@@ -84,7 +84,7 @@ export function getPoolListByTokenMintAddresses(
       if (
         ((pool.coin.mintAddress === coinMintAddress && pool.pc.mintAddress === pcMintAddress) ||
           (pool.coin.mintAddress === pcMintAddress && pool.pc.mintAddress === coinMintAddress)) &&
-        pool.version === 5
+        (pool.version === 5 || pool.version === 4)
         // && pool.official //@zhaohui
       ) {
         return !(ammIdOrMarket !== undefined && pool.ammId !== ammIdOrMarket && pool.serumMarket !== ammIdOrMarket)
@@ -94,26 +94,8 @@ export function getPoolListByTokenMintAddresses(
     }
     return false
   })
-  if (pool.length > 0) {
-    return cloneDeep(pool)
-  } else {
-    return cloneDeep(
-      LIQUIDITY_POOLS.filter((pool) => {
-        if (coinMintAddress && pcMintAddress) {
-          if (
-            ((pool.coin.mintAddress === coinMintAddress && pool.pc.mintAddress === pcMintAddress) ||
-              (pool.coin.mintAddress === pcMintAddress && pool.pc.mintAddress === coinMintAddress)) &&
-            pool.version === 4
-          ) {
-            return !(ammIdOrMarket !== undefined && pool.ammId !== ammIdOrMarket && pool.serumMarket !== ammIdOrMarket)
-          }
-        } else {
-          return !(ammIdOrMarket !== undefined && pool.ammId !== ammIdOrMarket && pool.serumMarket !== ammIdOrMarket)
-        }
-        return false
-      })
-    )
-  }
+
+  return cloneDeep(pool)
 }
 
 export function getLpMintByTokenMintAddresses(

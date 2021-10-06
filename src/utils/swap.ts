@@ -367,36 +367,37 @@ export async function twoStepSwap(
   fromPoolInfo: any,
   toPoolInfo: any,
   fromCoinMint: string,
+  midCoinMint: string,
   toCoinMint: string,
   fromTokenAccount: string,
-  crpTokenAccount:string,
+  midTokenAccount:string,
   toTokenAccount: string,
   aIn: string,
   aCrpOut: string,
   aOut: string)
 {
   console.log("Two Step swap")
-  if(!crpTokenAccount)
+  if(!midTokenAccount)
   {
     let transaction = new Transaction()
 
-    crpTokenAccount = (await createAssociatedTokenAccountIfNotExist(
-      crpTokenAccount,
+    midTokenAccount = (await createAssociatedTokenAccountIfNotExist(
+      midTokenAccount,
       wallet.publicKey,
-      TOKENS.CRP.mintAddress,
+      midCoinMint,
       transaction
     )).toString()
     await sendTransaction(connection, wallet, transaction, [])
   }
 
-  let ori_crp_balance = await getTokenBalance(connection, crpTokenAccount)
+  let ori_crp_balance = await getTokenBalance(connection, midTokenAccount)
   let tx_id_1 = await swap(connection, 
     wallet,
     fromPoolInfo,
     fromCoinMint,
-    TOKENS.CRP.mintAddress,
+    midCoinMint,
     fromTokenAccount,
-    crpTokenAccount,
+    midTokenAccount,
     aIn,
     aCrpOut
     )
@@ -404,14 +405,14 @@ export async function twoStepSwap(
   let cur_crp_balance = 0
   while(1)
   {
-    cur_crp_balance = await getTokenBalance(connection, crpTokenAccount)
+    cur_crp_balance = await getTokenBalance(connection, midTokenAccount)
     if(ori_crp_balance < cur_crp_balance)
     {
       break;
     }
   }
 
-  let crp_decimals = await getMintDecimals(connection, new PublicKey(TOKENS.CRP.mintAddress))
+  let crp_decimals = await getMintDecimals(connection, new PublicKey(midCoinMint))
   let delta_crp = cur_crp_balance - ori_crp_balance
   
   let aCrpIn = (new TokenAmount(delta_crp, crp_decimals)).fixed()
@@ -419,9 +420,9 @@ export async function twoStepSwap(
   let tx_id_2 = await swap(connection, 
     wallet,
     toPoolInfo,
-    TOKENS.CRP.mintAddress,
+    midCoinMint,
     toCoinMint,
-    crpTokenAccount,
+    midTokenAccount,
     toTokenAccount,
     aCrpIn,
     aOut
