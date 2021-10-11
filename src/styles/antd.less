@@ -85,3 +85,39 @@ button.ant-btn-background-ghost[disabled] {
   background: rgb(38, 28, 72) !important;
   border: 1px solid #d9d9d9 !important;
 }
+
+.ant-pagination-disabled a{
+  color:rgba(255, 255, 255, 0.25) !important;
+}
+
+.ant-pagination-prev .ant-pagination-item-link, .ant-pagination-next .ant-pagination-item-link{
+  border:none !important;
+    font-size: 17px;
+    line-height: 38px;
+}
+
+.ant-pagination-item{
+  width: 48px !important;
+  height: 48px !important;
+    border: 2px solid transparent !important;
+
+  & > a{
+    color: #FFF;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 48px;
+    letter-spacing: -0.05em;
+  }
+  
+  &.ant-pagination-item-active{
+    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 8px;
+
+    a{
+      color:#fff !important
+    }
+  }
+
+}

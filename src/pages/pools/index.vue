@@ -101,7 +101,7 @@
           <span slot="current" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
           <span slot="apu" slot-scope="text, pool"  >{{ text }} 
 
-            <div class="btncontainer">
+            <div class="btncontainer small">
               <Button size="small" ghost :disabled="!wallet.connected"
                   @click="openPoolAddModal(pool)">
                 <Icon type="plus" />
@@ -111,7 +111,7 @@
             &nbsp;
 
 
-            <div class="btncontainer">
+            <div class="btncontainer small">
               <Button size="small" class="minus" ghost :disabled="!wallet.connected || !pool.current"
                   @click="openUnstakeModal(pool, pool.lp, 1)">
                 <Icon type="minus" />
@@ -123,7 +123,7 @@
           
           <div style="text-align: center; width: 100%">
             <div style="width: 80%; display: inline-block">
-              <Pagination :total="totalCount" :showTotal="(total, range) => `${range[0]}-${range[1]} of ${total} items`" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
+              <Pagination :total="totalCount" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
               </Pagination>
             </div>
           </div>
@@ -703,7 +703,7 @@ section{
 
 
 .pool.container {
-  max-width: 1200px;
+  max-width: 1350px;
   background: #01033C;
   margin-top:20px;
   margin-bottom:20px;
@@ -717,7 +717,6 @@ section{
     background: #01033C;
     position: absolute;
     right: 0;
-    top: -16px;
 
     .btncontainer{
       display:inline-block
@@ -771,7 +770,19 @@ section{
 
   td{
     background:#01033C !important;
-    border-bottom:unset !important
+    border-bottom:unset !important;
+    border-top:1px solid rgba(255,255,255,0.2) !important;
+  }
+
+  .lp-icons{
+      display: block !important;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 20px;
+      white-space: nowrap;
+      border: 2px solid transparent;
+      border-image-source: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
   }
 
   table{
@@ -786,17 +797,53 @@ section{
     border-radius: 0 13px 13px 0;
   }
 
+  .create {
+    padding: 9px 19px;
+    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+
+    button{
+      background:unset !important;
+      color:#fff;
+      border-color: transparent;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 42px;
+      letter-spacing: -0.05em;
+    }
+
+  }
+
+  .ant-table-column-title{
+    font-size: 18px;
+    line-height: 21px;
+    color: #FFF;
+    opacity: 0.5;
+  }
+
   .btncontainer{
     background: #01033C !important;
     padding: 0 !important;
     border-radius:5px !important;
     display: inline-block;
     width: unset;
-    button{
-      background: #01033C !important;
-      width: 41px !important;
-      height: 41px !important;
-      border-radius:5px !important;
+
+
+    &.small{
+        background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+        border: 2px solid rgba(255, 255, 255, 0.14) !important;
+        border-radius: 8px;
+        width: 48px !important;
+        height: 48px !important;
+
+        button{ 
+          border: none !important;
+          font-size: 17px;
+          line-height: 50px;
+          font-weight: 800;
+        }
     }
 
     .ant-btn:hover, .ant-btn:focus{
@@ -810,26 +857,6 @@ section{
   }
 
 
-  .create {
-    background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
-    display: inline-block;
-    width: unset;
-    text-align: center;
-    position: relative;
-    max-width: 400px;
-    margin: 10px auto;
-    padding: 2px;
-    border-radius: 30px;
-    max-height: 50px;
-
-    button{
-      background:#01033C !important;
-      position: relative;
-      border-radius: 30px;
-      border-color: transparent;
-    }
-
-  }
 
 
 }
