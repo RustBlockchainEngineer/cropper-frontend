@@ -10,8 +10,6 @@
    url(../assets/fonts/Gilroy/Gilroy-Regular.ttf) format("truetype");
 }
 
-
-
 .ant-progress-circle-path { stroke: #13ECAB !important }
 
 ::-webkit-scrollbar-thumb {
@@ -23,6 +21,10 @@
   border-radius: 10px;
 }
 
+body {
+  font-family: Gilroy, sans-serif !important;
+}
+
 .container {
   margin: 0 auto;
   padding: 24px;
@@ -31,7 +33,6 @@
   font-style: normal;
   font-weight: normal;
 }
-
 
 .ant-progress{
   background:#01033C !important;
@@ -95,9 +96,9 @@ a{
   position:relative;
 
   .title {
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 80px;
     text-align: center;
     display: inline-block;
     vertical-align: middle;
@@ -106,17 +107,6 @@ a{
     background: #01033C;
     padding-left: 15px;
     position: relative;
-  }
-
-  &::after{
-    content: '';
-    width: 100%;
-    position: absolute;
-    height: 1px;
-    background: #444A58;
-    left: 0;
-    top: 50%;
-    z-index: 1;
   }
 
   .buttons {
