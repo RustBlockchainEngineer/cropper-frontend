@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wallet-btn">
 
     <div class="btncontainer" v-if="!wallet.connected" ghost @click="$accessor.wallet.openModal">
     <Button>
@@ -535,6 +535,11 @@ export default class Wallet extends Vue {
 
 <style lang="less">
 @import '../styles/variables';
+
+.wallet-btn {
+  display: inline-flex;
+  align-items: center;
+}
 
 .ant-modal-content {
   background-color: #01033C;
