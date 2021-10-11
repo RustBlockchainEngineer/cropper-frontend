@@ -537,7 +537,7 @@ export default class Wallet extends Vue {
 @import '../styles/variables';
 
 .ant-modal-content {
-  background-color: #1B2028;
+  background-color: #01033C;
 
   .ant-modal-close {
     color: @text-color;
@@ -576,7 +576,7 @@ header .btncontainer {
     line-height: 36px;
 
     button{
-      background: #000 !important;
+      background: #01033C !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;
@@ -587,10 +587,10 @@ header .btncontainer {
 
 
   .ant-modal-header{
-    background-color: #1B2028;
+    background-color: #01033C;
   }
   .ant-modal-title{
-    background-color: #1B2028;
+    background-color: #01033C;
     text-align:center
   }
 

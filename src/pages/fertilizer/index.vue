@@ -217,7 +217,7 @@ export default Vue.extend({
   max-height: 50px;
 
   button{
-    background:#000 !important;
+    background:#01033C !important;
     position: relative;
     border-radius: 30px;
     border-color: transparent;
@@ -241,7 +241,7 @@ export default Vue.extend({
     border-bottom:none !important;
     position:relative;
     margin:0 10px 20px 10px;
-    background:#000;
+    background:#01033C;
     border-radius:25px;
 
 
@@ -275,7 +275,7 @@ export default Vue.extend({
       cursor: hand;
 
       button{
-        background:#000 !important;
+        background:#01033C !important;
         position: relative;
         border-radius: 30px;
         padding:5px 10px;
@@ -340,7 +340,7 @@ export default Vue.extend({
       z-index:2;
       left:50%;
       position:absolute;
-      background:#000;
+      background:#01033C;
       transform:translate(-50%,-50%)
     }
 
@@ -412,7 +412,7 @@ export default Vue.extend({
 
 .fertilizer.cont {
   max-width: calc(100% - 80px);
-  background: #1B2028;
+  background: #01033C;
   margin-left:auto;
   margin-right:auto;
   margin-top:20px;
@@ -443,7 +443,7 @@ export default Vue.extend({
 }
 
 main{
-  background-color:#000;
+  background-color:#01033C;
   background-image:unset;
   background-size:cover;
   background-position:center bottom;
@@ -478,7 +478,7 @@ main{
     text-align: right;
 }
 .pf-record{
-    background-color: #000;
+    background-color:#01033C;
     border-bottom: 1px solid #d9d9d9;
 
     .pf-record-content{

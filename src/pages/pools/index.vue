@@ -694,17 +694,17 @@ export default class Pools extends Vue {
 <style lang="less" scoped>
 .ant-layout,
 .ant-layout-content{
-  background:#000 !important;  
+  background:#01033C !important;  
 }
 
 section{
-  background:#000 !important; 
+  background:#01033C !important; 
 }
 
 
 .pool.container {
   max-width: 1200px;
-  background: #1B2028;
+  background: #01033C;
   margin-top:20px;
   margin-bottom:20px;
 
@@ -714,7 +714,7 @@ section{
   .page-head a{
     z-index: 2;
     padding-left: 15px;
-    background: #1b2028;
+    background: #01033C;
     position: absolute;
     right: 0;
     top: -16px;
@@ -770,7 +770,7 @@ section{
   }
 
   td{
-    background:#000 !important;
+    background:#01033C !important;
     border-bottom:unset !important
   }
 
@@ -787,13 +787,13 @@ section{
   }
 
   .btncontainer{
-    background: #1b2028 !important;
+    background: #01033C !important;
     padding: 0 !important;
     border-radius:5px !important;
     display: inline-block;
     width: unset;
     button{
-      background: #1b2028 !important;
+      background: #01033C !important;
       width: 41px !important;
       height: 41px !important;
       border-radius:5px !important;
@@ -823,7 +823,7 @@ section{
     max-height: 50px;
 
     button{
-      background:#000 !important;
+      background:#01033C !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;

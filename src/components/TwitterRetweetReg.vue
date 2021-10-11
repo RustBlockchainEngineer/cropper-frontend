@@ -417,7 +417,7 @@ span.inputContent{
     border:none;
     padding:4px 10px;
     border-radius:5px 0 0 5px;
-    background:#1B2028;
+    background:#01033C;
     width: 230px; 
   }
 
@@ -481,7 +481,7 @@ span.inputContent{
     }
 
     button{
-      background:#000 !important;
+      background:#01033C !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;
@@ -512,7 +512,7 @@ span.inputContent{
 
 .multistepmodal .steps{
   & > div{
-    background:#000;
+    background:#01033C;
     border-radius:6px;
     margin:10px 30px 10px 90px;
     padding:0 11px;

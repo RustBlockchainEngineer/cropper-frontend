@@ -1477,7 +1477,7 @@ export default Vue.extend({
     border-bottom:none !important;
     position:relative;
     margin:0 10px 20px 10px;
-    background:#1B2028;
+    background:#01033C;
 
     .banner{
       height:100px;
@@ -1519,7 +1519,7 @@ export default Vue.extend({
       z-index:2;
       left:50%;
       position:absolute;
-      background:#000;
+      background:#01033C;
       transform:translate(-50%,-50%)
     }
 
@@ -1565,7 +1565,7 @@ div.inputContent{
     border:none;
     padding:9px 10px;
     border-radius:5px 0 0 5px;
-    background:#1B2028;
+    background:#01033C;
     width: 293px; 
   }
 
@@ -1672,7 +1672,7 @@ div.inputContent{
     }
 
   .steps > div{
-    background:#000;
+    background:#01033C;
     border-radius:6px;
     margin:10px 30px 10px 90px;
     padding:0 11px;
@@ -1903,7 +1903,7 @@ div.inputContent{
     max-height: 50px;
 
     button{
-      background:#000 !important;
+      background:#01033C !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;
@@ -1935,7 +1935,7 @@ div.inputContent{
   }
 
 main{
-  background-color:#000;
+  background-color:#01033C;
   background-image:unset;
   background-size:cover;
   background-position:center bottom;
@@ -1970,7 +1970,7 @@ main{
     text-align: right;
 }
 .pf-record{
-    background-color: #000;
+    background-color:#01033C;
     border-bottom: 1px solid #d9d9d9;
 
     .pf-record-content{
@@ -1996,7 +1996,7 @@ main{
 
 .farm.container {
   max-width: 1200px;
-  background: #1B2028;
+  background: #01033C;
   margin-top:20px;
   margin-bottom:20px;
 
@@ -2004,7 +2004,7 @@ main{
   .page-head a{
     z-index: 2;
     padding-left: 15px;
-    background: #1b2028;
+    background: #01033C;
     position: absolute;
     right: 0;
 
@@ -2016,7 +2016,7 @@ main{
   .card {
     .card-body {
       padding: 0;
-      background:#000;
+      background:#01033C;
       overflow-x: scroll;
       scrollbar-width: none;
       -ms-overflow-style: none;

@@ -856,7 +856,7 @@ export default Vue.extend({
 <style lang="less">
 
 main{
-  background-color:#000;
+  background-color:#01033C;
   background-image:unset;
   background-size:cover;
   background-position:center bottom;

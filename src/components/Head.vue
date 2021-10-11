@@ -53,8 +53,6 @@ export default Vue.extend({
 @import '../styles/variables';
 
 .header {
-  border-bottom: 2px solid @modal-header-bg;
-
   .logo {
     height: 26px;
   }
