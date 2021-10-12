@@ -7,7 +7,7 @@
           <div class="count-down">
             <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
             {{ farm.autoRefreshTime - farm.countdown }}
-            <div 
+            <div
               class="reload-btn"
               @click="
                 () => {
@@ -15,7 +15,7 @@
                   $accessor.wallet.getTokenAccounts()
                 }
               "
-              >
+            >
               <Icon type="loading" theme="outlined" />
             </div>
             <!-- <Progress
@@ -105,12 +105,42 @@
               </div>
             </div>
           </div>
-          
+
+          <Row class="farm-head table-head">
+            <Col class="lp-icons" :span="isMobile ? 12 : 6">
+              <div class="title">Labelized</div>
+            </Col>
+            <Col class="state" :span="isMobile ? 6 : 3">
+              <div class="title">Status</div>
+            </Col>
+            <Col class="state reward-col" :span="isMobile ? 12 : 6">
+              <div class="title">{{ isMobile ? 'Reward' : 'Pending Reward' }}</div>
+            </Col>
+            <Col class="state" :span="isMobile ? 6 : 3">
+              <div class="title">Staked</div>
+            </Col>
+            <Col class="state" :span="isMobile ? 6 : 3">
+              <div class="title">Total Apr</div>
+            </Col>
+            <Col class="state" :span="isMobile ? 6 : 3">
+              <div class="title">Liquidity</div>
+            </Col>
+          </Row>
           <Collapse v-model="showCollapse" expand-icon-position="right">
             <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
-                <div v-if="farm.labelized" class="labelized">LABELIZED</div>
-                <Col class="lp-icons" :span="isMobile ? 12 : 8">
+                <Col class="lp-icons" :span="isMobile ? 12 : 6">
+                  <div class="lp-icons-group">
+                    <div class="icons">
+                      <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
+                      <span>{{ farm.farmInfo.lp.coin.symbol }} - </span>
+                      <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
+                      <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
+                    </div>
+                  </div>
+                </Col>
+
+                <Col class="state" :span="isMobile ? 6 : 3">
                   <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                   <div
                     v-if="
@@ -121,21 +151,20 @@
                   >
                     Soon
                   </div>
-
-                  <div class="icons">
-                    <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
-                    <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
-                  </div>
-                  {{ isMobile ? farm.farmInfo.lp.symbol : farm.farmInfo.lp.name }}
                 </Col>
-                <Col class="state" :span="isMobile ? 6 : 4">
-                  <div class="title">{{ isMobile ? 'Reward' : 'Pending Reward' }}</div>
 
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
-                  <div v-else class="value">{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}</div>
+                <Col class="state reward-col" :span="isMobile ? 12 : 6">
+                  <Col span="12">
+                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
+                    <div v-else class="value">{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}</div>
+                  </Col>
+                  <Col span="12">
+                    <div v-if="farm.labelized" class="labelized">Labelized</div>
+                  </Col>
                 </Col>
-                <Col v-if="!isMobile" class="state" :span="4">
-                  <div class="title">
+
+                <Col v-if="!isMobile" class="state" :span="3">
+                  <!-- <div class="title">
                     Staked
                     <Tooltip
                       placement="right"
@@ -153,14 +182,15 @@
                       </template>
                       <Icon type="question-circle" style="color: #f00" />
                     </Tooltip>
-                  </div>
+                  </div> -->
                   <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
                   <div v-else class="value">
                     {{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
                   </div>
                 </Col>
-                <Col class="state" :span="isMobile ? 6 : 4">
-                  <div class="title">
+
+                <Col class="state" :span="isMobile ? 6 : 3">
+                  <!-- <div class="title">
                     Total Apr
                     <Tooltip
                       placement="right"
@@ -179,7 +209,7 @@
                       </template>
                       <Icon type="question-circle" />
                     </Tooltip>
-                  </div>
+                  </div> -->
                   <div
                     v-if="
                       farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
@@ -191,8 +221,8 @@
                   </div>
                   <div v-else class="value">{{ farm.farmInfo.apr }}%</div>
                 </Col>
-                <Col v-if="!isMobile && poolType" class="state" :span="4">
-                  <div class="title">Liquidity</div>
+
+                <Col v-if="!isMobile && poolType" class="state" :span="3">
                   <div
                     v-if="
                       farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
@@ -210,7 +240,8 @@
                     }}
                   </div>
                 </Col>
-                <Col v-if="!isMobile && !poolType" class="state" :span="4">
+
+                <Col v-if="!isMobile && !poolType" class="state" :span="3">
                   <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
                     Connect Wallet
                   </Button>
@@ -397,7 +428,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import {
-  Tooltip,
+  // Tooltip,
   // Progress,
   Collapse,
   Spin,
@@ -431,7 +462,7 @@ const RadioButton = Radio.Button
 
 export default Vue.extend({
   components: {
-    Tooltip,
+    // Tooltip,
     Toggle,
     Input,
     // Progress,
@@ -1512,14 +1543,12 @@ export default Vue.extend({
 
       .ant-collapse {
         border: 0;
-        background-color: rgba(0, 0, 0, 0.9471);
-
         .ant-collapse-item {
           border-bottom: 0;
         }
 
         .ant-collapse-item:not(:last-child) {
-          border-bottom: 1px solid #d9d9d9;
+          border-bottom: 1px solid #ffffff20;
         }
       }
 
@@ -1576,37 +1605,69 @@ export default Vue.extend({
     .title {
       font-weight: 600;
       font-size: 12px;
-      text-transform: uppercase;
       margin-bottom: 8px;
     }
+  }
+
+  .table-head 
+  {
+    border-bottom: 1px solid #FFFFFF20;
   }
 
   .farm-head {
     display: flex;
     align-items: center;
+    min-width: 768px;
 
     .lp-icons {
-      width: 32%;
-      left: 6%;
+      .lp-icons-group {
+        height: 51px;
+        background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+        border-radius: 8px;
+        padding: 2px;
 
-      .icons {
-        margin-right: 8px;
+        .icons {
+          height: 47px;
+          background-color: #01033C;
+          border-radius: 8px;
+          align-items: center;
+          padding: 0 20px;
+        }
+
+        .icons span {
+          margin-left: 12px;
+          margin-right: 12px;
+          font-weight: 400;
+          font-size: 18px;
+          line-height: 21px;
+        }
+      }
+
+      .title {
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+        color: #FFF;
+        opacity: 0.5;
       }
     }
 
     .state {
       display: flex;
-      flex-direction: column;
       text-align: left;
 
       .title {
-        font-size: 12px;
-        text-transform: uppercase;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+        color: #FFF;
+        opacity: 0.5;
       }
 
       .value {
-        font-size: 16px;
-        line-height: 24px;
+        font-size: 18px;
+        line-height: 21.19px;
+        font-weight: 400;
       }
     }
   }
@@ -1641,20 +1702,19 @@ export default Vue.extend({
   }
 
   .farm-head {
-    padding: 24px 32px !important;
+    padding: 30px 5px !important;
   }
 
   .ant-collapse-header {
     padding: 0 !important;
 
     .farm-head {
-      padding: 24px 32px !important;
+      padding: 30px 5px !important;
     }
   }
 
   .ant-collapse-content {
     border-top: 1px solid #1c274f;
-    background-color: rgba(0, 0, 0, 0.9471) !important;
   }
 }
 
@@ -1689,7 +1749,7 @@ export default Vue.extend({
 }
 
 .count-down-group {
-  background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+  background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
   height: 60px;
   border-radius: 63px;
   position: relative;
@@ -1698,7 +1758,7 @@ export default Vue.extend({
 }
 
 .count-down {
-  background-color: #01033C;
+  background-color: #01033c;
   border-radius: 63px;
   height: 56px;
   top: 2px;
@@ -1718,11 +1778,11 @@ export default Vue.extend({
     width: 50px;
     height: 50px;
     border-radius: 25px;
-    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
     margin-left: 15px;
     text-align: center;
     cursor: pointer;
-    
+
     .anticon {
       font-size: 16px !important;
       color: white !important;
@@ -1733,14 +1793,14 @@ export default Vue.extend({
 .tool-bar {
   height: 100px;
   border-radius: 14px;
-  border: 4px solid #16164A;
+  border: 4px solid #16164a;
   width: 100%;
 
   .tool-option {
     width: 24%;
     height: 100%;
     display: inline-block;
-    border-right: 3px solid #16164A;
+    border-right: 3px solid #16164a;
     position: relative;
 
     .input-search {
@@ -1769,7 +1829,7 @@ export default Vue.extend({
     .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
       opacity: 1 !important;
     }
-    
+
     .ant-select {
       border: none;
       height: 100%;
@@ -1804,7 +1864,7 @@ export default Vue.extend({
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      
+
       .label {
         font-size: 16px;
         opacity: 0.5;
@@ -1820,7 +1880,7 @@ export default Vue.extend({
       .ant-switch::after {
         width: 28px;
         height: 28px;
-        background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+        background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
         top: -10px;
         left: -2px;
       }
@@ -1837,32 +1897,38 @@ export default Vue.extend({
   }
 }
 .label.soon {
-  border: 1px solid #13d89d;
-  color: #13d89d;
-  position: absolute;
-  padding: 0 20px 0 20px;
-  border-radius: 3px;
+  background: #48A469;
+  border-radius: 4px;
   right: 110px;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 5px;
+  width: 53px;
 }
 
 .label.ended {
-  border: 1px solid #f00;
-  color: #f00;
-  position: absolute;
-  padding: 0 20px 0 20px;
-  border-radius: 3px;
+  background: #EF745D;
+  border-radius: 4px;
   right: 110px;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 5px;
+  width: 53px;
 }
 
 .labelized {
-  background: #13d89d;
-  position: absolute;
-  padding: 3px 10px;
-  left: 0;
-  top: 0;
-  border-radius: 0 0 10px;
-  font-size: 10px;
-  font-weight: bold;
+  background: #724CEE;
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 14px;
+  font-weight: 400;
+  width: fit-content;
+}
+
+.reward-col {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 main {
@@ -1893,5 +1959,9 @@ main {
 }
 .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
   border: 1px solid #d9d9d9;
+}
+
+.ant-collapse {
+  background-color: #01033c;
 }
 </style>
