@@ -2,7 +2,7 @@
   <div class="coin-select">
     <div class="label fs-container">
       <span>{{ label }}</span>
-      <span > Balance: {{ 8000}} </span>
+      <span v-if="balance && !balance.wei.isNaN()"> Balance: {{ balance.fixed() }} </span>
     </div>
     <div class="coin-input">
       <div class="main-input fs-container">
@@ -22,14 +22,10 @@
           @input="$emit('onInput', $event.target.value)"
           @focus="$emit('onFocus')"
         />
-        <div class="rangeGroup">
-          <button  class="input-button" @click="inputBalanceByPercent(1)"> 
-            <!-- v-if="!disabled && showHalf && balance" -->
-            max.
-          </button>
-          <button  class="input-button" @click="inputBalanceByPercent(0.5)">half</button>
-          <!-- v-if="!disabled && balance" -->
-        </div>
+        <button v-if="!disabled && showHalf && balance" class="input-button" @click="inputBalanceByPercent(0.5)">
+          HALF
+        </button>
+        <button v-if="!disabled && balance" class="input-button" @click="inputBalanceByPercent(1)">MAX</button>
         <button class="select-button fc-container" @click="$emit('onSelect')">
           <div v-if="coinName" class="fc-container">
             <CoinIcon :mint-address="mintAddress" />
@@ -143,13 +139,13 @@ export default Vue.extend({
 @import '../styles/variables';
 
 .coin-select {
-  border-radius: 13px;
 
   .label {
     padding: 0.75rem 1rem 0;
-    font-size: 18px;
-    line-height: 14px;
-    color: rgb(133, 133, 141);
+    font-size: 12px;
+    line-height: 15px;
+    color: #fff;
+    opacity: 0.5;
   }
 
   input {
@@ -158,7 +154,7 @@ export default Vue.extend({
     border: none;
     background-color: transparent;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 24px;
     flex: 1 1 auto;
     color: @text-color;
@@ -178,10 +174,10 @@ export default Vue.extend({
   }
 
   .coin-input {
+    padding: 11px 9px 12px;
+    margin-top:3px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 14px;
-    margin: 9px;
-    padding: 0.75rem 0.75rem 0.75rem 1rem;
 
     button {
       border: none;
@@ -204,11 +200,6 @@ export default Vue.extend({
       }
     }
 
-    .rangeGroup {
-      display: block;
-      width: min-content;
-    }
-
     .input-range {
       width: 100%;
       // &::-webkit-slider-runnable-track {
@@ -222,27 +213,18 @@ export default Vue.extend({
       // }
     }
     .input-button {
-      height: 20px;
-      width: 42px;
-      margin: 2px;
+      height: 32px;
       padding: 0 4px;
+      color: @primary-color;
       font-size: 0.9em;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-sizing: border-box;
-      border-radius: 6px;
-      color: rgba(255, 255, 255, 0.6) !important;
     }
-    
+
     .select-button {
-      padding: 0.5rem;
-      line-height: 24px;
-      margin-left: 2px;
+      padding: 10px 18px;
       background: #01033C;
       border-radius: 8px;
-      border: 2px solid;
-      border-color: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
-      width: 120px;
+      font-size: 13px;
+      line-height: 16px;
 
       .anticon {
         margin-left: 4px;
