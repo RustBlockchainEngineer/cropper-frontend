@@ -53,6 +53,8 @@ export default Vue.extend({
 @import '../styles/variables';
 
 .header {
+  margin-top: 40px;
+  
   .logo {
     height: 26px;
   }
@@ -132,5 +134,6 @@ export default Vue.extend({
 
 .header.mobile {
   padding: 0 20px;
+  margin-top: 20px;
 }
 </style>

@@ -570,26 +570,27 @@ export default class Wallet extends Vue {
 
   
 header .btncontainer {
-    background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
     display: block;
     text-align: center;
     position: relative;
     margin: auto;
     padding: 2px;
-    border-radius: 30px;
-    height: 36px;
-    line-height: 36px;
+    border-radius: 63px;
+    height: 54px;
 
     button{
       background: #01033C !important;
       position: relative;
-      border-radius: 30px;
+      border-radius: 63px;
+      height: 48px;
       border-color: transparent;
-      top: -2px;
+      top: -7px;
+      margin: 0 1px 0 1px;
+      border: none;
+      color: white !important;
     }
-
   }
-
 
   .ant-modal-header{
     background-color: #01033C;

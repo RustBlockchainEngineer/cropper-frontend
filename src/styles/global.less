@@ -102,13 +102,27 @@ a{
     text-align: center;
     display: inline-block;
     vertical-align: middle;
-    padding-right: 10px;
     z-index: 2;
     background: #01033C;
-    padding-left: 15px;
     position: relative;
   }
+  
+  @media screen and (max-width: 1024px) {
+    .title {
+      font-weight: 700;
+      font-size: 56px;
+      line-height: 70px;
+    }
+  }
 
+  @media screen and (max-width: 768px) {
+    .title {
+      font-weight: 600;
+      font-size: 48px;
+      line-height: 60px;
+    }
+  }
+  
   .buttons {
     display: flex;
     vertical-align: middle;

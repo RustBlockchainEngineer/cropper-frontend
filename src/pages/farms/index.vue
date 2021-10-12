@@ -2,40 +2,43 @@
   <div class="farm container">
     <div class="page-head fs-container">
       <span class="title">Farms</span>
-      <NuxtLink to="/farms/create-farm/">
-        <div class="btncontainer">
-          <Button size="large" ghost> Create a farm </Button>
+      <div class="farm-button-group">
+        <div class="count-down-group">
+          <div class="count-down">
+            <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
+            {{ farm.autoRefreshTime - farm.countdown }}
+            <div 
+              class="reload-btn"
+              @click="
+                () => {
+                  $accessor.farm.requestInfos()
+                  $accessor.wallet.getTokenAccounts()
+                }
+              "
+              >
+              <Icon type="loading" theme="outlined" />
+            </div>
+            <!-- <Progress
+              type="circle"
+              :width="20"
+              :stroke-width="10"
+              :percent="(100 / farm.autoRefreshTime) * farm.countdown"
+              :show-info="false"
+              :class="farm.loading ? 'disabled' : ''"
+              @click="
+                () => {
+                  $accessor.farm.requestInfos()
+                  $accessor.wallet.getTokenAccounts()
+                }
+              "
+            /> -->
+          </div>
         </div>
-      </NuxtLink>
-      <div class="buttons">
-        <!-- <span>
-          <RadioGroup v-model="poolType" style="display: inline-block; margin: 0 auto; padding-right: 30px">
-            <RadioButton class="radioButtonStyle" :value="true"> Active </RadioButton>
-            <RadioButton class="radioButtonStyle" :value="false"> Ended </RadioButton>
-          </RadioGroup>
-        </span> -->
-        <Tooltip v-if="farm.initialized" placement="bottomRight">
-          <template slot="title">
-            <span>
-              Displayed data will auto-refresh after
-              {{ farm.autoRefreshTime - farm.countdown }} seconds. Click this circle to update manually.
-            </span>
-          </template>
-          <Progress
-            type="circle"
-            :width="20"
-            :stroke-width="10"
-            :percent="(100 / farm.autoRefreshTime) * farm.countdown"
-            :show-info="false"
-            :class="farm.loading ? 'disabled' : ''"
-            @click="
-              () => {
-                $accessor.farm.requestInfos()
-                $accessor.wallet.getTokenAccounts()
-              }
-            "
-          />
-        </Tooltip>
+        <NuxtLink to="/farms/create-farm/">
+          <div class="btncontainer">
+            <Button size="large" ghost> Create a farm </Button>
+          </div>
+        </NuxtLink>
       </div>
     </div>
     <StakeModel
@@ -399,7 +402,7 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import {
   Tooltip,
-  Progress,
+  // Progress,
   Collapse,
   Spin,
   Icon,
@@ -435,7 +438,7 @@ export default Vue.extend({
     Tooltip,
     Toggle,
     Input,
-    Progress,
+    // Progress,
     Collapse,
     CollapsePanel,
     Spin,
@@ -742,12 +745,14 @@ export default Vue.extend({
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
-            if(this.labelizedAmms[newFarmInfo.poolId]){
-              labelized = true;
-                if(this.labelizedAmmsExtended[newFarmInfo.poolId].pfo == true && newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID){   
-                    isPFO = true;
-                }
-              
+            if (this.labelizedAmms[newFarmInfo.poolId]) {
+              labelized = true
+              if (
+                this.labelizedAmmsExtended[newFarmInfo.poolId].pfo == true &&
+                newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID
+              ) {
+                isPFO = true
+              }
             }
           }
 
@@ -1477,6 +1482,14 @@ export default Vue.extend({
   padding: 0;
   margin: 0;
 }
+
+.farm-button-group {
+  position: absolute;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
 .farm.container {
   max-width: 1200px;
   background: #01033c;
@@ -1484,12 +1497,8 @@ export default Vue.extend({
   margin-bottom: 20px;
 
   .page-head a {
-    z-index: 2;
-    padding-left: 15px;
     background: #01033c;
-    position: absolute;
-    right: 0;
-
+    margin-left: 20px;
     .btncontainer {
       display: inline-block;
     }
@@ -1628,8 +1637,7 @@ export default Vue.extend({
 .farm {
   .page-head .title {
     position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
+    left: 0;
   }
 
   .farm-head {
@@ -1662,22 +1670,63 @@ export default Vue.extend({
 }
 
 .btncontainer {
-  background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+  background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
   display: inline-block;
   width: unset;
   text-align: center;
   position: relative;
   max-width: 400px;
-  margin: 10px auto;
   padding: 2px;
-  border-radius: 30px;
-  max-height: 50px;
+  border-radius: 8px;
+  max-height: 60px;
 
   button {
-    background: #01033c !important;
     position: relative;
-    border-radius: 30px;
+    border-radius: 8px;
     border-color: transparent;
+    height: 60px;
+  }
+}
+
+.count-down-group {
+  background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+  height: 60px;
+  border-radius: 63px;
+  position: relative;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.count-down {
+  background-color: #01033C;
+  border-radius: 63px;
+  height: 56px;
+  top: 2px;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 3px 3px 20px;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 42px;
+  position: relative;
+
+  .ant-progress {
+    margin-left: 15px;
+  }
+
+  .reload-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+    margin-left: 15px;
+    text-align: center;
+    cursor: pointer;
+    
+    .anticon {
+      font-size: 16px !important;
+      color: white !important;
+    }
   }
 }
 
