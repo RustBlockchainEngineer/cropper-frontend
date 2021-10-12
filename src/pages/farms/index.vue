@@ -1491,7 +1491,7 @@ export default Vue.extend({
 }
 
 .farm.container {
-  max-width: 1200px;
+  padding: 50px;
   background: #01033c;
   margin-top: 20px;
   margin-bottom: 20px;
