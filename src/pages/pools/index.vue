@@ -27,38 +27,48 @@
 
         <div class="page-head fs-container">
         
+          <span class="title">Liquidity pools</span>
+
         <NuxtLink to="/pools/create-pool/">
           <div class="create">
             <Button size="large" ghost>
-              Create a pool
+              + &nbsp; Create a pool
             </Button>
           </div>
         </NuxtLink>
         
-          <span class="title">Liquidity pools</span>
           <div class="buttons">
-            <Tooltip placement="bottomRight">
-              <template slot="title">
-                <span>
-                  Displayed data will auto-refresh after
-                  {{ autoRefreshTime - countdown }} seconds. Click this circle to update manually.
-                </span>
-              </template>
-              <Progress
-                type="circle"
-                :width="20"
-                :stroke-width="10"
-                :percent="(100 / autoRefreshTime) * countdown"
-                :show-info="false"
-                :class="loading ? 'disabled' : ''"
-                @click="
-                  () => {
-                    flush()
-                    $accessor.wallet.getTokenAccounts()
-                  }
-                "
-              />
-            </Tooltip>
+            <div class="count-down-group">
+              <div class="count-down">
+                <span v-if="autoRefreshTime - countdown < 10">0</span>
+                {{ autoRefreshTime - countdown }}
+                <div 
+                  class="reload-btn"
+                  @click="
+                    () => {
+                      flush()
+                      $accessor.wallet.getTokenAccounts()
+                    }
+                  "
+                  >
+                  <Icon type="loading" theme="outlined" />
+                </div>
+                <!-- <Progress
+                  type="circle"
+                  :width="20"
+                  :stroke-width="10"
+                  :percent="(100 / autoRefreshTime) * countdown"
+                  :show-info="false"
+                  :class="loading ? 'disabled' : ''"
+                  @click="
+                    () => {
+                      $accessor.requestInfos()
+                      $accessor.wallet.getTokenAccounts()
+                    }
+                  "
+                /> -->
+              </div>
+            </div>
           </div>
         </div>
 
@@ -145,7 +155,7 @@
 import { get, cloneDeep } from 'lodash-es'
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
-import { Table, Radio, Progress, Tooltip, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
+import { Table, Radio, Tooltip, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
 import { getPoolByLpMintAddress, getAllPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
 import { getBigNumber } from '@/utils/layouts'
@@ -187,7 +197,6 @@ declare const window: any;
     RadioGroup,
     RadioButton,
     Toggle,
-    Progress,
     Tooltip,
     Button,
     Input,
@@ -713,10 +722,8 @@ section{
   }
   .page-head a{
     z-index: 2;
-    padding-left: 15px;
     background: #01033C;
-    position: absolute;
-    right: 0;
+    float: right;
 
     .btncontainer{
       display:inline-block
@@ -724,8 +731,7 @@ section{
   }
 
   .page-head .buttons{
-    position:absolute;
-    left:0
+    float:right;
   }
 
   h6 {
@@ -843,6 +849,9 @@ section{
           font-size: 17px;
           line-height: 50px;
           font-weight: 800;
+          background: transparent !important;
+          width: 100% !important;
+          height: 100% !important;
         }
     }
 
@@ -856,6 +865,56 @@ section{
     }
   }
 
+  label{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    color: #FFF;
+    opacity: 0.5;
+  }
+
+  .count-down-group {
+    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    height: 60px;
+    border-radius: 63px;
+    position: relative;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .count-down {
+    background-color: #01033C;
+    border-radius: 63px;
+    height: 56px;
+    top: 2px;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 3px 3px 20px;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 42px;
+    position: relative;
+
+    .ant-progress {
+      margin-left: 15px;
+    }
+
+    .reload-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+      margin-left: 15px;
+      text-align: center;
+      cursor: pointer;
+      
+      .anticon {
+        font-size: 16px !important;
+        color: white !important;
+      }
+    }
+  }
 
 
 
