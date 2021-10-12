@@ -1900,7 +1900,7 @@ div.inputContent{
     margin: 10px auto;
     padding: 2px;
     border-radius: 30px;
-    max-height: 50px;
+    max-height: 65px;
 
     button{
       background:#01033C !important;

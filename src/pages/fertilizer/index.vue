@@ -269,7 +269,7 @@ export default Vue.extend({
       margin: 10px auto;
       padding: 2px;
       border-radius: 30px;
-      max-height: 50px;
+      max-height: 65px;
       font-size:16px;
       cursor: pointer;
       cursor: hand;
