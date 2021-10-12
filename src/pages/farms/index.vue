@@ -190,26 +190,6 @@
                 </Col>
 
                 <Col class="state" :span="isMobile ? 6 : 3">
-                  <!-- <div class="title">
-                    Total Apr
-                    <Tooltip
-                      placement="right"
-                      v-if="
-                        !(
-                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                        )
-                      "
-                    >
-                      <template slot="title">
-                        <div>
-                          Farm APR : {{ farm.farmInfo.apr_details.apr }}%<br />
-                          Fees : {{ farm.farmInfo.apr_details.apy }}%
-                        </div>
-                      </template>
-                      <Icon type="question-circle" />
-                    </Tooltip>
-                  </div> -->
                   <div
                     v-if="
                       farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
@@ -220,6 +200,24 @@
                     -
                   </div>
                   <div v-else class="value">{{ farm.farmInfo.apr }}%</div>
+
+                  <Tooltip
+                      placement="bottomLeft"
+                      v-if="
+                        !(
+                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                        )
+                      "
+                    >
+                      <template slot="title">
+                        <div>
+                          <div class="tooltip-line">Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span> </div> <hr>
+                          <div class="tooltip-line">Ray <span>{{ farm.farmInfo.apr_details.apr }}%</span></div>
+                        </div>
+                      </template>
+                      <div class="infoIcon"><img src="@/assets/info2.png" width="16" height="16" /></div>
+                    </Tooltip>
                 </Col>
 
                 <Col v-if="!isMobile && poolType" class="state" :span="3">
@@ -427,7 +425,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import {
-  // Tooltip,
+  Tooltip,
   // Progress,
   Collapse,
   Spin,
@@ -461,7 +459,7 @@ const RadioButton = Radio.Button
 
 export default Vue.extend({
   components: {
-    // Tooltip,
+    Tooltip,
     Toggle,
     Input,
     // Progress,
@@ -1950,6 +1948,10 @@ export default Vue.extend({
 .collapse-row {
   display: flex;
   align-items: center;
+}
+
+.infoIcon {
+  margin-left: 12px;
 }
 
 main {
