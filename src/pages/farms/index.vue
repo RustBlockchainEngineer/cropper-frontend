@@ -1491,6 +1491,7 @@ export default Vue.extend({
   background: #01033c;
   margin-top: 20px;
   margin-bottom: 20px;
+  max-width: 100%;
 
   .page-head a {
     background: #01033c;
@@ -1635,7 +1636,8 @@ export default Vue.extend({
 .farm {
   .page-head .title {
     position: absolute;
-    left: 0;
+    left: 0 !important;
+    transform: translate(0, 0) !important;
   }
 
   .farm-head {
