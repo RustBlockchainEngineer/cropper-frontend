@@ -95,13 +95,15 @@
 
       <div v-if="poolLoaded">
         <Table :columns="columns" :data-source="poolsShow" :pagination="false" row-key="lp_mint">
+
           <span slot="name" slot-scope="text" class="lp-icons">
             {{ void (pool = getPoolByLpMintAddress(text)) }}
-            <div class="icons">
-              <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.coin.mintAddress : ''" />
-              <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.pc.mintAddress : ''" />
-            </div>
-            <span>{{ pool.name }}</span>
+            <span class="lp-iconscontainer">
+              <div class="icons">
+                <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.coin.mintAddress : ''" /> {{getPoolByLpMintAddress(text).lp.coin.symbol}} -
+                 <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.pc.mintAddress : ''" /> {{getPoolByLpMintAddress(text).lp.pc.symbol}}
+              </div>
+            </span>
           </span>
           <span slot="liquidity" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
           <span slot="volume_24h" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
@@ -741,11 +743,6 @@ section{
     display: grid;
     grid-gap: 4px;
   }
-  .lp-icons {
-    .icons {
-      margin-right: 8px;
-    }
-  }
 }
 .radioButtonStyle {
   width: 50%;
@@ -761,6 +758,16 @@ section{
   display: none; /* Chrome Safari */
 }
 
+.addliq .btnContainer{
+  background:transparent !important;
+  display:inline-block !important;
+  
+  button{
+    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 8px;
+  }
+}
 
 .pool.container {
   .card-body {
@@ -778,29 +785,38 @@ section{
     background:#01033C !important;
     border-bottom:unset !important;
     border-top:1px solid rgba(255,255,255,0.2) !important;
+    padding:25px 16px;
   }
 
-  .lp-icons{
+  .lp-iconscontainer {
+    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    padding:2px;
+    border-radius: 8px;
+    width:100%;
+
+    .icons{
       display: block !important;
       border-radius: 8px;
-      font-weight: 800;
+      font-weight: normal;
+      padding:14px 20px;
       font-size: 18px;
       line-height: 20px;
       white-space: nowrap;
-      border: 2px solid transparent;
-      border-image-source: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+      position: relative;
+      background:#01033C; 
+      text-align:center;
+      width:100%;
+
+      img{
+        position:relative;
+        top:-1px;
+      }
+
+    }
   }
 
   table{
     border-collapse: separate;
-    border-spacing: 0 15px;
-  }
-
-  table tr > td:first-of-type{
-    border-radius: 13px 0 0 13px;
-  }
-  table tr > td:last-of-type{
-    border-radius: 0 13px 13px 0;
   }
 
   .create {
