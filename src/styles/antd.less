@@ -66,14 +66,35 @@ button.ant-btn-background-ghost[disabled] {
 .ant-calendar-input,
 .ant-calendar,
 .ant-input,
-.ant-select-selection,
-.ant-select-dropdown-content,
-.ant-select-dropdown-menu-item-selected {
-  background: rgba(0, 0, 0, 0.9471) !important;
+.ant-select-selection {
+  background: #01033C !important;
 }
+
+.ant-select-dropdown {
+  background: linear-gradient(292.73deg, #21BDB8 -20.31%, #280684 100%);
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 8px !important;
+  padding: 30px 17px 15px 17px !important;
+}
+
+.ant-select-dropdown-menu-item {
+  font-size: 16px !important;
+  padding: 10px !important;
+  border-top: 1px solid #FFFFFF20;
+
+  :first-child {
+    border-top: none !important;
+  }
+}
+
+.ant-select-dropdown-menu-item-selected,
 .ant-select-dropdown-menu-item:hover:not(.ant-select-dropdown-menu-item-disabled){
-  background: rgba(0, 0, 0, 0.9471) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 6px;
 }
+
 .ant-select-arrow {
   color: rgb(255 255 255) !important;
 }

@@ -86,30 +86,26 @@
     <div v-if="farm.initialized">
       <div class="card">
         <div class="card-body">
-          <div style="text-align: center; width: 100%">
-            <div style="width: 30%; display: inline-block">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="search by name">
+          <div class="tool-bar">
+            <div class="tool-option">
+              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
               </Input>
             </div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block">
-              <Select :options="certifiedOptions" v-model="searchCertifiedFarm" style="width: 150px"> </Select>
+            <div class="tool-option">
+              <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
             </div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block">
-              <Select :options="lifeOptions" v-model="searchLifeFarm" style="width: 150px"> </Select>
+            <div class="tool-option">
+              <Select :options="lifeOptions" v-model="searchLifeFarm"> </Select>
             </div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block">
+            <div class="tool-option last-option">
               <div class="toggle">
                 <label class="label">Staked Only</label>
                 <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
               </div>
             </div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 5%; display: inline-block"></div>
           </div>
+          
           <Collapse v-model="showCollapse" expand-icon-position="right">
             <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
@@ -1505,6 +1501,8 @@ export default Vue.extend({
   }
 
   .card {
+    margin-top: 70px;
+
     .card-body {
       padding: 0;
       overflow-x: scroll;
@@ -1730,6 +1728,112 @@ export default Vue.extend({
   }
 }
 
+.tool-bar {
+  height: 100px;
+  border-radius: 14px;
+  border: 4px solid #16164A;
+  width: 100%;
+
+  .tool-option {
+    width: 24%;
+    height: 100%;
+    display: inline-block;
+    border-right: 3px solid #16164A;
+    position: relative;
+
+    .input-search {
+      height: 100%;
+      position: absolute;
+      width: 100%;
+
+      .ant-input-prefix {
+        left: 10%;
+        font-size: 20px;
+        color: white;
+      }
+
+      .ant-input {
+        padding: 0 10% 0 20%;
+        height: 100% !important;
+        border: none;
+      }
+
+      .ant-input::placeholder {
+        color: white;
+        opacity: 0.5;
+      }
+    }
+
+    .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
+      opacity: 1 !important;
+    }
+    
+    .ant-select {
+      border: none;
+      height: 100%;
+      position: absolute;
+      width: 100%;
+
+      .ant-select-selection {
+        height: 100%;
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        padding-left: 10%;
+        border: none;
+
+        .ant-select-selection__rendered {
+          margin-left: 0 !important;
+          font-size: 16px;
+          opacity: 0.5;
+        }
+
+        .ant-select-arrow {
+          right: 10%;
+          font-size: 13px;
+        }
+      }
+    }
+
+    .toggle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      
+      .label {
+        font-size: 16px;
+        opacity: 0.5;
+      }
+
+      .ant-switch {
+        margin-left: 14px;
+        background-color: white;
+        height: 11px;
+        border-radius: 30px;
+      }
+
+      .ant-switch::after {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+        top: -10px;
+        left: -2px;
+      }
+
+      .ant-switch-checked::after {
+        margin-left: 2px;
+        left: 100%;
+      }
+    }
+  }
+
+  .last-option {
+    border-right: none !important;
+  }
+}
 .label.soon {
   border: 1px solid #13d89d;
   color: #13d89d;
@@ -1787,8 +1891,5 @@ main {
 }
 .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
   border: 1px solid #d9d9d9;
-}
-.input-search {
-  border-radius: 5px;
 }
 </style>
