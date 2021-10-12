@@ -139,14 +139,13 @@ export default Vue.extend({
 @import '../styles/variables';
 
 .coin-select {
-  background: rgba(0,0,0,0.9471);
-  border-radius: 13px;
 
   .label {
     padding: 0.75rem 1rem 0;
     font-size: 12px;
-    line-height: 14px;
-    color: rgb(133, 133, 141);
+    line-height: 15px;
+    color: #fff;
+    opacity: 0.5;
   }
 
   input {
@@ -175,7 +174,10 @@ export default Vue.extend({
   }
 
   .coin-input {
-    padding: 0.75rem 0.75rem 0.75rem 1rem;
+    padding: 11px 9px 12px;
+    margin-top:3px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
 
     button {
       border: none;
@@ -218,8 +220,11 @@ export default Vue.extend({
     }
 
     .select-button {
-      padding: 0.5rem;
-      line-height: 24px;
+      padding: 10px 18px;
+      background: #01033C;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 16px;
 
       .anticon {
         margin-left: 4px;
@@ -228,8 +233,8 @@ export default Vue.extend({
 
       img {
         margin-right: 5px;
-        height: 24px;
-        width: 24px;
+        height: 17px;
+        width: 17px;
       }
     }
 
@@ -238,5 +243,6 @@ export default Vue.extend({
       justify-content: space-between;
     }
   }
+
 }
 </style>
