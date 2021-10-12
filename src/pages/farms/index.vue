@@ -258,13 +258,13 @@
                 </Col>
               </Row>
 
-              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : ''" :gutter="48">
+              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row'" :gutter="48">
                 <Col :span="isMobile ? 24 : 4"> </Col>
 
-                <Col :span="isMobile ? 24 : 10">
+                <Col :span="isMobile ? 24 : 8">
                   <div class="harvest">
                     <div class="title">Pending Reward</div>
-                    <div class="pending fs-container">
+                    <div class="pending">
                       <div class="reward">
                         <div class="token">
                           {{ farm.farmInfo.reward.symbol }}
@@ -286,7 +286,7 @@
                   </div>
                 </Col>
 
-                <Col :span="isMobile ? 24 : 10">
+                <Col :span="isMobile ? 24 : 8">
                   <div class="start">
                     <div class="title">Start farming</div>
                     <div v-if="!wallet.connected" @click="$accessor.wallet.openModal" class="btncontainer">
@@ -404,7 +404,6 @@
             <div style="width: 80%; display: inline-block">
               <Pagination
                 :total="totalCount"
-                :showTotal="(total, range) => `${range[0]}-${range[1]} of ${total} items`"
                 :pageSize="pageSize"
                 :defaultCurrent="1"
                 v-model="currentPage"
@@ -1518,7 +1517,7 @@ export default Vue.extend({
 }
 
 .farm.container {
-  padding: 50px;
+  padding: 70px 120px;
   background: #01033c;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -1559,10 +1558,15 @@ export default Vue.extend({
   }
 
   .harvest {
+    text-align: center;
+    max-width: 420px;
+
     .reward {
       .token {
-        font-weight: 600;
-        font-size: 20px;
+        font-weight: normal;
+        font-size: 40px;
+        line-height: 47px;
+        margin-bottom: 10px;
       }
 
       .value {
@@ -1576,10 +1580,17 @@ export default Vue.extend({
   }
 
   .start {
+    text-align: center;
+    max-width: 420px;
+    
     .unstarted {
+      width: 100%;
+
       .token {
-        font-weight: 600;
-        font-size: 20px;
+        font-weight: normal;
+        font-size: 40px;
+        line-height: 47px;
+        margin-bottom: 10px;
       }
 
       .value {
@@ -1598,13 +1609,17 @@ export default Vue.extend({
 
   .harvest,
   .start {
+    border: 4px solid #16164A;
+    box-sizing: border-box;
+    border-radius: 14px;
     padding: 16px;
-    border: 2px solid #1c274f;
-    border-radius: 4px;
 
     .title {
-      font-weight: 600;
-      font-size: 12px;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+      color: #FFF;
+      opacity: 0.5;
       margin-bottom: 8px;
     }
   }
@@ -1714,6 +1729,7 @@ export default Vue.extend({
   }
 
   .ant-collapse-content {
+    background-color: #01033C;
     border-top: 1px solid #1c274f;
   }
 }
@@ -1929,6 +1945,11 @@ export default Vue.extend({
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.collapse-row {
+  display: flex;
+  align-items: center;
 }
 
 main {
