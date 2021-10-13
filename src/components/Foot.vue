@@ -23,6 +23,7 @@
     <div v-if="isMobile" class="logo">
       <a href="/"><img src="@/assets/icons/logo-text.svg" /></a>
     </div>
+    <img class="planet-img-bottom" src="@/assets/Green Planet 2.png" />
   </Footer>
 </template>
 
@@ -60,6 +61,12 @@ export default class Foot extends Vue {
 </script>
 
 <style lang="less" scoped>
+
+.planet-img-bottom {
+  position: absolute;
+  right: 0;
+}
+
 .mobile {
   .link-menu {
     span {
@@ -81,11 +88,16 @@ export default class Foot extends Vue {
     text-align: center;
     margin-bottom: 50px;
   }
+
+  .planet-img-bottom {
+    bottom: 300px;
+  }
 }
 
 .pc {
   display: flex;
   justify-content: space-between;
+  position: relative;
 
   .logo{
       line-height:40px
@@ -105,6 +117,10 @@ export default class Foot extends Vue {
         color: #fff;
       }
     }
+  }
+
+  .planet-img-bottom {
+    bottom: 90px;
   }
 }
 </style>
