@@ -149,7 +149,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import importIcon from '@/utils/import-icon'
-import { CollapsePanel, Spin, Icon, Collapse, Col, Radio, Row, Select, Switch as Toggle, Pagination } from 'ant-design-vue'
+import { Spin, Icon, Collapse, Col, Radio, Row, Select, Switch as Toggle, Pagination } from 'ant-design-vue'
 import { get, cloneDeep } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
@@ -188,6 +188,7 @@ export default Vue.extend({
       currentPage:1,
       coinName : '',
       mintAddress : '',
+      poolLoaded : false,
       autoRefreshTime: 60 as number,
       countdown: 0,
       showCollapse: [] as any[],
