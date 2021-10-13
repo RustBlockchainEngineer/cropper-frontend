@@ -21,10 +21,6 @@
       @onCancel="cancelUnstake"
     />
 
-
-    <div class="card">
-      <div class="card-body">
-
         <div class="page-head fs-container">
         
           <span class="title">Liquidity pools</span>
@@ -72,25 +68,27 @@
           </div>
         </div>
 
-          <div style="text-align: center; width: 100%">
-            <div style="width: 30%; display: inline-block">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="search by name">
+    <div class="card">
+      <div class="card-body">
+
+
+          <div class="tool-bar">
+            <div class="tool-option">
+              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
               </Input>
             </div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block"></div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block"></div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block">
+            <div class="tool-option">
+            </div>
+            <div class="tool-option">
+            </div>
+
+            <div class="tool-option last-option">
               <div class="toggle">
                 <label class="label">Staked Only</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
               </div>
             </div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 5%; display: inline-block"></div>
           </div>
 
       <div v-if="poolLoaded">
@@ -263,6 +261,7 @@ export default class Pools extends Vue {
       scopedSlots: { customRender: 'fee_24h' },
       sorter: (a: any, b: any) => a.fee_24h - b.fee_24h
     },
+
     {
       title: '1y Fees / Liquidity',
       dataIndex: 'apy',
@@ -715,13 +714,22 @@ section{
 
 .pool.container {
   max-width: 1350px;
+  width: 100%;
   background: #01033C;
   margin-top:20px;
   margin-bottom:20px;
+  padding: 15px;
 
   .page-head{
     margin-top:10px
   }
+
+  .page-head .title {
+    position: absolute;
+    left: 0 !important;
+    transform: translate(0, 0) !important;
+  }
+  
   .page-head a{
     z-index: 2;
     background: #01033C;
@@ -769,7 +777,117 @@ section{
   }
 }
 
+.tool-bar {
+  height: 100px;
+  border-radius: 14px;
+  border: 4px solid #16164A;
+  width: 100%;
+
+  .tool-option {
+    width: 24%;
+    height: 100%;
+    display: inline-block;
+    border-right: 3px solid #16164A;
+    position: relative;
+
+    .input-search {
+      height: 100%;
+      position: absolute;
+      width: 100%;
+
+      .ant-input-prefix {
+        left: 10%;
+        font-size: 20px;
+        color: white;
+      }
+
+      .ant-input {
+        padding: 0 10% 0 20%;
+        height: 100% !important;
+        border: none;
+      }
+
+      .ant-input::placeholder {
+        color: white;
+        opacity: 0.5;
+      }
+    }
+
+    .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
+      opacity: 1 !important;
+    }
+    
+    .ant-select {
+      border: none;
+      height: 100%;
+      position: absolute;
+      width: 100%;
+
+      .ant-select-selection {
+        height: 100%;
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        padding-left: 10%;
+        border: none;
+
+        .ant-select-selection__rendered {
+          margin-left: 0 !important;
+          font-size: 16px;
+          opacity: 0.5;
+        }
+
+        .ant-select-arrow {
+          right: 10%;
+          font-size: 13px;
+        }
+      }
+    }
+
+    .toggle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      
+      .label {
+        font-size: 16px;
+        opacity: 0.5;
+      }
+
+      .ant-switch {
+        margin-left: 14px;
+        background-color: white;
+        height: 11px;
+        border-radius: 30px;
+      }
+
+      .ant-switch::after {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+        top: -10px;
+        left: -2px;
+      }
+
+      .ant-switch-checked::after {
+        margin-left: 2px;
+        left: 100%;
+      }
+    }
+  }
+
+  .last-option {
+    border-right: none !important;
+  }
+}
+
 .pool.container {
+  .card .card-body .buttons i{
+    margin-right:0;
+  }
   .card-body {
     overflow-x: scroll;
     scrollbar-width: none;
@@ -961,8 +1079,11 @@ section{
   background: transparent !important;
   border: none !important;
 }
-.input-search .ant-input {
-  height: 32.01px !important;
-}
 
+.ant-table-placeholder{
+  background:unset !important;
+  border-top:unset !important;
+  border-bottom:unset !important;
+  color:rgba(255,255,255, 0.1);
+}
 </style>
