@@ -1532,7 +1532,8 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="less" sxcoped>
+<style lang="less" sxcoped> //sxcoped
+
 .warning-style {
   font-weight: bold;
   color: #f0b90b;
@@ -1553,10 +1554,6 @@ main{
   background-color:#01033C;
   background-size:cover;
   background-position:center bottom;
-}
-
-.swapWrapper {
-  padding: 50px 128px;
 }
 
 .planetMiddle {
@@ -1648,6 +1645,9 @@ main{
   border: 2px solid rgba(255, 255, 255, 0.14);
   box-shadow: 18px 11px 14px rgb(0 0 0 / 25%);
   border-radius: 8px;
+  display: inline-block;
+  width: 250px !important;
+  color: white !important;
 }
 
 .ant-tooltip-arrow::before {
@@ -1815,6 +1815,66 @@ main{
         }
       }
     }
+  }
+}
+
+
+.swapWrapper {
+  padding: 50px 128px;
+  
+  .ant-layout{
+    background:#000 !important;
+  }
+  button.ant-btn-background-ghost[disabled] {
+    border-color: #85858d;
+  }
+  .ant-menu-horizontal > .ant-menu-item:hover, .ant-menu-horizontal > .ant-menu-submenu:hover, .ant-menu-horizontal > .ant-menu-item-active, .ant-menu-horizontal > .ant-menu-submenu-active, .ant-menu-horizontal > .ant-menu-item-open, .ant-menu-horizontal > .ant-menu-submenu-open, .ant-menu-horizontal > .ant-menu-item-selected, .ant-menu-horizontal > .ant-menu-submenu-selected{
+    border-bottom: none !important;
+  }
+  .page-head {
+    .title {
+      font-weight: 600;
+      font-size: 24px;
+      line-height: 32px;
+      text-align: center;
+      display: inline-block;
+      vertical-align: middle;
+      padding-right: 10px;
+      z-index: 2;
+      padding-left: 15px;
+      position: relative;
+    }
+    .buttons {
+      &:hover {
+        background: #1B2028;
+      }
+    }
+  }
+  .card {
+    .card-body {
+      row-gap: 5px;
+      width: 600px !important;
+      background: none;
+      > .fs-container{
+        text-align: center;
+      }
+    }
+  }
+  .lp-icons {
+    .icons {
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  .ant-menu-horizontal,
+  .ant-layout-header,
+  .ant-layout-footer {
+    background:#01033C !important;
+  }
+  .ant-layout-content {
+    background:#01033C !important;
   }
 }
 </style>

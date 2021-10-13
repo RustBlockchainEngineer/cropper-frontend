@@ -3,14 +3,14 @@
 
     <div class="btncontainer" v-if="!wallet.connected" ghost @click="$accessor.wallet.openModal">
     <Button>
-      <Icon type="wallet" />
+      <img src="@/assets/icons/wallet.svg" style="margin: 0 10px"/>
       Connect
     </Button>
     </div>
 
     <div class="btncontainer" v-else ghost @click="$accessor.wallet.openModal">
     <Button>
-      <Icon type="wallet" />
+      <img src="@/assets/icons/wallet.svg" style="margin: 0 10px"/>
       {{ wallet.address.substr(0, 4) }}
       ...
       {{ wallet.address.substr(wallet.address.length - 4, 4) }}
@@ -26,8 +26,8 @@
     >
       <div v-if="!wallet.connected" class="select-wallet">
         <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
-          <span>{{ name }}</span>
           <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
+          <span>{{ name }}</span>
         </Button>
       </div>
       <div v-else class="wallet-info">
@@ -540,10 +540,11 @@ export default class Wallet extends Vue {
   display: inline-flex;
   align-items: center;
 }
-
+.ant-modal {
+  width: 700px !important;
+}
 .ant-modal-content {
-  background-color: #01033C;
-
+  background-color: #0E1046;
   .ant-modal-close {
     color: @text-color;
   }
@@ -593,10 +594,12 @@ header .btncontainer {
   }
 
   .ant-modal-header{
-    background-color: #01033C;
+    background-color: #0E1046;
+    display: flex;
+    justify-content: space-between;
   }
   .ant-modal-title{
-    background-color: #01033C;
+    background-color: #0E1046;
     text-align:center
   }
 
@@ -609,7 +612,7 @@ header .btncontainer {
 
 
   button.ant-btn-background-ghost{
-    background-color: #2D3139 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
     border: none !important;
   }
 
