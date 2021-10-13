@@ -1199,12 +1199,22 @@ export default Vue.extend({
           }
           if(txStatus === "Fail"){
             console.log("unstake transaction failed")
+            this.unstaking = false
+            this.unstakeModalOpening = false
             return;
           }
+
+          //update wallet token account infos
+          this.$accessor.wallet.getTokenAccounts();
+          let delayForUpdate = 1000;
+          await this.delay(delayForUpdate);
+          
           let value = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`)
           value = value.wei.toNumber() / Math.pow(10,value.decimals);
           if(value <= 0){
             console.log("remove lp amount is 0")
+            this.unstaking = false
+            this.unstakeModalOpening = false
             return;
           }
           value = value.toString();
