@@ -4,6 +4,18 @@
   width: 8px;
 }
 
+@font-face {
+  font-family: "Gilroy";
+  src: local("Gilroy"),
+   url(../assets/fonts/Gilroy/Gilroy-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: bold;
+  src: local("Gilroy"),
+   url(../assets/fonts/Gilroy/Gilroy-Bold.ttf) format("truetype");
+}
 
 .ant-progress-circle-path { stroke: #13ECAB !important }
 
@@ -16,15 +28,32 @@
   border-radius: 10px;
 }
 
+body {
+  font-family: Gilroy, sans-serif !important;
+}
+
 .container {
   margin: 0 auto;
   padding: 24px;
-  max-width: 530px;
+  min-width: 530px;
+  font-family: Gilroy, sans-serif;
+  font-style: normal;
+  font-weight: normal;
 }
 
-
 .ant-progress{
-  background:#1B2028 !important;
+  background:#01033C !important;
+}
+
+.ant-modal-content{
+  border-radius:15px !important;
+}
+
+.ant-modal-header{
+  border-bottom:unset !important;
+}
+.ant-modal-body{
+  padding-top:0 !important;
 }
 
 .flex {
@@ -48,8 +77,7 @@ a{
 }
 
 .ant-menu-horizontal > .ant-menu-item:hover, .ant-menu-horizontal > .ant-menu-submenu:hover, .ant-menu-horizontal > .ant-menu-item-active, .ant-menu-horizontal > .ant-menu-submenu-active, .ant-menu-horizontal > .ant-menu-item-open, .ant-menu-horizontal > .ant-menu-submenu-open, .ant-menu-horizontal > .ant-menu-item-selected, .ant-menu-horizontal > .ant-menu-submenu-selected{
-    color: #13ECAB !important;
-    border-bottom: 2px solid #13ECAB !important;
+    color: white !important;
 }
 
 .ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected{
@@ -75,35 +103,37 @@ a{
   position:relative;
 
   .title {
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 80px;
     text-align: center;
     display: inline-block;
     vertical-align: middle;
-    padding-right: 10px;
     z-index: 2;
-    background: #1B2028;
-    padding-left: 15px;
+    background: #01033C;
     position: relative;
   }
-
-  &::after{
-    content: '';
-    width: 100%;
-    position: absolute;
-    height: 1px;
-    background: #444A58;
-    left: 0;
-    top: 50%;
-    z-index: 1;
+  
+  @media screen and (max-width: 1024px) {
+    .title {
+      font-weight: 700;
+      font-size: 56px;
+      line-height: 70px;
+    }
   }
 
+  @media screen and (max-width: 768px) {
+    .title {
+      font-weight: 600;
+      font-size: 48px;
+      line-height: 60px;
+    }
+  }
+  
   .buttons {
     display: flex;
     vertical-align: middle;
     padding-right: 15px;
-    background: #1B2028;
     z-index: 2;
     position: relative;
 
@@ -128,7 +158,7 @@ a{
       cursor: pointer;
 
       &:hover {
-        background: #1B2028;
+        background: #01033C;
       }
     }
     a {
@@ -144,7 +174,7 @@ a{
     grid-auto-rows: auto;
     row-gap: 12px;
     padding: 37px;
-    background-color: #1B2028;
+    background-color: #01033C;
     opacity: 1;
     border-radius: 0;
 
@@ -152,7 +182,7 @@ a{
       display: unset;
       align-items: unset;
       justify-content: unset;
-      text-align: center;
+      text-align: left;
     }
 
     .buttons{
@@ -183,16 +213,21 @@ a{
 
     img {
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
     }
   }
+}
+
+.ant-layout-header,
+.ant-layout-footer {
+  padding: 24px 120px !important;
 }
 
 .ant-menu-horizontal,
 .ant-layout-header,
 .ant-layout-footer{
-  background:#000 !important;
+  background:#01033C !important;
 }
 
 .nofooter .ant-modal-footer{
@@ -205,7 +240,31 @@ a{
 
 .ant-tooltip-inner {
   display: inline-block;
-  background: #1B2028 !important;
+  background: linear-gradient(295.75deg, #21BDB8 -53.35%, #280684 100%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 8px !important;
+  padding: 15px !important;
+  font-size: 14px;
+  line-height: 16px;
+  color: #FFFFFF50 !important;
+  width: 200px;
+
+  span {
+    font-size: 26px;
+    line-height: 31px;
+    color: #FFF;
+  }
+
+  hr {
+    border: 1px solid #FFFFFF20;
+  }
+  
+  .tooltip-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   p {
     margin-bottom: 8px;

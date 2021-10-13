@@ -1,9 +1,9 @@
 <template>
   <div>
 
-    <div  class="fertilizeruniq cont">
+    <div  class="fertilizeruniq cont" v-if="initialized">
 
-      <div v-for="farm in showFarms" :key="farm.farmInfo.poolId" slot="header" class="pf-record" :class="isMobile ? 'is-mobile card' : ' card'" :gutter="0">
+      <div v-for="farm in labelizedAmms" :key="farm.ammId" slot="header" class="pf-record" :class="isMobile ? 'is-mobile card' : ' card'" :gutter="0">
        
        <TwitterRetweetReg
         :farm="farm"
@@ -16,87 +16,130 @@
 
        <div class="card-body" style="grid-row-gap: 0; row-gap: 0; padding-bottom: 15px">
 
+          <div class="followerscount"><img src="@/assets/right-user.png" width="28" height="26" /> Follower <span>{{followerCount}}</span> </div>
+
           <Row class="full-border">
             <Col :span="24" class="">
               <div>
-                <img width="100%" :src="farm.labelized.links.banner" />
+                <img width="100%" :src="farm.links.banner" />
               </div>
             </Col>
           </Row>
 
-          <Row class="full-border ">
-            <Col :span="24" class="">
-              <div class="text-center">
-                  <h1>{{farm.labelized.name}} 
-                  <span class="icons">
-                    <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
-                    <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
-                  </span></h1>
-              </div>
-            </Col>
-          </Row>
 
           <Row class="full-border pf-margin-top pf-padding-top"  :span="isMobile ? 24 : 12">
             <Col :span="isMobile ? 24 : 12" class="notstep">
 
-              <div class="desc"></div>
+              <div class="modTitle">
+                <span class="icons">
+                  <CoinIcon :mint-address="farm.tokenA.mint" />
+                  <CoinIcon :mint-address="farm.tokenB.mint" />
+                </span>
 
-              <div class="followerscount">{{followerCount}} followers</div>
-
-              <div class="rewardAmount">Total Airdrop allocated : <b>{{farm.labelized.airdrop.amount}} {{farm.labelized.airdrop.symbol}}</b></div>
-
-              <div class="airdropInfo">{{farm.labelized.airdrop.info}}</div>
+                {{farm.tokenA.symbol}} - {{farm.tokenB.symbol}}
+              </div>
 
 
-              <div class="text-center largepdding">
+              <div class="walContent">
+                <div class="rewardAmount"><span>Total Airdrop allocated :</span> <b>{{farm.airdrop.amount}} {{farm.airdrop.symbol}}
+                  <CoinIcon :mint-address="farm.airdrop.mint" /></b></div>
 
-                  <div v-if="!wallet.connected" class="btncontainer">
-                    <Button
-                      size="large"
-                      ghost
-                      class="button_div"
-                      style="z-index: 999; width: 100%"
-                      @click="$accessor.wallet.openModal"
-                    >
-                      Connect wallet
-                    </Button>
+
+                <div class="rewardNFT" v-if="farm.nft_airdrop"><span>{{farm.nft_airdrop.info}} </span>
+                  <b v-for="nft in farm.nft_airdrop.list" :key="nft.picto"><img :src="nft.picto" /> {{nft.info}}</b></div>
+
+                <div class="airdropInfo"><img src="@/assets/info.png" width="22" height="22" /> {{farm.airdrop.info}}</div>
+
+                <div class="infoTickets" v-if="farm.pla_end_ts > currentTimestamp && isRegistered">
+                  You’ve well registered into the whithelist.<br />
+                  You have {{registeredDatas.submit}} lottery ticket{{registeredDatas.submit > 1 ? 's' : ''}} !
+                </div>
+                <div class="infoTickets" v-else-if="farm.pla_end_ts < currentTimestamp && isRegistered">
+
+                    <span v-if="farm.airdrop.status == 'lottery'" >
+                      You’ve well registered into the whithelist.<br />
+                      You have {{registeredDatas.submit}} lottery ticket{{registeredDatas.submit > 1 ? 's' : ''}} !
+                    </span>
+                    <span v-else-if="registeredDatas.won == 0 && registeredDatas.won_nft == 0" >
+                      You have {{registeredDatas.won}}/{{registeredDatas.submit}} winning ticket{{registeredDatas.won > 1 ? 's' : ''}}<br/>
+                    </span>
+                    <span v-else-if="registeredDatas.won" >
+                      Congratulation! Airdrop winner
+                      <div class="airdropWinner">{{farm.airdrop.singleValue}} {{farm.airdrop.symbol}} <CoinIcon :mint-address="farm.airdrop.mint" /></div>
+                    </span>
+                    <span v-else-if="registeredDatas.won_nft" >
+                      Congratulation! NFT winner
+                      <div class="nftWinner"><img :src="registeredDatas.won_nft" /> x1</div>
+                    </span>
+
+                </div>
+              </div>
+
+
+
+              <div class="text-center">
+
+                  <div class="largepdding" v-if="!wallet.connected"> 
+                    <div class="btncontainer">
+                      <Button
+                        size="large"
+                        ghost
+                        class="button_div"
+                        style="z-index: 999; width: 100%"
+                        @click="$accessor.wallet.openModal"
+                      >
+                        Connect wallet
+                      </Button>
+                    </div>
                   </div>
 
-                  <div v-else-if="farm.labelized.pla_ts > currentTimestamp && !followed">
-                    <div class="info">The registration hasn't started yet</div>
-                    <div class="share">
+                  <div v-else-if="farm.pla_ts > currentTimestamp && !followed" class="largepdding">
+                    <div class="share text-center">
                         <div class="btncontainer">
                           <Button
                             size="large"
                             ghost
                             class="button_div"
                             style="z-index: 999; width: 100%"
-                            @click="startFollow('https://api.cropper.finance/pfo/follow/?spl='+ $accessor.wallet.address +'&farmId='+ farm.labelized.pfarmID)"
+                            @click="startFollow('https://api.cropper.finance/pfo/follow/?spl='+ $accessor.wallet.address +'&farmId='+ farm.pfarmID)"
                           >
-                            Follow
+                             + Follow
                           </Button>
                         </div>
 
                     </div>
                   </div>
-                  <div v-else-if="farm.labelized.pla_ts > currentTimestamp && followed">
-                    <div class="info">The registration hasn't started yet</div>
-                    <div class="share">
+                  <div v-else-if="farm.pla_ts > currentTimestamp && followed" class="largepdding">
+                    <div class="share text-center">
 
                       You are following this project
 
                     </div>
                   </div>
 
-                  <div v-else-if="farm.labelized.pla_end_ts > currentTimestamp && isRegistered">
-                    <div class="info">You have {{registeredDatas.submit}} ticket{{registeredDatas.submit > 1 ? 's' : ''}} !</div>
+                  <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
                     <div class="share">
-                    Share your Referral link and earn more tickets
-                    <input type="text" class="link" :value="shareWalletAddress" />
+                    Share your referal link to earn more lottery ticket
+
+                    <div class="inputContent">
+                      <button class="submitbutton" @click="copyToClipboard()">Copy</button>
+                      <input type="text" class="twlink" :value="shareWalletAddress" />
+                    </div>
+
+                    <a :href="tgShareAdress" target="_blank" class="sharer">
+                      <img src="@/assets/icons/telegram.svg" height="39" width="39" />
+                    </a>
+
+                    <a :href="twShareAdress" target="_blank" class="sharer">
+                      <img src="@/assets/icons/twitter.svg" height="39" width="39" />
+                    </a>
+
+
                     </div>
                   </div>
 
-                  <div v-else-if="farm.labelized.pla_end_ts > currentTimestamp" class="btncontainer">
+                  <div v-else-if="farm.pla_end_ts > currentTimestamp" class="largepdding">
+                  <div class="btncontainer">
                     <Button
                       size="large"
                       ghost
@@ -104,27 +147,25 @@
                       style="z-index: 999; width: 100%"
                       @click="startRegistering()"
                     >
-                      Register to whitelist
+                      + Register for Whitelist
                     </Button>
                   </div>
-                  <div v-else-if="farm.labelized.pla_end_ts < currentTimestamp && !isRegistered">
+                  </div>
+                  <div v-else-if="farm.pla_end_ts < currentTimestamp && !isRegistered" class="airdropStatus">
                     You did not participate, please wait for the public opening
                   </div>
-                  <div v-else-if="farm.labelized.pla_end_ts < currentTimestamp">
-                    <span v-if="farm.labelized.airdrop.status == 'lottery'" >
-                      You have {{registeredDatas.submit}} ticket{{registeredDatas.submit > 1 ? 's' : ''}}<br/>
+                  <div v-else-if="farm.pla_end_ts < currentTimestamp" class="airdropStatus">
+                    <span v-if="farm.airdrop.status == 'lottery'" >
                       Lottery in progress...
                     </span>
-                    <span v-else-if="farm.labelized.airdrop.status == 'in progress'" >
-                      You have {{registeredDatas.won}}/{{registeredDatas.submit}} winning ticket{{registeredDatas.won > 1 ? 's' : ''}}<br/>
-                      Airdrop in progress...
+                    <span v-else-if="farm.airdrop.status == 'in progress'" >
+                      Prize distribution in progress...
                     </span>
-                    <span v-else-if="farm.labelized.airdrop.status == 'done'" >
-                      You have {{registeredDatas.won}}/{{registeredDatas.submit}} winning ticket{{registeredDatas.won > 1 ? 's' : ''}}<br/>
-                      Airdrop done
+                    <span v-else-if="farm.airdrop.status == 'done'" >
+                      Prize distribution complete
                     </span>
                   </div>
-                  <div v-else-if="farm.labelized.pfrom_ts < currentTimestamp">
+                  <div v-else-if="farm.pfrom_ts < currentTimestamp">
                     <h1>
                       You can use below farm now.
                     </h1>
@@ -134,21 +175,35 @@
 
             </Col>
             <Col :span="isMobile ? 24 : 12" :class="isMobile ? ' steps' : 'steps'">
-                <div :class="farm.labelized.pla_ts < currentTimestamp ? 'done' : 'notdone' " >
-                    Whitelist - You can register to the whitelist and earn lottery tickets.<br />
-                    <div class="date">{{farm.labelized.pla}}</div>
+
+                <div class="done" >
+                    <span class="span first"><img src="https://cropper.finance/distant/check-one.png?t=1" alt=""></span>
+                   <div><b class="t">Initialisation</b> - This project is in preparation phase. Stay tuned.</div>
                 </div>
-                <div :class="farm.labelized.pla_end_ts < currentTimestamp ? 'done' : 'notdone' ">
-                    Airdrop Lottery - See if you have any winning lottery tickets.<br/>
-                    <div class="date">{{farm.labelized.pla_end}}</div>
+
+                <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone' " >
+                    <span v-if="farm.pla_ts > currentTimestamp">2</span>
+                    <span v-else class="span"><img src="https://cropper.finance/distant/check-one.png?t=1" alt=""></span>
+                    <div><b class="t">Withelist</b> - You can now whitelist yourself for the lottery.<br />
+                    <div class="date"> {{farm.pla}} </div></div>
                 </div>
-                <div :class="farm.labelized.pfrom_ts < currentTimestamp ? 'done' : 'notdone' ">
-                    Private Farm opened - You can now use Farm {{farm.farmInfo.lp.coin.symbol}}-{{farm.farmInfo.lp.pc.symbol}}.<br/>
-                    <div class="date">{{farm.labelized.pfrom}}</div>
+                <div :class="farm.pla_end_ts < currentTimestamp ? 'done' : 'notdone' ">
+                    <span v-if="farm.pla_end_ts > currentTimestamp">3</span>
+                    <span v-else class="span"><img src="https://cropper.finance/distant/check-one.png?t=1" alt=""></span>
+                    <div><b class="t">Airdrop Lottery</b> - See if you have any winning lottery tickets.<br/>
+                    <div class="date"> {{farm.pla_end}} </div></div>
                 </div>
-                <div :class="farm.labelized.pto_ts < currentTimestamp ? 'done' : 'notdone' ">
-                    The farm goes public<br/>
-                    <div class="date">{{farm.labelized.pto}}</div>
+                <div :class="farm.pfrom_ts < currentTimestamp ? 'done' : 'notdone' ">
+                    <span v-if="farm.pfrom_ts > currentTimestamp">4</span>
+                    <span v-else class="span"><img src="https://cropper.finance/distant/check-one.png?t=1" alt=""></span> 
+                    <div><b class="t">Private Farm</b> - You can now stack LP in {{farm.tokenA.symbol}}-{{farm.tokenB.symbol}} farm.<br/>
+                    <div class="date"> {{farm.pfrom}} </div></div>
+                </div>
+                <div :class="farm.pto_ts < currentTimestamp ? 'done' : 'notdone' ">
+                    <span v-if="farm.pto_ts > currentTimestamp">5</span>
+                    <span v-else class="span"><img src="https://cropper.finance/distant/check-one.png?t=1" alt=""></span>
+                    <div><b class="t">Public Farm</b> - {{farm.tokenA.symbol}}-{{farm.tokenB.symbol}} farm goes public<br/>
+                    <div class="date"> {{farm.pto}} </div></div>
                 </div>
             </Col>
           </Row>
@@ -413,7 +468,7 @@ export default Vue.extend({
   data() {
     return {
       isMobile: false,
-
+      ammId : '',
       farms: [] as any[],
       showFarms:[] as any[],
       searchName:"",
@@ -425,6 +480,8 @@ export default Vue.extend({
       isRegistered: false,
       registeredDatas: false,
       shareWalletAddress: '',
+      twShareAdress: '',
+      tgShareAdress: '',
       rewardCoin: null,
       farmInfo: null as any,
       harvesting: false,
@@ -443,7 +500,9 @@ export default Vue.extend({
       currentTimestamp: 0,
       tempInfo:null as any,
       stakeLPError : false,
+      initialized : false,
       labelizedAmms:{} as any,
+      nbFarmsLoaded: 0,
       certifiedOptions:[{value:0,label:"Labelized"},{value:1,label:"Permissionless"},{value:2,label:"All"}],
       lifeOptions:[{value:0,label:"Opened"},{value:1,label:"Future"},{value:2,label:"Ended"},{value:3,label:"All"}],
       searchCertifiedFarm:0,
@@ -469,24 +528,20 @@ export default Vue.extend({
   watch: {
     'wallet.tokenAccounts': {
       handler(newTokenAccounts: any) {
+       // this.updateFarms()
         this.updateCurrentLp(newTokenAccounts)
       },
       deep: true
     },
 
-    'farm.infos': {
-      handler() {
-        this.updateFarms()
+    'wallet.address' : {
+      handler(newTokenAccounts: any) {
+       this.updateFarms()
       },
       deep: true
+
     },
 
-    'farm.stakeAccounts': {
-      handler() {
-        this.updateFarms()
-      },
-      deep: true
-    },
     showCollapse: {
       handler() {
         if (!this.poolType && this.showCollapse.length > 0) {
@@ -504,6 +559,7 @@ export default Vue.extend({
   },
 
   mounted() {
+
     this.updateFarms()
 
     var hash = window.location.hash;
@@ -515,10 +571,14 @@ export default Vue.extend({
       this.searchName = query.get('s') as string;
     }
 
-    if(this.searchName){
-      this.searchCertifiedFarm = 2;
-      this.searchLifeFarm = 3;
-    }
+    let timer = setInterval(async () => {
+      if (this.nbFarmsLoaded == Object.keys(this.labelizedAmms).length) {
+        this.initialized = true
+      }
+
+    }, 1000)
+
+
   },
 
   methods: {
@@ -540,9 +600,16 @@ export default Vue.extend({
         }
       }
     },
+    copyToClipboard(){
+      var textField = document.createElement('textarea')
+      textField.innerText = this.shareWalletAddress
+      document.body.appendChild(textField)
+      textField.select()
+      document.execCommand('copy')
+      textField.remove()
+    },
     startRegistering(){
         this.registerTwitterRetweet = true;
-        this.updateFarms();
     },
     async startFollow(u: any){
         let responseData
@@ -559,9 +626,12 @@ export default Vue.extend({
         }
     },
     TokenAmount,
+
     async updateLabelizedAmms()
     {
+      const query = new URLSearchParams(window.location.search);
       this.labelizedAmms = {};
+      let responseData2 = {};
       let responseData
       try{
         responseData = await fetch(
@@ -573,11 +643,37 @@ export default Vue.extend({
         responseData = [{"ammID":"ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF","labelized":true},{"ammID":"8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo","labelized":true}]
       }
       finally{
-        responseData.forEach((element:any) => {
-          this.labelizedAmms[element.ammID] = element;
+        responseData.forEach(async (element:any) => {
+
+          if(element.pfo == true){
+
+            if(query.get('f') && element.slug == query.get('f')){
+              element.calculateNextStep = 'Bla bla bla'
+              this.ammId = element.ammID
+              this.labelizedAmms[element.ammID] = element;
+              try{
+                responseData2 = await fetch(
+                  'https://api.cropper.finance/pfo/?farmId='+ this.labelizedAmms[element.ammID].pfarmID + '&t='+ Math.round(moment().unix()/60)
+                ).then(res => res.json());
+              }
+              catch{
+              }
+              finally{
+                this.labelizedAmms[element.ammID]['followers'] = Object.keys(responseData2).length;
+                this.followerCount = Object.keys(responseData2).length;
+
+
+                //this.labelizedAmms[element.ammID].twitterShare = `http://twitter.com/share?text=Earn ${this.labelizedAmms[element.ammID].tokenA.symbol} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${this.labelizedAmms[element.ammID].tokenA.symbol},${this.labelizedAmms[element.ammID].tokenB.symbol},yieldfarming,Solana`
+
+                    document.title = 'Fertilizer - CropperFinance x ' + element.name ;
+
+                this.nbFarmsLoaded++;
+              }
+            }
+          }
+
         });
       }
-
     },
 
     async updateFarms() {
@@ -672,15 +768,15 @@ export default Vue.extend({
           let labelized = false;
           if(lp){
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-            if(this.labelizedAmms[liquidityItem.ammId]){
-              labelized = this.labelizedAmms[liquidityItem.ammId];
+            if(this.labelizedAmms[newFarmInfo.poolId]){
+              labelized = this.labelizedAmms[newFarmInfo.poolId];
               if(labelized){
-                if(this.labelizedAmms[liquidityItem.ammId].pfo == true && newFarmInfo.poolId == this.labelizedAmms[liquidityItem.ammId].pfarmID){       
+                if(this.labelizedAmms[newFarmInfo.poolId].pfo == true && newFarmInfo.poolId == this.labelizedAmms[newFarmInfo.poolId].pfarmID){       
                   const query = new URLSearchParams(window.location.search);
-                  if(query.get('f') && this.labelizedAmms[liquidityItem.ammId].slug == query.get('f')){
+                  if(query.get('f') && this.labelizedAmms[newFarmInfo.poolId].slug == query.get('f')){
                     isPFO = true;
 
-                    newFarmInfo.twitterShare = `http://twitter.com/share?text=Earn ${newFarmInfo.reward.name} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${newFarmInfo.lp.coin.symbol},${newFarmInfo.lp.pc.symbol},yieldfarming,Solana`
+                     newFarmInfo.twitterShare = `http://twitter.com/share?text=Earn ${newFarmInfo.reward.name} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${newFarmInfo.lp.coin.symbol},${newFarmInfo.lp.pc.symbol},yieldfarming,Solana`
 
 
                     farms.push({
@@ -689,12 +785,12 @@ export default Vue.extend({
                       farmInfo: newFarmInfo
                     })
 
-                    document.title = 'Fertilizez - CropperFinance x ' + this.labelizedAmms[liquidityItem.ammId].name ;
+                    document.title = 'Fertilizer - CropperFinance x ' + this.labelizedAmms[newFarmInfo.poolId].name ;
 
                     let responseData
                     try{
                       responseData = await fetch(
-                        'https://api.cropper.finance/pfo/?farmId='+ this.labelizedAmms[liquidityItem.ammId].pfarmID + '&t='+ Math.round(moment().unix()/60)
+                        'https://api.cropper.finance/pfo/?farmId='+ this.labelizedAmms[newFarmInfo.poolId].pfarmID + '&t='+ Math.round(moment().unix()/60)
                       ).then(res => res.json());
                     }
                     catch{
@@ -704,29 +800,52 @@ export default Vue.extend({
                         if(responseData[this.wallet.address].submit > 0){
                           this.isRegistered = true;
                           this.registeredDatas = responseData[this.wallet.address];
-                          this.shareWalletAddress = "http://cropper.finance/fertilizer/project/?f=" + this.labelizedAmms[liquidityItem.ammId].slug + "&r=" + this.wallet.address;
+                          this.shareWalletAddress = "http://cropper.finance/fertilizer/project/?f=" + this.labelizedAmms[newFarmInfo.poolId].slug + "&r=" + this.wallet.address;
+
                         }
 
                         this.followed = true;
                         
                       }
-
                       this.followerCount = Object.keys(responseData).length;
                     }
-
 
                   }
                 }
               }
             }
           }
-
-        }
-        
+        } 
       }
 
 
 
+      let responseData
+      try{
+        responseData = await fetch(
+          'https://api.cropper.finance/pfo/?farmId='+ this.labelizedAmms[this.ammId].pfarmID + '&t='+ Math.round(moment().unix()/60)
+        ).then(res => res.json());
+      }
+      catch{
+      }
+      finally{
+        if(responseData[this.wallet.address]){
+          if(responseData[this.wallet.address].submit > 0){
+            this.isRegistered = true;
+            this.registeredDatas = responseData[this.wallet.address];
+            console.log(this.registeredDatas);
+            this.shareWalletAddress = "http://cropper.finance/fertilizer/project/?f=" + this.labelizedAmms[this.ammId].slug + "&r=" + this.wallet.address;
+            let shareWalletAddressEsc = "http://cropper.finance/fertilizer/project/?f=" + this.labelizedAmms[this.ammId].slug + "%26r=" + this.wallet.address;
+
+            this.twShareAdress = `http://twitter.com/share?text=Register for whishlist ${document.title}&url=${shareWalletAddressEsc} &hashtags=${this.labelizedAmms[this.ammId].tokenA.symbol},${this.labelizedAmms[this.ammId].tokenB.symbol},fertilizer,Solana,Airdrop`
+
+            this.tgShareAdress = `https://telegram.me/share/url?text=Register for whishlist ${document.title}&url=${shareWalletAddressEsc} `
+
+          }
+          this.followed = true; 
+        }
+        this.followerCount = Object.keys(responseData).length;
+      }
 
       this.farms = farms.sort((a: any, b: any ) => (b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue));
       this.endedFarmsPoolId = endedFarmsPoolId
@@ -1358,7 +1477,7 @@ export default Vue.extend({
     border-bottom:none !important;
     position:relative;
     margin:0 10px 20px 10px;
-    background:#1B2028;
+    background:#01033C;
 
     .banner{
       height:100px;
@@ -1385,6 +1504,7 @@ export default Vue.extend({
       text-align: left;
       font-weight: bold;
       font-size: 17px;
+      margin:16px;
     }
 
     .ant-col{
@@ -1399,7 +1519,7 @@ export default Vue.extend({
       z-index:2;
       left:50%;
       position:absolute;
-      background:#000;
+      background:#01033C;
       transform:translate(-50%,-50%)
     }
 
@@ -1423,7 +1543,7 @@ export default Vue.extend({
 <style lang="less">
 
 .text-center{
-  text-align:center
+  text-align:center !important
 }
 
 .fertilizeruniq {
@@ -1433,9 +1553,88 @@ export default Vue.extend({
       font-size:30px;
   }
 
+
+div.inputContent{
+  background: #09B17F;
+  padding: 2px;
+  display: inline-block;
+  border-radius: 5px;
+  margin-top:3px;
+
+  .twlink{
+    border:none;
+    padding:9px 10px;
+    border-radius:5px 0 0 5px;
+    background:#01033C;
+    width: 293px; 
+  }
+
+  .submitbutton{
+    border:none;
+    padding:9px 10px;
+    border-radius:5px;
+    margin-right:5px;
+    background:#09B17F;
+    cursor:pointer;
+  }
+}
+
+  .airdropStatus{
+    font-weight: 500;
+    font-size: 21px;
+    line-height: 25px;
+    margin-top:29px;
+  }
+
   .info{
     font-weight: bold;
     padding: 20px;
+  }
+
+  .modTitle{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 37px;
+  }
+
+  .walContent{
+    background: #000;
+    border-radius: 13px;
+    margin-top:9px;
+    padding:16px 12px;
+  }
+
+  .airdropWinner{
+    color:#13ECAB;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    img{
+      margin-left: 10px;
+      border-radius:50%;
+      width:20px;
+      position:relative;
+      top:-3px;
+    }
+  }
+
+  .nftWinner{
+    color:#13ECAB;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    img{
+      margin-left: 10px;
+      border-radius:50%;
+      width:51px;
+      position:relative;
+      top:-3px;
+    }
   }
 
   input.link{
@@ -1447,40 +1646,212 @@ export default Vue.extend({
     border: none;
     margin-top: 5px;
   }
+  
+  .text-center{
+    text-align:center;
+  } 
+
+  .largepdding{
+    padding-top:55px;
+  }
+
+   .followerscount span{
+      color:#13ECAB
+    }
+
+   .followerscount img{
+      position:relative;
+      top:-3px;
+    }
+
+    .share{
+    text-align:left;
+    margin-top:10px;
+    font-size: 16px;
+    line-height: 19px;
+    }
 
   .steps > div{
-    border:1px solid #ccc;
-    border-radius:5px;
-    padding:5px 10px;
-    margin:10px 30px;
+    background:#01033C;
+    border-radius:6px;
+    margin:10px 30px 10px 90px;
+    padding:0 11px;
+    height:59px;
+    position:relative;
+
+    & > .span{
+      position:absolute;
+      left: -60px;
+      top: 50%;
+      height: 37px;
+      transform:translate(0, -50%);
+      &:not(.first)::before{
+        content: '';
+        width: 2px;
+        background: #09B17F;
+        height: 26px;
+        left: 17.5px;
+        display: inline-block;
+        position: absolute;
+        top: -29px;
+      }
+    }
+
+    & > span:not(.span){
+      position:absolute;
+      left: -60px;
+      top: 50%;
+      transform:translate(0, -50%);
+      color: #C6C6C6;
+      border: #C6C6C6 3px solid;
+      border-radius: 50%;
+      text-align: center;
+      width: 37px;
+      height: 37px;
+      line-height: 30px;
+      display: inline-block;
+      font-weight: normal;
+      font-size: 18px;
+      &::before{
+        content: '';
+        width: 2px;
+        background: #C6C6C6;
+        height: 26px;
+        left: 13.5px;
+        display: inline-block;
+        position: absolute;
+        top: -32px;
+      }
+    }
+
+    &.done{
+      background: #09B17F;
+      .date{
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 19px;
+      }
+    }
+  }
+
+  .done > div {
+    color:#fff !important
+  }
+
+  .steps > div:not(.done) div.date{
+    font-weight: 400;
+    font-size: 14px;
+    background: #47A3D5;
+    border-radius: 10.5px;
+    height: 21px;
+    line-height: 21px;
+    display: inline-block;
+    color: #fff;
+    padding: 0 10px !important;
+    margin-top: 3px;
+  }
+
+  .steps > div > div{
+    font-style: normal;
+    font-size: 14px;
+    line-height: 16px;
+    color: #C6C6C6;
+    position:absolute;
+    font-weight:300;
+    top:50%;
+    transform:translate(0, -50%);
+
+    .t{
+      font-weight:400
+    }
+
   }
 
   .followerscount{
     font-size:24px;
+    margin:16px;
+
   }
 
-  .airdropInfo,
-  .rewardAmount{
-    font-size:20px;
-  }
-
-
-  .notdone{
-    opacity:.7;
-  }
-
-  .done:last-of-type{
-    font-weight:bold;
-  }
-
-  .icons{
-    margin-left:20px
+  .sharer{
+    float:right;
+    margin-left:12px;
   }
 
   .icons img{
-    max-width:40px;
+    max-width:43px;
+    margin-right:4px;
     margin-bottom:10px;
+    border-radius:50%;
   }
+
+  .rewardNFT,
+  .rewardAmount{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+    margin-bottom:25px;
+  }
+
+  .airdropInfo{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 16px;
+    color: #FFF;
+  }
+
+  .infoTickets{
+    font-weight: 500;
+    font-size: 21px;
+    line-height: 25px;
+    color: #FFF;
+    text-align:center;
+    margin-top:14px;
+  }
+
+  .rewardAmount b {
+    float:right;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    color: #13ECAB;
+
+    img{
+      max-width:20px;
+      border-radius:50%;
+      position:relative;
+      top:-2px;
+      margin-left:10px;
+    }
+  }
+
+  .rewardNFT b{
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    color: #13ECAB;
+    margin-right:15px;
+
+    img{
+      max-width:33px;
+      border-radius:50%;
+      position:relative;
+      top:-2px;
+      margin-left:10px;
+    }
+
+  }
+
+
+
+  .done{
+    background: #09B17F;
+    color:#fff;
+  }
+
+
 
   .page-head .title{
     position: absolute;
@@ -1529,13 +1900,17 @@ export default Vue.extend({
     margin: 10px auto;
     padding: 2px;
     border-radius: 30px;
-    max-height: 50px;
+    max-height: 65px;
 
     button{
-      background:#000 !important;
+      background:#01033C !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;
+
+      &.button_div{
+        padding: 10px 20px;
+      }
     }
 
   }
@@ -1560,7 +1935,7 @@ export default Vue.extend({
   }
 
 main{
-  background-color:#000;
+  background-color:#01033C;
   background-image:unset;
   background-size:cover;
   background-position:center bottom;
@@ -1595,7 +1970,7 @@ main{
     text-align: right;
 }
 .pf-record{
-    background-color: #000;
+    background-color:#01033C;
     border-bottom: 1px solid #d9d9d9;
 
     .pf-record-content{
@@ -1621,7 +1996,7 @@ main{
 
 .farm.container {
   max-width: 1200px;
-  background: #1B2028;
+  background: #01033C;
   margin-top:20px;
   margin-bottom:20px;
 
@@ -1629,7 +2004,7 @@ main{
   .page-head a{
     z-index: 2;
     padding-left: 15px;
-    background: #1b2028;
+    background: #01033C;
     position: absolute;
     right: 0;
 
@@ -1641,7 +2016,7 @@ main{
   .card {
     .card-body {
       padding: 0;
-      background:#000;
+      background:#01033C;
       overflow-x: scroll;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -1764,6 +2139,40 @@ main{
     margin-bottom: 0;
   }
 }
+
+@media (max-width: 700px){
+  .fertilizeruniq .notstep,
+  .fertilizeruniq .steps,
+  .fertilizeruniq .twlink{
+  width:100%;
+  }
+  .rewardAmount > span,
+  .rewardNFT > span{
+    display:block;
+    margin-top:5px;
+    margin-bottom:5px;
+  }
+
+.fertilizeruniq .rewardAmount b {
+    float: unset;
+}
+
+.fertilizeruniq .rewardNFT b {
+    float: unset;
+    white-space:nowrap
+}
+
+ .fertilizeruniq div.inputContent{
+    margin-bottom:5px;
+    width:100%;
+
+ }
+
+ .fertilizeruniq div.inputContent .twlink{
+    width: calc(100% - 80px);
+  }
+}
+
 </style>
 
 

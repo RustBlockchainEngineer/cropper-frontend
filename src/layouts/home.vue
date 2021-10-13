@@ -13,6 +13,6 @@ export default class Home extends Vue {}
 
 <style lang="less">
 .home-container-background {
-  background-color: #000;
+  background-color:#01033C;
 }
 </style>

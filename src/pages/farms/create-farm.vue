@@ -1066,10 +1066,10 @@ export default class CreatePool extends Vue {
     margin: 10px auto;
     padding: 2px;
     border-radius: 30px;
-    max-height: 50px;
+    max-height: 65px;
 
     button{
-      background:#000 !important;
+      background:#01033C !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;
@@ -1079,7 +1079,7 @@ export default class CreatePool extends Vue {
 
 
 main{
-  background-color:#000;
+  background-color:#01033C;
   background-image:unset;
   background-size:cover;
   background-position:center bottom;
@@ -1137,7 +1137,7 @@ div {
   padding-left: 10px;
 }
 .ant-layout{
-  background:#000 !important
+  background:#01033C !important
 }
 
 .ant-col {

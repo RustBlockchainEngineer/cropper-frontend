@@ -1,6 +1,6 @@
 <template>
   <Modal :title="title" :visible="true" :footer="null" :width="400" centered @cancel="$emit('onCancel')">
-    <div class="card">
+    <div class="card addliq">
       <div class="card-body">
         <CoinInput
           v-model="fromCoinAmount"
@@ -216,5 +216,16 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 @import '../styles/variables';
+@import '../styles/global';
 
+  .addliq .btnContainer{
+    background:transparent !important;
+    display:inline-block !important;
+    
+    button{
+      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+      border: 2px solid rgba(255, 255, 255, 0.14) !important;
+      border-radius: 8px;
+    }
+  }
 </style>
