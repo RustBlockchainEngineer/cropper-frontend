@@ -433,5 +433,5 @@ export default class Index extends Vue {
 </script>
 
 <style>
-  @import '../assets/landing.css';
+  @import '../assets/index.css';
 </style>
