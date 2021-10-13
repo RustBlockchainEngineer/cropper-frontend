@@ -35,6 +35,12 @@
       </div>
       <Nuxt />
     </Content>
+    <div
+      style="
+        height: 1px;
+        background: linear-gradient(90deg, rgba(90, 196, 190, 0) 0%, #3772ff 50%, rgba(194, 0, 251, 0) 100%);
+      "
+    />
     <Foot />
   </Layout>
 </template>
