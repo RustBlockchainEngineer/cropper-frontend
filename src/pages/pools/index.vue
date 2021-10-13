@@ -21,77 +21,87 @@
       @onCancel="cancelUnstake"
     />
 
-
-    <div class="card">
-      <div class="card-body">
-
         <div class="page-head fs-container">
         
+          <span class="title">Liquidity pools</span>
+
         <NuxtLink to="/pools/create-pool/">
           <div class="create">
             <Button size="large" ghost>
-              Create a pool
+              + &nbsp; Create a pool
             </Button>
           </div>
         </NuxtLink>
         
-          <span class="title">Liquidity pools</span>
           <div class="buttons">
-            <Tooltip placement="bottomRight">
-              <template slot="title">
-                <span>
-                  Displayed data will auto-refresh after
-                  {{ autoRefreshTime - countdown }} seconds. Click this circle to update manually.
-                </span>
-              </template>
-              <Progress
-                type="circle"
-                :width="20"
-                :stroke-width="10"
-                :percent="(100 / autoRefreshTime) * countdown"
-                :show-info="false"
-                :class="loading ? 'disabled' : ''"
-                @click="
-                  () => {
-                    flush()
-                    $accessor.wallet.getTokenAccounts()
-                  }
-                "
-              />
-            </Tooltip>
+            <div class="count-down-group">
+              <div class="count-down">
+                <span v-if="autoRefreshTime - countdown < 10">0</span>
+                {{ autoRefreshTime - countdown }}
+                <div 
+                  class="reload-btn"
+                  @click="
+                    () => {
+                      flush()
+                      $accessor.wallet.getTokenAccounts()
+                    }
+                  "
+                  >
+                  <Icon type="loading" theme="outlined" />
+                </div>
+                <!-- <Progress
+                  type="circle"
+                  :width="20"
+                  :stroke-width="10"
+                  :percent="(100 / autoRefreshTime) * countdown"
+                  :show-info="false"
+                  :class="loading ? 'disabled' : ''"
+                  @click="
+                    () => {
+                      $accessor.requestInfos()
+                      $accessor.wallet.getTokenAccounts()
+                    }
+                  "
+                /> -->
+              </div>
+            </div>
           </div>
         </div>
 
-          <div style="text-align: center; width: 100%">
-            <div style="width: 30%; display: inline-block">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="search by name">
+    <div class="card">
+      <div class="card-body">
+
+
+          <div class="tool-bar">
+            <div class="tool-option">
+              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
               </Input>
             </div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block"></div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block"></div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 15%; display: inline-block">
+            <div class="tool-option">
+            </div>
+            <div class="tool-option">
+            </div>
+
+            <div class="tool-option last-option">
               <div class="toggle">
                 <label class="label">Staked Only</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
               </div>
             </div>
-            <div style="width: 5%; display: inline-block"></div>
-            <div style="width: 5%; display: inline-block"></div>
           </div>
 
       <div v-if="poolLoaded">
         <Table :columns="columns" :data-source="poolsShow" :pagination="false" row-key="lp_mint">
+
           <span slot="name" slot-scope="text" class="lp-icons">
             {{ void (pool = getPoolByLpMintAddress(text)) }}
-            <div class="icons">
-              <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.coin.mintAddress : ''" />
-              <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.pc.mintAddress : ''" />
-            </div>
-            <span>{{ pool.name }}</span>
+            <span class="lp-iconscontainer">
+              <div class="icons">
+                <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.coin.mintAddress : ''" /> {{getPoolByLpMintAddress(text).lp.coin.symbol}} -
+                 <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.pc.mintAddress : ''" /> {{getPoolByLpMintAddress(text).lp.pc.symbol}}
+              </div>
+            </span>
           </span>
           <span slot="liquidity" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
           <span slot="volume_24h" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
@@ -101,7 +111,7 @@
           <span slot="current" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
           <span slot="apu" slot-scope="text, pool"  >{{ text }} 
 
-            <div class="btncontainer">
+            <div class="btncontainer small">
               <Button size="small" ghost :disabled="!wallet.connected"
                   @click="openPoolAddModal(pool)">
                 <Icon type="plus" />
@@ -111,7 +121,7 @@
             &nbsp;
 
 
-            <div class="btncontainer">
+            <div class="btncontainer small">
               <Button size="small" class="minus" ghost :disabled="!wallet.connected || !pool.current"
                   @click="openUnstakeModal(pool, pool.lp, 1)">
                 <Icon type="minus" />
@@ -123,7 +133,7 @@
           
           <div style="text-align: center; width: 100%">
             <div style="width: 80%; display: inline-block">
-              <Pagination :total="totalCount" :showTotal="(total, range) => `${range[0]}-${range[1]} of ${total} items`" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
+              <Pagination :total="totalCount" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
               </Pagination>
             </div>
           </div>
@@ -145,7 +155,7 @@
 import { get, cloneDeep } from 'lodash-es'
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
-import { Table, Radio, Progress, Tooltip, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
+import { Table, Radio, Tooltip, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
 import { getPoolByLpMintAddress, getAllPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
 import { getBigNumber } from '@/utils/layouts'
@@ -187,7 +197,6 @@ declare const window: any;
     RadioGroup,
     RadioButton,
     Toggle,
-    Progress,
     Tooltip,
     Button,
     Input,
@@ -252,6 +261,7 @@ export default class Pools extends Vue {
       scopedSlots: { customRender: 'fee_24h' },
       sorter: (a: any, b: any) => a.fee_24h - b.fee_24h
     },
+
     {
       title: '1y Fees / Liquidity',
       dataIndex: 'apy',
@@ -694,30 +704,36 @@ export default class Pools extends Vue {
 <style lang="less" scoped>
 .ant-layout,
 .ant-layout-content{
-  background:#000 !important;  
+  background:#01033C !important;  
 }
 
 section{
-  background:#000 !important; 
+  background:#01033C !important; 
 }
 
 
 .pool.container {
-  max-width: 1200px;
-  background: #1B2028;
+  max-width: 1350px;
+  width: 100%;
+  background: #01033C;
   margin-top:20px;
   margin-bottom:20px;
+  padding: 15px;
 
   .page-head{
     margin-top:10px
   }
+
+  .page-head .title {
+    position: absolute;
+    left: 0 !important;
+    transform: translate(0, 0) !important;
+  }
+  
   .page-head a{
     z-index: 2;
-    padding-left: 15px;
-    background: #1b2028;
-    position: absolute;
-    right: 0;
-    top: -16px;
+    background: #01033C;
+    float: right;
 
     .btncontainer{
       display:inline-block
@@ -725,8 +741,7 @@ section{
   }
 
   .page-head .buttons{
-    position:absolute;
-    left:0
+    float:right;
   }
 
   h6 {
@@ -735,11 +750,6 @@ section{
   .action {
     display: grid;
     grid-gap: 4px;
-  }
-  .lp-icons {
-    .icons {
-      margin-right: 8px;
-    }
   }
 }
 .radioButtonStyle {
@@ -756,8 +766,128 @@ section{
   display: none; /* Chrome Safari */
 }
 
+.addliq .btnContainer{
+  background:transparent !important;
+  display:inline-block !important;
+  
+  button{
+    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 8px;
+  }
+}
+
+.tool-bar {
+  height: 100px;
+  border-radius: 14px;
+  border: 4px solid #16164A;
+  width: 100%;
+
+  .tool-option {
+    width: 24%;
+    height: 100%;
+    display: inline-block;
+    border-right: 3px solid #16164A;
+    position: relative;
+
+    .input-search {
+      height: 100%;
+      position: absolute;
+      width: 100%;
+
+      .ant-input-prefix {
+        left: 10%;
+        font-size: 20px;
+        color: white;
+      }
+
+      .ant-input {
+        padding: 0 10% 0 20%;
+        height: 100% !important;
+        border: none;
+      }
+
+      .ant-input::placeholder {
+        color: white;
+        opacity: 0.5;
+      }
+    }
+
+    .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
+      opacity: 1 !important;
+    }
+    
+    .ant-select {
+      border: none;
+      height: 100%;
+      position: absolute;
+      width: 100%;
+
+      .ant-select-selection {
+        height: 100%;
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        padding-left: 10%;
+        border: none;
+
+        .ant-select-selection__rendered {
+          margin-left: 0 !important;
+          font-size: 16px;
+          opacity: 0.5;
+        }
+
+        .ant-select-arrow {
+          right: 10%;
+          font-size: 13px;
+        }
+      }
+    }
+
+    .toggle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      
+      .label {
+        font-size: 16px;
+        opacity: 0.5;
+      }
+
+      .ant-switch {
+        margin-left: 14px;
+        background-color: white;
+        height: 11px;
+        border-radius: 30px;
+      }
+
+      .ant-switch::after {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+        top: -10px;
+        left: -2px;
+      }
+
+      .ant-switch-checked::after {
+        margin-left: 2px;
+        left: 100%;
+      }
+    }
+  }
+
+  .last-option {
+    border-right: none !important;
+  }
+}
 
 .pool.container {
+  .card .card-body .buttons i{
+    margin-right:0;
+  }
   .card-body {
     overflow-x: scroll;
     scrollbar-width: none;
@@ -770,33 +900,93 @@ section{
   }
 
   td{
-    background:#000 !important;
-    border-bottom:unset !important
+    background:#01033C !important;
+    border-bottom:unset !important;
+    border-top:1px solid rgba(255,255,255,0.2) !important;
+    padding:25px 16px;
+  }
+
+  .lp-iconscontainer {
+    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    padding:2px;
+    border-radius: 8px;
+    width:100%;
+
+    .icons{
+      display: block !important;
+      border-radius: 8px;
+      font-weight: normal;
+      padding:14px 20px;
+      font-size: 18px;
+      line-height: 20px;
+      white-space: nowrap;
+      position: relative;
+      background:#01033C; 
+      text-align:center;
+      width:100%;
+
+      img{
+        position:relative;
+        top:-1px;
+      }
+
+    }
   }
 
   table{
     border-collapse: separate;
-    border-spacing: 0 15px;
   }
 
-  table tr > td:first-of-type{
-    border-radius: 13px 0 0 13px;
+  .create {
+    padding: 9px 19px;
+    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+
+    button{
+      background:unset !important;
+      color:#fff;
+      border-color: transparent;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 42px;
+      letter-spacing: -0.05em;
+    }
+
   }
-  table tr > td:last-of-type{
-    border-radius: 0 13px 13px 0;
+
+  .ant-table-column-title{
+    font-size: 18px;
+    line-height: 21px;
+    color: #FFF;
+    opacity: 0.5;
   }
 
   .btncontainer{
-    background: #1b2028 !important;
+    background: #01033C !important;
     padding: 0 !important;
     border-radius:5px !important;
     display: inline-block;
     width: unset;
-    button{
-      background: #1b2028 !important;
-      width: 41px !important;
-      height: 41px !important;
-      border-radius:5px !important;
+
+
+    &.small{
+        background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+        border: 2px solid rgba(255, 255, 255, 0.14) !important;
+        border-radius: 8px;
+        width: 48px !important;
+        height: 48px !important;
+
+        button{ 
+          border: none !important;
+          font-size: 17px;
+          line-height: 50px;
+          font-weight: 800;
+          background: transparent !important;
+          width: 100% !important;
+          height: 100% !important;
+        }
     }
 
     .ant-btn:hover, .ant-btn:focus{
@@ -809,27 +999,57 @@ section{
     }
   }
 
+  label{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    color: #FFF;
+    opacity: 0.5;
+  }
 
-  .create {
-    background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
-    display: inline-block;
-    width: unset;
-    text-align: center;
+  .count-down-group {
+    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    height: 60px;
+    border-radius: 63px;
     position: relative;
-    max-width: 400px;
-    margin: 10px auto;
-    padding: 2px;
-    border-radius: 30px;
-    max-height: 50px;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
 
-    button{
-      background:#000 !important;
-      position: relative;
-      border-radius: 30px;
-      border-color: transparent;
+  .count-down {
+    background-color: #01033C;
+    border-radius: 63px;
+    height: 56px;
+    top: 2px;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 3px 3px 20px;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 42px;
+    position: relative;
+
+    .ant-progress {
+      margin-left: 15px;
     }
 
+    .reload-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+      margin-left: 15px;
+      text-align: center;
+      cursor: pointer;
+      
+      .anticon {
+        font-size: 16px !important;
+        color: white !important;
+      }
+    }
   }
+
 
 
 }
@@ -859,8 +1079,11 @@ section{
   background: transparent !important;
   border: none !important;
 }
-.input-search .ant-input {
-  height: 32.01px !important;
-}
 
+.ant-table-placeholder{
+  background:unset !important;
+  border-top:unset !important;
+  border-bottom:unset !important;
+  color:rgba(255,255,255, 0.1);
+}
 </style>

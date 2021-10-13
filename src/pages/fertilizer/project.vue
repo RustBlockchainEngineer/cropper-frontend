@@ -184,7 +184,7 @@
                 <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone' " >
                     <span v-if="farm.pla_ts > currentTimestamp">2</span>
                     <span v-else class="span"><img src="https://cropper.finance/distant/check-one.png?t=1" alt=""></span>
-                    <div><b class="t">Withelist</b> - You can now whitelist yourself for the lottery.
+                    <div><b class="t">Withelist</b> - You can now whitelist yourself for the lottery.<br />
                     <div class="date"> {{farm.pla}} </div></div>
                 </div>
                 <div :class="farm.pla_end_ts < currentTimestamp ? 'done' : 'notdone' ">
@@ -534,6 +534,14 @@ export default Vue.extend({
       deep: true
     },
 
+    'wallet.address' : {
+      handler(newTokenAccounts: any) {
+       this.updateFarms()
+      },
+      deep: true
+
+    },
+
     showCollapse: {
       handler() {
         if (!this.poolType && this.showCollapse.length > 0) {
@@ -760,12 +768,12 @@ export default Vue.extend({
           let labelized = false;
           if(lp){
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-            if(this.labelizedAmms[liquidityItem.ammId]){
-              labelized = this.labelizedAmms[liquidityItem.ammId];
+            if(this.labelizedAmms[newFarmInfo.poolId]){
+              labelized = this.labelizedAmms[newFarmInfo.poolId];
               if(labelized){
-                if(this.labelizedAmms[liquidityItem.ammId].pfo == true && newFarmInfo.poolId == this.labelizedAmms[liquidityItem.ammId].pfarmID){       
+                if(this.labelizedAmms[newFarmInfo.poolId].pfo == true && newFarmInfo.poolId == this.labelizedAmms[newFarmInfo.poolId].pfarmID){       
                   const query = new URLSearchParams(window.location.search);
-                  if(query.get('f') && this.labelizedAmms[liquidityItem.ammId].slug == query.get('f')){
+                  if(query.get('f') && this.labelizedAmms[newFarmInfo.poolId].slug == query.get('f')){
                     isPFO = true;
 
                      newFarmInfo.twitterShare = `http://twitter.com/share?text=Earn ${newFarmInfo.reward.name} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${newFarmInfo.lp.coin.symbol},${newFarmInfo.lp.pc.symbol},yieldfarming,Solana`
@@ -777,12 +785,12 @@ export default Vue.extend({
                       farmInfo: newFarmInfo
                     })
 
-                    document.title = 'Fertilizer - CropperFinance x ' + this.labelizedAmms[liquidityItem.ammId].name ;
+                    document.title = 'Fertilizer - CropperFinance x ' + this.labelizedAmms[newFarmInfo.poolId].name ;
 
                     let responseData
                     try{
                       responseData = await fetch(
-                        'https://api.cropper.finance/pfo/?farmId='+ this.labelizedAmms[liquidityItem.ammId].pfarmID + '&t='+ Math.round(moment().unix()/60)
+                        'https://api.cropper.finance/pfo/?farmId='+ this.labelizedAmms[newFarmInfo.poolId].pfarmID + '&t='+ Math.round(moment().unix()/60)
                       ).then(res => res.json());
                     }
                     catch{
@@ -792,7 +800,7 @@ export default Vue.extend({
                         if(responseData[this.wallet.address].submit > 0){
                           this.isRegistered = true;
                           this.registeredDatas = responseData[this.wallet.address];
-                          this.shareWalletAddress = "http://cropper.finance/fertilizer/project/?f=" + this.labelizedAmms[liquidityItem.ammId].slug + "&r=" + this.wallet.address;
+                          this.shareWalletAddress = "http://cropper.finance/fertilizer/project/?f=" + this.labelizedAmms[newFarmInfo.poolId].slug + "&r=" + this.wallet.address;
 
                         }
 
@@ -1469,7 +1477,7 @@ export default Vue.extend({
     border-bottom:none !important;
     position:relative;
     margin:0 10px 20px 10px;
-    background:#1B2028;
+    background:#01033C;
 
     .banner{
       height:100px;
@@ -1511,7 +1519,7 @@ export default Vue.extend({
       z-index:2;
       left:50%;
       position:absolute;
-      background:#000;
+      background:#01033C;
       transform:translate(-50%,-50%)
     }
 
@@ -1557,7 +1565,7 @@ div.inputContent{
     border:none;
     padding:9px 10px;
     border-radius:5px 0 0 5px;
-    background:#1B2028;
+    background:#01033C;
     width: 293px; 
   }
 
@@ -1664,7 +1672,7 @@ div.inputContent{
     }
 
   .steps > div{
-    background:#000;
+    background:#01033C;
     border-radius:6px;
     margin:10px 30px 10px 90px;
     padding:0 11px;
@@ -1892,10 +1900,10 @@ div.inputContent{
     margin: 10px auto;
     padding: 2px;
     border-radius: 30px;
-    max-height: 50px;
+    max-height: 65px;
 
     button{
-      background:#000 !important;
+      background:#01033C !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;
@@ -1927,7 +1935,7 @@ div.inputContent{
   }
 
 main{
-  background-color:#000;
+  background-color:#01033C;
   background-image:unset;
   background-size:cover;
   background-position:center bottom;
@@ -1962,7 +1970,7 @@ main{
     text-align: right;
 }
 .pf-record{
-    background-color: #000;
+    background-color:#01033C;
     border-bottom: 1px solid #d9d9d9;
 
     .pf-record-content{
@@ -1988,7 +1996,7 @@ main{
 
 .farm.container {
   max-width: 1200px;
-  background: #1B2028;
+  background: #01033C;
   margin-top:20px;
   margin-bottom:20px;
 
@@ -1996,7 +2004,7 @@ main{
   .page-head a{
     z-index: 2;
     padding-left: 15px;
-    background: #1b2028;
+    background: #01033C;
     position: absolute;
     right: 0;
 
@@ -2008,7 +2016,7 @@ main{
   .card {
     .card-body {
       padding: 0;
-      background:#000;
+      background:#01033C;
       overflow-x: scroll;
       scrollbar-width: none;
       -ms-overflow-style: none;
