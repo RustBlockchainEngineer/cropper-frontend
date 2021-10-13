@@ -114,7 +114,6 @@
                 </Col>
 
                 <Col :span="!isMobile ? 10 : 10">
-                  Infos
 
                         <div class="title">{{farm.name}}</div>
                         XXXX
@@ -632,6 +631,55 @@ export default Vue.extend({
   .ant-collapse-content {
     background-color: #01033C;
     border-top: 1px solid #1c274f;
+  }
+
+  .ant-collapse-content-active {
+    background: #0E1046;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-sizing: border-box;
+    border-radius: 14px;
+
+    .title{
+        font-size: 25px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 31px;
+        letter-spacing: 0;
+        text-align: left;
+    }
+
+    .desc{
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px;
+      letter-spacing: 0;
+      text-align: left;   
+    }
+
+    .btncontainer{
+      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      color:#fff;
+      height: 60px;
+      width:163px;
+      line-height:60px;
+      margin-top:40px;
+      button{
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 42px;
+        text-align: center;
+        letter-spacing: -0.05em;
+        color: #FFF;
+        background:transparent !important;
+        width:100%;
+        height:100%;
+      }
+    }
+    
   }
 
   .page-head a{
