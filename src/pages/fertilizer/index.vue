@@ -531,13 +531,16 @@ export default Vue.extend({
 
 .fertilizer.cont {
   max-width: 1350px;
+  width: 100%;
   background: #01033C;
-  margin-left:auto;
-  margin-right:auto;
   margin-top:20px;
   margin-bottom:20px;
-  padding:15px;
-  border:none;
+  padding: 15px;
+
+  .card-body{
+    max-width: 1302px;
+    margin: 0 auto;
+  }
 
   .ant-collapse{
     border:unset !important;

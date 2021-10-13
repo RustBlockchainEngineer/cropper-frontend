@@ -21,10 +21,6 @@
       @onCancel="cancelUnstake"
     />
 
-
-    <div class="card">
-      <div class="card-body">
-
         <div class="page-head fs-container">
         
           <span class="title">Liquidity pools</span>
@@ -71,6 +67,10 @@
             </div>
           </div>
         </div>
+
+    <div class="card">
+      <div class="card-body">
+
 
           <div class="tool-bar">
             <div class="tool-option">
@@ -714,13 +714,22 @@ section{
 
 .pool.container {
   max-width: 1350px;
+  width: 100%;
   background: #01033C;
   margin-top:20px;
   margin-bottom:20px;
+  padding: 15px;
 
   .page-head{
     margin-top:10px
   }
+
+  .page-head .title {
+    position: absolute;
+    left: 0 !important;
+    transform: translate(0, 0) !important;
+  }
+  
   .page-head a{
     z-index: 2;
     background: #01033C;
