@@ -536,6 +536,8 @@ export default Vue.extend({
   margin-top:20px;
   margin-bottom:20px;
   padding: 15px;
+  margin-left:auto;
+  margin-right:auto;
 
   .card-body{
     max-width: 1302px;
