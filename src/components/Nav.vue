@@ -109,33 +109,16 @@ export default class Nav extends Vue {
   border: 2px solid #724CEE;
 }
 
-.ant-menu-item-selected .pools {
-  background: #724CEE;
-}
-
-
 .farms {
   border: 2px solid #EF745D;
-}
-
-.ant-menu-item-selected .farms {
-  background: #EF745D;
 }
 
 .swap {
   border: 2px solid #48A469;
 }
 
-.ant-menu-item-selected .swap {
-  background: #48A469;
-}
-
 .fertilizer {
   border: 2px solid #3990F5;
-}
-
-.ant-menu-item-selected .fertilizer {
-  background: #3990F5;
 }
 
 .ant-menu {

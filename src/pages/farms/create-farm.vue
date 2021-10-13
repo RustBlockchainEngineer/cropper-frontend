@@ -1066,7 +1066,7 @@ export default class CreatePool extends Vue {
     margin: 10px auto;
     padding: 2px;
     border-radius: 30px;
-    max-height: 65px;
+    max-height: 50px;
 
     button{
       background:#01033C !important;

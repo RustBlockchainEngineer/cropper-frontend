@@ -29,7 +29,6 @@
         <label>Privacy Policy</label>
       </div>
     </div>
-    <img class="planet-img-bottom" src="@/assets/Green Planet 2.png" />
   </Footer>
 </template>
 
@@ -68,11 +67,6 @@ export default class Foot extends Vue {
 
 <style lang="less" scoped>
 
-.planet-img-bottom {
-  position: absolute;
-  right: 0;
-}
-
 .ant-layout-footer {
   padding: 24px 128px !important;
 }
@@ -91,16 +85,11 @@ export default class Foot extends Vue {
       color: #505F8C !important;
     }
   }
-
-  .planet-img-bottom {
-    bottom: 300px;
-  }
 }
 
 .pc {
   display: flex;
   justify-content: space-between;
-  position: relative;
 
   .icon_list {
     font-style: normal;
@@ -118,10 +107,6 @@ export default class Foot extends Vue {
       color: #fff !important;
       font-size: 22px;
     }
-  }
-
-  .planet-img-bottom {
-    bottom: 90px;
   }
 }
 
