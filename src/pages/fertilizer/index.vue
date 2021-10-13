@@ -530,7 +530,7 @@ export default Vue.extend({
 
 
 .fertilizer.cont {
-  max-width: calc(100% - 80px);
+  max-width: 1350px;
   background: #01033C;
   margin-left:auto;
   margin-right:auto;
@@ -602,7 +602,6 @@ export default Vue.extend({
   }
   
   .create {
-    padding: 9px 19px;
     background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
@@ -616,6 +615,8 @@ export default Vue.extend({
       font-size: 18px;
       line-height: 42px;
       letter-spacing: -0.05em;
+      height:60px;
+      width:163px;
     }
 
   }

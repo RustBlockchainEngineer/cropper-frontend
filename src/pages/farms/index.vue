@@ -1501,11 +1501,10 @@ export default Vue.extend({
 }
 
 .farm.container {
-  padding: 70px 120px;
+  max-width: 1350px;
   background: #01033c;
   margin-top: 20px;
   margin-bottom: 20px;
-  max-width: 100%;
 
   .page-head a {
     background: #01033c;
