@@ -270,7 +270,7 @@
                     </div>
                 </div>
                 <div class="team-content-element">
-                    <img src="../assets/landing/turothecat_avatar.png">
+                    <img src="../assets/landing/Turothecat_avatar.png">
                     <p class="team-content-element-title">Turothecat</p>
                     <div class="team-content-element-des">
                         <p>Quis autem vel eum</p>
