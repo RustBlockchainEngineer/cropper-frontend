@@ -1,6 +1,6 @@
 <template>
   <div class="farm container">
-    <img class="planet-img-left" src="@/assets/Green Planet 1.png" />
+    <img class="planet-left" src="@/assets/Green Planet 1.png" />
     <div class="page-head fs-container">
       <span class="title">Farms</span>
       <div class="farm-button-group">
@@ -1969,7 +1969,7 @@ export default Vue.extend({
   margin-left: 12px;
 }
 
-.planet-img-left {
+.planet-left {
   position: absolute;
   left: 0;
   top: 35%;
