@@ -1,6 +1,6 @@
 <template>
   <Footer>
-    <img src="@/assets/icons/greenPlanet2.svg" class="planetBottom"/>
+    <img src="@/assets/icons/greenPlanet2.svg" class="planet-bottom"/>
     <div :class="isMobile ? 'mobile' : 'pc'">
       <div class="logo">
         <a href="/"><img src="@/assets/icons/logo-text.svg"  width="224.76" height="45.38" /></a>
@@ -72,7 +72,7 @@ export default class Foot extends Vue {
   position: relative;
 }
 
-.planetBottom {
+.planet-bottom {
   position: absolute;
   right: 0;
   bottom: 0;
