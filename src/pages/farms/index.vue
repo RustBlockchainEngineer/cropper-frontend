@@ -1670,6 +1670,7 @@ export default Vue.extend({
     .state {
       display: flex;
       text-align: left;
+      flex-direction: row;
 
       .title {
         font-weight: normal;

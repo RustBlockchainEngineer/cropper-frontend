@@ -75,7 +75,8 @@
                   <div class="lp-icons-group">
                     <div class="icons">
                       <CoinIcon :mint-address="farm.tokenA.mint" />
-                      <span>{{ farm.tokenA.symbol }} - </span>
+                      <span>{{ farm.tokenA.symbol }}</span>
+                      <div>-</div>
                       <CoinIcon :mint-address="farm.tokenB.mint" />
                       <span>{{ farm.tokenB.symbol }}</span>
                     </div>
@@ -543,7 +544,8 @@ export default Vue.extend({
       border-radius: 4px;
       font-size: 14px;
       font-weight: 400;
-      padding: 6px;
+      line-height: 17px;
+      padding: 6px 7px 4px 7px;
     }
   }
 
@@ -664,7 +666,7 @@ export default Vue.extend({
     .tags-group {
       display: flex;
       align-items: center;
-      margin: 20px 0;
+      margin: 15px 0;
 
       .tag {
         margin-right: 16px;
@@ -759,14 +761,17 @@ export default Vue.extend({
           border-radius: 8px;
           align-items: center;
           padding: 0 20px;
-        }
 
-        .icons span {
-          margin-left: 12px;
-          margin-right: 12px;
-          font-weight: 400;
-          font-size: 18px;
-          line-height: 21px;
+          div {
+            margin: 0 12px;
+          }
+
+          span {
+            margin-left: 12px;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 21px;
+          }
         }
       }
 
