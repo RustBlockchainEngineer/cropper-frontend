@@ -21,18 +21,23 @@
       @onCancel="cancelUnstake"
     />
 
+
+    <div class="card">
+      <div class="card-body">
+
+
         <div class="page-head fs-container">
         
           <span class="title">Liquidity pools</span>
 
-        <NuxtLink to="/pools/create-pool/">
-          <div class="create">
-            <Button size="large" ghost>
-              + &nbsp; Create a pool
-            </Button>
-          </div>
-        </NuxtLink>
-        
+            <NuxtLink to="/pools/create-pool/">
+              <div class="create">
+                <Button size="large" ghost>
+                  + &nbsp; Create a pool
+                </Button>
+              </div>
+            </NuxtLink>
+            
           <div class="buttons">
             <div class="count-down-group">
               <div class="count-down">
@@ -65,12 +70,10 @@
                 /> -->
               </div>
             </div>
+          
+            
           </div>
         </div>
-
-    <div class="card">
-      <div class="card-body">
-
 
           <div class="tool-bar">
             <div class="tool-option">
@@ -86,7 +89,7 @@
             <div class="tool-option last-option">
               <div class="toggle">
                 <label class="label">Staked Only</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
               </div>
             </div>
           </div>

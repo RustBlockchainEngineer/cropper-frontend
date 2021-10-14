@@ -1,6 +1,10 @@
 <template>
   <div class="farm container">
-    <img class="planet-left" src="@/assets/Green Planet 1.png" />
+    <img class="planet-img-left" src="@/assets/Green Planet 1.png" />
+
+    <div class="card">
+      <div class="card-body">
+      
     <div class="page-head fs-container">
       <span class="title">Farms</span>
       <div class="farm-button-group">
@@ -403,6 +407,8 @@
       <Spin :spinning="true">
         <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
       </Spin>
+    </div>
+  </div>
     </div>
   </div>
 </template>
