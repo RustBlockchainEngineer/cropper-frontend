@@ -1,7 +1,7 @@
 <template>
-  <main class="landing">
-<div class="vecteur-1">
-            <img src="../assets/GroupVector1.png">
+    <main class="landing">
+        <div class="vecteur-1">
+            <img src="../assets/landing/Planet 3.png">
         </div>
         <div class="header">
             <div class="space-btwn">
@@ -12,391 +12,368 @@
                     <h2>CropperFinance</h2>
                 </div>
             </div>
+            <div class="lunch-app">
+                <button class="lunch-app-button">Lunch App</button>
+            </div>
         </div>
-            <section id="section-1">
-                <div class="container">
-                    <h1 class="nomobile">The first permissionless yield </h1>
-                    <h1 class="nomobile">farming protocol on Solana.</h1>
-                    <h1 class="nodesktop nomargin">The first permissionless yield farming</h1>
-                    <h1 class="nodesktop ">protocol on Solana.</h1>
-                    <h2>Bringing Yield Farming to the next level.</h2>
-                    <div class="main-btns">
-                        <div id="btn-LA">
-                            <a  href="/swap/"><button id="LaunchApp">Launch App</button></a>
-                        </div>
-                        <div id="btn-RM">
-                            <a  href="https://cropper-finance.gitbook.io/cropperfinance/" target="_blank"><button id="ReadMore">Read More</button></a>
-                        </div>
+        <div class="Powered">
+            <p>Powered by Solana</p>
+        </div>
+        <section id="section-1">
+            <div class="container">
+                <p>The Ultimate Permissionless Yield</p>
+                <p>Farming Protocol on Solana</p>
+                <div class="main-btns">
+                    <div id="btn-LA">
+                        <a  href="/swap/"><button id="LaunchApp">Launch App</button></a>
                     </div>
-                    <div class="float-left">
-                        <div class="grid-reseaux">
-                            <div class="reseau">
-                                <a href="https://discord.gg/CropperFinance" target="_blank">
-                                    <img src="../assets/Discord_black.png"/>
-                                </a>
-                            </div>
-                            <div class="reseau">
-                                <a href="https://cropperfinance.medium.com/" target="_blank">
-                                    <img src="../assets/Medium_black.png"/>
-                                </a>
-                            </div>
-                            <div class="reseau">
-                                <a href="https://t.me/CropperFinance" target="_blank">
-                                    <img src="../assets/Telegram_black.png"/>
-                                </a>
-                            </div>
-                            <div class="reseau">
-                                <a href="https://twitter.com/CropperFinance" target="_blank">
-                                    <img src="../assets/Twitter_black.png"/>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="Powered">
-                        <p>Powered by</p>
-                        <img src="../assets/Componentpowered.png"/>
+                    <div id="btn-RM">
+                        <a  href="https://cropper-finance.gitbook.io/cropperfinance/" target="_blank"><button id="ReadMore">Read More</button></a>
                     </div>
                 </div>
-            </section>
-           
-
-            <section id="section-2">
-                <div class="container-2">
-                    <div class="title-section-left-c4">
-                        <img src="../assets/Component2.png"/>
-                        <h2>CRP Token</h2>
-                        <div class="line-from-left">
-                        </div>
-                    </div>
-                    <p>
-                        Solana Program Library (SPL)
-                    </p>
-                </div>
-                <div class="grid-2-2">
-                    <div class="grid-item-1">
-                        <div class="item-1">
-                            <h3>Farm creation</h3>
-                            <p>$CRP will be essential for paying<br />
-                                the fee to launch farms in USDC pairs.</p>
-                        </div>
-                    </div>
-                    <div class="grid-item-2">
-                        <div class="item-2">
-                            <h3>$CRP Token</h3>
-                            <p>Our platform will be fuelled by CRP,<br />
-                                it's native token.</p>
-                        </div>
-                    </div>
-                    <div class="grid-item-3">
-                        <div class="item-3">
-                            <h3>Liquidity provision</h3>
-                            <p>$CRP will be required for providing liquidity to $CRP-[SPL-Token] pairs and getting additional yield.</p>
-                        </div>
-                    </div>
-                    <div class="grid-item-4">
-                        <div class="item-4">
-                            <h3>Fee collection</h3>
-                            <p>Liquidity providers of the [CRP]-[USDC] farm will receive, in addition to the farming emissions, 50% of the fees collected.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-             <section id="section-3">
-                <div class="bg"></div>
-                <div class="container-2">
-                    <div class="title-section-left">
-                        <div class="line-from-right"></div>
-                        <img src="../assets/infinity.png"/>
-                        <h2>Yield Farm Generator</h2>
-                    </div>
-                    <p>
-                        SPL projects will be able to connect their liquidity to the 
-platform, set the total supply that will be allocated to farming, 
-decide the weekly emission schedule, and launch their yield farm 
-in a few clicks
-                    </p>
-                </div>
-            </section>
-
-            <section id="section-3">
-                <div class="container-3">
-                    <div class="title-section-left">
-                        <div class="line-from-right"></div>
-                        <div class="mr-60">
-                            <h2>
-                                <img src="../assets/sun.png"/>A place conceived, designed,<br />
-                                and developed for farmers</h2>
-                            <p>
-                                CropperFinance aims to provide best
-                                yields in the <br />ecosystem.
-                                Made by farmers, for farmers.
-                            </p>
-                        </div>
-                    </div>
-                    
-                </div>
-            </section>
-
-            <section id="section-2b">
-                <div class="container-2b">
-                    <div class="title-section-left-c4">
-                        <img src="../assets/Component2.png"/>
-                        <h2>Made for Solana builders</h2>
-                        <div class="line-from-left">
-                        </div>
-                    </div>
-                    <p>
-                        Friction-less process
-                    </p>
-                </div>
-                <div class="grid-2-2b">
-                    <div class="grid-item-1">
-                        <div class="item-1">
-                            <h3>Launch</h3>
-                            <p>Open your farms in a few clicks <br />and onboard thousands of farmers tomorrow.  
-                        </p>
-                        </div>
-                    </div>
-                    <div class="grid-item-3">
-                        <div class="item-3">
-                            <h3>Stabilize</h3>
-                            <p>Stabilize your SPL token and offer a good farming experience. </p>
-                        </div>
-                    </div>
-                    <div class="grid-item-4">
-                        <div class="item-4">
-                            <h3>Bring value </h3>
-                            <p>Generate rewards to your holders<br /> through different farming features.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-            <section id="section-5">
-                <div class="container-5">
-                    <div class="title-section-left">
-                        <div class="line-left"></div>
-                        <img src="../assets/profile.png"/>
-                        <h2>The Team</h2>
-                        <div class="line-right"></div>
-                    </div>
-                    <div class="grid-storie">
-                        <div class="grid-item od od1">
-                            <div class="team-mate">
-                                <img onclick="javascript:d('.od1')" src="../assets/Robercry_avatar.png"/>
-                                    <p onclick="javascript:d('.od1')">@Robercry</p>
-                                    <div class="links">
-                                    <a href="https://t.me/Robercry" target="_blank"><img src="../assets/Telegram_black.png"/></a>
-                                    <a href="https://twitter.com/Robercry" target="_blank"><img src="../assets/Twitter_black.png"/></a>
+            </div>
+        </section>     
+        <section id="section-2">
+            <img src="../assets/landing/Header Cropper.png"/>
+        </section>
+        <section id="section-3">
+            <div class="container-key">
+                <p class="key-text">Key Figures</p>
+                <div class="container-group">
+                    <div class="container-group-first">
+                        <div class="first-element">
+                            <img src="../assets/landing/Rectangle_CRP.png"/>
+                            <div class="container-group-text">
+                                <div class="first-text">
+                                    <p>Current CRP Token Price</p>
                                 </div>
-                                <div class="function" onclick="javascript:d('.od1')">Chief Tokenomic Officer <img src="../assets/Down_Chevron.png" /></div> 
-                            </div>
-                            <div class="storie">
-                                <p>
-                                    Robercry, our Chief of Tokenomics – or, as we call him internally, the alchemist – has studied 
-                                    mathematics, biotechnology, and neuroscience. He's been passionate about blockchain technology
-                                    since 2017 when he started to invest in BTC and ETH. He is currently based in France. 
-                                    He's the brother of Turothecat and Croppish.</p>
-                            </div>
-                        </div>
-                        <div class="grid-item od od2">
-                            <div class="team-mate">
-                                <img onclick="javascript:d('.od2')" src="../assets/turothecat_avatar.png"/>
-                                    <p onclick="javascript:d('.od2')">@Turothecat</p>
-                                    <div class="links">
-                                    <a href="https://t.me/turothecat" target="_blank"><img src="../assets/Telegram_black.png"/></a>
-                                    <a href="https://twitter.com/CropperArthur" target="_blank"><img src="../assets/Twitter_black.png"/></a>
+                                <div class="second-text">
+                                    <p>$0.23456</p>
                                 </div>
-                                <div class="function" onclick="javascript:d('.od2')">Chief Product Officer <img src="../assets/Down_Chevron.png" /></div>
-                            </div>
-                            <div class="storie">
-                                <p>
-                                    @Turothecat, our Chief of Product, is a serial entrepreneur with 6 years of experience in designing
-various types of products such as financial & e-commerce platforms, IOS Apps, hardware electronics.
-He started investing in BTC and ETH in 2017. He has lived and worked in 
-Hong Kong for 5 years and is currently based in France. He's the brother of Robercry and 
-Croppish. </p>
                             </div>
                         </div>
-                        <div class="grid-item od od3">
-                            <div class="team-mate">
-                                <img onclick="javascript:d('.od3')" src="../assets/Croppish_avatar.png"/>
-                                    <p onclick="javascript:d('.od3')">@Croppish</p>
-                                    <div class="links">
-                                    <a href="https://t.me/croppish" target="_blank"><img src="../assets/Telegram_black.png"/></a>
-                                    <a href="https://twitter.com/Croppish" target="_blank"><img src="../assets/Twitter_black.png"/></a>
+                        <div class="second-element">
+                            <img src="../assets/landing/Rectangle_total.png"/>
+                            <div class="container-group-text">
+                                <div class="first-text">
+                                    <p>Current Total Value Locked</p>
                                 </div>
-                                <div class="function" onclick="javascript:d('.od3')">Chief Executive Officer <img src="../assets/Down_Chevron.png" /></div>
-                            </div>
-                            <div class="storie">
-                                <p>
-                                    Croppish, our CEO, has been working in different fields such 
-                                    as finance, hardware electronics, e-commerce, and most recently the blockchain industry. 
-                                    He's a serial entrepreneur and specializes in building communities around a project. 
-                                    He started investing in BTC and ETH in 2017. He has lived and worked in 
-                                    Shanghai and Hong Kong for 6 years. He's the brother of Turothecat and Robercry.</p>
-                            </div>
-                        </div>
-                        <div class="grid-item od od4">
-                            <div class="team-mate">
-                                <img onclick="javascript:d('.od4')" src="../assets/El_mosquito_avater.png"/>
-                                    <p onclick="javascript:d('.od4')">@Elmosquito</p> 
-                                    <div class="links">
-                                    <a href="https://t.me/_elmosquito" target="_blank"><img src="../assets/Telegram_black.png"/></a>
-                                    <a href="https://twitter.com/_elmosquito" target="_blank"><img src="../assets/Twitter_black.png"/></a>
+                                <div class="second-text">
+                                    <p>$12,500.00</p>
                                 </div>
-                                <div class="function" onclick="javascript:d('.od4')">Chief Technical Officer <img src="../assets/Down_Chevron.png" /></div>
                             </div>
-                            <div class="storie">
-                                <p> 
-                                    Elmosquito, our Chief of Technology, has 15 years of experience in developing complex backend
-                                    structures. After being one of the first devs to work at vestiairecollective.com as the
-                                    lead back end, he was called on by the same company's CTO to be 
-                                    one of the tech advisors for its new project, Arianee, a blockchain-based luxury 
-                                    item digital passport. He is currently based in France.</p>
-                            </div>
-                        </div>
-                    </div>   
-                </div>
-            </section>
-
-            <section id="section-6">
-                <div class="container-6">
-                    <div class="title-section-left-PA">
-                        <div class="line-from-right"></div>
-                        <img src="../assets/path-intersect.png"/>
-                        <h2>Powered by</h2>
-                        <div class="line-from-left">
                         </div>
                     </div>
-
-
-                    <div class="grid-partenaires">
-                    
-                        <div class="grid-item-p">
-                            <img src="../assets/logo-horizontal-gradient-dark.png">
+                    <div class="container-group-second">
+                        <div class="first-element">
+                            <img src="../assets/landing/Rectangle_current.png"/>
+                            <div class="container-group-text">
+                                <div class="first-text">
+                                    <p>Current Market Up</p>
+                                </div>
+                                <div class="second-text">
+                                    <p>$23,998.00</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/Mask-Groupmask.png">
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/Component164.png">
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/Cropperbros_logo.png">
-                        </div>
-                        
-                        <div class="grid-item-p">
-                            <img src="../assets/skyvision.jpg">
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/zC_sQ9Oq_400x400.jpeg">
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/SolaniumVenturesWhiteWide.png">
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/ava_logo_transparent.png">
-                        </div>
-
-                        
-                        <div class="grid-item-p">
-                            <img src="../assets/full-logo-normal-mexc.svg">
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/client-logo-2.png">
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/basics_capital.png">
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/Newave-Capital-logo_white_180_60.png">
-                        </div>
-
-
-                        
-                        <div class="grid-item-p">
-                            <img src="../assets/22White_1.png"/>
-                        </div>
-                        <div class="grid-item-p">
-                            <img style="padding:20px" src="../assets/_Group_.png"/>
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/_logo_white.png"/>
-                        </div>
-                        <div class="grid-item-p">
-                            <img src="../assets/_white_1.png"/>
+                        <div class="second-element">
+                            <img src="../assets/landing/Rectangle_tranding.png"/>
+                            <div class="container-group-text">
+                                <div class="first-text">
+                                    <p>7 days trading volume</p>
+                                </div>
+                                <div class="second-text">
+                                    <p>$67,090.00</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
-
+            </div>
+        </section>
+        <div class="vecteur-2">
+            <img src="../assets/landing/dark_moon.png">
+        </div>
+        <div class="vecteur-3">
+            <img src="../assets/landing/Second Big  Illustration.png">
+        </div>
+        <div class="vecteur-4">
+            <img src="../assets/landing/blue_moon.png">
+        </div>
+        <section id="section-4">
+            <div class="bring-text">
+                <p>Bringing Yield Farming</p>
+                <p>to the Next Level</p>
+            </div>
+            <div class="yield-grid">
+                <div class="yield-grid-group">
+                    <div class="yield-grid-element">
+                        <img src="../assets/landing/swap.png">
+                        <div class="yield-text-group">
+                            <div class="yield-text-first">
+                                <p>Swap</p>
+                            </div>
+                            <div class="yield-text-second">
+                                <p>Instant tokens conversion.</p>
+                            </div>
+                        </div>
+                        <div class="yield-grid-button">
+                            <button class="ReadMore"><span><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-play fa-w-14 fa-7x" style="color: white; width: 8px;"><path fill="currentColor" d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" class=""></path></svg></span>Read More</button>
+                        </div>
+                    </div>
+                    <div class="yield-grid-element el-second">
+                        <img src="../assets/landing/Permission-Less Yield farming.png">
+                        <div class="yield-text-group">
+                            <div class="yield-text-first">
+                                <p>Permission-Less</p>
+                                <p>Yield farming</p>
+                            </div>
+                            <div class="yield-text-second">
+                                <p>Create your own farm for SPL</p>
+                                <p>token, in a few clicks.</p>
+                            </div>
+                        </div>
+                        <div class="yield-grid-button">
+                            <button class="ReadMore"><span><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-play fa-w-14 fa-7x" style="color: white; width: 8px;"><path fill="currentColor" d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" class=""></path></svg></span>Read More</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="yield-grid-group">
+                    <div class="yield-grid-element">
+                        <img src="../assets/landing/Fertilizer.png">
+                        <div class="yield-text-group">
+                            <div class="yield-text-first">
+                                <p>Fertilizer</p>
+                            </div>
+                            <div class="yield-text-second">
+                                <p>Certified Farms launcher for</p>
+                                <p>Solana projects.</p>
+                            </div>
+                        </div>
+                        <div class="yield-grid-button">
+                            <button class="ReadMore"><span><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-play fa-w-14 fa-7x" style="color: white; width: 8px;"><path fill="currentColor" d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" class=""></path></svg></span>Read More</button>
+                        </div>
+                    </div>
+                    <div class="yield-grid-element el-second">
+                        <img src="../assets/landing/Permission-Less Pool.png">
+                        <div class="yield-text-group">
+                            <div class="yield-text-first">
+                                <p>Permission-LessPool</p>
+                            </div>
+                            <div class="yield-text-second">
+                                <p>Create pool and provide liquidity</p>
+                                <p>for SPL token.</p>
+                            </div>
+                        </div>
+                        <div class="yield-grid-button">
+                            <button class="ReadMore"><span><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-play fa-w-14 fa-7x" style="color: white; width: 8px;"><path fill="currentColor" d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" class=""></path></svg></span>Read More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="vecteur-5">
+            <img src="../assets/landing/blue_moon.png">
+        </div>
+        <div class="vecteur-6">
+            <img src="../assets/landing/Third Big  Illustration.png">
+        </div>
+        <section id="section-5">
+            <div class="control-for">
+                <ul class="farm-section-header-list" style="list-style: none;">
+                    <li :class="`item ${isFarmer ? 'active' : ''}`" @click="changeToFarmer">For Farmer</li>
+                    <li :class="`item ${!isFarmer ? 'active' : ''}`" @click="changeToFarmer">For SPL Builder</li>
+                </ul>
+            </div>
+            <div class="control-for-content">
+                <div v-if="isFarmer" class="control-for-first">
+                    <div class="control-for-first-text">
+                        <div class="control-title">
+                            <p>Prepare to harvest</p>
+                        </div>
+                        <div class="control-list">
+                            <div class="control-list-first">
+                                <p>1. Select on option</p>
+                                <p>2. Import Serum Market ID</p>
+                                <p>3. Price & Initial Liquidity</p>
+                                <p>4. Initialize</p>
+                            </div>
+                            <div class="control-list-second">
+                                <p>5. Pool created</p>
+                                <p>6. Farm created</p>
+                            </div>
+                        </div>
+                        <div class="control-btn">
+                            <button class="control-btn-element">Start now</button>
+                        </div>
+                    </div>
+                    <div class="control-for-first-img">
+                        <img src="../assets/landing/For Farmers.png">
+                    </div>
+                </div>
+                <div v-else class="control-for-second">
+                    <div class="control-for-first-text">
+                        <div class="control-title">
+                            <p>Create a farm in a few clic</p>
+                        </div>
+                        <div class="control-list">
+                            <div class="control-list-first">
+                                <p>1. Buy the token you want to</p>
+                                <p>2. Stack liquidity</p>
+                            </div>
+                            <div class="control-list-second">
+                                <p>3. Harvest rewards</p>
+                                <p>4. Unstack liquidity</p>
+                            </div>
+                        </div>
+                        <div class="control-btn">
+                            <button class="control-btn-element">Start now</button>
+                        </div>
+                    </div>
+                    <div class="control-for-first-img">
+                        <img src="../assets/landing/For SPL Builders.png">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="vecteur-7">
+            <img src="../assets/landing/blue_moon.png">
+        </div>
+        <section id="section-6">
+            <div class="team-title">
+                <div class="team-title-text">
+                    <p>Multicultural Team</p>
+                    <p>Across the World</p>
+                </div>
+                <div class="team-title-direc">
+                    <button class="team-title-direct-prev"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+                    <button class="team-title-direct-next"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+            </div>
+            <div class="team-content">
+                <div class="team-content-element">
+                    <img src="../assets/landing/Croppish_avatar.png">
+                    <p class="team-content-element-title">Croppish</p>
+                    <div class="team-content-element-des">
+                        <p>Quis autem vel eum</p>
+                        <p>iure reprehenderit qui</p>
+                        <p>in ea qui in ea.</p>
+                    </div>
+                </div>
+                <div class="team-content-element">
+                    <img src="../assets/landing/El_mosquito_avater.png">
+                    <p class="team-content-element-title">Zhao</p>
+                    <div class="team-content-element-des">
+                        <p>Quis autem vel eum</p>
+                        <p>iure reprehenderit qui</p>
+                        <p>in ea qui in ea.</p>
+                    </div>
+                </div>
+                <div class="team-content-element">
+                    <img src="../assets/landing/turothecat_avatar.png">
+                    <p class="team-content-element-title">Turothecat</p>
+                    <div class="team-content-element-des">
+                        <p>Quis autem vel eum</p>
+                        <p>iure reprehenderit qui</p>
+                        <p>in ea qui in ea.</p>
+                    </div>
+                </div>
+                <div class="team-content-element">
+                    <img src="../assets/landing/Robercry_avatar.png">
+                    <p class="team-content-element-title">Mickey</p>
+                    <div class="team-content-element-des">
+                        <p>Quis autem vel eum</p>
+                        <p>iure reprehenderit qui</p>
+                        <p>in ea qui in ea.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="section-7">
+            <div class="industry-title">
+                <p>Surrounded by the Best</p>
+                <p>in the Industry</p>
+            </div>
+            <div class="industry-control">
+                <button :class="`industry-control-btn ${isBacked ? 'active' : ''}`" @click="changeToIndustry(1)">Backed by</button>
+                <button :class="`industry-control-btn ${isAdvisors ? 'active' : ''}`" @click="changeToIndustry(2)">Advisors</button>
+                <button :class="`industry-control-btn ${isPartners ? 'active' : ''}`" @click="changeToIndustry(3)">Partners</button>
+                <button :class="`industry-control-btn ${isPowered ? 'active' : ''}`" @click="changeToIndustry(4)">Powered by</button>
+            </div>
+            <div class="industry-content">
+                <div v-if="isBacked" class="industry-content-element">
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/dexlab-logo-white 1 (1).png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/dexlab-logo-white 1 (2).png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/dexlab-logo-white .png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/full-logo-normal-mexc 1.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/Group 229.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 100 (1).png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 100 (2).png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 100 (3).png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 100 (4).png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 100.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 101.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 102.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 103.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 104.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/image 105.png"></div></div>
+                </div>
+                <div v-if="isAdvisors" class="industry-content-element">
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/halborn_logo 1.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/Group-3.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/dexlab-logo-white 1.png"></div></div>
+                </div>
+                <div v-if="isPartners" class="industry-content-element">
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/dexlab-logo-white 2.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/Group2301.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/full-logo-normal-mexc 2.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/ftx-token-ftt-logo 1.png"></div></div>
+                </div>
+                <div v-if="isPowered" class="industry-content-element">
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/Vector.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/serum-srm-logo 1.png"></div></div>
+                    <div class="element-child"><div class="element-background"><img src="../assets/landing/solana-sol-logo 1.png"></div></div>
+                </div>
+            </div>
+        </section>
 
         <footer>
-            <div
-      style="
-        height: 1px;
-        background: linear-gradient(90deg, rgba(90, 196, 190, 0) 0%, #3772ff 50%, rgba(194, 0, 251, 0) 100%);
-      "
-    />
-            <nav>
-                <ul>
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-
-                    <li>
-                        <a href="https://cropper-finance.gitbook.io/cropperfinance/" target="_blank">Read More</a>
-                    </li>
-
-                    <li>
-                        <a href="/swap/">Launch App</a>
-                    </li>
-                </ul>
-            </nav>
             <div class="footer-center">
-                <div class="unvisible">
-                    <p>Decentralized 2021</p>
-                </div>
                 <div class="logoname">
                     <img src="../assets/Component2.png"/>
                     <h2>CropperFinance</h2>
                 </div>
-                <div class="visible">
-                    <p>Decentralized 2021</p>
+                <div class="team-links">
+                    <p class="our-social">Our social</p>
+                    <p class="links-detail">Medium</p>
+                    <p class="links-detail">Discord</p>
+                    <p class="links-detail">Twitter</p>
+                    <p :class="`links-detail ${isDirect ? 'active' : ''}`" @click="changeToDirect">Telegram<svg v-if="isDirect" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg><svg v-else xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></p>
                 </div>
-                <div class="grid-reseaux-footer">
-                    <div>
-                        <a href="https://discord.gg/CropperFinance" target="_blank">
-                            <img src="../assets/Discord_black.png"/>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="https://cropperfinance.medium.com/" target="_blank">
-                            <img src="../assets/Medium_black.png"/>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="https://t.me/CropperFinance" target="_blank">
-                            <img src="../assets/Telegram_black.png"/>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="https://twitter.com/CropperFinance" target="_blank">
-                            <img src="../assets/Twitter_black.png"/>
-                        </a>
-                    </div>
+            </div>
+            <div v-if="isDirect" class="team-links-telegram">
+                <p>Telegram (EN)</p>
+                <p>Telegram (CN)</p>
+                <p>Telegram (KR)</p>
+                <p>Telegram (JP)</p>
+                <p>Telegram (ES)</p>
+                <p>Telegram (TR)</p>
+                <p>Telegram (VN)</p>
+                <p>Telegram (RU)</p>
+            </div>
+            <div class="footer-end-word">
+                <div class="footer-end-first"><p>Decentralized 2021</p></div>
+                <div class="footer-end-second">
+                    <p>Terms & Conditions</p>
+                    <p>Privacy Policy</p>
                 </div>
-                
             </div>
         </footer>
-    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-    <script>
-        function d(i){ var u=0; if(jQuery(i).hasClass("op")){ u=1 } jQuery(".op").removeClass("op"); if(!u){ jQuery(i).addClass("op"); jQuery("body").addClass("fs"); } else { jQuery("body").removeClass("fs"); } }
-    </script>
-        </main>
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+        <script>
+            function d(i){ var u=0; if(jQuery(i).hasClass("op")){ u=1 } jQuery(".op").removeClass("op"); if(!u){ jQuery(i).addClass("op"); jQuery("body").addClass("fs"); } else { jQuery("body").removeClass("fs"); } }
+        </script>
+    </main>
 
 </template>
 
@@ -405,33 +382,73 @@ import { Vue, Component } from 'nuxt-property-decorator'
 import { Icon, Popover } from 'ant-design-vue'
 
 @Component({
-  components: {
-    Icon,
-    Popover
-  },
-  layout: 'home',
-
-  async asyncData({ $accessor, $api }) {
-  }
+    components: {
+        Icon,
+        Popover
+    },
+    layout: 'home',
+      async asyncData({ $accessor, $api }) {
+    }
 })
-export default class Index extends Vue {
-  isPopupOpen = false
-  tvl = 0
-  totalvolume = 0
-  timer: number | undefined = undefined
 
-  mounted() {
-  }
+export default class Landing extends Vue {
+    isPopupOpen = false
+    tvl = 0
+    totalvolume = 0
+    timer: number | undefined = undefined
+    isFarmer:boolean = true
+    isBacked:boolean = false
+    isAdvisors:boolean = true
+    isPartners:boolean = false
+    isPowered:boolean = false
+    isDirect:boolean = false
 
-  beforeDestroy() {
-    window.clearInterval(this.timer)
-  }
+    mounted() {
+    }
 
-  async getInfo() {
-  }
+    beforeDestroy() {
+        window.clearInterval(this.timer)
+    }
+
+    changeToFarmer() {
+        this.isFarmer = !this.isFarmer;
+    }
+
+    changeToIndustry(num : number) {
+        switch ( num ) {
+            case 1:
+                this.isBacked = true;
+                this.isAdvisors = false;
+                this.isPartners = false;
+                this.isPowered = false;
+                break;
+            case 2:
+                this.isBacked = false
+                this.isAdvisors = true
+                this.isPartners = false
+                this.isPowered = false
+                break;
+            case 3:
+                this.isBacked = false
+                this.isAdvisors = false
+                this.isPartners = true
+                this.isPowered = false
+                break;
+            case 4:
+                this.isBacked = false
+                this.isAdvisors = false
+                this.isPartners = false
+                this.isPowered = true
+                break;
+        }
+    }
+
+    changeToDirect() {
+        this.isDirect = !this.isDirect;
+    }
 }
 </script>
 
 <style>
-  @import '../assets/index.css';
+  @import '../assets/landing.css';
 </style>
