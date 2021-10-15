@@ -138,4 +138,57 @@ export default class Foot extends Vue {
   }
 }
 
+// ******* Mobile *******
+@media (max-width: 600px) {
+  .ant-layout-footer {
+    width: 375px;
+    margin: auto;
+    padding: 22px !important;
+  }
+  .planet-bottom {
+    display: none;
+  }
+  .foot-refer {
+    > label {
+      display: none;
+    }
+    .refer-list {
+      display: inline-block;
+      width: 100%;
+      label {
+        line-height: 40px;
+        margin-left: 0;
+        display: block;
+      }
+    }
+  }
+  .mobile {
+    .icon_list {
+      display: inline-block;
+      justify-items: center;
+      margin: 10px 0;
+      font-size: 20px;
+      width: 100%;
+      label {
+        display: none;
+      }
+      a {
+        display: block;
+        margin-top: 10px;
+        text-align: left;
+      }
+    }
+  }
+  
+}
+// @media (max-width: 1080px) {
+//   .pc {
+//     flex-direction: column;
+//     align-items: center;
+//   }
+//   .foot-refer .refer-list label {
+//     margin: 0 30px;
+//   }
+// }
+
 </style>
