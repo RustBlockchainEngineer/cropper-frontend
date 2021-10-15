@@ -243,9 +243,8 @@ export default Vue.extend({
       margin-left: 2px;
       background: #01033C;
       border-radius: 8px;
-      border: 2px solid;
-      border-color: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
       width: 120px;
+      position: relative;
 
       .anticon {
         margin-left: 4px;
@@ -257,6 +256,23 @@ export default Vue.extend({
         height: 24px;
         width: 24px;
       }
+    }
+    
+    .select-button::before {
+      content:"";
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      border-radius:8px; 
+      padding:2px; 
+      background:linear-gradient(45deg,#280C86,#22B5B6); 
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out; 
+      mask-composite: exclude; 
     }
 
     .shortcut-btns {

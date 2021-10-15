@@ -24,12 +24,21 @@
         <Tooltip placement="bottomLeft">
           <template slot="title">
             <div class="swap-info tooltipOne">
-              <InputNumber
+              <!-- <InputNumber
+                type="number"
                 style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); width: 200px"
                 v-model="setting.slippage"
-                min="0"
+                @keypress="validateNumber"
+              /> -->
+               <input 
+                id="number"
+                type="number"
+                min="1"
                 max="100"
-              />
+                v-model="setting.slippage"
+                @keypress="validateNumber"
+                style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); width: 200px"
+               />
             </div>
           </template>
           <button class="btn-grad">
@@ -278,7 +287,7 @@
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon"/>
                 </Tooltip>
               </span>
-              <div style="margin: 20px;"><span class="swapThrough"> {{ endpoint }} </span></div>
+              <div><span class="swapThrough { green : endpoint === 'CropperFinace Pool', purple: endpoint === 'Raydium Pool', cyan: endpoint === 'Serum orderbook'}"> {{ endpoint }} </span></div>
             </div>
 
             <div class="fs-container flexDiv slippage">
@@ -514,9 +523,7 @@ export default Vue.extend({
     Icon,
     Tooltip,
     Button,
-    // Progress,
-    Spin,
-    InputNumber
+    Spin
   },
 
   data() {
@@ -734,7 +741,11 @@ export default Vue.extend({
   methods: {
     gt,
     get,
-    
+    validateNumber(event: { target: { value: number }; preventDefault: () => void }) {
+      if(event.target.value > 10) {
+        event.preventDefault();
+      }
+    },
     openFromCoinSelect() {
       this.selectFromCoin = true
       this.closeAllModal('coinSelectShow')
@@ -1694,14 +1705,25 @@ main{
         }
         .tooltipIcon {
           margin-top: -15px;
+          width: 15px;
         }
       }
       .swapThrough {
         text-transform: capitalize;
-        border: solid 2px #0CAF7F;
         border-radius: 5px;
         padding: 0 7px;
+      }
+      .green {
         background: #0CAF7F;
+        border: solid 2px #0CAF7F;
+      }
+      .purple {
+        background: #69039C;
+        border: solid 2px #69039C;
+      }
+      .cyan {
+        background: #4DB1C4;
+        border: solid 2px #4DB1C4;
       }
     }
   }
@@ -1854,6 +1876,7 @@ main{
     }
   }
   .card {
+    border: 1px solid #4d4d4d;
     .card-body {
       row-gap: 5px;
       width: 600px !important;
@@ -1904,12 +1927,13 @@ main{
           height: 40px;
           margin-left: 5px;
           width: 120px;
-          font-size: 12px;
+          font-size: 11px;
           display: flex;
           justify-content: space-around;
           align-items: center;
           img {
             margin: auto 0;
+            width: 15px;
           }
         }
       }
@@ -1926,6 +1950,10 @@ main{
             font-size: 12px !important;
             .fs-container .name {
               font-size: 14px !important;
+              .tooltipIcon {
+                margin: 0 5px 0 0;
+                width: 12px;
+              }
             }
             .coin-budge {
               img {
@@ -1935,6 +1963,10 @@ main{
             .flexDiv {
               display: block;
               border-bottom: 1px solid #4d4d4d;
+              div {
+                margin: 20px;
+                float: right;
+              }
             }
             .pathway {
               span:nth-of-type(2) {
