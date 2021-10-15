@@ -1610,6 +1610,8 @@ main{
   }
   .buttonGroup {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
   }
 }
 
@@ -2036,7 +2038,7 @@ main{
   .ant-menu-horizontal {
     position: absolute;
     top: 100px;
-    zoom: 0.9;
+    zoom: 0.89;
     border-top: 1px solid;
     border-bottom: 1px solid;
   }
