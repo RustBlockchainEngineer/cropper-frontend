@@ -6,7 +6,8 @@
 
 
     <CreateFarmProgram
-      v-if="!farmProgramCreated && wallet.connected && wallet.address === superOwnerAddress"
+      v-if="!farmProgramCreated && wallet.connected"
+      :isSuperOwner = "wallet.address === superOwnerAddress"
       @onCreate="createFarmProgram"
     />
     <StakeModel
@@ -400,16 +401,13 @@ import { getUnixTs } from '@/utils'
 import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
-import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
-import { DEVNET_MODE, FARM_PROGRAM_ID } from '@/utils/ids'
+import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER } from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
 const CollapsePanel = Collapse.Panel
-const RadioGroup = Radio.Group
-const RadioButton = Radio.Button
 
 export default Vue.extend({
   components: {
@@ -437,11 +435,11 @@ export default Vue.extend({
       isMobile: false,
 
       farmProgramCreated:true,
-      superOwnerAddress:"",
+      superOwnerAddress:FARM_INITIAL_SUPER_OWNER,
 
       farms: [] as any[],
       showFarms: [] as any[],
-      searchName: '',
+      searchName: "",
 
       lp: null,
       rewardCoin: null,
@@ -580,7 +578,8 @@ export default Vue.extend({
     async createFarmProgram(){
       const conn = this.$web3
       const wallet = (this as any).$wallet
-      await FarmProgram.createDefaultProgramData(conn, wallet);
+      const txid = await FarmProgram.createDefaultProgramData(conn, wallet);
+      console.log("create farm program account",txid)
 
       await this.delay(1500);
       this.checkIfFarmProgramExist();
@@ -589,7 +588,7 @@ export default Vue.extend({
       const conn = this.$web3
       const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
       const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
-      const [programAccount,_nonce] = await PublicKey.findProgramAddress(seeds, farmProgramId);
+      const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
       try{
         const accountData = await loadAccount(conn, programAccount, farmProgramId);
         const farmData = FarmProgramAccountLayout.decode(accountData);
@@ -598,9 +597,7 @@ export default Vue.extend({
       }
       catch{
         this.farmProgramCreated = false;
-        this.superOwnerAddress = "";
       }
-      
     },
     async updateLabelizedAmms() {
       this.labelizedAmms = {}

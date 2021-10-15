@@ -2,7 +2,7 @@ import {Buffer} from 'buffer';
 import { bool, publicKey, u32,struct,  u64, u8, u128} from '@project-serum/borsh'
 // @ts-ignore
 import { nu64, nu128 } from 'buffer-layout'
-import {Connection, SYSVAR_CLOCK_PUBKEY} from '@solana/web3.js';
+import {Connection, SYSVAR_CLOCK_PUBKEY, SYSVAR_RENT_PUBKEY} from '@solana/web3.js';
 import {
   Account,
   AccountInfo,
@@ -17,7 +17,7 @@ import {loadAccount} from './account';
 import { AccountLayout, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { createSplAccount } from './new_fcn';
 import { createAssociatedTokenAccountIfNotExist, createProgramAccountIfNotExist, findAssociatedTokenAddress, sendTransaction } from './web3';
-import { FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5 } from './ids';
+import { FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5, SYSTEM_PROGRAM_ID } from './ids';
 import { FarmInfo } from './farms';
 import { getBigNumber } from './layouts';
 import { TokenAmount } from './safe-math';
@@ -134,9 +134,12 @@ export const UserInfoAccountLayout = struct([
     const keys = [
       {pubkey: programDataKey, isSigner: false, isWritable: true},
       {pubkey: owner.publicKey, isSigner: true, isWritable: true},
+      {pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false},
+      {pubkey: SYSTEM_PROGRAM_ID, isSigner: false, isWritable: false},
+      
     ];
-    
     const commandDataLayout = struct([
+      u8('instruction'),
       publicKey('super_owner'),
       publicKey('fee_owner'),
       publicKey('allowed_creator'),
@@ -149,7 +152,7 @@ export const UserInfoAccountLayout = struct([
     {
       const encodeLength = commandDataLayout.encode(
         {
-          instruction: FarmInstruction.InitializeFarm, // InitializeFarm instruction
+          instruction: FarmInstruction.SetProgramData, // InitializeFarm instruction
           super_owner:superOwner,
           fee_owner:feeOwner,
           allowed_creator:allowedCreator,
@@ -205,31 +208,14 @@ export const UserInfoAccountLayout = struct([
   ){
     let farmProgramId = new PublicKey(FARM_PROGRAM_ID);
 
-    let programDataKey = await PublicKey.createProgramAddress(
-      [farmProgramId.toBuffer()],
-      farmProgramId,
-    );
+    const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
+
     let transaction;
     transaction = new Transaction();
 
-    const balanceNeeded = await FarmProgram.getMinBalanceRentForExempt(
-      connection,
-    );
-
-    const accountInfo = await connection.getAccountInfo(programDataKey);
-    if (accountInfo === null) {
-      transaction.add(
-        SystemProgram.createAccount({ 
-          fromPubkey: owner.publicKey,
-          newAccountPubkey: programDataKey,
-          lamports: balanceNeeded,
-          space: FarmProgramAccountLayout.span,
-          programId: farmProgramId,
-        }),
-      );
-    }
     const instruction = FarmProgram.createSetProgramDataInstruction(
-      programDataKey,
+      programAccount,
       owner,
       superOwner,
       feeOwner,
@@ -241,9 +227,9 @@ export const UserInfoAccountLayout = struct([
       farmProgramId
     );
     transaction.add(instruction);
-      
+    
     let tx = await sendTransaction(connection, owner, transaction, [
-      
+    
     ]);
     return tx;
   }
