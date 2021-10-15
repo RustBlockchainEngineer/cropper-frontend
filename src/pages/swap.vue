@@ -2029,10 +2029,10 @@ main{
   }
 
 }
-@media (max-width: 920px) {
-  .swapWrapper {
-    padding: 50px;
-    margin: 0 auto;
-  }
-}
+// @media (max-width: 920px) {
+//   .swapWrapper {
+//     padding: 50px;
+//     margin: 0 auto;
+//   }
+// }
 </style>
