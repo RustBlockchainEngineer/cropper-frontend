@@ -66,7 +66,6 @@ export const FarmAccountLayout = struct([
   publicKey('reward_mint_address'),
   publicKey('token_program_id'),
   publicKey('owner'),
-  publicKey('fee_owner'),
   u128('reward_per_share_net'),
   u64('last_timestamp'),
   u64('reward_per_timestamp'),
@@ -107,6 +106,28 @@ export const UserInfoAccountLayout = struct([
     this.rewardMultipler = rewardMultipler;
   }
 
+  static async loadProgramAccount(connection:Connection){
+    const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+    const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
+
+    const data = await loadAccount(connection, programAccount, farmProgramId);
+    const programData = FarmProgramAccountLayout.decode(data);
+    
+    
+    let result = new FarmProgram(
+      programData.version,
+      programData.super_owner,
+      programData.fee_owner,
+      programData.allowed_creator,
+      programData.amm_program_id,
+      programData.farm_fee,
+      programData.harvest_fee_numerator,
+      programData.harvest_fee_denominator,
+      programData.reward_multipler,
+    );
+    return result;
+  }
   /**
    * Get the minimum balance for the farm account to be rent exempt
    *
@@ -269,7 +290,6 @@ export class YieldFarm {
   public rewardPerTimestamp: nu64 = 0;
   public rewardPerShareNet: nu128 = 0;
   public lastTimestamp: nu64 = 0;
-  public feeOwner:PublicKey | any;
 
   constructor(
     private connection: Connection,
@@ -520,7 +540,6 @@ export class YieldFarm {
     farm.rewardPerShareNet = rewardPerShareNet;
     farm.lastTimestamp = lastTimestamp;
     farm.rewardPerTimestamp = rewardPerTimestamp;
-    farm.feeOwner = feeOwner;
     
     if(isAllowed > 0)
     {
@@ -769,14 +788,16 @@ export class YieldFarm {
     userUSDCTokenAccount: PublicKey,
     amount: number,
   ) {
+
+    const programData = await FarmProgram.loadProgramAccount(this.connection);
     let transaction;
     transaction = new Transaction();
 
-    let usdcATA = await YieldFarm.checkWalletATA(this.connection, this.feeOwner, TOKENS.USDC.mintAddress);
+    let usdcATA = await YieldFarm.checkWalletATA(this.connection, programData.feeOwner, TOKENS.USDC.mintAddress);
     if(!usdcATA){
       usdcATA = await createAssociatedTokenAccountIfNotExist(
         null,
-        this.feeOwner,
+        programData.feeOwner,
         TOKENS.USDC.mintAddress,
         transaction
       )
@@ -855,6 +876,8 @@ export class YieldFarm {
     infoAccount: string | undefined | null,
     amount: string | number
   ) {
+    const programData = await FarmProgram.loadProgramAccount(connection);
+
     const value = getBigNumber(new TokenAmount(amount, farmInfo.lp.decimals, false).wei)
     const transaction = new Transaction()
     const signers: any = []
@@ -894,11 +917,11 @@ export class YieldFarm {
       farmId,
       programId
     )
-    let rewardATA = await YieldFarm.checkWalletATA(connection, fetchFarm.feeOwner, farmInfo.reward.mintAddress);
+    let rewardATA = await YieldFarm.checkWalletATA(connection, programData.feeOwner, farmInfo.reward.mintAddress);
     if(!rewardATA){
       rewardATA = await createAssociatedTokenAccountIfNotExist(
         null,
-        fetchFarm.feeOwner,
+        programData.feeOwner,
         farmInfo.reward.mintAddress,
         transaction
       )
@@ -957,6 +980,8 @@ export class YieldFarm {
     infoAccount: string | undefined | null,
     amount: string
   ) {
+    const programData = await FarmProgram.loadProgramAccount(connection);
+
     const value = getBigNumber(new TokenAmount(amount, farmInfo.lp.decimals, false).wei)
     const transaction = new Transaction()
     const signers: any = []
@@ -1004,11 +1029,11 @@ export class YieldFarm {
       farmId,
       programId
     )
-    let rewardATA = await YieldFarm.checkWalletATA(connection, fetchFarm.feeOwner, farmInfo.reward.mintAddress);
+    let rewardATA = await YieldFarm.checkWalletATA(connection, programData.feeOwner, farmInfo.reward.mintAddress);
     if(!rewardATA){
       rewardATA = await createAssociatedTokenAccountIfNotExist(
         null,
-        fetchFarm.feeOwner,
+        programData.feeOwner,
         farmInfo.reward.mintAddress,
         transaction
       )
