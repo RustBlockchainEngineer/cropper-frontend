@@ -541,10 +541,13 @@ export default class Wallet extends Vue {
   align-items: center;
 }
 .ant-modal {
-  width: 700px !important;
+  width: 800px !important;
 }
 .ant-modal-content {
   background-color: #0E1046;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px;
+  
   .ant-modal-close {
     color: @text-color;
   }
@@ -599,8 +602,15 @@ header .btncontainer {
     justify-content: space-between;
   }
   .ant-modal-title{
+    width: 100%;
     background-color: #0E1046;
-    text-align:center
+    text-align: center;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 80px;
+    letter-spacing: -0.05em;
+    color: #FFF;
+    border-bottom: 1px solid #FFFFFF20;
   }
 
 </style>
