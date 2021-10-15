@@ -1,8 +1,8 @@
 <template>
   <Menu
     v-model="currentRoute"
-    :mode="isMobile ? 'inline' : 'horizontal'"
-    :theme="isMobile ? 'dark' : 'light'"
+    :mode="'horizontal'"
+    :theme="'light'"
     @click="changeRoute"
   >
     <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()">

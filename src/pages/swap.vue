@@ -23,7 +23,7 @@
         </div>
         <Tooltip placement="bottomLeft">
           <template slot="title">
-            <div class="swap-info">
+            <div class="swap-info tooltipOne">
               <InputNumber
                 style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); width: 200px"
                 v-model="setting.slippage"
@@ -247,7 +247,7 @@
               </span>
             </div>
 
-            <div class="fs-container">
+            <div class="fs-container flexDiv pathway">
               <span class="name">
                 <label>Pathway</label>
                 <Tooltip placement="bottomLeft">
@@ -270,7 +270,7 @@
               </span>
             </div>
 
-            <div v-if="endpoint" class="fs-container">
+            <div v-if="endpoint" class="fs-container flexDiv swapping">
               <span class="name">
                 <label>Swapping Through</label>
                 <Tooltip placement="bottomLeft">
@@ -278,10 +278,10 @@
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon"/>
                 </Tooltip>
               </span>
-              <span class="swapThrough"> {{ endpoint }} </span>
+              <div style="margin: 20px;"><span class="swapThrough"> {{ endpoint }} </span></div>
             </div>
 
-            <div class="fs-container">
+            <div class="fs-container flexDiv slippage">
               <span class="name">
                 <label>Slippage Tolerance</label>
                 <Tooltip placement="bottomLeft">
@@ -294,7 +294,7 @@
               <span class="name"> <label>{{ $accessor.setting.slippage }}% </label></span>
             </div>
             
-            <div v-if="fromCoin && toCoin && fromCoinAmount && toCoinWithSlippage" class="fs-container">
+            <div v-if="fromCoin && toCoin && fromCoinAmount && toCoinWithSlippage" class="fs-container flexDiv minimum">
               <span class="name">
                 <label>Minimum Received</label>
                 <Tooltip placement="bottomLeft">
@@ -598,7 +598,9 @@ export default Vue.extend({
 
       setCoinFromMintLoading: false,
 
-      asksAndBidsLoading: true
+      asksAndBidsLoading: true,
+
+      windowWidth: 0
     }
   },
 
@@ -732,7 +734,7 @@ export default Vue.extend({
   methods: {
     gt,
     get,
-
+    
     openFromCoinSelect() {
       this.selectFromCoin = true
       this.closeAllModal('coinSelectShow')
@@ -1562,6 +1564,7 @@ main{
   top: 446px;
   transform: rotate(90deg);
 }
+
 .btn-grad {
   background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
   border: 2px solid rgba(255, 255, 255, 0.14);
@@ -1640,6 +1643,7 @@ main{
     }
   }
 }
+
 .ant-tooltip-inner {
   background: linear-gradient(292.73deg, #21BDB8 -20.31%, #280684 100%) !important;
   border: 2px solid rgba(255, 255, 255, 0.14);
@@ -1818,7 +1822,6 @@ main{
   }
 }
 
-
 .swapWrapper {
   padding: 50px 128px;
   
@@ -1877,4 +1880,159 @@ main{
     background:#01033C !important;
   }
 }
+
+// ******* Mobile *******
+@media (max-width: 780px) {
+  .swapWrapper {
+    margin: auto;
+    padding: 0;
+    width: 375px;
+
+    .planetMiddle {
+      display: none;
+    }
+    .swapHead {
+      margin: 22px;
+      h1 {
+        display: none;
+      }
+      .buttonGroup {
+        .count-down-group {
+          zoom: 0.66;
+        }
+        .btn-grad {
+          height: 40px;
+          margin-left: 5px;
+          width: 120px;
+          font-size: 12px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          img {
+            margin: auto 0;
+          }
+        }
+      }
+    }
+    .container {
+      min-width: auto;
+      padding: 22px !important;
+      .card {
+        border: 1px solid #4d4d4d;
+        .card-body {
+          padding: 20px 5px;
+          width: auto !important;
+          .price-info {
+            font-size: 12px !important;
+            .fs-container .name {
+              font-size: 14px !important;
+            }
+            .coin-budge {
+              img {
+                width: 15px;
+              }
+            }
+            .flexDiv {
+              display: block;
+              border-bottom: 1px solid #4d4d4d;
+            }
+            .pathway {
+              span:nth-of-type(2) {
+                justify-content: center;
+                margin: 20px;
+              }
+            }
+            .slippage, .minimum{
+              padding-bottom: 20px;
+              justify-content: space-between;
+              display: flex;
+            }
+          }
+          .coin-select {
+            .label {
+              font-size: 14px;
+            }
+            .coin-input {
+              .select-button {
+                font-size: 12px;
+                width: 100px;
+              }
+              .input-button {
+                height: 25px;
+                width: 40px;
+                margin: 4px;
+                button {
+                  font-size: 12px;
+                }
+              }
+              .main-input {
+                height: 40px;
+              }
+            }
+            input {
+              font-size: 14px;
+            }
+          } 
+        }
+      }
+      .btncontainer {
+        margin: 20px auto;
+        .ant-btn-lg {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .ant-notification {
+    top: 100px !important;
+    margin-left: 18px !important;
+    height: 0;
+
+    .ant-notification-notice {
+      background: #222262 !important;
+      border: 1px solid #7b7ebd;
+    }
+  }
+
+  .ant-tooltip-placement-bottomLeft {
+    .ant-tooltip-arrow {
+      display: none;
+    }
+  }
+
+  .ant-menu-horizontal {
+    position: absolute;
+    top: 100px;
+    zoom: 0.9;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+  }
+
+  .ant-modal {
+    max-width: 350px;
+    
+    .ant-modal-header {
+      padding: 16px 12px;
+    }
+    .ant-modal-body {
+      padding: 12px;
+    }
+  }
+
+  .select-token .token-list .token-info {
+    border: 1px solid rgba(255,255,255, 0.1) !important;;
+    border-radius: 10px;
+    padding: 5px 10px !important;
+    margin: 5px 0;
+    background: rgba(255,255,255, 0.1) !important;
+  }
+
+}
+// @media (max-width: 920px) {
+//   .swapWrapper {
+//     padding: 50px;
+//     margin: 0 auto;
+//   }
+// }
 </style>

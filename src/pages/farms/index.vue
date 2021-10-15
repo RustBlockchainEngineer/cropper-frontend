@@ -5,6 +5,11 @@
     
 
 
+    <CreateFarmProgram
+      v-if="!farmProgramCreated && wallet.connected"
+      :isSuperOwner = "wallet.address === superOwnerAddress"
+      @onCreate="createFarmProgram"
+    />
     <StakeModel
       v-if="stakeModalOpening"
       title="Supply & Stake LP"
@@ -47,54 +52,54 @@
       @onCancel="cancelStakeLP"
     />
 
+      <div class="card">
+        <div class="card-body">
 
-    <div class="card">
-      <div class="card-body">
+          <div class="page-head fs-container">
+            <span class="title">Farms</span>
+            <NuxtLink to="/farms/create-farm/">
+              <div class="create">
+                <Button size="large" ghost>+ Create a farm </Button>
+              </div>
+            </NuxtLink>
 
-    <div class="page-head fs-container">
-      <span class="title">Farms</span>
-      <NuxtLink to="/farms/create-farm/">
-        <div class="create">
-          <Button size="large" ghost>+ Create a farm </Button>
-        </div>
-      </NuxtLink>
-
-      <div class="farm-button-group">
-        <div class="count-down-group">
-          <div class="count-down">
-            <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
-            {{ farm.autoRefreshTime - farm.countdown }}
-            <div
-              class="reload-btn"
-              @click="
-                () => {
-                  $accessor.farm.requestInfos()
-                  $accessor.wallet.getTokenAccounts()
-                }
-              "
-            >
-              <Icon type="loading" theme="outlined" />
+            <div class="farm-button-group">
+              <div class="count-down-group">
+                <div class="count-down">
+                  <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
+                  {{ farm.autoRefreshTime - farm.countdown }}
+                  <div
+                    class="reload-btn"
+                    @click="
+                      () => {
+                        $accessor.farm.requestInfos()
+                        $accessor.wallet.getTokenAccounts()
+                      }
+                    "
+                  >
+                    <Icon type="loading" theme="outlined" />
+                  </div>
+                  <!-- <Progress
+                    type="circle"
+                    :width="20"
+                    :stroke-width="10"
+                    :percent="(100 / farm.autoRefreshTime) * farm.countdown"
+                    :show-info="false"
+                    :class="farm.loading ? 'disabled' : ''"
+                    @click="
+                      () => {
+                        $accessor.farm.requestInfos()
+                        $accessor.wallet.getTokenAccounts()
+                      }
+                    "
+                  /> -->
+                </div>
+              </div>
             </div>
-            <!-- <Progress
-              type="circle"
-              :width="20"
-              :stroke-width="10"
-              :percent="(100 / farm.autoRefreshTime) * farm.countdown"
-              :show-info="false"
-              :class="farm.loading ? 'disabled' : ''"
-              @click="
-                () => {
-                  $accessor.farm.requestInfos()
-                  $accessor.wallet.getTokenAccounts()
-                }
-              "
-            /> -->
           </div>
-        </div>
-      </div>
-    </div>
 
-    <div v-if="farm.initialized">
+          <div v-if="farm.initialized">
+
           <div class="tool-bar">
             <div class="tool-option">
               <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
@@ -405,11 +410,11 @@
             </div>
           </div>
         </div>
-    <div v-else class="fc-container">
-      <Spin :spinning="true">
-        <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
-      </Spin>
-    </div>
+        <div v-else class="fc-container">
+          <Spin :spinning="true">
+            <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
+          </Spin>
+        </div>
       </div>
     </div>
   </div>
@@ -441,15 +446,13 @@ import { getUnixTs } from '@/utils'
 import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
-import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
-import { PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
+import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
-import { DEVNET_MODE, FARM_PROGRAM_ID } from '@/utils/ids'
+import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER } from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
+import { loadAccount } from '@/utils/account'
 const CollapsePanel = Collapse.Panel
-const RadioGroup = Radio.Group
-const RadioButton = Radio.Button
 
 export default Vue.extend({
   components: {
@@ -476,9 +479,12 @@ export default Vue.extend({
     return {
       isMobile: false,
 
+      farmProgramCreated:true,
+      superOwnerAddress:FARM_INITIAL_SUPER_OWNER,
+
       farms: [] as any[],
       showFarms: [] as any[],
-      searchName: '',
+      searchName: "",
 
       lp: null,
       rewardCoin: null,
@@ -606,10 +612,38 @@ export default Vue.extend({
       this.searchCertifiedFarm = 2
       this.searchLifeFarm = 3
     }
+
+    this.checkIfFarmProgramExist();
+
+
   },
 
   methods: {
     TokenAmount,
+    async createFarmProgram(){
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      const txid = await FarmProgram.createDefaultProgramData(conn, wallet);
+      console.log("create farm program account",txid)
+
+      await this.delay(1500);
+      this.checkIfFarmProgramExist();
+    },
+    async checkIfFarmProgramExist(){
+      const conn = this.$web3
+      const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+      const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
+      const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
+      try{
+        const accountData = await loadAccount(conn, programAccount, farmProgramId);
+        const farmData = FarmProgramAccountLayout.decode(accountData);
+        this.farmProgramCreated = true;
+        this.superOwnerAddress = farmData.super_owner.toBase58();
+      }
+      catch{
+        this.farmProgramCreated = false;
+      }
+    },
     async updateLabelizedAmms() {
       this.labelizedAmms = {}
       this.labelizedAmmsExtended = {}
@@ -1519,11 +1553,11 @@ export default Vue.extend({
 }
 
 .farm.container {
-  max-width: 1350px;
+  max-width: 1350px;    
   width: 100%;
   background: #01033C;
-  margin-top:20px;
-  margin-bottom:20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   padding: 15px;
 
 
@@ -1543,11 +1577,8 @@ export default Vue.extend({
   }
 
   .card {
-
-    .card{
-      margin-top: 70px;
-
-    }
+  .card {
+    margin-top: 70px;
 
     .card-body {
       padding: 0;
@@ -1570,6 +1601,7 @@ export default Vue.extend({
         display: inline-block;
       }
     }
+  }
   }
 
   .harvest {
@@ -1734,7 +1766,6 @@ export default Vue.extend({
   .page-head{
     margin-top: 10px;
   }
-
   .page-head .title {
     position: absolute;
     left: 8px !important;
@@ -1799,13 +1830,6 @@ export default Vue.extend({
       border-color: transparent !important;
       height: 56px !important;
     }
-  }
-
-  .page-head{
-      display: block;
-    align-items: unset;
-    justify-content: unset;
-    text-align: left;
   }
 
   .fs-container {
@@ -2022,7 +2046,7 @@ export default Vue.extend({
   margin-left: 12px;
 }
 
-.planet-left {
+.planet-img-left {
   position: absolute;
   left: 0;
   top: 35%;
