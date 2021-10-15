@@ -252,7 +252,7 @@
             </div>
             <div class="team-content">
                 <div class="team-content-element">
-                    <img src="../assets/landing/Croppish_avatar 1.png">
+                    <img src="../assets/landing/Croppish_avatar.png">
                     <p class="team-content-element-title">Croppish</p>
                     <div class="team-content-element-des">
                         <p>Quis autem vel eum</p>
@@ -261,7 +261,7 @@
                     </div>
                 </div>
                 <div class="team-content-element">
-                    <img src="../assets/landing/El_mosquito_avater 1.png">
+                    <img src="../assets/landing/El_mosquito_avater.png">
                     <p class="team-content-element-title">Zhao</p>
                     <div class="team-content-element-des">
                         <p>Quis autem vel eum</p>
@@ -270,7 +270,7 @@
                     </div>
                 </div>
                 <div class="team-content-element">
-                    <img src="../assets/landing/turothecat_avatar 1.png">
+                    <img src="../assets/landing/Turothecat_avatar.png">
                     <p class="team-content-element-title">Turothecat</p>
                     <div class="team-content-element-des">
                         <p>Quis autem vel eum</p>
@@ -279,7 +279,7 @@
                     </div>
                 </div>
                 <div class="team-content-element">
-                    <img src="../assets/landing/Robercry_avatar 1.png">
+                    <img src="../assets/landing/Robercry_avatar.png">
                     <p class="team-content-element-title">Mickey</p>
                     <div class="team-content-element-des">
                         <p>Quis autem vel eum</p>

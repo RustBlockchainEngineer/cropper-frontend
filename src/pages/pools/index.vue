@@ -1,5 +1,6 @@
 <template>
   <div class="pool container">
+    <img class="planet-left" src="@/assets/Green Planet 1.png" />
 
 
 
@@ -723,6 +724,12 @@ section{
   margin-bottom:20px;
   padding: 15px;
 
+  .planet-left {
+    position: absolute;
+    left: 0;
+    top: 35%;
+  }
+  
   .page-head{
     margin-top:10px
   }

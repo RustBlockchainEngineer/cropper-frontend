@@ -1,51 +1,14 @@
 <template>
   <div class="farm container">
-    <img class="planet-img-left" src="@/assets/Green Planet 1.png" />
+    <img class="planet-left" src="@/assets/Green Planet 1.png" />
 
-    <div class="card">
-      <div class="card-body">
-      
-    <div class="page-head fs-container">
-      <span class="title">Farms</span>
-      <div class="farm-button-group">
-        <div class="count-down-group">
-          <div class="count-down">
-            <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
-            {{ farm.autoRefreshTime - farm.countdown }}
-            <div
-              class="reload-btn"
-              @click="
-                () => {
-                  $accessor.farm.requestInfos()
-                  $accessor.wallet.getTokenAccounts()
-                }
-              "
-            >
-              <Icon type="loading" theme="outlined" />
-            </div>
-            <!-- <Progress
-              type="circle"
-              :width="20"
-              :stroke-width="10"
-              :percent="(100 / farm.autoRefreshTime) * farm.countdown"
-              :show-info="false"
-              :class="farm.loading ? 'disabled' : ''"
-              @click="
-                () => {
-                  $accessor.farm.requestInfos()
-                  $accessor.wallet.getTokenAccounts()
-                }
-              "
-            /> -->
-          </div>
-        </div>
-        <NuxtLink to="/farms/create-farm/">
-          <div class="btncontainer">
-            <Button size="large" ghost> Create a farm </Button>
-          </div>
-        </NuxtLink>
-      </div>
-    </div>
+    
+
+
+    <CreateFarmProgram
+      v-if="!farmProgramCreated && wallet.connected && wallet.address === superOwnerAddress"
+      @onCreate="createFarmProgram"
+    />
     <StakeModel
       v-if="stakeModalOpening"
       title="Supply & Stake LP"
@@ -88,9 +51,54 @@
       @onCancel="cancelStakeLP"
     />
 
-    <div v-if="farm.initialized">
       <div class="card">
         <div class="card-body">
+
+          <div class="page-head fs-container">
+            <span class="title">Farms</span>
+            <NuxtLink to="/farms/create-farm/">
+              <div class="create">
+                <Button size="large" ghost>+ Create a farm </Button>
+              </div>
+            </NuxtLink>
+
+            <div class="farm-button-group">
+              <div class="count-down-group">
+                <div class="count-down">
+                  <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
+                  {{ farm.autoRefreshTime - farm.countdown }}
+                  <div
+                    class="reload-btn"
+                    @click="
+                      () => {
+                        $accessor.farm.requestInfos()
+                        $accessor.wallet.getTokenAccounts()
+                      }
+                    "
+                  >
+                    <Icon type="loading" theme="outlined" />
+                  </div>
+                  <!-- <Progress
+                    type="circle"
+                    :width="20"
+                    :stroke-width="10"
+                    :percent="(100 / farm.autoRefreshTime) * farm.countdown"
+                    :show-info="false"
+                    :class="farm.loading ? 'disabled' : ''"
+                    @click="
+                      () => {
+                        $accessor.farm.requestInfos()
+                        $accessor.wallet.getTokenAccounts()
+                      }
+                    "
+                  /> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="farm.initialized">
+
           <div class="tool-bar">
             <div class="tool-option">
               <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
@@ -401,14 +409,12 @@
             </div>
           </div>
         </div>
+        <div v-else class="fc-container">
+          <Spin :spinning="true">
+            <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
+          </Spin>
+        </div>
       </div>
-    </div>
-    <div v-else class="fc-container">
-      <Spin :spinning="true">
-        <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
-      </Spin>
-    </div>
-  </div>
     </div>
   </div>
 </template>
@@ -440,11 +446,12 @@ import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
-import { PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
+import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID } from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
+import { loadAccount } from '@/utils/account'
 const CollapsePanel = Collapse.Panel
 const RadioGroup = Radio.Group
 const RadioButton = Radio.Button
@@ -473,6 +480,9 @@ export default Vue.extend({
   data() {
     return {
       isMobile: false,
+
+      farmProgramCreated:true,
+      superOwnerAddress:"",
 
       farms: [] as any[],
       showFarms: [] as any[],
@@ -604,10 +614,39 @@ export default Vue.extend({
       this.searchCertifiedFarm = 2
       this.searchLifeFarm = 3
     }
+
+    this.checkIfFarmProgramExist();
+
+
   },
 
   methods: {
     TokenAmount,
+    async createFarmProgram(){
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      await FarmProgram.createDefaultProgramData(conn, wallet);
+
+      await this.delay(1500);
+      this.checkIfFarmProgramExist();
+    },
+    async checkIfFarmProgramExist(){
+      const conn = this.$web3
+      const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+      const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
+      const [programAccount,_nonce] = await PublicKey.findProgramAddress(seeds, farmProgramId);
+      try{
+        const accountData = await loadAccount(conn, programAccount, farmProgramId);
+        const farmData = FarmProgramAccountLayout.decode(accountData);
+        this.farmProgramCreated = true;
+        this.superOwnerAddress = farmData.super_owner.toBase58();
+      }
+      catch{
+        this.farmProgramCreated = false;
+        this.superOwnerAddress = "";
+      }
+      
+    },
     async updateLabelizedAmms() {
       this.labelizedAmms = {}
       this.labelizedAmmsExtended = {}
@@ -1510,28 +1549,37 @@ export default Vue.extend({
 }
 
 .farm-button-group {
-  position: absolute;
-  right: 0;
+  position: relative;
+  float: right;
   display: inline-flex;
   align-items: center;
 }
 
 .farm.container {
-  max-width: 1350px;
+  max-width: 1350px;    
   width: 100%;
   background: #01033C;
-  margin-top:20px;
-  margin-bottom:20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   padding: 15px;
+
+
+  .planet-left {
+    position: absolute;
+    left: 0;
+    top: 35%;
+  }
 
   .page-head a {
     background: #01033c;
     margin-left: 20px;
+    float:right;
     .btncontainer {
       display: inline-block;
     }
   }
 
+  .card {
   .card {
     margin-top: 70px;
 
@@ -1556,6 +1604,7 @@ export default Vue.extend({
         display: inline-block;
       }
     }
+  }
   }
 
   .harvest {
@@ -1676,6 +1725,7 @@ export default Vue.extend({
     .state {
       display: flex;
       text-align: left;
+      flex-direction: row;
 
       .title {
         font-weight: normal;
@@ -1716,9 +1766,12 @@ export default Vue.extend({
 
 <style lang="less">
 .farm {
+  .page-head{
+    margin-top: 10px;
+  }
   .page-head .title {
     position: absolute;
-    left: 0 !important;
+    left: 8px !important;
     transform: translate(0, 0) !important;
   }
 
@@ -1741,6 +1794,26 @@ export default Vue.extend({
 }
 
 .farm.container {
+
+  .create {
+    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+
+    button {
+      background: unset !important;
+      color: #fff;
+      border-color: transparent;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 42px;
+      letter-spacing: -0.05em;
+      height: 60px;
+      width: 163px;
+    }
+  }
+
   .btncontainer {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
     display: inline-block;
@@ -1749,6 +1822,7 @@ export default Vue.extend({
     position: relative;
     max-width: 400px;
     padding: 2px;
+    margin:0;
     border-radius: 8px !important;
     max-height: 60px !important;
 
@@ -1975,7 +2049,7 @@ export default Vue.extend({
   margin-left: 12px;
 }
 
-.planet-left {
+.planet-img-left {
   position: absolute;
   left: 0;
   top: 35%;
