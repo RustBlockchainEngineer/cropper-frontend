@@ -17,6 +17,8 @@ import {
   SERUM_PROGRAM_ID_V3 } from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { LP_TOKENS, NATIVE_SOL, TOKENS } from '@/utils/tokens'
+import { FEE_OPTIONS } from '@/utils/new_fcn'
+
 
 const AUTO_REFRESH_TIME = 60
 
@@ -448,11 +450,11 @@ export const actions = actionTree(
                 let parsed
                 if(version == 5){
                   parsed = AMM_INFO_LAYOUT_V6.decode(data)
-                  const { returnFeeNumerator, fixedFeeNumerator, feeDenominator } = parsed
+                  // const { returnFeeNumerator, fixedFeeNumerator, feeDenominator } = parsed
                   poolInfo.fees = {
-                    returnFeeNumerator: getBigNumber(returnFeeNumerator),
-                    fixedFeeNumerator: getBigNumber(fixedFeeNumerator),
-                    feeDenominator: getBigNumber(feeDenominator)
+                    returnFeeNumerator: getBigNumber(FEE_OPTIONS.returnFeeNumerator),
+                    fixedFeeNumerator: getBigNumber(FEE_OPTIONS.fixedFeeNumerator),
+                    feeDenominator: getBigNumber(FEE_OPTIONS.feeDenominator)
                   }
                 }
                 else{

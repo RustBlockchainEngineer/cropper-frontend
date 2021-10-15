@@ -12,13 +12,16 @@ import {
   mergeTransactions,
   sendTransaction,
   commitment,
-  getMintDecimals
+  getMintDecimals,
+  getGlobalStateAccount,
+  getOneFilteredTokenAccountsByOwner,
+  getGlobalStateAddress
 } from '@/utils/web3'
 import { TokenAmount } from '@/utils/safe-math'
 import { ACCOUNT_LAYOUT } from '@/utils/layouts'
 import { swapInstruction_v5 } from '@/utils/new_fcn'
 // eslint-disable-next-line
-import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, FIXED_FEE_ACCOUNT } from './ids'
+import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, FIXED_FEE_ACCOUNT, LIQUIDITY_POOL_PROGRAM_ID_V5, AMM_STATE_SEED } from './ids'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
 
 export function getOutAmount(
@@ -649,7 +652,15 @@ async function swap_v5(
 
   let normal_dir = (fromCoinMint == poolInfo.coin.mintAddress)
 
-  let feeTokenAccount = normal_dir ? poolInfo.feeCoinTokenAccount : poolInfo.feePcTokenAccount
+  const stateId = await getGlobalStateAddress();
+  const state_info = await getGlobalStateAccount(connection);
+
+  let feeTokenAccount = await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint)) as any
+
+  if(fromCoinMint === NATIVE_SOL.mintAddress){
+    feeTokenAccount = state_info.feeOwner.toString()
+  }
+
   let poolFromAccount = normal_dir? poolInfo.poolCoinTokenAccount: poolInfo.poolPcTokenAccount
   let poolToAccount = normal_dir? poolInfo.poolPcTokenAccount: poolInfo.poolCoinTokenAccount
 
@@ -658,13 +669,14 @@ async function swap_v5(
       new PublicKey(poolInfo.ammId),
       new PublicKey(poolInfo.ammAuthority),
       owner,
+      stateId,
       wrappedSolAccount ?? newFromTokenAccount,
       new PublicKey(poolFromAccount),
       new PublicKey(poolToAccount),
       wrappedSolAccount2 ?? newToTokenAccount,
       new PublicKey(poolInfo.lp.mintAddress),
       new PublicKey(feeTokenAccount),
-      FIXED_FEE_ACCOUNT,
+      state_info.feeOwner,
       new PublicKey(poolInfo.programId),
       TOKEN_PROGRAM_ID,
       SYSTEM_PROGRAM_ID,

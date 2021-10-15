@@ -20,7 +20,7 @@ import { nu64, blob } from 'buffer-layout'
 export const LIQUIDITY_TOKEN_PRECISION = 8
 export const DEFAULT_DENOMINATOR = 10000
 
-const FEE_OPTIONS = {
+export const FEE_OPTIONS = {
   curveType: 0,
   fixedFeeNumerator: 20,
   returnFeeNumerator: 10,
@@ -219,6 +219,7 @@ export const depositInstruction = (
   tokenSwap: PublicKey,
   authority: PublicKey,
   userTransferAuthority: PublicKey,
+  stateId:  PublicKey,
   sourceA: PublicKey,
   sourceB: PublicKey,
   intoA: PublicKey,
@@ -253,6 +254,7 @@ export const depositInstruction = (
     { pubkey: tokenSwap, isSigner: false, isWritable: false },
     { pubkey: authority, isSigner: false, isWritable: false },
     { pubkey: userTransferAuthority, isSigner: true, isWritable: false },
+    { pubkey: stateId, isSigner: false, isWritable: false },
     { pubkey: sourceA, isSigner: false, isWritable: true },
     { pubkey: sourceB, isSigner: false, isWritable: true },
     { pubkey: intoA, isSigner: false, isWritable: true },
@@ -272,6 +274,7 @@ export const withdrawInstruction = (
   tokenSwap: PublicKey,
   authority: PublicKey,
   userTransferAuthority: PublicKey,
+  stateId:  PublicKey,
   poolMint: PublicKey,
   sourcePoolAccount: PublicKey,
   fromA: PublicKey,
@@ -306,6 +309,7 @@ export const withdrawInstruction = (
     { pubkey: tokenSwap, isSigner: false, isWritable: false },
     { pubkey: authority, isSigner: false, isWritable: false },
     { pubkey: userTransferAuthority, isSigner: false, isWritable: false },
+    { pubkey: stateId, isSigner: false, isWritable: false },
     { pubkey: poolMint, isSigner: false, isWritable: true },
     { pubkey: sourcePoolAccount, isSigner: false, isWritable: true },
     { pubkey: fromA, isSigner: false, isWritable: true },
@@ -326,6 +330,7 @@ export const swapInstruction_v5 = (
   tokenSwap: PublicKey,
   authority: PublicKey,
   userTransferAuthority: PublicKey,
+  stateId:  PublicKey,
   userSource: PublicKey,
   poolSource: PublicKey,
   poolDestination: PublicKey,
@@ -349,6 +354,7 @@ export const swapInstruction_v5 = (
     { pubkey: tokenSwap, isSigner: false, isWritable: false },
     { pubkey: authority, isSigner: false, isWritable: false },
     { pubkey: userTransferAuthority, isSigner: true, isWritable: false },
+    { pubkey: stateId, isSigner: false, isWritable: false },
     { pubkey: userSource, isSigner: false, isWritable: true },
     { pubkey: poolSource, isSigner: false, isWritable: true },
     { pubkey: poolDestination, isSigner: false, isWritable: true },

@@ -17,7 +17,6 @@ import { Token, MintLayout, AccountLayout, ASSOCIATED_TOKEN_PROGRAM_ID } from "@
 import {
 
   AMM_INFO_LAYOUT_V6,
-  GLOBAL_STATE_LAYOUT,
   LIQUIDITY_TOKEN_PRECISION,
   createSplAccount,
   createLiquidityPool,
@@ -49,10 +48,11 @@ import {
   getFilteredTokenAccountsByOwner,
   getOneFilteredTokenAccountsByOwner,
   createAssociatedId,
-  createGlobalStateId,
   findAssociatedTokenAddress,
   createAssociatedTokenAccount,
-  createTokenAccountIfNotExist
+  createTokenAccountIfNotExist,
+  getGlobalStateAccount,
+  getGlobalStateAddress
 } from '@/utils/web3'
 // @ts-ignore
 import { struct, u8 } from 'buffer-layout'
@@ -134,29 +134,13 @@ export async function getMarket(conn: any, marketAddress: string): Promise<any |
   }
 }
 
-async function getGlobalStateAccount(conn:any, account:PublicKey)
-{
-  const state = await conn.getAccountInfo(account)
-  let state_account = null
-  if(state)
-  {
-    const stateData = GLOBAL_STATE_LAYOUT.decode(Buffer.from(state.data))
-
-    if (stateData.isInitialized) {
-      state_account = {
-        ...stateData
-      }
-    }
-  }
-  return state_account
-}
 
 export async function updateGlobalState(
   conn: any,
   wallet: any
 ){
-  const stateId = await createGlobalStateId(new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5), AMM_STATE_SEED)
-  const state_info = await getGlobalStateAccount(conn, stateId);
+  const stateId = await getGlobalStateAddress()
+  // const state_info = await getGlobalStateAccount(conn);
 
   let transaction: Transaction = new Transaction()
   console.log("update state account")
@@ -390,7 +374,7 @@ export async function createAmm(
     }
   });
 
-  const stateId = await createGlobalStateId(new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5), AMM_STATE_SEED)
+  const stateId = await getGlobalStateAddress();
   instructions.push(
     createLiquidityPool(
       tokenSwapAccount,

@@ -16,7 +16,8 @@ import {
   getMultipleAccounts,
   createAssociatedTokenAccountIfNotExist,
   getFilteredTokenAccountsByOwner,
-  getOneFilteredTokenAccountsByOwner
+  getOneFilteredTokenAccountsByOwner,
+  getGlobalStateAddress
 } from '@/utils/web3'
 // @ts-ignore
 import { nu64, struct, u8 } from 'buffer-layout'
@@ -156,7 +157,7 @@ export async function addLiquidity(
     poolInfo.lp.mintAddress,
     transaction
   )
-
+  const stateId = await getGlobalStateAddress();
   transaction.add(
     poolInfo.version === 5
       ? addLiquidityInstructionV5(
@@ -164,6 +165,7 @@ export async function addLiquidity(
 
           new PublicKey(poolInfo.ammId),
           new PublicKey(poolInfo.ammAuthority),
+          stateId,
           // new PublicKey(poolInfo.ammOpenOrders),
           // new PublicKey(poolInfo.ammTargetOrders),
           new PublicKey(poolInfo.lp.mintAddress),
@@ -275,6 +277,8 @@ export async function removeLiquidity(
     )
   }
 
+  const stateId = await getGlobalStateAddress()
+
   transaction.add(
     poolInfo.version === 5
       ? removeLiquidityV5(
@@ -283,6 +287,7 @@ export async function removeLiquidity(
           //amm info
           new PublicKey(poolInfo.ammId),
           new PublicKey(poolInfo.ammAuthority),
+          stateId,
           new PublicKey(poolInfo.lp.mintAddress),
           new PublicKey(poolInfo.poolCoinTokenAccount),
           new PublicKey(poolInfo.poolPcTokenAccount),
@@ -469,6 +474,7 @@ export function addLiquidityInstructionV5(
   // amm
   ammId: PublicKey,
   ammAuthority: PublicKey,
+  stateId: PublicKey,
   // ammOpenOrders: PublicKey,
   // ammTargetOrders: PublicKey,
   lpMintAddress: PublicKey,
@@ -491,6 +497,7 @@ export function addLiquidityInstructionV5(
     ammId,
     ammAuthority,
     userOwner,
+    stateId,
     userCoinTokenAccount,
     userPcTokenAccount,
     poolCoinTokenAccount,
@@ -645,6 +652,7 @@ export function removeLiquidityV5(
   // amm
   ammId: PublicKey,
   ammAuthority: PublicKey,
+  stateId: PublicKey,
   lpMintAddress: PublicKey,
   poolCoinTokenAccount: PublicKey,
   poolPcTokenAccount: PublicKey,
@@ -663,6 +671,7 @@ export function removeLiquidityV5(
     ammId,
     ammAuthority,
     userOwner,
+    stateId,
     lpMintAddress,
     userLpTokenAccount,
     poolCoinTokenAccount,
