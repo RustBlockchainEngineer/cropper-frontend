@@ -6,7 +6,7 @@
 
 
     <CreateFarmProgram
-      v-if="!farmProgramCreated"
+      v-if="!farmProgramCreated && wallet.connected && wallet.address === superOwnerAddress"
       @onCreate="createFarmProgram"
     />
     <StakeModel
@@ -401,11 +401,12 @@ import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
-import { FarmProgram, FARM_PREFIX, PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
+import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID } from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
+import { loadAccount } from '@/utils/account'
 const CollapsePanel = Collapse.Panel
 const RadioGroup = Radio.Group
 const RadioButton = Radio.Button
@@ -436,6 +437,7 @@ export default Vue.extend({
       isMobile: false,
 
       farmProgramCreated:true,
+      superOwnerAddress:"",
 
       farms: [] as any[],
       showFarms: [] as any[],
@@ -588,13 +590,17 @@ export default Vue.extend({
       const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
       const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
       const [programAccount,_nonce] = await PublicKey.findProgramAddress(seeds, farmProgramId);
-      const accountInfo = await conn.getAccountInfo(programAccount);
-      if (accountInfo === null) {
-        this.farmProgramCreated = false;
-      }
-      else{
+      try{
+        const accountData = await loadAccount(conn, programAccount, farmProgramId);
+        const farmData = FarmProgramAccountLayout.decode(accountData);
         this.farmProgramCreated = true;
+        this.superOwnerAddress = farmData.super_owner.toBase58();
       }
+      catch{
+        this.farmProgramCreated = false;
+        this.superOwnerAddress = "";
+      }
+      
     },
     async updateLabelizedAmms() {
       this.labelizedAmms = {}
