@@ -1,22 +1,24 @@
 <template>
   <Menu
     v-model="currentRoute"
-    :mode="isMobile ? 'inline' : 'horizontal'"
-    :theme="isMobile ? 'dark' : 'light'"
+    :mode="'horizontal'"
+    :theme="'light'"
     @click="changeRoute"
   >
     <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()">
       <a v-if="extra" :href="url[name]" target="_blank">
         {{ name.replace('-', ' ') }}
       </a>
-      <span v-else> {{ name.replace('-', ' ') }} </span>
+      <div class="menu-icon-group" v-else>
+        <div class="menu-icon" :class="name.replace('-', ' ')"></div>
+        <span> {{ name.replace('-', ' ') }} </span>
+      </div>
     </MenuItem>
   </Menu>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-
 import { Menu } from 'ant-design-vue'
 
 const MenuItem = Menu.Item
@@ -91,6 +93,53 @@ export default class Nav extends Vue {
 <style lang="less">
 @import '../styles/variables';
 
+.menu-icon-group {
+  display: inline-flex;
+  align-items: center;
+}
+
+.menu-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.ant-menu-item{
+  .pools {
+    border: 2px solid #724CEE;
+  }
+
+  &.ant-menu-item-selected .pools {
+    background: #724CEE;
+  }
+
+
+  .farms {
+    border: 2px solid #EF745D;
+  }
+
+  &.ant-menu-item-selected .farms {
+    background: #EF745D;
+  }
+
+  .swap {
+    border: 2px solid #48A469;
+  }
+
+  &.ant-menu-item-selected .swap {
+    background: #48A469;
+  }
+
+  .fertilizer {
+    border: 2px solid #3990F5;
+  }
+
+  &.ant-menu-item-selected .fertilizer {
+    background: #3990F5;
+  }
+}
+
 .ant-menu {
   text-transform: capitalize;
 }
@@ -98,6 +147,12 @@ export default class Nav extends Vue {
 .ant-menu-horizontal {
   line-height: 62px;
   border-bottom: none;
+}
+
+.ant-menu-horizontal > .ant-menu-item {
+  border-bottom: none;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .ant-menu-horizontal > .ant-menu-item:hover,
@@ -108,7 +163,7 @@ export default class Nav extends Vue {
 .ant-menu-horizontal > .ant-menu-submenu-open,
 .ant-menu-horizontal > .ant-menu-item-selected,
 .ant-menu-horizontal > .ant-menu-submenu-selected {
-  border-bottom: 2px solid @menu-dark-item-active-bg;
+  border-bottom: none;
 }
 
 @media (max-width: 1020px) {

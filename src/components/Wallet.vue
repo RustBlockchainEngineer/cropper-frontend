@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <div class="wallet-btn">
 
     <div class="btncontainer" v-if="!wallet.connected" ghost @click="$accessor.wallet.openModal">
     <Button>
-      <Icon type="wallet" />
+      <img src="@/assets/icons/wallet.svg" style="margin: 0 10px"/>
       Connect
     </Button>
     </div>
 
     <div class="btncontainer" v-else ghost @click="$accessor.wallet.openModal">
     <Button>
-      <Icon type="wallet" />
+      <img src="@/assets/icons/wallet.svg" style="margin: 0 10px"/>
       {{ wallet.address.substr(0, 4) }}
       ...
       {{ wallet.address.substr(wallet.address.length - 4, 4) }}
@@ -26,8 +26,8 @@
     >
       <div v-if="!wallet.connected" class="select-wallet">
         <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
-          <span>{{ name }}</span>
           <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
+          <span>{{ name }}</span>
         </Button>
       </div>
       <div v-else class="wallet-info">
@@ -536,9 +536,18 @@ export default class Wallet extends Vue {
 <style lang="less">
 @import '../styles/variables';
 
+.wallet-btn {
+  display: inline-flex;
+  align-items: center;
+}
+.ant-modal {
+  width: 800px !important;
+}
 .ant-modal-content {
-  background-color: #1B2028;
-
+  background-color: #0E1046;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px;
+  
   .ant-modal-close {
     color: @text-color;
   }
@@ -565,33 +574,43 @@ export default class Wallet extends Vue {
 
   
 header .btncontainer {
-    background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
     display: block;
     text-align: center;
     position: relative;
     margin: auto;
     padding: 2px;
-    border-radius: 30px;
-    height: 36px;
-    line-height: 36px;
+    border-radius: 63px;
+    height: 54px;
 
     button{
-      background: #000 !important;
+      background: #01033C !important;
       position: relative;
-      border-radius: 30px;
+      border-radius: 63px;
+      height: 48px;
       border-color: transparent;
-      top: -2px;
+      top: -7px;
+      margin: 0 1px 0 1px;
+      border: none;
+      color: white !important;
     }
-
   }
-
 
   .ant-modal-header{
-    background-color: #1B2028;
+    background-color: #0E1046;
+    display: flex;
+    justify-content: space-between;
   }
   .ant-modal-title{
-    background-color: #1B2028;
-    text-align:center
+    width: 100%;
+    background-color: #0E1046;
+    text-align: center;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 80px;
+    letter-spacing: -0.05em;
+    color: #FFF;
+    border-bottom: 1px solid #FFFFFF20;
   }
 
 </style>
@@ -603,7 +622,7 @@ header .btncontainer {
 
 
   button.ant-btn-background-ghost{
-    background-color: #2D3139 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
     border: none !important;
   }
 

@@ -1,8 +1,8 @@
 import {Buffer} from 'buffer';
-import { bool, publicKey, u32,struct,  u64, u8} from '@project-serum/borsh'
+import { bool, publicKey, u32,struct,  u64, u8, u128} from '@project-serum/borsh'
 // @ts-ignore
-import { nu64 } from 'buffer-layout'
-import {Connection, SYSVAR_CLOCK_PUBKEY} from '@solana/web3.js';
+import { nu64, nu128 } from 'buffer-layout'
+import {Connection, SYSVAR_CLOCK_PUBKEY, SYSVAR_RENT_PUBKEY} from '@solana/web3.js';
 import {
   Account,
   AccountInfo,
@@ -17,14 +17,15 @@ import {loadAccount} from './account';
 import { AccountLayout, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { createSplAccount } from './new_fcn';
 import { createAssociatedTokenAccountIfNotExist, createProgramAccountIfNotExist, findAssociatedTokenAddress, sendTransaction } from './web3';
-import { FARM_PROGRAM_ID } from './ids';
+import { FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5, SYSTEM_PROGRAM_ID } from './ids';
 import { FarmInfo } from './farms';
 import { getBigNumber } from './layouts';
 import { TokenAmount } from './safe-math';
+import { TOKENS } from './tokens';
 
 
 export const PAY_FARM_FEE = 5000;
-
+export const FARM_PREFIX = "cropperfarm";
 export const LOCKED_TOKENA_LIST = [
   "CRP",
   "USDC",
@@ -38,13 +39,24 @@ export const ALLOWED_TOKENB_LIST = [
 ]
 enum FarmInstruction
 {
-  Initialize = 0,
+  SetProgramData = 0,
+  InitializeFarm,
   Deposit,
   Withdraw,
   AddReward,
   PayFarmFee,
 }
-
+export const FarmProgramAccountLayout = struct([
+  u8('version'),
+  publicKey('super_owner'),
+  publicKey('fee_owner'),
+  publicKey('allowed_creator'),
+  publicKey('amm_program_id'),
+  u64('farm_fee'),
+  u64('harvest_fee_numerator'),
+  u64('harvest_fee_denominator'),
+  u64('reward_multipler'),
+]);
 export const FarmAccountLayout = struct([
   u8('is_allowed'),
   u8('nonce'),
@@ -54,8 +66,7 @@ export const FarmAccountLayout = struct([
   publicKey('reward_mint_address'),
   publicKey('token_program_id'),
   publicKey('owner'),
-  publicKey('fee_owner'),
-  u64('reward_per_share_net'),
+  u128('reward_per_share_net'),
   u64('last_timestamp'),
   u64('reward_per_timestamp'),
   u64('start_timestamp'),
@@ -67,6 +78,184 @@ export const UserInfoAccountLayout = struct([
   u64('deposit_balance'),
   u64('reward_debt'),
 ]);
+
+
+/**
+ * Yield Farm class
+ */
+ export class FarmProgram {
+  constructor(
+    public version:number,
+    public superOwner: PublicKey,
+    public feeOwner: PublicKey,
+    public allowedCreator: PublicKey,
+    public ammProgramId:PublicKey,
+    public farmFee: nu64,
+    public harvestFeeNumerator: nu64,
+    public harvestFeeDenominator: nu64,
+    public rewardMultipler: nu64,
+  ) {
+    this.version = version;
+    this.superOwner = superOwner;
+    this.feeOwner = feeOwner;
+    this.allowedCreator = allowedCreator;
+    this.ammProgramId = ammProgramId;
+    this.farmFee = farmFee;
+    this.harvestFeeNumerator = harvestFeeNumerator;
+    this.harvestFeeDenominator = harvestFeeDenominator;
+    this.rewardMultipler = rewardMultipler;
+  }
+
+  static async loadProgramAccount(connection:Connection){
+    const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+    const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
+
+    const data = await loadAccount(connection, programAccount, farmProgramId);
+    const programData = FarmProgramAccountLayout.decode(data);
+    
+    
+    let result = new FarmProgram(
+      programData.version,
+      programData.super_owner,
+      programData.fee_owner,
+      programData.allowed_creator,
+      programData.amm_program_id,
+      programData.farm_fee,
+      programData.harvest_fee_numerator,
+      programData.harvest_fee_denominator,
+      programData.reward_multipler,
+    );
+    return result;
+  }
+  /**
+   * Get the minimum balance for the farm account to be rent exempt
+   *
+   * @return Number of lamports required
+   */
+  static async getMinBalanceRentForExempt(
+    connection: Connection,
+  ): Promise<number> {
+    return await connection.getMinimumBalanceForRentExemption(
+      FarmProgramAccountLayout.span,
+    );
+  }
+  static createSetProgramDataInstruction(
+    programDataKey: PublicKey, 
+    owner: Account, 
+    superOwner: PublicKey,
+    feeOwner: PublicKey,
+    allowedCreator: PublicKey,
+    ammProgramId: PublicKey,
+    farmFee: number,
+    harvestFeeNumerator: number,
+    harvestFeeDenominator: number,
+    farmProgramId: PublicKey,
+  ): TransactionInstruction {
+    const keys = [
+      {pubkey: programDataKey, isSigner: false, isWritable: true},
+      {pubkey: owner.publicKey, isSigner: true, isWritable: true},
+      {pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false},
+      {pubkey: SYSTEM_PROGRAM_ID, isSigner: false, isWritable: false},
+      
+    ];
+    const commandDataLayout = struct([
+      u8('instruction'),
+      publicKey('super_owner'),
+      publicKey('fee_owner'),
+      publicKey('allowed_creator'),
+      publicKey('amm_program_id'),
+      nu64("farm_fee"),
+      nu64("harvest_fee_numerator"),
+      nu64("harvest_fee_denominator"),
+    ]); 
+    let data = Buffer.alloc(1024);
+    {
+      const encodeLength = commandDataLayout.encode(
+        {
+          instruction: FarmInstruction.SetProgramData, // InitializeFarm instruction
+          super_owner:superOwner,
+          fee_owner:feeOwner,
+          allowed_creator:allowedCreator,
+          amm_program_id:ammProgramId,
+          farm_fee: farmFee,
+          harvest_fee_numerator: harvestFeeNumerator,
+          harvest_fee_denominator: harvestFeeDenominator,
+        },
+        data,
+      );
+      data = data.slice(0, encodeLength);
+    }
+    return new TransactionInstruction({
+      keys,
+      programId: farmProgramId,
+      data,
+    });
+  }
+
+  static async createDefaultProgramData(
+    connection: Connection,
+    owner: Account,
+  ){
+    const DEFAULT_SUPER_OWNER = owner.publicKey;
+    const DEFAULT_FEE_OWNER = owner.publicKey;
+    const DEFAULT_ALLOWED_CREATOR = owner.publicKey;
+    const DEFAULT_AMM_PROGRAM_ID = new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5);
+    const DEFAULT_FARM_FEE = 5000;
+    const DEFAULT_HARVEST_FEE_NUMERATOR = 1;
+    const DEFAULT_HARVEST_FEE_DENOMINATOR = 1000;
+    return await FarmProgram.createOrSetProgramData(
+      connection,
+      owner,
+      DEFAULT_SUPER_OWNER,
+      DEFAULT_FEE_OWNER,
+      DEFAULT_ALLOWED_CREATOR,
+      DEFAULT_AMM_PROGRAM_ID,
+      DEFAULT_FARM_FEE,
+      DEFAULT_HARVEST_FEE_NUMERATOR,
+      DEFAULT_HARVEST_FEE_DENOMINATOR
+    )
+  }
+  static async createOrSetProgramData(
+    connection: Connection,
+    owner: Account,
+    superOwner: PublicKey,
+    feeOwner: PublicKey,
+    allowedCreator: PublicKey,
+    ammProgramId: PublicKey,
+    farmFee: number,
+    harvestFeeNumerator: number,
+    harvestFeeDenominator: number,
+  ){
+    let farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+
+    const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
+
+    let transaction;
+    transaction = new Transaction();
+
+    const instruction = FarmProgram.createSetProgramDataInstruction(
+      programAccount,
+      owner,
+      superOwner,
+      feeOwner,
+      allowedCreator,
+      ammProgramId,
+      farmFee,
+      harvestFeeNumerator,
+      harvestFeeDenominator,
+      farmProgramId
+    );
+    transaction.add(instruction);
+    
+    let tx = await sendTransaction(connection, owner, transaction, [
+    
+    ]);
+    return tx;
+  }
+
+}
 export class UserInfo {
   constructor(
     public userInfoId:PublicKey,
@@ -94,14 +283,13 @@ export class UserInfo {
   }
 }
 /**
- * A program for farm
+ * Yield Farm class
  */
 export class YieldFarm {
   public isAllowed:boolean = false;
   public rewardPerTimestamp: nu64 = 0;
-  public rewardPerShareNet: nu64 = 0;
+  public rewardPerShareNet: nu128 = 0;
   public lastTimestamp: nu64 = 0;
-  public feeOwner:PublicKey | any;
 
   constructor(
     private connection: Connection,
@@ -159,6 +347,7 @@ export class YieldFarm {
     farmProgramId: PublicKey,
     startTimestamp: number,
     endTimestamp: number,
+    programAccount: PublicKey,
   ): TransactionInstruction {
     const keys = [
       {pubkey: farmAccount.publicKey, isSigner: true, isWritable: true},
@@ -169,6 +358,7 @@ export class YieldFarm {
       {pubkey: poolMintAddress, isSigner: false, isWritable: false},
       {pubkey: rewardMintAddress, isSigner: false, isWritable: false},
       {pubkey: ammPubkey, isSigner: false, isWritable: false},
+      {pubkey: programAccount, isSigner: false, isWritable: true},
     ];
     
     const commandDataLayout = struct([
@@ -181,7 +371,7 @@ export class YieldFarm {
     {
       const encodeLength = commandDataLayout.encode(
         {
-          instruction: FarmInstruction.Initialize, // Initialize instruction
+          instruction: FarmInstruction.InitializeFarm, // InitializeFarm instruction
           nonce,
           start_timestamp: startTimestamp,
           end_timestamp: endTimestamp,
@@ -325,7 +515,7 @@ export class YieldFarm {
     const rewardTokenPoolMint = farmData.reward_mint_address;
     const tokenProgramId = farmData.token_program_id;
     const owner = farmData.owner;
-    const rewardPerShareNet:number = farmData.reward_per_share_net;
+    const rewardPerShareNet = farmData.reward_per_share_net;
     const lastTimestamp = farmData.last_timestamp;
     const rewardPerTimestamp = farmData.reward_per_timestamp;
     const startTimestamp = farmData.start_timestamp;
@@ -350,7 +540,6 @@ export class YieldFarm {
     farm.rewardPerShareNet = rewardPerShareNet;
     farm.lastTimestamp = lastTimestamp;
     farm.rewardPerTimestamp = rewardPerTimestamp;
-    farm.feeOwner = feeOwner;
     
     if(isAllowed > 0)
     {
@@ -464,7 +653,9 @@ export class YieldFarm {
       }),
     );
 
-    //check if fee owner has reward token account. if not, create new
+    
+    const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
 
     const instruction = YieldFarm.createInitFarmInstruction(
       farmAccount,
@@ -479,6 +670,7 @@ export class YieldFarm {
       farmProgramId,
       startTimestamp,
       endTimestamp,
+      programAccount
     );
     instructions.push(instruction);
 
@@ -492,6 +684,7 @@ export class YieldFarm {
       poolLpTokenAccount,
       farmAccount,
     ]);
+    console.log("creating farm txid=",tx);
 
     //check transation
 
@@ -512,6 +705,8 @@ export class YieldFarm {
     );
     return farm;
   }
+  
+  
   public async addReward( 
     owner: Account,
     userRewardTokenAccount: PublicKey,
@@ -519,6 +714,10 @@ export class YieldFarm {
   ) {
     let transaction;
     transaction = new Transaction();
+
+    const seeds = [Buffer.from(FARM_PREFIX),this.farmProgramId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, this.farmProgramId);
+
     const instruction = YieldFarm.createAddRewardInstruction(
       this.farmId,
       this.authority,
@@ -529,6 +728,7 @@ export class YieldFarm {
       this.tokenProgramId,
       this.farmProgramId,
       amount,
+      programAccount
     );
     transaction.add(instruction);
     
@@ -538,6 +738,7 @@ export class YieldFarm {
     ]);
     return tx;
   }
+  
   static createAddRewardInstruction(
     farmId: PublicKey, // farm account 
     authority: PublicKey, //farm authority
@@ -547,7 +748,8 @@ export class YieldFarm {
     poolMint: PublicKey,
     tokenProgramId: PublicKey,
     farmProgramId: PublicKey,
-    amount: number
+    amount: number,
+    programAccount: PublicKey,
   ): TransactionInstruction {
     const keys = [
       {pubkey: farmId, isSigner: false, isWritable: true},
@@ -556,6 +758,7 @@ export class YieldFarm {
       {pubkey: userRewardTokenAccount, isSigner: false, isWritable: true},
       {pubkey: poolRewardTokenAccount, isSigner: false, isWritable: true},
       {pubkey: poolMint, isSigner: false, isWritable: true},
+      {pubkey: programAccount, isSigner: false, isWritable: true},
       {pubkey: tokenProgramId, isSigner: false, isWritable: false},
       {pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false},
     ];
@@ -567,7 +770,7 @@ export class YieldFarm {
     {
       const encodeLength = commandDataLayout.encode(
         {
-          instruction: FarmInstruction.AddReward, // Initialize instruction
+          instruction: FarmInstruction.AddReward, // InitializeFarm instruction
           amount:amount,
         },
         data,
@@ -585,17 +788,34 @@ export class YieldFarm {
     userUSDCTokenAccount: PublicKey,
     amount: number,
   ) {
+
+    const programData = await FarmProgram.loadProgramAccount(this.connection);
     let transaction;
     transaction = new Transaction();
+
+    let usdcATA = await YieldFarm.checkWalletATA(this.connection, programData.feeOwner, TOKENS.USDC.mintAddress);
+    if(!usdcATA){
+      usdcATA = await createAssociatedTokenAccountIfNotExist(
+        null,
+        programData.feeOwner,
+        TOKENS.USDC.mintAddress,
+        transaction
+      )
+    }
+
+    const seeds = [Buffer.from(FARM_PREFIX),this.farmProgramId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, this.farmProgramId);
+
     const instruction = YieldFarm.createPayFarmFeeInstruction(
       this.farmId,
       this.authority,
       owner,
       userUSDCTokenAccount,
-      this.feeOwner,
+      usdcATA,
       this.tokenProgramId,
       this.farmProgramId,
       amount,
+      programAccount
     );
     transaction.add(instruction);
 
@@ -614,7 +834,8 @@ export class YieldFarm {
     ownerFeeAccount: PublicKey,
     tokenProgramId: PublicKey,
     farmProgramId: PublicKey,
-    amount: number
+    amount: number,
+    programAccount: PublicKey,
   ): TransactionInstruction {
     const keys = [
       {pubkey: farmId, isSigner: false, isWritable: true},
@@ -622,8 +843,8 @@ export class YieldFarm {
       {pubkey: depositor.publicKey, isSigner: false, isWritable: false},
       {pubkey: userUSDCTokenAccount, isSigner: false, isWritable: true},
       {pubkey: ownerFeeAccount, isSigner: false, isWritable: true},
+      {pubkey: programAccount, isSigner: false, isWritable: true},
       {pubkey: tokenProgramId, isSigner: false, isWritable: false},
-      {pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false},
     ];
     const commandDataLayout = struct([
       u8('instruction'),
@@ -633,7 +854,7 @@ export class YieldFarm {
     {
       const encodeLength = commandDataLayout.encode(
         {
-          instruction: FarmInstruction.PayFarmFee, // Initialize instruction
+          instruction: FarmInstruction.PayFarmFee, // InitializeFarm instruction
           amount:amount,
         },
         data,
@@ -655,19 +876,19 @@ export class YieldFarm {
     infoAccount: string | undefined | null,
     amount: string | number
   ) {
+    const programData = await FarmProgram.loadProgramAccount(connection);
+
     const value = getBigNumber(new TokenAmount(amount, farmInfo.lp.decimals, false).wei)
     const transaction = new Transaction()
     const signers: any = []
     const owner = wallet.publicKey
-    const atas: string[] = []
     const programId = new PublicKey(farmInfo.programId)
     const farmId = new PublicKey(farmInfo.poolId)
     const userLpAccount = await createAssociatedTokenAccountIfNotExist(
       lpAccount,
       owner,
       farmInfo.lp.mintAddress,
-      transaction,
-      atas
+      transaction
     )
 
     // if no account, create new one
@@ -675,8 +896,7 @@ export class YieldFarm {
       rewardAccount,
       owner,
       farmInfo.reward.mintAddress,
-      transaction,
-      atas
+      transaction
     )
 
     // if no userinfo account, create new one
@@ -691,38 +911,63 @@ export class YieldFarm {
       transaction,
       signers
     )
-    let [authority, nonce] = await PublicKey.findProgramAddress(
-      [farmId.toBuffer()],
-      programId,
-    );
 
     const fetchFarm = await YieldFarm.loadFarm(
       connection,
       farmId,
       programId
     )
-    // const rewardFeeATA = await findAssociatedTokenAddress(fetchFarm.feeOwner, new PublicKey(farmInfo.reward.mintAddress))
+    let rewardATA = await YieldFarm.checkWalletATA(connection, programData.feeOwner, farmInfo.reward.mintAddress);
+    if(!rewardATA){
+      rewardATA = await createAssociatedTokenAccountIfNotExist(
+        null,
+        programData.feeOwner,
+        farmInfo.reward.mintAddress,
+        transaction
+      )
+    }
+
+    const seeds = [Buffer.from(FARM_PREFIX),programId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, programId);
     
-    //console.log("rewareFeeATA",rewardFeeATA.toBase58())
     const instruction = YieldFarm.createDepositInstruction(
       farmId,
-      authority,
+      fetchFarm.authority,
       owner,
       userInfoAccount,
       userLpAccount,
       userRewardTokenAccount,
-      new PublicKey(farmInfo.poolLpTokenAccount),
-      new PublicKey(farmInfo.poolRewardTokenAccount),
-      new PublicKey(farmInfo.lp.mintAddress),
-      fetchFarm.feeOwner,
+      fetchFarm.poolLpTokenAccount,
+      fetchFarm.poolRewardTokenAccount,
+      fetchFarm.lpTokenPoolMint,
+      rewardATA,
       TOKEN_PROGRAM_ID,
       programId,
       value,
+      programAccount
     );
     transaction.add(instruction);
 
     
     return await sendTransaction(connection, wallet, transaction, signers);
+  }
+  public static async checkWalletATA(connection:Connection,walletPubkey:PublicKey,mint:string){
+    let parsedTokenAccounts = await connection.getParsedTokenAccountsByOwner(walletPubkey,
+      {
+        programId: TOKEN_PROGRAM_ID
+      },
+      'confirmed'
+    );
+    let result:any = null;
+    parsedTokenAccounts.value.forEach(async (tokenAccountInfo) => {
+      const tokenAccountPubkey = tokenAccountInfo.pubkey
+      const parsedInfo = tokenAccountInfo.account.data.parsed.info
+      const mintAddress = parsedInfo.mint
+      if(mintAddress === mint){
+        result = tokenAccountPubkey;
+      }
+    });
+    return result;
   }
   
   
@@ -735,6 +980,8 @@ export class YieldFarm {
     infoAccount: string | undefined | null,
     amount: string
   ) {
+    const programData = await FarmProgram.loadProgramAccount(connection);
+
     const value = getBigNumber(new TokenAmount(amount, farmInfo.lp.decimals, false).wei)
     const transaction = new Transaction()
     const signers: any = []
@@ -782,7 +1029,18 @@ export class YieldFarm {
       farmId,
       programId
     )
-    // const rewardFeeATA = await findAssociatedTokenAddress(fetchFarm.feeOwner, new PublicKey(farmInfo.reward.mintAddress))
+    let rewardATA = await YieldFarm.checkWalletATA(connection, programData.feeOwner, farmInfo.reward.mintAddress);
+    if(!rewardATA){
+      rewardATA = await createAssociatedTokenAccountIfNotExist(
+        null,
+        programData.feeOwner,
+        farmInfo.reward.mintAddress,
+        transaction
+      )
+    }
+
+    const seeds = [Buffer.from(FARM_PREFIX),programId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, programId);
     
     const instruction = YieldFarm.createWithdrawInstruction(
       farmId,
@@ -794,10 +1052,11 @@ export class YieldFarm {
       new PublicKey(farmInfo.poolLpTokenAccount),
       new PublicKey(farmInfo.poolRewardTokenAccount),
       new PublicKey(farmInfo.lp.mintAddress),
-      fetchFarm.feeOwner,
+      rewardATA,
       TOKEN_PROGRAM_ID,
       programId,
       value,
+      programAccount
     );
     transaction.add(instruction);
     return await sendTransaction(connection, wallet, transaction, signers);
@@ -815,8 +1074,10 @@ export class YieldFarm {
     feeOwner: PublicKey,
     tokenProgramId: PublicKey,
     farmProgramId: PublicKey,
-    amount: number
+    amount: number,
+    programAccount: PublicKey,
   ): TransactionInstruction {
+    
     const keys = [
       {pubkey: farmId, isSigner: false, isWritable: true},
       {pubkey: authority, isSigner: false, isWritable: false},
@@ -828,6 +1089,7 @@ export class YieldFarm {
       {pubkey: poolRewardTokenAccount, isSigner: false, isWritable: true},
       {pubkey: poolLpTokenMint, isSigner: false, isWritable: true},
       {pubkey: feeOwner, isSigner: false, isWritable: true},
+      {pubkey: programAccount, isSigner: false, isWritable: true},
       {pubkey: tokenProgramId, isSigner: false, isWritable: false},
       {pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false},
     ];
@@ -839,7 +1101,7 @@ export class YieldFarm {
     {
       const encodeLength = commandDataLayout.encode(
         {
-          instruction: FarmInstruction.Deposit, // Initialize instruction
+          instruction: FarmInstruction.Deposit, // InitializeFarm instruction
           amount:amount,
         },
         data,
@@ -865,7 +1127,8 @@ export class YieldFarm {
     feeOwner: PublicKey,
     tokenProgramId: PublicKey,
     farmProgramId: PublicKey,
-    amount: number
+    amount: number,
+    programAccount: PublicKey,
   ): TransactionInstruction {
     const keys = [
       {pubkey: farmId, isSigner: false, isWritable: true},
@@ -878,6 +1141,7 @@ export class YieldFarm {
       {pubkey: poolRewardTokenAccount, isSigner: false, isWritable: true},
       {pubkey: poolLpTokenMint, isSigner: false, isWritable: true},
       {pubkey: feeOwner, isSigner: false, isWritable: true},
+      {pubkey: programAccount, isSigner: false, isWritable: true},
       {pubkey: tokenProgramId, isSigner: false, isWritable: false},
       {pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false},
     ];
@@ -889,7 +1153,7 @@ export class YieldFarm {
     {
       const encodeLength = commandDataLayout.encode(
         {
-          instruction: FarmInstruction.Withdraw, // Initialize instruction
+          instruction: FarmInstruction.Withdraw, // InitializeFarm instruction
           amount:amount,
         },
         data,

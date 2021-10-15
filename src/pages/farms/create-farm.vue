@@ -439,7 +439,7 @@ import BigNumber from '@/../node_modules/bignumber.js/bignumber'
 import { NATIVE_SOL, TokenInfo, TOKENS } from '@/utils/tokens'
 import { createAssociatedId } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
-import { AMM_ASSOCIATED_SEED, FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V4, SITE_ALLOWED_CREATOR } from '@/utils/ids'
+import { AMM_ASSOCIATED_SEED, FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V4, FARM_INITIAL_ALLOWED_CREATOR } from '@/utils/ids'
 import { getBigNumber } from '@/utils/layouts'
 import { cloneDeep, get } from 'lodash-es'
 import moment from 'moment'
@@ -462,7 +462,7 @@ const Step = Steps.Step
     DatePicker,
   }
 })
-export default class CreatePool extends Vue {
+export default class CreateFarm extends Vue {
   rewardCoin:TokenInfo | null = null
   tokenA:TokenInfo | null = null
   tokenB:TokenInfo | null = null
@@ -471,7 +471,7 @@ export default class CreatePool extends Vue {
   selectFromCoin:boolean = false
   selectTokenA:boolean = false
   selectTokenB:boolean = false
-  allowedFarmCreator:string = SITE_ALLOWED_CREATOR
+  allowedFarmCreator:string = FARM_INITIAL_ALLOWED_CREATOR
   coinSelectShow: boolean = false
   startTime: any = moment()
   endTime:  any = moment()
@@ -1066,10 +1066,10 @@ export default class CreatePool extends Vue {
     margin: 10px auto;
     padding: 2px;
     border-radius: 30px;
-    max-height: 50px;
+    max-height: 65px;
 
     button{
-      background:#000 !important;
+      background:#01033C !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;
@@ -1079,7 +1079,7 @@ export default class CreatePool extends Vue {
 
 
 main{
-  background-color:#000;
+  background-color:#01033C;
   background-image:unset;
   background-size:cover;
   background-position:center bottom;
@@ -1137,7 +1137,7 @@ div {
   padding-left: 10px;
 }
 .ant-layout{
-  background:#000 !important
+  background:#01033C !important
 }
 
 .ant-col {

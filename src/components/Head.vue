@@ -2,23 +2,12 @@
   <Header class="header fs-container" :class="isMobile ? 'mobile' : ''">
     <NuxtLink to="/"><img class="logo" src="@/assets/icons/logo-text.svg" /></NuxtLink>
 
-    <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''">
+    <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
       <Nav @onSelect="() => (navOpened = false)" />
-    </div>
+    <!-- </div> -->
 
     <div class="fs-container">
       <Wallet />
-      <div
-        v-if="isMobile"
-        class="nav-button"
-        :class="navOpened ? 'opened' : ''"
-        @click="() => (navOpened = !navOpened)"
-      >
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
     </div>
   </Header>
 </template>
@@ -53,8 +42,8 @@ export default Vue.extend({
 @import '../styles/variables';
 
 .header {
-  border-bottom: 2px solid @modal-header-bg;
-
+  margin-top: 40px;
+  
   .logo {
     height: 26px;
   }
@@ -132,7 +121,14 @@ export default Vue.extend({
   }
 }
 
-.header.mobile {
-  padding: 0 20px;
+@media (max-width: 780px) {
+  .header.mobile {
+    width: 375px;
+    margin: 20px auto 70px;
+    padding: 22px !important;
+    .nav-button {
+      display: none;
+    }
+  }
 }
 </style>
