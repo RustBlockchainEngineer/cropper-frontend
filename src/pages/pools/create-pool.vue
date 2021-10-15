@@ -359,7 +359,7 @@ import { NATIVE_SOL, TokenInfo, TOKENS } from '@/utils/tokens'
 import { TokenAmount } from '@/utils/safe-math'
 import { createAssociatedId } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
-import { AMM_ASSOCIATED_SEED, FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V4, SITE_ALLOWED_CREATOR } from '@/utils/ids'
+import { AMM_ASSOCIATED_SEED, FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V4, FARM_INITIAL_ALLOWED_CREATOR } from '@/utils/ids'
 import { getBigNumber } from '@/utils/layouts'
 import { cloneDeep, get } from 'lodash-es'
 import moment from 'moment'
@@ -392,7 +392,7 @@ export default class CreatePool extends Vue {
   selectFromCoin:boolean = false
   selectTokenA:boolean = false
   selectTokenB:boolean = false
-  allowedFarmCreator:string = SITE_ALLOWED_CREATOR
+  allowedFarmCreator:string = FARM_INITIAL_ALLOWED_CREATOR
   coinSelectShow: boolean = false
   startTime: any = moment()
   endTime:  any = moment()

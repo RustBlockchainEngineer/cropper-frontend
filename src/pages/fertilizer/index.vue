@@ -114,13 +114,13 @@
                   <div class="title">
                     {{ farm.name }}
                     <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
-                      <img class="social-icon" src="@/assets/icons/link_vector.svg"/>
+                      <img class="social-icon" src="@/assets/icons/link_grey.svg"/>
                     </a>
                     <a v-show="farm.links.twitter" :href="farm.website.url" target="_blank">
-                      <img class="social-icon" src="@/assets/icons/twitter_vector.svg"/>
+                      <img class="social-icon" src="@/assets/icons/twitter_grey.svg"/>
                     </a>
                     <a v-show="farm.links.telegram" :href="farm.website.url" target="_blank">
-                      <img class="social-icon" src="@/assets/icons/telegram_vector.svg"/>
+                      <img class="social-icon" src="@/assets/icons/telegram_grey.svg"/>
                     </a>
                   </div>
                   <div class="tags-group">
@@ -691,6 +691,7 @@ export default Vue.extend({
       width: 163px;
       line-height: 60px;
       margin-top: 40px;
+
       button {
         font-style: normal;
         font-weight: normal;
@@ -702,6 +703,7 @@ export default Vue.extend({
         background: transparent !important;
         width: 100%;
         height: 100%;
+        cursor: pointer;
       }
     }
   }

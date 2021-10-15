@@ -29,13 +29,13 @@
                 <div class="title">
                   {{ farm.name }}
                   <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
-                    <img class="social-icon" src="@/assets/icons/link_vector.svg" />
+                    <img class="social-icon" src="@/assets/icons/link_grey.svg" />
                   </a>
                   <a v-show="farm.links.twitter" :href="farm.website.url" target="_blank">
-                    <img class="social-icon" src="@/assets/icons/twitter_vector.svg" />
+                    <img class="social-icon" src="@/assets/icons/twitter_grey.svg" />
                   </a>
                   <a v-show="farm.links.telegram" :href="farm.website.url" target="_blank">
-                    <img class="social-icon" src="@/assets/icons/telegram_vector.svg" />
+                    <img class="social-icon" src="@/assets/icons/telegram_grey.svg" />
                   </a>
                 </div>
 
@@ -98,23 +98,17 @@
                 <div v-else-if="farm.pla_ts > currentTimestamp && followed" class="largepdding">
                   <!-- <div class="share text-center">You are following this project</div> -->
                 </div>
-
+                
                 <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
-                  <div class="share">
-                    Share your referal link to earn more lottery ticket
+                  <div class="share-ticket">Lottery ticket: {{ registeredDatas.submit }}</div>
 
+                  <div class="share-content">Share your referal link to earn more lottery ticket</div>
+
+                  <div class="share-copy-form">
                     <div class="inputContent">
                       <button class="submitbutton" @click="copyToClipboard()">Copy</button>
                       <input type="text" class="twlink" :value="shareWalletAddress" />
                     </div>
-
-                    <a :href="tgShareAdress" target="_blank" class="sharer">
-                      <img src="@/assets/icons/telegram.svg" height="39" width="39" />
-                    </a>
-
-                    <a :href="twShareAdress" target="_blank" class="sharer">
-                      <img src="@/assets/icons/twitter.svg" height="39" width="39" />
-                    </a>
                   </div>
                 </div>
 
@@ -185,13 +179,10 @@
                   <a :href="farm.website.url" target="_blank">{{ farm.website.display }}</a>
                 </Col>
                 <Col class="state" :span="isMobile ? 6 : 3"> {{ farm.airdrop.amount }} ${{ farm.airdrop.symbol }} </Col>
-                <Col class="state nft-events" :span="isMobile ? 10 : 6">
-                  <img src="@/assets/landing/Turothecat_avatar.png" />
-                  <img src="@/assets/landing/Robercry_avatar.png" />
-                  <img src="@/assets/landing/Croppish_avatar.png" />
-                  <img src="@/assets/landing/El_mosquito_avater.png" />
-                  <img src="@/assets/landing/H-Bee_avatar.png" />
-                  <img src="@/assets/landing/Z_avatar.png" />
+                <Col class="state" :span="isMobile ? 10 : 6">
+                  <div v-if="farm.nft_airdrop" class="nft-events-icon">
+                    <img v-for="nft in farm.nft_airdrop.list" :key="nft.picto" :src="nft.picto" />
+                  </div>
                 </Col>
                 <Col class="state" :span="isMobile ? 6 : 3">
                   <div class="label" :style="'background-color: ' + farm.current_status.color">
@@ -201,8 +192,8 @@
               </Row>
             </div>
 
-            <Row class="full-border pf-margin-top pf-padding-top" :span="isMobile ? 24 : 12">
-              <!-- <Col :span="isMobile ? 24 : 12" class="notstep">
+            <!-- <Row class="full-border pf-margin-top pf-padding-top" :span="isMobile ? 24 : 12">
+              <Col :span="isMobile ? 24 : 12" class="notstep">
                 <div class="modTitle">
                   <span class="icons">
                     <CoinIcon :mint-address="farm.tokenA.mint" />
@@ -343,7 +334,7 @@
                     <h1>You can use below farm now.</h1>
                   </div>
                 </div>
-              </Col> -->
+              </Col>
 
               <Col :span="24" :class="isMobile ? ' steps' : 'steps'">
                 <div class="done">
@@ -387,17 +378,79 @@
                   </div>
                 </div>
               </Col>
-            </Row>
+            </Row> -->
 
-            <div v-if="farm.pla_ts > currentTimestamp && followed" class="largepdding">
-              <div class="share text-center">You are following this project</div>
-            </div>
+            <Row class="status-log" :span="24">
+              <div class="largepdding" v-if="!wallet.connected">
+                <div class="btncontainer">
+                  <Button
+                    size="large"
+                    ghost
+                    class="button_div"
+                    style="z-index: 999; width: 100%"
+                    @click="$accessor.wallet.openModal"
+                  >
+                    Connect wallet
+                  </Button>
+                </div>
+              </div>
+
+              <div v-else-if="farm.pla_ts > currentTimestamp && !followed" class="largepdding">
+                <div class="share text-center">
+                  <div class="btncontainer">
+                    <Button
+                      size="large"
+                      ghost
+                      class="button_div"
+                      style="z-index: 999; width: 100%"
+                      @click="
+                        startFollow(
+                          'https://api.cropper.finance/pfo/follow/?spl=' +
+                            $accessor.wallet.address +
+                            '&farmId=' +
+                            farm.pfarmID
+                        )
+                      "
+                    >
+                      + Follow
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div v-else-if="farm.pla_ts > currentTimestamp && followed" class="largepdding">
+                <div class="share text-center">You are following this project</div>
+              </div>
+
+              <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
+                <div class="share">
+                  You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{
+                    registeredDatas.submit > 1 ? 's' : ''
+                  }}
+                  !
+                </div>
+              </div>
+
+              <div v-else-if="farm.pla_end_ts > currentTimestamp" class="largepdding">
+                <div class="btncontainer">
+                  <Button
+                    size="large"
+                    ghost
+                    class="button_div"
+                    style="z-index: 999; width: 100%"
+                    @click="startRegistering()"
+                  >
+                    + Register for Whitelist
+                  </Button>
+                </div>
+              </div>
+            </Row>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
+    <!-- <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
       <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">
         <div class="card">
           <div class="card-body">
@@ -679,7 +732,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -1818,6 +1871,7 @@ export default Vue.extend({
         height: 60px;
         min-width: 163px;
         line-height: 60px;
+        display: flex;
 
         button {
           font-style: normal;
@@ -1830,6 +1884,7 @@ export default Vue.extend({
           background: transparent !important;
           width: 100%;
           height: 100%;
+          cursor: pointer;
         }
       }
 
@@ -1857,6 +1912,36 @@ export default Vue.extend({
       border-radius: 14px;
       padding: 20px 25px;
 
+      .status-log {
+        display: flex;
+        justify-content: center;
+
+        .largepdding .btncontainer {
+          background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+          border: 2px solid rgba(255, 255, 255, 0.14);
+          border-radius: 8px;
+          color: #fff;
+          height: 60px;
+          min-width: 163px;
+          line-height: 60px;
+          display: flex;
+
+          button {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 42px;
+            text-align: center;
+            letter-spacing: -0.05em;
+            color: #fff;
+            background: transparent !important;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+          }
+        }
+      }
+
       .list {
         text-align: center;
         width: 1300px;
@@ -1871,8 +1956,14 @@ export default Vue.extend({
           display: flex;
           align-items: center;
 
-          .nft-events {
+          .nft-events,
+          .nft-events-icon {
+            display: flex;
             justify-content: space-evenly;
+          }
+
+          .nft-events-icon {
+            width: 100%;
           }
 
           .state {
@@ -1880,11 +1971,6 @@ export default Vue.extend({
             line-height: 22px;
             font-weight: normal;
             display: flex;
-
-            img {
-              width: 40px;
-              height: 40px;
-            }
 
             a {
               color: #5ba5fb;
@@ -2067,13 +2153,57 @@ export default Vue.extend({
     text-align: center;
   }
 
+  .share-ticket {
+    font-weight: bold;
+    font-size: 25px;
+    line-height: 31px;
+    color: #fff;
+  }
+
+  .share-content {
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    color: #fff;
+    margin: 15px 0;
+  }
+
+  .share-copy-form {
+    .inputContent {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      height: 57px;
+      border-radius: 14px;
+      padding: 0;
+
+      .submitbutton {
+        height: 100%;
+        border-radius: 14px;
+        padding: 16px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        margin-right: 0;
+      }
+
+      .twlink {
+        width: 100%;
+        background: transparent;
+        outline: 0;
+        font-size: 20px;
+        line-height: 24px;
+        color: #b5b5b5;
+      }
+    }
+  }
+
   .share {
     text-align: left;
-    margin-top: 30px;
+    margin: 30px;
     font-weight: bold;
     font-size: 30px;
     line-height: 37px;
-    color: #FFF;
+    color: #fff;
   }
 
   .steps > div {
@@ -2296,7 +2426,6 @@ export default Vue.extend({
   position: relative;
   max-width: 400px;
   margin: 10px auto;
-  padding: 2px;
   border-radius: 30px;
   max-height: 65px;
 
@@ -2305,6 +2434,7 @@ export default Vue.extend({
     position: relative;
     border-radius: 30px;
     border-color: transparent;
+    cursor: pointer;
 
     &.button_div {
       padding: 0 20px;
@@ -2547,5 +2677,3 @@ main {
   }
 }
 </style>
-
-
