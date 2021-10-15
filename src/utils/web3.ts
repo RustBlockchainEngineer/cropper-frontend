@@ -41,6 +41,15 @@ export async function createAmmAuthority(programId: PublicKey) {
   )
 }
 
+export async function createGlobalStateId(programId: PublicKey, bufferKey: string) {
+  const { publicKey } = await findProgramAddress(
+    [Buffer.from(bufferKey), programId.toBuffer()],
+    programId
+  )
+  return publicKey
+}
+
+
 export async function createAssociatedId(infoId: PublicKey, marketAddress: PublicKey, bufferKey: string) {
   const { publicKey } = await findProgramAddress(
     [infoId.toBuffer(), marketAddress.toBuffer(), Buffer.from(bufferKey)],

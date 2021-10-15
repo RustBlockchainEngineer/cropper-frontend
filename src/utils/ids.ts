@@ -34,6 +34,8 @@ export const IDO_PROGRAM_ID = '6FJon3QE27qgPVggARueB22hLvoh22VzJpXv4rBEoSLF'
 export const IDO_PROGRAM_ID_V2 = 'CC12se5To1CdEuw7fDS27B7Geo5jJyL7t5UK2B44NgiH'
 export const IDO_PROGRAM_ID_V3 = '9HzJyW1qZsEiSfMUf6L2jo3CcTKAyBmSyKdwQeYisHrC'
 
+export const AMM_STATE_SEED = "AmmState";
+
 export const AUTHORITY_AMM = 'amm authority'
 export const AMM_ASSOCIATED_SEED = 'amm_associated_seed'
 export const TARGET_ASSOCIATED_SEED = 'target_associated_seed'

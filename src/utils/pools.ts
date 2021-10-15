@@ -239,9 +239,8 @@ export function isOfficalMarket(marketAddress: string) {
 export function getAllPools() {
 
   const polo:any = []
-
+  console.log(LIQUIDITY_POOLS)
   LIQUIDITY_POOLS.forEach(function (value) {
-
     let item = {
       'name' : value.coin.name + ' - ' + value.pc.name,
       'coin1' : value.coin,

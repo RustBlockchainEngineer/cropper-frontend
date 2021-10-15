@@ -10,7 +10,7 @@ import { PublicKey } from '@solana/web3.js'
 import { TokenAmount } from '@/utils/safe-math'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
-import { AMM_INFO_LAYOUT_V5 } from '@/utils/new_fcn'
+import { AMM_INFO_LAYOUT_V6 } from '@/utils/new_fcn'
 import { 
   LIQUIDITY_POOL_PROGRAM_ID_V4,
   LIQUIDITY_POOL_PROGRAM_ID_V5, 
@@ -66,7 +66,7 @@ export const mutations = mutationTree(state, {
 async function getCropperPools(conn:any){
   const ammAll = await getFilteredProgramAccounts(conn, new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5), [
     {
-      dataSize: AMM_INFO_LAYOUT_V5.span
+      dataSize: AMM_INFO_LAYOUT_V6.span
     }
   ])
 
@@ -83,7 +83,7 @@ async function getCropperPools(conn:any){
 
   const lpMintAddressList: string[] = []
   ammAll.forEach((item) => {
-    const ammLayout = AMM_INFO_LAYOUT_V5.decode(Buffer.from(item.accountInfo.data))
+    const ammLayout = AMM_INFO_LAYOUT_V6.decode(Buffer.from(item.accountInfo.data))
     if (
       ammLayout.pcMintAddress.toString() === ammLayout.serumMarket.toString() ||
       ammLayout.lpMintAddress.toString() === '11111111111111111111111111111111'
@@ -95,7 +95,7 @@ async function getCropperPools(conn:any){
   const lpMintListDecimls = await getLpMintListDecimals(conn, lpMintAddressList)
   
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
-    const ammInfo = AMM_INFO_LAYOUT_V5.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
+    const ammInfo = AMM_INFO_LAYOUT_V6.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
 
     if (
       !Object.keys(lpMintListDecimls).includes(ammInfo.lpMintAddress.toString()) ||
@@ -193,8 +193,6 @@ async function getCropperPools(conn:any){
       ammQuantities: NATIVE_SOL.mintAddress,
       poolCoinTokenAccount: ammInfo.poolCoinTokenAccount.toString(),
       poolPcTokenAccount: ammInfo.poolPcTokenAccount.toString(),
-      feeCoinTokenAccount: ammInfo.feeCoinTokenAccount.toString(),
-      feePcTokenAccount: ammInfo.feePcTokenAccount.toString(),
       poolWithdrawQueue: "", //ammInfo.poolWithdrawQueue.toString(),
       poolTempLpTokenAccount: "", //ammInfo.poolTempLpTokenAccount.toString(),
       serumProgramId: SERUM_PROGRAM_ID_V3,
@@ -449,7 +447,7 @@ export const actions = actionTree(
               case 'ammId': {
                 let parsed
                 if(version == 5){
-                  parsed = AMM_INFO_LAYOUT_V5.decode(data)
+                  parsed = AMM_INFO_LAYOUT_V6.decode(data)
                   const { returnFeeNumerator, fixedFeeNumerator, feeDenominator } = parsed
                   poolInfo.fees = {
                     returnFeeNumerator: getBigNumber(returnFeeNumerator),
