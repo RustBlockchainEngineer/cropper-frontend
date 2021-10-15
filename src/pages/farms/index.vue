@@ -52,9 +52,54 @@
       @onCancel="cancelStakeLP"
     />
 
-    <div v-if="farm.initialized">
       <div class="card">
         <div class="card-body">
+
+          <div class="page-head fs-container">
+            <span class="title">Farms</span>
+            <NuxtLink to="/farms/create-farm/">
+              <div class="create">
+                <Button size="large" ghost>+ Create a farm </Button>
+              </div>
+            </NuxtLink>
+
+            <div class="farm-button-group">
+              <div class="count-down-group">
+                <div class="count-down">
+                  <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
+                  {{ farm.autoRefreshTime - farm.countdown }}
+                  <div
+                    class="reload-btn"
+                    @click="
+                      () => {
+                        $accessor.farm.requestInfos()
+                        $accessor.wallet.getTokenAccounts()
+                      }
+                    "
+                  >
+                    <Icon type="loading" theme="outlined" />
+                  </div>
+                  <!-- <Progress
+                    type="circle"
+                    :width="20"
+                    :stroke-width="10"
+                    :percent="(100 / farm.autoRefreshTime) * farm.countdown"
+                    :show-info="false"
+                    :class="farm.loading ? 'disabled' : ''"
+                    @click="
+                      () => {
+                        $accessor.farm.requestInfos()
+                        $accessor.wallet.getTokenAccounts()
+                      }
+                    "
+                  /> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="farm.initialized">
+
           <div class="tool-bar">
             <div class="tool-option">
               <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
@@ -365,12 +410,12 @@
             </div>
           </div>
         </div>
+        <div v-else class="fc-container">
+          <Spin :spinning="true">
+            <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
+          </Spin>
+        </div>
       </div>
-    </div>
-    <div v-else class="fc-container">
-      <Spin :spinning="true">
-        <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
-      </Spin>
     </div>
   </div>
 </template>
@@ -1501,26 +1546,37 @@ export default Vue.extend({
 }
 
 .farm-button-group {
-  position: absolute;
-  right: 0;
+  position: relative;
+  float: right;
   display: inline-flex;
   align-items: center;
 }
 
 .farm.container {
-  max-width: 1350px;
-  background: #01033c;
+  max-width: 1350px;    
+  width: 100%;
+  background: #01033C;
   margin-top: 20px;
   margin-bottom: 20px;
+  padding: 15px;
+
+
+  .planet-left {
+    position: absolute;
+    left: 0;
+    top: 35%;
+  }
 
   .page-head a {
     background: #01033c;
     margin-left: 20px;
+    float:right;
     .btncontainer {
       display: inline-block;
     }
   }
 
+  .card {
   .card {
     margin-top: 70px;
 
@@ -1545,6 +1601,7 @@ export default Vue.extend({
         display: inline-block;
       }
     }
+  }
   }
 
   .harvest {
@@ -1665,6 +1722,7 @@ export default Vue.extend({
     .state {
       display: flex;
       text-align: left;
+      flex-direction: row;
 
       .title {
         font-weight: normal;
@@ -1705,9 +1763,12 @@ export default Vue.extend({
 
 <style lang="less">
 .farm {
+  .page-head{
+    margin-top: 10px;
+  }
   .page-head .title {
     position: absolute;
-    left: 0 !important;
+    left: 8px !important;
     transform: translate(0, 0) !important;
   }
 
@@ -1730,6 +1791,26 @@ export default Vue.extend({
 }
 
 .farm.container {
+
+  .create {
+    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+
+    button {
+      background: unset !important;
+      color: #fff;
+      border-color: transparent;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 42px;
+      letter-spacing: -0.05em;
+      height: 60px;
+      width: 163px;
+    }
+  }
+
   .btncontainer {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
     display: inline-block;
@@ -1738,6 +1819,7 @@ export default Vue.extend({
     position: relative;
     max-width: 400px;
     padding: 2px;
+    margin:0;
     border-radius: 8px !important;
     max-height: 60px !important;
 
