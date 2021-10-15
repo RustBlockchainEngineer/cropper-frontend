@@ -17,7 +17,7 @@ import {loadAccount} from './account';
 import { AccountLayout, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { createSplAccount } from './new_fcn';
 import { createAssociatedTokenAccountIfNotExist, createProgramAccountIfNotExist, findAssociatedTokenAddress, sendTransaction } from './web3';
-import { FARM_PROGRAM_ID } from './ids';
+import { FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5 } from './ids';
 import { FarmInfo } from './farms';
 import { getBigNumber } from './layouts';
 import { TokenAmount } from './safe-math';
@@ -25,7 +25,7 @@ import { TOKENS } from './tokens';
 
 
 export const PAY_FARM_FEE = 5000;
-
+export const FARM_PREFIX = "cropperfarm";
 export const LOCKED_TOKENA_LIST = [
   "CRP",
   "USDC",
@@ -79,70 +79,32 @@ export const UserInfoAccountLayout = struct([
   u64('deposit_balance'),
   u64('reward_debt'),
 ]);
-export class UserInfo {
-  constructor(
-    public userInfoId:PublicKey,
-    public wallet: PublicKey,
-    public farmId: PublicKey,
-    public depositBalance:nu64,
-    public rewardDebt:nu64,
-  ){
-    this.wallet = wallet;
-    this.farmId = farmId;
-    this.depositBalance = depositBalance;
-    this.rewardDebt = rewardDebt;
-  }
-  /**
-   * Get the minimum balance for the user info account to be rent exempt
-   *
-   * @return Number of lamports required
-   */
-   static async getMinBalanceRentForExemptUserInfo(
-    connection: Connection,
-  ): Promise<number> {
-    return await connection.getMinimumBalanceForRentExemption(
-      UserInfoAccountLayout.span,
-    );
-  }
-}
-/**
- * A program for farm
- */
-export class YieldFarm {
-  public isAllowed:boolean = false;
-  public rewardPerTimestamp: nu64 = 0;
-  public rewardPerShareNet: nu128 = 0;
-  public lastTimestamp: nu64 = 0;
-  public feeOwner:PublicKey | any;
 
+
+/**
+ * Yield Farm class
+ */
+ export class FarmProgram {
   constructor(
-    private connection: Connection,
-    public farmId: PublicKey,
-    public farmProgramId: PublicKey,
-    public tokenProgramId: PublicKey,
-    public lpTokenPoolMint: PublicKey,
-    public rewardTokenPoolMint: PublicKey,
-    public authority: PublicKey,
-    public poolRewardTokenAccount: PublicKey,
-    public poolLpTokenAccount: PublicKey,
-    public nonce: number,
-    public startTimestamp: nu64,
-    public endTimestamp: nu64,
-    public creator: Account,
+    public version:number,
+    public superOwner: PublicKey,
+    public feeOwner: PublicKey,
+    public allowedCreator: PublicKey,
+    public ammProgramId:PublicKey,
+    public farmFee: nu64,
+    public harvestFeeNumerator: nu64,
+    public harvestFeeDenominator: nu64,
+    public rewardMultipler: nu64,
   ) {
-    this.connection = connection;
-    this.farmId = farmId;
-    this.farmProgramId = farmProgramId;
-    this.tokenProgramId = tokenProgramId;
-    this.lpTokenPoolMint = lpTokenPoolMint;
-    this.rewardTokenPoolMint = rewardTokenPoolMint;
-    this.authority = authority;
-    this.poolRewardTokenAccount = poolRewardTokenAccount;
-    this.poolLpTokenAccount = poolLpTokenAccount;
-    this.nonce = nonce;
-    this.startTimestamp = startTimestamp;
-    this.endTimestamp = endTimestamp;
-    this.creator = creator;
+    this.version = version;
+    this.superOwner = superOwner;
+    this.feeOwner = feeOwner;
+    this.allowedCreator = allowedCreator;
+    this.ammProgramId = ammProgramId;
+    this.farmFee = farmFee;
+    this.harvestFeeNumerator = harvestFeeNumerator;
+    this.harvestFeeDenominator = harvestFeeDenominator;
+    this.rewardMultipler = rewardMultipler;
   }
 
   /**
@@ -150,11 +112,11 @@ export class YieldFarm {
    *
    * @return Number of lamports required
    */
-  static async getMinBalanceRentForExemptStakePool(
+  static async getMinBalanceRentForExempt(
     connection: Connection,
   ): Promise<number> {
     return await connection.getMinimumBalanceForRentExemption(
-      FarmAccountLayout.span,
+      FarmProgramAccountLayout.span,
     );
   }
   static createSetProgramDataInstruction(
@@ -205,6 +167,165 @@ export class YieldFarm {
       programId: farmProgramId,
       data,
     });
+  }
+
+  static async createDefaultProgramData(
+    connection: Connection,
+    owner: Account,
+  ){
+    const DEFAULT_SUPER_OWNER = owner.publicKey;
+    const DEFAULT_FEE_OWNER = owner.publicKey;
+    const DEFAULT_ALLOWED_CREATOR = owner.publicKey;
+    const DEFAULT_AMM_PROGRAM_ID = new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5);
+    const DEFAULT_FARM_FEE = 5000;
+    const DEFAULT_HARVEST_FEE_NUMERATOR = 1;
+    const DEFAULT_HARVEST_FEE_DENOMINATOR = 1000;
+    return await FarmProgram.createOrSetProgramData(
+      connection,
+      owner,
+      DEFAULT_SUPER_OWNER,
+      DEFAULT_FEE_OWNER,
+      DEFAULT_ALLOWED_CREATOR,
+      DEFAULT_AMM_PROGRAM_ID,
+      DEFAULT_FARM_FEE,
+      DEFAULT_HARVEST_FEE_NUMERATOR,
+      DEFAULT_HARVEST_FEE_DENOMINATOR
+    )
+  }
+  static async createOrSetProgramData(
+    connection: Connection,
+    owner: Account,
+    superOwner: PublicKey,
+    feeOwner: PublicKey,
+    allowedCreator: PublicKey,
+    ammProgramId: PublicKey,
+    farmFee: number,
+    harvestFeeNumerator: number,
+    harvestFeeDenominator: number,
+  ){
+    let farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+
+    let programDataKey = await PublicKey.createProgramAddress(
+      [farmProgramId.toBuffer()],
+      farmProgramId,
+    );
+    let transaction;
+    transaction = new Transaction();
+
+    const balanceNeeded = await FarmProgram.getMinBalanceRentForExempt(
+      connection,
+    );
+
+    const accountInfo = await connection.getAccountInfo(programDataKey);
+    if (accountInfo === null) {
+      transaction.add(
+        SystemProgram.createAccount({ 
+          fromPubkey: owner.publicKey,
+          newAccountPubkey: programDataKey,
+          lamports: balanceNeeded,
+          space: FarmProgramAccountLayout.span,
+          programId: farmProgramId,
+        }),
+      );
+    }
+    const instruction = FarmProgram.createSetProgramDataInstruction(
+      programDataKey,
+      owner,
+      superOwner,
+      feeOwner,
+      allowedCreator,
+      ammProgramId,
+      farmFee,
+      harvestFeeNumerator,
+      harvestFeeDenominator,
+      farmProgramId
+    );
+    transaction.add(instruction);
+      
+    let tx = await sendTransaction(connection, owner, transaction, [
+      
+    ]);
+    return tx;
+  }
+
+}
+export class UserInfo {
+  constructor(
+    public userInfoId:PublicKey,
+    public wallet: PublicKey,
+    public farmId: PublicKey,
+    public depositBalance:nu64,
+    public rewardDebt:nu64,
+  ){
+    this.wallet = wallet;
+    this.farmId = farmId;
+    this.depositBalance = depositBalance;
+    this.rewardDebt = rewardDebt;
+  }
+  /**
+   * Get the minimum balance for the user info account to be rent exempt
+   *
+   * @return Number of lamports required
+   */
+   static async getMinBalanceRentForExemptUserInfo(
+    connection: Connection,
+  ): Promise<number> {
+    return await connection.getMinimumBalanceForRentExemption(
+      UserInfoAccountLayout.span,
+    );
+  }
+}
+/**
+ * Yield Farm class
+ */
+export class YieldFarm {
+  public isAllowed:boolean = false;
+  public rewardPerTimestamp: nu64 = 0;
+  public rewardPerShareNet: nu128 = 0;
+  public lastTimestamp: nu64 = 0;
+  public feeOwner:PublicKey | any;
+
+  constructor(
+    private connection: Connection,
+    public farmId: PublicKey,
+    public farmProgramId: PublicKey,
+    public tokenProgramId: PublicKey,
+    public lpTokenPoolMint: PublicKey,
+    public rewardTokenPoolMint: PublicKey,
+    public authority: PublicKey,
+    public poolRewardTokenAccount: PublicKey,
+    public poolLpTokenAccount: PublicKey,
+    public nonce: number,
+    public startTimestamp: nu64,
+    public endTimestamp: nu64,
+    public creator: Account,
+  ) {
+    this.connection = connection;
+    this.farmId = farmId;
+    this.farmProgramId = farmProgramId;
+    this.tokenProgramId = tokenProgramId;
+    this.lpTokenPoolMint = lpTokenPoolMint;
+    this.rewardTokenPoolMint = rewardTokenPoolMint;
+    this.authority = authority;
+    this.poolRewardTokenAccount = poolRewardTokenAccount;
+    this.poolLpTokenAccount = poolLpTokenAccount;
+    this.nonce = nonce;
+    this.startTimestamp = startTimestamp;
+    this.endTimestamp = endTimestamp;
+    this.creator = creator;
+  }
+
+  /**
+   * Get the minimum balance for the farm account to be rent exempt
+   *
+   * @return Number of lamports required
+   */
+  static async getMinBalanceRentForExemptStakePool(
+    connection: Connection,
+  ): Promise<number> {
+    return await connection.getMinimumBalanceForRentExemption(
+      FarmAccountLayout.span,
+    );
   }
 
   static createInitFarmInstruction(
@@ -574,14 +695,7 @@ export class YieldFarm {
     return farm;
   }
   
-  static async createOrSetProgramData(
-    connection: Connection,
-    farmProgramId: PublicKey,
-    owner: PublicKey,
-  ){
-    
-  }
-
+  
   public async addReward( 
     owner: Account,
     userRewardTokenAccount: PublicKey,
