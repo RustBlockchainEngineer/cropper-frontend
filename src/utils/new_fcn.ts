@@ -13,13 +13,14 @@ import { Token, AccountLayout, MintLayout } from "@solana/spl-token";
 import { bool, publicKey, struct, u32, u64, u8,  } from '@project-serum/borsh'
 import { TOKENS } from '@/utils/tokens'
 import {SYSTEM_PROGRAM_ID, TOKEN_PROGRAM_ID} from '@/utils/ids'
+
 // @ts-ignore
 import { nu64, blob } from 'buffer-layout'
 
 export const LIQUIDITY_TOKEN_PRECISION = 8
 export const DEFAULT_DENOMINATOR = 10000
 
-const FEE_OPTIONS = {
+export const FEE_OPTIONS = {
   curveType: 0,
   fixedFeeNumerator: 20,
   returnFeeNumerator: 10,
@@ -57,14 +58,19 @@ export function createSplAccount(
   return account;
 }
 
-export const TokenSwapLayoutLegacyV0 = struct([
+export const GLOBAL_STATE_LAYOUT = struct([
   u8("isInitialized"),
-  u8("nonce"),
-  publicKey("tokenAccountA"),
-  publicKey("tokenAccountB"),
-  publicKey("tokenPool"),
-  u64("feesNumerator"),
-  u64("feesDenominator"),
+  publicKey("stateOwner"),
+  publicKey("feeOwner"),
+
+  u64("initialSupply"),
+  
+  u64('returnFeeNumerator'),
+  u64('fixedFeeNumerator'),
+  u64('feeDenominator'),
+  
+  u8('curveType'),
+  blob(32, 'curveParameters'),
 ]);
 
 export const AMM_INFO_LAYOUT_V5 =  struct(
@@ -91,42 +97,42 @@ export const AMM_INFO_LAYOUT_V5 =  struct(
   ]
 );
 
-export const createLiquidityPool = (
-  tokenSwapAccount: Account,
-  authority: PublicKey,
-  ammId:PublicKey,
-  tokenAccountA: PublicKey,
-  tokenAccountB: PublicKey,
-  tokenPool: PublicKey,
-  feeAccountA: PublicKey,
-  feeAccountB: PublicKey,
-  tokenAccountPool: PublicKey,
-  tokenProgramId: PublicKey,
+export const AMM_INFO_LAYOUT_V6 =  struct(
+  [
+    u8('version'),
+    u8('isInitialized'),
+    u8('nonce'),
+    publicKey('ammId'),
+    publicKey('dexProgramId'),
+    publicKey('serumMarket'),
+    publicKey('tokenProgramId'),
+    publicKey('poolCoinTokenAccount'),
+    publicKey('poolPcTokenAccount'),
+    publicKey('lpMintAddress'),
+    publicKey('coinMintAddress'),
+    publicKey('pcMintAddress')
+  ]
+);
+
+export const updateGlobalStateInstruction = (
+  stateAccount: PublicKey,
+  curStateOwner:PublicKey,
+  newStateOwner: PublicKey,
+  feeOwner: PublicKey,
   swapProgramId: PublicKey,
-  dexProgramId: PublicKey,
-  marketId:PublicKey,
-  nonce: number,
-): TransactionInstruction => {
+  ): TransactionInstruction => {
   const keys = [
-    { pubkey: tokenSwapAccount.publicKey, isSigner: false, isWritable: true },
-    { pubkey: authority, isSigner: false, isWritable: false },
-    { pubkey: ammId, isSigner: false, isWritable: false },
-    { pubkey: tokenAccountA, isSigner: false, isWritable: false },
-    { pubkey: tokenAccountB, isSigner: false, isWritable: false },
-    { pubkey: tokenPool, isSigner: false, isWritable: true },
-    { pubkey: feeAccountA, isSigner: false, isWritable: false },
-    { pubkey: feeAccountB, isSigner: false, isWritable: false },
-    { pubkey: tokenAccountPool, isSigner: false, isWritable: true },
-
-    { pubkey: marketId, isSigner: false, isWritable: false },
-
-    { pubkey: tokenProgramId, isSigner: false, isWritable: false },
-    { pubkey: dexProgramId, isSigner: false, isWritable: false },
+    { pubkey: stateAccount, isSigner: false, isWritable: true },
+    { pubkey: curStateOwner, isSigner: true, isWritable: false },
+    { pubkey: newStateOwner, isSigner: false, isWritable: false },
+    { pubkey: feeOwner, isSigner: false, isWritable: false },
+    { pubkey: SYSTEM_PROGRAM_ID, isSigner: false, isWritable: false },
+    { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
   ];
 
   const commandDataLayout = struct([
     u8("instruction"),
-    u8("nonce"),
+    nu64("initialSupply"),
     nu64("returnFeeNumerator"),
     nu64("fixedFeeNumerator"),
     nu64('feeDenominator'),
@@ -137,8 +143,8 @@ export const createLiquidityPool = (
   {
     const encodeLength = commandDataLayout.encode(
       {
-        instruction: 0, // InitializeSwap instruction
-        nonce,
+        instruction: 6, // InitializeSwap instruction
+        initialSupply: 1000000000,
         returnFeeNumerator: FEE_OPTIONS.returnFeeNumerator,
         fixedFeeNumerator: FEE_OPTIONS.fixedFeeNumerator,
         feeDenominator: FEE_OPTIONS.feeDenominator,
@@ -155,10 +161,65 @@ export const createLiquidityPool = (
   });
 };
 
+
+export const createLiquidityPool = (
+  tokenSwapAccount: Account,
+  authority: PublicKey,
+  stateId:  PublicKey,
+  ammId:PublicKey,
+  tokenAccountA: PublicKey,
+  tokenAccountB: PublicKey,
+  tokenPool: PublicKey,
+  tokenAccountPool: PublicKey,
+  tokenProgramId: PublicKey,
+  swapProgramId: PublicKey,
+  dexProgramId: PublicKey,
+  marketId:PublicKey,
+  nonce: number,
+): TransactionInstruction => {
+  const keys = [
+    { pubkey: tokenSwapAccount.publicKey, isSigner: false, isWritable: true },
+    { pubkey: authority, isSigner: false, isWritable: false },
+    { pubkey: stateId, isSigner: false, isWritable: false },
+    { pubkey: ammId, isSigner: false, isWritable: false },
+    { pubkey: tokenAccountA, isSigner: false, isWritable: false },
+    { pubkey: tokenAccountB, isSigner: false, isWritable: false },
+    { pubkey: tokenPool, isSigner: false, isWritable: true },
+    { pubkey: tokenAccountPool, isSigner: false, isWritable: true },
+
+    { pubkey: marketId, isSigner: false, isWritable: false },
+
+    { pubkey: tokenProgramId, isSigner: false, isWritable: false },
+    { pubkey: dexProgramId, isSigner: false, isWritable: false },
+  ];
+
+  const commandDataLayout = struct([
+    u8("instruction"),
+    u8("nonce"),
+  ]);
+  let data = Buffer.alloc(1024);
+  {
+    const encodeLength = commandDataLayout.encode(
+      {
+        instruction: 0, // InitializeSwap instruction
+        nonce,
+      },
+      data
+    );
+    data = data.slice(0, encodeLength);
+  }
+  return new TransactionInstruction({
+    keys,
+    programId: swapProgramId,
+    data,
+  });
+};
+
 export const depositInstruction = (
   tokenSwap: PublicKey,
   authority: PublicKey,
   userTransferAuthority: PublicKey,
+  stateId:  PublicKey,
   sourceA: PublicKey,
   sourceB: PublicKey,
   intoA: PublicKey,
@@ -193,6 +254,7 @@ export const depositInstruction = (
     { pubkey: tokenSwap, isSigner: false, isWritable: false },
     { pubkey: authority, isSigner: false, isWritable: false },
     { pubkey: userTransferAuthority, isSigner: true, isWritable: false },
+    { pubkey: stateId, isSigner: false, isWritable: false },
     { pubkey: sourceA, isSigner: false, isWritable: true },
     { pubkey: sourceB, isSigner: false, isWritable: true },
     { pubkey: intoA, isSigner: false, isWritable: true },
@@ -212,6 +274,7 @@ export const withdrawInstruction = (
   tokenSwap: PublicKey,
   authority: PublicKey,
   userTransferAuthority: PublicKey,
+  stateId:  PublicKey,
   poolMint: PublicKey,
   sourcePoolAccount: PublicKey,
   fromA: PublicKey,
@@ -246,6 +309,7 @@ export const withdrawInstruction = (
     { pubkey: tokenSwap, isSigner: false, isWritable: false },
     { pubkey: authority, isSigner: false, isWritable: false },
     { pubkey: userTransferAuthority, isSigner: false, isWritable: false },
+    { pubkey: stateId, isSigner: false, isWritable: false },
     { pubkey: poolMint, isSigner: false, isWritable: true },
     { pubkey: sourcePoolAccount, isSigner: false, isWritable: true },
     { pubkey: fromA, isSigner: false, isWritable: true },
@@ -266,6 +330,7 @@ export const swapInstruction_v5 = (
   tokenSwap: PublicKey,
   authority: PublicKey,
   userTransferAuthority: PublicKey,
+  stateId:  PublicKey,
   userSource: PublicKey,
   poolSource: PublicKey,
   poolDestination: PublicKey,
@@ -289,6 +354,7 @@ export const swapInstruction_v5 = (
     { pubkey: tokenSwap, isSigner: false, isWritable: false },
     { pubkey: authority, isSigner: false, isWritable: false },
     { pubkey: userTransferAuthority, isSigner: true, isWritable: false },
+    { pubkey: stateId, isSigner: false, isWritable: false },
     { pubkey: userSource, isSigner: false, isWritable: true },
     { pubkey: poolSource, isSigner: false, isWritable: true },
     { pubkey: poolDestination, isSigner: false, isWritable: true },

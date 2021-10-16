@@ -1,4 +1,4 @@
-import { ASSOCIATED_TOKEN_PROGRAM_ID, RENT_PROGRAM_ID, SYSTEM_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@/utils/ids'
+import { AMM_STATE_SEED, ASSOCIATED_TOKEN_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5, RENT_PROGRAM_ID, SYSTEM_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@/utils/ids'
 import { ACCOUNT_LAYOUT, MINT_LAYOUT } from '@/utils/layouts'
 import { TOKENS } from '@/utils/tokens'
 import { initializeAccount } from '@project-serum/serum/lib/token-instructions'
@@ -15,6 +15,7 @@ import {
   TransactionInstruction,
   TransactionSignature
 } from '@solana/web3.js'
+import { GLOBAL_STATE_LAYOUT } from './new_fcn'
 
 export const web3Config = {
   strategy: 'speed',
@@ -40,6 +41,15 @@ export async function createAmmAuthority(programId: PublicKey) {
     programId
   )
 }
+
+async function createGlobalStateId(programId: PublicKey, bufferKey: string) {
+  const { publicKey } = await findProgramAddress(
+    [Buffer.from(bufferKey), programId.toBuffer()],
+    programId
+  )
+  return publicKey
+}
+
 
 export async function createAssociatedId(infoId: PublicKey, marketAddress: PublicKey, bufferKey: string) {
   const { publicKey } = await findProgramAddress(
@@ -93,6 +103,28 @@ export async function createTokenAccountIfNotExist(
   }
 
   return publicKey
+}
+
+export async function getGlobalStateAddress(){
+  return await createGlobalStateId(new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5), AMM_STATE_SEED)
+}
+
+export async function getGlobalStateAccount(conn:any)
+{
+  const stateId = await getGlobalStateAddress()
+  const state = await conn.getAccountInfo(stateId)
+  let state_account = null
+  if(state)
+  {
+    const stateData = GLOBAL_STATE_LAYOUT.decode(Buffer.from(state.data))
+
+    if (stateData.isInitialized) {
+      state_account = {
+        ...stateData
+      }
+    }
+  }
+  return state_account
 }
 
 export async function createAssociatedTokenAccountIfNotExist(

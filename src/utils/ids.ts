@@ -23,7 +23,7 @@ export const LIQUIDITY_POOL_PROGRAM_ID_V4 = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24
 
 export const LIQUIDITY_POOL_PROGRAM_ID_V5 = '7ZZJNL4xD8db6yrT46SeMFZXcVr9MLepGpEtnKW2k6sW'//@zhaohui
 
-export const FARM_PROGRAM_ID = 'G2jHRHYzMk7U2ps6QyEuGg18Rg5hTRcxMPazMQLcLdaV'//@Hongbo
+export const FARM_PROGRAM_ID = '88UY5DEkkEe1QEXBY9uFbBWfKmYuqYWRob6dujQU8e6C'//@Hongbo
 export const FARM_INITIAL_SUPER_OWNER = DEVNET_MODE ? "4GJ3z4skEHJADz3MVeNYBg4YV8H27rBQey2YYdiPC8PA":"DyDdJM9KVsvosfXbcHDp4pRpmbMHkRq3pcarBykPy4ir";//@Hongbo
 export const FARM_INITIAL_ALLOWED_CREATOR = FARM_INITIAL_SUPER_OWNER;//@Hongbo
 
@@ -34,6 +34,8 @@ export const STAKE_PROGRAM_ID_V5 = '9KEPoZmtHUrBbhWN1v1KWLMkkvwY6WLtAVUCPRtRjP4z
 export const IDO_PROGRAM_ID = '6FJon3QE27qgPVggARueB22hLvoh22VzJpXv4rBEoSLF'
 export const IDO_PROGRAM_ID_V2 = 'CC12se5To1CdEuw7fDS27B7Geo5jJyL7t5UK2B44NgiH'
 export const IDO_PROGRAM_ID_V3 = '9HzJyW1qZsEiSfMUf6L2jo3CcTKAyBmSyKdwQeYisHrC'
+
+export const AMM_STATE_SEED = "AmmState";
 
 export const AUTHORITY_AMM = 'amm authority'
 export const AMM_ASSOCIATED_SEED = 'amm_associated_seed'

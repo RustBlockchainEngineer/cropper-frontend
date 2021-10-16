@@ -15,12 +15,13 @@ import {
 import { Token, MintLayout, AccountLayout, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 import {
-  createSplAccount,
-  AMM_INFO_LAYOUT_V5,
-  createLiquidityPool,
-  LIQUIDITY_TOKEN_PRECISION
-} from "@/utils/new_fcn"
 
+  AMM_INFO_LAYOUT_V6,
+  LIQUIDITY_TOKEN_PRECISION,
+  createSplAccount,
+  createLiquidityPool,
+  updateGlobalStateInstruction,
+} from "@/utils/new_fcn"
 
 import {
   LIQUIDITY_POOL_PROGRAM_ID_V5,
@@ -29,6 +30,7 @@ import {
   TOKEN_PROGRAM_ID,
   SYSTEM_PROGRAM_ID,
   AMM_ASSOCIATED_SEED,
+  AMM_STATE_SEED,
   TARGET_ASSOCIATED_SEED,
   WITHDRAW_ASSOCIATED_SEED,
   COIN_VAULT_ASSOCIATED_SEED,
@@ -48,7 +50,9 @@ import {
   createAssociatedId,
   findAssociatedTokenAddress,
   createAssociatedTokenAccount,
-  createTokenAccountIfNotExist
+  createTokenAccountIfNotExist,
+  getGlobalStateAccount,
+  getGlobalStateAddress
 } from '@/utils/web3'
 // @ts-ignore
 import { struct, u8 } from 'buffer-layout'
@@ -130,6 +134,40 @@ export async function getMarket(conn: any, marketAddress: string): Promise<any |
   }
 }
 
+
+export async function updateGlobalState(
+  conn: any,
+  wallet: any
+){
+  const stateId = await getGlobalStateAddress()
+  // const state_info = await getGlobalStateAccount(conn);
+
+  let transaction: Transaction = new Transaction()
+  console.log("update state account")
+  transaction.add(
+    updateGlobalStateInstruction(
+      stateId,
+      wallet.publicKey,
+      wallet.publicKey,
+      wallet.publicKey,
+      new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
+    )
+  )
+  
+  return await sendTransaction(conn, wallet, transaction, [])
+  
+  let transaction_tt: Transaction = new Transaction()
+  transaction_tt.add(
+    transfer(
+      new PublicKey("2Pv5mjmKYAtXNpr3mcsXf7HjtS3fieJeFoWPATVT5rWa"),
+      new PublicKey("5Tpi3fWL6XwKqNAV8Th3HK5g6bW3ceKaJ5pqz8GtyL85"),
+      wallet.publicKey,
+      100000000
+    )
+  )
+  return await sendTransaction(conn, wallet, transaction_tt, [])
+}
+
 export async function createAmm(
   conn: any,
   wallet: any,
@@ -138,18 +176,8 @@ export async function createAmm(
   userInputQuoteValue: number
 ) {
 
-  // let transaction_t: Transaction = new Transaction()
-  // transaction_t.add(
-  //   transfer(
-  //     new PublicKey("2Pv5mjmKYAtXNpr3mcsXf7HjtS3fieJeFoWPATVT5rWa"),
-  //     new PublicKey("5Tpi3fWL6XwKqNAV8Th3HK5g6bW3ceKaJ5pqz8GtyL85"),
-  //     wallet.publicKey,
-  //     100000000
-  //   )
-  // )
-  // return await sendTransaction(conn, wallet, transaction_t, [])
-
-
+  // return (await updateGlobalState(conn, wallet))
+  console.log("Creating AMM")
   let instructions: TransactionInstruction[] = [];
   let cleanupInstructions: TransactionInstruction[] = [];
 
@@ -233,23 +261,23 @@ export async function createAmm(
 
 
   // creating fee account for base & 
-  let feeFromTokenAccount = await getOneFilteredTokenAccountsByOwner(conn, FIXED_FEE_ACCOUNT, market.baseMintAddress) as any
-  let feeToTokenAccount = await getOneFilteredTokenAccountsByOwner(conn, FIXED_FEE_ACCOUNT, market.quoteMintAddress)  as any
+  // let feeFromTokenAccount = await getOneFilteredTokenAccountsByOwner(conn, FIXED_FEE_ACCOUNT, market.baseMintAddress) as any
+  // let feeToTokenAccount = await getOneFilteredTokenAccountsByOwner(conn, FIXED_FEE_ACCOUNT, market.quoteMintAddress)  as any
 
-  if(market.baseMintAddress == TOKENS.WSOL.mintAddress){
-    feeFromTokenAccount = FIXED_FEE_ACCOUNT.toString()
-  }
-  if(market.quoteMintAddress == TOKENS.WSOL.mintAddress){
-    feeToTokenAccount = FIXED_FEE_ACCOUNT.toString()
-  }
+  // if(market.baseMintAddress == TOKENS.WSOL.mintAddress){
+  //   feeFromTokenAccount = FIXED_FEE_ACCOUNT.toString()
+  // }
+  // if(market.quoteMintAddress == TOKENS.WSOL.mintAddress){
+  //   feeToTokenAccount = FIXED_FEE_ACCOUNT.toString()
+  // }
 
-  if(!feeFromTokenAccount || !feeToTokenAccount)
-  {
-    throw("Cannot find fee token account")
-  }
+  // if(!feeFromTokenAccount || !feeToTokenAccount)
+  // {
+  //   throw("Cannot find fee token account")
+  // }
 
-  feeFromTokenAccount = new PublicKey(feeFromTokenAccount)
-  feeToTokenAccount = new PublicKey(feeToTokenAccount)
+  // feeFromTokenAccount = new PublicKey(feeFromTokenAccount)
+  // feeToTokenAccount = new PublicKey(feeToTokenAccount)
 
   let transaction = new Transaction()
   instructions.forEach((instruction)=>{
@@ -272,9 +300,9 @@ export async function createAmm(
       fromPubkey: wallet.publicKey,
       newAccountPubkey: tokenSwapAccount.publicKey,
       lamports: await conn.getMinimumBalanceForRentExemption(
-        AMM_INFO_LAYOUT_V5.span
+        AMM_INFO_LAYOUT_V6.span
       ),
-      space: AMM_INFO_LAYOUT_V5.span,
+      space: AMM_INFO_LAYOUT_V6.span,
       programId: new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
     })
   );
@@ -346,16 +374,16 @@ export async function createAmm(
     }
   });
 
+  const stateId = await getGlobalStateAddress();
   instructions.push(
     createLiquidityPool(
       tokenSwapAccount,
       authority,
+      stateId,
       ammId,
       holdingAccounts[0].publicKey,
       holdingAccounts[1].publicKey,
       liquidityTokenAccount.publicKey,
-      feeFromTokenAccount,
-      feeToTokenAccount,
       depositorAccount,
       TOKEN_PROGRAM_ID,
       new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),

@@ -12,13 +12,16 @@ import {
   mergeTransactions,
   sendTransaction,
   commitment,
-  getMintDecimals
+  getMintDecimals,
+  getGlobalStateAccount,
+  getOneFilteredTokenAccountsByOwner,
+  getGlobalStateAddress
 } from '@/utils/web3'
 import { TokenAmount } from '@/utils/safe-math'
 import { ACCOUNT_LAYOUT } from '@/utils/layouts'
 import { swapInstruction_v5 } from '@/utils/new_fcn'
 // eslint-disable-next-line
-import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, FIXED_FEE_ACCOUNT } from './ids'
+import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, FIXED_FEE_ACCOUNT, LIQUIDITY_POOL_PROGRAM_ID_V5, AMM_STATE_SEED } from './ids'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
 
 export function getOutAmount(
@@ -367,36 +370,37 @@ export async function twoStepSwap(
   fromPoolInfo: any,
   toPoolInfo: any,
   fromCoinMint: string,
+  midCoinMint: string,
   toCoinMint: string,
   fromTokenAccount: string,
-  crpTokenAccount:string,
+  midTokenAccount:string,
   toTokenAccount: string,
   aIn: string,
   aCrpOut: string,
   aOut: string)
 {
   console.log("Two Step swap")
-  if(!crpTokenAccount)
+  if(!midTokenAccount)
   {
     let transaction = new Transaction()
 
-    crpTokenAccount = (await createAssociatedTokenAccountIfNotExist(
-      crpTokenAccount,
+    midTokenAccount = (await createAssociatedTokenAccountIfNotExist(
+      midTokenAccount,
       wallet.publicKey,
-      TOKENS.CRP.mintAddress,
+      midCoinMint,
       transaction
     )).toString()
     await sendTransaction(connection, wallet, transaction, [])
   }
 
-  let ori_crp_balance = await getTokenBalance(connection, crpTokenAccount)
+  let ori_crp_balance = await getTokenBalance(connection, midTokenAccount)
   let tx_id_1 = await swap(connection, 
     wallet,
     fromPoolInfo,
     fromCoinMint,
-    TOKENS.CRP.mintAddress,
+    midCoinMint,
     fromTokenAccount,
-    crpTokenAccount,
+    midTokenAccount,
     aIn,
     aCrpOut
     )
@@ -404,14 +408,14 @@ export async function twoStepSwap(
   let cur_crp_balance = 0
   while(1)
   {
-    cur_crp_balance = await getTokenBalance(connection, crpTokenAccount)
+    cur_crp_balance = await getTokenBalance(connection, midTokenAccount)
     if(ori_crp_balance < cur_crp_balance)
     {
       break;
     }
   }
 
-  let crp_decimals = await getMintDecimals(connection, new PublicKey(TOKENS.CRP.mintAddress))
+  let crp_decimals = await getMintDecimals(connection, new PublicKey(midCoinMint))
   let delta_crp = cur_crp_balance - ori_crp_balance
   
   let aCrpIn = (new TokenAmount(delta_crp, crp_decimals)).fixed()
@@ -419,9 +423,9 @@ export async function twoStepSwap(
   let tx_id_2 = await swap(connection, 
     wallet,
     toPoolInfo,
-    TOKENS.CRP.mintAddress,
+    midCoinMint,
     toCoinMint,
-    crpTokenAccount,
+    midTokenAccount,
     toTokenAccount,
     aCrpIn,
     aOut
@@ -648,7 +652,15 @@ async function swap_v5(
 
   let normal_dir = (fromCoinMint == poolInfo.coin.mintAddress)
 
-  let feeTokenAccount = normal_dir ? poolInfo.feeCoinTokenAccount : poolInfo.feePcTokenAccount
+  const stateId = await getGlobalStateAddress();
+  const state_info = await getGlobalStateAccount(connection);
+
+  let feeTokenAccount = await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint)) as any
+
+  if(fromCoinMint === NATIVE_SOL.mintAddress){
+    feeTokenAccount = state_info.feeOwner.toString()
+  }
+
   let poolFromAccount = normal_dir? poolInfo.poolCoinTokenAccount: poolInfo.poolPcTokenAccount
   let poolToAccount = normal_dir? poolInfo.poolPcTokenAccount: poolInfo.poolCoinTokenAccount
 
@@ -657,13 +669,14 @@ async function swap_v5(
       new PublicKey(poolInfo.ammId),
       new PublicKey(poolInfo.ammAuthority),
       owner,
+      stateId,
       wrappedSolAccount ?? newFromTokenAccount,
       new PublicKey(poolFromAccount),
       new PublicKey(poolToAccount),
       wrappedSolAccount2 ?? newToTokenAccount,
       new PublicKey(poolInfo.lp.mintAddress),
       new PublicKey(feeTokenAccount),
-      FIXED_FEE_ACCOUNT,
+      state_info.feeOwner,
       new PublicKey(poolInfo.programId),
       TOKEN_PROGRAM_ID,
       SYSTEM_PROGRAM_ID,
