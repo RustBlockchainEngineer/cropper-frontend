@@ -324,6 +324,8 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/variables';
+
 ::-webkit-scrollbar {
   display: none; /* Chrome Safari */
 }
@@ -501,6 +503,8 @@ export default Vue.extend({
 </style>
 
 <style lang="less">
+@import '../../styles/variables';
+
 .ant-alert-warning {
   width: 500px;
   margin-top: 30px;
@@ -526,6 +530,10 @@ export default Vue.extend({
     position: absolute;
     left: 0;
     top: 35%;
+
+    @media (max-width: @mobile-b-width) {
+      display: none;
+    }
   }
 
   .card-body {

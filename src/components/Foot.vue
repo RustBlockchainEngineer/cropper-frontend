@@ -66,6 +66,7 @@ export default class Foot extends Vue {
 </script>
 
 <style lang="less" scoped>
+@import '../styles/variables.less';
 
 .ant-layout-footer {
   padding: 24px 128px !important;
@@ -139,7 +140,7 @@ export default class Foot extends Vue {
 }
 
 // ******* Mobile *******
-@media (max-width: 600px) {
+@media (max-width: @mobile-b-width) {
   .ant-layout-footer {
     width: 375px;
     margin: auto;

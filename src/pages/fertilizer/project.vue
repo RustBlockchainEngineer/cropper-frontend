@@ -24,21 +24,21 @@
         <div class="card-body" style="grid-row-gap: 0; row-gap: 0; padding-bottom: 15px">
           <div class="modTitle">{{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }}</div>
           <div class="fertilizer-project-header">
-            <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row'" :gutter="24">
-              <Col :span="!isMobile ? 12 : 24">
-                <div class="title">
-                  {{ farm.name }}
-                  <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
-                    <img class="social-icon" src="@/assets/icons/link_grey.svg" />
-                  </a>
-                  <a v-show="farm.links.twitter" :href="farm.website.url" target="_blank">
-                    <img class="social-icon" src="@/assets/icons/twitter_grey.svg" />
-                  </a>
-                  <a v-show="farm.links.telegram" :href="farm.website.url" target="_blank">
-                    <img class="social-icon" src="@/assets/icons/telegram_grey.svg" />
-                  </a>
-                </div>
+            <div class="title">
+              {{ farm.shortname.slice(3) }}
+              <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
+                <img class="social-icon" src="@/assets/icons/link_grey.svg" />
+              </a>
+              <a v-show="farm.links.twitter" :href="farm.website.url" target="_blank">
+                <img class="social-icon" src="@/assets/icons/twitter_grey.svg" />
+              </a>
+              <a v-show="farm.links.telegram" :href="farm.website.url" target="_blank">
+                <img class="social-icon" src="@/assets/icons/telegram_grey.svg" />
+              </a>
+            </div>
 
+            <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row'" :gutter="24">
+              <Col :span="!isMobile ? 12 : 24" class="header-left-col">
                 <div class="followerscount">
                   <span>{{ followerCount }} </span> Followers
                 </div>
@@ -1683,6 +1683,8 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
+@import '../../styles/variables';
+
 ::-webkit-scrollbar {
   display: none; /* Chrome Safari */
 }
@@ -1713,14 +1715,30 @@ export default Vue.extend({
       border-radius: 14px;
       padding: 32px 50px;
 
+      @media (max-width: @mobile-b-width) {
+        margin-left: 20px;
+        margin-right: 20px;
+        padding: 12px 5px;
+      }
+
       .ant-row {
         height: 100% !important;
 
+        .header-left-col {
+          @media (max-width: @mobile-b-width) {
+            width: 100%;
+          }
+        }
+        
         .header-right-col {
           height: 100%;
           justify-content: right;
           display: flex;
           align-items: center;
+
+          @media (max-width: @mobile-b-width) {
+            display: none;
+          }
         }
       }
 
@@ -1759,6 +1777,12 @@ export default Vue.extend({
         line-height: 24px;
         letter-spacing: 0;
         text-align: left;
+
+        @media (max-width: @mobile-b-width) {
+          font-size: 16px;
+          line-height: 20px;
+          font-weight: 700;
+        }
       }
 
       .btncontainer {
@@ -1783,6 +1807,9 @@ export default Vue.extend({
           width: 100%;
           height: 100%;
           cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       }
 
@@ -1810,6 +1837,12 @@ export default Vue.extend({
       border-radius: 14px;
       padding: 20px 25px;
 
+      @media (max-width: @mobile-b-width) {
+        margin-left: 20px;
+        margin-right: 20px;
+        padding: 12px 5px;
+      }
+      
       .status-log {
         display: flex;
         justify-content: center;
@@ -1824,6 +1857,11 @@ export default Vue.extend({
           line-height: 60px;
           display: flex;
 
+          @media (max-width: @mobile-b-width) {
+            height: 44px;
+            min-width: 105px;
+          }
+          
           button {
             font-style: normal;
             font-weight: normal;
@@ -1836,6 +1874,14 @@ export default Vue.extend({
             width: 100%;
             height: 100%;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            @media (max-width: @mobile-b-width) {
+              height: 40px;
+              font-size: 14px;
+            }
           }
         }
       }
@@ -1943,6 +1989,8 @@ export default Vue.extend({
 </style>
 
 <style lang="less">
+@import '../../styles/variables';
+
 .text-center {
   text-align: center !important;
 }
@@ -1996,6 +2044,10 @@ export default Vue.extend({
     line-height: 80px;
     letter-spacing: -0.05em;
     margin-bottom: 20px;
+
+    @media (max-width: @mobile-b-width) {
+      display: none;
+    }
   }
 
   .walContent {

@@ -147,12 +147,24 @@ export default class Nav extends Vue {
 .ant-menu-horizontal {
   line-height: 62px;
   border-bottom: none;
+
+  @media (max-width: @mobile-b-width) {
+    display: flex;
+    border-top: 1px solid #ffffff30;
+    border-bottom: 1px solid #ffffff30;
+    margin-top: 10px;
+    justify-content: space-between;
+  }
 }
 
 .ant-menu-horizontal > .ant-menu-item {
   border-bottom: none;
   font-size: 16px;
   font-weight: 600;
+
+  @media (max-width: @mobile-m-width) {
+    font-size: 12px;
+  }
 }
 
 .ant-menu-horizontal > .ant-menu-item:hover,

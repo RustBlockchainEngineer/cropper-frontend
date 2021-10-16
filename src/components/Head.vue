@@ -6,7 +6,7 @@
       <Nav @onSelect="() => (navOpened = false)" />
     <!-- </div> -->
 
-    <div class="fs-container">
+    <div class="fs-container wallet-container" :class="isMobile ? 'mobile' : ''">
       <Wallet />
     </div>
   </Header>
@@ -121,14 +121,20 @@ export default Vue.extend({
   }
 }
 
-@media (max-width: 780px) {
+@media (max-width: @mobile-b-width) {
   .header.mobile {
-    width: 375px;
-    margin: 20px auto 70px;
-    padding: 22px !important;
+    margin: 10px 20px 80px 20px;
+    padding: 0 !important;
+    display: block;
+
     .nav-button {
       display: none;
     }
+  }
+
+  .wallet-container.mobile {
+    float: right;
+    margin-top: -130px;
   }
 }
 </style>
