@@ -631,7 +631,7 @@ export default class CreatePool extends Vue {
     this.alreadyExists = false;
     this.inputMarket = val.replace(/(^\s*)|(\s*$)/g, '')
     if (this.pools.filter((pool:any)=>(pool.serumMarket as string).toLowerCase() == (this.inputMarket as string).toLowerCase()).length > 0) {
-      this.alreadyExists = true;
+     // this.alreadyExists = true;
     }
   }
 
