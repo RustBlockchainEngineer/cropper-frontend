@@ -99,6 +99,20 @@
                   <!-- <div class="share text-center">You are following this project</div> -->
                 </div>
                 
+                <div v-else-if="farm.pla_end_ts > currentTimestamp && !isRegistered" class="largepdding">
+                  <div class="btncontainer">
+                    <Button
+                      size="large"
+                      ghost
+                      class="button_div"
+                      style="z-index: 999; width: 100%"
+                      @click="startRegistering()"
+                    >
+                      + Register for Whitelist
+                    </Button>
+                  </div>
+                </div>
+
                 <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
                   <div class="share-ticket">Lottery ticket: {{ registeredDatas.submit }}</div>
 
@@ -112,17 +126,21 @@
                   </div>
                 </div>
 
-                <div v-else-if="farm.pla_end_ts > currentTimestamp" class="largepdding">
-                  <div class="btncontainer">
-                    <Button
-                      size="large"
-                      ghost
-                      class="button_div"
-                      style="z-index: 999; width: 100%"
-                      @click="startRegistering()"
-                    >
-                      + Register for Whitelist
-                    </Button>
+                <div v-else-if="farm.pla_end_ts < currentTimestamp && isRegistered">
+                  <div v-if="farm.airdrop.status == 'lottery'" class="share-ticket">
+                    Lottery ticket: {{ registeredDatas.submit }}
+                  </div>
+                  <div v-if="farm.airdrop.status == 'in progress'" class="share-ticket">
+                    Winning ticket: {{ registeredDatas.won }}/{{ registeredDatas.submit }}
+                  </div>
+                
+                  <div class="share-content">Share your referal link to earn more lottery ticket</div>
+
+                  <div class="share-copy-form">
+                    <div class="inputContent">
+                      <button class="submitbutton" @click="copyToClipboard()">Copy</button>
+                      <input type="text" class="twlink" :value="shareWalletAddress" />
+                    </div>
                   </div>
                 </div>
               </Col>
@@ -190,195 +208,52 @@
                   </div>
                 </Col>
               </Row>
+
+              <Row class="full-border pf-margin-top pf-padding-top" :span="isMobile ? 24 : 12">
+                <Col :span="24" :class="isMobile ? ' steps' : 'steps'">
+                  <div class="done">
+                    <span class="span first"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+                    <div><b class="t">Initialisation</b> - This project is in preparation phase. Stay tuned.</div>
+                  </div>
+
+                  <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone'">
+                    <span v-if="farm.pla_ts > currentTimestamp">2</span>
+                    <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+                    <div>
+                      <b class="t">Withelist</b> - You can now whitelist yourself for the lottery.<br />
+                      <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla }}</div>
+                    </div>
+                  </div>
+                  <div :class="farm.pla_end_ts < currentTimestamp ? 'done' : 'notdone'">
+                    <span v-if="farm.pla_end_ts > currentTimestamp">3</span>
+                    <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+                    <div>
+                      <b class="t">Airdrop Lottery</b> - See if you have any winning lottery tickets.<br />
+                      <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla_end }}</div>
+                    </div>
+                  </div>
+                  <div :class="farm.pfrom_ts < currentTimestamp ? 'done' : 'notdone'">
+                    <span v-if="farm.pfrom_ts > currentTimestamp">4</span>
+                    <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+                    <div>
+                      <b class="t">Private Farm</b> - You can now stack LP in {{ farm.tokenA.symbol }}-{{
+                        farm.tokenB.symbol
+                      }}
+                      farm.<br />
+                      <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pfrom }}</div>
+                    </div>
+                  </div>
+                  <div :class="farm.pto_ts < currentTimestamp ? 'done' : 'notdone'">
+                    <span v-if="farm.pto_ts > currentTimestamp">5</span>
+                    <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+                    <div>
+                      <b class="t">Public Farm</b> - {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes public<br />
+                      <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pto }}</div>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
             </div>
-
-            <!-- <Row class="full-border pf-margin-top pf-padding-top" :span="isMobile ? 24 : 12">
-              <Col :span="isMobile ? 24 : 12" class="notstep">
-                <div class="modTitle">
-                  <span class="icons">
-                    <CoinIcon :mint-address="farm.tokenA.mint" />
-                    <CoinIcon :mint-address="farm.tokenB.mint" />
-                  </span>
-
-                  {{ farm.tokenA.symbol }} - {{ farm.tokenB.symbol }}
-                </div>
-
-                <div class="walContent">
-                  <div class="rewardAmount">
-                    <span>Total Airdrop allocated :</span>
-                    <b
-                      >{{ farm.airdrop.amount }} {{ farm.airdrop.symbol }} <CoinIcon :mint-address="farm.airdrop.mint"
-                    /></b>
-                  </div>
-
-                  <div class="rewardNFT" v-if="farm.nft_airdrop">
-                    <span>{{ farm.nft_airdrop.info }} </span>
-                    <b v-for="nft in farm.nft_airdrop.list" :key="nft.picto"><img :src="nft.picto" /> {{ nft.info }}</b>
-                  </div>
-
-                  <div class="airdropInfo">
-                    <img src="@/assets/info.png" width="22" height="22" /> {{ farm.airdrop.info }}
-                  </div>
-
-                  <div class="infoTickets" v-if="farm.pla_end_ts > currentTimestamp && isRegistered">
-                    You’ve well registered into the whithelist.<br />
-                    You have {{ registeredDatas.submit }} lottery ticket{{ registeredDatas.submit > 1 ? 's' : '' }} !
-                  </div>
-                  <div class="infoTickets" v-else-if="farm.pla_end_ts < currentTimestamp && isRegistered">
-                    <span v-if="farm.airdrop.status == 'lottery'">
-                      You’ve well registered into the whithelist.<br />
-                      You have {{ registeredDatas.submit }} lottery ticket{{ registeredDatas.submit > 1 ? 's' : '' }} !
-                    </span>
-                    <span v-else-if="registeredDatas.won == 0 && registeredDatas.won_nft == 0">
-                      You have {{ registeredDatas.won }}/{{ registeredDatas.submit }} winning ticket{{
-                        registeredDatas.won > 1 ? 's' : ''
-                      }}<br />
-                    </span>
-                    <span v-else-if="registeredDatas.won">
-                      Congratulation! Airdrop winner
-                      <div class="airdropWinner">
-                        {{ farm.airdrop.singleValue }} {{ farm.airdrop.symbol }}
-                        <CoinIcon :mint-address="farm.airdrop.mint" />
-                      </div>
-                    </span>
-                    <span v-else-if="registeredDatas.won_nft">
-                      Congratulation! NFT winner
-                      <div class="nftWinner"><img :src="registeredDatas.won_nft" /> x1</div>
-                    </span>
-                  </div>
-                </div>
-
-                <div class="text-center">
-                  <div class="largepdding" v-if="!wallet.connected">
-                    <div class="btncontainer">
-                      <Button
-                        size="large"
-                        ghost
-                        class="button_div"
-                        style="z-index: 999; width: 100%"
-                        @click="$accessor.wallet.openModal"
-                      >
-                        Connect wallet
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div v-else-if="farm.pla_ts > currentTimestamp && !followed" class="largepdding">
-                    <div class="share text-center">
-                      <div class="btncontainer">
-                        <Button
-                          size="large"
-                          ghost
-                          class="button_div"
-                          style="z-index: 999; width: 100%"
-                          @click="
-                            startFollow(
-                              'https://api.cropper.finance/pfo/follow/?spl=' +
-                                $accessor.wallet.address +
-                                '&farmId=' +
-                                farm.pfarmID
-                            )
-                          "
-                        >
-                          + Follow
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div v-else-if="farm.pla_ts > currentTimestamp && followed" class="largepdding">
-                    <div class="share text-center">You are following this project</div>
-                  </div>
-
-                  <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
-                    <div class="share">
-                      Share your referal link to earn more lottery ticket
-
-                      <div class="inputContent">
-                        <button class="submitbutton" @click="copyToClipboard()">Copy</button>
-                        <input type="text" class="twlink" :value="shareWalletAddress" />
-                      </div>
-
-                      <a :href="tgShareAdress" target="_blank" class="sharer">
-                        <img src="@/assets/icons/telegram.svg" height="39" width="39" />
-                      </a>
-
-                      <a :href="twShareAdress" target="_blank" class="sharer">
-                        <img src="@/assets/icons/twitter.svg" height="39" width="39" />
-                      </a>
-                    </div>
-                  </div>
-
-                  <div v-else-if="farm.pla_end_ts > currentTimestamp" class="largepdding">
-                    <div class="btncontainer">
-                      <Button
-                        size="large"
-                        ghost
-                        class="button_div"
-                        style="z-index: 999; width: 100%"
-                        @click="startRegistering()"
-                      >
-                        + Register for Whitelist
-                      </Button>
-                    </div>
-                  </div>
-                  <div v-else-if="farm.pla_end_ts < currentTimestamp && !isRegistered" class="airdropStatus">
-                    You did not participate, please wait for the public opening
-                  </div>
-                  <div v-else-if="farm.pla_end_ts < currentTimestamp" class="airdropStatus">
-                    <span v-if="farm.airdrop.status == 'lottery'"> Lottery in progress... </span>
-                    <span v-else-if="farm.airdrop.status == 'in progress'"> Prize distribution in progress... </span>
-                    <span v-else-if="farm.airdrop.status == 'done'"> Prize distribution complete </span>
-                  </div>
-                  <div v-else-if="farm.pfrom_ts < currentTimestamp">
-                    <h1>You can use below farm now.</h1>
-                  </div>
-                </div>
-              </Col>
-
-              <Col :span="24" :class="isMobile ? ' steps' : 'steps'">
-                <div class="done">
-                  <span class="span first"><img src="@/assets/icons/check-one.svg" alt="" /></span>
-                  <div><b class="t">Initialisation</b> - This project is in preparation phase. Stay tuned.</div>
-                </div>
-
-                <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone'">
-                  <span v-if="farm.pla_ts > currentTimestamp">2</span>
-                  <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
-                  <div>
-                    <b class="t">Withelist</b> - You can now whitelist yourself for the lottery.<br />
-                    <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla }}</div>
-                  </div>
-                </div>
-                <div :class="farm.pla_end_ts < currentTimestamp ? 'done' : 'notdone'">
-                  <span v-if="farm.pla_end_ts > currentTimestamp">3</span>
-                  <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
-                  <div>
-                    <b class="t">Airdrop Lottery</b> - See if you have any winning lottery tickets.<br />
-                    <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla_end }}</div>
-                  </div>
-                </div>
-                <div :class="farm.pfrom_ts < currentTimestamp ? 'done' : 'notdone'">
-                  <span v-if="farm.pfrom_ts > currentTimestamp">4</span>
-                  <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
-                  <div>
-                    <b class="t">Private Farm</b> - You can now stack LP in {{ farm.tokenA.symbol }}-{{
-                      farm.tokenB.symbol
-                    }}
-                    farm.<br />
-                    <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pfrom }}</div>
-                  </div>
-                </div>
-                <div :class="farm.pto_ts < currentTimestamp ? 'done' : 'notdone'">
-                  <span v-if="farm.pto_ts > currentTimestamp">5</span>
-                  <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
-                  <div>
-                    <b class="t">Public Farm</b> - {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes public<br />
-                    <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pto }}</div>
-                  </div>
-                </div>
-              </Col>
-            </Row> -->
 
             <Row class="status-log" :span="24">
               <div class="largepdding" v-if="!wallet.connected">
@@ -422,16 +297,7 @@
                 <div class="share text-center">You are following this project</div>
               </div>
 
-              <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
-                <div class="share">
-                  You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{
-                    registeredDatas.submit > 1 ? 's' : ''
-                  }}
-                  !
-                </div>
-              </div>
-
-              <div v-else-if="farm.pla_end_ts > currentTimestamp" class="largepdding">
+              <div v-else-if="farm.pla_end_ts > currentTimestamp && !isRegistered" class="largepdding">
                 <div class="btncontainer">
                   <Button
                     size="large"
@@ -442,6 +308,38 @@
                   >
                     + Register for Whitelist
                   </Button>
+                </div>
+              </div>
+              
+              <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
+                <div class="share">
+                  You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{
+                    registeredDatas.submit > 1 ? 's' : ''
+                  }}
+                  !
+                </div>
+              </div>
+              
+              <div v-else-if="farm.pla_end_ts < currentTimestamp && isRegistered">
+                <div class="share">
+                  <span v-if="farm.airdrop.status == 'lottery'">
+                    You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{registeredDatas.submit > 1 ? 's' : ''}}!
+                    <br /><br />
+                    Lottery in progress... 
+                  </span>
+                  <div v-else-if="farm.airdrop.status == 'in progress'">
+                    <span v-if="registeredDatas.won == 0 && registeredDatas.won_nft == 0">
+                      Oops! You don't have any winning tickets.
+                    </span>
+                    <span v-else-if="registeredDatas.won">
+                      Congratulation! You've won a {{ farm.airdrop.singleValue }} airdrop.
+                    </span>
+                    <span v-else-if="registeredDatas.won_nft">
+                      Congratulation! You've won a Founder's collector NFT
+                    </span>
+                    <br /><br />
+                    Prize distribution in progress...
+                  </div>
                 </div>
               </div>
             </Row>
@@ -2198,7 +2096,7 @@ export default Vue.extend({
   }
 
   .share {
-    text-align: left;
+    text-align: center;
     margin: 30px;
     font-weight: bold;
     font-size: 30px;
