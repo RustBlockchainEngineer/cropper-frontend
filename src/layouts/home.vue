@@ -1,6 +1,7 @@
 <template>
   <div class="home-container-background">
     <Nuxt />
+    <Foot />
   </div>
 </template>
 

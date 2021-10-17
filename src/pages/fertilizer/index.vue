@@ -69,7 +69,7 @@
           </Row>
          
           <Collapse v-model="showCollapse" expand-icon-position="right">
-            <CollapsePanel v-for="farm in labelizedAmms" v-show="true" :key="farm.links.banner" :show-arrow="poolType">
+            <CollapsePanel v-for="farm in labelizedAmms" v-show="true" :key="farm.slug" :show-arrow="poolType">
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
                 <Col class="lp-icons" :span="isMobile ? 9 : 6">
                   <div class="lp-icons-group">
