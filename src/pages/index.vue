@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="lunch-app">
-                <button class="lunch-app-button">Lunch App</button>
+                <button class="lunch-app-button">Launch App</button>
             </div>
         </div>
         <div class="Powered">
@@ -25,7 +25,10 @@
                 <p>Farming Protocol on Solana</p>
                 <div class="main-btns">
                     <div id="btn-LA">
-                        <a  href="/swap/"><button id="LaunchApp">Launch App</button></a>
+
+                        <NuxtLink to="/swap/">
+                            <button id="LaunchApp">Launch App</button>
+                        </NuxtLink>
                     </div>
                     <div id="btn-RM">
                         <a  href="https://cropper-finance.gitbook.io/cropperfinance/" target="_blank"><button id="ReadMore">Read More</button></a>
