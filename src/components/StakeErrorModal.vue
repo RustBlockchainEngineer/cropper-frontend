@@ -15,14 +15,20 @@
       </div>
     </div>
     <Row :gutter="32" class="actions">
-      <Col :span="8">
-        <Button ghost @click="$emit('onRetry')" >Retry to stake</Button>
+      <Col :span="8" class="text-center">
+        <div class="stdGradientButton">
+          <Button ghost @click="$emit('onRetry')" >Retry to stake</Button>
+        </div>
       </Col>
-      <Col :span="8">
-        <Button ghost @click="$emit('onRemove')" >Remove Liquidity</Button>
+      <Col :span="8" class="text-center">
+        <div class="stdEmptyGradientButton">
+          <Button ghost @click="$emit('onRemove')" >Remove Liquidity</Button>
+        </div>
       </Col>
-      <Col :span="8">
-        <Button ghost @click="$emit('onNothing')">Nothing</Button>
+      <Col :span="8" class="text-center">
+        <div class="stdEmptyGradientButton">
+          <Button ghost @click="$emit('onNothing')">Nothing</Button>
+        </div>
       </Col>
     </Row>
   </Modal>

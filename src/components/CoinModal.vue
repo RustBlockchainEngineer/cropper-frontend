@@ -161,14 +161,11 @@ export default Vue.extend({
 }
 
 .coin-modal {
-  background: rgba(0, 0, 0, 0.9471);
-  border-radius: 4px;
-
   .label {
-    padding: 0.75rem 1rem 0;
-    font-size: 12px;
+    padding: .75rem 1rem 0;
+    font-size: 18px;
     line-height: 14px;
-    color: rgb(133, 133, 141);
+    color: #85858d;
   }
 
   input {

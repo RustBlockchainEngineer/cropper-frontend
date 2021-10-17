@@ -37,8 +37,7 @@ body {
 }
 
 .stdEmptyGradientButton{
-  padding: 9px 19px;
-  background:transparent;
+  background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   display:inline-block;
@@ -46,20 +45,22 @@ body {
   margin: 0 auto;
 
   button{
-    background:unset !important;
-    color:#fff;
+    background:#01033C !important;    
+    padding: 9px 30px;
+    display: block;
+    height: 51px;
+    line-height: unset;
+    color: #fff;
     border-color: transparent;
     font-style: normal;
     font-weight: normal;
-    font-size: 18px;
-    line-height: 42px;
+    font-size: 16px;
     letter-spacing: -0.05em;
   }
 
 }
 
 .stdGradientButton {
-  padding: 9px 19px;
   background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
@@ -69,12 +70,15 @@ body {
 
   button{
     background:unset !important;
-    color:#fff;
+    padding: 9px 30px;
+    display: block;
+    height: 51px;
+    line-height: unset;
+    color: #fff;
     border-color: transparent;
     font-style: normal;
     font-weight: normal;
-    font-size: 18px;
-    line-height: 42px;
+    font-size: 16px;
     letter-spacing: -0.05em;
   }
 
@@ -372,6 +376,12 @@ a{
   background: transparent !important;
 }
 
+.coin-input{
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    margin: 9px;
+    padding: 0.75rem 0.75rem 0.75rem 1rem;
+}
 
 .ant-btn:hover, .ant-btn:focus,
 .coin-select .coin-input .input-button{
