@@ -25,7 +25,7 @@
           <div class="modTitle">{{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }}</div>
           <div class="fertilizer-project-header">
             <div class="title">
-              {{ farm }}
+              {{ farm.title }}
               <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
                 <img class="social-icon" src="@/assets/icons/link_grey.svg" />
               </a>
@@ -317,6 +317,19 @@
                 </Col>
               </Row>
             </div>
+
+            <Row class="copy-link-mobile" :span="24">
+              <div v-if="isRegistered">
+                <div class="share-content">Share your referal link to earn more lottery ticket</div>
+
+                <div class="share-copy-form">
+                  <div class="inputContent">
+                    <button class="submitbutton" @click="copyToClipboard()">Copy</button>
+                    <input type="text" class="twlink" :value="shareWalletAddress" />
+                  </div>
+                </div>
+              </div>
+            </Row>
 
             <Row class="status-log" :span="24">
               <div class="largepdding" v-if="!wallet.connected">
@@ -2068,6 +2081,21 @@ export default Vue.extend({
       .pc-list {
         @media (max-width: @mobile-b-width) {
           display: none;
+        }
+      }
+
+      .copy-link-mobile {
+        display: none;
+
+        @media (max-width: @mobile-b-width) {
+          display: block;
+          margin: 20px 20px 0 20px;
+          text-align: center;
+
+          div .share-content {
+            font-size: 16px;
+            line-height: 20px;
+          }
         }
       }
     }

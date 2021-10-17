@@ -164,9 +164,9 @@
               <div class="twitter-section-right">
                 <div class="inforetweet">
                   Quote Retweet <span>this tweet</span> <br>
-                  Tagging 3 friends <br>
-                  Using the hashtag <br>
-                  #CropperFiance #Fertilizer
+                  • Tagging 3 friends <br>
+                  • Using the hashtag <br>
+                    #CropperFiance #Fertilizer
                 </div>
 
                 <div class="social-input-form twitter-link">
@@ -401,6 +401,10 @@ export default Vue.extend({
   text-align: center;
   letter-spacing: -0.05em;
   margin-bottom: 20px;
+
+  @media (max-width: @mobile-b-width) {
+    font-size: 30px;
+  }
 }
 
 input.link {
@@ -415,17 +419,24 @@ span.inputContent {
     border: none;
     padding: 4px 20px;
     background-color: transparent;
-    width: 280px;
+    min-width: 280px;
     outline: none;
     font-size: 18px;
     line-height: 22px;
     font-weight: normal;
+
+    @media (max-width: @mobile-b-width) {
+      font-size: 12px;
+      padding: 4px 12px;
+    }
   }
 
   .submitbutton {
+    position: absolute;
+    right: -1px;
     background: #7E7ED8;
     box-sizing: border-box;
-    border-radius: 13px 8px 8px 13px;
+    border-radius: 13px;
     height: 39px;
     border: none;
     margin-left: -10px;
@@ -439,6 +450,10 @@ span.inputContent {
     justify-content: center;
     padding: 0 20px;
     cursor: pointer;
+
+    @media (max-width: @mobile-b-width) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -486,6 +501,10 @@ span.inputContent {
   max-width: 400px;
   margin: 10px auto;
 
+  @media (max-width: @mobile-b-width) {
+    height: 40px;
+  }
+
   &[disabled] {
     background: #767676;
     border: 2px solid rgba(255, 255, 255, 0.14);
@@ -506,6 +525,13 @@ span.inputContent {
     position: relative;
     border: 0;
     outline: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: @mobile-b-width) {
+      font-size: 14px;
+    }
   }
 
   button:hover,
@@ -522,6 +548,11 @@ span.inputContent {
   text-align: center;
   color: #FFF;
   margin: 45px auto 20px auto;
+
+  @media (max-width: @mobile-b-width) {
+    font-size: 12px;
+    line-height: 14px;
+  }
 }
 
 .multistepmodal .steps {
@@ -547,9 +578,18 @@ span.inputContent {
       display: flex;
       align-items: center;
 
+      @media (max-width: @mobile-b-width) {
+        font-size: 14px;
+        display: block;
+      }
+
       .social-icon {
         position: absolute;
         right: 22px;
+        
+        @media (max-width: @mobile-b-width) {
+          display: none;
+        }
       }
 
       b {
@@ -566,6 +606,10 @@ span.inputContent {
       border-radius: 4px 13px 13px 4px;
       height: 40px;
       
+      @media (max-width: @mobile-b-width) {
+        position: relative;
+      }
+
       .inputContent {
         height: 33px;
         display: flex;
@@ -581,6 +625,17 @@ span.inputContent {
       width: 40px;
       transform: translate(0, -50%);
 
+      @media (max-width: @mobile-b-width) {
+        left: -50px;
+        height: 35px;
+        width: 35px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
       &:not(.first)::before {
         content: '';
         width: 3px;
@@ -589,6 +644,12 @@ span.inputContent {
         left: 18px;
         position: absolute;
         top: -18px;
+
+        @media (max-width: @mobile-b-width) {
+          height: 60px;
+          top: -60px;
+          left: 16px;
+        }
       }
     }
 
@@ -607,6 +668,17 @@ span.inputContent {
       align-items: center;
       justify-content: center;
 
+      @media (max-width: @mobile-b-width) {
+        left: -50px;
+        height: 35px;
+        width: 35px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      
       &:not(.first)::before {
         content: '';
         width: 3px;
@@ -615,6 +687,12 @@ span.inputContent {
         left: 18px;
         position: absolute;
         top: -18px;
+
+        @media (max-width: @mobile-b-width) {
+          height: 60px;
+          top: -60px;
+          left: 16px;
+        }
       }
     }
 
@@ -694,6 +772,23 @@ span.inputContent {
     margin-left: 50px !important;
     padding: 10px;
 
+    @media (max-width: @mobile-b-width) {
+      margin-left: 30px !important;
+    }
+
+    .first {
+      @media (max-width: @mobile-b-width) {
+        left: -45px !important;
+        width: 35px;
+        height: 35px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+
     .ant-row {
       margin: 0 !important;
     }
@@ -701,6 +796,11 @@ span.inputContent {
     .twitter-section-left {
       background-color: white;
       margin-right: 20px;
+      
+      @media (max-width: @mobile-b-width) {
+        width: 100%;
+        margin-bottom: 10px;
+      }
 
       .twitter-tweet {
         background-color: white;
@@ -718,11 +818,31 @@ span.inputContent {
         font-size: 20px;
         line-height: 24px;
         color: #B5B5B5;
+
+        @media (max-width: @mobile-b-width) {
+          margin-bottom: 20px;
+          font-size: 14px;
+          line-height: 17px;
+        }
+
+        span {
+          text-decoration: underline;
+
+          @media (max-width: @mobile-b-width) {
+            font-size: 18px;
+            line-height: 22px;
+            font-weight: 600;
+          }
+        }
       }
 
       .twitter-link {
         bottom: 10px;
         left: calc(41.66666667% + 20px);
+
+        @media (max-width: @mobile-b-width) {
+          left: 0;
+        }
       }
     }
   }
@@ -748,13 +868,11 @@ span.inputContent {
   margin: auto;
 }
 
-@media (max-width: 700px) {
+@media (max-width: @mobile-b-width) {
   .multistepmodal .steps > div {
-    margin: 10px -30px 10px 40px;
-  }
-
-  span.inputContent .twlink {
-    width: 190px;
+    margin: 10px -20px 10px 30px;
+    height: 85px;
+    padding: 10px;
   }
 }
 </style>

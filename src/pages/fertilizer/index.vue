@@ -112,7 +112,7 @@
 
                 <Col :span="!isMobile ? 10 : 10">
                   <div class="title">
-                    {{ farm.name }}
+                    {{ farm.title }}
                     <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
                       <img class="social-icon" src="@/assets/icons/link_grey.svg"/>
                     </a>

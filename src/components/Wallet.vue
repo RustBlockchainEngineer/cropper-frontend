@@ -542,6 +542,10 @@ export default class Wallet extends Vue {
 }
 .ant-modal {
   width: 800px !important;
+
+  @media (max-width: @mobile-b-width) {
+    width: calc(100% - 40px) !important;
+  }
 }
 .ant-modal-content {
   background-color: #0E1046;
@@ -611,6 +615,10 @@ header .btncontainer {
     letter-spacing: -0.05em;
     color: #FFF;
     border-bottom: 1px solid #FFFFFF20;
+
+    @media (max-width: @mobile-b-width) {
+      font-size: 30px;
+    }
   }
 
 </style>
