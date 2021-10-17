@@ -2030,13 +2030,7 @@ main{
       display: none;
     }
   }
-  .ant-menu-horizontal {
-    position: absolute;
-    top: 100px;
-    zoom: 0.89;
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-  }
+  
   .ant-modal {
     max-width: 350px;
     
