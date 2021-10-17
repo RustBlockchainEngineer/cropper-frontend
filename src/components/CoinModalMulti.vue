@@ -61,7 +61,7 @@
         </div>
 
 
-        <div class="btncontainer">
+        <div class="stdGradientButton">
           <Button
             size="large"
             ghost

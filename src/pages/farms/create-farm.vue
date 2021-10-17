@@ -118,7 +118,7 @@
           <Col style="line-height: 20px" :span="24"><input v-model="userCreateAmmId" /></Col>
 
           <Col v-if="userCreateAmmId!=''" :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align:center">
-            <div class="btncontainer">
+            <div class="create">
               <Button
                 size="large"
                 ghost
@@ -137,7 +137,7 @@
           </Col>
 
           <Col v-if="userCreateAmmId===''" :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align:center">
-            <div class="btncontainer">
+            <div class="create">
               <Button
                 size="large"
                 ghost
@@ -153,7 +153,7 @@
         </Row>
         <Row v-if="current === 0 && !wallet.connected" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
           <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align:center">
-            <div v-if="!wallet.connected" class="btncontainer">
+            <div v-if="!wallet.connected" class="create">
               <Button  size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
                 Connect
               </Button>
@@ -177,7 +177,7 @@
           <Col style="line-height: 20px" :span="24"><input v-model="inputMarket" :disabled="!marketInputFlag" /></Col>
 
           <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align:center">
-            <div class="btncontainer">
+            <div class="create">
               <Button v-if="!wallet.connected" size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
                 Connect
               </Button>
@@ -268,7 +268,7 @@
               />
             </div>
             <Col :span="24" style="padding-top: 10px">
-              <div class="btncontainer" v-if="!wallet.connected">
+              <div class="create" v-if="!wallet.connected">
                 <Button
                   style="position: absolute; z-index: 999; width: 100%"
                   size="large"
@@ -292,7 +292,7 @@
                   {{ userCreateAmmId }}
                 </Col> -->
                 <Col span="24" style="word-break: break-word; line-height: 20px;text-align:center">
-                  <div class="btncontainer">
+                  <div class="create">
                     <Button size="large" :disabled="!wallet.connected" ghost style="z-index: 999; width: 100%" @click="goToFarmInfo">
                       Input Farm Info
                     </Button>
@@ -318,7 +318,7 @@
                   pool, create the AMM account, and add liquidity.
                 </p>
 <br />
-                <div class="btncontainer">
+                <div class="create">
                 <Button
                   size="large"
                   ghost
@@ -341,9 +341,6 @@
 
         <!-- Create Farm -->
         <Row v-if="current === 5" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
-          <Col v-if="!isCRPTokenPair" style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
-            <div>If you have associated your token with USDC, you will need to pay 5000 USDC to start the farm after it is created</div>
-          </Col>
           <Col style="line-height: 20px" :span="24">
             <CoinInput
               v-model="fromCoinAmount"
@@ -396,7 +393,7 @@
           </Col>
 
           <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align:center">
-            <div class="btncontainer">
+            <div class="create">
               <Button v-if="!wallet.connected" size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
                 Connect
               </Button>
@@ -411,7 +408,7 @@
             <div>Farm has been successfully created!</div>
           </Col>
           <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align:center">
-            <div class="btncontainer">
+            <div class="create">
               <Button v-if="!wallet.connected" size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
                 Connect
               </Button>
@@ -1056,27 +1053,6 @@ export default class CreateFarm extends Vue {
 </script>
 <style lang="less" scoped>
 
-  .btncontainer {
-    background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
-    display: inline-block;
-    width: unset;
-    text-align: center;
-    position: relative;
-    max-width: 400px;
-    margin: 10px auto;
-    padding: 2px;
-    border-radius: 30px;
-    max-height: 65px;
-
-    button{
-      background:#01033C !important;
-      position: relative;
-      border-radius: 30px;
-      border-color: transparent;
-    }
-
-  }
-
 
 main{
   background-color:#01033C;
@@ -1101,6 +1077,30 @@ main{
 
 .create-pool {
   max-width: 90%;
+
+  .ant-calendar-date:hover{
+    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+  }
+
+  .create {
+    padding: 9px 19px;
+    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    display:inline-block;
+
+    button{
+      background:unset !important;
+      color:#fff;
+      border-color: transparent;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 42px;
+      letter-spacing: -0.05em;
+    }
+
+  }
 
   .card-body{
       padding: 10px 60px 15px;

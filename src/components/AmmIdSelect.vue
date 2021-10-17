@@ -35,7 +35,9 @@
           </div>
         </div>
       </div>
-      <Button v-if="userClose" size="large" ghost @click="$emit('onSelect', undefined)">Create a new one</Button>
+      <div class="stdGradientButton">
+        <Button v-if="userClose" size="large" ghost @click="$emit('onSelect', undefined)">Create a new one</Button>
+      </div>
     </div>
   </Modal>
 </template>

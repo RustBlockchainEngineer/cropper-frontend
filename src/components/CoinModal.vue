@@ -32,18 +32,23 @@
     </div>
 
     <Row :gutter="32" class="actions">
-      <Col :span="12">
-        <Button ghost @click="$emit('onCancel')"> Cancel </Button>
+      <Col :span="12" class="text-center">
+
+        <div class="stdEmptyGradientButton">
+          <Button ghost @click="$emit('onCancel')"> Cancel </Button>
+        </div>
       </Col>
-      <Col :span="12">
-        <Button
-          :loading="loading"
-          :disabled="loading || isNullOrZero(value) || !lte(value, coin.balance.toEther()) || !validateTotalSupply()"
-          ghost
-          @click="$emit('onOk', value)"
-        >
-          Confirm
-        </Button>
+      <Col :span="12" class="text-center">
+        <div class="stdGradientButton">
+          <Button
+            :loading="loading"
+            :disabled="loading || isNullOrZero(value) || !lte(value, coin.balance.toEther()) || !validateTotalSupply()"
+            ghost
+            @click="$emit('onOk', value)"
+          >
+            Confirm
+          </Button>
+        </div>
       </Col>
     </Row>
   </Modal>
