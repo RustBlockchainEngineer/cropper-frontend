@@ -1605,7 +1605,7 @@ main{
   background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
-  height: 60px;
+  height: 62px;
   margin-left: 20px;
   width: 170px;
   font-size: 18px;
@@ -1622,6 +1622,7 @@ main{
 .swapHead {
   align-items: center;
   display: flex;
+  margin-top:10px;
   justify-content: space-between;
   h1 {
     // font-family: Gilroy;
@@ -1635,11 +1636,13 @@ main{
   .buttonGroup {
     display: flex;
     justify-content: space-between;
+    top: -25px;
+    position: relative;
   }
 }
 .count-down-group {
   background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-  height: 60px;
+  height: 62px;
   border-radius: 63px;
   position: relative;
   padding-left: 2px;
@@ -1648,7 +1651,7 @@ main{
 .count-down {
   background-color: #01033c;
   border-radius: 63px;
-  height: 56px;
+  height: 58px;
   top: 2px;
   display: inline-flex;
   align-items: center;
@@ -1848,7 +1851,14 @@ main{
   }
 }
 .swapWrapper {
-  padding: 50px 128px;
+  max-width: 1350px;
+  width: 100%;
+  background: #01033C;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  margin-left: auto;
+  margin-right: auto;
   
   .ant-layout{
     background:#000 !important;
