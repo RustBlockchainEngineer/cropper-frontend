@@ -25,7 +25,7 @@
           <div class="modTitle">{{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }}</div>
           <div class="fertilizer-project-header">
             <div class="title">
-              {{ farm.shortname.slice(3) }}
+              {{ farm }}
               <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
                 <img class="social-icon" src="@/assets/icons/link_grey.svg" />
               </a>
@@ -98,7 +98,7 @@
                 <div v-else-if="farm.pla_ts > currentTimestamp && followed" class="largepdding">
                   <!-- <div class="share text-center">You are following this project</div> -->
                 </div>
-                
+
                 <div v-else-if="farm.pla_end_ts > currentTimestamp && !isRegistered" class="largepdding">
                   <div class="btncontainer">
                     <Button
@@ -133,7 +133,7 @@
                   <div v-if="farm.airdrop.status == 'in progress'" class="share-ticket">
                     Winning ticket: {{ registeredDatas.won }}/{{ registeredDatas.submit }}
                   </div>
-                
+
                   <div class="share-content">Share your referal link to earn more lottery ticket</div>
 
                   <div class="share-copy-form">
@@ -156,30 +156,31 @@
               </Col>
             </Row>
 
-            <div class="list" v-if="initialized">
+            <!-- PC list -->
+            <div class="list pc-list" v-if="initialized">
               <Row class="farm-head table-head">
-                <Col class="lp-icons" :span="isMobile ? 9 : 5">
+                <Col class="state lp-icons" :span="isMobile ? 24 : 5">
                   <div class="title">Farm name</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 5 : 3">
+                <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Farm duration</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 8 : 4">
+                <Col class="state" :span="isMobile ? 24 : 4">
                   <div class="title">Project website</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 6 : 3">
+                <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Airdrop event</div>
                 </Col>
-                <Col class="state nft-events" :span="isMobile ? 10 : 6">
-                  <div class="title">NFT drop event (x10 each)</div>
+                <Col class="state" :span="isMobile ? 24 : 6">
+                  <div class="title">NFT Founders</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 6 : 3">
+                <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Status</div>
                 </Col>
               </Row>
 
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
-                <Col class="lp-icons" :span="isMobile ? 9 : 5">
+                <Col class="lp-icons state" :span="isMobile ? 24 : 5">
                   <div class="lp-icons-group">
                     <div class="icons">
                       <CoinIcon :mint-address="farm.tokenA.mint" />
@@ -190,37 +191,96 @@
                     </div>
                   </div>
                 </Col>
-                <Col class="state" :span="isMobile ? 5 : 3">
+                <Col class="state" :span="isMobile ? 24 : 3">
                   {{ farm.duration }}
                 </Col>
-                <Col class="state" :span="isMobile ? 8 : 4">
+                <Col class="state" :span="isMobile ? 24 : 4">
                   <a :href="farm.website.url" target="_blank">{{ farm.website.display }}</a>
                 </Col>
-                <Col class="state" :span="isMobile ? 6 : 3"> {{ farm.airdrop.amount }} ${{ farm.airdrop.symbol }} </Col>
-                <Col class="state" :span="isMobile ? 10 : 6">
+                <Col class="state" :span="isMobile ? 24 : 3">
+                  {{ farm.airdrop.amount }} ${{ farm.airdrop.symbol }}
+                </Col>
+                <Col class="state" :span="isMobile ? 24 : 6">
                   <div v-if="farm.nft_airdrop" class="nft-events-icon">
                     <img v-for="nft in farm.nft_airdrop.list" :key="nft.picto" :src="nft.picto" />
                   </div>
                 </Col>
-                <Col class="state" :span="isMobile ? 6 : 3">
+                <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="label" :style="'background-color: ' + farm.current_status.color">
                     {{ farm.current_status.label }}
                   </div>
                 </Col>
               </Row>
+            </div>
 
+            <!-- Mobile list -->
+            <div class="list mobile-list" v-if="initialized">
+              <Row slot="header" class="farm-head">
+                <Col class="lp-icons" :span="24">
+                  <div class="lp-icons-group">
+                    <div class="icons">
+                      <CoinIcon :mint-address="farm.tokenA.mint" />
+                      <span>{{ farm.tokenA.symbol }}</span>
+                      <div>-</div>
+                      <CoinIcon :mint-address="farm.tokenB.mint" />
+                      <span>{{ farm.tokenB.symbol }}</span>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col class="state" :span="12">
+                  <div class="title">Farm duration</div>
+                </Col>
+                <Col class="state" :span="12">
+                  {{ farm.duration }}
+                </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col class="state" :span="12">
+                  <div class="title">Airdrop event</div>
+                </Col>
+                <Col class="state" :span="12"> {{ farm.airdrop.amount }} ${{ farm.airdrop.symbol }} </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col class="state" :span="12">
+                  <div class="title">NFT Founders</div>
+                </Col>
+                <Col class="state" :span="12">
+                  <div v-if="farm.nft_airdrop" class="nft-events-icon">
+                    <img v-for="nft in farm.nft_airdrop.list" :key="nft.picto" :src="nft.picto" />
+                  </div>
+                </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col class="state" :span="12">
+                  <div class="title">Status</div>
+                </Col>
+                <Col class="state" :span="12">
+                  <div class="label" :style="'background-color: ' + farm.current_status.color">
+                    {{ farm.current_status.label }}
+                  </div>
+                </Col>
+              </Row>
+            </div>
+
+            <div class="list" v-if="initialized">
               <Row class="full-border pf-margin-top pf-padding-top" :span="isMobile ? 24 : 12">
-                <Col :span="24" :class="isMobile ? ' steps' : 'steps'">
+                <Col :span="24" class="steps">
                   <div class="done">
                     <span class="span first"><img src="@/assets/icons/check-one.svg" alt="" /></span>
-                    <div><b class="t">Initialisation</b> - This project is in preparation phase. Stay tuned.</div>
+                    <div>
+                      <div>Initialisation</div>
+                      <label>-</label>
+                      This project is in preparation phase. Stay tuned.<br />
+                    </div>
                   </div>
 
                   <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pla_ts > currentTimestamp">2</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <b class="t">Withelist</b> - You can now whitelist yourself for the lottery.<br />
+                      <div>Withelist</div><label>-</label>You can now whitelist yourself for the lottery.<br />
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla }}</div>
                     </div>
                   </div>
@@ -228,15 +288,17 @@
                     <span v-if="farm.pla_end_ts > currentTimestamp">3</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <b class="t">Airdrop Lottery</b> - See if you have any winning lottery tickets.<br />
-                      <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla_end }}</div>
+                      <div>Airdrop Lottery</div><label>-</label>See if you have any winning lottery tickets.<br />
+                      <div class="date" :style="'background-color: ' + farm.current_status.color">
+                        {{ farm.pla_end }}
+                      </div>
                     </div>
                   </div>
                   <div :class="farm.pfrom_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pfrom_ts > currentTimestamp">4</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <b class="t">Private Farm</b> - You can now stack LP in {{ farm.tokenA.symbol }}-{{
+                      <div>Private Farm</div><label>-</label>You can now stack LP in {{ farm.tokenA.symbol }}-{{
                         farm.tokenB.symbol
                       }}
                       farm.<br />
@@ -247,7 +309,8 @@
                     <span v-if="farm.pto_ts > currentTimestamp">5</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <b class="t">Public Farm</b> - {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes public<br />
+                      <div>Public Farm</div><label>-</label>{{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes
+                      public<br />
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pto }}</div>
                     </div>
                   </div>
@@ -310,7 +373,7 @@
                   </Button>
                 </div>
               </div>
-              
+
               <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
                 <div class="share">
                   You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{
@@ -319,13 +382,14 @@
                   !
                 </div>
               </div>
-              
+
               <div v-else-if="farm.pla_end_ts < currentTimestamp && isRegistered">
                 <div class="share">
                   <span v-if="farm.airdrop.status == 'lottery'">
-                    You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{registeredDatas.submit > 1 ? 's' : ''}}!
-                    <br /><br />
-                    Lottery in progress... 
+                    You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{
+                      registeredDatas.submit > 1 ? 's' : ''
+                    }}! <br /><br />
+                    Lottery in progress...
                   </span>
                   <div v-else-if="farm.airdrop.status == 'in progress'">
                     <span v-if="registeredDatas.won == 0 && registeredDatas.won_nft == 0">
@@ -1718,7 +1782,7 @@ export default Vue.extend({
       @media (max-width: @mobile-b-width) {
         margin-left: 20px;
         margin-right: 20px;
-        padding: 12px 5px;
+        padding: 10px;
       }
 
       .ant-row {
@@ -1729,7 +1793,7 @@ export default Vue.extend({
             width: 100%;
           }
         }
-        
+
         .header-right-col {
           height: 100%;
           justify-content: right;
@@ -1840,9 +1904,9 @@ export default Vue.extend({
       @media (max-width: @mobile-b-width) {
         margin-left: 20px;
         margin-right: 20px;
-        padding: 12px 5px;
+        padding: 10px;
       }
-      
+
       .status-log {
         display: flex;
         justify-content: center;
@@ -1861,7 +1925,7 @@ export default Vue.extend({
             height: 44px;
             min-width: 105px;
           }
-          
+
           button {
             font-style: normal;
             font-weight: normal;
@@ -1888,8 +1952,7 @@ export default Vue.extend({
 
       .list {
         text-align: center;
-        width: 1300px;
-        max-width: 1200px;
+        max-width: 1300px;
         margin-top: 20px;
 
         .pf-record .pf-record-content {
@@ -1900,13 +1963,9 @@ export default Vue.extend({
           display: flex;
           align-items: center;
 
-          .nft-events,
           .nft-events-icon {
             display: flex;
             justify-content: space-evenly;
-          }
-
-          .nft-events-icon {
             width: 100%;
           }
 
@@ -1915,6 +1974,7 @@ export default Vue.extend({
             line-height: 22px;
             font-weight: normal;
             display: flex;
+            justify-content: space-evenly;
 
             a {
               color: #5ba5fb;
@@ -1972,6 +2032,42 @@ export default Vue.extend({
               }
             }
           }
+        }
+      }
+
+      .mobile-list {
+        display: none;
+        padding: 0 10px;
+
+        @media (max-width: @mobile-b-width) {
+          display: block;
+        }
+
+        .farm-head {
+          .lp-icons {
+            justify-content: center;
+          }
+
+          .state:nth-child(1) {
+            justify-content: flex-start;
+
+            .title {
+              font-size: 14px;
+              line-height: 17px;
+            }
+          }
+
+          .state:nth-child(2) {
+            justify-content: flex-end;
+            font-size: 16px;
+            font-weight: 600;
+          }
+        }
+      }
+
+      .pc-list {
+        @media (max-width: @mobile-b-width) {
+          display: none;
         }
       }
     }
@@ -2154,6 +2250,18 @@ export default Vue.extend({
     font-size: 30px;
     line-height: 37px;
     color: #fff;
+
+    @media (max-width: @mobile-b-width) {
+      font-size: 16px;
+      line-height: 20px;
+    }
+  }
+
+  .icons img {
+    max-width: 43px;
+    margin-right: 4px;
+    margin-bottom: 10px;
+    border-radius: 50%;
   }
 
   .steps > div {
@@ -2166,6 +2274,29 @@ export default Vue.extend({
     font-weight: normal;
     font-size: 22px;
     line-height: 26px;
+    display: flex;
+    align-items: center;
+
+    @media (max-width: @mobile-b-width) {
+      height: 85px;
+      padding: 10px;
+      font-size: 14px;
+      line-height: 17px;
+
+      div {
+        text-align: left;
+        display: block !important;
+
+        div {
+          margin-bottom: 10px;
+          font-weight: 700;
+        }
+
+        label {
+          display: none;
+        }
+      }
+    }
 
     & > .span {
       position: absolute;
@@ -2175,6 +2306,16 @@ export default Vue.extend({
       width: 40px;
       transform: translate(0, -50%);
 
+      @media (max-width: @mobile-b-width) {
+        height: 35px;
+        width: 35px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
       &:not(.first)::before {
         content: '';
         width: 3px;
@@ -2183,6 +2324,12 @@ export default Vue.extend({
         left: 18px;
         position: absolute;
         top: -18px;
+
+        @media (max-width: @mobile-b-width) {
+          height: 68px;
+          top: -68px;
+          left: 16px;
+        }
       }
     }
 
@@ -2201,6 +2348,11 @@ export default Vue.extend({
       align-items: center;
       justify-content: center;
 
+      @media (max-width: @mobile-b-width) {
+        height: 35px;
+        width: 35px;
+      }
+
       &::before {
         content: '';
         width: 3px;
@@ -2209,6 +2361,12 @@ export default Vue.extend({
         left: 18px;
         position: absolute;
         top: -18px;
+
+        @media (max-width: @mobile-b-width) {
+          height: 68px;
+          top: -68px;
+          left: 16px;
+        }
       }
     }
 
@@ -2234,6 +2392,16 @@ export default Vue.extend({
     color: #fff;
     position: absolute;
     right: calc(12.5% - 45px);
+
+    @media (max-width: @mobile-b-width) {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 8px;
+      line-height: 10px;
+      font-weight: 400;
+      padding: 5px;
+    }
   }
 
   .steps > div > div {
@@ -2251,6 +2419,16 @@ export default Vue.extend({
       color: #fff;
       position: absolute;
       right: calc(12.5% - 45px);
+
+      @media (max-width: @mobile-b-width) {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 8px;
+        line-height: 10px;
+        font-weight: 400;
+        padding: 5px;
+      }
     }
 
     .t {
@@ -2261,13 +2439,6 @@ export default Vue.extend({
   .sharer {
     float: right;
     margin-left: 12px;
-  }
-
-  .icons img {
-    max-width: 43px;
-    margin-right: 4px;
-    margin-bottom: 10px;
-    border-radius: 50%;
   }
 
   .rewardNFT,
@@ -2294,38 +2465,6 @@ export default Vue.extend({
     color: #fff;
     text-align: center;
     margin-top: 14px;
-  }
-
-  .rewardAmount b {
-    float: right;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 21px;
-    color: #13ecab;
-
-    img {
-      max-width: 20px;
-      border-radius: 50%;
-      position: relative;
-      top: -2px;
-      margin-left: 10px;
-    }
-  }
-
-  .rewardNFT b {
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 21px;
-    color: #13ecab;
-    margin-right: 15px;
-
-    img {
-      max-width: 33px;
-      border-radius: 50%;
-      position: relative;
-      top: -2px;
-      margin-left: 10px;
-    }
   }
 
   .done {
@@ -2600,21 +2739,6 @@ main {
   .fertilizeruniq .steps,
   .fertilizeruniq .twlink {
     width: 100%;
-  }
-  .rewardAmount > span,
-  .rewardNFT > span {
-    display: block;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-
-  .fertilizeruniq .rewardAmount b {
-    float: unset;
-  }
-
-  .fertilizeruniq .rewardNFT b {
-    float: unset;
-    white-space: nowrap;
   }
 
   .fertilizeruniq div.inputContent {
