@@ -901,7 +901,7 @@ export default Vue.extend({
       this.registerTwitterRetweet = true
     },
     async startFollow(u: any) {
-      let responseData
+      let responseData = {}
       try {
         responseData = await fetch(u).then((res) => res.json())
       } catch {
@@ -921,7 +921,7 @@ export default Vue.extend({
       const query = new URLSearchParams(window.location.search)
       //this.labelizedAmms = {}
       let responseData2 = {}
-      let responseData
+      let responseData: any
       try {
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
@@ -986,7 +986,6 @@ export default Vue.extend({
             }
           }
         })
-        console.warn(this.labelizedAmms);
       }
     },
 
