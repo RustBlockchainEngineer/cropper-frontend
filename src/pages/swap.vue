@@ -1262,6 +1262,8 @@ export default Vue.extend({
             this.countdown += 1
             if (this.countdown === this.autoRefreshTime) {
               this.getOrderBooks()
+              this.$accessor.wallet.getTokenAccounts()
+              this.countdown = 0;
             }
           }
         }
