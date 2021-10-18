@@ -23,6 +23,7 @@ import { swapInstruction_v5 } from '@/utils/new_fcn'
 // eslint-disable-next-line
 import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, FIXED_FEE_ACCOUNT, LIQUIDITY_POOL_PROGRAM_ID_V5, AMM_STATE_SEED } from './ids'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
+import { updateGlobalState } from './market'
 
 export function getOutAmount(
   market: any,
@@ -585,6 +586,9 @@ async function swap_v5(
   aIn: string,
   aOut: string
 ) {
+
+  // return await updateGlobalState(connection, wallet)
+  
   const transaction = new Transaction()
   const signers: Account[] = []
 
@@ -897,28 +901,27 @@ export function swapInstruction_v4(
 
   const keys = [
     // spl token
-    { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+    { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
     // amm
     { pubkey: ammId, isSigner: false, isWritable: true },
-    { pubkey: ammAuthority, isSigner: false, isWritable: true },
+    { pubkey: ammAuthority, isSigner: false, isWritable: false },
     { pubkey: ammOpenOrders, isSigner: false, isWritable: true },
     { pubkey: ammTargetOrders, isSigner: false, isWritable: true },
     { pubkey: poolCoinTokenAccount, isSigner: false, isWritable: true },
     { pubkey: poolPcTokenAccount, isSigner: false, isWritable: true },
     // serum
-    { pubkey: serumProgramId, isSigner: false, isWritable: true },
+    { pubkey: serumProgramId, isSigner: false, isWritable: false },
     { pubkey: serumMarket, isSigner: false, isWritable: true },
     { pubkey: serumBids, isSigner: false, isWritable: true },
     { pubkey: serumAsks, isSigner: false, isWritable: true },
     { pubkey: serumEventQueue, isSigner: false, isWritable: true },
     { pubkey: serumCoinVaultAccount, isSigner: false, isWritable: true },
     { pubkey: serumPcVaultAccount, isSigner: false, isWritable: true },
-    { pubkey: serumVaultSigner, isSigner: false, isWritable: true },
+    { pubkey: serumVaultSigner, isSigner: false, isWritable: false },
     { pubkey: userSourceTokenAccount, isSigner: false, isWritable: true },
     { pubkey: userDestTokenAccount, isSigner: false, isWritable: true },
-    { pubkey: userOwner, isSigner: true, isWritable: true }
+    { pubkey: userOwner, isSigner: true, isWritable: false }
   ]
-
   const data = Buffer.alloc(dataLayout.span)
   dataLayout.encode(
     {
