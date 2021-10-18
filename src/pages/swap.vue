@@ -1,6 +1,6 @@
 <template>
-  <div class=swapWrapper>
-    <img src="@/assets/icons/greenPlanet2.svg" class="planetMiddle"/>
+  <div class="swapWrapper">
+    <img src="@/assets/icons/greenPlanet2.svg" class="planetMiddle" />
     <div class="swapHead">
       <h1>Swap</h1>
       <div class="buttonGroup">
@@ -30,15 +30,15 @@
                 v-model="setting.slippage"
                 @keypress="validateNumber"
               /> -->
-               <input 
+              <input
+                class="tooltip-input"
                 id="number"
                 type="number"
                 min="1"
                 max="100"
                 v-model="setting.slippage"
                 @keypress="validateNumber"
-                style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); width: 200px"
-               />
+              />
             </div>
           </template>
           <button class="btn-grad">
@@ -51,94 +51,93 @@
           <template slot="title">
             <div class="swap-info">
               <div v-if="fromCoin" class="info">
+                <div class="action">
+                  <a :href="`${url.explorer}/token/${fromCoin.mintAddress}`" target="_blank">
+                    <img src="@/assets/icons/link_grey.svg" />
+                  </a>
+                   <img src="@/assets/icons/copy.png" @click="$accessor.copy(fromCoin.mintAddress)" />
+                </div>
                 <div class="symbol">{{ fromCoin.symbol }}</div>
                 <div class="address">
                   {{ fromCoin.mintAddress.substr(0, 14) }}
                   ...
                   {{ fromCoin.mintAddress.substr(fromCoin.mintAddress.length - 14, 14) }}
                 </div>
-                <div class="action">
-                  <Icon type="copy" @click="$accessor.copy(fromCoin.mintAddress)" />
-                  <a :href="`${url.explorer}/token/${fromCoin.mintAddress}`" target="_blank">
-                    <Icon type="link" />
-                  </a>
-                </div>
               </div>
               <div v-if="toCoin" class="info">
+                <div class="action">
+                  <a :href="`${url.explorer}/token/${toCoin.mintAddress}`" target="_blank">
+                    <img src="@/assets/icons/link_grey.svg" />
+                  </a>
+                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(toCoin.mintAddress)" />
+                </div>
                 <div class="symbol">{{ toCoin.symbol }}</div>
                 <div class="address">
                   {{ toCoin.mintAddress.substr(0, 14) }}
                   ...
                   {{ toCoin.mintAddress.substr(toCoin.mintAddress.length - 14, 14) }}
                 </div>
-                <div class="action">
-                  <Icon type="copy" @click="$accessor.copy(toCoin.mintAddress)" />
-                  <a :href="`${url.explorer}/token/${toCoin.mintAddress}`" target="_blank">
-                    <Icon type="link" />
-                  </a>
-                </div>
               </div>
               <div v-if="marketAddress" class="info">
+                <div class="action">
+                  <a v-if="!officialPool" :href="`${url.explorer}/account/${marketAddress}`" target="_blank">
+                    <img src="@/assets/icons/link_grey.svg" />
+                  </a>
+                  <a v-else :href="`${url.trade}/${marketAddress}`" target="_blank">
+                    <img src="@/assets/icons/link_grey.svg" />
+                  </a>
+                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(marketAddress)" />
+                </div>
                 <div class="symbol">Market</div>
                 <div class="address">
                   {{ marketAddress.substr(0, 14) }}
                   ...
                   {{ marketAddress.substr(marketAddress.length - 14, 14) }}
                 </div>
-                <div class="action">
-                  <Icon type="copy" @click="$accessor.copy(marketAddress)" />
-                  <a v-if="!officialPool" :href="`${url.explorer}/account/${marketAddress}`" target="_blank">
-                    <Icon type="link" />
-                  </a>
-                  <a v-else :href="`${url.trade}/${marketAddress}`" target="_blank">
-                    <Icon type="link" />
-                  </a>
-                </div>
               </div>
               <div v-if="mainAmmId && best_dex_type == 'single'" class="info">
+                <div class="action">
+                  <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
+                    <img src="@/assets/icons/link_grey.svg" />
+                  </a>
+                   <img src="@/assets/icons/copy.png" @click="$accessor.copy(mainAmmId)" />
+                </div>
                 <div class="symbol">AMM ID</div>
                 <div class="address">
                   {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
                   ...
                   {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }}
                 </div>
-                <div class="action">
-                  <Icon type="copy" @click="$accessor.copy(mainAmmId)" />
-                  <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
-                    <Icon type="link" />
-                  </a>
-                </div>
               </div>
               <div v-if="best_dex_type == 'multi'" class="info">
                 <p>Swaping via multistep scenario</p>
               </div>
               <div v-if="best_dex_type == 'multi'" class="info">
-                <div class="symbol">{{fromCoin.symbol + " - " + midTokenSymbol}}</div>
+                <div class="action">
+                  <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
+                    <img src="@/assets/icons/link_grey.svg" />
+                  </a>
+                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(mainAmmId)" />
+                </div>
+                <div class="symbol">{{ fromCoin.symbol + ' - ' + midTokenSymbol }}</div>
                 <div class="address">
                   {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
                   ...
                   {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }}
                 </div>
-                <div class="action">
-                  <Icon type="copy" @click="$accessor.copy(mainAmmId)" />
-                  <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
-                    <Icon type="link" />
-                  </a>
-                </div>
               </div>
               <div v-if="best_dex_type == 'multi'" class="info">
-              
-                <div class="symbol">{{"CRP - " + toCoin.symbol}}</div>
+                <div class="action">
+                  <a :href="`${url.explorer}/account/${extAmmId}`" target="_blank">
+                    <img src="@/assets/icons/link_grey.svg" />
+                  </a>
+                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(extAmmId)" />
+                </div>
+                <div class="symbol">{{ 'CRP - ' + toCoin.symbol }}</div>
                 <div class="address">
                   {{ extAmmId ? extAmmId.substr(0, 14) : '' }}
                   ...
                   {{ extAmmId ? extAmmId.substr(extAmmId.length - 14, 14) : '' }}
-                </div>
-                <div class="action">
-                  <Icon type="copy" @click="$accessor.copy(extAmmId)" />
-                  <a :href="`${url.explorer}/account/${extAmmId}`" target="_blank">
-                    <Icon type="link" />
-                  </a>
                 </div>
               </div>
             </div>
@@ -151,61 +150,57 @@
       </div>
     </div>
     <div class="container">
+      <CoinSelect v-if="coinSelectShow" @onClose="() => (coinSelectShow = false)" @onSelect="onCoinSelect" />
+      <AmmIdSelect
+        :show="ammIdSelectShow"
+        :liquidity-list="ammIdSelectList"
+        :user-close="true"
+        @onClose="() => ((ammIdSelectShow = false), (ammIdSelectOld = true))"
+        @onSelect="onAmmIdSelect"
+      />
 
-    <CoinSelect v-if="coinSelectShow" @onClose="() => (coinSelectShow = false)" @onSelect="onCoinSelect" />
-    <AmmIdSelect
-      :show="ammIdSelectShow"
-      :liquidity-list="ammIdSelectList"
-      :user-close="true"
-      @onClose="() => ((ammIdSelectShow = false), (ammIdSelectOld = true))"
-      @onSelect="onAmmIdSelect"
-    />
+      <UnofficialPoolConfirmUser
+        v-if="userCheckUnofficialShow"
+        @onClose="() => (userCheckUnofficialShow = false)"
+        @onSelect="onUserCheckUnofficialSelect"
+      />
 
-    <UnofficialPoolConfirmUser
-      v-if="userCheckUnofficialShow"
-      @onClose="() => (userCheckUnofficialShow = false)"
-      @onSelect="onUserCheckUnofficialSelect"
-    />
+      <InputAmmIdOrMarket
+        v-if="ammIdOrMarketSearchShow"
+        @onClose="() => (ammIdOrMarketSearchShow = false)"
+        @onInput="onAmmIdOrMarketInput"
+      ></InputAmmIdOrMarket>
 
-    <InputAmmIdOrMarket
-      v-if="ammIdOrMarketSearchShow"
-      @onClose="() => (ammIdOrMarketSearchShow = false)"
-      @onInput="onAmmIdOrMarketInput"
-    ></InputAmmIdOrMarket>
-
-      
       <div class="card">
         <div class="card-body">
-          
+          <CoinInput
+            v-model="fromCoinAmount"
+            label="From"
+            :balance-offset="fromCoin && fromCoin.symbol === 'SOL' ? -0.05 : 0"
+            :mint-address="fromCoin ? fromCoin.mintAddress : ''"
+            :coin-name="fromCoin ? fromCoin.symbol : ''"
+            :balance="fromCoin ? fromCoin.balance : null"
+            :show-half="true"
+            @onInput="(amount) => (fromCoinAmount = amount)"
+            @onFocus="
+              () => {
+                fixedFromCoin = true
+              }
+            "
+            @onMax="
+              () => {
+                fixedFromCoin = true
+                fromCoinAmount = fromCoin && fromCoin.balance ? fromCoin.balance.fixed() : '0'
+              }
+            "
+            @onSelect="openFromCoinSelect"
+          />
 
-        <CoinInput
-          v-model="fromCoinAmount"
-          label="From"
-          :balance-offset="fromCoin && fromCoin.symbol === 'SOL' ? -0.05 : 0"
-          :mint-address="fromCoin ? fromCoin.mintAddress : ''"
-          :coin-name="fromCoin ? fromCoin.symbol : ''"
-          :balance="fromCoin ? fromCoin.balance : null"
-          :show-half="true"
-          @onInput="(amount) => (fromCoinAmount = amount)"
-          @onFocus="
-            () => {
-              fixedFromCoin = true
-            }
-          "
-          @onMax="
-            () => {
-              fixedFromCoin = true
-              fromCoinAmount = fromCoin && fromCoin.balance ? fromCoin.balance.fixed() : '0'
-            }
-          "
-          @onSelect="openFromCoinSelect"
-        />
-
-        <div class="change-side fc-container">
-          <div class="fc-container" @click="changeCoinPosition">
-            <Icon class="fst" type="arrow-up" /><Icon class="lst" type="arrow-down" />
+          <div class="change-side fc-container">
+            <div class="fc-container" @click="changeCoinPosition">
+              <Icon type="arrow-up" /><Icon type="arrow-down" />
+            </div>
           </div>
-        </div>
 
           <CoinInput
             v-model="toCoinAmount"
@@ -263,15 +258,15 @@
                   <template slot="title">
                     The maximum difference between your estimated price and execution price.
                   </template>
-                  <img src="@/assets/icons/wow.svg" class="tooltipIcon"/>
+                  <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <span v-if="fromCoin && toCoin" style="display: flex;"> 
+              <span v-if="fromCoin && toCoin" style="display: flex">
                 <div class="coin-budge">
                   <CoinIcon :mint-address="fromCoin.mintAddress" />
                   <span>{{ fromCoin.symbol }}</span>
                 </div>
-                <Icon class="fst" type="arrow-up" style="transform: rotate(90deg); margin: 5px;"/>
+                <Icon class="fst" type="arrow-up"/>
                 <div class="coin-budge">
                   <CoinIcon :mint-address="toCoin.mintAddress" />
                   <span>{{ toCoin.symbol }}</span>
@@ -284,10 +279,35 @@
                 <label>Swapping Through</label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title"> This venue gave the best price for your trade </template>
-                  <img src="@/assets/icons/wow.svg" class="tooltipIcon"/>
+                  <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <div><span class="swapThrough { green : endpoint === 'CropperFinace Pool', purple: endpoint === 'Raydium Pool', cyan: endpoint === 'Serum orderbook'}"> {{ endpoint }} </span></div>
+              <div>
+                <span
+                  class="
+                    swapThrough
+                    {
+                    green
+                    :
+                    endpoint
+                    ===
+                    'CropperFinace
+                    Pool',
+                    purple:
+                    endpoint
+                    ===
+                    'Raydium
+                    Pool',
+                    cyan:
+                    endpoint
+                    ===
+                    'Serum
+                    orderbook'}
+                  "
+                >
+                  {{ endpoint }}
+                </span>
+              </div>
             </div>
 
             <div class="fs-container flexDiv slippage">
@@ -297,21 +317,25 @@
                   <template slot="title">
                     The maximum difference between your estimated price and execution price.
                   </template>
-                  <img src="@/assets/icons/wow.svg" class="tooltipIcon"/>
+                  <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <span class="name"> <label>{{ $accessor.setting.slippage }}% </label></span>
+              <span class="name">
+                <label>{{ $accessor.setting.slippage }}% </label></span
+              >
             </div>
-            
+
             <div v-if="fromCoin && toCoin && fromCoinAmount && toCoinWithSlippage" class="fs-container flexDiv minimum">
               <span class="name">
                 <label>Minimum Received</label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title"> The least amount of tokens you will recieve on this trade </template>
-                  <img src="@/assets/icons/wow.svg" class="tooltipIcon"/>
+                  <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <span class="name"><label> {{ toCoinWithSlippage }} {{ toCoin.symbol }} </label></span>
+              <span class="name"
+                ><label> {{ toCoinWithSlippage }} {{ toCoin.symbol }} </label></span
+              >
             </div>
             <!-- <div
               v-if="
@@ -331,150 +355,150 @@
             </div>  Temporary-->
           </div>
 
-        <div v-if="officialPool === false">
-          <div style="margin: 10px">
-            <div>AMM ID:</div>
-            <div>
-              {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
-              ...
-              {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }}
+          <div v-if="officialPool === false">
+            <div style="margin: 10px">
+              <div>AMM ID:</div>
+              <div>
+                {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
+                ...
+                {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }}
+              </div>
             </div>
           </div>
-        </div>
 
           <div v-if="!wallet.connected" class="btncontainer">
-            <Button size="large" ghost @click="$accessor.wallet.openModal">
-              Swap now
+            <Button size="large" ghost @click="$accessor.wallet.openModal"> Swap now </Button>
+          </div>
+
+          <div v-else-if="!(officialPool || (!officialPool && userCheckUnofficial))" class="btncontainer">
+            <Button
+              size="large"
+              ghost
+              @click="
+                () => {
+                  setTimeout(() => {
+                    userCheckUnofficialShow = true
+                  }, 1)
+                }
+              "
+            >
+              Confirm Risk Warning
             </Button>
           </div>
 
-        <div v-else-if="!(officialPool || (!officialPool && userCheckUnofficial))" class="btncontainer">
-        <Button
-          
-          size="large"
-          ghost
-          @click="
-            () => {
-              setTimeout(() => {
-                userCheckUnofficialShow = true
-              }, 1)
-            }
-          "
-        >
-          Confirm Risk Warning
-        </Button>
-        </div>
+          <div v-else class="btncontainer">
+            <Button
+              size="large"
+              ghost
+              :disabled="
+                !fromCoin ||
+                !fromCoinAmount ||
+                !toCoin ||
+                !this.mainAmmId ||
+                (!marketAddress && !lpMintAddress && !isWrap && !best_dex_type) ||
+                !initialized ||
+                loading ||
+                gt(
+                  fromCoinAmount,
+                  fromCoin && fromCoin.balance
+                    ? fromCoin.symbol === 'SOL'
+                      ? fromCoin.balance.toEther().minus(0.05).toFixed(fromCoin.balance.decimals)
+                      : fromCoin.balance.fixed()
+                    : '0'
+                ) || // not enough SOL to swap SOL to another coin
+                (get(liquidity.infos, `${lpMintAddress}.status`) &&
+                  get(liquidity.infos, `${lpMintAddress}.status`) !== 1) ||
+                swaping ||
+                (fromCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, fromCoinAmount)) ||
+                (toCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, toCoinAmount))
+              "
+              :loading="swaping"
+              style="width: 100%"
+              :class="`swap-btn ${priceImpact > 10 ? '' : priceImpact > 5 ? '' : ''}`"
+              @click="placeOrder"
+            >
+              <template v-if="!fromCoin || !toCoin"> Select </template>
+              <template v-else-if="(!marketAddress && !lpMintAddress && !isWrap && !best_dex_type) || !initialized">
+                Insufficient liquidity for this trade
+              </template>
+              <template v-else-if="!fromCoinAmount"> Enter an amount </template>
+              <template v-else-if="loading"> Updating price information </template>
+              <template
+                v-else-if="
+                  gt(
+                    fromCoinAmount,
+                    fromCoin && fromCoin.balance
+                      ? fromCoin.symbol === 'SOL'
+                        ? fromCoin.balance.toEther().minus(0.05).toFixed(fromCoin.balance.decimals)
+                        : fromCoin.balance.fixed()
+                      : '0'
+                  )
+                "
+              >
+                Insufficient {{ fromCoin.symbol }} balance
+              </template>
+              <template
+                v-else-if="
+                  get(liquidity.infos, `${lpMintAddress}.status`) &&
+                  get(liquidity.infos, `${lpMintAddress}.status`) !== 1
+                "
+              >
+                Pool coming soon
+              </template>
+              <template v-else-if="fromCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, fromCoinAmount)">
+                xCOPE amount must greater than 5
+              </template>
+              <template v-else-if="toCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, toCoinAmount)">
+                xCOPE amount must greater than 5
+              </template>
+              <template v-else>{{ isWrap ? 'Unwrap' : priceImpact > 5 ? 'Swap' : 'Swap' }}</template>
+            </Button>
+          </div>
+          <div v-if="solBalance && +solBalance.balance.fixed() - 0.05 <= 0" class="not-enough-sol-alert">
+            <span class="caution-text">Caution: Your SOL balance is low</span>
 
-        <div v-else class="btncontainer">
-        <Button
-          size="large"
-          ghost
-          :disabled="
-            !fromCoin ||
-            !fromCoinAmount ||
-            !toCoin ||
-            !this.mainAmmId ||
-            (!marketAddress && !lpMintAddress && !isWrap && !best_dex_type) ||
-            !initialized ||
-            loading ||
-            gt(
-              fromCoinAmount,
-              fromCoin && fromCoin.balance
-                ? fromCoin.symbol === 'SOL'
-                  ? fromCoin.balance.toEther().minus(0.05).toFixed(fromCoin.balance.decimals)
-                  : fromCoin.balance.fixed()
-                : '0'
-            ) || // not enough SOL to swap SOL to another coin
-            (get(liquidity.infos, `${lpMintAddress}.status`) &&
-              get(liquidity.infos, `${lpMintAddress}.status`) !== 1) ||
-            swaping ||
-            (fromCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, fromCoinAmount)) ||
-            (toCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, toCoinAmount))
-          "
-          :loading="swaping"
-          style="width: 100%"
-          :class="`swap-btn ${priceImpact > 10 ? '' : priceImpact > 5 ? '' : ''}`"
-          @click="placeOrder"
-        >
-          <template v-if="!fromCoin || !toCoin"> Select a token </template>
-          <template v-else-if="(!marketAddress && !lpMintAddress && !isWrap && !best_dex_type) || !initialized">
-            Insufficient liquidity for this trade
-          </template>
-          <template v-else-if="!fromCoinAmount"> Enter an amount </template>
-          <template v-else-if="loading"> Updating price information </template>
-          <template
-            v-else-if="
-              gt(
-                fromCoinAmount,
-                fromCoin && fromCoin.balance
-                  ? fromCoin.symbol === 'SOL'
-                    ? fromCoin.balance.toEther().minus(0.05).toFixed(fromCoin.balance.decimals)
-                    : fromCoin.balance.fixed()
-                  : '0'
-              )
-            "
-          >
-            Insufficient {{ fromCoin.symbol }} balance
-          </template>
-          <template
-            v-else-if="
-              get(liquidity.infos, `${lpMintAddress}.status`) && get(liquidity.infos, `${lpMintAddress}.status`) !== 1
-            "
-          >
-            Pool coming soon
-          </template>
-          <template v-else-if="fromCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, fromCoinAmount)">
-            xCOPE amount must greater than 5
-          </template>
-          <template v-else-if="toCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, toCoinAmount)">
-            xCOPE amount must greater than 5
-          </template>
-          <template v-else>{{ isWrap ? 'Unwrap' : priceImpact > 5 ? 'Swap' : 'Swap' }}</template>
-        </Button>
-        </div>
-        <div v-if="solBalance && +solBalance.balance.fixed() - 0.05 <= 0" class="not-enough-sol-alert">
-          <span class="caution-text">Caution: Your SOL balance is low</span>
-
-          <Tooltip placement="bottomLeft">
-            <template slot="title">
-              SOL is needed for Solana network fees. A minimum balance of 0.05 SOL is recommended to avoid failed
-              transactions.
-            </template>
-            <Icon type="question-circle" />
-          </Tooltip>
+            <Tooltip placement="bottomLeft">
+              <template slot="title">
+                SOL is needed for Solana network fees. A minimum balance of 0.05 SOL is recommended to avoid failed
+                transactions.
+              </template>
+              <Icon type="question-circle" />
+            </Tooltip>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div
-      v-if="(!baseSymbol && !quoteSymbol && isFetchingUnsettled) || baseUnsettledAmount || quoteUnsettledAmount"
-      class="card extra"
-    >
-      <div class="settle card-body">
-        <div v-if="!baseSymbol && !quoteSymbol && isFetchingUnsettled" class="fetching-unsettled">
-          <Spin :spinning="true">
-            <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
-          </Spin>
-          <span>Fetching info from market. Please wait.</span>
-        </div>
+      <div
+        v-if="(!baseSymbol && !quoteSymbol && isFetchingUnsettled) || baseUnsettledAmount || quoteUnsettledAmount"
+        class="card extra"
+      >
+        <div class="settle card-body">
+          <div v-if="!baseSymbol && !quoteSymbol && isFetchingUnsettled" class="fetching-unsettled">
+            <Spin :spinning="true">
+              <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
+            </Spin>
+            <span>Fetching info from market. Please wait.</span>
+          </div>
 
-        <table
-          v-else-if="(baseSymbol && quoteSymbol && !isFetchingUnsettled && baseUnsettledAmount) || quoteUnsettledAmount"
-          class="settel-panel"
-        >
-          <thead>
-            <tr>
-              <th colspan="2">You have unsettled balances:</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="baseSymbol && baseUnsettledAmount" class="row">
-              <td>{{ baseSymbol }}</td>
-              <td>{{ baseUnsettledAmount }}</td>
-              <td class="align-right" rowspan="2">
-                <Button class="btn" :loading="isSettlingBase" ghost @click="settleFunds('base')">Settle</Button>
-              </td>
-            </tr>
+          <table
+            v-else-if="
+              (baseSymbol && quoteSymbol && !isFetchingUnsettled && baseUnsettledAmount) || quoteUnsettledAmount
+            "
+            class="settel-panel"
+          >
+            <thead>
+              <tr>
+                <th colspan="2">You have unsettled balances:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="baseSymbol && baseUnsettledAmount" class="row">
+                <td>{{ baseSymbol }}</td>
+                <td>{{ baseUnsettledAmount }}</td>
+                <td class="align-right" rowspan="2">
+                  <Button class="btn" :loading="isSettlingBase" ghost @click="settleFunds('base')">Settle</Button>
+                </td>
+              </tr>
 
               <tr v-if="quoteSymbol && quoteUnsettledAmount" class="row">
                 <td>{{ quoteSymbol }}</td>
@@ -502,7 +526,16 @@ import { inputRegex, escapeRegExp } from '@/utils/regex'
 import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
 import { SERUM_PROGRAM_ID_V3 } from '@/utils/ids'
-import { getOutAmount, getSwapOutAmount, place, swap, twoStepSwap, wrap, checkUnsettledInfo, settleFund } from '@/utils/swap'
+import {
+  getOutAmount,
+  getSwapOutAmount,
+  place,
+  swap,
+  twoStepSwap,
+  wrap,
+  checkUnsettledInfo,
+  settleFund
+} from '@/utils/swap'
 import { TokenAmount, gt } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
 import { canWrap, getLiquidityInfoSimilar } from '@/utils/liquidity'
@@ -579,8 +612,7 @@ export default Vue.extend({
       userCheckUnofficialShow: false,
       findUrlAmmId: false,
       mainAmmId: undefined as string | undefined,
-      
-      
+
       available_dex: [] as string[],
       best_dex_type: undefined as string | undefined,
       midTokenSymbol: undefined as string | undefined,
@@ -709,8 +741,8 @@ export default Vue.extend({
     gt,
     get,
     validateNumber(event: { target: { value: number }; preventDefault: () => void }) {
-      if(event.target.value > 10) {
-        event.preventDefault();
+      if (event.target.value > 10) {
+        event.preventDefault()
       }
     },
     openFromCoinSelect() {
@@ -760,7 +792,6 @@ export default Vue.extend({
       this.coinSelectShow = false
     },
     setCoinFromMint(ammIdOrMarket: string | undefined, from: string | undefined, to: string | undefined) {
-      
       this.setCoinFromMintLoading = true
       let fromCoin, toCoin
       try {
@@ -907,7 +938,6 @@ export default Vue.extend({
         }
 
         if (this.fromCoin.mintAddress && this.toCoin.mintAddress) {
-
           // serum market
           let marketAddress = ''
           for (const address of Object.keys(this.swap.markets)) {
@@ -926,7 +956,7 @@ export default Vue.extend({
                 (info.baseMint.toBase58() === toMint && info.quoteMint.toBase58() === fromMint)
               ) {
                 marketAddress = address
-                break;
+                break
               }
             }
           }
@@ -940,7 +970,7 @@ export default Vue.extend({
                 this.getOrderBooks()
               }
             )
-          } 
+          }
 
           // mono-step swap
           const lpList = getPoolListByTokenMintAddresses(
@@ -948,8 +978,7 @@ export default Vue.extend({
             this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
             typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
           )
-          if(lpList.length > 0)
-          {
+          if (lpList.length > 0) {
             this.available_dex.push(ENDPOINT_MONO)
           }
 
@@ -964,8 +993,7 @@ export default Vue.extend({
             this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
             undefined
           )
-          if(lpList_crp_1.length > 0 && lpList_crp_2.length > 0)
-          {
+          if (lpList_crp_1.length > 0 && lpList_crp_2.length > 0) {
             this.available_dex.push(ENDPOINT_MULTI_CRP)
           }
 
@@ -980,17 +1008,13 @@ export default Vue.extend({
             this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
             undefined
           )
-          if(lpList_usdc_1.length > 0 && lpList_usdc_2.length > 0)
-          {
+          if (lpList_usdc_1.length > 0 && lpList_usdc_2.length > 0) {
             this.available_dex.push(ENDPOINT_MULTI_USDC)
           }
-
         }
         this.updateUrl()
         this.updateAmounts()
-      }
-      else
-      {
+      } else {
         this.mainAmmId = undefined
         this.endpoint = ''
         this.marketAddress = ''
@@ -1032,7 +1056,6 @@ export default Vue.extend({
       }
     },
     updateAmounts() {
-    
       let max_coinAmount = 0
 
       let toCoinAmount = ''
@@ -1044,20 +1067,14 @@ export default Vue.extend({
       let best_dex_type = undefined
       let midTokenSymbol = undefined
       if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
-        if(this.isWrap){
+        if (this.isWrap) {
           // wrap & unwrap
           this.toCoinAmount = this.fromCoinAmount
           return
         }
-        this.available_dex.forEach((dex_type)=>{
-          if(dex_type == ENDPOINT_SRM){
-            if (
-              this.marketAddress &&
-              this.market &&
-              this.asks &&
-              this.bids &&
-              !this.asksAndBidsLoading
-            ) {
+        this.available_dex.forEach((dex_type) => {
+          if (dex_type == ENDPOINT_SRM) {
+            if (this.marketAddress && this.market && this.asks && this.bids && !this.asksAndBidsLoading) {
               // serum
               const { amountOut, amountOutWithSlippage, priceImpact } = getOutAmount(
                 this.market,
@@ -1079,8 +1096,7 @@ export default Vue.extend({
               if (!out.isNullOrZero()) {
                 // @ts-ignore
                 if (!toCoinWithSlippage || toCoinWithSlippage.wei.isLessThan(outWithSlippage.wei)) {
-                  if(max_coinAmount < parseFloat(out.fixed()))
-                  {
+                  if (max_coinAmount < parseFloat(out.fixed())) {
                     max_coinAmount = parseFloat(out.fixed())
                     toCoinAmount = out.fixed()
                     toCoinWithSlippage = outWithSlippage
@@ -1097,11 +1113,14 @@ export default Vue.extend({
                 }
               }
             }
-          }
-          else if(dex_type == ENDPOINT_MONO){
-            
+          } else if (dex_type == ENDPOINT_MONO) {
             // @ts-ignore
-            const poolInfo = findBestLP(this.$accessor.liquidity.infos, this.fromCoin.mintAddress, this.toCoin.mintAddress,this.fromCoinAmount)
+            const poolInfo = findBestLP(
+              this.$accessor.liquidity.infos,
+              this.fromCoin.mintAddress,
+              this.toCoin.mintAddress,
+              this.fromCoinAmount
+            )
             this.mainAmmId = poolInfo.ammId
             const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
               poolInfo,
@@ -1113,8 +1132,7 @@ export default Vue.extend({
               this.setting.slippage
             )
             if (!amountOut.isNullOrZero()) {
-              if(max_coinAmount < parseFloat(amountOut.fixed()))
-              {
+              if (max_coinAmount < parseFloat(amountOut.fixed())) {
                 max_coinAmount = parseFloat(amountOut.fixed())
 
                 toCoinAmount = amountOut.fixed()
@@ -1126,21 +1144,22 @@ export default Vue.extend({
                   false
                 ).fixed()
                 impact = priceImpact
-                if(poolInfo.version == 5)
-                  endpoint = ENDPOINT_CRP
-                else
-                  endpoint = ENDPOINT_RAY
-                
+                if (poolInfo.version == 5) endpoint = ENDPOINT_CRP
+                else endpoint = ENDPOINT_RAY
+
                 best_dex_type = 'single'
-                
               }
             }
-          }
-          else if(dex_type == ENDPOINT_MULTI_CRP){
+          } else if (dex_type == ENDPOINT_MULTI_CRP) {
             let midTokenMint = TOKENS.CRP.mintAddress
 
             // @ts-ignore
-            const fromPoolInfo = findBestLP(this.$accessor.liquidity.infos, this.fromCoin.mintAddress, midTokenMint,this.fromCoinAmount)
+            const fromPoolInfo = findBestLP(
+              this.$accessor.liquidity.infos,
+              this.fromCoin.mintAddress,
+              midTokenMint,
+              this.fromCoinAmount
+            )
             this.mainAmmId = fromPoolInfo.ammId
 
             let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
@@ -1153,9 +1172,14 @@ export default Vue.extend({
             )
 
             // @ts-ignore
-            const toPoolInfo = findBestLP(this.$accessor.liquidity.infos, midTokenMint, this.toCoin.mintAddress, amountOut.fixed())
+            const toPoolInfo = findBestLP(
+              this.$accessor.liquidity.infos,
+              midTokenMint,
+              this.toCoin.mintAddress,
+              amountOut.fixed()
+            )
             this.extAmmId = toPoolInfo.ammId
-          
+
             let final = getSwapOutAmount(
               toPoolInfo,
               midTokenMint,
@@ -1166,9 +1190,7 @@ export default Vue.extend({
             )
 
             if (!final.amountOut.isNullOrZero()) {
-
-              if(max_coinAmount < parseFloat(final.amountOut.fixed()))
-              {
+              if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
                 max_coinAmount = parseFloat(final.amountOut.fixed())
                 toCoinAmount = final.amountOut.fixed()
                 toCoinWithSlippage = final.amountOutWithSlippage
@@ -1183,15 +1205,18 @@ export default Vue.extend({
                 endpoint = ENDPOINT_MULTI_CRP
                 best_dex_type = 'multi'
                 midTokenSymbol = 'CRP'
-
               }
             }
-          }
-          else if(dex_type == ENDPOINT_MULTI_USDC){
+          } else if (dex_type == ENDPOINT_MULTI_USDC) {
             let midTokenMint = TOKENS.USDC.mintAddress
 
-          // @ts-ignore
-            const fromPoolInfo = findBestLP(this.$accessor.liquidity.infos, this.fromCoin.mintAddress, midTokenMint,this.fromCoinAmount)
+            // @ts-ignore
+            const fromPoolInfo = findBestLP(
+              this.$accessor.liquidity.infos,
+              this.fromCoin.mintAddress,
+              midTokenMint,
+              this.fromCoinAmount
+            )
             this.mainAmmId = fromPoolInfo.ammId
             let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
               fromPoolInfo,
@@ -1203,9 +1228,14 @@ export default Vue.extend({
             )
 
             // @ts-ignore
-            const toPoolInfo = findBestLP(this.$accessor.liquidity.infos, midTokenMint, this.toCoin.mintAddress, amountOut.fixed())
+            const toPoolInfo = findBestLP(
+              this.$accessor.liquidity.infos,
+              midTokenMint,
+              this.toCoin.mintAddress,
+              amountOut.fixed()
+            )
             this.extAmmId = toPoolInfo.ammId
-          
+
             let final = getSwapOutAmount(
               toPoolInfo,
               midTokenMint,
@@ -1216,8 +1246,7 @@ export default Vue.extend({
             )
 
             if (!final.amountOut.isNullOrZero()) {
-              if(max_coinAmount < parseFloat(final.amountOut.fixed()))
-              {
+              if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
                 max_coinAmount = parseFloat(final.amountOut.fixed())
                 toCoinAmount = final.amountOut.fixed()
                 toCoinWithSlippage = final.amountOutWithSlippage
@@ -1253,7 +1282,6 @@ export default Vue.extend({
         this.priceImpact = 0
         this.endpoint = ''
       }
-
     },
     setMarketTimer() {
       this.marketTimer = setInterval(() => {
@@ -1263,7 +1291,7 @@ export default Vue.extend({
             if (this.countdown === this.autoRefreshTime) {
               this.getOrderBooks()
               this.$accessor.wallet.getTokenAccounts()
-              this.countdown = 0;
+              this.countdown = 0
             }
           }
         }
@@ -1358,10 +1386,10 @@ export default Vue.extend({
           .finally(() => {
             this.swaping = false
           })
-      }else if(this.endpoint === ENDPOINT_MULTI_CRP || this.endpoint === ENDPOINT_MULTI_USDC) {
+      } else if (this.endpoint === ENDPOINT_MULTI_CRP || this.endpoint === ENDPOINT_MULTI_USDC) {
         const fromPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.mainAmmId)
         const toPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.extAmmId)
-        const midTokenMint = (this.endpoint === ENDPOINT_MULTI_CRP)? TOKENS.CRP.mintAddress :TOKENS.USDC.mintAddress
+        const midTokenMint = this.endpoint === ENDPOINT_MULTI_CRP ? TOKENS.CRP.mintAddress : TOKENS.USDC.mintAddress
         twoStepSwap(
           this.$web3,
           // @ts-ignore
@@ -1371,7 +1399,7 @@ export default Vue.extend({
           // @ts-ignore
           this.fromCoin.mintAddress,
           // @ts-ignore
-	  midTokenMint,
+          midTokenMint,
           // @ts-ignore
           this.toCoin.mintAddress,
           // @ts-ignore
@@ -1396,10 +1424,10 @@ export default Vue.extend({
                 ])
             })
             const description_1 = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.midAmountWithSlippage} ${TOKENS.CRP.symbol}`
-            this.$accessor.transaction.sub({ txid:txids[0], description:description_1 })
-            
+            this.$accessor.transaction.sub({ txid: txids[0], description: description_1 })
+
             const description = `Swap ${this.midAmountWithSlippage} ${TOKENS.CRP.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
-            this.$accessor.transaction.sub({ txid:txids[0], description })
+            this.$accessor.transaction.sub({ txid: txids[0], description })
           })
           .catch((error) => {
             this.$notify.error({
@@ -1467,7 +1495,7 @@ export default Vue.extend({
       //       ammId: this.ammId
       //     }
       //   })
-      // } else 
+      // } else
       if (this.fromCoin && this.toCoin) {
         if (this.fromCoin.mintAddress !== from || this.toCoin.mintAddress !== to) {
           await this.$router.push({
@@ -1576,7 +1604,8 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="less" sxcoped> //sxcoped
+<style lang="less" sxcoped>
+//sxcoped
 .warning-style {
   font-weight: bold;
   color: #f0b90b;
@@ -1591,11 +1620,11 @@ export default Vue.extend({
 .swap-btn.error-style {
   font-weight: normal;
 }
-main{
-  background-image:unset;
-  background-color:#01033C;
-  background-size:cover;
-  background-position:center bottom;
+main {
+  background-image: unset;
+  background-color: #01033c;
+  background-size: cover;
+  background-position: center bottom;
 }
 .planetMiddle {
   position: absolute;
@@ -1604,7 +1633,7 @@ main{
   transform: rotate(90deg);
 }
 .btn-grad {
-  background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+  background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   height: 62px;
@@ -1615,16 +1644,19 @@ main{
   font-weight: 400;
   line-height: 42px;
   letter-spacing: -0.05em;
-  text-align: left;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   img {
-    margin: 10px 5px 10px 10px;
+    margin: 10px 5px;
   }
 }
 .swapHead {
   align-items: center;
   display: flex;
-  margin-top:10px;
+  margin-top: 10px;
   justify-content: space-between;
   h1 {
     // font-family: Gilroy;
@@ -1679,22 +1711,10 @@ main{
     }
   }
 }
-.ant-tooltip-inner {
-  background: linear-gradient(292.73deg, #21BDB8 -20.31%, #280684 100%) !important;
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 18px 11px 14px rgb(0 0 0 / 25%);
-  border-radius: 8px;
-  display: inline-block;
-  width: 250px !important;
-  color: white !important;
-}
-.ant-tooltip-arrow::before {
-  background-color: #271789 !important;
-}
 .container {
   max-width: 662px; //550
   .card {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(236, 228, 228, 0.05);
     border-radius: 15px;
   }
   .price-info {
@@ -1709,7 +1729,6 @@ main{
     .anticon-swap {
       margin-left: 10px;
       padding: 5px;
-      background: #000829;
     }
     .price-base {
       line-height: 24px;
@@ -1719,7 +1738,7 @@ main{
     .fs-container {
       margin-top: 20px;
       .name {
-        color: #FFF;
+        color: #fff;
         font-size: 18px;
         label {
           opacity: 0.5;
@@ -1732,24 +1751,29 @@ main{
       .swapThrough {
         text-transform: capitalize;
         border-radius: 5px;
-        padding: 0 7px;
+        padding: 4px 8px;
       }
       .green {
-        background: #0CAF7F;
-        border: solid 2px #0CAF7F;
+        background: #0caf7f;
+        border: solid 2px #0caf7f;
       }
       .purple {
-        background: #69039C;
-        border: solid 2px #69039C;
+        background: #69039c;
+        border: solid 2px #69039c;
       }
       .cyan {
-        background: #4DB1C4;
-        border: solid 2px #4DB1C4;
+        background: #4db1c4;
+        border: solid 2px #4db1c4;
       }
     }
   }
   .btncontainer {
-    background: rgba(163, 148, 148, 0.14);//linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    // background: rgba(
+    //   163,
+    //   148,
+    //   148,
+    //   0.14
+    // ); //linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
     display: inline;
     width: unset;
     text-align: center;
@@ -1759,8 +1783,9 @@ main{
     padding: 2px;
     max-height: 50px;
     border-radius: 8px;
-    button{
-      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+    button {
+      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+      border: 2px solid rgba(255, 255, 255, 0.14);
       position: relative;
       border-radius: 8px;
       border-color: transparent;
@@ -1781,27 +1806,22 @@ main{
       width: 32px;
       border-radius: 50%;
       cursor: pointer;
-      i.fst{
-        left: 5px;
-        margin-right: 5px;
-        position: relative;
-        top: -3px;
-      }
-      i.lst{
-        position: relative;
-        bottom: -3px;
-        right: 3px;
-      }
     }
+  }
+  .fst {
+    transform: rotate(90deg);
+    margin: 8px;
   }
   .coin-budge {
     align-items: center;
     border: solid 1px;
-    border-radius: 5px;
+    border-radius: 6px;
     display: flex;
-    padding: 0 5px;
+    padding: 4px 8px;
     img {
-      width: 10px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
     }
     span {
       font-size: 14px;
@@ -1855,20 +1875,28 @@ main{
 .swapWrapper {
   max-width: 1350px;
   width: 100%;
-  background: #01033C;
+  background: #01033c;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
   margin-left: auto;
   margin-right: auto;
-  
-  .ant-layout{
-    background:#000 !important;
+
+  .ant-layout {
+    background: #000 !important;
   }
   button.ant-btn-background-ghost[disabled] {
-    border-color: #85858d;
+    background: #80819D !important;
+    border: 2px solid rgba(255, 255, 255, 0.14);
   }
-  .ant-menu-horizontal > .ant-menu-item:hover, .ant-menu-horizontal > .ant-menu-submenu:hover, .ant-menu-horizontal > .ant-menu-item-active, .ant-menu-horizontal > .ant-menu-submenu-active, .ant-menu-horizontal > .ant-menu-item-open, .ant-menu-horizontal > .ant-menu-submenu-open, .ant-menu-horizontal > .ant-menu-item-selected, .ant-menu-horizontal > .ant-menu-submenu-selected{
+  .ant-menu-horizontal > .ant-menu-item:hover,
+  .ant-menu-horizontal > .ant-menu-submenu:hover,
+  .ant-menu-horizontal > .ant-menu-item-active,
+  .ant-menu-horizontal > .ant-menu-submenu-active,
+  .ant-menu-horizontal > .ant-menu-item-open,
+  .ant-menu-horizontal > .ant-menu-submenu-open,
+  .ant-menu-horizontal > .ant-menu-item-selected,
+  .ant-menu-horizontal > .ant-menu-submenu-selected {
     border-bottom: none !important;
   }
   .page-head {
@@ -1886,7 +1914,7 @@ main{
     }
     .buttons {
       &:hover {
-        background: #1B2028;
+        background: #1b2028;
       }
     }
   }
@@ -1896,7 +1924,7 @@ main{
       row-gap: 5px;
       width: 600px !important;
       background: none;
-      > .fs-container{
+      > .fs-container {
         text-align: center;
       }
     }
@@ -1912,11 +1940,73 @@ main{
   .ant-menu-horizontal,
   .ant-layout-header,
   .ant-layout-footer {
-    background:#01033C !important;
+    background: #01033c !important;
   }
   .ant-layout-content {
-    background:#01033C !important;
+    background: #01033c !important;
   }
+}
+.ant-tooltip-inner {
+  background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 18px 11px 14px rgb(0 0 0 / 25%);
+  border-radius: 8px;
+  display: inline-block;
+  width: auto;
+  color: #ffffff50 !important;
+
+  .swap-info {
+    .tooltip-input {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      width: 240px;
+      outline: none;
+      border-radius: 6px;
+      font-size: 16px;
+      padding: 10px 13px;
+      line-height: 20px;
+    }
+    .info {
+      border-radius: 6px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      padding: 8px;
+      margin-bottom: 10px;
+      
+      .symbol {
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 700;
+        opacity: 1;
+        color: white;
+      }
+
+      .address {
+        font-size: 13px;
+        background: transparent;
+        opacity: 1;
+        color: white;
+      }
+
+      .action img {
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.ant-tooltip-arrow {
+  top: -8px !important;
+  width: 20px;
+  height: 20px;
+}
+.ant-tooltip-arrow::before {
+  background-color: #271789 !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.14);
+  border-left: 2px solid rgba(255, 255, 255, 0.14);
+  width: 10px;
+  height: 10px;
 }
 // ******* Mobile *******
 @media (max-width: 780px) {
@@ -1987,7 +2077,8 @@ main{
                 margin: 20px;
               }
             }
-            .slippage, .minimum{
+            .slippage,
+            .minimum {
               padding-bottom: 20px;
               justify-content: space-between;
               display: flex;
@@ -2017,7 +2108,7 @@ main{
             input {
               font-size: 14px;
             }
-          } 
+          }
         }
       }
       .btncontainer {
@@ -2033,8 +2124,9 @@ main{
     margin-left: 18px !important;
     height: 0;
     .ant-notification-notice {
-      background: #222262 !important;
-      border: 1px solid #7b7ebd;
+      // background: #222262 !important;
+      background: #FFFFFF10;
+      border-radius: 14px;
     }
   }
   .ant-tooltip-placement-bottomLeft {
@@ -2042,10 +2134,10 @@ main{
       display: none;
     }
   }
-  
+
   .ant-modal {
     max-width: 350px;
-    
+
     .ant-modal-header {
       padding: 16px 12px;
     }
@@ -2054,11 +2146,11 @@ main{
     }
   }
   .select-token .token-list .token-info {
-    border: 1px solid rgba(255,255,255, 0.1) !important;;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 10px;
     padding: 5px 10px !important;
     margin: 5px 0;
-    background: rgba(255,255,255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
   }
 }
 // @media (max-width: 920px) {

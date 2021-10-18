@@ -36,7 +36,7 @@
             <span>{{ coinName }}</span>
           </div>
           <span v-else>Select a token</span>
-          <Icon type="caret-down" />
+          <Icon type="down" />
         </button>
       </div>
       <!-- <input // Maybe it will use soon or later
@@ -157,7 +157,7 @@ export default Vue.extend({
     padding: 0;
     border: none;
     background-color: transparent;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 18px;
     line-height: 24px;
     flex: 1 1 auto;
@@ -247,8 +247,7 @@ export default Vue.extend({
       position: relative;
 
       .anticon {
-        margin-left: 4px;
-        font-size: 8px;
+        margin-left: 10px;
       }
 
       img {
@@ -266,8 +265,8 @@ export default Vue.extend({
       right:0;
       bottom:0;
       border-radius:8px; 
-      padding:2px; 
-      background:linear-gradient(45deg,#280C86,#22B5B6); 
+      padding:2px;
+      background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
       -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
         linear-gradient(#fff 0 0);
