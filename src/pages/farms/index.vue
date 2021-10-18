@@ -212,7 +212,7 @@
                         </div>
                         <hr />
                         <div class="tooltip-line">
-                          Ray <span>{{ farm.farmInfo.apr_details.apr }}%</span>
+                          Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
                         </div>
                       </div>
                     </template>
@@ -664,9 +664,7 @@ export default Vue.extend({
       }
 
       try {
-        this.poolsDatas = await fetch(
-          DEVNET_MODE ? 'https://api.croppppp.com/' : 'https://api.cropper.finance/pools/'
-        ).then((res) => res.json())
+        this.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
       } catch {
         this.poolsDatas = []
       } finally {
