@@ -27,26 +27,12 @@
                 >
                   <Icon type="loading" theme="outlined" />
                 </div>
-                <!-- <Progress
-                  type="circle"
-                  :width="20"
-                  :stroke-width="10"
-                  :percent="(100 / autoRefreshTime) * countdown"
-                  :show-info="false"
-                  :class="loading ? 'disabled' : ''"
-                  @click="
-                    () => {
-                      $accessor.requestInfos()
-                      $accessor.wallet.getTokenAccounts()
-                    }
-                  "
-                /> -->
               </div>
             </div>
           </div>
         </div>
 
-        <div class="list" v-if="initialized">
+        <div class="list pc-list" v-if="initialized">
           <Row class="farm-head table-head">
             <Col class="lp-icons" :span="isMobile ? 9 : 6">
               <div class="title">Farm name</div>
@@ -137,6 +123,68 @@
           </Collapse>
         </div>
 
+        <!-- Mobile list -->
+        <div class="list mobile-list" v-if="initialized">
+          <Collapse v-model="showCollapse" expand-icon-position="right">
+            <CollapsePanel v-for="farm in labelizedAmms" v-show="true" :key="farm.slug" :show-arrow="poolType">
+              <Row slot="header" class="farm-head">
+                <Col :span="24">
+                  <div class="title"> {{ farm.title }} </div>
+                </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col :span="24">
+                  <div class="followerscount">
+                    <span>{{ farm.followers }} </span> Followers
+                  </div>
+                  <div class="tags-group">
+                    <div v-for="tag in farm.tags" :key="tag.label" class="tag label" :style="'background-color: ' + tag.color">{{tag.label}}</div>
+                  </div>
+                </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col class="lp-icons" :span="24">
+                  <div class="lp-icons-group">
+                    <div class="icons">
+                      <CoinIcon :mint-address="farm.tokenA.mint" />
+                      <span>{{ farm.tokenA.symbol }}</span>
+                      <div>-</div>
+                      <CoinIcon :mint-address="farm.tokenB.mint" />
+                      <span>{{ farm.tokenB.symbol }}</span>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col class="state" :span="12">
+                  <div class="title">Farm duration</div>
+                </Col>
+                <Col class="state" :span="12">
+                  {{ farm.duration }}
+                </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col class="state" :span="12">
+                  <div class="title">Airdrop event</div>
+                </Col>
+                <Col class="state" :span="12"> {{ farm.airdrop.amount }} ${{ farm.airdrop.symbol }} </Col>
+              </Row>
+              <Row class="farm-head">
+                <Col class="state" :span="12">
+                  <div class="title">Status</div>
+                </Col>
+                <Col class="state" :span="12">
+                  <div class="label" :style="'background-color: ' + farm.current_status.color">
+                    {{ farm.current_status.label }}
+                  </div>
+                </Col>
+              </Row>
+              <div class="btncontainer" @click="goToProject(farm)">
+                <Button size="large" ghost> Join now </Button>
+              </div>
+            </CollapsePanel>
+          </Collapse>
+        </div>
         <div v-else class="fc-container">
           <Spin :spinning="true">
             <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
@@ -358,9 +406,100 @@ export default Vue.extend({
   }
 }
 
-.fertilizer .list {
-  text-align: center;
+.fertilizer {
+  .list {
+    text-align: center;
+  }
 
+  .pc-list {
+    @media (max-width: @mobile-b-width) {
+      display: none;
+    }
+  }
+
+  .mobile-list {
+    display: none;
+
+    @media (max-width: @mobile-b-width) {
+      display: block;
+    }
+
+    .ant-collapse .ant-collapse-item {
+      background: #0e1046;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-sizing: border-box;
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 20px;
+
+      .ant-collapse-header {
+        .farm-head .title {
+          font-size: 25px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 31px;
+          letter-spacing: 0;
+          text-align: left;
+        }
+      }
+
+      .ant-collapse-content {
+        .farm-head {
+          .followerscount {
+            text-align: left;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 22px;
+
+            span {
+              font-weight: normal;
+              font-size: 25px;
+              line-height: 30px;
+              color: #00dbb9;
+            }
+          }
+
+          .tags-group {
+            margin-bottom: 0 !important;
+          }
+
+          .lp-icons {
+            justify-content: center;
+          }
+
+          .state:nth-child(1) {
+            justify-content: flex-start;
+
+            .title {
+              font-size: 14px;
+              line-height: 17px;
+            }
+          }
+
+          .state:nth-child(2) {
+            justify-content: flex-end;
+            font-size: 16px;
+            font-weight: 600;
+          }
+        }
+
+        .btncontainer {
+          @media (max-width: @mobile-b-width) {
+            height: 44px;
+            width: 105px;
+          }
+
+          button {
+             @media (max-width: @mobile-b-width) {
+              height: 40px;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+  
   .ant-collapse {
     background-color: #01033c !important;
   }
@@ -368,134 +507,9 @@ export default Vue.extend({
   .pf-record .pf-record-content {
     padding: 0;
   }
-
-  .singleFarm {
-    width: calc(33.33333333% - 20px);
-    display: inline-block;
-    vertical-align: top;
-    border-bottom: none !important;
-    position: relative;
-    margin: 0 10px 20px 10px;
-    background: #01033c;
-    border-radius: 25px;
-
-    .labelaner {
-      background: #16edac;
-      background: linear-gradient(180deg, #16edac 0%, #14bb89 100%);
-      color: #fff;
-      padding: 10px 0;
-      border-radius: 25px 25px 0 0;
-    }
-
-    .addPadding {
-      padding: 0 10px 20px;
-    }
-
-    .btncontainer {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-      display: inline-block;
-      width: unset;
-      text-align: center;
-      position: relative;
-      max-width: 400px;
-      margin: 10px auto;
-      padding: 2px;
-      border-radius: 8px;
-      max-height: 65px;
-      font-size: 16px;
-      cursor: pointer;
-      cursor: hand;
-
-      button {
-        position: relative;
-        border-radius: 8px;
-        padding: 5px 10px;
-        border-color: transparent;
-        cursor: pointer;
-        cursor: hand;
-      }
-    }
-
-    .banner {
-      height: 132px;
-      position: relative;
-      overflow: hidden;
-
-      .large {
-        height: 140px;
-        min-width: 100%;
-        left: 50%;
-        top: 50%;
-        position: absolute;
-        object-fit: cover;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    .followerscount {
-      text-align: right;
-      font-weight: normal;
-      font-size: 24px;
-      color: #fff;
-      margin-top: 40px;
-
-      span {
-        color: #16edac;
-      }
-    }
-
-    .title {
-      text-align: left;
-      font-weight: normal;
-      font-size: 17px;
-      margin-top: 48px;
-    }
-
-    .desc {
-      font-size: 14px;
-      text-align: left;
-      min-height: 90px;
-    }
-
-    .ant-col {
-      padding: 0 10px 5px 10px;
-    }
-
-    .small {
-      width: 70px;
-      border: 4px solid #000;
-      border-radius: 50%;
-      top: 181px;
-      z-index: 2;
-      left: 50%;
-      position: absolute;
-      background: #01033c;
-      transform: translate(-50%, -50%);
-    }
-
-    .ant-collapse-header .farm-head {
-      padding: 30px 5px !important;
-    }
-    .ant-collapse {
-      font-size: 18px;
-      line-height: 22px;
-    }
-
-    .info {
-      color: #fff;
-    }
-
-    .icons img {
-      max-height: 24px;
-    }
-  }
 }
 
-@media (max-width: 700px) {
-  .singleFarm {
-    width: calc(100% - 20px) !important;
-  }
-
+@media (max-width: @mobile-b-width) {
   .fertilizer.cont {
     max-width: 95%;
   }
@@ -633,12 +647,21 @@ export default Vue.extend({
       width: 163px;
     }
   }
+
   .page-head {
     margin-top: 10px;
+
+    @media (max-width: @mobile-b-width) {
+      display: none;
+    }
   }
 
   .ant-collapse-header {
     padding: 0 !important;
+
+    @media (max-width: @mobile-b-width) {
+      margin-bottom: 10px;
+    }
   }
 
   .ant-collapse-content {
@@ -699,6 +722,8 @@ export default Vue.extend({
       width: 163px;
       line-height: 60px;
       margin-top: 40px;
+      display: flex;
+      align-items: center;
 
       button {
         font-style: normal;
@@ -712,6 +737,9 @@ export default Vue.extend({
         width: 100%;
         height: 100%;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }
@@ -747,8 +775,11 @@ export default Vue.extend({
   .farm-head {
     display: flex;
     align-items: center;
-    min-width: 768px;
     padding: 30px 5px !important;
+
+    @media (max-width: @mobile-b-width) {
+      padding: 10px 5px !important;
+    }
 
     .ant-collapse-header {
       padding: 0 !important;
