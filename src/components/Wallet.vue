@@ -33,8 +33,8 @@
       <div v-else class="wallet-info">
         <p class="address">{{ wallet.address }}</p>
 
-        <div class="btncontainer">
-        <Button ghost @click="disconnect"> DISCONNECT </Button>
+        <div class="stdGradientButton">
+          <Button ghost @click="disconnect"> DISCONNECT </Button>
         </div>
 
       </div>
@@ -626,17 +626,15 @@ header .btncontainer {
 <style lang="less" scoped>
 .wallet-info {
   text-align: center;
+
+  .stdGradientButton button{
+    height:72px
+  }
 }
 
 
-  button.ant-btn-background-ghost{
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: none !important;
-  }
-
   .wallet-info .address{
     border-radius: 7px;
-    background-color: #2D3139 !important;
     padding-top: 15px;
     padding-bottom: 15px;
     font-size: 17px;
