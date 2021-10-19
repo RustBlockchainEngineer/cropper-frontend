@@ -1117,17 +1117,17 @@ export default Vue.extend({
             // @ts-ignore
             const poolInfo = findBestLP(
               this.$accessor.liquidity.infos,
-              this.fromCoin.mintAddress,
-              this.toCoin.mintAddress,
+              this.fromCoin!.mintAddress,
+              this.toCoin!.mintAddress,
               this.fromCoinAmount
             )
             this.mainAmmId = poolInfo.ammId
             const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
               poolInfo,
               // @ts-ignore
-              this.fromCoin.mintAddress,
+              this.fromCoin!.mintAddress,
               // @ts-ignore
-              this.toCoin.mintAddress,
+              this.toCoin!.mintAddress,
               this.fromCoinAmount,
               this.setting.slippage
             )
@@ -1156,7 +1156,7 @@ export default Vue.extend({
             // @ts-ignore
             const fromPoolInfo = findBestLP(
               this.$accessor.liquidity.infos,
-              this.fromCoin.mintAddress,
+              this.fromCoin!.mintAddress,
               midTokenMint,
               this.fromCoinAmount
             )
@@ -1165,7 +1165,7 @@ export default Vue.extend({
             let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
               fromPoolInfo,
               // @ts-ignore
-              this.fromCoin.mintAddress,
+              this.fromCoin!.mintAddress,
               midTokenMint,
               this.fromCoinAmount,
               this.setting.slippage
@@ -1175,7 +1175,7 @@ export default Vue.extend({
             const toPoolInfo = findBestLP(
               this.$accessor.liquidity.infos,
               midTokenMint,
-              this.toCoin.mintAddress,
+              this.toCoin!.mintAddress,
               amountOut.fixed()
             )
             this.extAmmId = toPoolInfo.ammId
@@ -1213,7 +1213,7 @@ export default Vue.extend({
             // @ts-ignore
             const fromPoolInfo = findBestLP(
               this.$accessor.liquidity.infos,
-              this.fromCoin.mintAddress,
+              this.fromCoin!.mintAddress,
               midTokenMint,
               this.fromCoinAmount
             )
@@ -1231,7 +1231,7 @@ export default Vue.extend({
             const toPoolInfo = findBestLP(
               this.$accessor.liquidity.infos,
               midTokenMint,
-              this.toCoin.mintAddress,
+              this.toCoin!.mintAddress,
               amountOut.fixed()
             )
             this.extAmmId = toPoolInfo.ammId
