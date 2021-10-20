@@ -7,7 +7,7 @@
           <span class="title">Fertilizer</span>
           <NuxtLink to="/pools/create-pool/">
             <div class="create">
-              <Button size="large" ghost> + &nbsp; Contact us </Button>
+              <Button size="large" ghost> + &nbsp; Apply </Button>
             </div>
           </NuxtLink>
 
@@ -53,7 +53,7 @@
               <div class="title">Followers</div>
             </Col>
           </Row>
-         
+
           <Collapse v-model="showCollapse" expand-icon-position="right">
             <CollapsePanel v-for="farm in labelizedAmms" v-show="true" :key="farm.slug" :show-arrow="poolType">
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
@@ -90,9 +90,9 @@
               </Row>
 
               <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row'" :gutter="48">
-                <Col :span="!isMobile ? 40 : 10">
+                <Col :span="!isMobile ? 14 : 10">
                   <div class="banner">
-                    <img :src="farm.links.banner" class="large" alt="" style="max-width: 100%" />
+                    <img :src="farm.links.banner" class="large" alt=""/>
                   </div>
                 </Col>
 
@@ -560,7 +560,7 @@ export default Vue.extend({
   }
 
   .ant-collapse > .ant-collapse-item {
-    border: unset !important;
+    border-bottom: 1px solid rgba(255,255,255,0.12549) !important;
 
     .label{
       border-radius: 4px;
@@ -568,6 +568,11 @@ export default Vue.extend({
       font-weight: 400;
       line-height: 17px;
       padding: 6px 7px 4px 7px;
+    }
+
+    .banner img{
+      width: 100%;
+      height: 262px;
     }
   }
 
