@@ -441,9 +441,9 @@ export default Vue.extend({
   row-gap: 14px;
 
   input {
+    border: 4px solid #16164A;
+    border-radius: 14px;
     padding: 16px;
-    border: 1px solid @primary-color;
-    border-radius: 4px;
     background-color: transparent;
     font-size: 18px;
     color: @text-color;
@@ -460,6 +460,10 @@ export default Vue.extend({
       font-size: 14px;
       line-height: 36px;
       font-weight: 400;
+    }
+
+    @media (max-width: @mobile-b-width) {
+      display: none;
     }
   }
 

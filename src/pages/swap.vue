@@ -1736,8 +1736,8 @@ main {
       padding: 5px;
     }
     .price-base {
-      line-height: 24px;
-      font-size: 18px;
+      font-size: 12px;
+      line-height: 15px;
       opacity: 0.5;
     }
     .fs-container {
@@ -1797,7 +1797,6 @@ main {
     justify-content: center;
     align-items: center;
     gap: 8px;
-    margin-bottom: -18px;
     margin-top: 4px;
   }
   .change-side {
@@ -1811,6 +1810,11 @@ main {
   .fst {
     transform: rotate(90deg);
     margin: 8px;
+
+    @media (max-width: @mobile-b-width) {
+      height: fit-content;
+      margin: 20px 0 0 0;
+    }
   }
   .coin-budge {
     align-items: center;
@@ -2010,7 +2014,7 @@ main {
 //   height: 10px;
 // }
 // ******* Mobile *******
-@media (max-width: 780px) {
+@media (max-width: @mobile-b-width) {
   .swapWrapper {
     margin: auto;
     padding: 0;
@@ -2019,7 +2023,7 @@ main {
       display: none;
     }
     .swapHead {
-      margin: 22px;
+      margin: 42px 22px -25px 22px;
       h1 {
         display: none;
       }
@@ -2033,7 +2037,7 @@ main {
           width: 120px;
           font-size: 11px;
           display: flex;
-          justify-content: space-around;
+          justify-content: space-evenly;
           align-items: center;
           img {
             margin: auto 0;
@@ -2068,15 +2072,18 @@ main {
               display: block;
               border-bottom: 1px solid #4d4d4d;
               div {
-                margin: 20px;
-                float: right;
+                margin: 10px;
+                float: left;
               }
             }
             .pathway {
               span:nth-of-type(2) {
                 justify-content: center;
-                margin: 20px;
+                margin: auto auto 10px auto;
               }
+            }
+            .swapping div{
+              margin-bottom: 15px;
             }
             .slippage,
             .minimum {
@@ -2147,7 +2154,6 @@ main {
     }
   }
   .select-token .token-list .token-info {
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 10px;
     padding: 5px 10px !important;
     margin: 5px 0;

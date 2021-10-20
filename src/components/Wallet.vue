@@ -559,6 +559,9 @@ export default class Wallet extends Vue {
 
 .select-wallet {
   button {
+    border: none;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
