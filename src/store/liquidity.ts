@@ -3,7 +3,7 @@ import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 import { ACCOUNT_LAYOUT, getBigNumber, MINT_LAYOUT } from '@/utils/layouts'
 import { AMM_INFO_LAYOUT, AMM_INFO_LAYOUT_V3, AMM_INFO_LAYOUT_V4, getLpMintListDecimals } from '@/utils/liquidity'
 import { LIQUIDITY_POOLS, getAddressForWhat, LiquidityPoolInfo } from '@/utils/pools'
-import { commitment, createAmmAuthority, getFilteredProgramAccounts, getMultipleAccounts, getMintDecimals } from '@/utils/web3'
+import { commitment, createAmmAuthority, getFilteredProgramAccounts, getMultipleAccounts, getMintDecimals, getAMMGlobalStateAccount as getAMMGlobalStateAccount } from '@/utils/web3'
 
 import { OpenOrders } from '@project-serum/serum'
 import { PublicKey } from '@solana/web3.js'
@@ -17,8 +17,6 @@ import {
   SERUM_PROGRAM_ID_V3 } from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { LP_TOKENS, NATIVE_SOL, TOKENS } from '@/utils/tokens'
-import { FEE_OPTIONS } from '@/utils/new_fcn'
-
 
 const AUTO_REFRESH_TIME = 60
 
@@ -385,6 +383,8 @@ export const actions = actionTree(
       const liquidityPools = {} as any
       const publicKeys = [] as any
 
+      const amm_state_info = await getAMMGlobalStateAccount(conn);
+
       LIQUIDITY_POOLS.forEach((pool) => {
         const { poolCoinTokenAccount, poolPcTokenAccount, ammOpenOrders, ammId, coin, pc, lp } = pool
 
@@ -452,9 +452,9 @@ export const actions = actionTree(
                   parsed = AMM_INFO_LAYOUT_V6.decode(data)
                   // const { returnFeeNumerator, fixedFeeNumerator, feeDenominator } = parsed
                   poolInfo.fees = {
-                    returnFeeNumerator: getBigNumber(FEE_OPTIONS.returnFeeNumerator),
-                    fixedFeeNumerator: getBigNumber(FEE_OPTIONS.fixedFeeNumerator),
-                    feeDenominator: getBigNumber(FEE_OPTIONS.feeDenominator)
+                    returnFeeNumerator: getBigNumber(amm_state_info.returnFeeNumerator),
+                    fixedFeeNumerator: getBigNumber(amm_state_info.fixedFeeNumerator),
+                    feeDenominator: getBigNumber(amm_state_info.feeDenominator)
                   }
                 }
                 else{

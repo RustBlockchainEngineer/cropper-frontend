@@ -20,12 +20,10 @@ import {
   LIQUIDITY_TOKEN_PRECISION,
   createSplAccount,
   createLiquidityPool,
-  updateGlobalStateInstruction,
 } from "@/utils/new_fcn"
 
 import {
   LIQUIDITY_POOL_PROGRAM_ID_V5,
-  FIXED_FEE_ACCOUNT,
   SERUM_PROGRAM_ID_V3,
   TOKEN_PROGRAM_ID,
   SYSTEM_PROGRAM_ID,
@@ -51,8 +49,8 @@ import {
   findAssociatedTokenAddress,
   createAssociatedTokenAccount,
   createTokenAccountIfNotExist,
-  getGlobalStateAccount,
-  getGlobalStateAddress
+  getAMMGlobalStateAccount,
+  getAMMGlobalStateAddress
 } from '@/utils/web3'
 // @ts-ignore
 import { struct, u8 } from 'buffer-layout'
@@ -125,47 +123,13 @@ export async function getMarket(conn: any, marketAddress: string): Promise<any |
     const baseMintDecimals = new BigNumber(await getMintDecimals(conn, market.baseMintAddress as PublicKey))
     const quoteMintDecimals = new BigNumber(await getMintDecimals(conn, market.quoteMintAddress as PublicKey))
     return { market, price, msg: '', baseMintDecimals, quoteMintDecimals }
-  } catch (error) {
+  } catch (error:any) {
     if (error.message === 'Non-base58 character') {
       return { market: null, price: null, msg: 'market input error', baseMintDecimals: 0, quoteMintDecimals: 0 }
     } else {
       return { market: null, price: null, msg: error.message, baseMintDecimals: 0, quoteMintDecimals: 0 }
     }
   }
-}
-
-
-export async function updateGlobalState(
-  conn: any,
-  wallet: any
-){
-  const stateId = await getGlobalStateAddress()
-  // const state_info = await getGlobalStateAccount(conn);
-
-  let transaction: Transaction = new Transaction()
-  console.log("update state account")
-  transaction.add(
-    updateGlobalStateInstruction(
-      stateId,
-      wallet.publicKey,
-      wallet.publicKey,
-      wallet.publicKey,
-      new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
-    )
-  )
-  
-  return await sendTransaction(conn, wallet, transaction, [])
-  
-  let transaction_tt: Transaction = new Transaction()
-  transaction_tt.add(
-    transfer(
-      new PublicKey("2Pv5mjmKYAtXNpr3mcsXf7HjtS3fieJeFoWPATVT5rWa"),
-      new PublicKey("5Tpi3fWL6XwKqNAV8Th3HK5g6bW3ceKaJ5pqz8GtyL85"),
-      wallet.publicKey,
-      100000000
-    )
-  )
-  return await sendTransaction(conn, wallet, transaction_tt, [])
 }
 
 export async function createAmm(
@@ -258,26 +222,6 @@ export async function createAmm(
       )
     )
   }
-
-
-  // creating fee account for base & 
-  // let feeFromTokenAccount = await getOneFilteredTokenAccountsByOwner(conn, FIXED_FEE_ACCOUNT, market.baseMintAddress) as any
-  // let feeToTokenAccount = await getOneFilteredTokenAccountsByOwner(conn, FIXED_FEE_ACCOUNT, market.quoteMintAddress)  as any
-
-  // if(market.baseMintAddress == TOKENS.WSOL.mintAddress){
-  //   feeFromTokenAccount = FIXED_FEE_ACCOUNT.toString()
-  // }
-  // if(market.quoteMintAddress == TOKENS.WSOL.mintAddress){
-  //   feeToTokenAccount = FIXED_FEE_ACCOUNT.toString()
-  // }
-
-  // if(!feeFromTokenAccount || !feeToTokenAccount)
-  // {
-  //   throw("Cannot find fee token account")
-  // }
-
-  // feeFromTokenAccount = new PublicKey(feeFromTokenAccount)
-  // feeToTokenAccount = new PublicKey(feeToTokenAccount)
 
   let transaction = new Transaction()
   instructions.forEach((instruction)=>{
@@ -374,7 +318,7 @@ export async function createAmm(
     }
   });
 
-  const stateId = await getGlobalStateAddress();
+  const stateId = await getAMMGlobalStateAddress();
   instructions.push(
     createLiquidityPool(
       tokenSwapAccount,

@@ -105,13 +105,13 @@ export async function createTokenAccountIfNotExist(
   return publicKey
 }
 
-export async function getGlobalStateAddress(){
+export async function getAMMGlobalStateAddress(){
   return await createGlobalStateId(new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5), AMM_STATE_SEED)
 }
 
-export async function getGlobalStateAccount(conn:any)
+export async function getAMMGlobalStateAccount(conn:any)
 {
-  const stateId = await getGlobalStateAddress()
+  const stateId = await getAMMGlobalStateAddress()
   const state = await conn.getAccountInfo(stateId)
   let state_account = null
   if(state)

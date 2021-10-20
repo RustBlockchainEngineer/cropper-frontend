@@ -13,17 +13,17 @@ import {
   sendTransaction,
   commitment,
   getMintDecimals,
-  getGlobalStateAccount,
+  getAMMGlobalStateAccount,
   getOneFilteredTokenAccountsByOwner,
-  getGlobalStateAddress
+  getAMMGlobalStateAddress
 } from '@/utils/web3'
 import { TokenAmount } from '@/utils/safe-math'
 import { ACCOUNT_LAYOUT } from '@/utils/layouts'
 import { swapInstruction_v5 } from '@/utils/new_fcn'
 // eslint-disable-next-line
-import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, FIXED_FEE_ACCOUNT, LIQUIDITY_POOL_PROGRAM_ID_V5, AMM_STATE_SEED } from './ids'
+import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, LIQUIDITY_POOL_PROGRAM_ID_V5, AMM_STATE_SEED } from './ids'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
-import { updateGlobalState } from './market'
+import { initAMMGlobalState } from './global_state'
 
 export function getOutAmount(
   market: any,
@@ -587,7 +587,7 @@ async function swap_v5(
   aOut: string
 ) {
 
-  // return await updateGlobalState(connection, wallet)
+  // return await initAMMGlobalState(connection, wallet)
   
   const transaction = new Transaction()
   const signers: Account[] = []
@@ -656,8 +656,8 @@ async function swap_v5(
 
   let normal_dir = (fromCoinMint == poolInfo.coin.mintAddress)
 
-  const stateId = await getGlobalStateAddress();
-  const state_info = await getGlobalStateAccount(connection);
+  const stateId = await getAMMGlobalStateAddress();
+  const state_info = await getAMMGlobalStateAccount(connection);
 
   let feeTokenAccount = await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint)) as any
 
