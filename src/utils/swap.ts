@@ -500,7 +500,7 @@ async function swap_v4(
   if (fromCoinMint === NATIVE_SOL.mintAddress) {
     wrappedSolAccount = await createTokenAccountIfNotExist(
       connection,
-      wrappedSolAccount,
+      null,
       owner,
       TOKENS.WSOL.mintAddress,
       getBigNumber(amountIn.wei) + 1e7,
@@ -511,7 +511,7 @@ async function swap_v4(
   if (toCoinMint === NATIVE_SOL.mintAddress) {
     wrappedSolAccount2 = await createTokenAccountIfNotExist(
       connection,
-      wrappedSolAccount2,
+      null,
       owner,
       TOKENS.WSOL.mintAddress,
       1e7,
@@ -619,7 +619,7 @@ async function swap_v5(
   if (fromCoinMint === NATIVE_SOL.mintAddress) {
     wrappedSolAccount = await createTokenAccountIfNotExist(
       connection,
-      wrappedSolAccount,
+      null,
       owner,
       TOKENS.WSOL.mintAddress,
       getBigNumber(amountIn.wei) + 1e7,
@@ -630,7 +630,7 @@ async function swap_v5(
   if (toCoinMint === NATIVE_SOL.mintAddress) {
     wrappedSolAccount2 = await createTokenAccountIfNotExist(
       connection,
-      wrappedSolAccount2,
+      null,
       owner,
       TOKENS.WSOL.mintAddress,
       1e7,
@@ -766,7 +766,7 @@ export async function place(
 
     wrappedSolAccount = await createTokenAccountIfNotExist(
       connection,
-      wrappedSolAccount,
+      null,
       owner,
       TOKENS.WSOL.mintAddress,
       lamports,
