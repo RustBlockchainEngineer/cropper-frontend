@@ -267,6 +267,11 @@
                   <span>{{ fromCoin.symbol }}</span>
                 </div>
                 <Icon class="fst" type="arrow-up"/>
+                <div class="coin-budge" v-if="midTokenSymbol">
+                  <CoinIcon :mint-address="midTokenMint" />
+                  <span>{{ midTokenSymbol }}</span>
+                </div>
+                <Icon v-if="midTokenSymbol" class="fst" type="arrow-up"/>
                 <div class="coin-budge">
                   <CoinIcon :mint-address="toCoin.mintAddress" />
                   <span>{{ toCoin.symbol }}</span>
