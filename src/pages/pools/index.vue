@@ -63,7 +63,7 @@
                       }
                     "
                   >
-                    <Icon type="loading" theme="outlined" />
+                    <img src="@/assets/icons/loading.svg" />
                   </div>
                 </div>
               </div>
@@ -1461,7 +1461,9 @@ section {
       border-radius: 25px;
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
       margin-left: 15px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
 
       .anticon {
