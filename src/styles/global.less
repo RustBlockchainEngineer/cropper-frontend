@@ -220,8 +220,11 @@ a{
   }
 }
 
-.card {
+.ant-modal-body .card-body{
+    background-color: unset !important;
+}
 
+.card {
   .card-body {
     display: grid;
     grid-auto-rows: auto;
@@ -386,5 +389,20 @@ a{
 .ant-btn:hover, .ant-btn:focus,
 .coin-select .coin-input .input-button{
     color: #13ECAB !important;
+}
+
+@media (max-width: 800px){
+  .card .card-body{
+    padding: unset;
+  }
+
+  .coin-select .label{
+    font-size: 14px;
+  }
+
+  .ant-modal-body .stdGradientButton{
+    height: unset;
+    margin:0 auto;
+  }
 }
 

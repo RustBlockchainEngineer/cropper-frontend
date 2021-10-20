@@ -56,6 +56,22 @@
         <div class="card-body">
 
           <div class="page-head fs-container">
+
+            <span class="details noDesktop">
+              <div class="openButton" 
+                      @click="
+                        () => {
+                          if(displayfilters == true){
+                            displayfilters = false;
+                          } else {
+                            displayfilters = true;
+                          }
+                        }
+                      ">
+                <button>Search</button>
+              </div>
+            </span>
+
             <span class="title">Farms</span>
             <span class="buttonsd">
 
@@ -126,7 +142,7 @@
 
           <div class="tool-bar noDesktop" v-if="displayfilters">
             <div class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
+              <Input v-model="searchName" size="large" class="input-search largeserach" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
               </Input>
             </div>
@@ -167,6 +183,15 @@
           <Collapse v-model="showCollapse" expand-icon-position="right">
             <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
+
+
+
+                <span class="details noDesktop">
+                  <div class="openButton">
+                    <button>Details</button>
+                  </div>
+                </span>
+
                 <Col class="lp-icons" :span="isMobile ? 12 : 6">
                   <div class="lp-icons-group">
                     <div class="icons">
@@ -176,6 +201,21 @@
                       <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
                     </div>
                   </div>
+
+                  <div class="noDesktop labells">
+                    <div v-if="farm.labelized" class="labelized">Labelized</div>
+                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="ended">Ended</div>
+                    <div
+                      v-if="
+                        currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
+                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                      "
+                      class="soon"
+                    >
+                      Soon
+                    </div>
+                  </div>
+
                 </Col>
 
                 <Col class="state noMobile" :span="isMobile ? 6 : 3">
@@ -421,7 +461,7 @@
                       </div>
                     </div>
                     <div>
-                      <div v-if="!wallet.connected" @click="$accessor.wallet.openModal" class="btncontainer">
+                      <div v-if="!wallet.connected" @click="$accessor.wallet.openModal" class="btncontainer largebtn">
                         <Button size="large" ghost> Connect Wallet </Button>
                       </div>
                       <div v-else class="fs-container">
@@ -504,7 +544,7 @@
                         </div>
 
                         <div
-                          class="btncontainer"
+                          class="btncontainer noMobile"
                           v-if="
                             farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
                             farm.farmInfo.poolInfo.is_allowed &&
@@ -613,7 +653,7 @@ export default Vue.extend({
       farms: [] as any[],
       showFarms: [] as any[],
       searchName: "",
-      displayfilters: true,
+      displayfilters: false,
       lp: null,
       rewardCoin: null,
       farmInfo: null as any,
@@ -1850,6 +1890,14 @@ export default Vue.extend({
       }
     }
 
+    .details{
+      top: 50%;
+      transform: translate(0, -50%);
+      position: absolute;
+      right: 17px;
+      margin-top:unset;
+    }
+
     .state {
       display: flex;
       text-align: left;
@@ -1904,12 +1952,39 @@ export default Vue.extend({
     margin-top: 0;
     padding: 20px 20px !important;
 
-    .bgl{
-      background:#16164A !important
+    .details{
+      float:right;
+      margin-top:-5px;
     }
+
+    .openButton{
+      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+      display:inline-block;
+      padding:2px;
+      border-radius:23px;
+      button{
+        height: 42px;
+        padding:11px 24px;
+        color:#fff;
+        font-size: 14px;
+        letter-spacing: -0.05em;
+        background:#01033C;
+        border-radius:22px;
+        border:transparent
+      }
+    }
+
+
+    .bgl{
+        background: #16164A !important;
+      margin-top: -17px;
+      padding-bottom: 10px;
+      margin-bottom: -16px;
+    } 
 
     .buttonsd{
       display:block;
+      background: #00033c;
     }
 
     .noMobile{
@@ -1920,31 +1995,58 @@ export default Vue.extend({
       display:inline-block;
     }
 
+    .largeserach input{
+    height:47px !important
+    }
+
     .page-head{
       margin-bottom:0;
+      margin-top:0;
       .title{
+        font-size:40px;
         position:relative;
+        line-height: 50px;
       }
       .buttonsd{
         height: 87px;
-        padding:20px 0 84px;
+        padding:20px 20px 84px;
         border: 4px solid #16164A;
         box-sizing: border-box;
         border-radius: 14px;
         text-align:center;
 
         a{
-          float:unset;
+          float:right;
           display:inline-block;
         }
 
         > div{
           float: left;
-          margin-right: -26px;
+          margin-right: -66px;
           display: inline-block;
         }
       }
     }
+
+    .fs-container{
+      display:inline-block;
+    }
+
+    .ant-collapse, 
+    .ant-collapse > .ant-collapse-item{
+      position:relative;
+    }
+
+    .ant-collapse::before, 
+    .ant-collapse > .ant-collapse-item::before {
+        content: '';
+        height: 4px;
+        width: 100%;
+        top: 0;
+        background: #00033c;
+        position: absolute;
+    }
+
 
     .farm-head.table-head{
       display:none
@@ -1964,16 +2066,20 @@ export default Vue.extend({
 
     .farm-head{
       min-width:100%;
+      padding-top:25px !important;
+      padding-bottom:25px !important;
       display: block;
       align-items: unset;
-      .lp-icons,
-      .state{
+      .lp-icons{
         padding: 0 10px;
-        display:block;
+        display:block !important;
         width:100%;
         flex-direction:unset;
         float: unset;
         flex: unset;
+        img{
+            margin-top: -4px;
+        }
         .lp-icons-group{
           background:transparent;
           .icons{
@@ -1981,6 +2087,7 @@ export default Vue.extend({
             background-color:transparent;
           }
         }
+
       }
 
 
@@ -2053,18 +2160,33 @@ export default Vue.extend({
       }
     }
 
+
     .start,
     .harvest{
       background: #01033C;
       border-radius: 14px;
+      .reward .token{
+        font-size: 26px;
+        line-height: 31px;
+      }
     }
 
     .btncontainer{
-      display:inline-block !important;
+      display:inline-block !important;  
     }
 
-    .start.btncontainer{
-      width:48%;
+    .start .btncontainer:not(.largebtn){
+      width:calc(50% - 20px);
+      margin-left:5px;
+      margin-right:5px;
+      margin-bottom: 10px;
+    }
+
+
+    .start .btncontainer:not(.largebtn):last-of-type{
+      width:calc(100% - 30px);
+      margin-left:5px;
+      margin-right:5px;
     }
     
     .tool-bar {
@@ -2081,15 +2203,29 @@ export default Vue.extend({
           border: 4px solid #16164A;
           box-sizing: border-box;
           border-radius: 10px;
-
           .input-search{ 
-            height:unset !important;
+            height:47px !important;
             .ant-input {
                 padding: 19px 60px;
                 border: none;
-                height: unset !important;
+                height: 47px !important;
             }
 
+          }
+
+          .toggle {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              display: inline-flex;
+              align-items: center;
+              justify-content: left;
+              padding-left: 10%;
+
+              .ant-switch{
+                position: absolute;
+                right: 10%;
+              }
           }
       }
     }
