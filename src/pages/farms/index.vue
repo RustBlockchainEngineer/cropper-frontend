@@ -2165,6 +2165,7 @@ export default Vue.extend({
     .harvest{
       background: #01033C;
       border-radius: 14px;
+      margin: auto;
       .reward .token{
         font-size: 26px;
         line-height: 31px;
