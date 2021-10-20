@@ -417,7 +417,7 @@
               :class="`swap-btn ${priceImpact > 10 ? '' : priceImpact > 5 ? '' : ''}`"
               @click="placeOrder"
             >
-              <template v-if="!fromCoin || !toCoin"> Select </template>
+              <template v-if="!fromCoin || !toCoin"> Select a token</template>
               <template v-else-if="(!marketAddress && !lpMintAddress && !isWrap && !best_dex_type) || !initialized">
                 Insufficient liquidity for this trade
               </template>
@@ -1768,12 +1768,7 @@ main {
     }
   }
   .btncontainer {
-    // background: rgba(
-    //   163,
-    //   148,
-    //   148,
-    //   0.14
-    // ); //linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    background: none;
     display: inline;
     width: unset;
     text-align: center;
@@ -1997,17 +1992,18 @@ main {
   }
 }
 .ant-tooltip-arrow {
-  top: -8px !important;
-  width: 20px;
-  height: 20px;
+  display: none;
+  // top: -8px !important;
+  // width: 20px;
+  // height: 20px;
 }
-.ant-tooltip-arrow::before {
-  background-color: #271789 !important;
-  border-top: 2px solid rgba(255, 255, 255, 0.14);
-  border-left: 2px solid rgba(255, 255, 255, 0.14);
-  width: 10px;
-  height: 10px;
-}
+// .ant-tooltip-arrow::before {
+//   background-color: #271789 !important;
+//   border-top: 2px solid rgba(255, 255, 255, 0.14);
+//   border-left: 2px solid rgba(255, 255, 255, 0.14);
+//   width: 10px;
+//   height: 10px;
+// }
 // ******* Mobile *******
 @media (max-width: 780px) {
   .swapWrapper {
@@ -2091,7 +2087,7 @@ main {
             .coin-input {
               .select-button {
                 font-size: 12px;
-                width: 100px;
+                width: 120px;
               }
               .input-button {
                 height: 25px;

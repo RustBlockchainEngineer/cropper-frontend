@@ -243,11 +243,11 @@ export default Vue.extend({
       margin-left: 2px;
       background: #01033C;
       border-radius: 8px;
-      width: 120px;
+      width: 140px;
       position: relative;
 
       .anticon {
-        margin-left: 10px;
+        margin-left: 7px;
       }
 
       img {
