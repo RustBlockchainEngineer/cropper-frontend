@@ -20,13 +20,6 @@ import { nu64, blob } from 'buffer-layout'
 export const LIQUIDITY_TOKEN_PRECISION = 8
 export const DEFAULT_DENOMINATOR = 10000
 
-export const FEE_OPTIONS = {
-  curveType: 0,
-  fixedFeeNumerator: 20,
-  returnFeeNumerator: 10,
-  feeDenominator: DEFAULT_DENOMINATOR,
-}
-
 export function createSplAccount(
   instructions: TransactionInstruction[],
   payer: PublicKey,
@@ -113,53 +106,6 @@ export const AMM_INFO_LAYOUT_V6 =  struct(
     publicKey('pcMintAddress')
   ]
 );
-
-export const updateGlobalStateInstruction = (
-  stateAccount: PublicKey,
-  curStateOwner:PublicKey,
-  newStateOwner: PublicKey,
-  feeOwner: PublicKey,
-  swapProgramId: PublicKey,
-  ): TransactionInstruction => {
-  const keys = [
-    { pubkey: stateAccount, isSigner: false, isWritable: true },
-    { pubkey: curStateOwner, isSigner: true, isWritable: false },
-    { pubkey: newStateOwner, isSigner: false, isWritable: false },
-    { pubkey: feeOwner, isSigner: false, isWritable: false },
-    { pubkey: SYSTEM_PROGRAM_ID, isSigner: false, isWritable: false },
-    { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
-  ];
-
-  const commandDataLayout = struct([
-    u8("instruction"),
-    nu64("initialSupply"),
-    nu64("returnFeeNumerator"),
-    nu64("fixedFeeNumerator"),
-    nu64('feeDenominator'),
-    u8("curveType"),
-    blob(32, 'curveParameters'),
-  ]);
-  let data = Buffer.alloc(1024);
-  {
-    const encodeLength = commandDataLayout.encode(
-      {
-        instruction: 6, // InitializeSwap instruction
-        initialSupply: 1000000000,
-        returnFeeNumerator: FEE_OPTIONS.returnFeeNumerator,
-        fixedFeeNumerator: FEE_OPTIONS.fixedFeeNumerator,
-        feeDenominator: FEE_OPTIONS.feeDenominator,
-        curveType: FEE_OPTIONS.curveType,
-      },
-      data
-    );
-    data = data.slice(0, encodeLength);
-  }
-  return new TransactionInstruction({
-    keys,
-    programId: swapProgramId,
-    data,
-  });
-};
 
 
 export const createLiquidityPool = (

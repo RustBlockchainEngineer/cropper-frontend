@@ -17,7 +17,7 @@ import {
   createAssociatedTokenAccountIfNotExist,
   getFilteredTokenAccountsByOwner,
   getOneFilteredTokenAccountsByOwner,
-  getGlobalStateAddress
+  getAMMGlobalStateAddress
 } from '@/utils/web3'
 // @ts-ignore
 import { nu64, struct, u8 } from 'buffer-layout'
@@ -157,7 +157,7 @@ export async function addLiquidity(
     poolInfo.lp.mintAddress,
     transaction
   )
-  const stateId = await getGlobalStateAddress();
+  const stateId = await getAMMGlobalStateAddress();
   transaction.add(
     poolInfo.version === 5
       ? addLiquidityInstructionV5(
@@ -277,7 +277,7 @@ export async function removeLiquidity(
     )
   }
 
-  const stateId = await getGlobalStateAddress()
+  const stateId = await getAMMGlobalStateAddress()
 
   transaction.add(
     poolInfo.version === 5
