@@ -29,54 +29,69 @@
 
         <div class="page-head fs-container">
         
-          <span class="title">Liquidity pools</span>
+            <span class="details noDesktop">
+              <div class="openButton" 
+                      @click="
+                        () => {
+                          if(displayfilters == true){
+                            displayfilters = false;
+                          } else {
+                            displayfilters = true;
+                          }
+                        }
+                      ">
+                <button>Search</button>
+              </div>
+            </span>
 
-            <NuxtLink to="/pools/create-pool/">
-              <div class="create">
-                <Button size="large" ghost>
-                  + &nbsp; Create a pool
-                </Button>
-              </div>
-            </NuxtLink>
-            
-          <div class="buttons">
-            <div class="count-down-group">
-              <div class="count-down">
-                <span v-if="autoRefreshTime - countdown < 10">0</span>
-                {{ autoRefreshTime - countdown }}
-                <div 
-                  class="reload-btn"
-                  @click="
-                    () => {
-                      flush()
-                      $accessor.wallet.getTokenAccounts()
-                    }
-                  "
-                  >
-                  <Icon type="loading" theme="outlined" />
+          <span class="title noMobile">Liquidity pools</span>
+          <span class="title noDesktop">Pools</span>
+
+
+            <span class="buttonsd">
+
+              <NuxtLink to="/pools/create-pool/">
+                <div class="create">
+                  <Button size="large" ghost>+ Create a pool </Button>
                 </div>
-                <!-- <Progress
-                  type="circle"
-                  :width="20"
-                  :stroke-width="10"
-                  :percent="(100 / autoRefreshTime) * countdown"
-                  :show-info="false"
-                  :class="loading ? 'disabled' : ''"
-                  @click="
-                    () => {
-                      $accessor.requestInfos()
-                      $accessor.wallet.getTokenAccounts()
-                    }
-                  "
-                /> -->
+              </NuxtLink>
+
+              <div class="farm-button-group">
+                <div class="count-down-group">
+                  <div class="count-down">
+                    <span v-if="autoRefreshTime - countdown < 10">0</span>
+                    {{ autoRefreshTime - countdown }}
+                    <div
+                      class="reload-btn"
+                      @click="
+                        () => {
+                          $accessor.wallet.getTokenAccounts()
+                        }
+                      "
+                    >
+                      <Icon type="loading" theme="outlined" />
+                    </div>
+                    <!-- <Progress
+                      type="circle"
+                      :width="20"
+                      :stroke-width="10"
+                      :percent="(100 / autoRefreshTime) * countdown"
+                      :show-info="false"
+                      :class="farm.loading ? 'disabled' : ''"
+                      @click="
+                        () => {
+                          $accessor.farm.requestInfos()
+                          $accessor.wallet.getTokenAccounts()
+                        }
+                      "
+                    /> -->
+                  </div>
+                </div>
               </div>
-            </div>
-          
-            
-          </div>
+            </span>
         </div>
 
-          <div class="tool-bar">
+          <div class="tool-bar noMobile">
             <div class="tool-option">
               <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
@@ -95,7 +110,24 @@
             </div>
           </div>
 
-      <div v-if="poolLoaded">
+
+
+          <div class="tool-bar noDesktop" v-if="displayfilters">
+            <div class="tool-option">
+              <Input v-model="searchName" size="large" class="input-search largeserach" placeholder="Search by name">
+                <Icon slot="prefix" type="search" />
+              </Input>
+            </div>
+
+            <div class="tool-option last-option">
+              <div class="toggle">
+                <label class="label">Staked Only</label>
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+              </div>
+            </div>
+          </div>
+
+      <div v-if="poolLoaded" class="mobilescroller">
         <Table :columns="columns" :data-source="poolsShow" :pagination="false" row-key="lp_mint">
 
           <span slot="name" slot-scope="text" class="lp-icons">
@@ -301,6 +333,7 @@ export default class Pools extends Vue {
   stakeModalOpening: any = false
   unstakeModalOpening: any = false
   toCoin: any = false
+  displayfilters: any = false
   poolAdd: any = false
   poolInf: any = false
   lptoken: any = false
@@ -769,6 +802,314 @@ section{
 .card-body {
       padding: 0;
 }
+
+
+.noDesktop{
+  display:none
+}
+
+@media (max-width: 800px){
+  body .pool.container{
+    min-width: unset;
+    width:100%;
+    max-width:100%;
+    margin-top: 0;
+    padding: 20px 20px !important;
+
+    thead.ant-table-thead{
+      display:none !important;
+    }
+
+    .mobilescroller{
+      max-width: calc(100vh - 40px);
+      overflow: scroll
+    }
+
+    .details{
+      float:right;
+      margin-top:-5px;
+    }
+
+    .openButton{
+      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+      display:inline-block;
+      padding:2px;
+      border-radius:23px;
+      button{
+        height: 42px;
+        padding:11px 24px;
+        color:#fff;
+        font-size: 14px;
+        letter-spacing: -0.05em;
+        background:#01033C;
+        border-radius:22px;
+        border:transparent
+      }
+    }
+
+
+    .bgl{
+        background: #16164A !important;
+      margin-top: -17px;
+      padding-bottom: 10px;
+      margin-bottom: -16px;
+    } 
+
+    .buttonsd{
+      display:block;
+      background: #00033c;
+    }
+
+    .noMobile{
+      display:none;
+    }
+
+    .noDesktop{
+      display:inline-block;
+    }
+
+    .largeserach input{
+    height:47px !important
+    }
+
+    .page-head{
+      margin-bottom:0;
+      margin-top:0;
+      .title{
+        font-size:40px;
+        position:relative;
+        line-height: 50px;
+      }
+      .buttonsd{
+        height: 87px;
+        padding:20px 20px 84px;
+        border: 4px solid #16164A;
+        box-sizing: border-box;
+        border-radius: 14px;
+        text-align:center;
+
+        a{
+          float:right;
+          display:inline-block;
+        }
+
+        > div{
+          float: left;
+          margin-right: -66px;
+          display: inline-block;
+        }
+      }
+    }
+
+    .fs-container{
+      display:inline-block;
+    }
+
+    .ant-collapse, 
+    .ant-collapse > .ant-collapse-item{
+      position:relative;
+    }
+
+    .ant-collapse::before, 
+    .ant-collapse > .ant-collapse-item::before {
+        content: '';
+        height: 4px;
+        width: 100%;
+        top: 0;
+        background: #00033c;
+        position: absolute;
+    }
+
+
+    .farm-head.table-head{
+      display:none
+    }
+
+    .labmobile{
+      float:left;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+      color: #FFF;
+      opacity: 0.5;
+      display:block;
+    }
+
+
+    .farm-head{
+      min-width:100%;
+      padding-top:25px !important;
+      padding-bottom:25px !important;
+      display: block;
+      align-items: unset;
+      .lp-icons{
+        padding: 0 10px;
+        display:block !important;
+        width:100%;
+        flex-direction:unset;
+        float: unset;
+        flex: unset;
+        img{
+            margin-top: -4px;
+        }
+        .lp-icons-group{
+          background:transparent;
+          .icons{
+            padding: 0;
+            background-color:transparent;
+          }
+        }
+
+      }
+
+
+      .state{
+        text-align:right;
+        display:none;
+        margin-top: 11px;
+        .ant-col-12{
+        width:100%
+        }
+      }
+    }
+
+    .collapse-row .lp-icons,
+    .collapse-row .state{
+        padding: 0 10px;
+        display: block;
+        width: 100%;
+        flex-direction: unset;
+        float: unset;
+        flex: unset;
+        text-align: right;
+        font-size: 18px;
+        margin-bottom: 6px;
+        .lp-icons-group{
+          background:transparent;
+          .icons{
+            padding: 0;
+            background-color:transparent;
+          }
+        }
+      }
+
+    .anticon.anticon-right,
+    .info-icon{
+      display:none !important;
+    }
+
+    .ant-pagination{
+      margin-top:40px;
+    }
+    .ant-collapse.ant-collapse-icon-position-right{
+      max-width:100%;
+      background:#16164A;
+      border-radius:10px;
+    }
+
+    .reward-col{
+      margin-bottom: 30px;
+    }
+
+    .ant-collapse-content{
+      background:#16164A !important;
+    }
+
+    .ant-collapse-content-box{
+      background:#16164A !important;
+      .collapse-row{
+        display: block;
+        align-items: unset;
+        .ant-col.ant-col-4,
+        .ant-col.ant-col-8{
+          width:100%;
+          display:block;
+          flex-direction:unset;
+          float: unset;
+          flex: unset;
+        }
+
+      }
+    }
+
+
+    .start,
+    .harvest{
+      background: #01033C;
+      border-radius: 14px;
+      .reward .token{
+        font-size: 26px;
+        line-height: 31px;
+      }
+    }
+
+    .btncontainer{
+      display:inline-block !important;  
+    }
+
+    .start .btncontainer:not(.largebtn){
+      width:calc(50% - 20px);
+      margin-left:5px;
+      margin-right:5px;
+      margin-bottom: 10px;
+    }
+
+
+    .start .btncontainer:not(.largebtn):last-of-type{
+      width:calc(100% - 30px);
+      margin-left:5px;
+      margin-right:5px;
+    }
+    
+    .tool-bar {
+      height:unset;
+      border:unset;
+
+      .tool-option {
+          background: #00033c;
+          width: 100%;
+          height: 54px;
+          display: block;
+          position: relative;
+          margin: 10px 0;
+          border: 4px solid #16164A;
+          box-sizing: border-box;
+          border-radius: 10px;
+          .input-search{ 
+            height:47px !important;
+            .ant-input {
+                padding: 19px 60px;
+                border: none;
+                height: 47px !important;
+            }
+
+          }
+
+          .toggle {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              display: inline-flex;
+              align-items: center;
+              justify-content: left;
+              padding-left: 10%;
+
+              .ant-switch{
+                position: absolute;
+                right: 10%;
+              }
+          }
+      }
+    }
+
+    
+
+  }
+
+}
+
+
 </style>
 
 <style lang="less">

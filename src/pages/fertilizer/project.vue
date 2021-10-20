@@ -901,7 +901,7 @@ export default Vue.extend({
       this.registerTwitterRetweet = true
     },
     async startFollow(u: any) {
-      let responseData
+      let responseData = {}
       try {
         responseData = await fetch(u).then((res) => res.json())
       } catch {
@@ -919,9 +919,9 @@ export default Vue.extend({
 
     async updateLabelizedAmms() {
       const query = new URLSearchParams(window.location.search)
-      this.labelizedAmms = {}
+      //this.labelizedAmms = {}
       let responseData2 = {}
-      let responseData
+      let responseData: any
       try {
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
@@ -933,6 +933,7 @@ export default Vue.extend({
       } finally {
         responseData.forEach(async (element: any) => {
           if (element.pfo == true) {
+
             if (query.get('f') && element.slug == query.get('f')) {
               element.calculateNextStep = 'Bla bla bla'
               this.ammId = element.ammID
@@ -946,6 +947,33 @@ export default Vue.extend({
                 ).then((res) => res.json())
               } catch {
               } finally {
+
+                if (responseData[this.wallet.address]) {
+                  if (responseData[this.wallet.address].submit > 0) {
+                    this.isRegistered = true
+                    this.registeredDatas = responseData[this.wallet.address]
+                    this.shareWalletAddress =
+                      'http://cropper.finance/fertilizer/project/?f=' +
+                      this.labelizedAmms[this.ammId].slug +
+                      '&r=' +
+                      this.wallet.address
+                    let shareWalletAddressEsc =
+                      'http://cropper.finance/fertilizer/project/?f=' +
+                      this.labelizedAmms[this.ammId].slug +
+                      '%26r=' +
+                      this.wallet.address
+
+                    this.twShareAdress = `http://twitter.com/share?text=Register for whishlist ${
+                      document.title
+                    }&url=${shareWalletAddressEsc} &hashtags=${this.labelizedAmms[this.ammId].tokenA.symbol},${
+                      this.labelizedAmms[this.ammId].tokenB.symbol
+                    },fertilizer,Solana,Airdrop`
+
+                    this.tgShareAdress = `https://telegram.me/share/url?text=Register for whishlist ${document.title}&url=${shareWalletAddressEsc} `
+                  }
+                  this.followed = true
+                }
+
                 this.labelizedAmms[element.ammID]['followers'] = Object.keys(responseData2).length
                 this.followerCount = Object.keys(responseData2).length
 
@@ -1121,7 +1149,6 @@ export default Vue.extend({
           if (responseData[this.wallet.address].submit > 0) {
             this.isRegistered = true
             this.registeredDatas = responseData[this.wallet.address]
-            console.log(this.registeredDatas)
             this.shareWalletAddress =
               'http://cropper.finance/fertilizer/project/?f=' +
               this.labelizedAmms[this.ammId].slug +

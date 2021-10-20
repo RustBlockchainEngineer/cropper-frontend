@@ -1,22 +1,21 @@
 <template>
   <Footer>
-    <img src="@/assets/icons/greenPlanet2.svg" class="planet-bottom"/>
     <div :class="isMobile ? 'mobile' : 'pc'">
       <div class="logo">
         <a href="/"><img src="@/assets/icons/logo-text.svg"  width="224.76" height="45.38" /></a>
       </div>
-      <div class="icon_list">
+      <div class="icon_list" v-if="isMobile">
         <label>Our Social</label>
-        <a :href="linkUrl.twitter" target="_blank">
+        <a :href="linkUrl.medium" target="_blank">
           Medium
         </a>
         <a :href="linkUrl.discord" target="_blank">
           Discord
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.twitter" target="_blank">
           Twitter
         </a>
-        <a :href="linkUrl.medium" target="_blank">
+        <a :href="linkUrl.telegram" target="_blank">
           Telegram
         </a>
       </div>
@@ -24,11 +23,24 @@
     <div class="foot-line"></div>
     <div :class="isMobile ? 'mobile foot-refer' : 'pc foot-refer'">
       <label>Decentralized 2021</label>
-      <div class="refer-list">
-        <label>Terms & Conditions</label>
-        <label>Privacy Policy</label>
+
+      <div class="icon_list" v-if="!isMobile">
+        <label>Our Social</label>
+        <a :href="linkUrl.medium" target="_blank">
+          Medium
+        </a>
+        <a :href="linkUrl.discord" target="_blank">
+          Discord
+        </a>
+        <a :href="linkUrl.twitter" target="_blank">
+          Twitter
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram
+        </a>
       </div>
     </div>
+    <img src="@/assets/icons/greenPlanet2.svg" class="planet-bottom"/>
   </Footer>
 </template>
 
@@ -128,6 +140,8 @@ export default class Foot extends Vue {
   line-height: 32px;
   letter-spacing: -0.05em;
   text-align: left;
+  position:relative;
+  z-index:2;
 
   .refer-list {
     label{
