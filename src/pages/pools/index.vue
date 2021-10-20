@@ -723,6 +723,7 @@ section {
     z-index: 2;
     background: #01033c;
     float: right;
+    margin-left: 20px;
 
     .btncontainer {
       display: inline-block;
@@ -730,6 +731,10 @@ section {
   }
 
   .page-head .buttons {
+    float: right;
+  }
+
+  .page-head .farm-button-group {
     float: right;
   }
 
@@ -1243,6 +1248,7 @@ section {
   }
 
   .count-down-group {
+    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
     height: 60px;
     border-radius: 63px;
     position: relative;
