@@ -333,7 +333,7 @@ export default class Pools extends Vue {
   stakeModalOpening: any = false
   unstakeModalOpening: any = false
   toCoin: any = false
-  displayfilters: false
+  displayfilters: any = false
   poolAdd: any = false
   poolInf: any = false
   lptoken: any = false
