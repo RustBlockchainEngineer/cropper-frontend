@@ -32,7 +32,9 @@
               <a href="https://twitter.com/CropperFinance" class="social-icon" target="_blank" @click="validateTwitterA()">
                 <img src="@/assets/icons/twitter_purple.svg" width="30" height="30" />
               </a>
+              <a href="https://twitter.com/CropperFinance" target="_blank" style="color:#c6c6c6" @click="validateTwitterA()">
               Follow <b>CropperFinance on Twitter</b>
+              </a>
             </div>
           </div>
 
@@ -43,34 +45,41 @@
               <a href="https://t.me/CropperFinance" class="social-icon" target="_blank" @click="validateTelegramA()">
                 <img src="@/assets/icons/telegram_purple.svg" width="30" height="30" />
               </a>
+              <a href="https://t.me/CropperFinance" style="color:#c6c6c6" target="_blank" @click="validateTelegramA()">
               Join <b>CropperFinance on Telegram</b> 
+              </a>
             </div>
           </div>
 
-          <div v-if="this.farm.links.twitter" :class="this.twitterB ? 'done' : 'notdone'">
+          <div v-if="this.farm.links.twitter && this.farm.slug != 'cropper'" :class="this.twitterB ? 'done' : 'notdone'">
             <span v-if="!this.twitterB">3</span>
             <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
             <div>
               <a :href="this.farm.links.twitter" target="_blank" class="social-icon"  @click="validateTwitterB()">
                 <img src="@/assets/icons/twitter_purple.svg" width="30" height="30" />
               </a>
+              <a :href="this.farm.links.twitter" target="_blank" style="color:#c6c6c6"   @click="validateTwitterB()">
               Follow <b>{{ this.farm.shortname }} on Twitter</b> 
+              </a>
             </div>
           </div>
 
-          <div v-if="this.farm.links.telegram" :class="this.telegramB ? 'done' : 'notdone'">
-            <span v-if="!this.telegramB">4</span>
+          <div v-if="this.farm.links.telegram && this.farm.slug != 'cropper'" :class="this.telegramB ? 'done' : 'notdone'">
+            <span v-if="!this.telegramB ">4</span>
             <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
             <div>
               <a :href="this.farm.links.telegram" target="_blank" class="social-icon"  @click="validateTelegramB()">
                 <img src="@/assets/icons/telegram_purple.svg" width="30" height="30" />
               </a>
+
+              <a :href="this.farm.links.telegram" target="_blank" style="color:#c6c6c6"  @click="validateTelegramB()">
               Join <b>{{ this.farm.shortname }} on Telegram</b> 
+              </a>
             </div>
           </div>
 
           <div :class="this.inputtwitter ? 'done' : 'notdone'">
-            <span v-if="!this.inputtwitter">{{ this.farm.links.twitter ? 5 : 3 }}</span>
+            <span v-if="!this.inputtwitter">{{ this.farm.links.twitter && this.farm.slug != 'cropper' ? 5 : 3 }}</span>
             <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
             <div>
               Input your twitter ID
@@ -89,7 +98,7 @@
           </div>
 
           <div :class="this.inputtelegram ? 'done' : 'notdone'">
-            <span v-if="!this.inputtelegram">{{ this.farm.links.twitter ? 6 : 4 }}</span>
+            <span v-if="!this.inputtelegram">{{ this.farm.links.twitter && this.farm.slug != 'cropper' ? 6 : 4 }}</span>
             <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
             <div>
               Input your telegram ID
@@ -324,14 +333,14 @@ export default Vue.extend({
         return
       }
 
-      if (this.farm.links.twitter) {
+      if (this.farm.links.twitter && this.farm.slug != 'cropper') {
         if (!this.twitterB) {
           this.stepAok = false
           return
         }
       }
 
-      if (this.farm.links.telegram) {
+      if (this.farm.links.telegram && this.farm.slug != 'cropper') {
         if (!this.telegramB) {
           this.stepAok = false
           return
