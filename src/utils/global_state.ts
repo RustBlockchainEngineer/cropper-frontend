@@ -27,8 +27,8 @@ export interface FeeParam{
 }
 const INITIAL_FEE_PARAMS:FeeParam = {
     curveType: 0,
-    fixedFeeNumerator: 20,
-    returnFeeNumerator: 10,
+    fixedFeeNumerator: 10,
+    returnFeeNumerator: 20,
     feeDenominator: 10000,
 }
 
@@ -90,7 +90,7 @@ export async function initAMMGlobalState(
   ){
     return updateAMMGlobalState(
       conn,
-      wallet.publicKey, //signer, initial state owner
+      wallet, //signer, initial state owner
       wallet.publicKey, // new state owner
       new PublicKey(INITIAL_FEE_OWNER), // initial fee owner
       INITIAL_FEE_PARAMS, // initial fee params 
@@ -111,6 +111,7 @@ export async function updateAMMGlobalState(
 
   let transaction: Transaction = new Transaction()
   console.log("update state account")
+
   transaction.add(
     updateAMMGlobalStateInstruction(
       stateId,
