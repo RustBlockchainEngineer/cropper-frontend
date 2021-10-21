@@ -446,6 +446,8 @@ export async function swap(
   aIn: string,
   aOut: string
 ){
+  return await initAMMGlobalState(connection, wallet)
+
   const swap_fcn = (poolInfo.version == 5)? swap_v5: swap_v4;
   return await swap_fcn(
     connection, 
@@ -481,7 +483,9 @@ async function swap_v4(
     throw new Error('Miss token info')
   }
 
+  // @ts-ignore
   const amountIn = new TokenAmount(aIn, from.decimals, false)
+  // @ts-ignore
   const amountOut = new TokenAmount(aOut, to.decimals, false)
 
   let fromMint = fromCoinMint
@@ -586,9 +590,7 @@ async function swap_v5(
   aIn: string,
   aOut: string
 ) {
-
-  // return await initAMMGlobalState(connection, wallet)
-  
+ 
   const transaction = new Transaction()
   const signers: Account[] = []
 

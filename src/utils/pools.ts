@@ -234,25 +234,28 @@ export function isOfficalMarket(marketAddress: string) {
   return false
 }
 
-export function getAllPools() {
+export function getAllCropperPools() {
 
   const polo:any = []
   LIQUIDITY_POOLS.forEach(function (value) {
-    let item = {
-      'name' : value.coin.name + ' - ' + value.pc.name,
-      'coin1' : value.coin,
-      'coin2' : value.pc,
-      'lp_mint' : value.lp.mintAddress,
-      'lp' : {
-        coin : cloneDeep(value.coin) ,
-        pc : cloneDeep(value.pc),
-        mintAddress : cloneDeep(value.lp.mintAddress)
-      },
-      'ammId' : value.ammId,
-      'serumMarket' : value.serumMarket
-
-    };
-    polo.push(item);
+    if(value.version == 5)
+    {
+      let item = {
+        'name' : value.coin.name + ' - ' + value.pc.name,
+        'coin1' : value.coin,
+        'coin2' : value.pc,
+        'lp_mint' : value.lp.mintAddress,
+        'lp' : {
+          coin : cloneDeep(value.coin) ,
+          pc : cloneDeep(value.pc),
+          mintAddress : cloneDeep(value.lp.mintAddress)
+        },
+        'ammId' : value.ammId,
+        'serumMarket' : value.serumMarket
+  
+      };
+      polo.push(item);  
+    }
   });
   return polo
 }
