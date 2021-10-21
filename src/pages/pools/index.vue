@@ -905,6 +905,7 @@ section {
         img {
           margin-left: 5px;
           transform: rotate(0);
+          transition: transform 0.3s;
         }
       }
     }

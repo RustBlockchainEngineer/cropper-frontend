@@ -2,12 +2,9 @@
   <div class="farm container">
     <img class="planet-left" src="@/assets/Green Planet 1.png" />
 
-    
-
-
     <CreateFarmProgram
       v-if="!farmProgramCreated && wallet.connected"
-      :isSuperOwner = "wallet.address === superOwnerAddress"
+      :isSuperOwner="wallet.address === superOwnerAddress"
       @onCreate="createFarmProgram"
     />
     <StakeModel
@@ -52,52 +49,55 @@
       @onCancel="cancelStakeLP"
     />
 
-      <div class="card">
-        <div class="card-body">
+    <div class="card">
+      <div class="card-body">
+        <div class="page-head fs-container">
+          <span class="details noDesktop">
+            <div
+              class="openButton"
+              :class="displayfilters ? 'openButton-active' : ''"
+              @click="
+                () => {
+                  if (displayfilters == true) {
+                    displayfilters = false
+                  } else {
+                    displayfilters = true
+                  }
+                }
+              "
+            >
+              <button>
+                Search
+                <img src="@/assets/icons/arrow-down.svg" />
+              </button>
+            </div>
+          </span>
 
-          <div class="page-head fs-container">
-
-            <span class="details noDesktop">
-              <div class="openButton" 
-                      @click="
-                        () => {
-                          if(displayfilters == true){
-                            displayfilters = false;
-                          } else {
-                            displayfilters = true;
-                          }
-                        }
-                      ">
-                <button>Search</button>
+          <span class="title">Farms</span>
+          <span class="buttonsd">
+            <NuxtLink to="/farms/create-farm/">
+              <div class="create">
+                <Button size="large" ghost>+ Create a farm </Button>
               </div>
-            </span>
+            </NuxtLink>
 
-            <span class="title">Farms</span>
-            <span class="buttonsd">
-
-              <NuxtLink to="/farms/create-farm/">
-                <div class="create">
-                  <Button size="large" ghost>+ Create a farm </Button>
-                </div>
-              </NuxtLink>
-
-              <div class="farm-button-group">
-                <div class="count-down-group">
-                  <div class="count-down">
-                    <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
-                    {{ farm.autoRefreshTime - farm.countdown }}
-                    <div
-                      class="reload-btn"
-                      @click="
-                        () => {
-                          $accessor.farm.requestInfos()
-                          $accessor.wallet.getTokenAccounts()
-                        }
-                      "
-                    >
-                      <img src="@/assets/icons/loading.svg" />
-                    </div>
-                    <!-- <Progress
+            <div class="farm-button-group">
+              <div class="count-down-group">
+                <div class="count-down">
+                  <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
+                  {{ farm.autoRefreshTime - farm.countdown }}
+                  <div
+                    class="reload-btn"
+                    @click="
+                      () => {
+                        $accessor.farm.requestInfos()
+                        $accessor.wallet.getTokenAccounts()
+                      }
+                    "
+                  >
+                    <img src="@/assets/icons/loading.svg" />
+                  </div>
+                  <!-- <Progress
                       type="circle"
                       :width="20"
                       :stroke-width="10"
@@ -111,14 +111,13 @@
                         }
                       "
                     /> -->
-                  </div>
                 </div>
               </div>
-            </span>
-          </div>
+            </div>
+          </span>
+        </div>
 
-          <div v-if="farm.initialized">
-
+        <div v-if="farm.initialized">
           <div class="tool-bar noMobile">
             <div class="tool-option">
               <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
@@ -138,7 +137,6 @@
               </div>
             </div>
           </div>
-
 
           <div class="tool-bar noDesktop" v-if="displayfilters">
             <div class="tool-option">
@@ -183,9 +181,6 @@
           <Collapse v-model="showCollapse" expand-icon-position="right">
             <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
-
-
-
                 <span class="details noDesktop">
                   <div class="openButton">
                     <button>Details</button>
@@ -215,7 +210,6 @@
                       Soon
                     </div>
                   </div>
-
                 </Col>
 
                 <Col class="state noMobile" :span="isMobile ? 6 : 3">
@@ -233,8 +227,13 @@
 
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
                   <Col span="12">
-                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value"><span class="labmobile">Pending Reward</span>-</div>
-                    <div v-else class="value"><span class="labmobile">Pending Reward</span>{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}</div>
+                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                      <span class="labmobile">Pending Reward</span>-
+                    </div>
+                    <div v-else class="value">
+                      <span class="labmobile">Pending Reward</span
+                      >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                    </div>
                   </Col>
                   <Col span="12">
                     <div v-if="farm.labelized" class="labelized">Labelized</div>
@@ -242,9 +241,12 @@
                 </Col>
 
                 <Col v-if="!isMobile" class="state noMobile" :span="3">
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value"><span class="labmobile">Staked</span>-</div>
+                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                    <span class="labmobile">Staked</span>-
+                  </div>
                   <div v-else class="value">
-                    <span class="labmobile">Staked</span>{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
+                    <span class="labmobile">Staked</span
+                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
                   </div>
                 </Col>
 
@@ -256,7 +258,7 @@
                     "
                     class="value"
                   >
-                   <span class="labmobile">Total apr</span> -
+                    <span class="labmobile">Total apr</span> -
                   </div>
                   <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
 
@@ -292,10 +294,10 @@
                     "
                     class="value"
                   >
-                   <span class="labmobile">Liquidity</span> -
+                    <span class="labmobile">Liquidity</span> -
                   </div>
-                  <div v-else class="value"><span class="labmobile">Liquidity</span>
-                    ${{
+                  <div v-else class="value">
+                    <span class="labmobile">Liquidity</span> ${{
                       Math.round(farm.farmInfo.liquidityUsdValue)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -321,10 +323,6 @@
               </Row>
 
               <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
-
-
-
-
                 <Col class="state noDesktop" :span="isMobile ? 6 : 3">
                   <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                   <div
@@ -339,14 +337,22 @@
                 </Col>
 
                 <Col class="state reward-col noDesktop" :span="isMobile ? 12 : 6">
-                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value"><span class="labmobile">Pending Reward</span>-</div>
-                    <div v-else class="value"><span class="labmobile">Pending Reward</span>{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}</div>
+                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                    <span class="labmobile">Pending Reward</span>-
+                  </div>
+                  <div v-else class="value">
+                    <span class="labmobile">Pending Reward</span
+                    >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                  </div>
                 </Col>
 
                 <Col v-if="!isMobile" class="state noDesktop" :span="3">
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value"><span class="labmobile">Staked</span>-</div>
+                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                    <span class="labmobile">Staked</span>-
+                  </div>
                   <div v-else class="value">
-                    <span class="labmobile">Staked</span>{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
+                    <span class="labmobile">Staked</span
+                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
                   </div>
                 </Col>
 
@@ -358,7 +364,7 @@
                     "
                     class="value"
                   >
-                   <span class="labmobile">Total apr</span> -
+                    <span class="labmobile">Total apr</span> -
                   </div>
                   <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
 
@@ -394,10 +400,10 @@
                     "
                     class="value"
                   >
-                   <span class="labmobile">Liquidity</span> -
+                    <span class="labmobile">Liquidity</span> -
                   </div>
-                  <div v-else class="value"><span class="labmobile">Liquidity</span>
-                    ${{
+                  <div v-else class="value">
+                    <span class="labmobile">Liquidity</span> ${{
                       Math.round(farm.farmInfo.liquidityUsdValue)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -420,10 +426,6 @@
                     </Button>
                   </div>
                 </Col>
-
-
-
-
 
                 <Col :span="isMobile ? 24 : 4"> </Col>
 
@@ -647,12 +649,12 @@ export default Vue.extend({
     return {
       isMobile: false,
 
-      farmProgramCreated:true,
-      superOwnerAddress:FARM_INITIAL_SUPER_OWNER,
+      farmProgramCreated: true,
+      superOwnerAddress: FARM_INITIAL_SUPER_OWNER,
 
       farms: [] as any[],
       showFarms: [] as any[],
-      searchName: "",
+      searchName: '',
       displayfilters: false,
       lp: null,
       rewardCoin: null,
@@ -781,35 +783,32 @@ export default Vue.extend({
       this.searchLifeFarm = 3
     }
 
-    this.checkIfFarmProgramExist();
-
-
+    this.checkIfFarmProgramExist()
   },
 
   methods: {
     TokenAmount,
-    async createFarmProgram(){
+    async createFarmProgram() {
       const conn = this.$web3
       const wallet = (this as any).$wallet
-      const txid = await FarmProgram.createDefaultProgramData(conn, wallet);
-      console.log("create farm program account",txid)
+      const txid = await FarmProgram.createDefaultProgramData(conn, wallet)
+      console.log('create farm program account', txid)
 
-      await this.delay(1500);
-      this.checkIfFarmProgramExist();
+      await this.delay(1500)
+      this.checkIfFarmProgramExist()
     },
-    async checkIfFarmProgramExist(){
+    async checkIfFarmProgramExist() {
       const conn = this.$web3
-      const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
-      const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
-      const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
-      try{
-        const accountData = await loadAccount(conn, programAccount, farmProgramId);
-        const farmData = FarmProgramAccountLayout.decode(accountData);
-        this.farmProgramCreated = true;
-        this.superOwnerAddress = farmData.super_owner.toBase58();
-      }
-      catch{
-        this.farmProgramCreated = false;
+      const farmProgramId = new PublicKey(FARM_PROGRAM_ID)
+      const seeds = [Buffer.from(FARM_PREFIX), farmProgramId.toBuffer()]
+      const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId)
+      try {
+        const accountData = await loadAccount(conn, programAccount, farmProgramId)
+        const farmData = FarmProgramAccountLayout.decode(accountData)
+        this.farmProgramCreated = true
+        this.superOwnerAddress = farmData.super_owner.toBase58()
+      } catch {
+        this.farmProgramCreated = false
       }
     },
     async updateLabelizedAmms() {
@@ -851,8 +850,6 @@ export default Vue.extend({
       const farms: any = []
       const endedFarmsPoolId: string[] = []
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
-
-
         let userInfo = get(this.farm.stakeAccounts, poolId)
         let isPFO = false
 
@@ -864,7 +861,7 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
-        console.log(newFarmInfo.poolId);
+        console.log(newFarmInfo.poolId)
 
         if (reward && lp) {
           const rewardPerTimestampAmount = new TokenAmount(getBigNumber(reward_per_timestamp), reward.decimals)
@@ -967,7 +964,7 @@ export default Vue.extend({
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
-            console.log(newFarmInfo);
+            console.log(newFarmInfo)
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = true
               if (
@@ -1561,25 +1558,25 @@ export default Vue.extend({
             txStatus = this.$accessor.transaction.history[txid].status
             await this.delay(500)
           }
-          if(txStatus === "Fail"){
-            console.log("unstake transaction failed")
+          if (txStatus === 'Fail') {
+            console.log('unstake transaction failed')
             this.unstaking = false
             this.unstakeModalOpening = false
-            return;
+            return
           }
 
           //update wallet token account infos
-          this.$accessor.wallet.getTokenAccounts();
-          let delayForUpdate = 1000;
-          await this.delay(delayForUpdate);
-          
+          this.$accessor.wallet.getTokenAccounts()
+          let delayForUpdate = 1000
+          await this.delay(delayForUpdate)
+
           let value = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`)
-          value = value.wei.toNumber() / Math.pow(10,value.decimals);
-          if(value <= 0){
-            console.log("remove lp amount is 0")
+          value = value.wei.toNumber() / Math.pow(10, value.decimals)
+          if (value <= 0) {
+            console.log('remove lp amount is 0')
             this.unstaking = false
             this.unstakeModalOpening = false
-            return;
+            return
           }
           value = value.toString()
 
@@ -1724,13 +1721,12 @@ export default Vue.extend({
 }
 
 .farm.container {
-  max-width: 1350px;    
+  max-width: 1350px;
   width: 100%;
-  background: #01033C;
+  background: #01033c;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
-
 
   .planet-left {
     position: absolute;
@@ -1741,38 +1737,38 @@ export default Vue.extend({
   .page-head a {
     background: #01033c;
     margin-left: 20px;
-    float:right;
+    float: right;
     .btncontainer {
       display: inline-block;
     }
   }
 
   .card {
-  .card {
-    margin-top: 70px;
+    .card {
+      margin-top: 70px;
 
-    .card-body {
-      padding: 0;
-      overflow-x: scroll;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      .card-body {
+        padding: 0;
+        overflow-x: scroll;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
 
-      .ant-collapse {
-        border: 0;
-        .ant-collapse-item {
-          border-bottom: 0;
+        .ant-collapse {
+          border: 0;
+          .ant-collapse-item {
+            border-bottom: 0;
+          }
+
+          .ant-collapse-item:not(:last-child) {
+            border-bottom: 1px solid #ffffff20;
+          }
         }
 
-        .ant-collapse-item:not(:last-child) {
-          border-bottom: 1px solid #ffffff20;
+        .start .btncontainer {
+          display: inline-block;
         }
-      }
-
-      .start .btncontainer {
-        display: inline-block;
       }
     }
-  }
   }
 
   .harvest {
@@ -1806,7 +1802,7 @@ export default Vue.extend({
     min-height: 186px;
     display: grid;
     align-items: center;
-    
+
     .unstarted {
       width: 100%;
 
@@ -1890,12 +1886,12 @@ export default Vue.extend({
       }
     }
 
-    .details{
+    .details {
       top: 50%;
       transform: translate(0, -50%);
       position: absolute;
       right: 17px;
-      margin-top:unset;
+      margin-top: unset;
     }
 
     .state {
@@ -1939,88 +1935,97 @@ export default Vue.extend({
   text-align: center;
 }
 
-.noDesktop{
-  display:none
+.noDesktop {
+  display: none;
 }
 
-
-@media (max-width: 800px){
-  body .farm.container{
+@media (max-width: 800px) {
+  body .farm.container {
     min-width: unset;
-    width:100%;
-    max-width:100%;
+    width: 100%;
+    max-width: 100%;
     margin-top: 0;
     padding: 20px 20px !important;
 
-    .details{
-      float:right;
-      margin-top:-5px;
+    .details {
+      float: right;
+      margin-top: -5px;
     }
 
-    .openButton{
-      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
-      display:inline-block;
-      padding:2px;
-      border-radius:23px;
-      button{
+    .openButton {
+      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      display: inline-block;
+      padding: 2px;
+      border-radius: 23px;
+
+      button {
         height: 42px;
-        padding:11px 24px;
-        color:#fff;
+        padding: 11px 24px;
+        color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background:#01033C;
-        border-radius:22px;
-        border:transparent
+        background: #01033c;
+        border-radius: 22px;
+        border:transparent;
+        
+        img {
+          margin-left: 5px;
+          transform: rotate(0);
+          transition: transform 0.3s;
+        }
       }
     }
 
+    .openButton-active > button > img {
+      transform: rotate(180deg);
+    }
 
-    .bgl{
-        background: #16164A !important;
+    .bgl {
+      background: #16164a !important;
       margin-top: -17px;
       padding-bottom: 10px;
       margin-bottom: -16px;
-    } 
+    }
 
-    .buttonsd{
-      display:block;
+    .buttonsd {
+      display: block;
       background: #00033c;
     }
 
-    .noMobile{
-      display:none;
+    .noMobile {
+      display: none;
     }
 
-    .noDesktop{
-      display:inline-block;
+    .noDesktop {
+      display: inline-block;
     }
 
-    .largeserach input{
-    height:47px !important
+    .largeserach input {
+      height: 47px !important;
     }
 
-    .page-head{
-      margin-bottom:0;
-      margin-top:0;
-      .title{
-        font-size:40px;
-        position:relative;
+    .page-head {
+      margin-bottom: 0;
+      margin-top: 0;
+      .title {
+        font-size: 40px;
+        position: relative;
         line-height: 50px;
       }
-      .buttonsd{
+      .buttonsd {
         height: 87px;
-        padding:20px 20px 84px;
-        border: 4px solid #16164A;
+        padding: 20px 20px 84px;
+        border: 4px solid #16164a;
         box-sizing: border-box;
         border-radius: 14px;
-        text-align:center;
+        text-align: center;
 
-        a{
-          float:right;
-          display:inline-block;
+        a {
+          float: right;
+          display: inline-block;
         }
 
-        > div{
+        > div {
           float: left;
           margin-right: -66px;
           display: inline-block;
@@ -2028,221 +2033,207 @@ export default Vue.extend({
       }
     }
 
-    .fs-container{
-      display:inline-block;
+    .fs-container {
+      display: inline-block;
     }
 
-    .ant-collapse, 
-    .ant-collapse > .ant-collapse-item{
-      position:relative;
+    .ant-collapse,
+    .ant-collapse > .ant-collapse-item {
+      position: relative;
     }
 
-    .ant-collapse::before, 
+    .ant-collapse::before,
     .ant-collapse > .ant-collapse-item::before {
-        content: '';
-        height: 4px;
-        width: 100%;
-        top: 0;
-        background: #00033c;
-        position: absolute;
+      content: '';
+      height: 4px;
+      width: 100%;
+      top: 0;
+      background: #00033c;
+      position: absolute;
     }
 
-
-    .farm-head.table-head{
-      display:none
+    .farm-head.table-head {
+      display: none;
     }
 
-    .labmobile{
-      float:left;
+    .labmobile {
+      float: left;
       font-style: normal;
       font-weight: normal;
       font-size: 18px;
       line-height: 21px;
-      color: #FFF;
+      color: #fff;
       opacity: 0.5;
-      display:block;
+      display: block;
     }
 
-
-    .farm-head{
-      min-width:100%;
-      padding-top:25px !important;
-      padding-bottom:25px !important;
+    .farm-head {
+      min-width: 100%;
+      padding-top: 25px !important;
+      padding-bottom: 25px !important;
       display: block;
       align-items: unset;
-      .lp-icons{
+      .lp-icons {
         padding: 0 10px;
-        display:block !important;
-        width:100%;
-        flex-direction:unset;
+        display: block !important;
+        width: 100%;
+        flex-direction: unset;
         float: unset;
         flex: unset;
-        img{
-            margin-top: -4px;
+        img {
+          margin-top: -4px;
         }
-        .lp-icons-group{
-          background:transparent;
-          .icons{
+        .lp-icons-group {
+          background: transparent;
+          .icons {
             padding: 0;
-            background-color:transparent;
+            background-color: transparent;
           }
         }
-
       }
 
-
-      .state{
-        text-align:right;
-        display:none;
+      .state {
+        text-align: right;
+        display: none;
         margin-top: 11px;
-        .ant-col-12{
-        width:100%
+        .ant-col-12 {
+          width: 100%;
         }
       }
     }
 
     .collapse-row .lp-icons,
-    .collapse-row .state{
-        padding: 0 10px;
-        display: block;
-        width: 100%;
-        flex-direction: unset;
-        float: unset;
-        flex: unset;
-        text-align: right;
-        font-size: 18px;
-        margin-bottom: 6px;
-        .lp-icons-group{
-          background:transparent;
-          .icons{
-            padding: 0;
-            background-color:transparent;
-          }
+    .collapse-row .state {
+      padding: 0 10px;
+      display: block;
+      width: 100%;
+      flex-direction: unset;
+      float: unset;
+      flex: unset;
+      text-align: right;
+      font-size: 18px;
+      margin-bottom: 6px;
+      .lp-icons-group {
+        background: transparent;
+        .icons {
+          padding: 0;
+          background-color: transparent;
         }
       }
+    }
 
     .anticon.anticon-right,
-    .info-icon{
-      display:none !important;
+    .info-icon {
+      display: none !important;
     }
 
-    .ant-pagination{
-      margin-top:40px;
+    .ant-pagination {
+      margin-top: 40px;
     }
-    .ant-collapse.ant-collapse-icon-position-right{
-      max-width:100%;
-      background:#16164A;
-      border-radius:10px;
+    .ant-collapse.ant-collapse-icon-position-right {
+      max-width: 100%;
+      background: #16164a;
+      border-radius: 10px;
     }
 
-    .reward-col{
+    .reward-col {
       margin-bottom: 30px;
     }
 
-    .ant-collapse-content{
-      background:#16164A !important;
+    .ant-collapse-content {
+      background: #16164a !important;
     }
 
-    .ant-collapse-content-box{
-      background:#16164A !important;
-      .collapse-row{
+    .ant-collapse-content-box {
+      background: #16164a !important;
+      .collapse-row {
         display: block;
         align-items: unset;
         .ant-col.ant-col-4,
-        .ant-col.ant-col-8{
-          width:100%;
-          display:block;
-          flex-direction:unset;
+        .ant-col.ant-col-8 {
+          width: 100%;
+          display: block;
+          flex-direction: unset;
           float: unset;
           flex: unset;
         }
-
       }
     }
 
-
     .start,
-    .harvest{
-      background: #01033C;
+    .harvest {
+      background: #01033c;
       border-radius: 14px;
       margin: auto;
-      .reward .token{
+      .reward .token {
         font-size: 26px;
         line-height: 31px;
       }
     }
 
-    .btncontainer{
-      display:inline-block !important;  
+    .btncontainer {
+      display: inline-block !important;
     }
 
-    .start .btncontainer:not(.largebtn){
-      width:calc(50% - 20px);
-      margin-left:5px;
-      margin-right:5px;
+    .start .btncontainer:not(.largebtn) {
+      width: calc(50% - 20px);
+      margin-left: 5px;
+      margin-right: 5px;
       margin-bottom: 10px;
     }
 
-
-    .start .btncontainer:not(.largebtn):last-of-type{
-      width:calc(100% - 30px);
-      margin-left:5px;
-      margin-right:5px;
+    .start .btncontainer:not(.largebtn):last-of-type {
+      width: calc(100% - 30px);
+      margin-left: 5px;
+      margin-right: 5px;
     }
-    
+
     .tool-bar {
-      height:unset;
-      border:unset;
+      height: unset;
+      border: unset;
 
       .tool-option {
-          background: #00033c;
+        background: #00033c;
+        width: 100%;
+        height: 54px;
+        display: block;
+        position: relative;
+        margin: 10px 0;
+        border: 4px solid #16164a;
+        box-sizing: border-box;
+        border-radius: 10px;
+        .input-search {
+          height: 47px !important;
+          .ant-input {
+            padding: 19px 60px;
+            border: none;
+            height: 47px !important;
+          }
+        }
+
+        .toggle {
+          position: absolute;
           width: 100%;
-          height: 54px;
-          display: block;
-          position: relative;
-          margin: 10px 0;
-          border: 4px solid #16164A;
-          box-sizing: border-box;
-          border-radius: 10px;
-          .input-search{ 
-            height:47px !important;
-            .ant-input {
-                padding: 19px 60px;
-                border: none;
-                height: 47px !important;
-            }
+          height: 100%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: left;
+          padding-left: 10%;
 
+          .ant-switch {
+            position: absolute;
+            right: 10%;
           }
-
-          .toggle {
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              display: inline-flex;
-              align-items: center;
-              justify-content: left;
-              padding-left: 10%;
-
-              .ant-switch{
-                position: absolute;
-                right: 10%;
-              }
-          }
+        }
       }
     }
-
-    
-
   }
-
 }
-
-
 </style>
 
 <style lang="less">
 .farm {
-  .page-head{
+  .page-head {
     margin-top: 10px;
   }
   .page-head .title {
@@ -2269,17 +2260,19 @@ export default Vue.extend({
   }
 }
 
-
 .ant-collapse {
   background-color: #01033c;
 }
 
 .farm.container {
-
   .create {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
+
+    @media (max-width: @mobile-b-width) {
+      padding: 9px 19px;
+    }
 
     button {
       background: unset !important;
@@ -2292,11 +2285,19 @@ export default Vue.extend({
       letter-spacing: -0.05em;
       height: 60px;
       width: 163px;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 14px;
+        line-height: 24px;
+        padding: 0;
+        width: auto;
+        height: 40px;
+      }
     }
   }
   .ant-collapse,
-  .ant-collapse > .ant-collapse-item{
-    border:unset !important
+  .ant-collapse > .ant-collapse-item {
+    border: unset !important;
   }
 
   .btncontainer {
@@ -2307,7 +2308,7 @@ export default Vue.extend({
     position: relative;
     max-width: 400px;
     padding: 2px;
-    margin:0;
+    margin: 0;
     border-radius: 8px !important;
     max-height: 60px !important;
 
@@ -2502,8 +2503,8 @@ export default Vue.extend({
   width: 53px;
 }
 
-.labmobile{
-  display:none;
+.labmobile {
+  display: none;
 }
 
 .label.ended {
@@ -2575,5 +2576,4 @@ main {
 .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
   border: 1px solid #d9d9d9;
 }
-
 </style>
