@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-body">
         <div class="page-head fs-container">
-          <span class="title">Fertilizer</span>
+          <span class="title">Fertilizer Beta</span>
           <NuxtLink to="/pools/create-pool/">
             <div class="create">
               <Button size="large" ghost> + &nbsp; Apply </Button>
@@ -254,7 +254,7 @@ export default Vue.extend({
   },
 
   head: {
-    title: 'CropperFinance Farm'
+    title: 'CropperFinance'
   },
 
   computed: {

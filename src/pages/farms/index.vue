@@ -166,13 +166,13 @@
               <div class="title">Status</div>
             </Col>
             <Col class="state reward-col" :span="isMobile ? 12 : 6">
-              <div class="title">{{ isMobile ? 'Reward' : 'Pending Reward' }}</div>
+              <div class="title">{{ isMobile ? 'Reward' : 'Pending Rewards' }}</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
               <div class="title">Staked</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">Total Apr</div>
+              <div class="title">Total APR</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
               <div class="title">Liquidity</div>
@@ -553,7 +553,7 @@
                             currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
                           "
                         >
-                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Reward </Button>
+                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
                         </div>
 
                         <div
