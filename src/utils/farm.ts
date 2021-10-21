@@ -17,7 +17,7 @@ import {loadAccount} from './account';
 import { AccountLayout, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { createSplAccount } from './new_fcn';
 import { createAssociatedTokenAccountIfNotExist, createProgramAccountIfNotExist, findAssociatedTokenAddress, sendTransaction } from './web3';
-import { FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5, SYSTEM_PROGRAM_ID } from './ids';
+import { FARM_INITIAL_FEE_OWNER, FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5, SYSTEM_PROGRAM_ID } from './ids';
 import { FarmInfo } from './farms';
 import { getBigNumber } from './layouts';
 import { TokenAmount } from './safe-math';
@@ -198,8 +198,8 @@ export const UserInfoAccountLayout = struct([
     owner: Account,
   ){
     const DEFAULT_SUPER_OWNER = owner.publicKey;
-    const DEFAULT_FEE_OWNER = owner.publicKey;
-    const DEFAULT_ALLOWED_CREATOR = owner.publicKey;
+    const DEFAULT_FEE_OWNER = new PublicKey(FARM_INITIAL_FEE_OWNER);
+    const DEFAULT_ALLOWED_CREATOR = DEFAULT_SUPER_OWNER;
     const DEFAULT_AMM_PROGRAM_ID = new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5);
     const DEFAULT_FARM_FEE = 5000;
     const DEFAULT_HARVEST_FEE_NUMERATOR = 1;
