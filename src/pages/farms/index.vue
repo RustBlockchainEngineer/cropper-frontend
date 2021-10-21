@@ -95,7 +95,7 @@
                         }
                       "
                     >
-                      <Icon type="loading" theme="outlined" />
+                      <img src="@/assets/icons/loading.svg" />
                     </div>
                     <!-- <Progress
                       type="circle"
@@ -2165,6 +2165,7 @@ export default Vue.extend({
     .harvest{
       background: #01033C;
       border-radius: 14px;
+      margin: auto;
       .reward .token{
         font-size: 26px;
         line-height: 31px;
@@ -2373,7 +2374,9 @@ export default Vue.extend({
     border-radius: 25px;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
     margin-left: 15px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
 
     .anticon {

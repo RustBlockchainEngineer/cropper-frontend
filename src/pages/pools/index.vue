@@ -63,22 +63,8 @@
                       }
                     "
                   >
-                    <Icon type="loading" theme="outlined" />
+                    <img src="@/assets/icons/loading.svg" />
                   </div>
-                  <!-- <Progress
-                      type="circle"
-                      :width="20"
-                      :stroke-width="10"
-                      :percent="(100 / autoRefreshTime) * countdown"
-                      :show-info="false"
-                      :class="farm.loading ? 'disabled' : ''"
-                      @click="
-                        () => {
-                          $accessor.farm.requestInfos()
-                          $accessor.wallet.getTokenAccounts()
-                        }
-                      "
-                    /> -->
                 </div>
               </div>
             </div>
@@ -118,7 +104,7 @@
         </div>
 
         <div v-if="poolLoaded" class="mobilescroller">
-          <Table :columns="columns" :data-source="poolsShow" :pagination="false" row-key="lp_mint">
+          <Table :columns="columns" :data-source="poolsShow" :pagination="false" row-key="lp_mint" class="pools-table-pc">
             <span slot="name" slot-scope="text" class="lp-icons">
               {{ void (pool = getPoolByLpMintAddress(text)) }}
               <span class="lp-iconscontainer">
@@ -161,6 +147,87 @@
             </span>
           </Table>
 
+          <Collapse v-model="showCollapse" expand-icon-position="right" class="pools-table-mobile">
+            <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
+              <Row slot="header" class="farm-head">
+                <Col class="lp-icons" :span="24">
+                  <div class="icons">
+                    <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
+                    {{ data.lp.coin.symbol }}
+                    <span>-</span>
+                    <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
+                    {{ data.lp.pc.symbol }}
+                  </div>
+                </Col>
+
+                <div class="detailButton">
+                  <button>Details</button>
+                </div>
+              </Row>
+
+              <Row v-if="poolCollapse" class="collapse-row">
+                <Col class="state" span="24">
+                  <div class="value">
+                    <span class="labmobile">Liquidity</span>
+                    ${{ new TokenAmount(data.liquidity, 2, false).format() }}
+                  </div>
+                </Col>
+                <Col class="state" span="24">
+                  <div class="value">
+                    <span class="labmobile">24h / Volume</span>
+                    ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
+                  </div>
+                </Col>
+                <Col class="state" span="24">
+                  <div class="value">
+                    <span class="labmobile">7d / Volume</span>
+                    ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
+                  </div>
+                </Col>
+                <Col class="state" span="24">
+                  <div class="value">
+                    <span class="labmobile">24h / Fees</span>
+                    ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
+                  </div>
+                </Col>
+                <Col class="state" span="24">
+                  <div class="value">
+                    <span class="labmobile">1y fees / Liquidity</span>
+                    {{ new TokenAmount(data.apy, 2, false).format() }}%
+                  </div>
+                </Col>
+                <Col class="current-liquidity" span="24">
+                  <div class="liquidity-content">Your liquidity</div>
+                  <div class="liquidity-value">${{ new TokenAmount(data.current, 2, false).format() }}</div>
+                  <div class="btncontainer small plus-btn">
+                    <Button size="small" ghost :disabled="!wallet.connected" @click="openPoolAddModal(data)">
+                      <Icon type="plus" />
+                    </Button>
+                  </div>
+
+                  &nbsp;
+
+                  <div class="btncontainer small minus-btn">
+                    <Button
+                      size="small"
+                      class="minus"
+                      ghost
+                      :disabled="!wallet.connected || !data.current"
+                      @click="openUnstakeModal(data, data.lp, 1)"
+                    >
+                      <Icon type="minus" />
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+              <!-- <Row v-if="poolCollapse" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'">
+                <Col class="state" span="12">
+                  ${{ new TokenAmount(data.current, 2, false).format() }}
+                </Col>
+              </Row> -->
+            </CollapsePanel>
+          </Collapse>
+
           <div style="text-align: center; width: 100%">
             <div style="width: 80%; display: inline-block">
               <Pagination :total="totalCount" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
@@ -182,7 +249,7 @@
 import { get, cloneDeep } from 'lodash-es'
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
-import { Table, Radio, Tooltip, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
+import { Table, Radio, Tooltip, Collapse, Row, Spin, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
 import { getPoolByLpMintAddress, getAllPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
 import { getBigNumber } from '@/utils/layouts'
@@ -190,6 +257,7 @@ import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { LiquidityPoolInfo } from '@/utils/pools'
 import { getUnixTs } from '@/utils'
 import { DEVNET_MODE } from '../../utils/ids'
+const CollapsePanel = Collapse.Panel
 const RadioGroup = Radio.Group
 const poolAdd = false
 const RadioButton = Radio.Button
@@ -226,6 +294,9 @@ declare const window: any
 
   components: {
     Table,
+    Collapse,
+    CollapsePanel,
+    Row,
     RadioGroup,
     RadioButton,
     Toggle,
@@ -233,6 +304,7 @@ declare const window: any
     Button,
     Input,
     Icon,
+    Spin,
     Pagination
   },
   async asyncData({ $api }) {
@@ -310,6 +382,8 @@ export default class Pools extends Vue {
       key: 'apu'
     }
   ]
+  poolCollapse: any = true
+  showCollapse: any = []
   pools: any = []
   poolsShow: any = []
   poolType: string = 'RaydiumPools'
@@ -345,6 +419,12 @@ export default class Pools extends Vue {
   @Watch('$accessor.liquidity.initialized', { immediate: true, deep: true })
   refreshThePage() {
     this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+  }
+  @Watch('showCollapse', { immediate: true, deep: true }) handler() {
+    console.log('123');
+    if (!this.poolType && this.showCollapse.length > 0) {
+      this.showCollapse.splice(0, this.showCollapse.length)
+    }
   }
   @Watch('$accessor.liquidity.info', { immediate: true, deep: true })
   async onLiquidityChanged() {
@@ -703,6 +783,12 @@ section {
   margin-bottom: 20px;
   padding: 15px;
 
+  .mobilescroller {
+    .pools-table-mobile {
+      display: none;
+    }
+  }
+
   .planet-left {
     position: absolute;
     left: 0;
@@ -758,13 +844,18 @@ section {
   display: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: @mobile-b-width) {
   body .pool.container {
     min-width: unset;
     width: 100%;
     max-width: 100%;
     margin-top: 0;
     padding: 20px 20px !important;
+
+    .ant-collapse-content {
+      background-color: #01033c;
+      border-top: none !important;
+    }
 
     thead.ant-table-thead {
       display: none !important;
@@ -773,11 +864,23 @@ section {
     .mobilescroller {
       max-width: calc(100vh - 40px);
       overflow: scroll;
+
+      .pools-table-pc {
+        display: none;
+      }
+
+      .pools-table-mobile {
+        display: block;
+
+        .ant-collapse-item .ant-collapse-content {
+          background-color: #01033c;
+          border-top: none !important;
+        }
+      }
     }
 
     .details {
       float: right;
-      margin-top: -5px;
     }
 
     .openButton {
@@ -792,6 +895,24 @@ section {
         font-size: 14px;
         letter-spacing: -0.05em;
         background: #01033c;
+        border-radius: 22px;
+        border: transparent;
+      }
+    }
+
+    .detailButton {
+      background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
+      display: inline-block;
+      padding: 1px;
+      border-radius: 23px;
+
+      button {
+        height: 42px;
+        padding: 11px 40px 11px 24px;
+        color: #fff;
+        font-size: 14px;
+        letter-spacing: -0.05em;
+        background: #16164A;
         border-radius: 22px;
         border: transparent;
       }
@@ -836,6 +957,7 @@ section {
         box-sizing: border-box;
         border-radius: 14px;
         text-align: center;
+        margin-top: 20px;
 
         a {
           float: right;
@@ -857,16 +979,7 @@ section {
     .ant-collapse,
     .ant-collapse > .ant-collapse-item {
       position: relative;
-    }
-
-    .ant-collapse::before,
-    .ant-collapse > .ant-collapse-item::before {
-      content: '';
-      height: 4px;
-      width: 100%;
-      top: 0;
-      background: #00033c;
-      position: absolute;
+      border-bottom: 1px solid #01033C;
     }
 
     .farm-head.table-head {
@@ -888,8 +1001,9 @@ section {
       min-width: 100%;
       padding-top: 25px !important;
       padding-bottom: 25px !important;
-      display: block;
-      align-items: unset;
+      display: flex;
+      align-items: center;
+      
       .lp-icons {
         padding: 0 10px;
         display: block !important;
@@ -897,9 +1011,23 @@ section {
         flex-direction: unset;
         float: unset;
         flex: unset;
-        img {
-          margin-top: -4px;
-        }
+        font-size: 15px;
+        line-height: 18px;
+
+        .icons {
+          display: flex;
+          align-items: center;
+
+          img {
+            margin-top: -4px;
+            margin-right: 10px;
+          }
+
+          span {
+            margin: 0 16px;
+          }
+        };
+        
         .lp-icons-group {
           background: transparent;
           .icons {
@@ -939,6 +1067,35 @@ section {
       }
     }
 
+    .collapse-row .current-liquidity {
+      display: block;
+      width: 100%;
+      flex-direction: unset;
+      float: unset;
+      flex: unset;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 6px;
+      background: #01033C;
+      border-radius: 14px;
+      padding: 18px 0;
+
+      .liquidity-content {
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 17px;
+        color: #FFFFFF50;
+        margin-bottom: 15px;
+      }
+
+      .liquidity-value {
+        font-size: 26px;
+        line-height: 32px;
+        color: #FFF;
+        margin-bottom: 15px;
+      }
+    }
+
     .anticon.anticon-right,
     .info-icon {
       display: none !important;
@@ -951,14 +1108,16 @@ section {
       max-width: 100%;
       background: #16164a;
       border-radius: 10px;
+      border: none;
+
+      .ant-collapse-header .ant-collapse-arrow {
+        right: 30px !important;
+        z-index: 2;
+      }
     }
 
     .reward-col {
       margin-bottom: 30px;
-    }
-
-    .ant-collapse-content {
-      background: #16164a !important;
     }
 
     .ant-collapse-content-box {
@@ -1171,6 +1330,23 @@ section {
 }
 
 .pool.container {
+  .ant-collapse-header {
+    @media (max-width: @mobile-b-width) {
+      padding-right: 16px !important;
+    }
+    .ant-collapse-arrow {
+      @media (max-width: @mobile-b-width) {
+        right: 30px !important;
+        z-index: 2;
+        }
+    }
+  }
+  .ant-collapse-content {
+    @media (max-width: @mobile-b-width) {
+      background-color: #16164a;
+      border-top: none !important;
+    }
+  }
   .card .card-body .buttons i {
     margin-right: 0;
   }
@@ -1237,6 +1413,12 @@ section {
       font-size: 18px;
       line-height: 42px;
       letter-spacing: -0.05em;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 14px;
+        line-height: 24px;
+        padding: 0;
+      }
     }
   }
 
@@ -1279,7 +1461,9 @@ section {
       border-radius: 25px;
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
       margin-left: 15px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
 
       .anticon {
