@@ -26,6 +26,7 @@
           <span class="details noDesktop">
             <div
               class="openButton"
+              :class="displayfilters ? 'openButton-active' : ''"
               @click="
                 () => {
                   if (displayfilters == true) {
@@ -36,7 +37,11 @@
                 }
               "
             >
-              <button>Search</button>
+              <button>
+                Search
+                <img src="@/assets/icons/arrow-down.svg" />
+
+              </button>
             </div>
           </span>
 
@@ -59,6 +64,7 @@
                     class="reload-btn"
                     @click="
                       () => {
+                        flush()
                         $accessor.wallet.getTokenAccounts()
                       }
                     "
@@ -146,7 +152,9 @@
               </div>
             </span>
           </Table>
+        </div>
 
+        <div v-if="poolLoaded">
           <Collapse v-model="showCollapse" expand-icon-position="right" class="pools-table-mobile">
             <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
               <Row slot="header" class="farm-head">
@@ -220,11 +228,6 @@
                   </div>
                 </Col>
               </Row>
-              <!-- <Row v-if="poolCollapse" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'">
-                <Col class="state" span="12">
-                  ${{ new TokenAmount(data.current, 2, false).format() }}
-                </Col>
-              </Row> -->
             </CollapsePanel>
           </Collapse>
 
@@ -888,6 +891,7 @@ section {
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
+
       button {
         height: 42px;
         padding: 11px 24px;
@@ -897,7 +901,17 @@ section {
         background: #01033c;
         border-radius: 22px;
         border: transparent;
+
+        img {
+          margin-left: 5px;
+          transform: rotate(0);
+          transition: transform 0.3s;
+        }
       }
+    }
+
+    .openButton-active > button > img {
+      transform: rotate(180deg);
     }
 
     .detailButton {
