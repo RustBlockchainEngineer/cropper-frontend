@@ -59,6 +59,7 @@
                     class="reload-btn"
                     @click="
                       () => {
+                        flush()
                         $accessor.wallet.getTokenAccounts()
                       }
                     "
