@@ -182,7 +182,7 @@
             <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
                 <span class="details noDesktop">
-                  <div class="openButton">
+                  <div class="detailButton">
                     <button>Details</button>
                   </div>
                 </span>
@@ -1939,7 +1939,7 @@ export default Vue.extend({
   display: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: @mobile-b-width) {
   body .farm.container {
     min-width: unset;
     width: 100%;
@@ -1949,7 +1949,24 @@ export default Vue.extend({
 
     .details {
       float: right;
-      margin-top: -5px;
+    }
+
+    .detailButton {
+      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      display: inline-block;
+      padding: 2px;
+      border-radius: 23px;
+
+      button {
+        height: 42px;
+        padding: 11px 40px 11px 24px;
+        color: #fff;
+        font-size: 14px;
+        letter-spacing: -0.05em;
+        background: #16164A;
+        border-radius: 22px;
+        border:transparent;
+      }
     }
 
     .openButton {
@@ -1964,7 +1981,7 @@ export default Vue.extend({
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #01033c;
+        background: #16164A;
         border-radius: 22px;
         border:transparent;
         
@@ -1990,6 +2007,7 @@ export default Vue.extend({
     .buttonsd {
       display: block;
       background: #00033c;
+      margin-top: 10px;
     }
 
     .noMobile {
@@ -2133,7 +2151,7 @@ export default Vue.extend({
     .ant-collapse.ant-collapse-icon-position-right {
       max-width: 100%;
       background: #16164a;
-      border-radius: 10px;
+      border-radius: 14px;
     }
 
     .reward-col {
@@ -2251,6 +2269,11 @@ export default Vue.extend({
 
     .farm-head {
       padding: 30px 5px !important;
+    }
+
+    .ant-collapse-arrow {
+      z-index: 2;
+      margin-right: 20px;
     }
   }
 
