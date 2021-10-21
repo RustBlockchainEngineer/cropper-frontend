@@ -4,7 +4,7 @@
 
     <coinModalMulti
       v-if="stakeModalOpening"
-      title="Add liquidity"
+      title="Add Liquidity"
       :loading="staking"
       :farmInfo="poolInf"
       @onOk="stake"
@@ -45,7 +45,7 @@
             </div>
           </span>
 
-          <span class="title noMobile">Liquidity pools</span>
+          <span class="title noMobile">Liquidity Pools</span>
           <span class="title noDesktop">Pools</span>
 
           <span class="buttonsd">
@@ -88,7 +88,7 @@
 
           <div class="tool-option last-option">
             <div class="toggle">
-              <label class="label">Staked Only</label>
+              <label class="label">Staked only</label>
               <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
             </div>
           </div>
@@ -103,7 +103,7 @@
 
           <div class="tool-option last-option">
             <div class="toggle">
-              <label class="label">Staked Only</label>
+              <label class="label">Staked only</label>
               <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
             </div>
           </div>
@@ -355,7 +355,7 @@ export default class Pools extends Vue {
       sorter: (a: any, b: any) => a.volume_7d - b.volume_7d
     },
     {
-      title: 'Fees (24hr)',
+      title: 'Fees (24hrs)',
       dataIndex: 'fee_24h',
       key: 'fee_24h',
       scopedSlots: { customRender: 'fee_24h' },
@@ -371,7 +371,7 @@ export default class Pools extends Vue {
     },
 
     {
-      title: 'Your liquidity',
+      title: 'Your Liquidity',
       dataIndex: 'current',
       key: 'current',
       scopedSlots: { customRender: 'current' },
