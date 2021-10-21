@@ -938,7 +938,7 @@ export default Vue.extend({
           const { rewardDebt, depositBalance } = userInfo
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           const currentTimestamp = this.currentTimestamp
-          const duration = (currentTimestamp > newFarmInfo.poolInfo.end_timestamp ? newFarmInfo.poolInfo.end_timestamp : currentTimestamp)  - last_timestamp.toNumber()
+          const duration = (currentTimestamp > farmInfo.poolInfo.end_timestamp ? farmInfo.poolInfo.end_timestamp : currentTimestamp)  - last_timestamp.toNumber()
           const rewardPerShareCalc =
             reward_per_share_net.toNumber() +
             (1000000000 * reward_per_timestamp.toNumber() * duration) / liquidityItem.lp.totalSupply.wei.toNumber()
