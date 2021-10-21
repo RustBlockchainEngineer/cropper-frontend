@@ -204,7 +204,7 @@
 
           <CoinInput
             v-model="toCoinAmount"
-            label="To (Estimate)"
+            label="To (estimate)"
             :mint-address="toCoin ? toCoin.mintAddress : ''"
             :coin-name="toCoin ? toCoin.symbol : ''"
             :balance="toCoin ? toCoin.balance : null"
@@ -256,7 +256,7 @@
                 <label>Pathway</label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title">
-                    The maximum difference between your estimated price and execution price.
+                    This trade routes though the following tokens to give you the best price
                   </template>
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
@@ -283,7 +283,7 @@
               <span class="name">
                 <label>Swapping Through</label>
                 <Tooltip placement="bottomLeft">
-                  <template slot="title"> This venue gave the best price for your trade </template>
+                  <template slot="title"> This venue gave the best price for this trade </template>
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
@@ -320,7 +320,7 @@
                 <label>Slippage Tolerance</label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title">
-                    The maximum difference between your estimated price and execution price.
+                    The maximum difference between your estimate price and execution price
                   </template>
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
@@ -334,7 +334,7 @@
               <span class="name">
                 <label>Minimum Received</label>
                 <Tooltip placement="bottomLeft">
-                  <template slot="title"> The least amount of tokens you will recieve on this trade </template>
+                  <template slot="title"> The least amount of tokens you will receive for this trade </template>
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
@@ -372,7 +372,7 @@
           </div>
 
           <div v-if="!wallet.connected" class="btncontainer">
-            <Button size="large" ghost @click="$accessor.wallet.openModal"> Swap now </Button>
+            <Button size="large" ghost @click="$accessor.wallet.openModal"> Swap </Button>
           </div>
 
           <div v-else-if="!(officialPool || (!officialPool && userCheckUnofficial))" class="btncontainer">
@@ -422,7 +422,7 @@
               :class="`swap-btn ${priceImpact > 10 ? '' : priceImpact > 5 ? '' : ''}`"
               @click="placeOrder"
             >
-              <template v-if="!fromCoin || !toCoin"> Select a token</template>
+              <template v-if="!fromCoin || !toCoin"> Select</template>
               <template v-else-if="(!marketAddress && !lpMintAddress && !isWrap && !best_dex_type) || !initialized">
                 Insufficient liquidity for this trade
               </template>
