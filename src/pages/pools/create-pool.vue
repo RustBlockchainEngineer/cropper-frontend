@@ -360,7 +360,7 @@ import { getBigNumber } from '@/utils/layouts'
 import { cloneDeep, get } from 'lodash-es'
 import moment from 'moment'
 import {YieldFarm} from '@/utils/farm'
-import { getPoolListByTokenMintAddresses, getPoolByLpMintAddress, getAllPools, LIQUIDITY_POOLS, LiquidityPoolInfo } from '@/utils/pools'
+import { getPoolListByTokenMintAddresses, getPoolByLpMintAddress, getAllCropperPools, LIQUIDITY_POOLS, LiquidityPoolInfo } from '@/utils/pools'
 const Step = Steps.Step
 declare const window: any;
 
@@ -547,7 +547,7 @@ export default class CreatePool extends Vue {
 
     const polo:any = []
 
-    getAllPools().forEach(function (value : any) {
+    getAllCropperPools().forEach(function (value : any) {
 
 
       const liquidityItem = get(liquidity.infos, value.lp_mint)

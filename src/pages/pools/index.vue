@@ -250,7 +250,7 @@ import { get, cloneDeep } from 'lodash-es'
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
 import { Table, Radio, Tooltip, Collapse, Row, Spin, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
-import { getPoolByLpMintAddress, getAllPools } from '@/utils/pools'
+import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
 import { getBigNumber } from '@/utils/layouts'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
@@ -317,7 +317,7 @@ declare const window: any
     } finally {
     }
 
-    const pools = getAllPools()
+    const pools = getAllCropperPools()
     return { pools }
   }
 })
@@ -643,7 +643,7 @@ export default class Pools extends Vue {
 
     const polo: any = []
 
-    getAllPools().forEach(function (value: any) {
+    getAllCropperPools().forEach(function (value: any) {
       const liquidityItem = get(liquidity.infos, value.lp_mint)
       let lp = getPoolByLpMintAddress(value.lp_mint)
 
