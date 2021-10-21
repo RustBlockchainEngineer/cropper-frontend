@@ -102,10 +102,10 @@
                     <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
                       <img class="social-icon" src="@/assets/icons/link_grey.svg"/>
                     </a>
-                    <a v-show="farm.links.twitter" :href="farm.website.url" target="_blank">
+                    <a v-show="farm.links.twitter" :href="farm.links.twitter" target="_blank">
                       <img class="social-icon" src="@/assets/icons/twitter_grey.svg"/>
                     </a>
-                    <a v-show="farm.links.telegram" :href="farm.website.url" target="_blank">
+                    <a v-show="farm.links.telegram" :href="farm.links.telegram" target="_blank">
                       <img class="social-icon" src="@/assets/icons/telegram_grey.svg"/>
                     </a>
                   </div>
