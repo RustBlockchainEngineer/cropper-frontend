@@ -446,8 +446,7 @@ export async function swap(
   aIn: string,
   aOut: string
 ){
-  return await initAMMGlobalState(connection, wallet)
-
+  
   const swap_fcn = (poolInfo.version == 5)? swap_v5: swap_v4;
   return await swap_fcn(
     connection, 
