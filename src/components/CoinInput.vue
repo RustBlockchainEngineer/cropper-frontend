@@ -23,7 +23,7 @@
           @focus="$emit('onFocus')"
         />
         <div class="rangeGroup">
-          <button v-if="!disabled && showHalf && balance" class="input-button" @click="inputBalanceByPercent(1)"> 
+          <button v-if="!disabled && balance" class="input-button" @click="inputBalanceByPercent(1)"> 
             <!-- v-if="!disabled && showHalf && balance" -->
             max.
           </button>
