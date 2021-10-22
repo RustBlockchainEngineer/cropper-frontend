@@ -154,21 +154,7 @@
             /></span>
             <Row :gutter="24">
               <Col :span="10" class="twitter-section-left">
-                <blockquote class="twitter-tweet">
-                  <p lang="en" dir="ltr">
-                    👨🏻‍🌾 Dear Croppers,<br /><br />📣 We’re excited to announce our Farm Launcher’s hero feature.
-                    <br /><br />🎉 Introducing a feature that celebrates DeFi innovation while rewarding farmers.
-                    <br /><br />🤝 Meet
-                    <a href="https://twitter.com/hashtag/Fertilizer?src=hash&amp;ref_src=twsrc%5Etfw">#Fertilizer</a>
-                    <br /><br />
-                    🧪<a href="https://t.co/BeuvL2aUbz">https://t.co/BeuvL2aUbz</a>
-                  </p>
-                  &mdash; CropperFinance (@CropperFinance)
-                  <a href="https://twitter.com/CropperFinance/status/1443533161913372672?ref_src=twsrc%5Etfw"
-                    >September 30, 2021</a
-                  >
-                </blockquote>
-                <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <blockquote class="twitter-tweet"><p lang="en" dir="ltr">🧪Fertilizer Update: CRP-USDC <br><br>📖 Whitelist for the CRP-USDC Fertilizer is now LIVE!<br><br>🎟️ Register to reserve your spot in the Community Farm and secure your lottery tickets!<br><br>Register now.🔽<br>Whitelist: <a href="https://t.co/2XwbP3CGnX">https://t.co/2XwbP3CGnX</a><br>More details: <a href="https://t.co/n7dkyIzV65">https://t.co/n7dkyIzV65</a> <a href="https://t.co/BOwBeTv6dE">pic.twitter.com/BOwBeTv6dE</a></p>&mdash; CropperFinance (@CropperFinance) <a href="https://twitter.com/CropperFinance/status/1451504413969879059?ref_src=twsrc%5Etfw">October 22, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
               </Col>
               <div class="twitter-section-right">
                 <div class="inforetweet">
