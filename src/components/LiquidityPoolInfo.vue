@@ -78,6 +78,11 @@ export default Vue.extend({
   line-height: 21px;
   color: #FFFFFF50;
 
+  @media (max-width: @mobile-b-width) {
+    font-size: 14px;
+    line-height: 18px;
+  }
+
   .info {
     display: grid;
     text-align: right;
@@ -87,6 +92,11 @@ export default Vue.extend({
     font-size: 18px;
     line-height: 21px;
     color: #FFFFFF50;
+
+    @media (max-width: @mobile-b-width) {
+      font-size: 12px;
+      line-height: 15px;
+    }
 
     .anticon-swap {
       margin-left: 10px;
