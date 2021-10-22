@@ -200,7 +200,7 @@
                 </Col>
                 <Col class="state" span="24">
                   <div class="value">
-                    <span class="labmobile">1y fees / Liquidity</span>
+                    <span class="labmobile">APY</span>
                     {{ new TokenAmount(data.apy, 2, false).format() }}%
                   </div>
                 </Col>
@@ -363,7 +363,7 @@ export default class Pools extends Vue {
     },
 
     {
-      title: '1y Fees / Liquidity',
+      title: 'APY',
       dataIndex: 'apy',
       key: 'apy',
       scopedSlots: { customRender: 'apy' },

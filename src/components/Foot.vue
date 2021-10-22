@@ -4,26 +4,6 @@
       <div class="logo">
         <a href="/"><img src="@/assets/icons/logo-text.svg"  width="224.76" height="45.38" /></a>
       </div>
-      <div class="icon_list" v-if="isMobile">
-        <label>Our Social</label>
-        <a :href="linkUrl.medium" target="_blank">
-          Medium
-        </a>
-        <a :href="linkUrl.discord" target="_blank">
-          Discord
-        </a>
-        <a :href="linkUrl.twitter" target="_blank">
-          Twitter
-        </a>
-        <a :href="linkUrl.telegram" target="_blank">
-          Telegram
-        </a>
-      </div>
-    </div>
-    <div class="foot-line"></div>
-    <div :class="isMobile ? 'mobile foot-refer' : 'pc foot-refer'">
-      <label>Decentralized 2021</label>
-
       <div class="icon_list" v-if="!isMobile">
         <label>Our Social</label>
         <a :href="linkUrl.medium" target="_blank">
@@ -35,12 +15,96 @@
         <a :href="linkUrl.twitter" target="_blank">
           Twitter
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
-          Telegram
+        <a
+          class="telegramButton"
+          :class="displayfilters ? 'telegramButton-active' : ''"
+          @click="
+            () => {
+              if (displayfilters == true) {
+                displayfilters = false
+              } else {
+                displayfilters = true
+              }
+            }
+          "
+        >
+            Telegram
+            <img src="@/assets/icons/arrow-down.svg" />
+        </a>
+      </div>
+      <div class="icon_list" v-if="isMobile">
+        <label>Our Social</label>
+        <a :href="linkUrl.medium" target="_blank">
+          Medium
+        </a>
+        <a :href="linkUrl.discord" target="_blank">
+          Discord
+        </a>
+        <a :href="linkUrl.twitter" target="_blank">
+          Twitter
+        </a>
+        <a
+          class="telegramButton"
+          :class="displayfilters ? 'telegramButton-active' : ''"
+          @click="
+            () => {
+              if (displayfilters == true) {
+                displayfilters = false
+              } else {
+                displayfilters = true
+              }
+            }
+          "
+        >
+            Telegram
+            <img src="@/assets/icons/arrow-down.svg" />
         </a>
       </div>
     </div>
-    <img src="@/assets/icons/greenPlanet2.svg" class="planet-bottom"/>
+    <div class="telegram">
+      <div class="telegram-group" v-if="displayfilters">
+        <a :href="linkUrl.telegram_en" target="_blank">
+          Telegram(EN)
+        </a>
+        <a :href="linkUrl.telegram_cn" target="_blank">
+          Telegram(CN)
+        </a>
+        <a :href="linkUrl.telegram_kr" target="_blank">
+          Telegram(KR)
+        </a>
+        <a :href="linkUrl.telegram_jp" target="_blank">
+          Telegram(JP)
+        </a>
+        <a :href="linkUrl.telegram_es" target="_blank">
+          Telegram(ES)
+        </a>
+        <a :href="linkUrl.telegram_tr" target="_blank">
+          Telegram(TR)
+        </a>
+        <a :href="linkUrl.telegram_vn" target="_blank">
+          Telegram(VN)
+        </a>
+        <a :href="linkUrl.telegram_ru" target="_blank">
+          Telegram(RU)
+        </a>
+        <a :href="linkUrl.telegram_fr" target="_blank">
+          Telegram(FR)
+        </a>
+        <a :href="linkUrl.telegram_br" target="_blank">
+          Telegram(BR)
+        </a>
+        <a :href="linkUrl.telegram_in" target="_blank">
+          Telegram(IN)
+        </a>
+        <a :href="linkUrl.telegram_it" target="_blank">
+          Telegram(IT)
+        </a>
+      </div>
+    </div>
+    <div class="foot-line"></div>
+    <div class="foot-refer">
+      <label>Decentralized 2021</label>
+    </div>
   </Footer>
 </template>
 
@@ -62,10 +126,22 @@ export default class Foot extends Vue {
     home: '/',
     app: '/swap/',
     twitter: 'https://twitter.com/CropperFinance',
-    discord: 'https://discord.gg/CropperFinance',
-    telegram: 'https://t.me/CropperFinance',
-    medium: 'https://cropperfinance.medium.com/'
+    discord: 'https://discord.gg/TH7k2N5k',
+    medium: 'https://cropperfinance.medium.com/',
+    telegram_en: 'https://t.me/CropperFinance',
+    telegram_cn: 'https://t.me/cropperChineseofficial',
+    telegram_kr: 'https://t.me/CropperFinance_Korea',
+    telegram_jp: 'https://t.me/cropperfinancejapan',
+    telegram_es: 'https://t.me/cropperspanish',
+    telegram_tr: 'https://t.me/CropperTurkish',
+    telegram_vn: 'https://t.me/CropperFinanceVietNam',
+    telegram_ru: 'https://t.me/cropperrussia',
+    telegram_fr: 'https://t.me/cropperfinancefrance',
+    telegram_br: 'https://t.me/cropperfinancebrazil',
+    telegram_id: 'https://t.me/cropperfinanceindo',
+    telegram_it: 'https://t.me/cropperitalia',
   }
+  displayfilters = false
 
   get isMobile() {
     return this.$accessor.isMobile
@@ -85,10 +161,35 @@ export default class Foot extends Vue {
   position: relative;
 }
 
-.planet-bottom {
-  position: absolute;
-  right: 0;
-  bottom: 0;
+.telegram {
+  height: 30px;
+
+  @media (max-width: @mobile-b-width) {
+    height: 230px;
+  }
+
+  .telegram-group {
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: @mobile-b-width) {
+      display: block;
+    }
+
+    a {
+      font-size: 16px;
+      font-weight: normal;
+      line-height: 42px;
+      letter-spacing: -0.05em;
+      color: #fff;
+
+      @media (max-width: @mobile-b-width) {
+        display: block;
+        width: 50%;
+        float: left;
+      }
+    }
+  }
 }
 
 .mobile {
@@ -153,6 +254,15 @@ export default class Foot extends Vue {
   }
 }
 
+.telegramButton > img {
+  margin-left: 12px;
+  transform: 0;
+}
+
+.telegramButton-active > img {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
 // ******* Mobile *******
 @media (max-width: @mobile-b-width) {
   .ant-layout-footer {
@@ -164,9 +274,10 @@ export default class Foot extends Vue {
     display: none;
   }
   .foot-refer {
-    > label {
-      display: none;
-    }
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: -0.05em;
+    font-weight: normal;
     .refer-list {
       display: inline-block;
       width: 100%;
@@ -182,7 +293,9 @@ export default class Foot extends Vue {
       display: inline-block;
       justify-items: center;
       margin: 10px 0;
-      font-size: 20px;
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: -0.05em;
       width: 100%;
       label {
         display: none;
@@ -194,16 +307,5 @@ export default class Foot extends Vue {
       }
     }
   }
-  
 }
-// @media (max-width: 1080px) {
-//   .pc {
-//     flex-direction: column;
-//     align-items: center;
-//   }
-//   .foot-refer .refer-list label {
-//     margin: 0 30px;
-//   }
-// }
-
 </style>

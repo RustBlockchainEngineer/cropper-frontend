@@ -5,11 +5,11 @@
       <div class="card-body">
         <div class="page-head fs-container">
           <span class="title">Fertilizer Beta</span>
-          <NuxtLink to="/pools/create-pool/">
+          <a href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/apply-for-fertilizer" target="_blank">
             <div class="create">
               <Button size="large" ghost> + &nbsp; Apply </Button>
             </div>
-          </NuxtLink>
+          </a>
 
           <div class="buttons">
             <div class="count-down-group">
@@ -687,6 +687,7 @@ export default Vue.extend({
       letter-spacing: -0.05em;
       height: 60px;
       width: 163px;
+      cursor: pointer;
     }
   }
 

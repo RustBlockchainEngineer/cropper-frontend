@@ -28,7 +28,9 @@
                 <p slot="title" :style="current > 1 ? '' : 'color: rgb(87, 117, 147)'">
                   {{ stepTitleInputMarket }}
                   <Tooltip placement="right">
-                    <div slot="title">For details on creating a Serum Market, see bla bla bla</div>
+                    <div slot="title">For details on creating a market ID,
+                      <a href="//cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool" target="_blank"> click here</a>
+                    </div>
                     <Icon type="info-circle" />
                   </Tooltip>
                 </p>
@@ -79,14 +81,14 @@
             >
               <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'"
                 ><div style="padding-bottom: 10px; word-break: break-word">
-                  $$This tool is for advanced users. Before attempting to create a new liquidity pool, we suggest going
+                  This tool is for advanced users. Before attempting to create a new liquidity pool, we suggest going
                   through this
                   <a
                     href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
                     target="_blank"
                   >
                     detailed guide</a
-                  >$$
+                  >
                 </div>
               </Col>
               <Col style="line-height: 20px" :span="24"
