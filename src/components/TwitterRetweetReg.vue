@@ -161,7 +161,7 @@
                   Quote Retweet <span>this tweet</span> <br>
                   • Tagging 3 friends <br>
                   • Using the hashtag <br>
-                    #CropperFiance #Fertilizer
+                    #CropperFinance #Fertilizer
                 </div>
 
                 <div class="social-input-form twitter-link">

@@ -49,7 +49,7 @@ const web3Plugin: Plugin = async (ctx, inject) => {
   if(DEVNET_MODE)
     endpoint = 'https://api.devnet.solana.com'; 
   else
-   endpoint = 'https://lokidfxnwlabdq.main.genesysgo.net:8899';
+   endpoint = 'https://cropper.genesysgo.net';
   
   const web3 = createWeb3Instance(endpoint)
 
