@@ -440,7 +440,21 @@
                         </div>
                       </div>
                       <div class="btncontainer">
+
+
                         <Button
+                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                          size="large"
+                          ghost
+                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                        >
+                          Harvest & Unstake
+                        </Button>
+
+
+                        <Button
+                          v-else
                           size="large"
                           ghost
                           :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
@@ -449,6 +463,7 @@
                         >
                           Harvest
                         </Button>
+
                       </div>
                     </div>
                   </div>
@@ -467,7 +482,8 @@
                         <Button size="large" ghost> Connect Wallet </Button>
                       </div>
                       <div v-else class="fs-container">
-                        <div class="btncontainer" v-if="!farm.userInfo.depositBalance.isNullOrZero()">
+                        <div class="btncontainer" v-if="!farm.userInfo.depositBalance.isNullOrZero() && 
+                        farm.farmInfo.poolInfo.end_timestamp > currentTimestamp">
                           <Button
                             class="unstake btn-bg-fill"
                             size="large"
