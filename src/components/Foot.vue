@@ -63,29 +63,41 @@
     </div>
     <div class="telegram">
       <div class="telegram-group" v-if="displayfilters">
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.telegram_en" target="_blank">
           Telegram(EN)
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.telegram_cn" target="_blank">
           Telegram(CN)
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.telegram_kr" target="_blank">
           Telegram(KR)
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.telegram_jp" target="_blank">
           Telegram(JP)
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.telegram_es" target="_blank">
           Telegram(ES)
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.telegram_tr" target="_blank">
           Telegram(TR)
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.telegram_vn" target="_blank">
           Telegram(VN)
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
+        <a :href="linkUrl.telegram_ru" target="_blank">
           Telegram(RU)
+        </a>
+        <a :href="linkUrl.telegram_fr" target="_blank">
+          Telegram(FR)
+        </a>
+        <a :href="linkUrl.telegram_br" target="_blank">
+          Telegram(BR)
+        </a>
+        <a :href="linkUrl.telegram_in" target="_blank">
+          Telegram(IN)
+        </a>
+        <a :href="linkUrl.telegram_it" target="_blank">
+          Telegram(IT)
         </a>
       </div>
     </div>
@@ -114,9 +126,20 @@ export default class Foot extends Vue {
     home: '/',
     app: '/swap/',
     twitter: 'https://twitter.com/CropperFinance',
-    discord: 'https://discord.gg/CropperFinance',
-    telegram: 'https://t.me/CropperFinance',
-    medium: 'https://cropperfinance.medium.com/'
+    discord: 'https://discord.gg/TH7k2N5k',
+    medium: 'https://cropperfinance.medium.com/',
+    telegram_en: 'https://t.me/CropperFinance',
+    telegram_cn: 'https://t.me/cropperChineseofficial',
+    telegram_kr: 'https://t.me/CropperFinance_Korea',
+    telegram_jp: 'https://t.me/cropperfinancejapan',
+    telegram_es: 'https://t.me/cropperspanish',
+    telegram_tr: 'https://t.me/CropperTurkish',
+    telegram_vn: 'https://t.me/CropperFinanceVietNam',
+    telegram_ru: 'https://t.me/cropperrussia',
+    telegram_fr: 'https://t.me/cropperfinancefrance',
+    telegram_br: 'https://t.me/cropperfinancebrazil',
+    telegram_id: 'https://t.me/cropperfinanceindo',
+    telegram_it: 'https://t.me/cropperitalia',
   }
   displayfilters = false
 
@@ -142,7 +165,7 @@ export default class Foot extends Vue {
   height: 30px;
 
   @media (max-width: @mobile-b-width) {
-    height: 150px;
+    height: 230px;
   }
 
   .telegram-group {
