@@ -50,7 +50,7 @@ const web3Plugin: Plugin = async (ctx, inject) => {
     endpoint = 'https://api.devnet.solana.com'; 
   else
    endpoint = 'https://lokidfxnwlabdq.main.genesysgo.net:8899';
-    // endpoint = 'https://solana-api.projectserum.com';
+  endpoint = 'https://solana-api.projectserum.com';
   
   const web3 = createWeb3Instance(endpoint)
 

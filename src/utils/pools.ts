@@ -77,12 +77,31 @@ export function getPoolListByTokenMintAddresses(
   pcMintAddress: string,
   ammIdOrMarket: string | undefined
 ): LiquidityPoolInfo[] {
-  const pool = LIQUIDITY_POOLS.filter((pool) => {
+  const crp_pools = LIQUIDITY_POOLS.filter((pool) => {
     if (coinMintAddress && pcMintAddress) {
       if (
         ((pool.coin.mintAddress === coinMintAddress && pool.pc.mintAddress === pcMintAddress) ||
           (pool.coin.mintAddress === pcMintAddress && pool.pc.mintAddress === coinMintAddress)) &&
-        (pool.version === 5 || pool.version === 4)
+        (pool.version === 5)
+        // && pool.official //@zhaohui
+      ) {
+        return !(ammIdOrMarket !== undefined && pool.ammId !== ammIdOrMarket && pool.serumMarket !== ammIdOrMarket)
+      }
+    } else {
+      return !(ammIdOrMarket !== undefined && pool.ammId !== ammIdOrMarket && pool.serumMarket !== ammIdOrMarket)
+    }
+    return false
+  })
+  if (crp_pools.length > 0){
+    return cloneDeep(crp_pools)
+  }
+
+  const ray_pools = LIQUIDITY_POOLS.filter((pool) => {
+    if (coinMintAddress && pcMintAddress) {
+      if (
+        ((pool.coin.mintAddress === coinMintAddress && pool.pc.mintAddress === pcMintAddress) ||
+          (pool.coin.mintAddress === pcMintAddress && pool.pc.mintAddress === coinMintAddress)) &&
+        (pool.version === 4)
         // && pool.official //@zhaohui
       ) {
         return !(ammIdOrMarket !== undefined && pool.ammId !== ammIdOrMarket && pool.serumMarket !== ammIdOrMarket)
@@ -93,7 +112,8 @@ export function getPoolListByTokenMintAddresses(
     return false
   })
 
-  return cloneDeep(pool)
+
+  return cloneDeep(ray_pools)
 }
 
 export function getLpMintByTokenMintAddresses(
@@ -206,6 +226,7 @@ export function findBestLP(pools:any, baseMint:string, quoteMint:string, amountI
         amountIn,
         1
       )
+      console.log(amountOut.fixed())
       if(!bestLP || maxAmount < amountOut.wei.toNumber()){
         maxAmount = amountOut.wei.toNumber()
         bestLP = poolInfo
