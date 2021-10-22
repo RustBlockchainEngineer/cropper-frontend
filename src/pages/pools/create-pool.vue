@@ -616,13 +616,17 @@ export default class CreatePool extends Vue {
   async validateAmount() {
     this.isAmountValid = false
     if (this.inputBaseValue && this.inputQuoteValue && this.baseMintDecimals && this.quoteMintDecimals) {
+      const baseMintAddress = this.marketMsg.baseMintAddress.toBase58() == TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.marketMsg.baseMintAddress.toBase58()
+      const quoteMintAddress = this.marketMsg.quoteMintAddress.toBase58() == TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.marketMsg.quoteMintAddress.toBase58()
+
       const walletBaseAmount = parseFloat(
-        get(this.wallet.tokenAccounts, `${this.marketMsg.baseMintAddress.toBase58()}.balance`).fixed()
+        get(this.wallet.tokenAccounts, `${baseMintAddress}.balance`).fixed()
       )
       const walletQuoteAmount = parseFloat(
-        get(this.wallet.tokenAccounts, `${this.marketMsg.quoteMintAddress.toBase58()}.balance`).fixed()
+        get(this.wallet.tokenAccounts, `${quoteMintAddress}.balance`).fixed()
       )
-
+      console.log(walletBaseAmount)
+      console.log(walletQuoteAmount)
       if (
         this.inputBaseValue > 0 &&
         this.inputBaseValue < walletBaseAmount &&
