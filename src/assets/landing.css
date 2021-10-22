@@ -2648,13 +2648,7 @@ footer .footer-end-word .footer-end-second p{
         margin-bottom:0
     }
     .vecteur-1 {
-        position: absolute;
-        width: 70%;
-        min-width: 50%;
-        height: auto;
-        z-index: 0;
-        top: -20px;
-        right: 90px;
+        display: none;
     } 
 .vecteur-1 img {
     width: 90vh;

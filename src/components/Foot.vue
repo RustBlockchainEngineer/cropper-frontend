@@ -15,8 +15,21 @@
         <a :href="linkUrl.twitter" target="_blank">
           Twitter
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
-          Telegram
+        <a
+          class="telegramButton"
+          :class="displayfilters ? 'telegramButton-active' : ''"
+          @click="
+            () => {
+              if (displayfilters == true) {
+                displayfilters = false
+              } else {
+                displayfilters = true
+              }
+            }
+          "
+        >
+            Telegram
+            <img src="@/assets/icons/arrow-down.svg" />
         </a>
       </div>
       <div class="icon_list" v-if="isMobile">
@@ -30,8 +43,49 @@
         <a :href="linkUrl.twitter" target="_blank">
           Twitter
         </a>
+        <a
+          class="telegramButton"
+          :class="displayfilters ? 'telegramButton-active' : ''"
+          @click="
+            () => {
+              if (displayfilters == true) {
+                displayfilters = false
+              } else {
+                displayfilters = true
+              }
+            }
+          "
+        >
+            Telegram
+            <img src="@/assets/icons/arrow-down.svg" />
+        </a>
+      </div>
+    </div>
+    <div class="telegram">
+      <div class="telegram-group" v-if="displayfilters">
         <a :href="linkUrl.telegram" target="_blank">
-          Telegram
+          Telegram(EN)
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram(CN)
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram(KR)
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram(JP)
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram(ES)
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram(TR)
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram(VN)
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram(RU)
         </a>
       </div>
     </div>
@@ -64,6 +118,7 @@ export default class Foot extends Vue {
     telegram: 'https://t.me/CropperFinance',
     medium: 'https://cropperfinance.medium.com/'
   }
+  displayfilters = false
 
   get isMobile() {
     return this.$accessor.isMobile
@@ -81,6 +136,37 @@ export default class Foot extends Vue {
 .ant-layout-footer {
   padding: 24px 128px !important;
   position: relative;
+}
+
+.telegram {
+  height: 30px;
+
+  @media (max-width: @mobile-b-width) {
+    height: 150px;
+  }
+
+  .telegram-group {
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: @mobile-b-width) {
+      display: block;
+    }
+
+    a {
+      font-size: 16px;
+      font-weight: normal;
+      line-height: 42px;
+      letter-spacing: -0.05em;
+      color: #fff;
+
+      @media (max-width: @mobile-b-width) {
+        display: block;
+        width: 50%;
+        float: left;
+      }
+    }
+  }
 }
 
 .mobile {
@@ -145,6 +231,15 @@ export default class Foot extends Vue {
   }
 }
 
+.telegramButton > img {
+  margin-left: 12px;
+  transform: 0;
+}
+
+.telegramButton-active > img {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
 // ******* Mobile *******
 @media (max-width: @mobile-b-width) {
   .ant-layout-footer {
@@ -189,6 +284,5 @@ export default class Foot extends Vue {
       }
     }
   }
-  
 }
 </style>
