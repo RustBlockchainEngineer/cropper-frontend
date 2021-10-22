@@ -1032,7 +1032,7 @@ export default Vue.extend({
             if (lpList_usdc_1.length > 0 && lpList_usdc_2.length > 0) {
               this.available_dex.push(ENDPOINT_MULTI_USDC)
             }
-          }while(true);
+          }while(false);
         }
         this.updateUrl()
         this.updateAmounts()
@@ -1448,7 +1448,7 @@ export default Vue.extend({
             this.$accessor.transaction.sub({ txid: txids[0], description: description_1 })
 
             const description = `Swap ${this.midAmountWithSlippage} ${TOKENS.CRP.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
-            this.$accessor.transaction.sub({ txid: txids[0], description })
+            this.$accessor.transaction.sub({ txid: txids[1], description })
           })
           .catch((error) => {
             this.$notify.error({

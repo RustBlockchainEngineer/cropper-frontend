@@ -377,7 +377,7 @@ export async function twoStepSwap(
   midTokenAccount:string,
   toTokenAccount: string,
   aIn: string,
-  aCrpOut: string,
+  aMid: string,
   aOut: string)
 {
   console.log("Two Step swap")
@@ -403,7 +403,7 @@ export async function twoStepSwap(
     fromTokenAccount,
     midTokenAccount,
     aIn,
-    aCrpOut
+    aMid
     )
   
   let cur_crp_balance = 0
