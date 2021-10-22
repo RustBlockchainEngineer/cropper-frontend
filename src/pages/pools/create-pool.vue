@@ -287,7 +287,7 @@
                         :disabled="createAmmFlag || !(inputPrice !== null && isAmountValid)"
                         @click="createKey"
                       >
-                        {{ createAmmFlag ? '' : 'Confirm and initialize Liquidity Pool' }}
+                        {{ createAmmFlag ? '' : isAmountValid == false ? 'Insufficient amount' : 'Confirm and initialize Liquidity Pool' }}
                       </Button>
                     </div>
                   </div>
@@ -652,63 +652,67 @@ export default class CreatePool extends Vue {
       const liquidityItem = get(liquidity.infos, value.lp_mint)
       let lp = getPoolByLpMintAddress(value.lp_mint)
 
-      const liquidityCoinValue =
-        getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
-        price.prices[liquidityItem?.coin.symbol as string]
-      const liquidityPcValue =
-        getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
-        price.prices[liquidityItem?.pc.symbol as string]
-      const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
+      if(liquidityItem?.coin.balance)
+      {
+        const liquidityCoinValue =
+          getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
+          price.prices[liquidityItem?.coin.symbol as string]
+        const liquidityPcValue =
+          getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
+          price.prices[liquidityItem?.pc.symbol as string]
+        const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
 
-      const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
-      const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
+        const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
+        const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
 
-      value.liquidity = liquidityTotalValue
+        value.liquidity = liquidityTotalValue
 
-      if (!window.poolsDatas) {
-        window.poolsDatas = {}
-      }
+        if (!window.poolsDatas) {
+          window.poolsDatas = {}
+        }
 
-      if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['1day']) {
-        value.volume_24h = window.poolsDatas[value.ammId]['1day']
-      } else {
-        value.volume_24h = 0
-      }
+        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['1day']) {
+          value.volume_24h = window.poolsDatas[value.ammId]['1day']
+        } else {
+          value.volume_24h = 0
+        }
 
-      if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['7day']) {
-        value.volume_7d = window.poolsDatas[value.ammId]['7day']
-      } else {
-        value.volume_7d = 0
-      }
+        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['7day']) {
+          value.volume_7d = window.poolsDatas[value.ammId]['7day']
+        } else {
+          value.volume_7d = 0
+        }
 
-      if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['fees']) {
-        value.fee_24h = window.poolsDatas[value.ammId]['fees']
-      } else {
-        value.fee_24h = 0
-      }
+        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['fees']) {
+          value.fee_24h = window.poolsDatas[value.ammId]['fees']
+        } else {
+          value.fee_24h = 0
+        }
 
-      if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['fees']) {
-        value.apy = (window.poolsDatas[value.ammId]['fees'] * 365 * 100) / liquidityTotalValue
-      } else {
-        value.apy = 0
-      }
+        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['fees']) {
+          value.apy = (window.poolsDatas[value.ammId]['fees'] * 365 * 100) / liquidityTotalValue
+        } else {
+          value.apy = 0
+        }
 
-      value.current = 0
+        value.current = 0
 
-      if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
-        if (wallet) {
-          value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`)
-          if (value.current) {
-            value.current = (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) * liquidityItemValue
+        if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
+          if (wallet) {
+            value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`)
+            if (value.current) {
+              value.current = (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) * liquidityItemValue
+            } else {
+              value.current = 0
+            }
           } else {
             value.current = 0
           }
-        } else {
-          value.current = 0
         }
+
+        polo.push(value)
       }
 
-      polo.push(value)
     })
 
     return polo
