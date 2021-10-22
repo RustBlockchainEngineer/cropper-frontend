@@ -879,7 +879,6 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
-        console.log(newFarmInfo.poolId)
 
         if (reward && lp) {
           const rewardPerTimestampAmount = new TokenAmount(getBigNumber(reward_per_timestamp), reward.decimals)
@@ -966,7 +965,7 @@ export default Vue.extend({
           const rewardPerShareCalc = new BigNumber(reward_per_timestamp.toNumber())
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
-            .dividedBy(liquidityItem.lp.totalSupply.wei)
+            .dividedBy(newFarmInfo.lp.balance.wei)
             .plus(getBigNumber(reward_per_share_net));
           
           const pendingReward = depositBalance.wei
