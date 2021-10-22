@@ -280,38 +280,42 @@
                     <span v-if="farm.pla_ts > currentTimestamp">2</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Withelist</div><label>-</label>You can now whitelist yourself for the lottery.<br />
+                      <div>Withelist</div>
+                      <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla }}</div>
+                      You can now whitelist yourself for the lottery.<br />
                     </div>
                   </div>
                   <div :class="farm.pla_end_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pla_end_ts > currentTimestamp">3</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Airdrop Lottery</div><label>-</label>See if you have any winning lottery tickets.<br />
-                      <div class="date" :style="'background-color: ' + farm.current_status.color">
+                      <div>Airdrop Lottery</div>
+                      <label>-</label>
+                       <div class="date" :style="'background-color: ' + farm.current_status.color">
                         {{ farm.pla_end }}
                       </div>
+                      See if you have any winning lottery tickets.<br />
                     </div>
                   </div>
                   <div :class="farm.pfrom_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pfrom_ts > currentTimestamp">4</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Private Farm</div><label>-</label>You can now stack LP in {{ farm.tokenA.symbol }}-{{
-                        farm.tokenB.symbol
-                      }}
-                      farm.<br />
+                      <div>Private Farm</div>
+                      <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pfrom }}</div>
+                      You can now stack LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
                     </div>
                   </div>
                   <div :class="farm.pto_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pto_ts > currentTimestamp">5</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Public Farm</div><label>-</label>{{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes
-                      public<br />
+                      <div>Public Farm</div>
+                      <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pto }}</div>
+                      {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes public<br />
                     </div>
                   </div>
                 </Col>
@@ -2353,6 +2357,10 @@ export default Vue.extend({
       }
     }
 
+    @media (max-width: @mobile-m-width) {
+      height: 120px;
+    }
+
     & > .span {
       position: absolute;
       left: -60px;
@@ -2383,6 +2391,12 @@ export default Vue.extend({
         @media (max-width: @mobile-b-width) {
           height: 68px;
           top: -68px;
+          left: 16px;
+        }
+
+        @media (max-width: @mobile-m-width) {
+          height: 103px;
+          top: -103px;
           left: 16px;
         }
       }
@@ -2422,6 +2436,12 @@ export default Vue.extend({
           top: -68px;
           left: 16px;
         }
+
+        @media (max-width: @mobile-m-width) {
+          height: 103px;
+          top: -103px;
+          left: 16px;
+        }
       }
     }
 
@@ -2457,6 +2477,12 @@ export default Vue.extend({
       font-weight: 400;
       padding: 5px;
     }
+
+     @media (max-width: @mobile-m-width) {
+      position: relative;
+      top: 0;
+      right: 0;
+    }
   }
 
   .steps > div > div {
@@ -2483,6 +2509,12 @@ export default Vue.extend({
         line-height: 10px;
         font-weight: 400;
         padding: 5px;
+      }
+
+      @media (max-width: @mobile-m-width) {
+        position: relative;
+        top: 0;
+        right: 0;
       }
     }
 
