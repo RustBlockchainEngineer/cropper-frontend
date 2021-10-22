@@ -4,6 +4,21 @@
       <div class="logo">
         <a href="/"><img src="@/assets/icons/logo-text.svg"  width="224.76" height="45.38" /></a>
       </div>
+      <div class="icon_list" v-if="!isMobile">
+        <label>Our Social</label>
+        <a :href="linkUrl.medium" target="_blank">
+          Medium
+        </a>
+        <a :href="linkUrl.discord" target="_blank">
+          Discord
+        </a>
+        <a :href="linkUrl.twitter" target="_blank">
+          Twitter
+        </a>
+        <a :href="linkUrl.telegram" target="_blank">
+          Telegram
+        </a>
+      </div>
       <div class="icon_list" v-if="isMobile">
         <label>Our Social</label>
         <a :href="linkUrl.medium" target="_blank">
@@ -21,26 +36,9 @@
       </div>
     </div>
     <div class="foot-line"></div>
-    <div :class="isMobile ? 'mobile foot-refer' : 'pc foot-refer'">
+    <div class="foot-refer">
       <label>Decentralized 2021</label>
-
-      <div class="icon_list" v-if="!isMobile">
-        <label>Our Social</label>
-        <a :href="linkUrl.medium" target="_blank">
-          Medium
-        </a>
-        <a :href="linkUrl.discord" target="_blank">
-          Discord
-        </a>
-        <a :href="linkUrl.twitter" target="_blank">
-          Twitter
-        </a>
-        <a :href="linkUrl.telegram" target="_blank">
-          Telegram
-        </a>
-      </div>
     </div>
-    <img src="@/assets/icons/greenPlanet2.svg" class="planet-bottom"/>
   </Footer>
 </template>
 
@@ -83,12 +81,6 @@ export default class Foot extends Vue {
 .ant-layout-footer {
   padding: 24px 128px !important;
   position: relative;
-}
-
-.planet-bottom {
-  position: absolute;
-  right: 0;
-  bottom: 0;
 }
 
 .mobile {
@@ -164,9 +156,10 @@ export default class Foot extends Vue {
     display: none;
   }
   .foot-refer {
-    > label {
-      display: none;
-    }
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: -0.05em;
+    font-weight: normal;
     .refer-list {
       display: inline-block;
       width: 100%;
@@ -182,7 +175,9 @@ export default class Foot extends Vue {
       display: inline-block;
       justify-items: center;
       margin: 10px 0;
-      font-size: 20px;
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: -0.05em;
       width: 100%;
       label {
         display: none;
@@ -196,14 +191,4 @@ export default class Foot extends Vue {
   }
   
 }
-// @media (max-width: 1080px) {
-//   .pc {
-//     flex-direction: column;
-//     align-items: center;
-//   }
-//   .foot-refer .refer-list label {
-//     margin: 0 30px;
-//   }
-// }
-
 </style>

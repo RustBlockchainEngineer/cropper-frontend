@@ -39,6 +39,7 @@
         </div>
       </div>
     </section>
+    <img src="@/assets/landing/Header_Cropper_mobile.png" class="background-mobile" />
   </main>
 </template>
 
@@ -111,7 +112,7 @@ export default class Landing extends Vue {
 }
 </script>
 
-<style>
+<style lang="less">
 @import '../assets/landing.css';
 
 .home-container-background {
@@ -150,17 +151,16 @@ export default class Landing extends Vue {
   height: 72px;
 }
 
-.home-container-background .pc .icon_list a,
-.home-container-background .foot-refer {
-  color: #fff !important;
-}
-
 main.landing {
   min-height: calc(100vh - 196px);
   background: none !important;
 }
 
-@media (max-width: 800px) {
+.background-mobile {
+  display: none;
+}
+
+@media (max-width: @mobile-b-width) {
   .home-container-background {
     background-image: unset !important;
   }
@@ -170,14 +170,14 @@ main.landing {
   }
   .main-btns {
     margin-bottom: 57px;
-    padding: 0 50px;
+    padding: 0 20px;
     flex-direction: unset;
     max-width: 100%;
     display: block;
   }
 
   .main-btns > div {
-    width: 100%;
+    width: 335px;
     margin: 0 0 20px;
   }
 
@@ -185,12 +185,13 @@ main.landing {
     font-family: Gilroy, sans-serif;
     font-style: normal;
     font-weight: normal;
-    font-size: 17px;
-    line-height: 30px;
+    font-size: 14px;
+    line-height: 32px;
+    letter-spacing: -0.05em;
     text-align: center;
     margin-bottom: 20px;
-    opacity: 0.9;
-    margin-top: 89px;
+    opacity: 0.7;
+    margin-top: 20px;
   }
 
   .header-left h2 {
@@ -207,16 +208,21 @@ main.landing {
   }
 
   #section-1 .container p {
-    font-size: 34px;
-    line-height: 42px;
+    font-size: 26px;
+    line-height: 34px;
+    letter-spacing: -0.05em;
   }
 
   main.landing {
     min-height: unset;
-    background: no-repeat url('../assets/landing/Header_Cropper_mobile.png') !important;
     background-position: bottom center !important;
     background-size: contain !important;
     background-repeat: no-repeat;
+  }
+
+  .background-mobile {
+    display: block;
+    width: 100%;
   }
 }
 </style>
