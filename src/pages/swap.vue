@@ -547,13 +547,14 @@ import { canWrap, getLiquidityInfoSimilar } from '@/utils/liquidity'
 import {
   getLpListByTokenMintAddresses,
   getPoolListByTokenMintAddresses,
+  getCRPPoolListByTokenMintAddresses,
+  getRAYPoolListByTokenMintAddresses,
   findBestLP,
   isOfficalMarket,
   LiquidityPoolInfo
 } from '@/utils/pools'
 const CRP = getTokenBySymbol('CRP')
 const ENDPOINT_SRM = 'Serum Dex'
-const ENDPOINT_MONO = 'Mono-step Swap'
 const ENDPOINT_CRP = 'CropperFinance Pool'
 const ENDPOINT_RAY = 'Raydium Pool'
 const ENDPOINT_MULTI_CRP = 'Two-Step Swap with CRP'
@@ -943,79 +944,95 @@ export default Vue.extend({
         }
 
         if (this.fromCoin.mintAddress && this.toCoin.mintAddress) {
-          // serum market
-          let marketAddress = ''
-          for (const address of Object.keys(this.swap.markets)) {
-            if (isOfficalMarket(address)) {
-              const info = cloneDeep(this.swap.markets[address])
-              let fromMint = this.fromCoin.mintAddress
-              let toMint = this.toCoin.mintAddress
-              if (fromMint === NATIVE_SOL.mintAddress) {
-                fromMint = TOKENS.WSOL.mintAddress
-              }
-              if (toMint === NATIVE_SOL.mintAddress) {
-                toMint = TOKENS.WSOL.mintAddress
-              }
-              if (
-                (info.baseMint.toBase58() === fromMint && info.quoteMint.toBase58() === toMint) ||
-                (info.baseMint.toBase58() === toMint && info.quoteMint.toBase58() === fromMint)
-              ) {
-                marketAddress = address
-                break
+
+          do{
+            // mono-step swap
+            const crpLPList = getCRPPoolListByTokenMintAddresses(
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
+              typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
+            )
+            if (crpLPList.length > 0) {
+              this.available_dex.push(ENDPOINT_CRP)
+              break;
+            }
+
+            //two-step swap with CRP
+            const lpList_crp_1 = getPoolListByTokenMintAddresses(
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              TOKENS.CRP.mintAddress,
+              undefined
+            )
+            const lpList_crp_2 = getPoolListByTokenMintAddresses(
+              TOKENS.CRP.mintAddress,
+              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
+              undefined
+            )
+            if (lpList_crp_1.length > 0 && lpList_crp_2.length > 0) {
+              this.available_dex.push(ENDPOINT_MULTI_CRP)
+              break;
+            }
+
+            // mono-step swap using raydium
+            const rayLPList = getRAYPoolListByTokenMintAddresses(
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
+              typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
+            )
+            if (rayLPList.length > 0) {
+              this.available_dex.push(ENDPOINT_RAY)
+              break;
+            }
+
+            // serum market
+            let marketAddress = ''
+            for (const address of Object.keys(this.swap.markets)) {
+              if (isOfficalMarket(address)) {
+                const info = cloneDeep(this.swap.markets[address])
+                let fromMint = this.fromCoin.mintAddress
+                let toMint = this.toCoin.mintAddress
+                if (fromMint === NATIVE_SOL.mintAddress) {
+                  fromMint = TOKENS.WSOL.mintAddress
+                }
+                if (toMint === NATIVE_SOL.mintAddress) {
+                  toMint = TOKENS.WSOL.mintAddress
+                }
+                if (
+                  (info.baseMint.toBase58() === fromMint && info.quoteMint.toBase58() === toMint) ||
+                  (info.baseMint.toBase58() === toMint && info.quoteMint.toBase58() === fromMint)
+                ) {
+                  marketAddress = address
+                  break
+                }
               }
             }
-          }
-          if (marketAddress && this.marketAddress !== marketAddress) {
-            this.isWrap = false
-            this.marketAddress = marketAddress
-            Market.load(this.$web3, new PublicKey(marketAddress), {}, new PublicKey(SERUM_PROGRAM_ID_V3)).then(
-              (market) => {
-                this.available_dex.push(ENDPOINT_SRM)
-                this.market = market
-                this.getOrderBooks()
-              }
+            if (marketAddress && this.marketAddress !== marketAddress) {
+              this.isWrap = false
+              this.marketAddress = marketAddress
+              Market.load(this.$web3, new PublicKey(marketAddress), {}, new PublicKey(SERUM_PROGRAM_ID_V3)).then(
+                (market) => {
+                  this.available_dex.push(ENDPOINT_SRM)
+                  this.market = market
+                  this.getOrderBooks()
+                }
+              )
+            }
+
+            //two-step swap with USDC
+            const lpList_usdc_1 = getPoolListByTokenMintAddresses(
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              TOKENS.USDC.mintAddress,
+              undefined
             )
-          }
-
-          // mono-step swap
-          const lpList = getPoolListByTokenMintAddresses(
-            this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
-            this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
-            typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
-          )
-          if (lpList.length > 0) {
-            this.available_dex.push(ENDPOINT_MONO)
-          }
-
-          //two-step swap with CRP
-          const lpList_crp_1 = getPoolListByTokenMintAddresses(
-            this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
-            TOKENS.CRP.mintAddress,
-            undefined
-          )
-          const lpList_crp_2 = getPoolListByTokenMintAddresses(
-            TOKENS.CRP.mintAddress,
-            this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
-            undefined
-          )
-          if (lpList_crp_1.length > 0 && lpList_crp_2.length > 0) {
-            this.available_dex.push(ENDPOINT_MULTI_CRP)
-          }
-
-          //two-step swap with CRP
-          const lpList_usdc_1 = getPoolListByTokenMintAddresses(
-            this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
-            TOKENS.USDC.mintAddress,
-            undefined
-          )
-          const lpList_usdc_2 = getPoolListByTokenMintAddresses(
-            TOKENS.USDC.mintAddress,
-            this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
-            undefined
-          )
-          if (lpList_usdc_1.length > 0 && lpList_usdc_2.length > 0) {
-            this.available_dex.push(ENDPOINT_MULTI_USDC)
-          }
+            const lpList_usdc_2 = getPoolListByTokenMintAddresses(
+              TOKENS.USDC.mintAddress,
+              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
+              undefined
+            )
+            if (lpList_usdc_1.length > 0 && lpList_usdc_2.length > 0) {
+              this.available_dex.push(ENDPOINT_MULTI_USDC)
+            }
+          }while(false);
         }
         this.updateUrl()
         this.updateAmounts()
@@ -1118,13 +1135,13 @@ export default Vue.extend({
                 }
               }
             }
-          } else if (dex_type == ENDPOINT_MONO) {
+          } else if (dex_type == ENDPOINT_CRP || dex_type == ENDPOINT_RAY) {
             // @ts-ignore
             const poolInfo = findBestLP(
               this.$accessor.liquidity.infos,
               this.fromCoin!.mintAddress,
               this.toCoin!.mintAddress,
-              this.fromCoinAmount
+              this.fromCoinAmount,
             )
             this.mainAmmId = poolInfo.ammId
             const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
@@ -1149,8 +1166,7 @@ export default Vue.extend({
                   false
                 ).fixed()
                 impact = priceImpact
-                if (poolInfo.version == 5) endpoint = ENDPOINT_CRP
-                else endpoint = ENDPOINT_RAY
+                endpoint = dex_type
 
                 best_dex_type = 'single'
               }
@@ -1395,6 +1411,8 @@ export default Vue.extend({
         const fromPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.mainAmmId)
         const toPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.extAmmId)
         const midTokenMint = this.endpoint === ENDPOINT_MULTI_CRP ? TOKENS.CRP.mintAddress : TOKENS.USDC.mintAddress
+        const midTokenSymbol = this.endpoint === ENDPOINT_MULTI_CRP ? TOKENS.CRP.symbol : TOKENS.USDC.symbol
+
         twoStepSwap(
           this.$web3,
           // @ts-ignore
@@ -1428,11 +1446,11 @@ export default Vue.extend({
                   h('a', { attrs: { href: `${this.url.explorer}/tx/${txids[1]}`, target: '_blank' } }, 'here')
                 ])
             })
-            const description_1 = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.midAmountWithSlippage} ${TOKENS.CRP.symbol}`
+            const description_1 = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.midAmountWithSlippage} ${midTokenSymbol}`
             this.$accessor.transaction.sub({ txid: txids[0], description: description_1 })
 
-            const description = `Swap ${this.midAmountWithSlippage} ${TOKENS.CRP.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
-            this.$accessor.transaction.sub({ txid: txids[0], description })
+            const description = `Swap ${this.midAmountWithSlippage} ${midTokenSymbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
+            this.$accessor.transaction.sub({ txid: txids[1], description })
           })
           .catch((error) => {
             this.$notify.error({

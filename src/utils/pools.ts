@@ -72,7 +72,7 @@ export function getPoolByTokenMintAddresses(
 
 
 
-export function getPoolListByTokenMintAddresses(
+export function getCRPPoolListByTokenMintAddresses(
   coinMintAddress: string,
   pcMintAddress: string,
   ammIdOrMarket: string | undefined
@@ -92,11 +92,16 @@ export function getPoolListByTokenMintAddresses(
     }
     return false
   })
-  if (crp_pools.length > 0){
-    return cloneDeep(crp_pools)
-  }
+  return cloneDeep(crp_pools)
+}
 
-  const ray_pools = LIQUIDITY_POOLS.filter((pool) => {
+
+export function getRAYPoolListByTokenMintAddresses(
+  coinMintAddress: string,
+  pcMintAddress: string,
+  ammIdOrMarket: string | undefined
+): LiquidityPoolInfo[] {
+  const crp_pools = LIQUIDITY_POOLS.filter((pool) => {
     if (coinMintAddress && pcMintAddress) {
       if (
         ((pool.coin.mintAddress === coinMintAddress && pool.pc.mintAddress === pcMintAddress) ||
@@ -111,10 +116,22 @@ export function getPoolListByTokenMintAddresses(
     }
     return false
   })
-
-
-  return cloneDeep(ray_pools)
+  return cloneDeep(crp_pools)
 }
+
+
+export function getPoolListByTokenMintAddresses(
+  coinMintAddress: string,
+  pcMintAddress: string,
+  ammIdOrMarket: string | undefined
+): LiquidityPoolInfo[] {
+  const crp_pools = getCRPPoolListByTokenMintAddresses(coinMintAddress, pcMintAddress, ammIdOrMarket)
+  if(crp_pools.length){
+    return crp_pools
+  }
+  else return getRAYPoolListByTokenMintAddresses(coinMintAddress, pcMintAddress, ammIdOrMarket)
+}
+
 
 export function getLpMintByTokenMintAddresses(
   coinMintAddress: string,
