@@ -25,6 +25,7 @@ import { TOKENS } from './tokens';
 
 
 export const PAY_FARM_FEE = 5000;
+export const REWARD_MULTIPLER = 1000000000;
 export const FARM_PREFIX = "cropperfarm";
 export const LOCKED_TOKENA_LIST = [
   "CRP",
@@ -63,7 +64,7 @@ export const FarmAccountLayout = struct([
   publicKey('pool_lp_token_account'),
   publicKey('pool_reward_token_account'),
   publicKey('pool_mint_address'),
-  publicKey('reward_mint_address'),
+  publicKey('reward_mint_address'), 
   publicKey('token_program_id'),
   publicKey('owner'),
   u128('reward_per_share_net'),

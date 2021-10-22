@@ -632,12 +632,13 @@ import { getUnixTs } from '@/utils'
 import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
-import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
+import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, REWARD_MULTIPLER, YieldFarm } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER } from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
+import BigNumber from 'bignumber.js'
 const CollapsePanel = Collapse.Panel
 
 export default Vue.extend({
@@ -856,6 +857,7 @@ export default Vue.extend({
     },
 
     async updateFarms() {
+      console.log("updating farms ...")
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
 
@@ -870,7 +872,7 @@ export default Vue.extend({
         let isPFO = false
 
         // @ts-ignore
-        const { reward_per_share_net, reward_per_timestamp, last_timestamp } = farmInfo.poolInfo
+        const { reward_per_share_net, reward_per_timestamp, last_timestamp, end_timestamp } = farmInfo.poolInfo
 
         // @ts-ignore
         const { reward, lp } = farmInfo
@@ -953,15 +955,23 @@ export default Vue.extend({
 
           const { rewardDebt, depositBalance } = userInfo
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-          const currentTimestamp = this.currentTimestamp
-          const duration = currentTimestamp - last_timestamp.toNumber()
-          const rewardPerShareCalc =
-            reward_per_share_net.toNumber() +
-            (1000000000 * reward_per_timestamp.toNumber() * duration) / liquidityItem.lp.totalSupply.wei.toNumber()
+          let currentTimestamp = this.currentTimestamp
 
+          
+          if(currentTimestamp > end_timestamp.toNumber()){
+            currentTimestamp = end_timestamp.toNumber();
+          }
+          
+          const duration = currentTimestamp - last_timestamp.toNumber()
+          const rewardPerShareCalc = new BigNumber(reward_per_timestamp.toNumber())
+            .multipliedBy(duration)
+            .multipliedBy(REWARD_MULTIPLER)
+            .dividedBy(liquidityItem.lp.totalSupply.wei)
+            .plus(getBigNumber(reward_per_share_net));
+          
           const pendingReward = depositBalance.wei
-            .multipliedBy(getBigNumber(rewardPerShareCalc))
-            .dividedBy(1e9)
+            .multipliedBy(rewardPerShareCalc)
+            .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
           userInfo.pendingReward = new TokenAmount(pendingReward, rewardDebt.decimals)
         } else {
