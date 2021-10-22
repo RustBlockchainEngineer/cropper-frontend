@@ -166,13 +166,13 @@
               <div class="title">Status</div>
             </Col>
             <Col class="state reward-col" :span="isMobile ? 12 : 6">
-              <div class="title">{{ isMobile ? 'Reward' : 'Pending Reward' }}</div>
+              <div class="title">{{ isMobile ? 'Reward' : 'Pending Rewards' }}</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
               <div class="title">Staked</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">Total Apr</div>
+              <div class="title">Total APR</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
               <div class="title">Liquidity</div>
@@ -182,7 +182,7 @@
             <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
                 <span class="details noDesktop">
-                  <div class="openButton">
+                  <div class="detailButton">
                     <button>Details</button>
                   </div>
                 </span>
@@ -440,7 +440,21 @@
                         </div>
                       </div>
                       <div class="btncontainer">
+
+
                         <Button
+                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                          size="large"
+                          ghost
+                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                        >
+                          Harvest & Unstake
+                        </Button>
+
+
+                        <Button
+                          v-else
                           size="large"
                           ghost
                           :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
@@ -449,6 +463,7 @@
                         >
                           Harvest
                         </Button>
+
                       </div>
                     </div>
                   </div>
@@ -467,7 +482,8 @@
                         <Button size="large" ghost> Connect Wallet </Button>
                       </div>
                       <div v-else class="fs-container">
-                        <div class="btncontainer" v-if="!farm.userInfo.depositBalance.isNullOrZero()">
+                        <div class="btncontainer" v-if="!farm.userInfo.depositBalance.isNullOrZero() && 
+                        farm.farmInfo.poolInfo.end_timestamp > currentTimestamp">
                           <Button
                             class="unstake btn-bg-fill"
                             size="large"
@@ -553,7 +569,7 @@
                             currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
                           "
                         >
-                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Reward </Button>
+                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
                         </div>
 
                         <div
@@ -616,12 +632,13 @@ import { getUnixTs } from '@/utils'
 import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
-import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
+import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, REWARD_MULTIPLER, YieldFarm } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER } from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
+import BigNumber from 'bignumber.js'
 const CollapsePanel = Collapse.Panel
 
 export default Vue.extend({
@@ -840,6 +857,7 @@ export default Vue.extend({
     },
 
     async updateFarms() {
+      console.log("updating farms ...")
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
 
@@ -854,14 +872,13 @@ export default Vue.extend({
         let isPFO = false
 
         // @ts-ignore
-        const { reward_per_share_net, reward_per_timestamp, last_timestamp } = farmInfo.poolInfo
+        const { reward_per_share_net, reward_per_timestamp, last_timestamp, end_timestamp } = farmInfo.poolInfo
 
         // @ts-ignore
         const { reward, lp } = farmInfo
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
-        console.log(newFarmInfo.poolId)
 
         if (reward && lp) {
           const rewardPerTimestampAmount = new TokenAmount(getBigNumber(reward_per_timestamp), reward.decimals)
@@ -937,15 +954,23 @@ export default Vue.extend({
 
           const { rewardDebt, depositBalance } = userInfo
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-          const currentTimestamp = this.currentTimestamp
-          const duration = currentTimestamp - last_timestamp.toNumber()
-          const rewardPerShareCalc =
-            reward_per_share_net.toNumber() +
-            (1000000000 * reward_per_timestamp.toNumber() * duration) / liquidityItem.lp.totalSupply.wei.toNumber()
+          let currentTimestamp = this.currentTimestamp
 
+          
+          if(currentTimestamp > end_timestamp.toNumber()){
+            currentTimestamp = end_timestamp.toNumber();
+          }
+          
+          const duration = currentTimestamp - last_timestamp.toNumber()
+          const rewardPerShareCalc = new BigNumber(reward_per_timestamp.toNumber())
+            .multipliedBy(duration)
+            .multipliedBy(REWARD_MULTIPLER)
+            .dividedBy(newFarmInfo.lp.balance.wei)
+            .plus(getBigNumber(reward_per_share_net));
+          
           const pendingReward = depositBalance.wei
-            .multipliedBy(getBigNumber(rewardPerShareCalc))
-            .dividedBy(1e9)
+            .multipliedBy(rewardPerShareCalc)
+            .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
           userInfo.pendingReward = new TokenAmount(pendingReward, rewardDebt.decimals)
         } else {
@@ -1939,7 +1964,7 @@ export default Vue.extend({
   display: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: @mobile-b-width) {
   body .farm.container {
     min-width: unset;
     width: 100%;
@@ -1949,7 +1974,24 @@ export default Vue.extend({
 
     .details {
       float: right;
-      margin-top: -5px;
+    }
+
+    .detailButton {
+      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      display: inline-block;
+      padding: 2px;
+      border-radius: 23px;
+
+      button {
+        height: 42px;
+        padding: 11px 40px 11px 24px;
+        color: #fff;
+        font-size: 14px;
+        letter-spacing: -0.05em;
+        background: #16164A;
+        border-radius: 22px;
+        border:transparent;
+      }
     }
 
     .openButton {
@@ -1964,7 +2006,7 @@ export default Vue.extend({
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #01033c;
+        background: #16164A;
         border-radius: 22px;
         border:transparent;
         
@@ -1990,6 +2032,7 @@ export default Vue.extend({
     .buttonsd {
       display: block;
       background: #00033c;
+      margin-top: 10px;
     }
 
     .noMobile {
@@ -2133,7 +2176,7 @@ export default Vue.extend({
     .ant-collapse.ant-collapse-icon-position-right {
       max-width: 100%;
       background: #16164a;
-      border-radius: 10px;
+      border-radius: 14px;
     }
 
     .reward-col {
@@ -2251,6 +2294,11 @@ export default Vue.extend({
 
     .farm-head {
       padding: 30px 5px !important;
+    }
+
+    .ant-collapse-arrow {
+      z-index: 2;
+      margin-right: 20px;
     }
   }
 

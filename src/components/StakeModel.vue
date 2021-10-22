@@ -94,7 +94,7 @@
         </div>
 
         <div style="text-align:center">
-        You will have to validate 2 operations, Supply liquidity pool & Stake
+          You will have to validate 2 operations, Supply liquidity pool & Stake
         </div>
 
 

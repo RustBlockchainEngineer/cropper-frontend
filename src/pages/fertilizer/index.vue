@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-body">
         <div class="page-head fs-container">
-          <span class="title">Fertilizer</span>
+          <span class="title">Fertilizer Beta</span>
           <NuxtLink to="/pools/create-pool/">
             <div class="create">
               <Button size="large" ghost> + &nbsp; Apply </Button>
@@ -102,10 +102,10 @@
                     <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
                       <img class="social-icon" src="@/assets/icons/link_grey.svg"/>
                     </a>
-                    <a v-show="farm.links.twitter" :href="farm.website.url" target="_blank">
+                    <a v-show="farm.links.twitter" :href="farm.links.twitter" target="_blank">
                       <img class="social-icon" src="@/assets/icons/twitter_grey.svg"/>
                     </a>
-                    <a v-show="farm.links.telegram" :href="farm.website.url" target="_blank">
+                    <a v-show="farm.links.telegram" :href="farm.links.telegram" target="_blank">
                       <img class="social-icon" src="@/assets/icons/telegram_grey.svg"/>
                     </a>
                   </div>
@@ -130,6 +130,10 @@
               <Row slot="header" class="farm-head">
                 <Col :span="24">
                   <div class="title"> {{ farm.title }} </div>
+
+                  <div class="detailButton">
+                    <button>Details</button>
+                  </div>
                 </Col>
               </Row>
               <Row class="farm-head">
@@ -250,7 +254,7 @@ export default Vue.extend({
   },
 
   head: {
-    title: 'CropperFinance Farm'
+    title: 'CropperFinance'
   },
 
   computed: {
@@ -432,14 +436,55 @@ export default Vue.extend({
       padding: 10px;
       margin-bottom: 20px;
 
+      .ant-collapse-content .farm-head .btncontainer {
+        @media (max-width: @mobile-b-width) {
+          height: 44px;
+          width: 105px;
+        }
+
+        button {
+            @media (max-width: @mobile-b-width) {
+            height: 40px;
+            font-size: 14px;
+          }
+        }
+      }
+
       .ant-collapse-header {
-        .farm-head .title {
-          font-size: 25px;
-          font-style: normal;
-          font-weight: 700;
-          line-height: 31px;
-          letter-spacing: 0;
-          text-align: left;
+        .farm-head {
+          .ant-col {
+            display: flex;
+            align-items: center;
+          }
+
+          .title {
+            font-size: 25px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 31px;
+            letter-spacing: 0;
+            text-align: left;
+          }
+          
+          .detailButton {
+            background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
+            display: inline-block;
+            padding: 1px;
+            border-radius: 23px;
+            position: absolute;
+            right: 0;
+
+            button {
+              height: 42px;
+              padding: 11px 32px 11px 24px;
+              color: #fff;
+              font-size: 14px;
+              letter-spacing: -0.05em;
+              background: #16164A;
+              border-radius: 22px;
+              border: transparent;
+            }
+          }
         }
       }
 
@@ -480,20 +525,6 @@ export default Vue.extend({
             justify-content: flex-end;
             font-size: 16px;
             font-weight: 600;
-          }
-        }
-
-        .btncontainer {
-          @media (max-width: @mobile-b-width) {
-            height: 44px;
-            width: 105px;
-          }
-
-          button {
-             @media (max-width: @mobile-b-width) {
-              height: 40px;
-              font-size: 14px;
-            }
           }
         }
       }
@@ -557,6 +588,10 @@ export default Vue.extend({
 
   .ant-collapse {
     border: unset !important;
+  }
+
+  .ant-collapse-arrow {
+    z-index: 2;
   }
 
   .ant-collapse > .ant-collapse-item {
