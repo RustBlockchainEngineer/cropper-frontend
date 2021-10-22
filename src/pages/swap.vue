@@ -2025,7 +2025,7 @@ main {
       display: none;
     }
     .swapHead {
-      margin: 42px 22px -25px 22px;
+      margin: 62px 22px -25px 22px;
       h1 {
         display: none;
       }

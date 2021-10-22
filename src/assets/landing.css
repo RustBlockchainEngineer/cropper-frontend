@@ -4,7 +4,7 @@
 
 .landing * {
     margin: 0;
-   /* z-index: 2;*/
+   z-index: 2;
 }
 
 body {
@@ -35,21 +35,26 @@ body .landing{
 
 .lunch-app{
     margin-right: 75px;
-    height: 43px;
-    border: 1px solid transparent;
-    border-radius: 18px;
+    height: 54px;
+    border: 2px solid transparent;
+    border-radius: 63px;
+    padding-right: 1px;
     background-image: linear-gradient(to right, #373cb7, #08a599);
 }
 
 .lunch-app-button{
-    margin-top: 1px;
-    height: 39px;
+    height: 50px;
     background-color: #01033C;
-    border-radius: 20px;
+    border-radius: 63px;
     border-color: #01033C;
-    font-size: 15px;
+    padding: 6px 28px;
+    font-size: 16px;
+    line-height: 42px;
+    letter-spacing: -0.05em;
     font-family: Gilroy;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .vecteur-1 {
@@ -466,6 +471,7 @@ h1 {
     font-weight: bold;
     font-size: 64px;
     line-height: 72px;
+    text-align: center;
 }
 
 .main-btns {
@@ -519,6 +525,7 @@ h1 {
     width: 100%;
     height: 100%;
     justify-content: center;
+    display: flex;
     align-items: center;
     background-color: #01033c;
     color: white;
@@ -528,6 +535,10 @@ h1 {
     font-size: 20px;
     line-height: 22px;
     cursor:pointer;
+}
+
+#ReadMore > img {
+    margin-right: 10px;
 }
 
 .grid-reseaux {

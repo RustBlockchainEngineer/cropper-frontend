@@ -9,9 +9,14 @@
       <a v-if="extra" :href="url[name]" target="_blank">
         {{ name.replace('-', ' ') }}
       </a>
-      <div class="menu-icon-group" v-else>
-        <div class="menu-icon" :class="name.replace('-', ' ')"></div>
-        <span> {{ name.replace('-', ' ') }} </span>
+      <div v-else>
+        <div class="menu-icon-group">
+          <div class="menu-icon" :class="name.replace('-', ' ')"></div>
+          <span> {{ name.replace('-', ' ') }} </span>
+        </div>
+        <div class="menu-icon-soon" v-if="name.replace('-', ' ') == 'farms'">
+          <span>Soon</span>
+        </div>
       </div>
     </MenuItem>
   </Menu>
@@ -60,32 +65,36 @@ export default class Nav extends Vue {
 
   changeRoute({ key }: { key: string }): void {
     const { from, to, ammId } = this.$route.query
-    if (['swap', 'liquidity'].includes(key) && (ammId || (from && to))) {
-      // if (ammId) {
-      //   this.$router.push({
-      //     path: `/${key}/`,
-      //     query: {
-      //       ammId
-      //     }
-      //   })
-      // } else 
-      if (from && to) {
-        this.$router.push({
-          path: `/${key}/`,
-          query: {
-            from,
-            to
-          }
-        })
-      } else {
+    if(key != "farms") {
+      if (['swap', 'liquidity'].includes(key) && (ammId || (from && to))) {
+        // if (ammId) {
+        //   this.$router.push({
+        //     path: `/${key}/`,
+        //     query: {
+        //       ammId
+        //     }
+        //   })
+        // } else 
+        if (from && to) {
+          this.$router.push({
+            path: `/${key}/`,
+            query: {
+              from,
+              to
+            }
+          })
+        } else {
+          this.$router.push({ path: `/${key}/` })
+        }
+      } else if (!(this as any).navs[key]) {
         this.$router.push({ path: `/${key}/` })
       }
-    } else if (!(this as any).navs[key]) {
-      this.$router.push({ path: `/${key}/` })
+      // to close menu on mobile mode
+      this.$emit('onSelect')
     }
-
-    // to close menu on mobile mode
-    this.$emit('onSelect')
+    else {
+      console.log("farms will be come soon");
+    }
   }
 }
 </script>
@@ -96,6 +105,12 @@ export default class Nav extends Vue {
 .menu-icon-group {
   display: inline-flex;
   align-items: center;
+
+  span {
+    height: 30px;
+    display: flex;
+    align-items: center;
+  }
 }
 
 .menu-icon {
@@ -103,6 +118,32 @@ export default class Nav extends Vue {
   height: 12px;
   border-radius: 4px;
   margin-right: 10px;
+}
+
+.menu-icon-soon {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding: 2px;
+  border-radius: 8px;
+  background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+  margin-top: -10px;
+
+  span {
+    border-radius: 8px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    background-color: #01033c;
+    height: 26px;
+    color: white;
+    width: 100%;
+    justify-content: center;
+  }
+
+  @media (max-width: @mobile-b-width) {
+    margin-bottom: 20px;
+  }
 }
 
 .ant-menu-item{
@@ -113,7 +154,6 @@ export default class Nav extends Vue {
   &.ant-menu-item-selected .pools {
     background: #724CEE;
   }
-
 
   .farms {
     border: 2px solid #EF745D;
@@ -161,6 +201,7 @@ export default class Nav extends Vue {
   border-bottom: none;
   font-size: 16px;
   font-weight: 600;
+  height: 100px;
 
   @media (max-width: @mobile-m-width) {
     font-size: 12px;
