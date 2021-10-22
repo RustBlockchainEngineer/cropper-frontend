@@ -154,7 +154,7 @@
           </Table>
         </div>
 
-        <div v-if="poolLoaded">
+        <div v-if="poolLoaded" class="noDesktop">
           <Collapse v-model="showCollapse" expand-icon-position="right" class="pools-table-mobile">
             <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
               <Row slot="header" class="farm-head">
@@ -424,7 +424,6 @@ export default class Pools extends Vue {
     this.showPool(this.searchName, this.stakedOnly, this.currentPage)
   }
   @Watch('showCollapse', { immediate: true, deep: true }) handler() {
-    console.log('123');
     if (!this.poolType && this.showCollapse.length > 0) {
       this.showCollapse.splice(0, this.showCollapse.length)
     }
