@@ -34,7 +34,7 @@ export const NATIVE_SOL: TokenInfo = {
 }
 
 const TOKENSBASE_MAINNET_BETA: Tokens = {
-  WSOL: {
+WSOL: {
     symbol: 'WSOL',
     name: 'Wrapped Solana',
     mintAddress: 'So11111111111111111111111111111111111111112',
@@ -151,46 +151,6 @@ const TOKENSBASE_MAINNET_BETA: Tokens = {
     mintAddress: '5Fu5UUgbjpUvdBveb3a1JTNirL8rXtiYeSMWvKjtUNQv',
     decimals: 6,
     referrer: '7WPzEiozJ69MQe8bfbss1t2unR6bHR4S7FimiUVRgu7P',
-    tags: ['cropper']
-  },
-  UBXT: {
-    symbol: 'UBXT',
-    name: 'Wrapped UBXT',
-    mintAddress: '873KLxCbz7s9Kc4ZzgYRtNmhfkQrhfyWGZJBmyCbC3ei',
-    decimals: 6,
-    referrer: '9aocFzNkSVj9TCS6cJk2uYyuzEpXPWT7xoBBF9JcZ879',
-    tags: ['cropper']
-  },
-  HNT: {
-    symbol: 'HNT',
-    name: 'Wrapped HNT',
-    mintAddress: 'HqB7uswoVg4suaQiDP3wjxob1G5WdZ144zhdStwMCq7e',
-    decimals: 6,
-    referrer: 'B61oHrGCFh8P75Z2cRDiw2nbEwbMyhVfZhMWiwxU2qCV',
-    tags: ['cropper']
-  },
-  FRONT: {
-    symbol: 'FRONT',
-    name: 'Wrapped FRONT',
-    mintAddress: '9S4t2NEAiJVMvPdRYKVrfJpBafPBLtvbvyS3DecojQHw',
-    decimals: 6,
-    referrer: 'FnasnCc7c43hd2nanSmRjh9Sf9Cgz6aEvNj6wpDznS5h',
-    tags: ['cropper']
-  },
-  AKRO: {
-    symbol: 'AKRO',
-    name: 'Wrapped AKRO',
-    mintAddress: '6WNVCuxCGJzNjmMZoKyhZJwvJ5tYpsLyAtagzYASqBoF',
-    decimals: 6,
-    referrer: 'FihBmWJbiLSEvq4QZpPPdjokdMgxqq6pESZ7oMkE1qJH',
-    tags: ['cropper']
-  },
-  HXRO: {
-    symbol: 'HXRO',
-    name: 'Wrapped HXRO',
-    mintAddress: 'DJafV9qemGp7mLMEn5wrfqaFwxsbLgUsGVS16zKRk9kc',
-    decimals: 6,
-    referrer: '4NgrGZDRCzyqiwYvKPEePTKfQXtWzKmSDBoZJjRw6wNC',
     tags: ['cropper']
   },
   UNI: {
@@ -616,6 +576,120 @@ const TOKENSBASE_MAINNET_BETA: Tokens = {
     mintAddress: '3FoUAsGDbvTD6YZ4wVKJgTB76onJUKz7GPEBNiR5b8wc',
     decimals: 4,
     referrer: '',
+    tags: ['cropper']
+  },
+  stSOL: {
+    symbol: 'stSOL',
+    name: 'stSOL',
+    mintAddress: '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj',
+    decimals: 9,
+    referrer: '8Mq4Tugv1fcT4gb1wf5ChdEFmdqNGKxFVCnM9TVe44vD',
+    tags: ['cropper']
+  },
+  LARIX: {
+    symbol: 'LARIX',
+    name: 'LARIX',
+    mintAddress: 'Lrxqnh6ZHKbGy3dcrCED43nsoLkM1LTzU2jRfWe8qUC',
+    decimals: 6,
+    referrer: 'DReKowvoxxEDdi5jnxBWJLTV73D9oHSt9uNMuSCk9cLk',
+    tags: ['cropper']
+  },
+  RIN: {
+    symbol: 'RIN',
+    name: 'RIN',
+    mintAddress: 'E5ndSkaB17Dm7CsD22dvcjfrYSDLCxFcMd6z8ddCk5wp',
+    decimals: 9,
+    tags: ['cropper']
+  },
+  APEX: {
+    symbol: 'APEX',
+    name: 'APEX',
+    mintAddress: '51tMb3zBKDiQhNwGqpgwbavaGH54mk8fXFzxTc1xnasg',
+    decimals: 9,
+    tags: ['cropper']
+  },
+  MNDE: {
+    symbol: 'MNDE',
+    name: 'MNDE',
+    mintAddress: 'MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey',
+    decimals: 9,
+    tags: ['cropper']
+  },
+  LIQ: {
+    symbol: 'LIQ',
+    name: 'LIQ',
+    mintAddress: '4wjPQJ6PrkC4dHhYghwJzGBVP78DkBzA2U3kHoFNBuhj',
+    decimals: 6,
+    tags: ['cropper']
+  },
+  WAG: {
+    symbol: 'WAG',
+    name: 'WAG',
+    mintAddress: '5tN42n9vMi6ubp67Uy4NnmM5DMZYN8aS8GeB3bEDHr6E',
+    decimals: 9,
+    tags: ['cropper']
+  },
+  wLDO: {
+    symbol: 'wLDO',
+    name: 'wLDO',
+    mintAddress: 'HZRCwxP2Vq9PCpPXooayhJ2bxTpo5xfpQrwB1svh332p',
+    decimals: 8,
+    tags: ['cropper']
+  },
+  SLIM: {
+    symbol: 'SLIM',
+    name: 'SLIM',
+    mintAddress: 'xxxxa1sKNGwFtw2kFn8XauW9xq8hBZ5kVtcSesTT9fW',
+    decimals: 6,
+    tags: ['cropper']
+  },
+  PRT: {
+    symbol: 'PRT',
+    name: 'PRT',
+    mintAddress: 'PRT88RkA4Kg5z7pKnezeNH4mafTvtQdfFgpQTGRjz44',
+    decimals: 6,
+    tags: ['cropper']
+  },
+  SBR: {
+    symbol: 'SBR',
+    name: 'SBR',
+    mintAddress: 'Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1',
+    decimals: 6,
+    tags: ['cropper']
+  },
+  FAB: {
+    symbol: 'FAB',
+    name: 'FAB',
+    mintAddress: 'EdAhkbj5nF9sRM7XN7ewuW8C9XEUMs8P7cnoQ57SYE96',
+    decimals: 9,
+    tags: ['cropper']
+  },
+  ABR: {
+    symbol: 'ABR',
+    name: 'ABR',
+    mintAddress: 'a11bdAAuV8iB2fu7X6AxAvDTo1QZ8FXB3kk5eecdasp',
+    decimals: 9,
+    tags: ['cropper']
+  },
+  IVN: {
+    symbol: 'IVN',
+    name: 'IVN',
+    mintAddress: 'iVNcrNE9BRZBC9Aqf753iZiZfbszeAVUoikgT9yvr2a',
+    decimals: 6,
+    tags: ['cropper']
+  },
+  CYS: {
+    symbol: 'CYS',
+    name: 'CYS',
+    mintAddress: 'BRLsMczKuaR5w9vSubF4j8HwEGGprVAyyVgS4EX7DKEg',
+    decimals: 6,
+    tags: ['cropper']
+  },
+  FRKT: {
+    symbol: 'FRKT',
+    name: 'FRKT',
+    mintAddress: 'ErGB9xa24Szxbk1M28u2Tx8rKPqzL6BroNkkzk5rG4zj',
+    decimals: 8,
     tags: ['cropper']
   }
 }
