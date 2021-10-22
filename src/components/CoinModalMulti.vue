@@ -24,7 +24,7 @@
 
         <div class="add-icon fc-container">
           <div class="fc-container">
-            <Icon type="plus" />
+            <img src="@/assets/icons/plus-icon.svg"/>
           </div>
         </div>
 
@@ -101,7 +101,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Modal,  Button,Icon } from 'ant-design-vue'
+import { Modal,  Button } from 'ant-design-vue'
 import { mapState } from 'vuex'
 import { inputRegex, escapeRegExp } from '@/utils/regex'
 import { getOutAmount } from '@/utils/liquidity'
@@ -112,7 +112,6 @@ Vue.use(Modal)
 
 export default Vue.extend({
   components: {
-    Icon,
     Modal,
     Button
   },
@@ -217,6 +216,10 @@ export default Vue.extend({
 <style lang="less" scoped>
 @import '../styles/variables';
 @import '../styles/global';
+
+  .addliq .add-icon .fc-container img{
+    cursor: pointer;
+  }
 
   .addliq .btnContainer{
     background:transparent !important;

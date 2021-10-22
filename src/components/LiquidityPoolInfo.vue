@@ -12,7 +12,7 @@
         {{ getPrice(poolInfo, false).toFixed(coin.decimals) }}
         {{ coin.symbol }}
       </span>
-      <Icon type="swap" @click="() => (coinBasePrice = !coinBasePrice)" />
+      <img class="anticon-swap" src="@/assets/icons/swap-icon.svg" @click="() => (coinBasePrice = !coinBasePrice)" />
     </div>
 
     <div class="fs-container">
@@ -40,14 +40,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Icon } from 'ant-design-vue'
 import { getPrice } from '@/utils/liquidity'
 
 export default Vue.extend({
-  components: {
-    Icon
-  },
-
   props: {
     initialized: {
       type: Boolean,
@@ -79,12 +74,9 @@ export default Vue.extend({
   grid-auto-rows: auto;
   row-gap: 8px;
   padding: 0 12px;
-  font-size: 12px;
-  line-height: 20px;
-
-  .name {
-    opacity: 0.75;
-  }
+  font-size: 18px;
+  line-height: 21px;
+  color: #FFFFFF50;
 
   .info {
     display: grid;
@@ -92,13 +84,13 @@ export default Vue.extend({
   }
 
   .price-base {
-    line-height: 24px;
+    font-size: 18px;
+    line-height: 21px;
+    color: #FFFFFF50;
 
     .anticon-swap {
       margin-left: 10px;
-      padding: 5px;
-      border-radius: 50%;
-      background: #000829;
+      cursor: pointer;
     }
   }
 }

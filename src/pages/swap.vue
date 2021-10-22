@@ -231,12 +231,12 @@
                 {{ toCoin.symbol }}
               </span>
             </div>
-            <div v-else-if="fromCoin && toCoin && lpMintAddress && fromCoinAmount" class="price-base fc-container">
+            <div v-else-if="fromCoin && toCoin && !isWrap && fromCoinAmount" class="price-base fc-container">
               <span>
                 1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} ≈
                 {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
                 {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-                <Icon type="swap" @click="() => (hasPriceSwapped = !hasPriceSwapped)" />
+                <img src="@/assets/icons/swap-icon.svg" @click="() => (hasPriceSwapped = !hasPriceSwapped)" class="swap-icon" />
               </span>
             </div>
             <div
@@ -247,7 +247,7 @@
                 1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} ≈
                 {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
                 {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-                <Icon type="swap" @click="() => (hasPriceSwapped = !hasPriceSwapped)" />
+                <img src="@/assets/icons/swap-icon.svg" @click="() => (hasPriceSwapped = !hasPriceSwapped)" class="swap-icon" />
               </span>
             </div>
 
@@ -1751,9 +1751,9 @@ main {
     font-size: 12px;
     line-height: 20px;
     margin-bottom: 6px;
-    .anticon-swap {
+    .swap-icon {
       margin-left: 10px;
-      padding: 5px;
+      cursor: pointer;
     }
     .price-base {
       font-size: 12px;
