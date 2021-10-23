@@ -290,7 +290,7 @@ declare const window: any
       toCoin: false,
       poolAdd: false,
       totalCount: 110,
-      pageSize: 10,
+      pageSize: 50,
       currentPage: 1
     }
   },
@@ -412,7 +412,7 @@ export default class Pools extends Vue {
   searchButton = true
   searchName = ''
   totalCount = 110
-  pageSize = 10
+  pageSize = 50
   currentPage = 1
 
   get liquidity() {
