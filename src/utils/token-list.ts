@@ -650,6 +650,14 @@ WSOL: {
     decimals: 6,
     tags: ['cropper']
   },
+
+  PRT: {
+    symbol: 'COBAN',
+    name: 'COBAN',
+    mintAddress: '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY',
+    decimals: 3,
+    tags: ['cropper']
+  },
   SBR: {
     symbol: 'SBR',
     name: 'SBR',
