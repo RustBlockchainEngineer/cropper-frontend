@@ -651,7 +651,7 @@ WSOL: {
     tags: ['cropper']
   },
 
-  PRT: {
+  COBAN: {
     symbol: 'COBAN',
     name: 'COBAN',
     mintAddress: '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY',
