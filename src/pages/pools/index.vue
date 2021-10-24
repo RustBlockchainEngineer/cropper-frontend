@@ -655,12 +655,12 @@ export default class Pools extends Vue {
 
 
       if(!price.prices[liquidityItem?.coin.symbol as string] && price.prices[liquidityItem?.pc.symbol as string]){
-        price.prices[liquidityItem?.coin.symbol as string] = getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) * price.prices[liquidityItem?.pc.symbol as string] / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+        price.prices[liquidityItem?.coin.symbol as string] = price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
       }
 
 
       if(!price.prices[liquidityItem?.pc.symbol as string] && price.prices[liquidityItem?.coin.symbol as string]){
-        price.prices[liquidityItem?.pc.symbol as string] = getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) * price.prices[liquidityItem?.coin.symbol as string] / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+        price.prices[liquidityItem?.pc.symbol as string] = price.prices[liquidityItem?.coin.symbol as string] * getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
       }
 
 
