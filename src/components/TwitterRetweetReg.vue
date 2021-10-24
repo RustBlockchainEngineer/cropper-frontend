@@ -117,7 +117,7 @@
           </div>
         </div>
 
-        <div class="infoCheck">We will be checking if you’ve did the above tasks.</div>
+        <div class="infoCheck">We will be checking if you’ve completed the above tasks.</div>
 
         <Row :gutter="32" class="actions">
           <Col :span="24" style="text-align: center">
@@ -180,7 +180,7 @@
           </div>
         </div>
 
-        <div class="infoCheck">We will be checking if you’ve did the above tasks.</div>
+        <div class="infoCheck">We will be checking if you’ve completed the above tasks.</div>
 
         <Row :gutter="32" class="actions">
           <Col :span="24" style="text-align: center">

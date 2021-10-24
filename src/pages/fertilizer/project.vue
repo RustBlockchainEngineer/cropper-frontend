@@ -393,7 +393,7 @@
 
               <div v-else-if="farm.pla_end_ts > currentTimestamp && isRegistered">
                 <div class="share">
-                  You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{
+                  You’ve well registered into the whitelist. You have {{ registeredDatas.submit }} lottery ticket{{
                     registeredDatas.submit > 1 ? 's' : ''
                   }}
                   !
@@ -403,7 +403,7 @@
               <div v-else-if="farm.pla_end_ts < currentTimestamp && isRegistered">
                 <div class="share">
                   <span v-if="farm.airdrop.status == 'lottery'">
-                    You’ve well registered into the whithelist. You have {{ registeredDatas.submit }} lottery ticket{{
+                    You’ve well registered into the whitelist. You have {{ registeredDatas.submit }} lottery ticket{{
                       registeredDatas.submit > 1 ? 's' : ''
                     }}! <br /><br />
                     Lottery in progress...
