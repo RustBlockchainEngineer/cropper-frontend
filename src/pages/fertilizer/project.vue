@@ -428,7 +428,7 @@
       </div>
     </div>
 
-    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
+    <div v-for="farm in labelizedAmms" :key="farm.farmInfo.poolId">
       <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">
         <div class="card">
           <div class="card-body">
@@ -997,9 +997,11 @@ export default Vue.extend({
       this.currentTimestamp = moment().unix()
       const farms: any = []
       const endedFarmsPoolId: string[] = []
+      console.log('here 1');
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let userInfo = get(this.farm.stakeAccounts, poolId)
 
+      console.log('here 2', poolId);
         // @ts-ignore
         const { reward_per_share_net, reward_per_timestamp, last_timestamp } = farmInfo.poolInfo
 
@@ -1052,7 +1054,9 @@ export default Vue.extend({
           }
         }
 
+      console.log('here 3', poolId);
         if (userInfo && lp) {
+      console.log('here 4', poolId);
           userInfo = cloneDeep(userInfo)
 
           const { rewardDebt, depositBalance } = userInfo
