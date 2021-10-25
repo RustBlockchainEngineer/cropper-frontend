@@ -1054,7 +1054,7 @@ export default Vue.extend({
           }
         }
 
-      console.log('here 3', poolId);
+      console.log('here 3', poolId, userInfo, lp);
         if (userInfo && lp) {
       console.log('here 4', poolId);
           userInfo = cloneDeep(userInfo)
