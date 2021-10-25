@@ -848,12 +848,6 @@ export default Vue.extend({
         }
       },
       deep: true
-    },
-    searchName: {
-      handler(newSearchName: string) {
-        this.filterFarms(newSearchName)
-      },
-      deep: true
     }
   },
 
@@ -1164,38 +1158,15 @@ export default Vue.extend({
               farmInfo: newFarmInfo
             })
           }
+
+          console.log('here');
         }
       }
 
       this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
-      this.filterFarms(
-        this.searchName
-      )
-    },
-    filterFarms(searchName: string) {
       this.showFarms = this.farms
 
-      //filter for not allowed farms
-      this.showFarms = this.showFarms.filter(
-        (farm: any) =>
-          farm.farmInfo.poolInfo.is_allowed > 0 ||
-          (farm.farmInfo.poolInfo.owner.toBase58() === this.wallet.address && farm.farmInfo.poolInfo.is_allowed === 0)
-      )
-
-      if (
-        searchName != '' &&
-        searchName != null &&
-        this.farms.filter((farm: any) => farm.farmInfo.poolId.toLowerCase() == searchName.toLowerCase())
-      ) {
-        this.showFarms = this.farms.filter(
-          (farm: any) => farm.farmInfo.poolId.toLowerCase() == searchName.toLowerCase()
-        )
-      } else if (searchName != '' && searchName != null) {
-        this.showFarms = this.farms.filter((farm: any) =>
-          farm.farmInfo.lp.symbol.toLowerCase().includes(searchName.toLowerCase())
-        )
-      }
     },
 
     updateCurrentLp(newTokenAccounts: any) {
