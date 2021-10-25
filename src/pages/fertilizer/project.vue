@@ -43,7 +43,7 @@
       @onCancel="cancelStakeLP"
     />
 
-    
+
     <div class="fertilizeruniq cont" v-if="initialized">
       <img class="planet-left" src="@/assets/Green Planet 1.png" />
       <div
@@ -474,7 +474,7 @@
 
     <Collapse v-model="showCollapse" expand-icon-position="right">
             <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
-              <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
+              <Row slot="header" class="farm-head"  v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
                 <span class="details noDesktop">
                   <div class="detailButton">
                     <button>Details</button>
