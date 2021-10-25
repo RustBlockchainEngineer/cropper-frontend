@@ -62,11 +62,11 @@ export function getSwapOutAmount(
   amount: string,
   slippage: number
 ){
-  const getSwapOutAmount_fcn = (poolInfo.version == CRP_LP_VERSION_V1)? getSwapOutAmount_v5: getSwapOutAmount_v4
+  const getSwapOutAmount_fcn = (poolInfo.version == CRP_LP_VERSION_V1)? getSwapOutAmount_crp: getSwapOutAmount_ray
   return getSwapOutAmount_fcn(poolInfo, fromCoinMint, toCoinMint, amount, slippage);
 }
 
-function getSwapOutAmount_v5(
+function getSwapOutAmount_crp(
   poolInfo: any,
   fromCoinMint: string,
   toCoinMint: string,
@@ -142,7 +142,7 @@ function getSwapOutAmount_v5(
   }
 }
 
-function getSwapOutAmount_v4(
+function getSwapOutAmount_ray(
   poolInfo: any,
   fromCoinMint: string,
   toCoinMint: string,
@@ -408,9 +408,9 @@ export async function twoStepSwap(
   toTokenAccount: string,
   aIn: string,
   aMid: string,
+  wsolAddress:string
 )
 {
-  console.log("Two Step swap")
 
   let transactionAll = new Transaction()
   let signersAll:Account[] = []
@@ -423,6 +423,7 @@ export async function twoStepSwap(
     midTokenAccount,
     aIn,
     aMid,
+    wsolAddress,
     true
     )
   transactionAll.add(res.transaction)
@@ -437,6 +438,7 @@ export async function twoStepSwap(
     toTokenAccount,
     aMid,
     '0',
+    wsolAddress,
     true
     )
   
@@ -456,6 +458,7 @@ export async function swap(
   toTokenAccount: string,
   aIn: string,
   aOut: string,
+  wsolAddress: string,
   twoStepSwap: boolean = false
 ){
   
@@ -470,6 +473,7 @@ export async function swap(
     toTokenAccount, 
     aIn, 
     aOut,
+    wsolAddress,
     twoStepSwap)
 }
 
@@ -483,6 +487,7 @@ async function ray_swap(
   toTokenAccount: string,
   aIn: string,
   aOut: string,
+  wsolAddress: string,
   twoStepSwap:boolean
 ) {
 
@@ -501,6 +506,16 @@ async function ray_swap(
   const amountIn = new TokenAmount(aIn, from.decimals, false)
   // @ts-ignore
   const amountOut = new TokenAmount(aOut, to.decimals, false)
+
+  if (twoStepSwap == false && fromCoinMint === NATIVE_SOL.mintAddress && wsolAddress) {
+    transaction.add(
+      closeAccount({
+        source: new PublicKey(wsolAddress),
+        destination: owner,
+        owner
+      })
+    )
+  }
 
   let fromMint = fromCoinMint
   let toMint = toCoinMint
@@ -612,6 +627,7 @@ async function crp_swap(
   toTokenAccount: string,
   aIn: string,
   aOut: string,
+  wsolAddress:string,
   twoStepSwap: boolean,
 ) {
  
@@ -628,6 +644,18 @@ async function crp_swap(
 
   const amountIn = new TokenAmount(aIn, from.decimals, false)
   const amountOut = new TokenAmount(aOut, to.decimals, false)
+
+  if (twoStepSwap == false && fromCoinMint === NATIVE_SOL.mintAddress && wsolAddress) {
+    
+    transaction.add(
+      closeAccount({
+        source: new PublicKey(wsolAddress),
+        destination: owner,
+        owner
+      })
+    )
+  }
+
 
   let fromMint = fromCoinMint
   let toMint = toCoinMint

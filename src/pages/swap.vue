@@ -424,14 +424,7 @@
                 (!marketAddress && !lpMintAddress && !isWrap && !best_dex_type) ||
                 !initialized ||
                 loading ||
-                gt(
-                  fromCoinAmount,
-                  fromCoin && fromCoin.balance
-                    ? fromCoin.symbol === 'SOL'
-                      ? fromCoin.balance.toEther().minus(0.05).toFixed(fromCoin.balance.decimals)
-                      : fromCoin.balance.fixed()
-                    : '0'
-                ) || // not enough SOL to swap SOL to another coin
+                checkFromCoinAmount() || // not enough SOL to swap SOL to another coin
                 (get(liquidity.infos, `${lpMintAddress}.status`) &&
                   get(liquidity.infos, `${lpMintAddress}.status`) !== 1) ||
                 swaping ||
@@ -449,20 +442,7 @@
               </template>
               <template v-else-if="!fromCoinAmount"> Enter an amount </template>
               <template v-else-if="loading"> Updating price information </template>
-              <template
-                v-else-if="
-                  gt(
-                    fromCoinAmount,
-                    fromCoin && fromCoin.balance
-                      ? fromCoin.symbol === 'SOL'
-                        ? fromCoin.balance.toEther().minus(0.05).toFixed(fromCoin.balance.decimals)
-                        : fromCoin.balance.fixed()
-                      : '0'
-                  )
-                "
-              >
-                Insufficient {{ fromCoin.symbol }} balance
-              </template>
+              <template v-else-if="checkFromCoinAmount()" > Insufficient {{ fromCoin.symbol }} balance </template>
               <template
                 v-else-if="
                   get(liquidity.infos, `${lpMintAddress}.status`) &&
@@ -956,6 +936,23 @@ export default Vue.extend({
         }
       }
     },
+    checkFromCoinAmount(){
+      return parseFloat(this.fromCoinAmount) >
+              parseFloat(this.fromCoin && this.fromCoin.balance
+                ? this.fromCoin.symbol === 'SOL'
+                  ? this.fromCoin.balance
+                      .toEther()
+                      .minus(0.05)
+                      .plus(
+                        get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.balance`)
+                          ? get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.balance`).toEther()
+                          : 0
+                      )
+                      .toFixed(this.fromCoin.balance.decimals)
+                  : this.fromCoin.balance.fixed()
+                : '0')
+
+    },
     findMarket() {
       this.available_dex = []
       this.lpMintAddress = ''
@@ -1444,7 +1441,8 @@ export default Vue.extend({
           // @ts-ignore
           get(this.wallet.tokenAccounts, `${this.toCoin.mintAddress}.tokenAccountAddress`),
           this.fromCoinAmount,
-          this.toCoinWithSlippage
+          this.toCoinWithSlippage,
+          get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.tokenAccountAddress`)
         )
           .then((txid) => {
             this.$notify.info({
@@ -1545,6 +1543,8 @@ export default Vue.extend({
             get(this.wallet.tokenAccounts, `${this.toCoin.mintAddress}.tokenAccountAddress`),
             this.fromCoinAmount,
             this.midAmountWithSlippage,
+            get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.tokenAccountAddress`),
+
           )
             .then((txid) => {
               this.$notify.info({
