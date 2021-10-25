@@ -942,7 +942,6 @@ export default Vue.extend({
               element.calculateNextStep = 'Bla bla bla'
               this.ammId = element.ammID
               this.labelizedAmms[element.ammID] = element
-              this.labelizedFarms[element.pfarmID] = element
               try {
                 responseData2 = await fetch(
                   'https://api.cropper.finance/pfo/?farmId=' +
@@ -1186,6 +1185,8 @@ export default Vue.extend({
       this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(this.searchName)
+
+      console.log(farms, this.farms);
 
       /*
       if(Object.keys(this.farms).length < 1 && Object.keys(this.labelizedAmms).length > 0){
