@@ -1129,19 +1129,16 @@ export default Vue.extend({
             pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
           }
         }
-          console.log('ici2', lp);
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
         ) {
-          console.log('ici', lp);
           let labelized = false
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
-          console.log('ic', newFarmInfo.poolId, this.labelizedAmms);
             if (this.labelizedAmms[newFarmInfo.poolId]) {
-          console.log('ic0', lp);
+          console.log('ic0', lp, this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo, newFarmInfo.poolId, this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID);
               labelized = true
               if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
