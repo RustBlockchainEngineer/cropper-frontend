@@ -1144,7 +1144,7 @@ export default Vue.extend({
           console.log('ic0', lp);
               labelized = true
               if (
-                this.labelizedAmmsExtended[newFarmInfo.poolId].pfo == true &&
+                this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
                 newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID
               ) {
           console.log('ic01', lp);
