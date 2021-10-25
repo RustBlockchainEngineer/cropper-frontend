@@ -428,7 +428,7 @@
       </div>
     </div>
 CKCK
-    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">COCO
+    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">COCO {{isRegistered}} {{farm.labelized.pfrom_ts}} {{currentTimestamp}}
       <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">CYCY
         <div class="card">
           <div class="card-body">
