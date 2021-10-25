@@ -618,6 +618,7 @@ export default Vue.extend({
       fromCoinAmount: '',
       toCoinAmount: '',
       toCoinWithSlippage: '',
+      midAmount: '', //multistep-swap
       midAmountWithSlippage: '', //multistep-swap
       // wrap
       isWrap: false,
@@ -1242,6 +1243,7 @@ export default Vue.extend({
                 toCoinAmount = final.amountOut.fixed()
                 toCoinWithSlippage = final.amountOutWithSlippage
                 this.midAmountWithSlippage = amountOutWithSlippage.fixed()
+                this.midAmount = amountOut.fixed()
                 price = +new TokenAmount(
                   parseFloat(toCoinAmount) / parseFloat(this.fromCoinAmount),
                   // @ts-ignore
@@ -1461,24 +1463,20 @@ export default Vue.extend({
           get(this.wallet.tokenAccounts, `${this.toCoin.mintAddress}.tokenAccountAddress`),
           this.fromCoinAmount,
           this.midAmountWithSlippage,
-          this.toCoinWithSlippage
         )
-          .then((txids) => {
+          .then((txid) => {
             this.$notify.info({
               key,
               message: 'Transaction has been sent',
               description: (h: any) =>
                 h('div', [
                   'Confirmation is in progress.  Check your transaction on ',
-                  h('a', { attrs: { href: `${this.url.explorer}/tx/${txids[0]}`, target: '_blank' } }, 'here'),
-                  h('a', { attrs: { href: `${this.url.explorer}/tx/${txids[1]}`, target: '_blank' } }, 'here')
+                  h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
                 ])
             })
-            const description_1 = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.midAmountWithSlippage} ${midTokenSymbol}`
-            this.$accessor.transaction.sub({ txid: txids[0], description: description_1 })
+            const description = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
+            this.$accessor.transaction.sub({ txid, description })
 
-            const description = `Swap ${this.midAmountWithSlippage} ${midTokenSymbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
-            this.$accessor.transaction.sub({ txid: txids[1], description })
           })
           .catch((error) => {
             this.$notify.error({
