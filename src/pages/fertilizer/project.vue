@@ -428,8 +428,8 @@
       </div>
     </div>
 
-    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">HERE
-      <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">HORE
+    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
+      <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">
         <div class="card">
           <div class="card-body">
             <Collapse v-model="showCollapse" expand-icon-position="right">
@@ -910,6 +910,8 @@ export default Vue.extend({
       } catch {
         // dummy data
         responseData = [
+          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
+          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
         ]
       } finally {
         this.followed = true
@@ -919,17 +921,18 @@ export default Vue.extend({
     TokenAmount,
 
     async updateLabelizedAmms() {
-      if(this.labelizedAmms != {}){
-          return;
-      }
       const query = new URLSearchParams(window.location.search)
-      this.labelizedAmms = {}
+      //this.labelizedAmms = {}
       let responseData2 = {}
       let responseData: any
       try {
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
-        responseData = []
+        // dummy data
+        responseData = [
+          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
+          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
+        ]
       } finally {
         responseData.forEach(async (element: any) => {
           if (element.pfo == true) {
@@ -994,11 +997,9 @@ export default Vue.extend({
       this.currentTimestamp = moment().unix()
       const farms: any = []
       const endedFarmsPoolId: string[] = []
-      console.log('here 1' , this.labelizedAmms);
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let userInfo = get(this.farm.stakeAccounts, poolId)
 
-      console.log('here 2', poolId);
         // @ts-ignore
         const { reward_per_share_net, reward_per_timestamp, last_timestamp } = farmInfo.poolInfo
 
@@ -1051,9 +1052,7 @@ export default Vue.extend({
           }
         }
 
-      console.log('here 3', poolId);
         if (userInfo && lp) {
-      console.log('here 4', poolId);
           userInfo = cloneDeep(userInfo)
 
           const { rewardDebt, depositBalance } = userInfo
@@ -1085,17 +1084,21 @@ export default Vue.extend({
           let labelized = false
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
+            console.log(this.labelizedAmms)
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = this.labelizedAmms[newFarmInfo.poolId]
               if (labelized) {
+                    console.log('yo3');
                 if (
                   this.labelizedAmms[newFarmInfo.poolId].pfo == true &&
                   newFarmInfo.poolId == this.labelizedAmms[newFarmInfo.poolId].pfarmID
                 ) {
+                    console.log('yo2');
                   const query = new URLSearchParams(window.location.search)
-                  console.log(query.get('f'), this.labelizedAmms[newFarmInfo.poolId].slug)
                   if (query.get('f') && this.labelizedAmms[newFarmInfo.poolId].slug == query.get('f')) {
                     isPFO = true
+
+                    console.log('yo');
 
                     newFarmInfo.twitterShare = `http://twitter.com/share?text=Earn ${newFarmInfo.reward.name} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${newFarmInfo.lp.coin.symbol},${newFarmInfo.lp.pc.symbol},yieldfarming,Solana`
 
@@ -1178,13 +1181,10 @@ export default Vue.extend({
         this.followerCount = Object.keys(responseData).length
       }
 
-      console.log(farms);
-
-      this.farms = farms
+      this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(this.searchName)
 
-      console.log(this.farms);
       /*
       if(Object.keys(this.farms).length < 1 && Object.keys(this.labelizedAmms).length > 0){
         this.$router.push({
