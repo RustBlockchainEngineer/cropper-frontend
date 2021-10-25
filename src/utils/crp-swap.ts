@@ -66,7 +66,7 @@ export const GLOBAL_STATE_LAYOUT = struct([
   blob(32, 'curveParameters'),
 ]);
 
-export const CRP_AMM_LAYOUT_V5 =  struct(
+export const CRP_AMM_LAYOUT_V1 =  struct(
   [
     u8('version'),
     u8('isInitialized'),

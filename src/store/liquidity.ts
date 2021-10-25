@@ -10,10 +10,10 @@ import { PublicKey } from '@solana/web3.js'
 import { TokenAmount } from '@/utils/safe-math'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
-import { CRP_AMM_LAYOUT_V5 } from '@/utils/crp-swap'
+import { CRP_AMM_LAYOUT_V1 } from '@/utils/crp-swap'
 import { 
   LIQUIDITY_POOL_PROGRAM_ID_V4,
-  LIQUIDITY_POOL_PROGRAM_ID_V5, 
+  CRP_LP_PROGRAM_ID_V1, 
   SERUM_PROGRAM_ID_V3 } from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { LP_TOKENS, NATIVE_SOL, TOKENS } from '@/utils/tokens'
@@ -64,9 +64,9 @@ export const mutations = mutationTree(state, {
 })
 
 async function getCropperPools(conn:any){
-  const ammAll = await getFilteredProgramAccounts(conn, new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5), [
+  const ammAll = await getFilteredProgramAccounts(conn, new PublicKey(CRP_LP_PROGRAM_ID_V1), [
     {
-      dataSize: CRP_AMM_LAYOUT_V5.span
+      dataSize: CRP_AMM_LAYOUT_V1.span
     }
   ])
 
@@ -83,7 +83,7 @@ async function getCropperPools(conn:any){
 
   const lpMintAddressList: string[] = []
   ammAll.forEach((item) => {
-    const ammLayout = CRP_AMM_LAYOUT_V5.decode(Buffer.from(item.accountInfo.data))
+    const ammLayout = CRP_AMM_LAYOUT_V1.decode(Buffer.from(item.accountInfo.data))
     if (
       ammLayout.pcMintAddress.toString() === ammLayout.serumMarket.toString() ||
       ammLayout.lpMintAddress.toString() === '11111111111111111111111111111111'
@@ -95,7 +95,7 @@ async function getCropperPools(conn:any){
   const lpMintListDecimls = await getLpMintListDecimals(conn, lpMintAddressList)
   
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
-    const ammInfo = CRP_AMM_LAYOUT_V5.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
+    const ammInfo = CRP_AMM_LAYOUT_V1.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
 
     if (
       !Object.keys(lpMintListDecimls).includes(ammInfo.lpMintAddress.toString()) ||
@@ -170,7 +170,7 @@ async function getCropperPools(conn:any){
     // const { publicKey } = await createAmmAuthority(new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5))
     const [authority, nonce] = await PublicKey.findProgramAddress(
       [ammAll[indexAmmInfo].publicKey.toBuffer()],
-      new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5)
+      new PublicKey(CRP_LP_PROGRAM_ID_V1)
     );
     const market = marketToLayout[ammInfo.serumMarket]
 
@@ -185,7 +185,7 @@ async function getCropperPools(conn:any){
       pc,
       lp,
       version: 5,
-      programId: LIQUIDITY_POOL_PROGRAM_ID_V5,
+      programId: CRP_LP_PROGRAM_ID_V1,
       ammId: ammAll[indexAmmInfo].publicKey.toString(),
       ammAuthority: authority.toString(),
       ammOpenOrders: "", // ammInfo.ammOpenOrders.toString(),
@@ -449,7 +449,7 @@ export const actions = actionTree(
               case 'ammId': {
                 let parsed
                 if(version == 5){
-                  parsed = CRP_AMM_LAYOUT_V5.decode(data)
+                  parsed = CRP_AMM_LAYOUT_V1.decode(data)
                   // const { returnFeeNumerator, fixedFeeNumerator, feeDenominator } = parsed
                   poolInfo.fees = {
                     returnFeeNumerator: getBigNumber(amm_state_info.returnFeeNumerator),

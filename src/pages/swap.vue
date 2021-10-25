@@ -845,6 +845,7 @@ export default Vue.extend({
         //     toCoin = liquidityUser.pc
         //   }
         // }
+        console.log(Object.values(TOKENS).find((item) => item.mintAddress === 'So11111111111111111111111111111111111111112'))
         fromCoin = Object.values(TOKENS).find((item) => item.mintAddress === from)
         toCoin = Object.values(TOKENS).find((item) => item.mintAddress === to)
         if (fromCoin || toCoin) {

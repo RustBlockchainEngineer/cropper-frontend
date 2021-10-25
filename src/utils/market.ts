@@ -16,14 +16,14 @@ import { Token, MintLayout, AccountLayout, ASSOCIATED_TOKEN_PROGRAM_ID } from "@
 
 import {
 
-  CRP_AMM_LAYOUT_V5,
+  CRP_AMM_LAYOUT_V1,
   LIQUIDITY_TOKEN_PRECISION,
   createSplAccount,
   createLiquidityPool,
 } from "@/utils/crp-swap"
 
 import {
-  LIQUIDITY_POOL_PROGRAM_ID_V5,
+  CRP_LP_PROGRAM_ID_V1,
   SERUM_PROGRAM_ID_V3,
   TOKEN_PROGRAM_ID,
   SYSTEM_PROGRAM_ID,
@@ -70,7 +70,7 @@ export async function getMarket(conn: any, marketAddress: string): Promise<any |
   try {
     const expectAmmId = (
       await createAssociatedId(
-        new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
+        new PublicKey(CRP_LP_PROGRAM_ID_V1),
         new PublicKey(marketAddress),
         AMM_ASSOCIATED_SEED
       )
@@ -168,7 +168,7 @@ export async function createAmm(
   const ammId: PublicKey = tokenSwapAccount.publicKey
   const [authority, nonce] = await PublicKey.findProgramAddress(
     [tokenSwapAccount.publicKey.toBuffer()],
-    new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5)
+    new PublicKey(CRP_LP_PROGRAM_ID_V1)
   );
 
   // create mint for pool liquidity token
@@ -244,10 +244,10 @@ export async function createAmm(
       fromPubkey: wallet.publicKey,
       newAccountPubkey: tokenSwapAccount.publicKey,
       lamports: await conn.getMinimumBalanceForRentExemption(
-        CRP_AMM_LAYOUT_V5.span
+        CRP_AMM_LAYOUT_V1.span
       ),
-      space: CRP_AMM_LAYOUT_V5.span,
-      programId: new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
+      space: CRP_AMM_LAYOUT_V1.span,
+      programId: new PublicKey(CRP_LP_PROGRAM_ID_V1),
     })
   );
   
@@ -330,7 +330,7 @@ export async function createAmm(
       liquidityTokenAccount.publicKey,
       depositorAccount,
       TOKEN_PROGRAM_ID,
-      new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
+      new PublicKey(CRP_LP_PROGRAM_ID_V1),
       new PublicKey(SERUM_PROGRAM_ID_V3),
       market.address,
       nonce

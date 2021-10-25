@@ -1,4 +1,4 @@
-import { AMM_STATE_SEED, ASSOCIATED_TOKEN_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5, RENT_PROGRAM_ID, SYSTEM_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@/utils/ids'
+import { AMM_STATE_SEED, ASSOCIATED_TOKEN_PROGRAM_ID, CRP_LP_PROGRAM_ID_V1, RENT_PROGRAM_ID, SYSTEM_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@/utils/ids'
 import { ACCOUNT_LAYOUT, MINT_LAYOUT } from '@/utils/layouts'
 import { TOKENS } from '@/utils/tokens'
 import { initializeAccount } from '@project-serum/serum/lib/token-instructions'
@@ -106,7 +106,7 @@ export async function createTokenAccountIfNotExist(
 }
 
 export async function getAMMGlobalStateAddress(){
-  return await createGlobalStateId(new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5), AMM_STATE_SEED)
+  return await createGlobalStateId(new PublicKey(CRP_LP_PROGRAM_ID_V1), AMM_STATE_SEED)
 }
 
 export async function getAMMGlobalStateAccount(conn:any)
