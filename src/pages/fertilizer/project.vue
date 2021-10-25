@@ -428,8 +428,8 @@
       </div>
     </div>
 
-    <div v-for="farm in labelizedAmms" :key="farm.farmInfo.poolId">
-      <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">
+    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">HERE
+      <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">HORE
         <div class="card">
           <div class="card-body">
             <Collapse v-model="showCollapse" expand-icon-position="right">
@@ -922,7 +922,7 @@ export default Vue.extend({
 
     async updateLabelizedAmms() {
       const query = new URLSearchParams(window.location.search)
-      //this.labelizedAmms = {}
+      this.labelizedAmms = {}
       let responseData2 = {}
       let responseData: any
       try {
