@@ -260,6 +260,13 @@ WSOL: {
     decimals: 9,
     tags: ['cropper']
   },
+  KURO: {
+    symbol: 'KURO',
+    name: 'Kurobi',
+    mintAddress: '2Kc38rfQ49DFaKHQaWbijkE7fcymUMLY5guUiUsDmFfn',
+    decimals: 6,
+    tags: ['cropper']
+  },
   OXY: {
     symbol: 'OXY',
     name: 'OXY',
