@@ -27,7 +27,7 @@ import BigNumber from 'bignumber.js'
 import { LIQUIDITY_POOL_PROGRAM_ID_V5, TOKEN_PROGRAM_ID } from '@/utils/ids'
 import { TokenAmount } from '@/utils/safe-math'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
-import { depositInstruction, withdrawInstruction } from './new_fcn'
+import { depositInstruction, withdrawInstruction } from './crp-pool'
 
 export { getLpMintByTokenMintAddresses, getPoolByLpMintAddress, getPoolByTokenMintAddresses, canWrap }
 

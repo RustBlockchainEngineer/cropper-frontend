@@ -16,11 +16,11 @@ import { Token, MintLayout, AccountLayout, ASSOCIATED_TOKEN_PROGRAM_ID } from "@
 
 import {
 
-  AMM_INFO_LAYOUT_V6,
+  CRP_AMM_LAYOUT_V5,
   LIQUIDITY_TOKEN_PRECISION,
   createSplAccount,
   createLiquidityPool,
-} from "@/utils/new_fcn"
+} from "@/utils/crp-pool"
 
 import {
   LIQUIDITY_POOL_PROGRAM_ID_V5,
@@ -244,9 +244,9 @@ export async function createAmm(
       fromPubkey: wallet.publicKey,
       newAccountPubkey: tokenSwapAccount.publicKey,
       lamports: await conn.getMinimumBalanceForRentExemption(
-        AMM_INFO_LAYOUT_V6.span
+        CRP_AMM_LAYOUT_V5.span
       ),
-      space: AMM_INFO_LAYOUT_V6.span,
+      space: CRP_AMM_LAYOUT_V5.span,
       programId: new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
     })
   );

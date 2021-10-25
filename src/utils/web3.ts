@@ -15,7 +15,7 @@ import {
   TransactionInstruction,
   TransactionSignature
 } from '@solana/web3.js'
-import { GLOBAL_STATE_LAYOUT } from './new_fcn'
+import { GLOBAL_STATE_LAYOUT } from './crp-pool'
 
 export const web3Config = {
   strategy: 'speed',

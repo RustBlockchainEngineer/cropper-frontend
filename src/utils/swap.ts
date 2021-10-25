@@ -19,7 +19,7 @@ import {
 } from '@/utils/web3'
 import { TokenAmount } from '@/utils/safe-math'
 import { ACCOUNT_LAYOUT } from '@/utils/layouts'
-import { swapInstruction_v5 } from '@/utils/new_fcn'
+import { swapInstruction_v5 } from '@/utils/crp-pool'
 // eslint-disable-next-line
 import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, LIQUIDITY_POOL_PROGRAM_ID_V5, AMM_STATE_SEED } from './ids'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
