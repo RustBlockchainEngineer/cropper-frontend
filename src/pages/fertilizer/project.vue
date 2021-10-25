@@ -1158,6 +1158,7 @@ export default Vue.extend({
                   (newFarmInfo as any).poolId
                 } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
 
+                let labelized = this.poolsDatas[liquidityItem.ammId]
                 if (isPFO) {
                   farms.push({
                     labelized,
