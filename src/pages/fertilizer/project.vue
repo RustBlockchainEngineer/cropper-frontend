@@ -828,7 +828,7 @@ export default Vue.extend({
   watch: {
     'wallet.tokenAccounts': {
       handler(newTokenAccounts: any) {
-        // this.updateFarms()
+        this.updateFarms()
         this.updateCurrentLp(newTokenAccounts)
       },
       deep: true
