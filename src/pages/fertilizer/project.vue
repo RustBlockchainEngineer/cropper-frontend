@@ -1145,6 +1145,7 @@ export default Vue.extend({
           newFarmInfo.poolId, 
           this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID, newFarmInfo);
               labelized = true
+              const query = new URLSearchParams(window.location.search)
               if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
                 (query.get('f') && this.labelizedAmmsExtended[newFarmInfo.poolId]?.slug == query.get('f'))
