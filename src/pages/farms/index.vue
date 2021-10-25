@@ -868,11 +868,12 @@ export default Vue.extend({
       const farms: any = []
       const endedFarmsPoolId: string[] = []
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
+        
         let userInfo = get(this.farm.stakeAccounts, poolId)
         let isPFO = false
 
         // @ts-ignore
-        const { reward_per_share_net, reward_per_timestamp, last_timestamp, end_timestamp } = farmInfo.poolInfo
+        const { reward_per_share_net, last_timestamp, end_timestamp } = farmInfo.poolInfo
 
         // @ts-ignore
         const { reward, lp } = farmInfo
@@ -881,7 +882,8 @@ export default Vue.extend({
 
 
         if (reward && lp) {
-          const rewardPerTimestampAmount = new TokenAmount(getBigNumber(reward_per_timestamp), reward.decimals)
+          const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+          const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
           const rewardPerTimestampAmountTotalValue =
@@ -948,12 +950,10 @@ export default Vue.extend({
             //endedFarmsPoolId.push(poolId)
           }
         }
-
         if (userInfo && lp) {
           userInfo = cloneDeep(userInfo)
 
           const { rewardDebt, depositBalance } = userInfo
-          const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           let currentTimestamp = this.currentTimestamp
 
           
@@ -962,7 +962,9 @@ export default Vue.extend({
           }
           
           const duration = currentTimestamp - last_timestamp.toNumber()
-          const rewardPerShareCalc = new BigNumber(reward_per_timestamp.toNumber())
+          
+          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+          const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(newFarmInfo.lp.balance.wei)
@@ -972,7 +974,8 @@ export default Vue.extend({
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
-          userInfo.pendingReward = new TokenAmount(pendingReward, rewardDebt.decimals)
+            
+          userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
         } else {
           userInfo = {
             // @ts-ignore
@@ -989,7 +992,6 @@ export default Vue.extend({
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
-            console.log(newFarmInfo)
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = true
               if (

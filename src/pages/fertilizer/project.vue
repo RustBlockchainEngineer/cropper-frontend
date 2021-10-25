@@ -428,7 +428,7 @@
       </div>
     </div>
 
-    <!-- <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
+    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
       <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">
         <div class="card">
           <div class="card-body">
@@ -710,7 +710,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -791,6 +791,7 @@ export default Vue.extend({
       stakeLPError: false,
       initialized: false,
       labelizedAmms: {} as any,
+      labelizedFarms: {} as any,
       nbFarmsLoaded: 0,
       certifiedOptions: [
         { value: 0, label: 'Labelized' },
@@ -941,6 +942,7 @@ export default Vue.extend({
               element.calculateNextStep = 'Bla bla bla'
               this.ammId = element.ammID
               this.labelizedAmms[element.ammID] = element
+              this.labelizedFarms[element.pfarmID] = element
               try {
                 responseData2 = await fetch(
                   'https://api.cropper.finance/pfo/?farmId=' +
@@ -1084,16 +1086,21 @@ export default Vue.extend({
           let labelized = false
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
+            console.log(this.labelizedAmms, newFarmInfo.poolId)
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = this.labelizedAmms[newFarmInfo.poolId]
               if (labelized) {
+                    console.log('yo3');
                 if (
                   this.labelizedAmms[newFarmInfo.poolId].pfo == true &&
                   newFarmInfo.poolId == this.labelizedAmms[newFarmInfo.poolId].pfarmID
                 ) {
+                    console.log('yo2');
                   const query = new URLSearchParams(window.location.search)
                   if (query.get('f') && this.labelizedAmms[newFarmInfo.poolId].slug == query.get('f')) {
                     isPFO = true
+
+                    console.log('yo');
 
                     newFarmInfo.twitterShare = `http://twitter.com/share?text=Earn ${newFarmInfo.reward.name} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${newFarmInfo.lp.coin.symbol},${newFarmInfo.lp.pc.symbol},yieldfarming,Solana`
 
