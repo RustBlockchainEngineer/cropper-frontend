@@ -55,7 +55,7 @@
                   <a :href="`${url.explorer}/token/${fromCoin.mintAddress}`" target="_blank">
                     <img src="@/assets/icons/link_grey.svg" />
                   </a>
-                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(fromCoin.mintAddress)" />
+                   <img src="@/assets/icons/copy.png" @click="$accessor.copy(fromCoin.mintAddress)" />
                 </div>
                 <div class="symbol">{{ fromCoin.symbol }}</div>
                 <div class="address">
@@ -100,7 +100,7 @@
                   <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
                     <img src="@/assets/icons/link_grey.svg" />
                   </a>
-                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(mainAmmId)" />
+                   <img src="@/assets/icons/copy.png" @click="$accessor.copy(mainAmmId)" />
                 </div>
                 <div class="symbol">AMM ID</div>
                 <div class="address">
@@ -236,11 +236,7 @@
                 1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} ≈
                 {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
                 {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-                <img
-                  src="@/assets/icons/swap-icon.svg"
-                  @click="() => (hasPriceSwapped = !hasPriceSwapped)"
-                  class="swap-icon"
-                />
+                <img src="@/assets/icons/swap-icon.svg" @click="() => (hasPriceSwapped = !hasPriceSwapped)" class="swap-icon" />
               </span>
             </div>
             <div
@@ -251,11 +247,7 @@
                 1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} ≈
                 {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
                 {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-                <img
-                  src="@/assets/icons/swap-icon.svg"
-                  @click="() => (hasPriceSwapped = !hasPriceSwapped)"
-                  class="swap-icon"
-                />
+                <img src="@/assets/icons/swap-icon.svg" @click="() => (hasPriceSwapped = !hasPriceSwapped)" class="swap-icon" />
               </span>
             </div>
 
@@ -274,12 +266,12 @@
                   <CoinIcon :mint-address="fromCoin.mintAddress" />
                   <span>{{ fromCoin.symbol }}</span>
                 </div>
-                <Icon class="fst" type="arrow-up" />
+                <Icon class="fst" type="arrow-up"/>
                 <div class="coin-budge" v-if="midTokenSymbol">
                   <CoinIcon :mint-address="midTokenMint" />
                   <span>{{ midTokenSymbol }}</span>
                 </div>
-                <Icon v-if="midTokenSymbol" class="fst" type="arrow-up" />
+                <Icon v-if="midTokenSymbol" class="fst" type="arrow-up"/>
                 <div class="coin-budge">
                   <CoinIcon :mint-address="toCoin.mintAddress" />
                   <span>{{ toCoin.symbol }}</span>
@@ -295,12 +287,12 @@
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <div class="multi-swap" v-if="endpoint === ENDPOINT_MULTI_CRP || endpoint === ENDPOINT_MULTI_USDC">
+              <div v-if="endpoint === ENDPOINT_MULTI_CRP || endpoint === ENDPOINT_MULTI_USDC">
                 <span class="swapThrough green">
-                  ENDPOINT_CRP
+                  {{ ENDPOINT_CRP }}
                 </span>
                 <span class="swapThrough purple">
-                  ENDPOINT_RAY
+                  {{ ENDPOINT_RAY }}
                 </span>
               </div>
               <div v-else>
@@ -308,7 +300,8 @@
                   class="
                     swapThrough
                     {
-                    green:
+                    green
+                    :
                     endpoint
                     ===
                     'CropperFinace
@@ -320,9 +313,9 @@
                     Pool',
                     cyan:
                     endpoint
-                    ==='Serum
-                    Dex'
-                    }
+                    ===
+                    'Serum
+                    orderbook'}
                   "
                 >
                   {{ endpoint }}
@@ -362,9 +355,7 @@
               <span class="name">
                 <label>Price Impact</label>
                 <Tooltip placement="bottomLeft">
-                  <template slot="title">
-                    The difference between the market price and estimated price due to trade size
-                  </template>
+                  <template slot="title"> The difference between the market price and estimated price due to trade size </template>
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
@@ -975,25 +966,22 @@ export default Vue.extend({
         }
 
         if (this.fromCoin.mintAddress && this.toCoin.mintAddress) {
-          do {
+
+          do{
             // mono-step swap
             const crpLPList = getCRPPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
               this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
               typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
             )
             if (crpLPList.length > 0) {
               this.available_dex.push(ENDPOINT_CRP)
-              break
+              break;
             }
 
             //two-step swap with CRP
             const lpList_crp_1 = getPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
               TOKENS.CRP.mintAddress,
               undefined
             )
@@ -1004,20 +992,18 @@ export default Vue.extend({
             )
             if (lpList_crp_1.length > 0 && lpList_crp_2.length > 0) {
               this.available_dex.push(ENDPOINT_MULTI_CRP)
-              break
+              break;
             }
 
             // mono-step swap using raydium
             const rayLPList = getRAYPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
               this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
               typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
             )
             if (rayLPList.length > 0) {
               this.available_dex.push(ENDPOINT_RAY)
-              break
+              break;
             }
 
             // serum market
@@ -1056,9 +1042,7 @@ export default Vue.extend({
 
             //two-step swap with USDC
             const lpList_usdc_1 = getPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
               TOKENS.USDC.mintAddress,
               undefined
             )
@@ -1070,7 +1054,7 @@ export default Vue.extend({
             if (lpList_usdc_1.length > 0 && lpList_usdc_2.length > 0) {
               this.available_dex.push(ENDPOINT_MULTI_USDC)
             }
-          } while (false)
+          }while(false);
         }
         this.updateUrl()
         this.updateAmounts()
@@ -1179,7 +1163,7 @@ export default Vue.extend({
               this.$accessor.liquidity.infos,
               this.fromCoin!.mintAddress,
               this.toCoin!.mintAddress,
-              this.fromCoinAmount
+              this.fromCoinAmount,
             )
             this.mainAmmId = poolInfo.ammId
             const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
@@ -1270,7 +1254,7 @@ export default Vue.extend({
           } else if (dex_type == ENDPOINT_MULTI_USDC) {
             let midTokenMint = TOKENS.USDC.mintAddress
             this.midTokenMint = midTokenMint
-
+            
             // @ts-ignore
             const fromPoolInfo = findBestLP(
               this.$accessor.liquidity.infos,
@@ -1951,7 +1935,7 @@ main {
     background: #000 !important;
   }
   button.ant-btn-background-ghost[disabled] {
-    background: #80819d !important;
+    background: #80819D !important;
     border: 2px solid rgba(255, 255, 255, 0.14);
   }
   .ant-menu-horizontal > .ant-menu-item:hover,
@@ -2012,7 +1996,7 @@ main {
   }
 }
 .ant-tooltip-inner {
-  background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+  background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
   border: 2px solid rgba(255, 255, 255, 0.14);
   box-shadow: 18px 11px 14px rgb(0 0 0 / 25%);
   border-radius: 8px;
@@ -2033,11 +2017,11 @@ main {
     }
     .info {
       border-radius: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
       padding: 8px;
       margin-bottom: 10px;
-
+      
       .symbol {
         font-size: 13px;
         line-height: 16px;
@@ -2143,12 +2127,8 @@ main {
                 margin: auto auto 10px auto;
               }
             }
-            .swapping div {
+            .swapping div{
               margin-bottom: 15px;
-            }
-            .swapping .multi-swap {
-              display: flex;
-              align-items: center;
             }
             .slippage,
             .minimum {
@@ -2198,7 +2178,7 @@ main {
     height: 0;
     .ant-notification-notice {
       // background: #222262 !important;
-      background: #ffffff10;
+      background: #FFFFFF10;
       border-radius: 14px;
     }
   }
