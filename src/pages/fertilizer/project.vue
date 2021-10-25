@@ -428,7 +428,7 @@
       </div>
     </div>
 
-    <!-- <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
+    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
       <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">
         <div class="card">
           <div class="card-body">
@@ -710,7 +710,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
