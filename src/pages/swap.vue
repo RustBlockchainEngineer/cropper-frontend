@@ -144,7 +144,7 @@
           </template>
           <button class="btn-grad">
             <img src="@/assets/icons/wow.svg" />
-            Informations
+            Details
           </button>
         </Tooltip>
       </div>
@@ -287,7 +287,15 @@
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <div>
+              <div v-if="endpoint === ENDPOINT_MULTI_CRP || endpoint === ENDPOINT_MULTI_USDC">
+                <span class="swapThrough green">
+                  {{ ENDPOINT_CRP }}
+                </span>
+                <span class="swapThrough purple">
+                  {{ ENDPOINT_RAY }}
+                </span>
+              </div>
+              <div v-else>
                 <span
                   class="
                     swapThrough
