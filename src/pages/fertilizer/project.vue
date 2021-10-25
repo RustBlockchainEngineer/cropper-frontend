@@ -1139,13 +1139,18 @@ export default Vue.extend({
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
-          console.log('ic0', lp, this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo, newFarmInfo.poolId, this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID, newFarmInfo);
+          console.log('ic0', 
+          lp, 
+          this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo, 
+          newFarmInfo.poolId, 
+          this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID, newFarmInfo);
               labelized = true
               if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
-                newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID
+                (query.get('f') && this.labelizedAmmsExtended[newFarmInfo.poolId]?.slug == query.get('f'))
+
               ) {
-          console.log('ic01', lp);
+              console.log('hhhhheeee');
                 isPFO = true
               }
             }
@@ -1157,7 +1162,7 @@ export default Vue.extend({
             (newFarmInfo as any).poolId
           } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
 
-          if (!isPFO) {
+          if (isPFO) {
             farms.push({
               labelized,
               userInfo,
