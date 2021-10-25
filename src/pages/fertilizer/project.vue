@@ -275,7 +275,6 @@
                       This project is in preparation phase. Stay tuned.<br />
                     </div>
                   </div>
-
                   <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pla_ts > currentTimestamp">2</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
