@@ -253,6 +253,13 @@ WSOL: {
     decimals: 6,
     tags: ['cropper']
   },
+  DATE: {
+    symbol: 'DATE',
+    name: 'DATE',
+    mintAddress: 'Ce3PSQfkxT5ua4r2JqCoWYrMwKWC5hEzwsrT9Hb7mAz9',
+    decimals: 9,
+    tags: ['cropper']
+  },
   OXY: {
     symbol: 'OXY',
     name: 'OXY',
