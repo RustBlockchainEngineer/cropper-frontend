@@ -1084,7 +1084,7 @@ export default Vue.extend({
           let labelized = false
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-            console.log(this.labelizedAmms)
+            console.log(this.labelizedAmms, newFarmInfo.poolId)
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = this.labelizedAmms[newFarmInfo.poolId]
               if (labelized) {
