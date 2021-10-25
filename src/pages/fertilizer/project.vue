@@ -1138,11 +1138,11 @@ export default Vue.extend({
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
-          console.log('ic0', lp, this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo, newFarmInfo.poolId, this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID);
+          console.log('ic0', lp, this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo, newFarmInfo.poolId, this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID);
               labelized = true
               if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
-                newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID
+                newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID
               ) {
           console.log('ic01', lp);
                 isPFO = true
