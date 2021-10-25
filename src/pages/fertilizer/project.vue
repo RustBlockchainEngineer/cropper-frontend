@@ -305,7 +305,7 @@
                       <div>Private Farm</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pfrom }}</div>
-                      You can now stack LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
+                      You can now stake LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
                     </div>
                   </div>
                   <div :class="farm.pto_ts < currentTimestamp ? 'done' : 'notdone'">
