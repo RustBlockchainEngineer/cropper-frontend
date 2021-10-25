@@ -728,7 +728,7 @@ import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
-import { PAY_FARM_FEE, YieldFarm } from '@/utils/farm'
+import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, REWARD_MULTIPLER, YieldFarm } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID } from '@/utils/ids'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
@@ -792,6 +792,8 @@ export default Vue.extend({
       initialized: false,
       labelizedAmms: {} as any,
       labelizedFarms: {} as any,
+      labelizedAmmsExtended: {} as any,
+      poolsDatas: {} as any,
       nbFarmsLoaded: 0,
       certifiedOptions: [
         { value: 0, label: 'Labelized' },
@@ -991,6 +993,15 @@ export default Vue.extend({
           }
         })
       }
+
+      try {
+        this.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
+      } catch {
+        this.poolsDatas = []
+      } finally {
+        // nothing to do ..
+      }
+
     },
 
     async updateFarms() {
@@ -1159,11 +1170,7 @@ export default Vue.extend({
       this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(
-        this.searchName,
-        this.searchCertifiedFarm,
-        this.searchLifeFarm,
-        this.stakedOnly,
-        this.currentPage
+        this.searchName
       )
     },
     filterFarms(searchName: string) {
