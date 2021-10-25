@@ -1139,7 +1139,7 @@ export default Vue.extend({
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
-          console.log('ic', lp);
+          console.log('ic', newFarmInfo.poolId, this.labelizedAmms);
             if (this.labelizedAmms[newFarmInfo.poolId]) {
           console.log('ic0', lp);
               labelized = true
