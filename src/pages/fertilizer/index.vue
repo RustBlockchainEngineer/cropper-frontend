@@ -338,7 +338,7 @@ export default Vue.extend({
       let responseData2 = {}
       let responseData
       try {
-        responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
+        responseData = await fetch('https://api.cropper.finance/farms/?t='+ Math.round((new Date().getTime()) / 60000)).then((res) => res.json())
       } catch {
         // dummy data
         responseData = [
