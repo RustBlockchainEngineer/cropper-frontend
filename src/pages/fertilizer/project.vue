@@ -948,7 +948,7 @@ export default Vue.extend({
                 ).then((res) => res.json())
               } catch {
               } finally {
-
+                console.log(responseData2[this.wallet.address]);
                 if (responseData2[this.wallet.address]) {
                   if (responseData2[this.wallet.address].submit > 0) {
                     this.isRegistered = true
@@ -1014,7 +1014,6 @@ export default Vue.extend({
           console.log('ici4', this.farm.infos);
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         
-        let userInfo = get(this.farm.stakeAccounts, poolId)
         let isPFO = false
 
         // @ts-ignore
@@ -1027,109 +1026,7 @@ export default Vue.extend({
 
           console.log('ici3', lp);
 
-        if (reward && lp) {
-          const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
-          const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
-          const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
-          const rewardPerTimestampAmountTotalValue =
-            getBigNumber(rewardPerTimestampAmount.toEther()) *
-            2 *
-            60 *
-            60 *
-            24 *
-            365 *
-            this.price.prices[reward.symbol as string]
-
-          const liquidityCoinValue =
-            getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
-            this.price.prices[liquidityItem?.coin.symbol as string]
-          const liquidityPcValue =
-            getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
-            this.price.prices[liquidityItem?.pc.symbol as string]
-          const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
-
-          const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
-          const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
-          let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
-          let apr = ((rewardPerTimestampAmountTotalValue / liquidityUsdValue) * 100).toFixed(2)
-          if (apr === 'NaN' || apr === 'Infinity') {
-            apr = '0'
-          }
-          if (isNaN(liquidityUsdValue)) {
-            liquidityUsdValue = 0
-          }
-          // @ts-ignore
-          newFarmInfo.apr = apr
-
-          newFarmInfo.apr_details = {
-            apr: Math.round((apr as any) * 100) / 100,
-            apy: 0
-          } as any
-
-          if (
-            this.poolsDatas[liquidityItem.ammId] &&
-            this.poolsDatas[liquidityItem.ammId]['fees'] &&
-            liquidityTotalValue > 0
-          ) {
-            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / liquidityTotalValue
-            newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
-            newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
-          }
-
-          if (wallet) {
-            let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
-            //getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther());
-            if (unstaked) {
-              newFarmInfo.currentLPtokens = getBigNumber((unstaked as TokenAmount).toEther())
-            } else {
-              newFarmInfo.currentLPtokens = 0
-            }
-          } else {
-            newFarmInfo.currentLPtokens = 0
-          }
-
-          // @ts-ignore
-          newFarmInfo.liquidityUsdValue = liquidityUsdValue
-
-          if (rewardPerTimestampAmount.toEther().toString() === '0') {
-            //endedFarmsPoolId.push(poolId)
-          }
-        }
-        if (userInfo && lp) {
-          userInfo = cloneDeep(userInfo)
-
-          const { rewardDebt, depositBalance } = userInfo
-          let currentTimestamp = this.currentTimestamp
-
-          
-          if(currentTimestamp > end_timestamp.toNumber()){
-            currentTimestamp = end_timestamp.toNumber();
-          }
-          
-          const duration = currentTimestamp - last_timestamp.toNumber()
-          
-          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
-          const rewardPerShareCalc = rewardPerTimestamp
-            .multipliedBy(duration)
-            .multipliedBy(REWARD_MULTIPLER)
-            .dividedBy(newFarmInfo.lp.balance.wei)
-            .plus(getBigNumber(reward_per_share_net));
-          
-          const pendingReward = depositBalance.wei
-            .multipliedBy(rewardPerShareCalc)
-            .dividedBy(REWARD_MULTIPLER)
-            .minus(rewardDebt.wei)
-            
-          userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
-        } else {
-          userInfo = {
-            // @ts-ignore
-            depositBalance: new TokenAmount(0, farmInfo.lp.decimals),
-            // @ts-ignore
-            pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
-          }
-        }
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
@@ -1139,11 +1036,6 @@ export default Vue.extend({
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
-          console.log('ic0', 
-          lp, 
-          this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo, 
-          newFarmInfo.poolId, 
-          this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID, newFarmInfo);
               labelized = true
               const query = new URLSearchParams(window.location.search)
               if (
@@ -1151,8 +1043,115 @@ export default Vue.extend({
                 (query.get('f') && this.labelizedAmmsExtended[newFarmInfo.poolId]?.slug == query.get('f'))
 
               ) {
-              console.log('hhhhheeee');
                 isPFO = true
+
+                let userInfo = get(this.farm.stakeAccounts, poolId)
+
+                if (reward && lp) {
+                  const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+                  const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
+                  const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
+
+                  const rewardPerTimestampAmountTotalValue =
+                    getBigNumber(rewardPerTimestampAmount.toEther()) *
+                    2 *
+                    60 *
+                    60 *
+                    24 *
+                    365 *
+                    this.price.prices[reward.symbol as string]
+
+                  const liquidityCoinValue =
+                    getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
+                    this.price.prices[liquidityItem?.coin.symbol as string]
+                  const liquidityPcValue =
+                    getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
+                    this.price.prices[liquidityItem?.pc.symbol as string]
+                  const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
+
+                  const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
+                  const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
+                  let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
+                  let apr = ((rewardPerTimestampAmountTotalValue / liquidityUsdValue) * 100).toFixed(2)
+                  if (apr === 'NaN' || apr === 'Infinity') {
+                    apr = '0'
+                  }
+                  if (isNaN(liquidityUsdValue)) {
+                    liquidityUsdValue = 0
+                  }
+                  // @ts-ignore
+                  newFarmInfo.apr = apr
+
+                  newFarmInfo.apr_details = {
+                    apr: Math.round((apr as any) * 100) / 100,
+                    apy: 0
+                  } as any
+
+                  if (
+                    this.poolsDatas[liquidityItem.ammId] &&
+                    this.poolsDatas[liquidityItem.ammId]['fees'] &&
+                    liquidityTotalValue > 0
+                  ) {
+                    let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / liquidityTotalValue
+                    newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
+                    newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
+                  }
+
+                  if (wallet) {
+                    let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
+                    //getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther());
+                    if (unstaked) {
+                      newFarmInfo.currentLPtokens = getBigNumber((unstaked as TokenAmount).toEther())
+                    } else {
+                      newFarmInfo.currentLPtokens = 0
+                    }
+                  } else {
+                    newFarmInfo.currentLPtokens = 0
+                  }
+
+                  // @ts-ignore
+                  newFarmInfo.liquidityUsdValue = liquidityUsdValue
+
+                  if (rewardPerTimestampAmount.toEther().toString() === '0') {
+                    //endedFarmsPoolId.push(poolId)
+                  }
+                }
+
+                if (userInfo && lp) {
+                  userInfo = cloneDeep(userInfo)
+
+                  const { rewardDebt, depositBalance } = userInfo
+                  let currentTimestamp = this.currentTimestamp
+
+                  
+                  if(currentTimestamp > end_timestamp.toNumber()){
+                    currentTimestamp = end_timestamp.toNumber();
+                  }
+                  
+                  const duration = currentTimestamp - last_timestamp.toNumber()
+                  
+                  const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+                  const rewardPerShareCalc = rewardPerTimestamp
+                    .multipliedBy(duration)
+                    .multipliedBy(REWARD_MULTIPLER)
+                    .dividedBy(newFarmInfo.lp.balance.wei)
+                    .plus(getBigNumber(reward_per_share_net));
+                  
+                  const pendingReward = depositBalance.wei
+                    .multipliedBy(rewardPerShareCalc)
+                    .dividedBy(REWARD_MULTIPLER)
+                    .minus(rewardDebt.wei)
+                    
+                  userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
+                } else {
+                  userInfo = {
+                    // @ts-ignore
+                    depositBalance: new TokenAmount(0, farmInfo.lp.decimals),
+                    // @ts-ignore
+                    pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
+                  }
+                }
+
               }
             }
           }
