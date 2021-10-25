@@ -14,7 +14,8 @@ import { CRP_AMM_LAYOUT_V1 } from '@/utils/crp-swap'
 import { 
   LIQUIDITY_POOL_PROGRAM_ID_V4,
   CRP_LP_PROGRAM_ID_V1, 
-  SERUM_PROGRAM_ID_V3 } from '@/utils/ids'
+  SERUM_PROGRAM_ID_V3, 
+  CRP_LP_VERSION_V1} from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { LP_TOKENS, NATIVE_SOL, TOKENS } from '@/utils/tokens'
 
@@ -184,7 +185,7 @@ async function getCropperPools(conn:any){
       coin,
       pc,
       lp,
-      version: 5,
+      version: CRP_LP_VERSION_V1,
       programId: CRP_LP_PROGRAM_ID_V1,
       ammId: ammAll[indexAmmInfo].publicKey.toString(),
       ammAuthority: authority.toString(),
@@ -448,7 +449,7 @@ export const actions = actionTree(
               }
               case 'ammId': {
                 let parsed
-                if(version == 5){
+                if(version == CRP_LP_VERSION_V1){
                   parsed = CRP_AMM_LAYOUT_V1.decode(data)
                   // const { returnFeeNumerator, fixedFeeNumerator, feeDenominator } = parsed
                   poolInfo.fees = {

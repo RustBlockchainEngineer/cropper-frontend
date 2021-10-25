@@ -1,4 +1,5 @@
 import {
+  CRP_LP_VERSION_V1,
   DEVNET_MODE,
   LIQUIDITY_POOL_PROGRAM_ID_V2,
   LIQUIDITY_POOL_PROGRAM_ID_V3,
@@ -70,8 +71,6 @@ export function getPoolByTokenMintAddresses(
   return pool
 }
 
-
-
 export function getCRPPoolListByTokenMintAddresses(
   coinMintAddress: string,
   pcMintAddress: string,
@@ -82,7 +81,7 @@ export function getCRPPoolListByTokenMintAddresses(
       if (
         ((pool.coin.mintAddress === coinMintAddress && pool.pc.mintAddress === pcMintAddress) ||
           (pool.coin.mintAddress === pcMintAddress && pool.pc.mintAddress === coinMintAddress)) &&
-        (pool.version === 5)
+        (pool.version === CRP_LP_VERSION_V1)
         // && pool.official //@zhaohui
       ) {
         return !(ammIdOrMarket !== undefined && pool.ammId !== ammIdOrMarket && pool.serumMarket !== ammIdOrMarket)
@@ -94,7 +93,6 @@ export function getCRPPoolListByTokenMintAddresses(
   })
   return cloneDeep(crp_pools)
 }
-
 
 export function getRAYPoolListByTokenMintAddresses(
   coinMintAddress: string,
@@ -119,7 +117,6 @@ export function getRAYPoolListByTokenMintAddresses(
   return cloneDeep(crp_pools)
 }
 
-
 export function getPoolListByTokenMintAddresses(
   coinMintAddress: string,
   pcMintAddress: string,
@@ -131,7 +128,6 @@ export function getPoolListByTokenMintAddresses(
   }
   else return getRAYPoolListByTokenMintAddresses(coinMintAddress, pcMintAddress, ammIdOrMarket)
 }
-
 
 export function getLpMintByTokenMintAddresses(
   coinMintAddress: string,
@@ -156,7 +152,7 @@ export function getLpListByTokenMintAddresses(
   coinMintAddress: string,
   pcMintAddress: string,
   ammIdOrMarket: string | undefined,
-  version = [5]
+  version = [CRP_LP_VERSION_V1]
 ): LiquidityPoolInfo[] {
   const pool = LIQUIDITY_POOLS.filter((pool) => {
     if (coinMintAddress && pcMintAddress) {
@@ -243,7 +239,6 @@ export function findBestLP(pools:any, baseMint:string, quoteMint:string, amountI
         amountIn,
         1
       )
-      console.log(amountOut.fixed())
       if(!bestLP || maxAmount < amountOut.wei.toNumber()){
         maxAmount = amountOut.wei.toNumber()
         bestLP = poolInfo
@@ -276,7 +271,7 @@ export function getAllCropperPools() {
 
   const polo:any = []
   LIQUIDITY_POOLS.forEach(function (value) {
-    if(value.version == 5)
+    if(value.version == CRP_LP_VERSION_V1)
     {
       let item = {
         'name' : value.coin.name + ' - ' + value.pc.name,

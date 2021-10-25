@@ -1,5 +1,6 @@
 import { PublicKey } from '@solana/web3.js'
-
+export const CRP_LP_VERSION_V1 = 1001
+export const CRP_LP_VERSION_V2 = 1002
 export const DEVNET_MODE = false;
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')

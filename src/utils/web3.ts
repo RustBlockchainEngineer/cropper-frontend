@@ -67,6 +67,52 @@ export async function findAssociatedTokenAddress(walletAddress: PublicKey, token
   return publicKey
 }
 
+export async function createAtaSolIfNotExistAndWrap(
+  connection: Connection,
+  account: string | undefined | null,
+  owner: PublicKey,
+  transaction: Transaction,
+  signers: Array<Account>,
+  amount: number
+) {
+  let publicKey
+  if (account) {
+    publicKey = new PublicKey(account)
+  }
+  const mint = new PublicKey(TOKENS.WSOL.mintAddress)
+  // @ts-ignore without ts ignore, yarn build will failed
+  const ata = await Token.getAssociatedTokenAddress(ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, mint, owner, true)
+  if (!publicKey) {
+    const rent = await Token.getMinBalanceRentForExemptAccount(connection)
+    transaction.add(
+      SystemProgram.transfer({ fromPubkey: owner, toPubkey: ata, lamports: amount + rent }),
+      Token.createAssociatedTokenAccountInstruction(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        mint,
+        ata,
+        owner,
+        owner
+      )
+    )
+  } else {
+    const rent = await Token.getMinBalanceRentForExemptAccount(connection)
+    const wsol = await createTokenAccountIfNotExist(
+      connection,
+      null,
+      owner,
+      TOKENS.WSOL.mintAddress,
+      amount + rent,
+      transaction,
+      signers
+    )
+    transaction.add(
+      Token.createTransferInstruction(TOKEN_PROGRAM_ID, wsol, ata, owner, [], amount),
+      Token.createCloseAccountInstruction(TOKEN_PROGRAM_ID, wsol, owner, owner, [])
+    )
+  }
+}
+
 export async function createTokenAccountIfNotExist(
   connection: Connection,
   account: string | undefined | null,

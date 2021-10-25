@@ -24,7 +24,7 @@ import { nu64, struct, u8 } from 'buffer-layout'
 import { publicKey, u64, u128 } from '@project-serum/borsh'
 
 import BigNumber from 'bignumber.js'
-import { CRP_LP_PROGRAM_ID_V1, TOKEN_PROGRAM_ID } from '@/utils/ids'
+import { CRP_LP_PROGRAM_ID_V1, CRP_LP_VERSION_V1, TOKEN_PROGRAM_ID } from '@/utils/ids'
 import { TokenAmount } from '@/utils/safe-math'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
 import { depositInstruction, withdrawInstruction } from './crp-swap'
@@ -159,7 +159,7 @@ export async function addLiquidity(
   )
   const stateId = await getAMMGlobalStateAddress();
   transaction.add(
-    poolInfo.version === 5
+    poolInfo.version === CRP_LP_VERSION_V1
       ? addLiquidityInstructionV5(
           new PublicKey(poolInfo.programId),
 
@@ -280,7 +280,7 @@ export async function removeLiquidity(
   const stateId = await getAMMGlobalStateAddress()
 
   transaction.add(
-    poolInfo.version === 5
+    poolInfo.version === CRP_LP_VERSION_V1
       ? removeLiquidityV5(
           new PublicKey(poolInfo.programId),
           
