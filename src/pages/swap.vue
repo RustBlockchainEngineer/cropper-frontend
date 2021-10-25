@@ -144,7 +144,7 @@
           </template>
           <button class="btn-grad">
             <img src="@/assets/icons/wow.svg" />
-            Informations
+            Details
           </button>
         </Tooltip>
       </div>

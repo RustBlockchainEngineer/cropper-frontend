@@ -113,15 +113,8 @@ export default class Nav extends Vue {
   }
 }
 
-.menu-icon {
-  width: 12px;
-  height: 12px;
-  border-radius: 4px;
-  margin-right: 10px;
-}
-
 .menu-icon-soon {
-  display: flex;
+  display: none;
   align-items: center;
   height: 30px;
   padding: 2px;
@@ -139,11 +132,23 @@ export default class Nav extends Vue {
     color: white;
     width: 100%;
     justify-content: center;
+    font-size: 14px;
   }
 
   @media (max-width: @mobile-b-width) {
     margin-bottom: 20px;
   }
+}
+
+.menu-icon-group:hover + .menu-icon-soon {
+  display: block;
+}
+
+.menu-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  margin-right: 10px;
 }
 
 .ant-menu-item{
