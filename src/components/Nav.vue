@@ -65,7 +65,7 @@ export default class Nav extends Vue {
 
   changeRoute({ key }: { key: string }): void {
     const { from, to, ammId } = this.$route.query
-    if(key != "farms") {
+    if(key != "farms-hongbo") {
       if (['swap', 'liquidity'].includes(key) && (ammId || (from && to))) {
         // if (ammId) {
         //   this.$router.push({
