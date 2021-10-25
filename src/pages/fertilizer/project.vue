@@ -616,7 +616,7 @@
                 </Col>
               </Row>
 
-              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
+              <Row  v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered && poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
                 <Col class="state noDesktop" :span="isMobile ? 6 : 3">
                   <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                   <div
