@@ -1092,6 +1092,7 @@ export default Vue.extend({
                   newFarmInfo.poolId == this.labelizedAmms[newFarmInfo.poolId].pfarmID
                 ) {
                   const query = new URLSearchParams(window.location.search)
+                  console.log(query.get('f'), this.labelizedAmms[newFarmInfo.poolId].slug)
                   if (query.get('f') && this.labelizedAmms[newFarmInfo.poolId].slug == query.get('f')) {
                     isPFO = true
 
