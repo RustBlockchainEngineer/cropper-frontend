@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js'
 
-export const DEVNET_MODE = true;
+export const DEVNET_MODE = false;
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
