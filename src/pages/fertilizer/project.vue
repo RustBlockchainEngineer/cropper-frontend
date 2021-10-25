@@ -1179,6 +1179,7 @@ export default Vue.extend({
       this.endedFarmsPoolId = endedFarmsPoolId
       this.showFarms = this.farms
 
+          console.log(this.farms, farms);
     },
 
     updateCurrentLp(newTokenAccounts: any) {
