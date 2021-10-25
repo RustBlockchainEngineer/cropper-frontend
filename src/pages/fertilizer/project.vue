@@ -997,7 +997,7 @@ export default Vue.extend({
       this.currentTimestamp = moment().unix()
       const farms: any = []
       const endedFarmsPoolId: string[] = []
-      console.log('here 1');
+      console.log('here 1', this.farm.infos);
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let userInfo = get(this.farm.stakeAccounts, poolId)
 
