@@ -920,7 +920,7 @@ export default Vue.extend({
     async updateLabelizedAmms() {
       const query = new URLSearchParams(window.location.search)
       //this.labelizedAmms = {}
-      let responseData2 = {}
+      let responseData2: any = {}
       let responseData: any
       try {
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
