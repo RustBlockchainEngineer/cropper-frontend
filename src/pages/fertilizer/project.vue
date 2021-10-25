@@ -949,10 +949,10 @@ export default Vue.extend({
               } catch {
               } finally {
 
-                if (responseData[this.wallet.address]) {
-                  if (responseData[this.wallet.address].submit > 0) {
+                if (responseData2[this.wallet.address]) {
+                  if (responseData2[this.wallet.address].submit > 0) {
                     this.isRegistered = true
-                    this.registeredDatas = responseData[this.wallet.address]
+                    this.registeredDatas = responseData2[this.wallet.address]
                     this.shareWalletAddress =
                       'http://cropper.finance/fertilizer/project/?f=' +
                       this.labelizedAmms[this.ammId].slug +
