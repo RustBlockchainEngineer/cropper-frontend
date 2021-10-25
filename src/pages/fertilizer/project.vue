@@ -1022,6 +1022,7 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
+          console.log('ici3', lp);
 
         if (reward && lp) {
           const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
@@ -1126,10 +1127,12 @@ export default Vue.extend({
             pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
           }
         }
+          console.log('ici2', lp);
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
         ) {
+          console.log('ici', lp);
           let labelized = false
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
