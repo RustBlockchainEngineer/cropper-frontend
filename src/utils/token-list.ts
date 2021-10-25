@@ -255,7 +255,7 @@ WSOL: {
   },
   DATE: {
     symbol: 'DATE',
-    name: 'DATE',
+    name: 'SolDate',
     mintAddress: 'Ce3PSQfkxT5ua4r2JqCoWYrMwKWC5hEzwsrT9Hb7mAz9',
     decimals: 9,
     tags: ['cropper']
