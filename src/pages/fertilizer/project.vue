@@ -436,7 +436,7 @@ CKCK
               <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
                 <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
                   <div v-if="farm.labelized" class="labelized">LABELIZED</div>
-                  <Col class="lp-icons" :span="isMobile ? 12 : 8">
+                  <Col class="lp-icons" :span="isMobile ? 12 : 8">{{farm.farmInfo.poolId}}
                     <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                     <div
                       v-if="
