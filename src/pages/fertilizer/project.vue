@@ -910,8 +910,6 @@ export default Vue.extend({
       } catch {
         // dummy data
         responseData = [
-          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
-          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
         ]
       } finally {
         this.followed = true
@@ -921,18 +919,17 @@ export default Vue.extend({
     TokenAmount,
 
     async updateLabelizedAmms() {
+      if(this.labelizedAmms != {}){
+          return;
+      }
       const query = new URLSearchParams(window.location.search)
-      //this.labelizedAmms = {}
+      this.labelizedAmms = {}
       let responseData2 = {}
       let responseData: any
       try {
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
-        // dummy data
-        responseData = [
-          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
-          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
-        ]
+        responseData = []
       } finally {
         responseData.forEach(async (element: any) => {
           if (element.pfo == true) {
