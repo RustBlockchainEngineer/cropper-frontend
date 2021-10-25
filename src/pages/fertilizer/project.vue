@@ -1176,10 +1176,13 @@ export default Vue.extend({
         this.followerCount = Object.keys(responseData).length
       }
 
+      console.log(this.farms);
+
       this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(this.searchName)
 
+      console.log(this.farms);
       /*
       if(Object.keys(this.farms).length < 1 && Object.keys(this.labelizedAmms).length > 0){
         this.$router.push({
