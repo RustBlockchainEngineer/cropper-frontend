@@ -922,7 +922,7 @@ export default Vue.extend({
 
     async updateLabelizedAmms() {
       const query = new URLSearchParams(window.location.search)
-      this.labelizedAmms = {}
+      //this.labelizedAmms = {}
       let responseData2 = {}
       let responseData: any
       try {
@@ -985,8 +985,15 @@ export default Vue.extend({
                 document.title = 'Fertilizer - CropperFinance x ' + element.name
 
                 this.nbFarmsLoaded++
+              }
+            }
+          }
+        })
+      }
+    },
 
-
+    async updateFarms() {
+      await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
       const farms: any = []
       const endedFarmsPoolId: string[] = []
@@ -1192,17 +1199,6 @@ export default Vue.extend({
        })
       }
 */
-
-
-              }
-            }
-          }
-        })
-      }
-    },
-
-    async updateFarms() {
-      await this.updateLabelizedAmms()
     },
     filterFarms(searchName: string) {
       this.showFarms = this.farms
