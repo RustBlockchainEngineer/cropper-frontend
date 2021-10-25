@@ -152,7 +152,9 @@ export const actions = actionTree(
         }
 
         _farmInfo.lp.balance = new TokenAmount(0, lpTokenInfo.decimals);
+        _farmInfo.reward.balance = new TokenAmount(0, rewardToken.decimals);
         publicKeys.push(_farmData.pool_lp_token_account);
+        publicKeys.push(_farmData.pool_reward_token_account);
         farms[farmAccountAddress] = _farmInfo;
         farms[farmAccountAddress].poolInfo = _farmData;
       })
@@ -163,9 +165,14 @@ export const actions = actionTree(
           const address = info.publicKey.toBase58()
           const data = Buffer.from(info.account.data)
           const parsed = ACCOUNT_LAYOUT.decode(data);
-          let findedFarm = FARMS.find((item)=>item.poolLpTokenAccount === address)
-          if(findedFarm != undefined){
-            farms[findedFarm.poolId].lp.balance.wei = farms[findedFarm.poolId].lp.balance.wei.plus(getBigNumber(parsed.amount))
+          let findedFarmForLP = FARMS.find((item)=>item.poolLpTokenAccount === address)
+          if(findedFarmForLP != undefined){
+            farms[findedFarmForLP.poolId].lp.balance.wei = farms[findedFarmForLP.poolId].lp.balance.wei.plus(getBigNumber(parsed.amount))
+          }
+
+          let findedFarmForReward = FARMS.find((item)=>item.poolRewardTokenAccount === address)
+          if(findedFarmForReward != undefined){
+            farms[findedFarmForReward.poolId].reward.balance.wei = farms[findedFarmForReward.poolId].reward.balance.wei.plus(getBigNumber(parsed.amount))
           }
         }
       });
