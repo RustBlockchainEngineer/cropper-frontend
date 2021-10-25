@@ -280,7 +280,7 @@
                     <span v-if="farm.pla_ts > currentTimestamp">2</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Withelist</div>
+                      <div>Whitelist</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla }}</div>
                       You can now whitelist yourself for the lottery.<br />
