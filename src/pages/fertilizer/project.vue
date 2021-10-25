@@ -427,9 +427,9 @@
         </div>
       </div>
     </div>
-
-    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
-      <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">
+CKCK
+    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">COCO
+      <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">CYCY
         <div class="card">
           <div class="card-body">
             <Collapse v-model="showCollapse" expand-icon-position="right">
