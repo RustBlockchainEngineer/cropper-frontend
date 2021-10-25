@@ -1152,25 +1152,22 @@ export default Vue.extend({
                   }
                 }
 
+                ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=Earn ${
+                  (newFarmInfo as any).reward.name
+                } with our new farm on @CropperFinance&url=https://cropper.finance/farms/?s=${
+                  (newFarmInfo as any).poolId
+                } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
+
+                if (isPFO) {
+                  farms.push({
+                    labelized,
+                    userInfo,
+                    farmInfo: newFarmInfo
+                  })
+                }
               }
             }
           }
-
-          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=Earn ${
-            (newFarmInfo as any).reward.name
-          } with our new farm on @CropperFinance&url=https://cropper.finance/farms/?s=${
-            (newFarmInfo as any).poolId
-          } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
-
-          if (isPFO) {
-            farms.push({
-              labelized,
-              userInfo,
-              farmInfo: newFarmInfo
-            })
-          }
-
-          console.log('here');
         }
       }
 
