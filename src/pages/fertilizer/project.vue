@@ -1176,9 +1176,9 @@ export default Vue.extend({
         this.followerCount = Object.keys(responseData).length
       }
 
-      console.log(this.farms);
+      console.log(farms);
 
-      this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+      this.farms = farms
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(this.searchName)
 
