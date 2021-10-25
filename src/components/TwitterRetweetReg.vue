@@ -153,8 +153,7 @@
               ><img src="@/assets/icons/check-one.svg" alt=""
             /></span>
             <Row :gutter="24">
-              <Col :span="10" class="twitter-section-left">
-                {{ this.farm.links.retweet_html }}
+              <Col :span="10" class="twitter-section-left" v-html="this.farm.links.retweet_html">
               </Col>
               <div class="twitter-section-right">
                 <div class="inforetweet">
