@@ -1470,7 +1470,7 @@ export default Vue.extend({
       } else if (this.endpoint === ENDPOINT_MULTI_CRP || this.endpoint === ENDPOINT_MULTI_USDC) {
         if (this.needCreateTokens() || this.needWrapSol()) {
           console.log(this.fromCoin?.mintAddress, this.midTokenMint, this.toCoin?.mintAddress)
-          let fromMint = this.fromCoin.mintAddress
+          let fromMint = this.fromCoin?.mintAddress
           let midMint = this.midTokenMint
           let toMint = this.toCoin?.mintAddress
           if (fromMint === NATIVE_SOL.mintAddress) fromMint = TOKENS.WSOL.mintAddress
