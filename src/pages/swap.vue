@@ -144,7 +144,7 @@
           </template>
           <button class="btn-grad">
             <img src="@/assets/icons/wow.svg" />
-            Informations
+            Details
           </button>
         </Tooltip>
       </div>
@@ -278,7 +278,6 @@
                 </div>
               </span>
             </div>
-
             <div v-if="endpoint" class="fs-container flexDiv swapping">
               <span class="name">
                 <label>Swapping Through</label>
@@ -287,7 +286,15 @@
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <div>
+              <div v-if="endpoint == endpoint_multi_crp || endpoint == endpoint_multi_usdc">
+                <span class="swapThrough green">
+                  {{ endpoint_crp }}
+                </span>
+                <span class="swapThrough purple">
+                  {{ endpoint_ray }}
+                </span>
+              </div>
+              <div v-else>
                 <span
                   class="
                     swapThrough
@@ -611,6 +618,7 @@ export default Vue.extend({
       fromCoinAmount: '',
       toCoinAmount: '',
       toCoinWithSlippage: '',
+      midAmount: '', //multistep-swap
       midAmountWithSlippage: '', //multistep-swap
       // wrap
       isWrap: false,
@@ -645,7 +653,11 @@ export default Vue.extend({
       userNeedAmmIdOrMarket: undefined as string | undefined,
       setCoinFromMintLoading: false,
       asksAndBidsLoading: true,
-      windowWidth: 0
+      windowWidth: 0,
+      endpoint_crp: 'CropperFinance Pool',
+      endpoint_ray: 'Raydium Pool',
+      endpoint_multi_crp: 'Two-Step Swap with CRP',
+      endpoint_multi_usdc: 'Two-Step Swap with USDC'
     }
   },
   head: {
@@ -833,6 +845,7 @@ export default Vue.extend({
         //     toCoin = liquidityUser.pc
         //   }
         // }
+        console.log(Object.values(TOKENS).find((item) => item.mintAddress === 'So11111111111111111111111111111111111111112'))
         fromCoin = Object.values(TOKENS).find((item) => item.mintAddress === from)
         toCoin = Object.values(TOKENS).find((item) => item.mintAddress === to)
         if (fromCoin || toCoin) {
@@ -1231,6 +1244,7 @@ export default Vue.extend({
                 toCoinAmount = final.amountOut.fixed()
                 toCoinWithSlippage = final.amountOutWithSlippage
                 this.midAmountWithSlippage = amountOutWithSlippage.fixed()
+                this.midAmount = amountOut.fixed()
                 price = +new TokenAmount(
                   parseFloat(toCoinAmount) / parseFloat(this.fromCoinAmount),
                   // @ts-ignore
@@ -1450,24 +1464,20 @@ export default Vue.extend({
           get(this.wallet.tokenAccounts, `${this.toCoin.mintAddress}.tokenAccountAddress`),
           this.fromCoinAmount,
           this.midAmountWithSlippage,
-          this.toCoinWithSlippage
         )
-          .then((txids) => {
+          .then((txid) => {
             this.$notify.info({
               key,
               message: 'Transaction has been sent',
               description: (h: any) =>
                 h('div', [
                   'Confirmation is in progress.  Check your transaction on ',
-                  h('a', { attrs: { href: `${this.url.explorer}/tx/${txids[0]}`, target: '_blank' } }, 'here'),
-                  h('a', { attrs: { href: `${this.url.explorer}/tx/${txids[1]}`, target: '_blank' } }, 'here')
+                  h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
                 ])
             })
-            const description_1 = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.midAmountWithSlippage} ${midTokenSymbol}`
-            this.$accessor.transaction.sub({ txid: txids[0], description: description_1 })
+            const description = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
+            this.$accessor.transaction.sub({ txid, description })
 
-            const description = `Swap ${this.midAmountWithSlippage} ${midTokenSymbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
-            this.$accessor.transaction.sub({ txid: txids[1], description })
           })
           .catch((error) => {
             this.$notify.error({
@@ -1794,6 +1804,7 @@ main {
         text-transform: capitalize;
         border-radius: 5px;
         padding: 4px 8px;
+        margin-left: 5px;
       }
       .green {
         background: #0caf7f;

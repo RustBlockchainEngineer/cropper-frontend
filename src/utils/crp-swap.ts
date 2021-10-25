@@ -66,31 +66,7 @@ export const GLOBAL_STATE_LAYOUT = struct([
   blob(32, 'curveParameters'),
 ]);
 
-export const AMM_INFO_LAYOUT_V5 =  struct(
-  [
-    u8('version'),
-    u8('isInitialized'),
-    u8('nonce'),
-    publicKey('ammId'),
-    publicKey('dexProgramId'),
-    publicKey('serumMarket'),
-    publicKey('tokenProgramId'),
-    publicKey('poolCoinTokenAccount'),
-    publicKey('poolPcTokenAccount'),
-    publicKey('lpMintAddress'),
-    publicKey('coinMintAddress'),
-    publicKey('pcMintAddress'),
-    publicKey('feeCoinTokenAccount'),
-    publicKey('feePcTokenAccount'),
-    u64('returnFeeNumerator'),
-    u64('fixedFeeNumerator'),
-    u64('feeDenominator'),
-    u8('curveType'),
-    blob(32, 'curveParameters'),
-  ]
-);
-
-export const AMM_INFO_LAYOUT_V6 =  struct(
+export const CRP_AMM_LAYOUT_V1 =  struct(
   [
     u8('version'),
     u8('isInitialized'),

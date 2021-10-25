@@ -338,7 +338,7 @@ export default Vue.extend({
       keyword = keyword.trim()
       let tokenList = []
 
-      let ray = {}
+      let crp = {}
       let nativeSol = cloneDeep(NATIVE_SOL)
 
       let hasBalance = []
@@ -351,13 +351,13 @@ export default Vue.extend({
         if (tokenAccount) {
           tokenInfo = { ...tokenInfo, ...tokenAccount, key: symbol }
 
-          if (tokenInfo.symbol === 'RAY') {
-            ray = cloneDeep({ ...tokenInfo, key: symbol })
+          if (tokenInfo.symbol === 'CRP') {
+            crp = cloneDeep({ ...tokenInfo, key: symbol })
           } else {
             hasBalance.push({ ...tokenInfo, key: symbol })
           }
-        } else if (tokenInfo.symbol === 'RAY') {
-          ray = cloneDeep({ ...tokenInfo, key: symbol })
+        } else if (tokenInfo.symbol === 'CRP') {
+          crp = cloneDeep({ ...tokenInfo, key: symbol })
         } else {
           noBalance.push({ ...tokenInfo, key: symbol })
         }
@@ -380,9 +380,9 @@ export default Vue.extend({
       })
 
       if (!this.desc) {
-        tokenList = [...[ray, nativeSol], ...hasBalance, ...noBalance]
+        tokenList = [...[crp, nativeSol], ...hasBalance, ...noBalance]
       } else {
-        tokenList = [...[ray, nativeSol], ...noBalance.reverse(), ...hasBalance]
+        tokenList = [...[crp, nativeSol], ...noBalance.reverse(), ...hasBalance]
       }
 
       if (keyword) {

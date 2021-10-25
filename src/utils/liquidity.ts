@@ -24,10 +24,10 @@ import { nu64, struct, u8 } from 'buffer-layout'
 import { publicKey, u64, u128 } from '@project-serum/borsh'
 
 import BigNumber from 'bignumber.js'
-import { LIQUIDITY_POOL_PROGRAM_ID_V5, TOKEN_PROGRAM_ID } from '@/utils/ids'
+import { CRP_LP_PROGRAM_ID_V1, TOKEN_PROGRAM_ID } from '@/utils/ids'
 import { TokenAmount } from '@/utils/safe-math'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
-import { depositInstruction, withdrawInstruction } from './new_fcn'
+import { depositInstruction, withdrawInstruction } from './crp-swap'
 
 export { getLpMintByTokenMintAddresses, getPoolByLpMintAddress, getPoolByTokenMintAddresses, canWrap }
 
@@ -504,7 +504,7 @@ export function addLiquidityInstructionV5(
     poolPcTokenAccount,
     lpMintAddress,
     userLpTokenAccount,
-    new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
+    new PublicKey(CRP_LP_PROGRAM_ID_V1),
     TOKEN_PROGRAM_ID,
     lpAmount,
     maxCoinAmount,
@@ -678,7 +678,7 @@ export function removeLiquidityV5(
     poolPcTokenAccount,
     userCoinTokenAccount,
     userPcTokenAccount,
-    new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
+    new PublicKey(CRP_LP_PROGRAM_ID_V1),
     TOKEN_PROGRAM_ID,
     amount,
     0,

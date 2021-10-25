@@ -275,12 +275,11 @@
                       This project is in preparation phase. Stay tuned.<br />
                     </div>
                   </div>
-
                   <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pla_ts > currentTimestamp">2</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Withelist</div>
+                      <div>Whitelist</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla }}</div>
                       You can now whitelist yourself for the lottery.<br />
@@ -290,12 +289,12 @@
                     <span v-if="farm.pla_end_ts > currentTimestamp">3</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Airdrop Lottery</div>
+                      <div>{{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }}</div>
                       <label>-</label>
                        <div class="date" :style="'background-color: ' + farm.current_status.color">
                         {{ farm.pla_end }}
                       </div>
-                      See if you have any winning lottery tickets.<br />
+                      farm is in preparation.<br />
                     </div>
                   </div>
                   <div :class="farm.pfrom_ts < currentTimestamp ? 'done' : 'notdone'">
@@ -305,7 +304,7 @@
                       <div>Private Farm</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pfrom }}</div>
-                      You can now stack LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
+                      You can now stake LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
                     </div>
                   </div>
                   <div :class="farm.pto_ts < currentTimestamp ? 'done' : 'notdone'">
@@ -315,7 +314,7 @@
                       <div>Public Farm</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pto }}</div>
-                      {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes public<br />
+                      {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes public + Airdrop lottery<br />
                     </div>
                   </div>
                 </Col>
@@ -400,7 +399,7 @@
                 </div>
               </div>
 
-              <div v-else-if="farm.pla_end_ts < currentTimestamp && isRegistered">
+              <div v-else-if="farm.pto_ts < currentTimestamp && isRegistered">
                 <div class="share">
                   <span v-if="farm.airdrop.status == 'lottery'">
                     You’ve well registered into the whitelist. You have {{ registeredDatas.submit }} lottery ticket{{
@@ -429,8 +428,8 @@
       </div>
     </div>
 
-    <!-- <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">
-      <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">
+    <div v-for="farm in showFarms" :key="farm.farmInfo.poolId">HERE
+      <div v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" class="farm container">HORE
         <div class="card">
           <div class="card-body">
             <Collapse v-model="showCollapse" expand-icon-position="right">
@@ -711,7 +710,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -911,8 +910,6 @@ export default Vue.extend({
       } catch {
         // dummy data
         responseData = [
-          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
-          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
         ]
       } finally {
         this.followed = true
@@ -922,18 +919,17 @@ export default Vue.extend({
     TokenAmount,
 
     async updateLabelizedAmms() {
+      if(this.labelizedAmms != {}){
+          return;
+      }
       const query = new URLSearchParams(window.location.search)
-      //this.labelizedAmms = {}
+      this.labelizedAmms = {}
       let responseData2 = {}
       let responseData: any
       try {
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
-        // dummy data
-        responseData = [
-          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
-          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
-        ]
+        responseData = []
       } finally {
         responseData.forEach(async (element: any) => {
           if (element.pfo == true) {
@@ -998,9 +994,11 @@ export default Vue.extend({
       this.currentTimestamp = moment().unix()
       const farms: any = []
       const endedFarmsPoolId: string[] = []
+      console.log('here 1' , this.labelizedAmms);
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let userInfo = get(this.farm.stakeAccounts, poolId)
 
+      console.log('here 2', poolId);
         // @ts-ignore
         const { reward_per_share_net, reward_per_timestamp, last_timestamp } = farmInfo.poolInfo
 
@@ -1053,7 +1051,9 @@ export default Vue.extend({
           }
         }
 
+      console.log('here 3', poolId);
         if (userInfo && lp) {
+      console.log('here 4', poolId);
           userInfo = cloneDeep(userInfo)
 
           const { rewardDebt, depositBalance } = userInfo
@@ -1093,6 +1093,7 @@ export default Vue.extend({
                   newFarmInfo.poolId == this.labelizedAmms[newFarmInfo.poolId].pfarmID
                 ) {
                   const query = new URLSearchParams(window.location.search)
+                  console.log(query.get('f'), this.labelizedAmms[newFarmInfo.poolId].slug)
                   if (query.get('f') && this.labelizedAmms[newFarmInfo.poolId].slug == query.get('f')) {
                     isPFO = true
 
@@ -1177,10 +1178,13 @@ export default Vue.extend({
         this.followerCount = Object.keys(responseData).length
       }
 
-      this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+      console.log(farms);
+
+      this.farms = farms
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(this.searchName)
 
+      console.log(this.farms);
       /*
       if(Object.keys(this.farms).length < 1 && Object.keys(this.labelizedAmms).length > 0){
         this.$router.push({

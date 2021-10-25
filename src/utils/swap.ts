@@ -19,9 +19,9 @@ import {
 } from '@/utils/web3'
 import { TokenAmount } from '@/utils/safe-math'
 import { ACCOUNT_LAYOUT } from '@/utils/layouts'
-import { swapInstruction_v5 } from '@/utils/new_fcn'
+import { swapInstruction_v5 } from '@/utils/crp-swap'
 // eslint-disable-next-line
-import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, LIQUIDITY_POOL_PROGRAM_ID_V5, AMM_STATE_SEED } from './ids'
+import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, CRP_LP_PROGRAM_ID_V1, AMM_STATE_SEED } from './ids'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
 import { initAMMGlobalState } from './global_state'
 
@@ -378,7 +378,7 @@ export async function twoStepSwap(
   toTokenAccount: string,
   aIn: string,
   aMid: string,
-  aOut: string)
+)
 {
   console.log("Two Step swap")
   if(!midTokenAccount)
@@ -394,8 +394,10 @@ export async function twoStepSwap(
     await sendTransaction(connection, wallet, transaction, [])
   }
 
-  let ori_crp_balance = await getTokenBalance(connection, midTokenAccount)
-  let tx_id_1 = await swap(connection, 
+  // let ori_crp_balance = await getTokenBalance(connection, midTokenAccount)
+  let transactionAll = new Transaction()
+  let signersAll:Account[] = []
+  let res = await swap(connection, 
     wallet,
     fromPoolInfo,
     fromCoinMint,
@@ -403,36 +405,28 @@ export async function twoStepSwap(
     fromTokenAccount,
     midTokenAccount,
     aIn,
-    aMid
+    aMid,
+    true
     )
-  
-  let cur_crp_balance = 0
-  while(1)
-  {
-    cur_crp_balance = await getTokenBalance(connection, midTokenAccount)
-    if(ori_crp_balance < cur_crp_balance)
-    {
-      break;
-    }
-  }
+  transactionAll.add(res.transaction)
+  signersAll = [...signersAll, ...res.signers]
 
-  let crp_decimals = await getMintDecimals(connection, new PublicKey(midCoinMint))
-  let delta_crp = cur_crp_balance - ori_crp_balance
-  
-  let aCrpIn = (new TokenAmount(delta_crp, crp_decimals)).fixed()
-
-  let tx_id_2 = await swap(connection, 
+  res = await swap(connection, 
     wallet,
     toPoolInfo,
     midCoinMint,
     toCoinMint,
     midTokenAccount,
     toTokenAccount,
-    aCrpIn,
-    aOut
+    aMid,
+    '0',
+    true
     )
   
-  return [tx_id_1, tx_id_2]
+  transactionAll.add(res.transaction)
+  signersAll = [...signersAll, ...res.signers]
+
+  return await sendTransaction(connection, wallet, transactionAll, signersAll)
 }
 
 export async function swap(
@@ -444,7 +438,8 @@ export async function swap(
   fromTokenAccount: string,
   toTokenAccount: string,
   aIn: string,
-  aOut: string
+  aOut: string,
+  twoStepSwap: boolean = false
 ){
   
   const swap_fcn = (poolInfo.version == 5)? swap_v5: swap_v4;
@@ -457,7 +452,8 @@ export async function swap(
     fromTokenAccount, 
     toTokenAccount, 
     aIn, 
-    aOut)
+    aOut,
+    twoStepSwap)
 }
 
 async function swap_v4(
@@ -469,8 +465,10 @@ async function swap_v4(
   fromTokenAccount: string,
   toTokenAccount: string,
   aIn: string,
-  aOut: string
+  aOut: string,
+  twoStepSwap:boolean
 ) {
+  console.log(twoStepSwap)
   const transaction = new Transaction()
   const signers: Account[] = []
 
@@ -574,7 +572,16 @@ async function swap_v4(
       })
     )
   }
-  return await sendTransaction(connection, wallet, transaction, signers)
+  if(twoStepSwap){
+    return {
+      transaction, 
+      signers
+    }
+  }
+  else
+  {
+    return await sendTransaction(connection, wallet, transaction, signers)
+  }
 }
 
 
@@ -587,7 +594,8 @@ async function swap_v5(
   fromTokenAccount: string,
   toTokenAccount: string,
   aIn: string,
-  aOut: string
+  aOut: string,
+  twoStepSwap: boolean,
 ) {
  
   const transaction = new Transaction()
@@ -660,11 +668,9 @@ async function swap_v5(
   const stateId = await getAMMGlobalStateAddress();
   const state_info = await getAMMGlobalStateAccount(connection);
 
-  let feeTokenAccount = await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint)) as any
-
-  if(fromCoinMint === NATIVE_SOL.mintAddress){
-    feeTokenAccount = state_info.feeOwner.toString()
-  }
+  let feeTokenAccount = (fromCoinMint === NATIVE_SOL.mintAddress) ? 
+                        state_info.feeOwner.toString() :
+                        await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint))
 
   let poolFromAccount = normal_dir? poolInfo.poolCoinTokenAccount: poolInfo.poolPcTokenAccount
   let poolToAccount = normal_dir? poolInfo.poolPcTokenAccount: poolInfo.poolCoinTokenAccount
@@ -709,7 +715,12 @@ async function swap_v5(
       })
     )
   }
-
+  if(twoStepSwap){
+    return {
+      transaction, 
+      signers
+    }
+  }
   return await sendTransaction(connection, wallet, transaction, signers)
 }
 

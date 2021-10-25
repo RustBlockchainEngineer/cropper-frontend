@@ -7,7 +7,7 @@ import {
 } from '@solana/web3.js'
 
 import {
-  LIQUIDITY_POOL_PROGRAM_ID_V5,
+  CRP_LP_PROGRAM_ID_V1,
   SYSTEM_PROGRAM_ID,
 } from '@/utils/ids'
 import {
@@ -120,7 +120,7 @@ export async function updateAMMGlobalState(
       newFeeOwner,
       feeParams,
       initialSupply,
-      new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V5),
+      new PublicKey(CRP_LP_PROGRAM_ID_V1),
     )
   )
   
