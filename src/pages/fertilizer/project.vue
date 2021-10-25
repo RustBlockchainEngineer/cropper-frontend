@@ -275,12 +275,11 @@
                       This project is in preparation phase. Stay tuned.<br />
                     </div>
                   </div>
-
                   <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pla_ts > currentTimestamp">2</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Withelist</div>
+                      <div>Whitelist</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla }}</div>
                       You can now whitelist yourself for the lottery.<br />
@@ -290,12 +289,12 @@
                     <span v-if="farm.pla_end_ts > currentTimestamp">3</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Airdrop Lottery</div>
+                      <div>{{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }}</div>
                       <label>-</label>
                        <div class="date" :style="'background-color: ' + farm.current_status.color">
                         {{ farm.pla_end }}
                       </div>
-                      See if you have any winning lottery tickets.<br />
+                      farm is in preparation.<br />
                     </div>
                   </div>
                   <div :class="farm.pfrom_ts < currentTimestamp ? 'done' : 'notdone'">
@@ -305,7 +304,7 @@
                       <div>Private Farm</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pfrom }}</div>
-                      You can now stack LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
+                      You can now stake LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
                     </div>
                   </div>
                   <div :class="farm.pto_ts < currentTimestamp ? 'done' : 'notdone'">
@@ -315,7 +314,7 @@
                       <div>Public Farm</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pto }}</div>
-                      {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes public<br />
+                      {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm goes public + Airdrop lottery<br />
                     </div>
                   </div>
                 </Col>
@@ -400,7 +399,7 @@
                 </div>
               </div>
 
-              <div v-else-if="farm.pla_end_ts < currentTimestamp && isRegistered">
+              <div v-else-if="farm.pto_ts < currentTimestamp && isRegistered">
                 <div class="share">
                   <span v-if="farm.airdrop.status == 'lottery'">
                     You’ve well registered into the whitelist. You have {{ registeredDatas.submit }} lottery ticket{{

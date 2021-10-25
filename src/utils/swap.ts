@@ -660,11 +660,9 @@ async function swap_v5(
   const stateId = await getAMMGlobalStateAddress();
   const state_info = await getAMMGlobalStateAccount(connection);
 
-  let feeTokenAccount = await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint)) as any
-
-  if(fromCoinMint === NATIVE_SOL.mintAddress){
-    feeTokenAccount = state_info.feeOwner.toString()
-  }
+  let feeTokenAccount = (fromCoinMint === NATIVE_SOL.mintAddress) ? 
+                        state_info.feeOwner.toString() :
+                        await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint))
 
   let poolFromAccount = normal_dir? poolInfo.poolCoinTokenAccount: poolInfo.poolPcTokenAccount
   let poolToAccount = normal_dir? poolInfo.poolPcTokenAccount: poolInfo.poolCoinTokenAccount
