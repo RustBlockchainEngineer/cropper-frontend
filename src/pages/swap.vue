@@ -338,10 +338,24 @@
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <span class="name"
-                ><label> {{ toCoinWithSlippage }} {{ toCoin.symbol }} </label></span
-              >
+              <span class="name">
+                <label> {{ toCoinWithSlippage }} {{ toCoin.symbol }} </label>
+              </span>
             </div>
+
+            <div v-if="priceImpact" class="fs-container flexDiv minimum">
+              <span class="name">
+                <label>Price Impact</label>
+                <Tooltip placement="bottomLeft">
+                  <template slot="title"> The difference between the market price and estimated price due to trade size </template>
+                  <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
+                </Tooltip>
+              </span>
+              <span class="name">
+                <label> {{ priceImpact.toFixed(2) }}% </label>
+              </span>
+            </div>
+
             <!-- <div
               v-if="
                 endpoint && endpoint.toLowerCase().includes('raydium') && fromCoin && fromCoin.symbol && fromCoinAmount
