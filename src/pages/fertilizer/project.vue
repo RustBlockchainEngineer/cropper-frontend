@@ -791,6 +791,7 @@ export default Vue.extend({
       stakeLPError: false,
       initialized: false,
       labelizedAmms: {} as any,
+      labelizedFarms: {} as any,
       nbFarmsLoaded: 0,
       certifiedOptions: [
         { value: 0, label: 'Labelized' },
@@ -941,6 +942,7 @@ export default Vue.extend({
               element.calculateNextStep = 'Bla bla bla'
               this.ammId = element.ammID
               this.labelizedAmms[element.ammID] = element
+              this.labelizedFarms[element.pfarmID] = element
               try {
                 responseData2 = await fetch(
                   'https://api.cropper.finance/pfo/?farmId=' +
