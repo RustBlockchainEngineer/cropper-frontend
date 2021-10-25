@@ -15,7 +15,7 @@ import {
 import {sendAndConfirmTransaction} from './send-and-confirm-transaction';
 import {loadAccount} from './account';
 import { AccountLayout, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { createSplAccount } from './crp-pool';
+import { createSplAccount } from './crp-swap';
 import { createAssociatedTokenAccountIfNotExist, createProgramAccountIfNotExist, findAssociatedTokenAddress, sendTransaction } from './web3';
 import { FARM_INITIAL_FEE_OWNER, FARM_PROGRAM_ID, LIQUIDITY_POOL_PROGRAM_ID_V5, SYSTEM_PROGRAM_ID } from './ids';
 import { FarmInfo } from './farms';

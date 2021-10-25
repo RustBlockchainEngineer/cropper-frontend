@@ -20,7 +20,7 @@ import {
   LIQUIDITY_TOKEN_PRECISION,
   createSplAccount,
   createLiquidityPool,
-} from "@/utils/crp-pool"
+} from "@/utils/crp-swap"
 
 import {
   LIQUIDITY_POOL_PROGRAM_ID_V5,

@@ -10,7 +10,7 @@ import { PublicKey } from '@solana/web3.js'
 import { TokenAmount } from '@/utils/safe-math'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
-import { CRP_AMM_LAYOUT_V5 } from '@/utils/crp-pool'
+import { CRP_AMM_LAYOUT_V5 } from '@/utils/crp-swap'
 import { 
   LIQUIDITY_POOL_PROGRAM_ID_V4,
   LIQUIDITY_POOL_PROGRAM_ID_V5, 
