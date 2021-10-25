@@ -985,15 +985,8 @@ export default Vue.extend({
                 document.title = 'Fertilizer - CropperFinance x ' + element.name
 
                 this.nbFarmsLoaded++
-              }
-            }
-          }
-        })
-      }
-    },
 
-    async updateFarms() {
-      await this.updateLabelizedAmms()
+
       this.currentTimestamp = moment().unix()
       const farms: any = []
       const endedFarmsPoolId: string[] = []
@@ -1199,6 +1192,17 @@ export default Vue.extend({
        })
       }
 */
+
+
+              }
+            }
+          }
+        })
+      }
+    },
+
+    async updateFarms() {
+      await this.updateLabelizedAmms()
     },
     filterFarms(searchName: string) {
       this.showFarms = this.farms
