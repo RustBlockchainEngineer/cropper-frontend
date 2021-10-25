@@ -938,6 +938,7 @@ export default Vue.extend({
               element.calculateNextStep = 'Bla bla bla'
               this.ammId = element.ammID
               this.labelizedAmms[element.ammID] = element
+              this.labelizedAmmsExtended[element.ammID] = element
               try {
                 responseData2 = await fetch(
                   'https://api.cropper.finance/pfo/?farmId=' +
