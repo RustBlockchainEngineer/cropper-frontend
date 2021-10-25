@@ -994,25 +994,33 @@ export default Vue.extend({
     },
 
     async updateFarms() {
+      console.log("updating farms ...")
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
+
+      const conn = this.$web3
+      const wallet = (this as any).$accessor.wallet
+      const liquidity = (this as any).$accessor.liquidity
+
       const farms: any = []
       const endedFarmsPoolId: string[] = []
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
+        
         let userInfo = get(this.farm.stakeAccounts, poolId)
+        let isPFO = false
 
         // @ts-ignore
-        const { reward_per_share_net, reward_per_timestamp, last_timestamp } = farmInfo.poolInfo
+        const { reward_per_share_net, last_timestamp, end_timestamp } = farmInfo.poolInfo
 
         // @ts-ignore
         const { reward, lp } = farmInfo
 
-        let newFarmInfo: any = cloneDeep(farmInfo)
+        const newFarmInfo: any = cloneDeep(farmInfo)
 
-        let isPFO = false
 
         if (reward && lp) {
-          const rewardPerTimestampAmount = new TokenAmount(getBigNumber(reward_per_timestamp), reward.decimals)
+          const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+          const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
           const rewardPerTimestampAmountTotalValue =
@@ -1045,6 +1053,33 @@ export default Vue.extend({
           // @ts-ignore
           newFarmInfo.apr = apr
 
+          newFarmInfo.apr_details = {
+            apr: Math.round((apr as any) * 100) / 100,
+            apy: 0
+          } as any
+
+          if (
+            this.poolsDatas[liquidityItem.ammId] &&
+            this.poolsDatas[liquidityItem.ammId]['fees'] &&
+            liquidityTotalValue > 0
+          ) {
+            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / liquidityTotalValue
+            newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
+            newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
+          }
+
+          if (wallet) {
+            let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
+            //getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther());
+            if (unstaked) {
+              newFarmInfo.currentLPtokens = getBigNumber((unstaked as TokenAmount).toEther())
+            } else {
+              newFarmInfo.currentLPtokens = 0
+            }
+          } else {
+            newFarmInfo.currentLPtokens = 0
+          }
+
           // @ts-ignore
           newFarmInfo.liquidityUsdValue = liquidityUsdValue
 
@@ -1052,23 +1087,32 @@ export default Vue.extend({
             //endedFarmsPoolId.push(poolId)
           }
         }
-
         if (userInfo && lp) {
           userInfo = cloneDeep(userInfo)
 
           const { rewardDebt, depositBalance } = userInfo
-          const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-          const currentTimestamp = this.currentTimestamp
-          const duration = currentTimestamp - last_timestamp.toNumber()
-          const rewardPerShareCalc =
-            reward_per_share_net.toNumber() +
-            (1000000000 * reward_per_timestamp.toNumber() * duration) / liquidityItem.lp.totalSupply.wei.toNumber()
+          let currentTimestamp = this.currentTimestamp
 
+          
+          if(currentTimestamp > end_timestamp.toNumber()){
+            currentTimestamp = end_timestamp.toNumber();
+          }
+          
+          const duration = currentTimestamp - last_timestamp.toNumber()
+          
+          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+          const rewardPerShareCalc = rewardPerTimestamp
+            .multipliedBy(duration)
+            .multipliedBy(REWARD_MULTIPLER)
+            .dividedBy(newFarmInfo.lp.balance.wei)
+            .plus(getBigNumber(reward_per_share_net));
+          
           const pendingReward = depositBalance.wei
-            .multipliedBy(getBigNumber(rewardPerShareCalc))
-            .dividedBy(1e9)
+            .multipliedBy(rewardPerShareCalc)
+            .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
-          userInfo.pendingReward = new TokenAmount(pendingReward, rewardDebt.decimals)
+            
+          userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
         } else {
           userInfo = {
             // @ts-ignore
@@ -1077,7 +1121,6 @@ export default Vue.extend({
             pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
           }
         }
-
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
@@ -1085,116 +1128,43 @@ export default Vue.extend({
           let labelized = false
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-            console.log(this.labelizedAmms, newFarmInfo.poolId)
+
             if (this.labelizedAmms[newFarmInfo.poolId]) {
-              labelized = this.labelizedAmms[newFarmInfo.poolId]
-              if (labelized) {
-                    console.log('yo3');
-                if (
-                  this.labelizedAmms[newFarmInfo.poolId].pfo == true &&
-                  newFarmInfo.poolId == this.labelizedAmms[newFarmInfo.poolId].pfarmID
-                ) {
-                    console.log('yo2');
-                  const query = new URLSearchParams(window.location.search)
-                  if (query.get('f') && this.labelizedAmms[newFarmInfo.poolId].slug == query.get('f')) {
-                    isPFO = true
-
-                    console.log('yo');
-
-                    newFarmInfo.twitterShare = `http://twitter.com/share?text=Earn ${newFarmInfo.reward.name} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${newFarmInfo.lp.coin.symbol},${newFarmInfo.lp.pc.symbol},yieldfarming,Solana`
-
-                    farms.push({
-                      labelized,
-                      userInfo,
-                      farmInfo: newFarmInfo
-                    })
-
-                    document.title = 'Fertilizer - CropperFinance x ' + this.labelizedAmms[newFarmInfo.poolId].name
-
-                    let responseData
-                    try {
-                      responseData = await fetch(
-                        'https://api.cropper.finance/pfo/?farmId=' +
-                          this.labelizedAmms[newFarmInfo.poolId].pfarmID +
-                          '&t=' +
-                          Math.round(moment().unix() / 60)
-                      ).then((res) => res.json())
-                    } catch {
-                    } finally {
-                      if (responseData[this.wallet.address]) {
-                        if (responseData[this.wallet.address].submit > 0) {
-                          this.isRegistered = true
-                          this.registeredDatas = responseData[this.wallet.address]
-                          this.shareWalletAddress =
-                            'http://cropper.finance/fertilizer/project/?f=' +
-                            this.labelizedAmms[newFarmInfo.poolId].slug +
-                            '&r=' +
-                            this.wallet.address
-                        }
-
-                        this.followed = true
-                      }
-                      this.followerCount = Object.keys(responseData).length
-                    }
-                  }
-                }
+              labelized = true
+              if (
+                this.labelizedAmmsExtended[newFarmInfo.poolId].pfo == true &&
+                newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID
+              ) {
+                isPFO = true
               }
             }
           }
-        }
-      }
 
-      let responseData
-      try {
-        responseData = await fetch(
-          'https://api.cropper.finance/pfo/?farmId=' +
-            this.labelizedAmms[this.ammId].pfarmID +
-            '&t=' +
-            Math.round(moment().unix() / 60)
-        ).then((res) => res.json())
-      } catch {
-      } finally {
-        if (responseData[this.wallet.address]) {
-          if (responseData[this.wallet.address].submit > 0) {
-            this.isRegistered = true
-            this.registeredDatas = responseData[this.wallet.address]
-            this.shareWalletAddress =
-              'http://cropper.finance/fertilizer/project/?f=' +
-              this.labelizedAmms[this.ammId].slug +
-              '&r=' +
-              this.wallet.address
-            let shareWalletAddressEsc =
-              'http://cropper.finance/fertilizer/project/?f=' +
-              this.labelizedAmms[this.ammId].slug +
-              '%26r=' +
-              this.wallet.address
+          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=Earn ${
+            (newFarmInfo as any).reward.name
+          } with our new farm on @CropperFinance&url=https://cropper.finance/farms/?s=${
+            (newFarmInfo as any).poolId
+          } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
 
-            this.twShareAdress = `http://twitter.com/share?text=Register for whishlist ${
-              document.title
-            }&url=${shareWalletAddressEsc} &hashtags=${this.labelizedAmms[this.ammId].tokenA.symbol},${
-              this.labelizedAmms[this.ammId].tokenB.symbol
-            },fertilizer,Solana,Airdrop`
-
-            this.tgShareAdress = `https://telegram.me/share/url?text=Register for whishlist ${document.title}&url=${shareWalletAddressEsc} `
+          if (!isPFO) {
+            farms.push({
+              labelized,
+              userInfo,
+              farmInfo: newFarmInfo
+            })
           }
-          this.followed = true
         }
-        this.followerCount = Object.keys(responseData).length
       }
 
       this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
-      this.filterFarms(this.searchName)
-
-      console.log(farms, this.farms);
-
-      /*
-      if(Object.keys(this.farms).length < 1 && Object.keys(this.labelizedAmms).length > 0){
-        this.$router.push({
-           path: '/fertilizer/'
-       })
-      }
-*/
+      this.filterFarms(
+        this.searchName,
+        this.searchCertifiedFarm,
+        this.searchLifeFarm,
+        this.stakedOnly,
+        this.currentPage
+      )
     },
     filterFarms(searchName: string) {
       this.showFarms = this.farms
