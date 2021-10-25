@@ -636,7 +636,7 @@ export default Vue.extend({
       available_dex: [] as string[],
       best_dex_type: undefined as string | undefined,
       midTokenSymbol: undefined as string | undefined,
-
+      midTokenMint: undefined as string | undefined,
       extAmmId: undefined as string | undefined,
       ammIdSelectShow: false,
       ammIdSelectList: [] as LiquidityPoolInfo[] | [],
@@ -1187,6 +1187,7 @@ export default Vue.extend({
             }
           } else if (dex_type == ENDPOINT_MULTI_CRP) {
             let midTokenMint = TOKENS.CRP.mintAddress
+            this.midTokenMint = midTokenMint
 
             // @ts-ignore
             const fromPoolInfo = findBestLP(
@@ -1244,7 +1245,8 @@ export default Vue.extend({
             }
           } else if (dex_type == ENDPOINT_MULTI_USDC) {
             let midTokenMint = TOKENS.USDC.mintAddress
-
+            this.midTokenMint = midTokenMint
+            
             // @ts-ignore
             const fromPoolInfo = findBestLP(
               this.$accessor.liquidity.infos,
@@ -1425,6 +1427,7 @@ export default Vue.extend({
         const fromPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.mainAmmId)
         const toPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.extAmmId)
         const midTokenMint = this.endpoint === ENDPOINT_MULTI_CRP ? TOKENS.CRP.mintAddress : TOKENS.USDC.mintAddress
+        this.midTokenMint = midTokenMint
         const midTokenSymbol = this.endpoint === ENDPOINT_MULTI_CRP ? TOKENS.CRP.symbol : TOKENS.USDC.symbol
 
         twoStepSwap(
