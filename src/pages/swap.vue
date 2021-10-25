@@ -278,7 +278,6 @@
                 </div>
               </span>
             </div>
-
             <div v-if="endpoint" class="fs-container flexDiv swapping">
               <span class="name">
                 <label>Swapping Through</label>
@@ -287,12 +286,12 @@
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <div v-if="endpoint === ENDPOINT_MULTI_CRP || endpoint === ENDPOINT_MULTI_USDC">
+              <div v-if="endpoint == endpoint_multi_crp || endpoint == endpoint_multi_usdc">
                 <span class="swapThrough green">
-                  {{ ENDPOINT_CRP }}
+                  {{ endpoint_crp }}
                 </span>
                 <span class="swapThrough purple">
-                  {{ ENDPOINT_RAY }}
+                  {{ endpoint_ray }}
                 </span>
               </div>
               <div v-else>
@@ -654,7 +653,11 @@ export default Vue.extend({
       userNeedAmmIdOrMarket: undefined as string | undefined,
       setCoinFromMintLoading: false,
       asksAndBidsLoading: true,
-      windowWidth: 0
+      windowWidth: 0,
+      endpoint_crp: 'CropperFinance Pool',
+      endpoint_ray: 'Raydium Pool',
+      endpoint_multi_crp: 'Two-Step Swap with CRP',
+      endpoint_multi_usdc: 'Two-Step Swap with USDC'
     }
   },
   head: {
@@ -1800,6 +1803,7 @@ main {
         text-transform: capitalize;
         border-radius: 5px;
         padding: 4px 8px;
+        margin-left: 5px;
       }
       .green {
         background: #0caf7f;
