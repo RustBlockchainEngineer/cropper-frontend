@@ -1085,16 +1085,20 @@ export default Vue.extend({
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
         ) {
+      console.log('here 5', poolId);
           let labelized = false
           if (lp) {
+      console.log('here 6', poolId);
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = this.labelizedAmms[newFarmInfo.poolId]
               if (labelized) {
+      console.log('here 7', poolId);
                 if (
                   this.labelizedAmms[newFarmInfo.poolId].pfo == true &&
                   newFarmInfo.poolId == this.labelizedAmms[newFarmInfo.poolId].pfarmID
                 ) {
+      console.log('here 8', poolId);
                   const query = new URLSearchParams(window.location.search)
                   console.log(query.get('f'), this.labelizedAmms[newFarmInfo.poolId].slug)
                   if (query.get('f') && this.labelizedAmms[newFarmInfo.poolId].slug == query.get('f')) {
