@@ -1009,6 +1009,8 @@ export default Vue.extend({
 
       const farms: any = []
       const endedFarmsPoolId: string[] = []
+
+          console.log('ici4', this.farm.infos);
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         
         let userInfo = get(this.farm.stakeAccounts, poolId)
