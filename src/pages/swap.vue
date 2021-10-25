@@ -975,10 +975,10 @@ export default Vue.extend({
               this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
               typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
             )
-            // if (crpLPList.length > 0) {
-            //   this.available_dex.push(ENDPOINT_CRP)
-            //   break;
-            // }
+            if (crpLPList.length > 0) {
+              this.available_dex.push(ENDPOINT_CRP)
+              break;
+            }
 
             //two-step swap with CRP
             const lpList_crp_1 = getPoolListByTokenMintAddresses(
@@ -991,10 +991,10 @@ export default Vue.extend({
               this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
               undefined
             )
-            // if (lpList_crp_1.length > 0 && lpList_crp_2.length > 0) {
-            //   this.available_dex.push(ENDPOINT_MULTI_CRP)
-            //   break;
-            // }
+            if (lpList_crp_1.length > 0 && lpList_crp_2.length > 0) {
+              this.available_dex.push(ENDPOINT_MULTI_CRP)
+              break;
+            }
 
             // mono-step swap using raydium
             const rayLPList = getRAYPoolListByTokenMintAddresses(
