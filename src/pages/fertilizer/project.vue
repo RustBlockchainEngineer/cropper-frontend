@@ -275,12 +275,11 @@
                       This project is in preparation phase. Stay tuned.<br />
                     </div>
                   </div>
-
                   <div :class="farm.pla_ts < currentTimestamp ? 'done' : 'notdone'">
                     <span v-if="farm.pla_ts > currentTimestamp">2</span>
                     <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
                     <div>
-                      <div>Withelist</div>
+                      <div>Whitelist</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pla }}</div>
                       You can now whitelist yourself for the lottery.<br />
@@ -305,7 +304,7 @@
                       <div>Private Farm</div>
                       <label>-</label>
                       <div class="date" :style="'background-color: ' + farm.current_status.color">{{ farm.pfrom }}</div>
-                      You can now stack LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
+                      You can now stake LP in {{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }} farm.<br />
                     </div>
                   </div>
                   <div :class="farm.pto_ts < currentTimestamp ? 'done' : 'notdone'">

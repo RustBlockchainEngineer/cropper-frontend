@@ -155,6 +155,7 @@
             <Row :gutter="24">
               <Col :span="10" class="twitter-section-left" v-html="this.farm.links.retweet_html">
               </Col>
+               <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
               <div class="twitter-section-right">
                 <div class="inforetweet">
                   Quote Retweet <span>this tweet</span> <br>
