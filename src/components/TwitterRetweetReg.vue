@@ -154,7 +154,7 @@
             /></span>
             <Row :gutter="24">
               <Col :span="10" class="twitter-section-left">
-                <blockquote class="twitter-tweet"><p lang="en" dir="ltr">🧪Fertilizer Update: CRP-USDC <br><br>📖 Whitelist for the CRP-USDC Fertilizer is now LIVE!<br><br>🎟️ Register to reserve your spot in the Community Farm and secure your lottery tickets!<br><br>Register now.🔽<br>Whitelist: <a href="https://t.co/2XwbP3CGnX">https://t.co/2XwbP3CGnX</a><br>More details: <a href="https://t.co/n7dkyIzV65">https://t.co/n7dkyIzV65</a> <a href="https://t.co/BOwBeTv6dE">pic.twitter.com/BOwBeTv6dE</a></p>&mdash; CropperFinance (@CropperFinance) <a href="https://twitter.com/CropperFinance/status/1451504413969879059?ref_src=twsrc%5Etfw">October 22, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                {{ this.farm.links.retweet_html }}
               </Col>
               <div class="twitter-section-right">
                 <div class="inforetweet">
