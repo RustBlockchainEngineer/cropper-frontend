@@ -1025,9 +1025,6 @@ export default Vue.extend({
 
         this.nbFarmsLoaded = 0;
         this.updateFarms()
-
-
-
         let timer = setInterval(async () => {
           if (this.nbFarmsLoaded >= 1) {
             this.initialized = true
@@ -1204,6 +1201,8 @@ export default Vue.extend({
 
       const farms: any = []
       const endedFarmsPoolId: string[] = []
+
+      console.warn(this.farm.infos);
 
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let isPFO = false
