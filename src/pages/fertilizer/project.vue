@@ -967,6 +967,7 @@ export default Vue.extend({
       mintAddress: '',
       adding: false,
       paying: false,
+      farmloading: false,
       unstakeModalOpening: false,
       unstaking: false,
       poolType: true,
@@ -1027,7 +1028,12 @@ export default Vue.extend({
         this.updateFarms()
         let timer = setInterval(async () => {
           if (this.nbFarmsLoaded >= 1) {
-            this.initialized = true
+            this.initialized = true;
+            if(this.farmloading = false){
+              this.updateFarms()
+              clearInterval(timer)
+            }
+
           }
         }, 1000)
       },
@@ -1194,6 +1200,7 @@ export default Vue.extend({
       console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
+      this.farmloading = true;
 
       const conn = this.$web3
       const wallet = (this as any).$accessor.wallet
@@ -1363,6 +1370,8 @@ export default Vue.extend({
                     userInfo,
                     farmInfo: newFarmInfo
                   })
+
+      this.farmloading = false;
 
                   console.log(farms)
                 }
