@@ -1968,6 +1968,20 @@ export default Vue.extend({
   align-items: center;
   min-width: 768px;
 
+  .noDesktop {
+    display: none;
+  }
+
+  @media (max-width: @mobile-b-width) {
+    .noDesktop {
+      display: inline-block;
+    }
+
+    .noMobile {
+      display: none;
+    }
+  }
+  
   .lp-icons {
     .lp-icons-group {
       height: 51px;
