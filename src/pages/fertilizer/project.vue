@@ -1025,19 +1025,13 @@ export default Vue.extend({
 
         this.nbFarmsLoaded = 0;
         this.updateFarms()
-        var hash = window.location.hash
-        if (hash) {
-          hash = hash.substring(1)
-          this.searchName = hash
-        } else {
-          const query = new URLSearchParams(window.location.search)
-          this.searchName = query.get('s') as string
-        }
+
+
 
         let timer = setInterval(async () => {
+        console.log(this.nbFarmsLoaded, this.labelizedAmms);
           if (this.nbFarmsLoaded == Object.keys(this.labelizedAmms).length) {
             this.initialized = true
-            alert("here");
           }
         }, 1000)
       },
