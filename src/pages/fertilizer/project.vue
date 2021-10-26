@@ -1125,6 +1125,7 @@ export default Vue.extend({
         ]
       } finally {
         alert("here");
+        console.warn('here');
         responseData.forEach(async (element: any) => {
           if (query.get('f') && element.slug == query.get('f')) {
           if (element.pfo == true) {
