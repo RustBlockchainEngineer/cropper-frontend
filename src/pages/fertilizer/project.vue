@@ -1199,7 +1199,6 @@ export default Vue.extend({
 
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let isPFO = false
-        console.log('1');
         // @ts-ignore
         const { reward_per_share_net, last_timestamp, end_timestamp } = farmInfo.poolInfo
 
@@ -1209,14 +1208,12 @@ export default Vue.extend({
 
 
         const newFarmInfo: any = cloneDeep(farmInfo)
+        
+        console.log(newFarmInfo);
 
-
-        console.log(newFarmInfo.poolId, this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID);
 
         const query = new URLSearchParams(window.location.search)
 
-        console.log(this.labelizedAmmsExtended)
-        console.log('2');
         if (
           this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
           query.get('f') &&
@@ -1225,12 +1222,9 @@ export default Vue.extend({
             (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address)
         ) {
           let labelized = false
-        console.log('3');
           if (lp) {
-        console.log('4');
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
-        console.log('6');
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = true
               if (
@@ -1240,7 +1234,6 @@ export default Vue.extend({
               ) {
                 isPFO = true
 
-        console.log('6');
                 let userInfo = get(this.farm.stakeAccounts, poolId)
 
                 if (reward && lp) {
@@ -1377,7 +1370,6 @@ export default Vue.extend({
       this.endedFarmsPoolId = endedFarmsPoolId
       this.showFarms = this.farms
 
-      console.log(this.farms, farms)
     },
 
     updateCurrentLp(newTokenAccounts: any) {
