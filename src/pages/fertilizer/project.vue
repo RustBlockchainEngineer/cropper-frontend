@@ -1114,7 +1114,7 @@ export default Vue.extend({
     TokenAmount,
 
     async updateLabelizedAmms() {
-      console.warn('here');
+      console.warn('here')
       const query = new URLSearchParams(window.location.search)
       //this.labelizedAmms = {}
       let responseData2: any = {}
@@ -1190,7 +1190,7 @@ export default Vue.extend({
       try {
         this.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
       } catch {
-        if(this.poolsDatas == []){
+        if (this.poolsDatas == []) {
           this.poolsDatas = []
         }
       } finally {
@@ -2085,6 +2085,79 @@ export default Vue.extend({
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .harvest {
+    text-align: center;
+    max-width: 420px;
+    min-height: 186px;
+    display: grid;
+    align-items: center;
+
+    .reward {
+      .token {
+        font-weight: normal;
+        font-size: 40px;
+        line-height: 47px;
+        margin-bottom: 10px;
+      }
+
+      .value {
+        font-size: 12px;
+      }
+    }
+
+    button {
+      padding: 0 30px;
+    }
+  }
+
+  .start {
+    text-align: center;
+    max-width: 420px;
+    min-height: 186px;
+    display: grid;
+    align-items: center;
+
+    .unstarted {
+      width: 100%;
+
+      .token {
+        font-weight: normal;
+        font-size: 40px;
+        line-height: 47px;
+        margin-bottom: 10px;
+      }
+
+      .value {
+        font-size: 12px;
+      }
+    }
+
+    .unstake {
+      margin-right: 10px;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .harvest,
+  .start {
+    border: 4px solid #16164a;
+    box-sizing: border-box;
+    border-radius: 14px;
+    padding: 16px;
+
+    .title {
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+      color: #fff;
+      opacity: 0.5;
+      margin-bottom: 8px;
+    }
   }
 }
 
@@ -3044,79 +3117,6 @@ main {
       .value {
         font-size: 16px;
         line-height: 24px;
-      }
-    }
-
-    .harvest {
-      text-align: center;
-      max-width: 420px;
-      min-height: 186px;
-      display: grid;
-      align-items: center;
-
-      .reward {
-        .token {
-          font-weight: normal;
-          font-size: 40px;
-          line-height: 47px;
-          margin-bottom: 10px;
-        }
-
-        .value {
-          font-size: 12px;
-        }
-      }
-
-      button {
-        padding: 0 30px;
-      }
-    }
-
-    .start {
-      text-align: center;
-      max-width: 420px;
-      min-height: 186px;
-      display: grid;
-      align-items: center;
-
-      .unstarted {
-        width: 100%;
-
-        .token {
-          font-weight: normal;
-          font-size: 40px;
-          line-height: 47px;
-          margin-bottom: 10px;
-        }
-
-        .value {
-          font-size: 12px;
-        }
-      }
-
-      .unstake {
-        margin-right: 10px;
-      }
-
-      button {
-        width: 100%;
-      }
-    }
-
-    .harvest,
-    .start {
-      border: 4px solid #16164a;
-      box-sizing: border-box;
-      border-radius: 14px;
-      padding: 16px;
-
-      .title {
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 21px;
-        color: #fff;
-        opacity: 0.5;
-        margin-bottom: 8px;
       }
     }
   }
