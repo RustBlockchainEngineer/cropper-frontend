@@ -1208,7 +1208,7 @@ export default Vue.extend({
       const farms: any = []
       const endedFarmsPoolId: string[] = []
 
-      console.warn(this.farm.infos);
+      console.warn(this.farm.infos.length);
       if(this.farm.infos.length == 0){
         this.farmloading = false;
         return;
