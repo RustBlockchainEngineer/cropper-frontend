@@ -1999,6 +1999,10 @@ export default Vue.extend({
         border-radius: 8px;
         align-items: center;
         padding: 0 20px;
+
+        img {
+          margin: 0 !important;
+        }
       }
 
       .icons span {
