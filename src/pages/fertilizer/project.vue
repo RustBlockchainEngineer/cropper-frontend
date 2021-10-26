@@ -1262,8 +1262,8 @@ export default Vue.extend({
                   let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
 
                   let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
-
                   let apr = ((rewardPerTimestampAmountTotalValue / farmUsdValue) * 100).toFixed(2)
+                  
                   if (apr === 'NaN' || apr === 'Infinity') {
                     apr = '0'
                   }
