@@ -199,7 +199,7 @@
             </Row>
 
             <!-- PC list -->
-            <div class="list pc-list" v-if="initialized">
+            <div class="list pc-list" v-if="initialized && wallet.connected">
               <Row class="farm-head table-head">
                 <Col class="state lp-icons" :span="isMobile ? 24 : 5">
                   <div class="title">Farm name</div>
@@ -1961,9 +1961,6 @@ export default Vue.extend({
   display: none; /* Chrome Safari */
 }
 
-.noDesktop {
-  display: none !important;
-}
 
 @media (max-width: @mobile-b-width) {
   .noDesktop {
@@ -2534,6 +2531,321 @@ export default Vue.extend({
     min-width: unset;
   }
 }
+
+
+.noDesktop {
+  display: none;
+}
+
+@media (max-width: @mobile-b-width) {
+  body .fertilizeruniq.container {
+    min-width: unset;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 0;
+    padding: 20px 20px !important;
+
+    .details {
+      float: right;
+    }
+
+    .detailButton {
+      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      display: inline-block;
+      padding: 2px;
+      border-radius: 23px;
+
+      button {
+        height: 42px;
+        padding: 11px 40px 11px 24px;
+        color: #fff;
+        font-size: 14px;
+        letter-spacing: -0.05em;
+        background: #16164A;
+        border-radius: 22px;
+        border:transparent;
+      }
+    }
+
+    .openButton {
+      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      display: inline-block;
+      padding: 2px;
+      border-radius: 23px;
+
+      button {
+        height: 42px;
+        padding: 11px 24px;
+        color: #fff;
+        font-size: 14px;
+        letter-spacing: -0.05em;
+        background: #16164A;
+        border-radius: 22px;
+        border:transparent;
+        
+        img {
+          margin-left: 5px;
+          transform: rotate(0);
+          transition: transform 0.3s;
+        }
+      }
+    }
+
+    .openButton-active > button > img {
+      transform: rotate(180deg);
+    }
+
+    .bgl {
+      background: #16164a !important;
+      margin-top: -17px;
+      padding-bottom: 10px;
+      margin-bottom: -16px;
+    }
+
+    .buttonsd {
+      display: block;
+      background: #00033c;
+      margin-top: 10px;
+    }
+
+    .noMobile {
+      display: none;
+    }
+
+    .noDesktop {
+      display: inline-block;
+    }
+
+    .largeserach input {
+      height: 47px !important;
+    }
+
+    .page-head {
+      margin-bottom: 0;
+      margin-top: 0;
+      .title {
+        font-size: 40px;
+        position: relative;
+        line-height: 50px;
+      }
+      .buttonsd {
+        height: 87px;
+        padding: 20px 20px 84px;
+        border: 4px solid #16164a;
+        box-sizing: border-box;
+        border-radius: 14px;
+        text-align: center;
+
+        a {
+          float: right;
+          display: inline-block;
+        }
+
+        > div {
+          float: left;
+          margin-right: -66px;
+          display: inline-block;
+        }
+      }
+    }
+
+    .fs-container {
+      display: inline-block;
+    }
+
+    .ant-collapse,
+    .ant-collapse > .ant-collapse-item {
+      position: relative;
+    }
+
+    .ant-collapse::before,
+    .ant-collapse > .ant-collapse-item::before {
+      content: '';
+      height: 4px;
+      width: 100%;
+      top: 0;
+      background: #00033c;
+      position: absolute;
+    }
+
+    .farm-head.table-head {
+      display: none;
+    }
+
+    .labmobile {
+      float: left;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+      color: #fff;
+      opacity: 0.5;
+      display: block;
+    }
+
+    .farm-head {
+      min-width: 100%;
+      padding-top: 25px !important;
+      padding-bottom: 25px !important;
+      display: block;
+      align-items: unset;
+      .lp-icons {
+        padding: 0 10px;
+        display: block !important;
+        width: 100%;
+        flex-direction: unset;
+        float: unset;
+        flex: unset;
+        img {
+          margin-top: -4px;
+        }
+        .lp-icons-group {
+          background: transparent;
+          .icons {
+            padding: 0;
+            background-color: transparent;
+          }
+        }
+      }
+
+      .state {
+        text-align: right;
+        display: none;
+        margin-top: 11px;
+        .ant-col-12 {
+          width: 100%;
+        }
+      }
+    }
+
+    .collapse-row .lp-icons,
+    .collapse-row .state {
+      padding: 0 10px;
+      display: block;
+      width: 100%;
+      flex-direction: unset;
+      float: unset;
+      flex: unset;
+      text-align: right;
+      font-size: 18px;
+      margin-bottom: 6px;
+      .lp-icons-group {
+        background: transparent;
+        .icons {
+          padding: 0;
+          background-color: transparent;
+        }
+      }
+    }
+
+    .anticon.anticon-right,
+    .info-icon {
+      display: none !important;
+    }
+
+    .ant-pagination {
+      margin-top: 40px;
+    }
+    .ant-collapse.ant-collapse-icon-position-right {
+      max-width: 100%;
+      background: #16164a;
+      border-radius: 14px;
+    }
+
+    .reward-col {
+      margin-bottom: 30px;
+    }
+
+    .ant-collapse-content {
+      background: #16164a !important;
+    }
+
+    .ant-collapse-content-box {
+      background: #16164a !important;
+      .collapse-row {
+        display: block;
+        align-items: unset;
+        .ant-col.ant-col-4,
+        .ant-col.ant-col-8 {
+          width: 100%;
+          display: block;
+          flex-direction: unset;
+          float: unset;
+          flex: unset;
+        }
+      }
+    }
+
+    .start,
+    .harvest {
+      background: #01033c;
+      border-radius: 14px;
+      margin: auto;
+      .reward .token {
+        font-size: 26px;
+        line-height: 31px;
+      }
+    }
+
+    .btncontainer {
+      display: inline-block !important;
+    }
+
+    .start .btncontainer:not(.largebtn) {
+      width: calc(50% - 20px);
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-bottom: 10px;
+    }
+
+    .start .btncontainer:not(.largebtn):last-of-type {
+      width: calc(100% - 30px);
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+    .tool-bar {
+      height: unset;
+      border: unset;
+
+      .tool-option {
+        background: #00033c;
+        width: 100%;
+        height: 54px;
+        display: block;
+        position: relative;
+        margin: 10px 0;
+        border: 4px solid #16164a;
+        box-sizing: border-box;
+        border-radius: 10px;
+        .input-search {
+          height: 47px !important;
+          .ant-input {
+            padding: 19px 60px;
+            border: none;
+            height: 47px !important;
+          }
+        }
+
+        .toggle {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: left;
+          padding-left: 10%;
+
+          .ant-switch {
+            position: absolute;
+            right: 10%;
+          }
+        }
+      }
+    }
+  }
+}
+
 
 .pf-record {
   border-bottom: none !important;
