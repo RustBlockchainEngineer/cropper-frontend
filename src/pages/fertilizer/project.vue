@@ -1217,6 +1217,8 @@ export default Vue.extend({
         const newFarmInfo: any = cloneDeep(farmInfo)
 
         const query = new URLSearchParams(window.location.search)
+
+        console.log(this.labelizedAmmsExtended);
         if (
           this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
           query.get('f') &&
