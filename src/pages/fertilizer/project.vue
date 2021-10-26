@@ -1124,7 +1124,8 @@ export default Vue.extend({
           { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
         ]
       } finally {
-        alert('here')
+        alert("here");
+        console.warn('here');
         responseData.forEach(async (element: any) => {
           if (query.get('f') && element.slug == query.get('f')) {
             if (element.pfo == true) {
