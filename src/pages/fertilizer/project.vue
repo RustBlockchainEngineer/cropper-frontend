@@ -1029,8 +1029,7 @@ export default Vue.extend({
 
 
         let timer = setInterval(async () => {
-        console.log(this.nbFarmsLoaded, this.labelizedAmms);
-          if (this.nbFarmsLoaded == Object.keys(this.labelizedAmms).length) {
+          if (this.nbFarmsLoaded >= 1) {
             this.initialized = true
           }
         }, 1000)
@@ -1061,7 +1060,7 @@ export default Vue.extend({
     }
 
     let timer = setInterval(async () => {
-      if (this.nbFarmsLoaded == Object.keys(this.labelizedAmms).length) {
+      if (this.nbFarmsLoaded >= 1) {
         this.initialized = true
       }
     }, 1000)
