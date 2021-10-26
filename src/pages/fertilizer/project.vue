@@ -1171,6 +1171,7 @@ export default Vue.extend({
 
                 //this.labelizedAmms[element.ammID].twitterShare = `http://twitter.com/share?text=Earn ${this.labelizedAmms[element.ammID].tokenA.symbol} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${this.labelizedAmms[element.ammID].tokenA.symbol},${this.labelizedAmms[element.ammID].tokenB.symbol},yieldfarming,Solana`
 
+                updateFarms(false);
                 document.title = 'Fertilizer - CropperFinance x ' + element.name
 
                 this.nbFarmsLoaded++
@@ -1189,9 +1190,11 @@ export default Vue.extend({
       }
     },
 
-    async updateFarms() {
+    async updateFarms(c = true) {
       console.log('updating farms ...')
-      await this.updateLabelizedAmms()
+      if(c != false){
+        await this.updateLabelizedAmms()
+      }
       this.currentTimestamp = moment().unix()
 
       const conn = this.$web3
