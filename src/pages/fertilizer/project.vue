@@ -465,7 +465,7 @@
                 </div>
               </div>
             </Row>
-            {{showFarms}}
+
             <Collapse v-model="showCollapse" expand-icon-position="right">
               <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
                 <Row
@@ -1027,7 +1027,6 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
-        this.nbFarmsLoaded = 0
         this.$router.push('/pools/?r=1');
       },
       deep: true
