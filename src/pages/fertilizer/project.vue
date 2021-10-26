@@ -468,8 +468,7 @@
           </div>
         </div>
       </div>
-    </div>
-    <Collapse v-model="showCollapse" expand-icon-position="right">
+      <Collapse v-model="showCollapse" expand-icon-position="right">
       <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
         <Row
           slot="header"
@@ -889,6 +888,7 @@
         </Row>
       </CollapsePanel>
     </Collapse>
+    </div>
   </div>
 </template>
 
