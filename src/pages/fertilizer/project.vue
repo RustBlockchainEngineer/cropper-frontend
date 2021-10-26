@@ -556,29 +556,6 @@
                       <span class="labmobile">Total apr</span> -
                     </div>
                     <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
-
-                    <Tooltip
-                      placement="bottomLeft"
-                      v-if="
-                        !(
-                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                        )
-                      "
-                    >
-                      <template slot="title">
-                        <div>
-                          <div class="tooltip-line">
-                            Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                          </div>
-                          <hr />
-                          <div class="tooltip-line">
-                            Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                          </div>
-                        </div>
-                      </template>
-                      <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
-                    </Tooltip>
                   </Col>
 
                   <Col v-if="!isMobile && poolType" class="state noMobile" :span="3">
@@ -666,29 +643,6 @@
                       <span class="labmobile">Total apr</span> -
                     </div>
                     <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
-
-                    <Tooltip
-                      placement="bottomLeft"
-                      v-if="
-                        !(
-                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                        )
-                      "
-                    >
-                      <template slot="title">
-                        <div>
-                          <div class="tooltip-line">
-                            Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                          </div>
-                          <hr />
-                          <div class="tooltip-line">
-                            Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                          </div>
-                        </div>
-                      </template>
-                      <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
-                    </Tooltip>
                   </Col>
 
                   <Col v-if="!isMobile && poolType" class="state noDesktop" :span="3">
