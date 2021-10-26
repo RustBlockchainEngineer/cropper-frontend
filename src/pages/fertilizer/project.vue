@@ -2103,6 +2103,17 @@ export default Vue.extend({
         opacity: 0.5;
         margin-bottom: 8px;
       }
+
+      .btncontainer {
+        background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+        padding: 2px;
+        height: 60px;
+        button {
+          padding: 10px 50px;
+          height: 56px;
+          background-color: #0E1046;
+        }
+      }
     }
   }
 
@@ -2143,7 +2154,7 @@ export default Vue.extend({
   .reward-col {
     display: inline-flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
   }
 }
 
