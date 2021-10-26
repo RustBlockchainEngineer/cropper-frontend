@@ -1210,6 +1210,7 @@ export default Vue.extend({
       const farms: any = []
       const endedFarmsPoolId: string[] = []
 
+
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let isPFO = false
 
@@ -1379,10 +1380,10 @@ export default Vue.extend({
           }
         }
       }
-
-        this.farmloading = false;
-        return;
-
+      if(farms == []){
+      this.farmloading = false;
+      
+      }
       this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
       this.showFarms = this.farms
