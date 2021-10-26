@@ -2427,6 +2427,7 @@ export default Vue.extend({
 
             .reload-btn {
               margin-left: -15%;
+              cursor: pointer;
             }
           }
 
