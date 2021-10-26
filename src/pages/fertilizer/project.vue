@@ -1023,6 +1023,7 @@ export default Vue.extend({
     'wallet.address': {
       handler(newTokenAccounts: any) {
 
+        $accessor.farm.requestInfos()
         this.nbFarmsLoaded = 0;
         this.updateFarms()
 
@@ -1217,14 +1218,11 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
-        console.log('ici3', lp)
-
-              const query = new URLSearchParams(window.location.search)
+        const query = new URLSearchParams(window.location.search)
         if (
-                this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
-                query.get('f') &&
-                this.labelizedAmmsExtended[newFarmInfo.poolId]?.slug == query.get('f')
-                && (
+          this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
+          query.get('f') &&
+          this.labelizedAmmsExtended[newFarmInfo.poolId]?.slug == query.get('f') && (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address)
         ) {
