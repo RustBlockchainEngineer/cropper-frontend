@@ -1029,7 +1029,10 @@ export default Vue.extend({
     'wallet.address': {
       handler(newTokenAccounts: any) {
         this.updateLabelizedAmms()
+      setTimeout(function(){
+
         this.updateFarms()
+      }, 15000)
       },
       deep: true
     },
@@ -1111,6 +1114,7 @@ export default Vue.extend({
     TokenAmount,
 
     async updateLabelizedAmms() {
+      console.warn('here');
       const query = new URLSearchParams(window.location.search)
       //this.labelizedAmms = {}
       let responseData2: any = {}
@@ -1187,7 +1191,9 @@ export default Vue.extend({
       try {
         this.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
       } catch {
-        this.poolsDatas = []
+        if(this.poolsDatas == []){
+          this.poolsDatas = []
+        }
       } finally {
         // nothing to do ..
       }
