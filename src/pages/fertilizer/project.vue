@@ -2020,8 +2020,7 @@ export default Vue.extend({
 
   .state {
     display: flex;
-    text-align: left;
-    flex-direction: row;
+    justify-content: space-evenly;
 
     .title {
       font-weight: normal;
