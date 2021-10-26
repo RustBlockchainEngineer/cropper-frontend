@@ -480,7 +480,7 @@
                 <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Staked</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 4">
+                <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Total apr</div>
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 3">
@@ -567,7 +567,7 @@
                     </div>
                   </Col>
 
-                  <Col class="state noMobile" :span="isMobile ? 6 : 4">
+                  <Col class="state noMobile" :span="isMobile ? 6 : 3">
                     <div
                       v-if="
                         farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
@@ -2981,24 +2981,6 @@ export default Vue.extend({
       padding: 0 20px;
     }
   }
-}
-
-.label.soon {
-  border: 1px solid #13d89d;
-  color: #13d89d;
-  position: absolute;
-  padding: 0 20px 0 20px;
-  border-radius: 3px;
-  right: 60px;
-}
-
-.label.ended {
-  border: 1px solid #f00;
-  color: #f00;
-  position: absolute;
-  padding: 0 20px 0 20px;
-  border-radius: 3px;
-  right: 60px;
 }
 
 main {
