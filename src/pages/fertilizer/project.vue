@@ -1368,19 +1368,16 @@ export default Vue.extend({
                     userInfo,
                     farmInfo: newFarmInfo
                   })
-
-      this.farmloading = false;
-
-                  console.log(farms)
                 }
               }
             }
           }
         }
       }
+        console.log(farms);
       if(farms == []){
-      this.farmloading = false;
-      
+        console.log('here');
+        this.farmloading = false;
       }
       this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
