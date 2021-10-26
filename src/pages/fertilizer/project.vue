@@ -1171,7 +1171,7 @@ export default Vue.extend({
 
                 //this.labelizedAmms[element.ammID].twitterShare = `http://twitter.com/share?text=Earn ${this.labelizedAmms[element.ammID].tokenA.symbol} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${this.labelizedAmms[element.ammID].tokenA.symbol},${this.labelizedAmms[element.ammID].tokenB.symbol},yieldfarming,Solana`
 
-                updateFarms(false);
+                this.updateFarms(false);
                 document.title = 'Fertilizer - CropperFinance x ' + element.name
 
                 this.nbFarmsLoaded++
