@@ -478,6 +478,12 @@
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 6">
                   <div class="title">Pending Reward</div>
+                  <div
+                    class="reload-btn"
+                    @click="() => { flush() }"
+                  >
+                    <img src="@/assets/icons/refresh-right.svg" />
+                  </div>
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 4">
                   <div class="title">Staked</div>
@@ -906,8 +912,8 @@ const RadioButton = Radio.Button
 export default Vue.extend({
   components: {
     //Toggle,
-    //Collapse,
-    //CollapsePanel,
+    // Collapse,
+    // CollapsePanel,
     //Spin,
     // Icon,
     Col,
@@ -2397,6 +2403,7 @@ export default Vue.extend({
             font-weight: normal;
             display: flex;
             justify-content: space-evenly;
+            align-items: center;
 
             a {
               color: #5ba5fb;
@@ -2414,6 +2421,11 @@ export default Vue.extend({
               font-weight: 400;
               line-height: 17px;
               padding: 6px 7px 4px 7px;
+            }
+
+            .reload-btn {
+              margin-left: -15%;
+              cursor: pointer;
             }
           }
 
