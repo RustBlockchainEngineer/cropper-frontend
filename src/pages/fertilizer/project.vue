@@ -1023,8 +1023,8 @@ export default Vue.extend({
     'wallet.address': {
       handler(newTokenAccounts: any) {
 
+        this.nbFarmsLoaded = 0;
         this.updateFarms()
-
         var hash = window.location.hash
         if (hash) {
           hash = hash.substring(1)
