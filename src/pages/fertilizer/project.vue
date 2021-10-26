@@ -2111,7 +2111,7 @@ export default Vue.extend({
         }
 
         button {
-          padding: 10px 50px;
+          padding: 10px 30px;
           height: 56px;
           background-color: #0E1046 !important;
           border-radius: 8px;
