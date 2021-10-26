@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <StakeModel
       v-if="stakeModalOpening"
       title="Supply & Stake LP"
@@ -42,7 +41,6 @@
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
-
 
     <div class="fertilizeruniq cont" v-if="initialized">
       <img class="planet-left" src="@/assets/Green Planet 1.png" />
@@ -335,7 +333,7 @@
                     <div>
                       <div>{{ farm.tokenA.symbol }}-{{ farm.tokenB.symbol }}</div>
                       <label>-</label>
-                       <div class="date" :style="'background-color: ' + farm.current_status.color">
+                      <div class="date" :style="'background-color: ' + farm.current_status.color">
                         {{ farm.pla_end }}
                       </div>
                       farm is in preparation.<br />
@@ -473,418 +471,425 @@
     </div>
 
     <Collapse v-model="showCollapse" expand-icon-position="right">
-            <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
-              <Row slot="header" class="farm-head"  v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
-                <span class="details noDesktop">
-                  <div class="detailButton">
-                    <button>Details</button>
-                  </div>
-                </span>
+      <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
+        <Row
+          slot="header"
+          class="farm-head"
+          v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered"
+          :class="isMobile ? 'is-mobile' : ''"
+          :gutter="0"
+        >
+          <span class="details noDesktop">
+            <div class="detailButton">
+              <button>Details</button>
+            </div>
+          </span>
 
-                <Col class="lp-icons" :span="isMobile ? 12 : 6">
-                  <div class="lp-icons-group">
-                    <div class="icons">
-                      <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
-                      <span>{{ farm.farmInfo.lp.coin.symbol }} - </span>
-                      <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
-                      <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
-                    </div>
+          <Col class="lp-icons" :span="isMobile ? 12 : 6">
+            <div class="lp-icons-group">
+              <div class="icons">
+                <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
+                <span>{{ farm.farmInfo.lp.coin.symbol }} - </span>
+                <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
+                <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
+              </div>
+            </div>
+
+            <div class="noDesktop labells">
+              <div v-if="farm.labelized" class="labelized">Labelized</div>
+              <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="ended">Ended</div>
+              <div
+                v-if="
+                  currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
+                  currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                "
+                class="soon"
+              >
+                Soon
+              </div>
+            </div>
+          </Col>
+
+          <Col class="state noMobile" :span="isMobile ? 6 : 3">
+            <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
+            <div
+              v-if="
+                currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
+                currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+              "
+              class="label soon"
+            >
+              Soon
+            </div>
+          </Col>
+
+          <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
+            <Col span="12">
+              <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                <span class="labmobile">Pending Reward</span>-
+              </div>
+              <div v-else class="value">
+                <span class="labmobile">Pending Reward</span
+                >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+              </div>
+            </Col>
+            <Col span="12">
+              <div v-if="farm.labelized" class="labelized">Labelized</div>
+            </Col>
+          </Col>
+
+          <Col v-if="!isMobile" class="state noMobile" :span="3">
+            <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+              <span class="labmobile">Staked</span>-
+            </div>
+            <div v-else class="value">
+              <span class="labmobile">Staked</span>{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
+            </div>
+          </Col>
+
+          <Col class="state noMobile" :span="isMobile ? 6 : 3">
+            <div
+              v-if="
+                farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+              "
+              class="value"
+            >
+              <span class="labmobile">Total apr</span> -
+            </div>
+            <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
+
+            <Tooltip
+              placement="bottomLeft"
+              v-if="
+                !(
+                  farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                  currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                )
+              "
+            >
+              <template slot="title">
+                <div>
+                  <div class="tooltip-line">
+                    Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
+                  </div>
+                  <hr />
+                  <div class="tooltip-line">
+                    Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
+                  </div>
+                </div>
+              </template>
+              <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
+            </Tooltip>
+          </Col>
+
+          <Col v-if="!isMobile && poolType" class="state noMobile" :span="3">
+            <div
+              v-if="
+                farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+              "
+              class="value"
+            >
+              <span class="labmobile">Liquidity</span> -
+            </div>
+            <div v-else class="value">
+              <span class="labmobile">Liquidity</span> ${{
+                Math.round(farm.farmInfo.liquidityUsdValue)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              }}
+            </div>
+          </Col>
+
+          <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
+            <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
+              Connect Wallet
+            </Button>
+            <div v-else class="fs-container">
+              <Button
+                :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                size="large"
+                ghost
+                @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+              >
+                Harvest & Unstake
+              </Button>
+            </div>
+          </Col>
+        </Row>
+
+        <Row
+          v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered && poolType"
+          :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'"
+          :gutter="48"
+        >
+          <Col class="state noDesktop" :span="isMobile ? 6 : 3">
+            <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
+            <div
+              v-if="
+                currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
+                currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+              "
+              class="label soon"
+            >
+              Soon
+            </div>
+          </Col>
+
+          <Col class="state reward-col noDesktop" :span="isMobile ? 12 : 6">
+            <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+              <span class="labmobile">Pending Reward</span>-
+            </div>
+            <div v-else class="value">
+              <span class="labmobile">Pending Reward</span
+              >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+            </div>
+          </Col>
+
+          <Col v-if="!isMobile" class="state noDesktop" :span="3">
+            <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+              <span class="labmobile">Staked</span>-
+            </div>
+            <div v-else class="value">
+              <span class="labmobile">Staked</span>{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
+            </div>
+          </Col>
+
+          <Col class="state noDesktop" :span="isMobile ? 6 : 3">
+            <div
+              v-if="
+                farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+              "
+              class="value"
+            >
+              <span class="labmobile">Total apr</span> -
+            </div>
+            <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
+
+            <Tooltip
+              placement="bottomLeft"
+              v-if="
+                !(
+                  farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                  currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                )
+              "
+            >
+              <template slot="title">
+                <div>
+                  <div class="tooltip-line">
+                    Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
+                  </div>
+                  <hr />
+                  <div class="tooltip-line">
+                    Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
+                  </div>
+                </div>
+              </template>
+              <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
+            </Tooltip>
+          </Col>
+
+          <Col v-if="!isMobile && poolType" class="state noDesktop" :span="3">
+            <div
+              v-if="
+                farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+              "
+              class="value"
+            >
+              <span class="labmobile">Liquidity</span> -
+            </div>
+            <div v-else class="value">
+              <span class="labmobile">Liquidity</span> ${{
+                Math.round(farm.farmInfo.liquidityUsdValue)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              }}
+            </div>
+          </Col>
+
+          <Col v-if="!isMobile && !poolType" class="state noDesktop" :span="3">
+            <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
+              Connect Wallet
+            </Button>
+            <div v-else class="fs-container">
+              <Button
+                :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                size="large"
+                ghost
+                @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+              >
+                Harvest & Unstake
+              </Button>
+            </div>
+          </Col>
+
+          <Col :span="isMobile ? 24 : 4"> </Col>
+
+          <Col :span="isMobile ? 24 : 8">
+            <div class="harvest">
+              <div class="title">Pending Reward</div>
+              <div class="pending">
+                <div class="reward">
+                  <div class="token">
+                    {{ farm.farmInfo.reward.symbol }}
+                    {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                  </div>
+                </div>
+                <div class="btncontainer">
+                  <Button
+                    v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                    :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                    size="large"
+                    ghost
+                    @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                  >
+                    Harvest & Unstake
+                  </Button>
+
+                  <Button
+                    v-else
+                    size="large"
+                    ghost
+                    :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
+                    :loading="harvesting"
+                    @click="harvest(farm.farmInfo)"
+                  >
+                    Harvest
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Col>
+
+          <Col :span="isMobile ? 24 : 8">
+            <div class="start">
+              <div class="title">Start farming</div>
+              <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="unstarted">
+                <div class="token">
+                  {{ getCountdownFromPeriod(farm.farmInfo.poolInfo.start_timestamp - currentTimestamp) }}
+                </div>
+              </div>
+              <div>
+                <div v-if="!wallet.connected" @click="$accessor.wallet.openModal" class="btncontainer largebtn">
+                  <Button size="large" ghost> Connect Wallet </Button>
+                </div>
+                <div v-else class="fs-container">
+                  <div
+                    class="btncontainer"
+                    v-if="
+                      !farm.userInfo.depositBalance.isNullOrZero() &&
+                      farm.farmInfo.poolInfo.end_timestamp > currentTimestamp
+                    "
+                  >
+                    <Button
+                      class="unstake btn-bg-fill"
+                      size="large"
+                      ghost
+                      @click="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                    >
+                      <Icon type="minus" />
+                    </Button>
                   </div>
 
-                  <div class="noDesktop labells">
-                    <div v-if="farm.labelized" class="labelized">Labelized</div>
-                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="ended">Ended</div>
-                    <div
-                      v-if="
-                        currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                  <div
+                    class="btncontainer"
+                    v-if="
+                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                      farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
+                    "
+                  >
+                    <Button
+                      class="btn-bg-fill"
+                      size="large"
+                      ghost
+                      :disabled="
+                        !farm.farmInfo.poolInfo.is_allowed ||
+                        farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
                       "
-                      class="soon"
+                      @click="openStakeModal(farm.farmInfo, farm.farmInfo.lp)"
                     >
-                      Soon
-                    </div>
-                  </div>
-                </Col>
-
-                <Col class="state noMobile" :span="isMobile ? 6 : 3">
-                  <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                  <div
-                    v-if="
-                      currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="label soon"
-                  >
-                    Soon
-                  </div>
-                </Col>
-
-                <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
-                  <Col span="12">
-                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                      <span class="labmobile">Pending Reward</span>-
-                    </div>
-                    <div v-else class="value">
-                      <span class="labmobile">Pending Reward</span
-                      >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
-                    </div>
-                  </Col>
-                  <Col span="12">
-                    <div v-if="farm.labelized" class="labelized">Labelized</div>
-                  </Col>
-                </Col>
-
-                <Col v-if="!isMobile" class="state noMobile" :span="3">
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                    <span class="labmobile">Staked</span>-
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Staked</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
-                  </div>
-                </Col>
-
-                <Col class="state noMobile" :span="isMobile ? 6 : 3">
-                  <div
-                    v-if="
-                      farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                      currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="value"
-                  >
-                    <span class="labmobile">Total apr</span> -
-                  </div>
-                  <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
-
-                  <Tooltip
-                    placement="bottomLeft"
-                    v-if="
-                      !(
-                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                      )
-                    "
-                  >
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-line">
-                          Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                        </div>
-                        <hr />
-                        <div class="tooltip-line">
-                          Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
-                  </Tooltip>
-                </Col>
-
-                <Col v-if="!isMobile && poolType" class="state noMobile" :span="3">
-                  <div
-                    v-if="
-                      farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                      currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="value"
-                  >
-                    <span class="labmobile">Liquidity</span> -
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Liquidity</span> ${{
-                      Math.round(farm.farmInfo.liquidityUsdValue)
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                    }}
-                  </div>
-                </Col>
-
-                <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
-                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
-                    Connect Wallet
-                  </Button>
-                  <div v-else class="fs-container">
-                    <Button
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                      size="large"
-                      ghost
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                    >
-                      Harvest & Unstake
+                      {{
+                        !farm.farmInfo.poolInfo.is_allowed
+                          ? 'Not Allowed'
+                          : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                          ? 'Ended'
+                          : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                          ? 'Unstarted'
+                          : 'Stake'
+                      }}
                     </Button>
                   </div>
-                </Col>
-              </Row>
 
-              <Row  v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered && poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
-                <Col class="state noDesktop" :span="isMobile ? 6 : 3">
-                  <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                   <div
+                    class="btncontainer"
                     v-if="
-                      currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="label soon"
-                  >
-                    Soon
-                  </div>
-                </Col>
-
-                <Col class="state reward-col noDesktop" :span="isMobile ? 12 : 6">
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                    <span class="labmobile">Pending Reward</span>-
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Pending Reward</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
-                  </div>
-                </Col>
-
-                <Col v-if="!isMobile" class="state noDesktop" :span="3">
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                    <span class="labmobile">Staked</span>-
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Staked</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
-                  </div>
-                </Col>
-
-                <Col class="state noDesktop" :span="isMobile ? 6 : 3">
-                  <div
-                    v-if="
-                      farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                      currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="value"
-                  >
-                    <span class="labmobile">Total apr</span> -
-                  </div>
-                  <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
-
-                  <Tooltip
-                    placement="bottomLeft"
-                    v-if="
-                      !(
-                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                      )
+                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                      farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
+                      farm.farmInfo.currentLPtokens > 0.001
                     "
                   >
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-line">
-                          Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                        </div>
-                        <hr />
-                        <div class="tooltip-line">
-                          Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
-                  </Tooltip>
-                </Col>
-
-                <Col v-if="!isMobile && poolType" class="state noDesktop" :span="3">
-                  <div
-                    v-if="
-                      farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                      currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="value"
-                  >
-                    <span class="labmobile">Liquidity</span> -
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Liquidity</span> ${{
-                      Math.round(farm.farmInfo.liquidityUsdValue)
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                    }}
-                  </div>
-                </Col>
-
-                <Col v-if="!isMobile && !poolType" class="state noDesktop" :span="3">
-                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
-                    Connect Wallet
-                  </Button>
-                  <div v-else class="fs-container">
                     <Button
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                      class="btn-bg-fill"
                       size="large"
                       ghost
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                      :disabled="
+                        !farm.farmInfo.poolInfo.is_allowed ||
+                        farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                      "
+                      @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
                     >
-                      Harvest & Unstake
+                      {{
+                        !farm.farmInfo.poolInfo.is_allowed
+                          ? 'Not Allowed'
+                          : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                          ? 'Ended'
+                          : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                          ? 'Unstarted'
+                          : 'Stake LP'
+                      }}
                     </Button>
                   </div>
-                </Col>
 
-                <Col :span="isMobile ? 24 : 4"> </Col>
-
-                <Col :span="isMobile ? 24 : 8">
-                  <div class="harvest">
-                    <div class="title">Pending Reward</div>
-                    <div class="pending">
-                      <div class="reward">
-                        <div class="token">
-                          {{ farm.farmInfo.reward.symbol }}
-                          {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
-                        </div>
-                      </div>
-                      <div class="btncontainer">
-
-
-                        <Button
-                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                          size="large"
-                          ghost
-                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                        >
-                          Harvest & Unstake
-                        </Button>
-
-
-                        <Button
-                          v-else
-                          size="large"
-                          ghost
-                          :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
-                          :loading="harvesting"
-                          @click="harvest(farm.farmInfo)"
-                        >
-                          Harvest
-                        </Button>
-
-                      </div>
-                    </div>
+                  <div class="btncontainer">
+                    <a target="_blank" :href="farm.farmInfo.twitterShare">
+                      <Button size="large" ghost style="background-color: #01033c !important"> Share </Button>
+                    </a>
                   </div>
-                </Col>
 
-                <Col :span="isMobile ? 24 : 8">
-                  <div class="start">
-                    <div class="title">Start farming</div>
-                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="unstarted">
-                      <div class="token">
-                        {{ getCountdownFromPeriod(farm.farmInfo.poolInfo.start_timestamp - currentTimestamp) }}
-                      </div>
-                    </div>
-                    <div>
-                      <div v-if="!wallet.connected" @click="$accessor.wallet.openModal" class="btncontainer largebtn">
-                        <Button size="large" ghost> Connect Wallet </Button>
-                      </div>
-                      <div v-else class="fs-container">
-                        <div class="btncontainer" v-if="!farm.userInfo.depositBalance.isNullOrZero() && 
-                        farm.farmInfo.poolInfo.end_timestamp > currentTimestamp">
-                          <Button
-                            class="unstake btn-bg-fill"
-                            size="large"
-                            ghost
-                            @click="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                          >
-                            <Icon type="minus" />
-                          </Button>
-                        </div>
-
-                        <div
-                          class="btncontainer"
-                          v-if="
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                            farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
-                          "
-                        >
-                          <Button
-                            class="btn-bg-fill"
-                            size="large"
-                            ghost
-                            :disabled="
-                              !farm.farmInfo.poolInfo.is_allowed ||
-                              farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                            "
-                            @click="openStakeModal(farm.farmInfo, farm.farmInfo.lp)"
-                          >
-                            {{
-                              !farm.farmInfo.poolInfo.is_allowed
-                                ? 'Not Allowed'
-                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                                ? 'Ended'
-                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                                ? 'Unstarted'
-                                : 'Stake'
-                            }}
-                          </Button>
-                        </div>
-
-                        <div
-                          class="btncontainer"
-                          v-if="
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                            farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
-                            farm.farmInfo.currentLPtokens > 0.001
-                          "
-                        >
-                          <Button
-                            class="btn-bg-fill"
-                            size="large"
-                            ghost
-                            :disabled="
-                              !farm.farmInfo.poolInfo.is_allowed ||
-                              farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                            "
-                            @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
-                          >
-                            {{
-                              !farm.farmInfo.poolInfo.is_allowed
-                                ? 'Not Allowed'
-                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                                ? 'Ended'
-                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                                ? 'Unstarted'
-                                : 'Stake LP'
-                            }}
-                          </Button>
-                        </div>
-
-                        <div class="btncontainer">
-                          <a target="_blank" :href="farm.farmInfo.twitterShare">
-                            <Button size="large" ghost style="background-color: #01033c !important"> Share </Button>
-                          </a>
-                        </div>
-
-                        <div
-                          class="btncontainer noMobile"
-                          v-if="
-                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                          "
-                        >
-                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
-                        </div>
-
-                        <div
-                          class="btncontainer"
-                          v-if="
-                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            !farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                          "
-                        >
-                          <Button size="large" ghost @click="payFarmFee(farm)"> Pay Farm Fee </Button>
-                        </div>
-                      </div>
-                    </div>
+                  <div
+                    class="btncontainer noMobile"
+                    v-if="
+                      farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                      farm.farmInfo.poolInfo.is_allowed &&
+                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                    "
+                  >
+                    <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
                   </div>
-                </Col>
-              </Row>
-            </CollapsePanel>
-          </Collapse>
 
-
+                  <div
+                    class="btncontainer"
+                    v-if="
+                      farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                      !farm.farmInfo.poolInfo.is_allowed &&
+                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                    "
+                  >
+                    <Button size="large" ghost @click="payFarmFee(farm)"> Pay Farm Fee </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </CollapsePanel>
+    </Collapse>
   </div>
 </template>
 
@@ -902,7 +907,14 @@ import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
-import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, REWARD_MULTIPLER, YieldFarm } from '@/utils/farm'
+import {
+  FarmProgram,
+  FarmProgramAccountLayout,
+  FARM_PREFIX,
+  PAY_FARM_FEE,
+  REWARD_MULTIPLER,
+  YieldFarm
+} from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID } from '@/utils/ids'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
@@ -1107,7 +1119,6 @@ export default Vue.extend({
       } finally {
         responseData.forEach(async (element: any) => {
           if (element.pfo == true) {
-
             if (query.get('f') && element.slug == query.get('f')) {
               element.calculateNextStep = 'Bla bla bla'
               this.ammId = element.ammID
@@ -1122,7 +1133,7 @@ export default Vue.extend({
                 ).then((res) => res.json())
               } catch {
               } finally {
-                console.log(responseData2[this.wallet.address]);
+                console.log(responseData2[this.wallet.address])
                 if (responseData2[this.wallet.address]) {
                   if (responseData2[this.wallet.address].submit > 0) {
                     this.isRegistered = true
@@ -1170,11 +1181,10 @@ export default Vue.extend({
       } finally {
         // nothing to do ..
       }
-
     },
 
     async updateFarms() {
-      console.log("updating farms ...")
+      console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
 
@@ -1185,9 +1195,8 @@ export default Vue.extend({
       const farms: any = []
       const endedFarmsPoolId: string[] = []
 
-          console.log('ici4', this.farm.infos);
+      console.log('ici4', this.farm.infos)
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
-        
         let isPFO = false
 
         // @ts-ignore
@@ -1198,8 +1207,7 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
-          console.log('ici3', lp);
-
+        console.log('ici3', lp)
 
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
@@ -1214,15 +1222,17 @@ export default Vue.extend({
               const query = new URLSearchParams(window.location.search)
               if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
-                (query.get('f') && this.labelizedAmmsExtended[newFarmInfo.poolId]?.slug == query.get('f'))
-
+                query.get('f') &&
+                this.labelizedAmmsExtended[newFarmInfo.poolId]?.slug == query.get('f')
               ) {
                 isPFO = true
 
                 let userInfo = get(this.farm.stakeAccounts, poolId)
 
                 if (reward && lp) {
-                  const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+                  const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(
+                    end_timestamp.toNumber() - last_timestamp.toNumber()
+                  )
                   const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
                   const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
@@ -1297,25 +1307,26 @@ export default Vue.extend({
                   const { rewardDebt, depositBalance } = userInfo
                   let currentTimestamp = this.currentTimestamp
 
-                  
-                  if(currentTimestamp > end_timestamp.toNumber()){
-                    currentTimestamp = end_timestamp.toNumber();
+                  if (currentTimestamp > end_timestamp.toNumber()) {
+                    currentTimestamp = end_timestamp.toNumber()
                   }
-                  
+
                   const duration = currentTimestamp - last_timestamp.toNumber()
-                  
-                  const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+
+                  const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(
+                    end_timestamp.toNumber() - last_timestamp.toNumber()
+                  )
                   const rewardPerShareCalc = rewardPerTimestamp
                     .multipliedBy(duration)
                     .multipliedBy(REWARD_MULTIPLER)
                     .dividedBy(newFarmInfo.lp.balance.wei)
-                    .plus(getBigNumber(reward_per_share_net));
-                  
+                    .plus(getBigNumber(reward_per_share_net))
+
                   const pendingReward = depositBalance.wei
                     .multipliedBy(rewardPerShareCalc)
                     .dividedBy(REWARD_MULTIPLER)
                     .minus(rewardDebt.wei)
-                    
+
                   userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
                 } else {
                   userInfo = {
@@ -1330,7 +1341,9 @@ export default Vue.extend({
                   (newFarmInfo as any).reward.name
                 } with our new farm on @CropperFinance&url=https://cropper.finance/farms/?s=${
                   (newFarmInfo as any).poolId
-                } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
+                } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${
+                  (newFarmInfo as any).lp.pc.symbol
+                },yieldfarming,Solana`
 
                 let labelized = this.labelizedAmmsExtended[newFarmInfo.poolId]
                 if (isPFO) {
@@ -1340,8 +1353,7 @@ export default Vue.extend({
                     farmInfo: newFarmInfo
                   })
 
-
-                  console.log(farms);
+                  console.log(farms)
                 }
               }
             }
@@ -1353,7 +1365,7 @@ export default Vue.extend({
       this.endedFarmsPoolId = endedFarmsPoolId
       this.showFarms = this.farms
 
-          console.log(this.farms, farms);
+      console.log(this.farms, farms)
     },
 
     updateCurrentLp(newTokenAccounts: any) {
@@ -1937,6 +1949,77 @@ export default Vue.extend({
 
 ::-webkit-scrollbar {
   display: none; /* Chrome Safari */
+}
+
+.farm-head {
+  display: flex;
+  align-items: center;
+  min-width: 768px;
+
+  .lp-icons {
+    .lp-icons-group {
+      height: 51px;
+      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+      border-radius: 8px;
+      padding: 2px;
+
+      .icons {
+        height: 47px;
+        background-color: #01033c;
+        border-radius: 8px;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .icons span {
+        margin-left: 12px;
+        margin-right: 12px;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 21px;
+      }
+    }
+
+    .title {
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+      color: #fff;
+      opacity: 0.5;
+    }
+  }
+
+  .details {
+    top: 50%;
+    transform: translate(0, -50%);
+    position: absolute;
+    right: 17px;
+    margin-top: unset;
+  }
+
+  .state {
+    display: flex;
+    text-align: left;
+    flex-direction: row;
+
+    .title {
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+      color: #fff;
+      opacity: 0.5;
+    }
+
+    .value {
+      font-size: 18px;
+      line-height: 21.19px;
+      font-weight: 400;
+    }
+  }
+}
+
+.farm-head.is-mobile {
+  padding: 24px 16px !important;
 }
 
 .fertilizeruniq {
@@ -2620,7 +2703,7 @@ export default Vue.extend({
       padding: 5px;
     }
 
-     @media (max-width: @mobile-m-width) {
+    @media (max-width: @mobile-m-width) {
       position: relative;
       top: 0;
       right: 0;
