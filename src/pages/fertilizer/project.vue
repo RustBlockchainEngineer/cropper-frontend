@@ -2114,7 +2114,7 @@ export default Vue.extend({
         button {
           padding: 10px 50px;
           height: 56px;
-          background-color: #0E1046;
+          background-color: #0E1046 !important;
           border-radius: 8px;
         }
       }
@@ -2434,7 +2434,7 @@ export default Vue.extend({
 
               .icons {
                 height: 47px;
-                background-color: #01033c;
+                background-color: #0e1046;
                 border-radius: 8px;
                 align-items: center;
                 padding: 0 20px;
