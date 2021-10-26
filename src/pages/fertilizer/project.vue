@@ -532,6 +532,7 @@
                   </Col>
 
                   <Col class="state noMobile" :span="isMobile ? 6 : 3">
+                    <div v-if="farm.labelized" class="labelized">Labelized</div>
                     <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                     <div
                       v-if="
@@ -545,18 +546,13 @@
                   </Col>
 
                   <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
-                    <Col span="12">
-                      <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                        <span class="labmobile">Pending Reward</span>-
-                      </div>
-                      <div v-else class="value">
-                        <span class="labmobile">Pending Reward</span
-                        >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
-                      </div>
-                    </Col>
-                    <Col span="12">
-                      <div v-if="farm.labelized" class="labelized">Labelized</div>
-                    </Col>
+                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                      <span class="labmobile">Pending Reward</span>-
+                    </div>
+                    <div v-else class="value">
+                      <span class="labmobile">Pending Reward</span
+                      >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                    </div>
                   </Col>
 
                   <Col v-if="!isMobile" class="state noMobile" :span="4">
