@@ -2035,6 +2035,7 @@ export default Vue.extend({
       font-size: 18px;
       line-height: 21.19px;
       font-weight: 400;
+      text-align: center;
     }
 
     .harvest {
@@ -2136,6 +2137,7 @@ export default Vue.extend({
     font-size: 14px;
     font-weight: 400;
     width: fit-content;
+    margin: auto;
   }
 
   .reward-col {
@@ -2947,25 +2949,32 @@ export default Vue.extend({
 }
 
 .btncontainer {
-  background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+  background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
   display: inline-block;
   width: unset;
   text-align: center;
   position: relative;
   max-width: 400px;
-  margin: 10px auto;
-  border-radius: 30px;
-  max-height: 65px;
+  padding: 2px;
+  margin: 0;
+  border-radius: 8px !important;
+  max-height: 60px !important;
 
   button {
-    background: #01033c !important;
+    background: transparent !important;
     position: relative;
-    border-radius: 30px;
-    border-color: transparent;
-    cursor: pointer;
+    border-radius: 8px !important;
+    border-color: transparent !important;
+    height: 56px !important;
+  }
+}
 
-    &.button_div {
-      padding: 0 20px;
+.fs-container {
+  justify-content: space-evenly;
+
+  .btncontainer {
+    .btn-bg-fill {
+      background-color: #01033c !important;
     }
   }
 }
