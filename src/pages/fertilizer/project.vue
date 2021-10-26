@@ -1022,7 +1022,23 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
-        this.mounted()
+          
+        this.updateFarms()
+
+        var hash = window.location.hash
+        if (hash) {
+          hash = hash.substring(1)
+          this.searchName = hash
+        } else {
+          const query = new URLSearchParams(window.location.search)
+          this.searchName = query.get('s') as string
+        }
+
+        let timer = setInterval(async () => {
+          if (this.nbFarmsLoaded == Object.keys(this.labelizedAmms).length) {
+            this.initialized = true
+          }
+        }, 1000)
       },
       deep: true
     },
