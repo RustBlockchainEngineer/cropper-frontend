@@ -1112,7 +1112,7 @@ export default Vue.extend({
 
     async updateLabelizedAmms() {
       const query = new URLSearchParams(window.location.search)
-      this.labelizedAmms = {}
+      //this.labelizedAmms = {}
       let responseData2: any = {}
       let responseData: any
       try {
