@@ -1023,7 +1023,7 @@ export default Vue.extend({
     'wallet.address': {
       handler(newTokenAccounts: any) {
 
-        $accessor.farm.requestInfos()
+        this.$accessor.farm.requestInfos()
         this.nbFarmsLoaded = 0;
         this.updateFarms()
 
