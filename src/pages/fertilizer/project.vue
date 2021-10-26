@@ -466,7 +466,29 @@
               </div>
             </Row>
 
-            {{ showFarms }}
+            <div class="list pc-list" v-if="initialized">
+              <Row class="farm-head table-head">
+                <Col class="state lp-icons" :span="isMobile ? 24 : 6">
+                  <div class="title">Farm name</div>
+                </Col>
+                <Col class="state" :span="isMobile ? 24 : 3">
+                  <div class="title">Status</div>
+                </Col>
+                <Col class="state" :span="isMobile ? 24 : 4">
+                  <div class="title">Pending Reward</div>
+                </Col>
+                <Col class="state" :span="isMobile ? 24 : 3">
+                  <div class="title">Staked</div>
+                </Col>
+                <Col class="state" :span="isMobile ? 24 : 6">
+                  <div class="title">total apr</div>
+                </Col>
+                <Col class="state" :span="isMobile ? 24 : 3">
+                  <div class="title">Liquidity</div>
+                </Col>
+              </Row>
+            </div>
+
             <Collapse v-model="showCollapse" expand-icon-position="right">
               <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
                 <Row
@@ -508,15 +530,8 @@
                   </Col>
 
                   <Col class="state noMobile" :span="isMobile ? 6 : 3">
-                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                    <div
-                      v-if="
-                        currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                      "
-                      class="label soon"
-                    >
-                      Soon
+                    <div class="label" :style="'background-color: ' + farm.current_status.color">
+                      {{ farm.current_status.label }}
                     </div>
                   </Col>
 
@@ -596,6 +611,7 @@
 
                 <Row
                   v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered && poolType"
+                  class="farm-head"
                   :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'"
                   :gutter="48"
                 >
