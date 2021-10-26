@@ -2529,6 +2529,12 @@ export default Vue.extend({
   }
 }
 
+@media (max-width: @mobile-b-width) {
+  .farm-head {
+    min-width: unset;
+  }
+}
+
 .pf-record {
   border-bottom: none !important;
 }
