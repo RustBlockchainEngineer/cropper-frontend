@@ -468,20 +468,20 @@
 
             <div class="list pc-list" v-if="initialized">
               <Row class="farm-head table-head">
-                <Col class="state lp-icons" :span="isMobile ? 24 : 6">
+                <Col class="state lp-icons" :span="isMobile ? 24 : 5">
                   <div class="title">Farm name</div>
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Status</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 4">
+                <Col class="state" :span="isMobile ? 24 : 6">
                   <div class="title">Pending Reward</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 3">
+                <Col class="state" :span="isMobile ? 24 : 4">
                   <div class="title">Staked</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 6">
-                  <div class="title">total apr</div>
+                <Col class="state" :span="isMobile ? 24 : 3">
+                  <div class="title">Total apr</div>
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Liquidity</div>
@@ -504,7 +504,7 @@
                     </div>
                   </span>
 
-                  <Col class="lp-icons" :span="isMobile ? 12 : 6">
+                  <Col class="lp-icons" :span="isMobile ? 12 : 5">
                     <div class="lp-icons-group">
                       <div class="icons">
                         <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
@@ -550,7 +550,7 @@
                     </Col>
                   </Col>
 
-                  <Col v-if="!isMobile" class="state noMobile" :span="3">
+                  <Col v-if="!isMobile" class="state noMobile" :span="4">
                     <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
                       <span class="labmobile">Staked</span>-
                     </div>
