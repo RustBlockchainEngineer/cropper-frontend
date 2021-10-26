@@ -2980,24 +2980,6 @@ export default Vue.extend({
   }
 }
 
-.label.soon {
-  border: 1px solid #13d89d;
-  color: #13d89d;
-  position: absolute;
-  padding: 0 20px 0 20px;
-  border-radius: 3px;
-  right: 60px;
-}
-
-.label.ended {
-  border: 1px solid #f00;
-  color: #f00;
-  position: absolute;
-  padding: 0 20px 0 20px;
-  border-radius: 3px;
-  right: 60px;
-}
-
 main {
   background-color: #01033c;
   background-image: unset;
