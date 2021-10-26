@@ -1099,7 +1099,6 @@ export default Vue.extend({
     TokenAmount,
 
     async updateLabelizedAmms() {
-      console.warn('here')
       const query = new URLSearchParams(window.location.search)
       //this.labelizedAmms = {}
       let responseData2: any = {}
@@ -1113,11 +1112,9 @@ export default Vue.extend({
           { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
         ]
       } finally {
-        console.warn('here')
         responseData.forEach(async (element: any) => {
           if (query.get('f') && element.slug == query.get('f')) {
             if (element.pfo == true) {
-              element.calculateNextStep = 'Bla bla bla'
               this.ammId = element.ammID
               this.labelizedAmms[element.ammID] = element
               this.labelizedAmmsExtended[element.ammID] = element
@@ -1130,7 +1127,6 @@ export default Vue.extend({
                 ).then((res) => res.json())
               } catch {
               } finally {
-                console.log(responseData2[this.wallet.address])
                 if (responseData2[this.wallet.address]) {
                   if (responseData2[this.wallet.address].submit > 0) {
                     this.isRegistered = true
@@ -1209,7 +1205,6 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
         
-        console.log(newFarmInfo);
 
 
         const query = new URLSearchParams(window.location.search)

@@ -196,7 +196,6 @@
                       <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
                     </div>
 
-                    {{farm.farmInfo.poolId}}
                   </div>
 
                   <div class="noDesktop labells">
