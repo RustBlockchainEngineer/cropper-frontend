@@ -1220,8 +1220,12 @@ export default Vue.extend({
         console.log('ici3', lp)
 
         if (
+                this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
+                query.get('f') &&
+                this.labelizedAmmsExtended[newFarmInfo.poolId]?.slug == query.get('f')
+                && (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
-          (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
+          (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address)
         ) {
           let labelized = false
           if (lp) {
