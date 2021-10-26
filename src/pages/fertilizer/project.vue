@@ -465,7 +465,8 @@
                 </div>
               </div>
             </Row>
-
+            
+            {{showFarms}}
             <Collapse v-model="showCollapse" expand-icon-position="right">
               <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
                 <Row
@@ -926,7 +927,6 @@ import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 const CollapsePanel = Collapse.Panel
 const RadioGroup = Radio.Group
 const RadioButton = Radio.Button
-declare const window: any
 
 export default Vue.extend({
   components: {
@@ -1112,7 +1112,7 @@ export default Vue.extend({
 
     async updateLabelizedAmms() {
       const query = new URLSearchParams(window.location.search)
-      //this.labelizedAmms = {}
+      this.labelizedAmms = {}
       let responseData2: any = {}
       let responseData: any
       try {
