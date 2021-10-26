@@ -468,20 +468,20 @@
 
             <div class="list pc-list" v-if="initialized">
               <Row class="farm-head table-head">
-                <Col class="state lp-icons" :span="isMobile ? 24 : 5">
+                <Col class="state lp-icons" :span="isMobile ? 24 : 6">
                   <div class="title">Farm name</div>
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Status</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 6">
+                <Col class="state" :span="isMobile ? 24 : 4">
                   <div class="title">Pending Reward</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 4">
+                <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Staked</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 3">
-                  <div class="title">Total apr</div>
+                <Col class="state" :span="isMobile ? 24 : 6">
+                  <div class="title">total apr</div>
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Liquidity</div>
@@ -504,7 +504,7 @@
                     </div>
                   </span>
 
-                  <Col class="lp-icons" :span="isMobile ? 12 : 5">
+                  <Col class="lp-icons" :span="isMobile ? 12 : 6">
                     <div class="lp-icons-group">
                       <div class="icons">
                         <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
@@ -529,11 +529,6 @@
                     </div>
                   </Col>
 
-                  <Col class="state noMobile" :span="isMobile ? 6 : 3">
-                    <div class="label" :style="'background-color: ' + farm.current_status.color">
-                      {{ farm.current_status.label }}
-                    </div>
-                  </Col>
 
                   <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
                     <Col span="12">
@@ -550,7 +545,7 @@
                     </Col>
                   </Col>
 
-                  <Col v-if="!isMobile" class="state noMobile" :span="4">
+                  <Col v-if="!isMobile" class="state noMobile" :span="3">
                     <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
                       <span class="labmobile">Staked</span>-
                     </div>
@@ -1194,7 +1189,7 @@ export default Vue.extend({
 
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let isPFO = false
-
+        console.log('1');
         // @ts-ignore
         const { reward_per_share_net, last_timestamp, end_timestamp } = farmInfo.poolInfo
 
@@ -1206,6 +1201,7 @@ export default Vue.extend({
         const query = new URLSearchParams(window.location.search)
 
         console.log(this.labelizedAmmsExtended)
+        console.log('2');
         if (
           this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
           query.get('f') &&
@@ -1214,9 +1210,12 @@ export default Vue.extend({
             (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address)
         ) {
           let labelized = false
+        console.log('3');
           if (lp) {
+        console.log('4');
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
+        console.log('6');
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = true
               if (
@@ -1226,6 +1225,7 @@ export default Vue.extend({
               ) {
                 isPFO = true
 
+        console.log('6');
                 let userInfo = get(this.farm.stakeAccounts, poolId)
 
                 if (reward && lp) {
