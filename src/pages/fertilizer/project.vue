@@ -465,8 +465,8 @@
                 </div>
               </div>
             </Row>
-            
-            {{showFarms}}
+
+            {{ showFarms }}
             <Collapse v-model="showCollapse" expand-icon-position="right">
               <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
                 <Row
@@ -1036,7 +1036,7 @@ export default Vue.extend({
           }
         }, 1000)
 
-        this.$router.push('/?r=' + window.location.search);
+        this.$router.push('/?r=' + window.location.search)
       },
       deep: true
     },
@@ -1179,7 +1179,7 @@ export default Vue.extend({
 
                 //this.labelizedAmms[element.ammID].twitterShare = `http://twitter.com/share?text=Earn ${this.labelizedAmms[element.ammID].tokenA.symbol} with our new farm on @CropperFinance&url=https://cropper.finance?s=${newFarmInfo.poolId} &hashtags=${this.labelizedAmms[element.ammID].tokenA.symbol},${this.labelizedAmms[element.ammID].tokenB.symbol},yieldfarming,Solana`
 
-                this.updateFarms(false);
+                this.updateFarms(false)
                 document.title = 'Fertilizer - CropperFinance x ' + element.name
 
                 this.nbFarmsLoaded++
@@ -1200,7 +1200,7 @@ export default Vue.extend({
 
     async updateFarms(c = true) {
       console.log('updating farms ...')
-      if(c != false){
+      if (c != false) {
         await this.updateLabelizedAmms()
       }
       this.currentTimestamp = moment().unix()
@@ -1211,7 +1211,6 @@ export default Vue.extend({
 
       const farms: any = []
       const endedFarmsPoolId: string[] = []
-
 
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let isPFO = false
@@ -1372,7 +1371,6 @@ export default Vue.extend({
                     userInfo,
                     farmInfo: newFarmInfo
                   })
-
                 }
               }
             }
@@ -2048,6 +2046,45 @@ export default Vue.extend({
       line-height: 21.19px;
       font-weight: 400;
     }
+  }
+
+  .label.soon {
+    background: #48a469;
+    border-radius: 4px;
+    right: 110px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 5px;
+    width: 53px;
+  }
+
+  .labmobile {
+    display: none;
+  }
+
+  .label.ended {
+    background: #ef745d;
+    border-radius: 4px;
+    right: 110px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 5px;
+    width: 53px;
+  }
+
+  .labelized {
+    background: #724cee;
+    border-radius: 6px;
+    padding: 5px 9px;
+    font-size: 14px;
+    font-weight: 400;
+    width: fit-content;
+  }
+
+  .reward-col {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 
