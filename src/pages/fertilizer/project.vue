@@ -497,7 +497,7 @@
               </Row>
             </div>
 
-            <div v-if="showFarms.length == 0" class="fc-container">
+            <div v-if="showFarms.length == 0 && wallet.connected" class="fc-container">
               <Spin :spinning="true">
                 <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
               </Spin>
