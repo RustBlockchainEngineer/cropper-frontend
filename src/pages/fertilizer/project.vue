@@ -1031,7 +1031,7 @@ export default Vue.extend({
         this.updateLabelizedAmms()
         setTimeout(async () => {
           this.updateFarms()
-        }, 15000)
+        }, 5000)
       },
       deep: true
     },
@@ -1128,7 +1128,6 @@ export default Vue.extend({
         ]
       } finally {
         console.warn('here');
-        alert("here");
         responseData.forEach(async (element: any) => {
           if (query.get('f') && element.slug == query.get('f')) {
             if (element.pfo == true) {
