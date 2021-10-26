@@ -376,7 +376,7 @@
               </div>
             </Row>
 
-            <div class="devider">></div>
+            <div class="devider"></div>
 
             <Row class="status-log" :span="24">
               <div class="largepdding" v-if="!wallet.connected">
@@ -2121,7 +2121,7 @@ export default Vue.extend({
 
       .stake-btn {
         button {
-          background-color: transparent;
+          background-color: transparent !important;
         }
       }
     }
@@ -2327,7 +2327,7 @@ export default Vue.extend({
       }
 
       .devider {
-        margin: 50px -24px;
+        margin: 30px -24px;
         border-bottom: 1px solid #ffffff20;
         height: 1px;
       }
