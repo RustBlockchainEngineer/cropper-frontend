@@ -2999,16 +2999,6 @@ export default Vue.extend({
   }
 }
 
-.fs-container {
-  justify-content: space-evenly;
-
-  .btncontainer {
-    .btn-bg-fill {
-      background-color: #01033c !important;
-    }
-  }
-}
-
 main {
   background-color: #01033c;
   background-image: unset;
