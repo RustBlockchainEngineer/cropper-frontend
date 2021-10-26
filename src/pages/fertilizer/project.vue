@@ -474,14 +474,14 @@
                 <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Status</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 4">
+                <Col class="state" :span="isMobile ? 24 : 6">
                   <div class="title">Pending Reward</div>
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Staked</div>
                 </Col>
-                <Col class="state" :span="isMobile ? 24 : 6">
-                  <div class="title">total apr</div>
+                <Col class="state" :span="isMobile ? 24 : 4">
+                  <div class="title">Total apr</div>
                 </Col>
                 <Col class="state" :span="isMobile ? 24 : 3">
                   <div class="title">Liquidity</div>
@@ -567,7 +567,7 @@
                     </div>
                   </Col>
 
-                  <Col class="state noMobile" :span="isMobile ? 6 : 3">
+                  <Col class="state noMobile" :span="isMobile ? 6 : 4">
                     <div
                       v-if="
                         farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
