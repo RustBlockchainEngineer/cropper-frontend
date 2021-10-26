@@ -1125,8 +1125,9 @@ export default Vue.extend({
         ]
       } finally {
         responseData.forEach(async (element: any) => {
+        alert("here");
+          if (query.get('f') && element.slug == query.get('f')) {
           if (element.pfo == true) {
-            if (query.get('f') && element.slug == query.get('f')) {
               element.calculateNextStep = 'Bla bla bla'
               this.ammId = element.ammID
               this.labelizedAmms[element.ammID] = element
