@@ -1230,15 +1230,13 @@ export default Vue.extend({
                 let userInfo = get(this.farm.stakeAccounts, poolId)
 
                 if (reward && lp) {
-                  const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(
-                    end_timestamp.toNumber() - last_timestamp.toNumber()
-                  )
+
+                  const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
                   const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
                   const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
                   const rewardPerTimestampAmountTotalValue =
                     getBigNumber(rewardPerTimestampAmount.toEther()) *
-                    2 *
                     60 *
                     60 *
                     24 *
