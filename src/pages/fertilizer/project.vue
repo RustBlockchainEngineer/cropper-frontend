@@ -1023,7 +1023,6 @@ export default Vue.extend({
     'wallet.address': {
       handler(newTokenAccounts: any) {
 
-        this.$accessor.farm.requestInfos()
         this.nbFarmsLoaded = 0;
         this.updateFarms()
 
@@ -1116,7 +1115,7 @@ export default Vue.extend({
 
     async updateLabelizedAmms() {
       const query = new URLSearchParams(window.location.search)
-      //this.labelizedAmms = {}
+      this.labelizedAmms = {}
       let responseData2: any = {}
       let responseData: any
       try {
@@ -1206,7 +1205,6 @@ export default Vue.extend({
       const farms: any = []
       const endedFarmsPoolId: string[] = []
 
-      console.log('ici4', this.farm.infos)
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let isPFO = false
 
