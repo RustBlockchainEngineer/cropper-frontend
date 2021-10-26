@@ -1963,6 +1963,20 @@ export default Vue.extend({
   display: none; /* Chrome Safari */
 }
 
+.noDesktop {
+  display: none !important;
+}
+
+@media (max-width: @mobile-b-width) {
+  .noDesktop {
+    display: inline-block !important;
+  }
+
+  .noMobile {
+    display: none !important;
+  }
+}
+
 .farm-head {
   display: flex;
   align-items: center;
@@ -2027,20 +2041,6 @@ export default Vue.extend({
       line-height: 21.19px;
       font-weight: 400;
     }
-  }
-}
-
-.noDesktop {
-  display: none;
-}
-
-@media (max-width: @mobile-b-width) {
-  .noDesktop {
-    display: inline-block;
-  }
-
-  .noMobile {
-    display: none;
   }
 }
 
