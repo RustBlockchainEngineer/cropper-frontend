@@ -1031,12 +1031,10 @@ export default Vue.extend({
         let timer = setInterval(async () => {
           if (this.nbFarmsLoaded >= 1) {
             this.initialized = true
-            if ((this.farmloading = false)) {
-              this.updateFarms()
-              clearInterval(timer)
-            }
           }
         }, 1000)
+
+        this.$router.push('/');
       },
       deep: true
     },
@@ -1201,7 +1199,6 @@ export default Vue.extend({
       console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
-      this.farmloading = true
 
       const conn = this.$web3
       const wallet = (this as any).$accessor.wallet
@@ -1377,11 +1374,7 @@ export default Vue.extend({
           }
         }
       }
-        console.log(farms);
-      if(farms == []){
-        console.log('here');
-        this.farmloading = false;
-      }
+
       this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
       this.showFarms = this.farms
