@@ -911,6 +911,10 @@ export default Vue.extend({
           let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
           let apr = ((rewardPerTimestampAmountTotalValue / farmUsdValue) * 100).toFixed(2)
 
+          console.log(farmUsdValue, rewardPerTimestampAmountTotalValue, apr);
+
+
+
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
           }
@@ -935,6 +939,8 @@ export default Vue.extend({
             newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
           }
 
+          console.log(newFarmInfo.apr_details);
+          
           if (wallet) {
             let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
             //getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther());
