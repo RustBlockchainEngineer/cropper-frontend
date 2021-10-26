@@ -1028,10 +1028,11 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
+        this.$accessor.farm.requestInfos()
         this.updateLabelizedAmms()
         setTimeout(async () => {
           this.updateFarms()
-        }, 5000)
+        }, 10000)
       },
       deep: true
     },
