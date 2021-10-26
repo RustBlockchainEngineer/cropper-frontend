@@ -883,7 +883,8 @@ export default Vue.extend({
 
 
         if (reward && lp) {
-          const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+        console.log( newFarmInfo);
+          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
@@ -940,7 +941,7 @@ export default Vue.extend({
           }
 
           console.log(newFarmInfo.apr_details);
-          
+
           if (wallet) {
             let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
             //getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther());
