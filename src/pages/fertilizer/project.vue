@@ -1028,15 +1028,8 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
-        this.nbFarmsLoaded = 0
-        this.updateFarms()
-        let timer = setInterval(async () => {
-          if (this.nbFarmsLoaded >= 1) {
-            this.initialized = true
-          }
-        }, 1000)
-
-        this.$router.push('/?r=' + window.location.search)
+        this.updateLabelizedAmms();
+        this.updateFarms();
       },
       deep: true
     },
