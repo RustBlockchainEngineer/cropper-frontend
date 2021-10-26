@@ -1219,6 +1219,7 @@ export default Vue.extend({
 
         console.log('ici3', lp)
 
+              const query = new URLSearchParams(window.location.search)
         if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
                 query.get('f') &&
@@ -1233,7 +1234,6 @@ export default Vue.extend({
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               labelized = true
-              const query = new URLSearchParams(window.location.search)
               if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfo == true &&
                 query.get('f') &&
