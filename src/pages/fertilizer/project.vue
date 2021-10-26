@@ -1082,7 +1082,7 @@ export default Vue.extend({
           { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
         ]
       } finally {
-        console.warn('here');
+        console.warn('here')
         responseData.forEach(async (element: any) => {
           if (query.get('f') && element.slug == query.get('f')) {
             if (element.pfo == true) {
@@ -2004,6 +2004,79 @@ export default Vue.extend({
       line-height: 21.19px;
       font-weight: 400;
     }
+
+    .harvest {
+      text-align: center;
+      max-width: 420px;
+      min-height: 186px;
+      display: grid;
+      align-items: center;
+
+      .reward {
+        .token {
+          font-weight: normal;
+          font-size: 40px;
+          line-height: 47px;
+          margin-bottom: 10px;
+        }
+
+        .value {
+          font-size: 12px;
+        }
+      }
+
+      button {
+        padding: 0 30px;
+      }
+    }
+
+    .start {
+      text-align: center;
+      max-width: 420px;
+      min-height: 186px;
+      display: grid;
+      align-items: center;
+
+      .unstarted {
+        width: 100%;
+
+        .token {
+          font-weight: normal;
+          font-size: 40px;
+          line-height: 47px;
+          margin-bottom: 10px;
+        }
+
+        .value {
+          font-size: 12px;
+        }
+      }
+
+      .unstake {
+        margin-right: 10px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .harvest,
+    .start {
+      border: 4px solid #16164a;
+      box-sizing: border-box;
+      border-radius: 14px;
+      padding: 16px;
+
+      .title {
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+        color: #fff;
+        opacity: 0.5;
+        margin-bottom: 8px;
+      }
+    }
   }
 
   .label.soon {
@@ -2043,79 +2116,6 @@ export default Vue.extend({
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-  }
-
-  .harvest {
-    text-align: center;
-    max-width: 420px;
-    min-height: 186px;
-    display: grid;
-    align-items: center;
-
-    .reward {
-      .token {
-        font-weight: normal;
-        font-size: 40px;
-        line-height: 47px;
-        margin-bottom: 10px;
-      }
-
-      .value {
-        font-size: 12px;
-      }
-    }
-
-    button {
-      padding: 0 30px;
-    }
-  }
-
-  .start {
-    text-align: center;
-    max-width: 420px;
-    min-height: 186px;
-    display: grid;
-    align-items: center;
-
-    .unstarted {
-      width: 100%;
-
-      .token {
-        font-weight: normal;
-        font-size: 40px;
-        line-height: 47px;
-        margin-bottom: 10px;
-      }
-
-      .value {
-        font-size: 12px;
-      }
-    }
-
-    .unstake {
-      margin-right: 10px;
-    }
-
-    button {
-      width: 100%;
-    }
-  }
-
-  .harvest,
-  .start {
-    border: 4px solid #16164a;
-    box-sizing: border-box;
-    border-radius: 14px;
-    padding: 16px;
-
-    .title {
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 21px;
-      color: #fff;
-      opacity: 0.5;
-      margin-bottom: 8px;
-    }
   }
 }
 
