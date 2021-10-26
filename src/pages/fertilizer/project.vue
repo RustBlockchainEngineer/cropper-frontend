@@ -1022,7 +1022,7 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
-          
+
         this.updateFarms()
 
         var hash = window.location.hash
@@ -1037,6 +1037,7 @@ export default Vue.extend({
         let timer = setInterval(async () => {
           if (this.nbFarmsLoaded == Object.keys(this.labelizedAmms).length) {
             this.initialized = true
+            alert("here");
           }
         }, 1000)
       },
