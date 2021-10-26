@@ -512,6 +512,12 @@
                   :class="isMobile ? 'is-mobile' : ''"
                   :gutter="0"
                 >
+                  <span class="details noDesktop">
+                    <div class="detailButton">
+                      <button>Details</button>
+                    </div>
+                  </span>
+
                   <Col class="lp-icons" :span="isMobile ? 12 : 5">
                     <div class="lp-icons-group">
                       <div class="icons">
@@ -2702,9 +2708,6 @@ export default Vue.extend({
         margin-top: 11px;
         .ant-col-12 {
           width: 100%;
-        }
-        .value{
-          text-align: right;
         }
       }
     }
