@@ -1206,6 +1206,9 @@ export default Vue.extend({
         // @ts-ignore
         const { reward, lp } = farmInfo
 
+
+        console.log(lp);
+
         const newFarmInfo: any = cloneDeep(farmInfo)
 
         const query = new URLSearchParams(window.location.search)
