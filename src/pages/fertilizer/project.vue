@@ -2108,10 +2108,12 @@ export default Vue.extend({
         background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
         padding: 2px;
         height: 60px;
+        border-radius: 8px;
         button {
           padding: 10px 50px;
           height: 56px;
           background-color: #0E1046;
+          border-radius: 8px;
         }
       }
     }
