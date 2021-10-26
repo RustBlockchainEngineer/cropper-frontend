@@ -497,7 +497,13 @@
               </Row>
             </div>
 
-            <Collapse v-model="showCollapse" expand-icon-position="right">
+            <div v-if="showFarms.length == 0" class="fc-container">
+              <Spin :spinning="true">
+                <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
+              </Spin>
+            </div>
+
+            <Collapse v-else v-model="showCollapse" expand-icon-position="right">
               <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
                 <Row
                   slot="header"
@@ -883,7 +889,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import importIcon from '@/utils/import-icon'
-import { Collapse, Col, Radio, Select, Row, Switch as Toggle, Pagination } from 'ant-design-vue'
+import { Collapse, Col, Radio, Select, Row, Spin, Icon, Switch as Toggle, Pagination } from 'ant-design-vue'
 import { get, cloneDeep } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { FarmInfo } from '@/utils/farms'
@@ -914,8 +920,8 @@ export default Vue.extend({
     //Toggle,
     // Collapse,
     // CollapsePanel,
-    //Spin,
-    // Icon,
+    Spin,
+    Icon,
     Col,
     Row
     //Select,
