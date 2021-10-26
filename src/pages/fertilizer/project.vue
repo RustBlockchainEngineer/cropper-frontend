@@ -1209,6 +1209,10 @@ export default Vue.extend({
       const endedFarmsPoolId: string[] = []
 
       console.warn(this.farm.infos);
+      if(this.farm.infos.length = 0){
+        this.farmloading = false;
+        return;
+      }
 
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
         let isPFO = false
