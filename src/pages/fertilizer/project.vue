@@ -2538,13 +2538,7 @@ export default Vue.extend({
 }
 
 @media (max-width: @mobile-b-width) {
-  body .fertilizeruniq.container {
-    min-width: unset;
-    width: 100%;
-    max-width: 100%;
-    margin-top: 0;
-    padding: 20px 20px !important;
-
+  body .fertilizeruniq.cont {
     .details {
       float: right;
     }
