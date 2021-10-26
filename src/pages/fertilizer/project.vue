@@ -1198,7 +1198,6 @@ export default Vue.extend({
       const endedFarmsPoolId: string[] = []
 
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
-        console.log(farmInfo.poolInfo);
         let isPFO = false
         // @ts-ignore
         const { reward_per_share_net, last_timestamp, end_timestamp } = farmInfo.poolInfo
@@ -1209,6 +1208,8 @@ export default Vue.extend({
 
 
         const newFarmInfo: any = cloneDeep(farmInfo)
+        
+        console.log(newFarmInfo);
 
 
         const query = new URLSearchParams(window.location.search)
