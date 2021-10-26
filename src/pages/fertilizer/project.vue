@@ -982,7 +982,12 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
-        this.flush();
+      
+        this.$accessor.farm.requestInfos()
+        this.updateLabelizedAmms()
+        setTimeout(async () => {
+          this.updateFarms()
+        }, 10000)
         setInterval(async () => {
           this.flush();
         }, 30000)
