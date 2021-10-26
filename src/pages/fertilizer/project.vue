@@ -1209,7 +1209,7 @@ export default Vue.extend({
       const endedFarmsPoolId: string[] = []
 
       console.warn(this.farm.infos);
-      if(this.farm.infos.length = 0){
+      if(this.farm.infos.length == 0){
         this.farmloading = false;
         return;
       }
