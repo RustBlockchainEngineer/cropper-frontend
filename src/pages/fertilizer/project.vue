@@ -1207,9 +1207,11 @@ export default Vue.extend({
         const { reward, lp } = farmInfo
 
 
-        console.log(lp);
 
         const newFarmInfo: any = cloneDeep(farmInfo)
+
+
+        console.log(newFarmInfo.poolId, this.labelizedAmmsExtended[newFarmInfo.poolId]?.pfarmID);
 
         const query = new URLSearchParams(window.location.search)
 
