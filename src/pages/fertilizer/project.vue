@@ -1028,7 +1028,8 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
-        this.$router.push('/pools/?r=1');
+        this.updateLabelizedAmms();
+        this.updateFarms();
       },
       deep: true
     },
