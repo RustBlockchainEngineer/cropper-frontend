@@ -1010,7 +1010,7 @@ export default Vue.extend({
             (newFarmInfo as any).poolId
           } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
 
-          if (!isPFO) {
+          if (!isPFO || true) {
             farms.push({
               labelized,
               userInfo,
