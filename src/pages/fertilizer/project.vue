@@ -2040,45 +2040,45 @@ export default Vue.extend({
       font-weight: 400;
     }
   }
-}
 
-.label.soon {
-  background: #48a469;
-  border-radius: 4px;
-  right: 110px;
-  font-size: 14px;
-  font-weight: 400;
-  padding: 5px;
-  width: 53px;
-}
+  .label.soon {
+    background: #48a469;
+    border-radius: 4px;
+    right: 110px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 5px;
+    width: 53px;
+  }
 
-.labmobile {
-  display: none;
-}
+  .labmobile {
+    display: none;
+  }
 
-.label.ended {
-  background: #ef745d;
-  border-radius: 4px;
-  right: 110px;
-  font-size: 14px;
-  font-weight: 400;
-  padding: 5px;
-  width: 53px;
-}
+  .label.ended {
+    background: #ef745d;
+    border-radius: 4px;
+    right: 110px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 5px;
+    width: 53px;
+  }
 
-.labelized {
-  background: #724cee;
-  border-radius: 6px;
-  padding: 5px 9px;
-  font-size: 14px;
-  font-weight: 400;
-  width: fit-content;
-}
+  .labelized {
+    background: #724cee;
+    border-radius: 6px;
+    padding: 5px 9px;
+    font-size: 14px;
+    font-weight: 400;
+    width: fit-content;
+  }
 
-.reward-col {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
+  .reward-col {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .farm-head.is-mobile {
