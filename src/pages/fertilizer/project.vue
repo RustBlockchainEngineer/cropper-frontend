@@ -1029,9 +1029,9 @@ export default Vue.extend({
     'wallet.address': {
       handler(newTokenAccounts: any) {
         this.updateLabelizedAmms()
-        setTimeout(function () {
+        setTimeout(async () => {
           this.updateFarms()
-        }, 15000)
+        }, 5000)
       },
       deep: true
     },
@@ -1127,8 +1127,7 @@ export default Vue.extend({
           { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
         ]
       } finally {
-        console.warn('here')
-        alert('here')
+        console.warn('here');
         responseData.forEach(async (element: any) => {
           if (query.get('f') && element.slug == query.get('f')) {
             if (element.pfo == true) {
