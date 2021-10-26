@@ -753,11 +753,14 @@ export default class Pools extends Vue {
           const query = new URLSearchParams(window.location.search)
           if (query.get('s')) this.searchName = query.get('s') as string
         }
-        clearInterval(this.timer)
         this.poolLoaded = true
         this.setTimer()
       }
     }, 1000)
+
+          const query = new URLSearchParams(window.location.search)
+          if (query.get('r')) 
+        this.$router.push('/fertilizer/project/?f=cropper');
   }
 
   setTimer() {
