@@ -3017,10 +3017,18 @@ main {
   }
 
   .harvest {
+    text-align: center;
+    max-width: 420px;
+    min-height: 186px;
+    display: grid;
+    align-items: center;
+
     .reward {
       .token {
-        font-weight: 600;
-        font-size: 20px;
+        font-weight: normal;
+        font-size: 40px;
+        line-height: 47px;
+        margin-bottom: 10px;
       }
 
       .value {
@@ -3034,10 +3042,20 @@ main {
   }
 
   .start {
+    text-align: center;
+    max-width: 420px;
+    min-height: 186px;
+    display: grid;
+    align-items: center;
+
     .unstarted {
+      width: 100%;
+
       .token {
-        font-weight: 600;
-        font-size: 20px;
+        font-weight: normal;
+        font-size: 40px;
+        line-height: 47px;
+        margin-bottom: 10px;
       }
 
       .value {
@@ -3056,14 +3074,17 @@ main {
 
   .harvest,
   .start {
+    border: 4px solid #16164a;
+    box-sizing: border-box;
+    border-radius: 14px;
     padding: 16px;
-    border: 2px solid #1c274f;
-    border-radius: 4px;
 
     .title {
-      font-weight: 600;
-      font-size: 12px;
-      text-transform: uppercase;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+      color: #fff;
+      opacity: 0.5;
       margin-bottom: 8px;
     }
   }
