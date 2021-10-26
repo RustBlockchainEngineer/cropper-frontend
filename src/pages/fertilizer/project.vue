@@ -1034,7 +1034,7 @@ export default Vue.extend({
           }
         }, 1000)
 
-        this.$router.push('/');
+        this.$router.push('/?r=' + window.location.search);
       },
       deep: true
     },
