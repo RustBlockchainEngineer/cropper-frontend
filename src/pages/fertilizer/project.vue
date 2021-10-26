@@ -2035,6 +2035,7 @@ export default Vue.extend({
       font-size: 18px;
       line-height: 21.19px;
       font-weight: 400;
+      text-align: center;
     }
 
     .harvest {
@@ -2143,10 +2144,6 @@ export default Vue.extend({
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-
-    div {
-      align-items: center;
-    }
   }
 }
 
@@ -2969,6 +2966,16 @@ export default Vue.extend({
     border-radius: 8px !important;
     border-color: transparent !important;
     height: 56px !important;
+  }
+}
+
+.fs-container {
+  justify-content: space-evenly;
+
+  .btncontainer {
+    .btn-bg-fill {
+      background-color: #01033c !important;
+    }
   }
 }
 
