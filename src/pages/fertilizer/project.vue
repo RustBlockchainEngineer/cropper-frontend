@@ -728,7 +728,7 @@
 
                   <Col :span="isMobile ? 24 : 4"> </Col>
 
-                  <Col :span="isMobile ? 24 : 8">
+                  <Col :span="isMobile ? 24 : 8" class="state">
                     <div class="harvest">
                       <div class="title">Pending Reward</div>
                       <div class="pending">
@@ -766,7 +766,7 @@
                     </div>
                   </Col>
 
-                  <Col :span="isMobile ? 24 : 8">
+                  <Col :span="isMobile ? 24 : 8" class="state">
                     <div class="start">
                       <div class="title">Start farming</div>
                       <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="unstarted">
