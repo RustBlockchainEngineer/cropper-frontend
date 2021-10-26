@@ -888,9 +888,11 @@ export default Vue.extend({
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
+
+        console.log( rewardPerTimestampAmount);
+
           const rewardPerTimestampAmountTotalValue =
             getBigNumber(rewardPerTimestampAmount.toEther()) *
-            2 *
             60 *
             60 *
             24 *
