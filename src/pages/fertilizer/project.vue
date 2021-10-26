@@ -2045,12 +2045,6 @@ export default Vue.extend({
     }
 
     .harvest {
-      text-align: center;
-      max-width: 420px;
-      min-height: 186px;
-      display: grid;
-      align-items: center;
-
       .reward {
         .token {
           font-weight: normal;
@@ -2070,12 +2064,6 @@ export default Vue.extend({
     }
 
     .start {
-      text-align: center;
-      max-width: 420px;
-      min-height: 186px;
-      display: grid;
-      align-items: center;
-
       .unstarted {
         width: 100%;
 
@@ -2106,6 +2094,12 @@ export default Vue.extend({
       box-sizing: border-box;
       border-radius: 14px;
       padding: 16px;
+      width: 100%;
+      text-align: center;
+      max-width: 420px;
+      min-height: 186px;
+      display: grid;
+      align-items: center;
 
       .title {
         font-weight: normal;
