@@ -1022,7 +1022,7 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
-        this.updateFarms()
+        this.mounted()
       },
       deep: true
     },
