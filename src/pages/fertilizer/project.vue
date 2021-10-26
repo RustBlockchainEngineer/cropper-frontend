@@ -2528,7 +2528,7 @@ export default Vue.extend({
 
 
 .noDesktop {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: @mobile-b-width) {
