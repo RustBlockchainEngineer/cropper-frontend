@@ -998,11 +998,15 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
+      
         this.$accessor.farm.requestInfos()
         this.updateLabelizedAmms()
         setTimeout(async () => {
           this.updateFarms()
         }, 10000)
+        setInterval(async () => {
+          this.flush();
+        }, 30000)
       },
       deep: true
     },
@@ -1036,9 +1040,15 @@ export default Vue.extend({
     }, 1000)
   },
 
+
   methods: {
     moment,
     importIcon,
+    flush() {
+      this.$accessor.farm.requestInfos()
+      this.updateLabelizedAmms()
+      this.updateFarms()
+    },
     getCoinPicUrl() {
       let token
       if (this.mintAddress == NATIVE_SOL.mintAddress) {
