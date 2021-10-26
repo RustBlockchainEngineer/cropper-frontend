@@ -376,6 +376,8 @@
               </div>
             </Row>
 
+            <div class="devider"></div>
+
             <Row class="status-log" :span="24">
               <div class="largepdding" v-if="!wallet.connected">
                 <div class="btncontainer">
@@ -774,7 +776,7 @@
                           </div>
 
                           <div
-                            class="btncontainer"
+                            class="btncontainer stake-btn"
                             v-if="
                               currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
                               farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
@@ -804,7 +806,7 @@
                           </div>
 
                           <div
-                            class="btncontainer"
+                            class="btncontainer stake-btn"
                             v-if="
                               currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
                               farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
@@ -836,7 +838,7 @@
 
                           <div class="btncontainer">
                             <a target="_blank" :href="farm.farmInfo.twitterShare">
-                              <Button size="large" ghost style="background-color: #01033c !important"> Share </Button>
+                              <Button size="large" ghost> Share </Button>
                             </a>
                           </div>
 
@@ -2089,7 +2091,7 @@ export default Vue.extend({
       width: 100%;
       text-align: center;
       max-width: 420px;
-      min-height: 186px;
+      min-height: 226px;
       display: grid;
       align-items: center;
 
@@ -2107,11 +2109,22 @@ export default Vue.extend({
         padding: 2px;
         height: 60px;
         border-radius: 8px;
+
+        a {
+          color: white;
+        }
+
         button {
           padding: 10px 50px;
           height: 56px;
-          background-color: #0E1046;
+          background-color: #0E1046 !important;
           border-radius: 8px;
+        }
+      }
+
+      .stake-btn {
+        button {
+          background-color: transparent !important;
         }
       }
     }
@@ -2316,6 +2329,12 @@ export default Vue.extend({
         padding: 10px;
       }
 
+      .devider {
+        margin: 30px -24px;
+        border-bottom: 1px solid #ffffff20;
+        height: 1px;
+      }
+
       .status-log {
         display: flex;
         justify-content: center;
@@ -2418,7 +2437,7 @@ export default Vue.extend({
 
               .icons {
                 height: 47px;
-                background-color: #01033c;
+                background-color: #0e1046;
                 border-radius: 8px;
                 align-items: center;
                 padding: 0 20px;
@@ -2979,16 +2998,6 @@ export default Vue.extend({
 
     &.button_div {
       padding: 0 20px;
-    }
-  }
-}
-
-.fs-container {
-  justify-content: space-evenly;
-
-  .btncontainer {
-    .btn-bg-fill {
-      background-color: #01033c !important;
     }
   }
 }
