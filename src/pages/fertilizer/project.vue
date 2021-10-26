@@ -556,29 +556,6 @@
                       <span class="labmobile">Total apr</span> -
                     </div>
                     <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
-
-                    <Tooltip
-                      placement="bottomLeft"
-                      v-if="
-                        !(
-                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                        )
-                      "
-                    >
-                      <template slot="title">
-                        <div>
-                          <div class="tooltip-line">
-                            Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                          </div>
-                          <hr />
-                          <div class="tooltip-line">
-                            Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                          </div>
-                        </div>
-                      </template>
-                      <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
-                    </Tooltip>
                   </Col>
 
                   <Col v-if="!isMobile && poolType" class="state noMobile" :span="3">
@@ -666,29 +643,6 @@
                       <span class="labmobile">Total apr</span> -
                     </div>
                     <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
-
-                    <Tooltip
-                      placement="bottomLeft"
-                      v-if="
-                        !(
-                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                        )
-                      "
-                    >
-                      <template slot="title">
-                        <div>
-                          <div class="tooltip-line">
-                            Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                          </div>
-                          <hr />
-                          <div class="tooltip-line">
-                            Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                          </div>
-                        </div>
-                      </template>
-                      <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
-                    </Tooltip>
                   </Col>
 
                   <Col v-if="!isMobile && poolType" class="state noDesktop" :span="3">
@@ -1133,7 +1087,7 @@ export default Vue.extend({
           { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
         ]
       } finally {
-        console.warn('here');
+        console.warn('here')
         responseData.forEach(async (element: any) => {
           if (query.get('f') && element.slug == query.get('f')) {
             if (element.pfo == true) {
@@ -2055,6 +2009,79 @@ export default Vue.extend({
       line-height: 21.19px;
       font-weight: 400;
     }
+
+    .harvest {
+      text-align: center;
+      max-width: 420px;
+      min-height: 186px;
+      display: grid;
+      align-items: center;
+
+      .reward {
+        .token {
+          font-weight: normal;
+          font-size: 40px;
+          line-height: 47px;
+          margin-bottom: 10px;
+        }
+
+        .value {
+          font-size: 12px;
+        }
+      }
+
+      button {
+        padding: 0 30px;
+      }
+    }
+
+    .start {
+      text-align: center;
+      max-width: 420px;
+      min-height: 186px;
+      display: grid;
+      align-items: center;
+
+      .unstarted {
+        width: 100%;
+
+        .token {
+          font-weight: normal;
+          font-size: 40px;
+          line-height: 47px;
+          margin-bottom: 10px;
+        }
+
+        .value {
+          font-size: 12px;
+        }
+      }
+
+      .unstake {
+        margin-right: 10px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .harvest,
+    .start {
+      border: 4px solid #16164a;
+      box-sizing: border-box;
+      border-radius: 14px;
+      padding: 16px;
+
+      .title {
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+        color: #fff;
+        opacity: 0.5;
+        margin-bottom: 8px;
+      }
+    }
   }
 
   .label.soon {
@@ -2094,79 +2121,6 @@ export default Vue.extend({
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-  }
-
-  .harvest {
-    text-align: center;
-    max-width: 420px;
-    min-height: 186px;
-    display: grid;
-    align-items: center;
-
-    .reward {
-      .token {
-        font-weight: normal;
-        font-size: 40px;
-        line-height: 47px;
-        margin-bottom: 10px;
-      }
-
-      .value {
-        font-size: 12px;
-      }
-    }
-
-    button {
-      padding: 0 30px;
-    }
-  }
-
-  .start {
-    text-align: center;
-    max-width: 420px;
-    min-height: 186px;
-    display: grid;
-    align-items: center;
-
-    .unstarted {
-      width: 100%;
-
-      .token {
-        font-weight: normal;
-        font-size: 40px;
-        line-height: 47px;
-        margin-bottom: 10px;
-      }
-
-      .value {
-        font-size: 12px;
-      }
-    }
-
-    .unstake {
-      margin-right: 10px;
-    }
-
-    button {
-      width: 100%;
-    }
-  }
-
-  .harvest,
-  .start {
-    border: 4px solid #16164a;
-    box-sizing: border-box;
-    border-radius: 14px;
-    padding: 16px;
-
-    .title {
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 21px;
-      color: #fff;
-      opacity: 0.5;
-      margin-bottom: 8px;
-    }
   }
 }
 
