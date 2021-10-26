@@ -2580,7 +2580,7 @@ export default Vue.extend({
 .reward-col {
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .collapse-row {
