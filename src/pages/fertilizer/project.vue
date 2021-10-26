@@ -530,8 +530,15 @@
                   </Col>
 
                   <Col class="state noMobile" :span="isMobile ? 6 : 3">
-                    <div class="label" :style="'background-color: ' + farm.current_status.color">
-                      {{ farm.current_status.label }}
+                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
+                    <div
+                      v-if="
+                        currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
+                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                      "
+                      class="label soon"
+                    >
+                      Soon
                     </div>
                   </Col>
 
@@ -998,14 +1005,13 @@ export default Vue.extend({
 
     'wallet.address': {
       handler(newTokenAccounts: any) {
-      
         this.$accessor.farm.requestInfos()
         this.updateLabelizedAmms()
         setTimeout(async () => {
           this.updateFarms()
         }, 10000)
         setInterval(async () => {
-          this.flush();
+          this.flush()
         }, 30000)
       },
       deep: true
@@ -1039,7 +1045,6 @@ export default Vue.extend({
       }
     }, 1000)
   },
-
 
   methods: {
     moment,
