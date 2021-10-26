@@ -1968,20 +1968,6 @@ export default Vue.extend({
   align-items: center;
   min-width: 768px;
 
-  .noDesktop {
-    display: none;
-  }
-
-  @media (max-width: @mobile-b-width) {
-    .noDesktop {
-      display: inline-block;
-    }
-
-    .noMobile {
-      display: none;
-    }
-  }
-  
   .lp-icons {
     .lp-icons-group {
       height: 51px;
@@ -2041,6 +2027,20 @@ export default Vue.extend({
       line-height: 21.19px;
       font-weight: 400;
     }
+  }
+}
+
+.noDesktop {
+  display: none;
+}
+
+@media (max-width: @mobile-b-width) {
+  .noDesktop {
+    display: inline-block;
+  }
+
+  .noMobile {
+    display: none;
   }
 }
 
