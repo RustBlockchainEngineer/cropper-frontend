@@ -744,24 +744,22 @@ export default class Pools extends Vue {
 
   mounted() {
     this.timer_init = setInterval(async () => {
-      await this.flush()
-      if (this.pools.length > 0) {
-        var hash = window.location.hash
-        if (hash) {
-          hash = hash.substring(1)
-          this.searchName = hash
-        } else {
-          const query = new URLSearchParams(window.location.search)
-          if (query.get('s')) this.searchName = query.get('s') as string
+      if(!this.poolLoaded){
+        await this.flush()
+        if (this.pools.length > 0) {
+          var hash = window.location.hash
+          if (hash) {
+            hash = hash.substring(1)
+            this.searchName = hash
+          } else {
+            const query = new URLSearchParams(window.location.search)
+            if (query.get('s')) this.searchName = query.get('s') as string
+          }
+          this.poolLoaded = true
         }
-        this.poolLoaded = true
       }
     }, 1000)
-        this.setTimer()
-
-          const query = new URLSearchParams(window.location.search)
-          if (query.get('r')) 
-        this.$router.push('/fertilizer/project/?f=cropper');
+    this.setTimer()
   }
 
   setTimer() {
