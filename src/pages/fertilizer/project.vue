@@ -2752,6 +2752,10 @@ export default Vue.extend({
         text-align: right;
         display: block !important;
         margin-top: 11px;
+
+        &.noMobile{
+          display:none !important;
+        }
         .ant-col-12 {
           width: 100%;
         }
