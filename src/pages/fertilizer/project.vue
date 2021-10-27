@@ -468,7 +468,7 @@
               </div>
             </Row>
 
-            <div class="list pc-list" v-if="((farm.labelized.pfrom_ts < currentTimestamp && isRegistered) || farm.labelized.pto_ts < currentTimestamp)">
+            <div class="list pc-list" v-if="initialized">
               <Row class="farm-head table-head">
                 <Col class="state lp-icons" :span="isMobile ? 24 : 5">
                   <div class="title">Farm name</div>
