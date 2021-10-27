@@ -553,11 +553,23 @@
 
                   <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
                     <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                      <span class="labmobile">Pending Reward</span>-
+                      <span class="labmobile">Pending Reward</span>
+                  <div
+                    class="reload-btn"
+                    @click="() => { flush() }"
+                  >
+                    <img src="@/assets/icons/refresh-right.svg" />
+                  </div> -
                     </div>
                     <div v-else class="value">
                       <span class="labmobile">Pending Reward</span
-                      >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                      >
+                  <div
+                    class="reload-btn"
+                    @click="() => { flush() }"
+                  >
+                    <img src="@/assets/icons/refresh-right.svg" />
+                  </div>{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
                     </div>
                   </Col>
 
@@ -1773,6 +1785,11 @@ export default Vue.extend({
       this.farmInfo = null
       this.stakeModalOpening = false
     },
+    cancelStakeLP() {
+      this.lp = null
+      this.farmInfo = null
+      this.stakeModalOpeningLP = false
+    },
     onNothing() {
       this.stakeLPError = false
       this.tempInfo = null
@@ -1806,7 +1823,7 @@ export default Vue.extend({
       this.farmInfo.lp.pc.balance = pcBalance
       this.stakeModalOpeningLP = true
     },
-    
+
     unstakeAndRemove(amount: string) {
       this.unstaking = true
 
