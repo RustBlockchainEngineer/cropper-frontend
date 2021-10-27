@@ -2759,6 +2759,10 @@ export default Vue.extend({
         .ant-col-12 {
           width: 100%;
         }
+
+        .title{
+          text-align:left;
+        }
         .value{
           text-align: right;
         }
