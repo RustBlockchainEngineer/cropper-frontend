@@ -785,6 +785,9 @@ export default Vue.extend({
   },
 
   mounted() {
+
+        this.$router.push('/');
+
     this.updateFarms()
 
     var hash = window.location.hash
@@ -883,13 +886,9 @@ export default Vue.extend({
 
 
         if (reward && lp) {
-        console.log( newFarmInfo);
           const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-
-
-        console.log( rewardPerTimestampAmount);
 
           const rewardPerTimestampAmountTotalValue =
             getBigNumber(rewardPerTimestampAmount.toEther()) *
@@ -963,6 +962,7 @@ export default Vue.extend({
             //endedFarmsPoolId.push(poolId)
           }
         }
+
         if (userInfo && lp) {
           userInfo = cloneDeep(userInfo)
 
@@ -997,6 +997,8 @@ export default Vue.extend({
             pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
           }
         }
+
+
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
