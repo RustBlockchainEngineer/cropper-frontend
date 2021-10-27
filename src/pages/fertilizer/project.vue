@@ -942,6 +942,7 @@ export default Vue.extend({
       harvesting: false,
       stakeModalOpening: false,
       addRewardModalOpening: false,
+      stakeModalOpeningLP: false,
       staking: false,
       coinName: '',
       mintAddress: '',
@@ -1766,7 +1767,7 @@ export default Vue.extend({
       this.staking = false
       this.stakeModalOpeningLP = false
     },
-    
+
     cancelStake() {
       this.lp = null
       this.farmInfo = null
