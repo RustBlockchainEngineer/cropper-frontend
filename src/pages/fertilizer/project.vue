@@ -199,7 +199,7 @@
             </Row>
 
             <!-- PC list -->
-            <div class="list pc-list" v-if="initialized && wallet.connected">
+            <div class="list pc-list" v-if="initialized">
               <Row class="farm-head table-head">
                 <Col class="state lp-icons" :span="isMobile ? 24 : 5">
                   <div class="title">Farm name</div>
@@ -468,7 +468,7 @@
               </div>
             </Row>
 
-            <div class="list pc-list" v-if="initialized">
+            <div class="list pc-list" v-if="initialized && ((farm.labelized.pfrom_ts < currentTimestamp && isRegistered) || farm.labelized.pto_ts < currentTimestamp)">
               <Row class="farm-head table-head">
                 <Col class="state lp-icons" :span="isMobile ? 24 : 5">
                   <div class="title">Farm name</div>
@@ -1736,7 +1736,7 @@ export default Vue.extend({
         this.wallet.tokenAccounts,
         `${this.tempInfo.farmInfo.lp.pc.mintAddress}.tokenAccountAddress`
       )
-      
+
       console.log(this.tempInfo)
       this.removeLP(
         this.tempInfo.conn,
