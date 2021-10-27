@@ -94,7 +94,8 @@
         </div>
 
         <div style="text-align:center">
-          You will have to validate 2 operations, Supply liquidity pool & Stake
+            You will have to validate 2 operations, Supply Liquidity & Stake LP.<br />
+            If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser.
         </div>
 
 
