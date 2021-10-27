@@ -267,6 +267,13 @@ WSOL: {
     decimals: 9,
     tags: ['cropper']
   },
+  CRY: {
+    symbol: 'CRY',
+    name: 'Crystal',
+    mintAddress: 'HbrmyoumgcK6sDFBi6EZQDi4i4ZgoN16eRB2JseKc7Hiicon',
+    decimals: 9,
+    tags: ['cropper']
+  },
   KURO: {
     symbol: 'KURO',
     name: 'Kurobi',
