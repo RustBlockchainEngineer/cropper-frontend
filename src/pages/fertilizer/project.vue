@@ -2785,6 +2785,13 @@ export default Vue.extend({
       }
     }
 
+    .reload-btn{
+        display: inline-block !important;
+        position: absolute;
+        right: 50px;
+        top: 20px;
+    }
+
     .anticon.anticon-right,
     .info-icon {
       display: none !important;
