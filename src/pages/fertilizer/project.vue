@@ -22,7 +22,7 @@
       :loading="unstaking"
       @onOk="unstakeAndRemove"
       @onCancel="cancelUnstake"
-      text="You will have to validate 2 operations, Supply Liquidity & Stake LP.
+      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.
 If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
     />
     <CoinModal
