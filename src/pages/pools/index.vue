@@ -742,7 +742,6 @@ export default class Pools extends Vue {
   }
 
   mounted() {
-    this.timer = setInterval(async () => {
       await this.flush()
       if (this.pools.length > 0) {
         var hash = window.location.hash
@@ -756,7 +755,6 @@ export default class Pools extends Vue {
         this.poolLoaded = true
         this.setTimer()
       }
-    }, 1000)
 
           const query = new URLSearchParams(window.location.search)
           if (query.get('r')) 
