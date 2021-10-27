@@ -1710,7 +1710,7 @@ export default Vue.extend({
       if (!this.tempInfo) {
         return
       }
-
+      console.log(this.tempInfo)
       this.stakeLP(
         this.tempInfo.conn,
         this.tempInfo.wallet,
@@ -1736,6 +1736,8 @@ export default Vue.extend({
         this.wallet.tokenAccounts,
         `${this.tempInfo.farmInfo.lp.pc.mintAddress}.tokenAccountAddress`
       )
+      
+      console.log(this.tempInfo)
       this.removeLP(
         this.tempInfo.conn,
         this.tempInfo.wallet,
