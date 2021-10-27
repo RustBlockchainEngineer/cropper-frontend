@@ -270,7 +270,7 @@ WSOL: {
   CRY: {
     symbol: 'CRY',
     name: 'Crystal',
-    mintAddress: 'HbrmyoumgcK6sDFBi6EZQDi4i4ZgoN16eRB2JseKc7Hiicon',
+    mintAddress: 'HbrmyoumgcK6sDFBi6EZQDi4i4ZgoN16eRB2JseKc7Hi',
     decimals: 9,
     tags: ['cropper']
   },
