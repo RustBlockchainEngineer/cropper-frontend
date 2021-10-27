@@ -407,6 +407,7 @@ export default class Pools extends Vue {
   autoRefreshTime: number = 60
   countdown: number = 0
   timer: any = null
+  timer_init: any = null
   loading: boolean = false
   stakedOnly: boolean = false
   searchButton = true
@@ -742,7 +743,7 @@ export default class Pools extends Vue {
   }
 
   mounted() {
-    this.timer = setInterval(async () => {
+    this.timer_init = setInterval(async () => {
       await this.flush()
       if (this.pools.length > 0) {
         var hash = window.location.hash
