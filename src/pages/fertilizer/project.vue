@@ -1792,6 +1792,21 @@ export default Vue.extend({
       this.unstakeModalOpening = true
     },
 
+
+    openStakeModalLP(poolInfo: FarmInfo, lp: any) {
+      const coin = cloneDeep(lp)
+      const lpBalance = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`)
+      coin.balance = lpBalance
+
+      this.lp = coin
+      this.farmInfo = cloneDeep(poolInfo)
+      const coinBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.coin.mintAddress}.balance`)
+      const pcBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.pc.mintAddress}.balance`)
+      this.farmInfo.lp.coin.balance = coinBalance
+      this.farmInfo.lp.pc.balance = pcBalance
+      this.stakeModalOpeningLP = true
+    },
+    
     unstakeAndRemove(amount: string) {
       this.unstaking = true
 
