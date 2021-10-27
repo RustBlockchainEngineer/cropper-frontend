@@ -508,7 +508,7 @@
                 <Row
                   slot="header"
                   class="farm-head"
-                  v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered"
+                  v-if="(farm.labelized.pfrom_ts < currentTimestamp && isRegistered) || farm.labelized.pto_ts < currentTimestamp"
                   :class="isMobile ? 'is-mobile' : ''"
                   :gutter="0"
                 >
@@ -621,7 +621,7 @@
                 </Row>
 
                 <Row
-                  v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered && poolType"
+                  v-if="((farm.labelized.pfrom_ts < currentTimestamp && isRegistered)  || farm.labelized.pto_ts < currentTimestamp ) && poolType"
                   class="farm-head"
                   :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'"
                   :gutter="48"
@@ -836,12 +836,6 @@
                                   : 'Stake LP'
                               }}
                             </Button>
-                          </div>
-
-                          <div class="btncontainer">
-                            <a target="_blank" :href="farm.farmInfo.twitterShare">
-                              <Button size="large" ghost> Share </Button>
-                            </a>
                           </div>
 
                           <div
