@@ -508,7 +508,7 @@
                 <Row
                   slot="header"
                   class="farm-head"
-                  v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered"
+                  v-if="(farm.labelized.pfrom_ts < currentTimestamp && isRegistered) || farm.labelized.pto_ts < currentTimestamp"
                   :class="isMobile ? 'is-mobile' : ''"
                   :gutter="0"
                 >
@@ -621,7 +621,7 @@
                 </Row>
 
                 <Row
-                  v-if="farm.labelized.pfrom_ts < currentTimestamp && isRegistered"
+                  v-if="(farm.labelized.pfrom_ts < currentTimestamp && isRegistered)  || farm.labelized.pto_ts < currentTimestamp"
                   class="farm-head"
                   :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'"
                   :gutter="48"
