@@ -260,6 +260,13 @@ WSOL: {
     decimals: 9,
     tags: ['cropper']
   },
+  SYP: {
+    symbol: 'SYP',
+    name: 'Sypool',
+    mintAddress: 'FnKE9n6aGjQoNWRBZXy4RW6LZVao7qwBonUbiD7edUmZ',
+    decimals: 9,
+    tags: ['cropper']
+  },
   KURO: {
     symbol: 'KURO',
     name: 'Kurobi',
