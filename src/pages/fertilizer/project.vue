@@ -1130,7 +1130,7 @@ export default Vue.extend({
                   'https://api.cropper.finance/pfo/?farmId=' +
                     this.labelizedAmms[element.ammID].pfarmID +
                     '&t=' +
-                    Math.round(moment().unix() / 60)
+                    Math.round(moment().unix() / 60000)
                 ).then((res) => res.json())
               } catch {
               } finally {
