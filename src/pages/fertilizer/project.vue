@@ -621,7 +621,7 @@
                 </Row>
 
                 <Row
-                  v-if="((farm.labelized.pfrom_ts < currentTimestamp && isRegistered)  || farm.labelized.pto_ts < currentTimestamp ) && poolType"
+                  v-if="((farm.labelized.pfrom_ts < currentTimestamp && isRegistered)  || farm.labelized.pto_ts < currentTimestamp )"
                   class="farm-head"
                   :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'"
                   :gutter="48"
