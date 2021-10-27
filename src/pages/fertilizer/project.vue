@@ -2750,7 +2750,7 @@ export default Vue.extend({
 
       .state {
         text-align: right;
-        display: none;
+        display: block !important;
         margin-top: 11px;
         .ant-col-12 {
           width: 100%;
