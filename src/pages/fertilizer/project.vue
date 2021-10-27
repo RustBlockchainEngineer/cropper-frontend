@@ -1738,6 +1738,35 @@ export default Vue.extend({
     async delay(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms))
     },
+
+    stake(amount: number) {
+      this.staking = true
+
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+
+      const lpAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.mintAddress}.tokenAccountAddress`)
+      const rewardAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`)
+      const infoAccount = get(this.farm.stakeAccounts, `${this.farmInfo.poolId}.stakeAccountAddress`)
+
+      const key = getUnixTs().toString()
+
+      if (amount <= 0) {
+        this.$notify.error({
+          key,
+          message: 'Add liquidity failed',
+          description: 'Added LP token amount is 0'
+        })
+        console.log('added lp amount is 0')
+        return
+      }
+
+      this.stakeLP(conn, wallet, this.farmInfo, lpAccount, rewardAccount, infoAccount, amount)
+
+      this.staking = false
+      this.stakeModalOpeningLP = false
+    },
+    
     cancelStake() {
       this.lp = null
       this.farmInfo = null
