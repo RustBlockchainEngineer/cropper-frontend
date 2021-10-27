@@ -742,7 +742,7 @@ export default class Pools extends Vue {
   }
 
   mounted() {
-      await this.flush()
+      this.flush()
       if (this.pools.length > 0) {
         var hash = window.location.hash
         if (hash) {
