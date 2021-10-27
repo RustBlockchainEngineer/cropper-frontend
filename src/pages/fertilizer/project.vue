@@ -468,7 +468,7 @@
               </div>
             </Row>
 
-            <div class="list pc-list" v-if="initialized && ((farm.labelized.pfrom_ts < currentTimestamp && isRegistered) || farm.labelized.pto_ts < currentTimestamp)">
+            <div class="list pc-list" v-if="initialized">
               <Row class="farm-head table-head">
                 <Col class="state lp-icons" :span="isMobile ? 24 : 5">
                   <div class="title">Farm name</div>
@@ -713,7 +713,7 @@
                     <div class="harvest">
                       <div class="title">Pending Reward</div>
                   <div
-                    class="reload-btn"
+                    class="reload-btn noDesktop"
                     @click="() => { flush() }"
                   >
                     <img src="@/assets/icons/refresh-right.svg" />
