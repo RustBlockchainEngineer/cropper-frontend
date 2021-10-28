@@ -743,7 +743,6 @@ export default class Pools extends Vue {
   }
 
   mounted() {
-    this.$accessor.token.loadTokens()
     this.timer_init = setInterval(async () => {
       if(!this.poolLoaded){
         await this.flush()
