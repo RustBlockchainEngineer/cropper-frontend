@@ -884,7 +884,6 @@ section {
 
     .mobilescroller {
       max-width: calc(100vh - 40px);
-      overflow: scroll;
 
       .pools-table-pc {
         display: none;
@@ -933,6 +932,8 @@ section {
     }
 
     .detailButton {
+      position: absolute;
+      right: 0;
       background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
       display: inline-block;
       padding: 1px;
@@ -1037,7 +1038,6 @@ section {
       align-items: center;
       
       .lp-icons {
-        padding: 0 10px;
         display: block !important;
         width: 100%;
         flex-direction: unset;
@@ -1056,7 +1056,7 @@ section {
           }
 
           span {
-            margin: 0 16px;
+            margin: 0 10px;
           }
         };
         
