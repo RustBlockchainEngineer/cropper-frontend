@@ -786,6 +786,7 @@ export default Vue.extend({
 
   mounted() {
 
+    this.$accessor.token.loadTokens()
         this.$router.push('/');
 
     this.updateFarms()
