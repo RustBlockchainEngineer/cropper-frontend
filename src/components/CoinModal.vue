@@ -31,6 +31,8 @@
       </div>
     </div>
 
+    <div>{{text}}</div>
+
     <Row :gutter="32" class="actions">
       <Col :span="12" class="text-center">
 
@@ -85,6 +87,10 @@ export default Vue.extend({
     loading: {
       type: Boolean,
       default: false
+    },
+    text: {
+      type: String,
+      default: ''
     }
   },
 

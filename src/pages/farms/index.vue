@@ -195,6 +195,7 @@
                       <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
                       <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
                     </div>
+
                   </div>
 
                   <div class="noDesktop labells">
@@ -784,6 +785,9 @@ export default Vue.extend({
   },
 
   mounted() {
+
+        this.$router.push('/');
+
     this.updateFarms()
 
     var hash = window.location.hash
@@ -882,13 +886,12 @@ export default Vue.extend({
 
 
         if (reward && lp) {
-          const rewardPerTimestamp = newFarmInfo.lp.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
           const rewardPerTimestampAmountTotalValue =
             getBigNumber(rewardPerTimestampAmount.toEther()) *
-            2 *
             60 *
             60 *
             24 *
@@ -906,7 +909,14 @@ export default Vue.extend({
           const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
           const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
           let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
-          let apr = ((rewardPerTimestampAmountTotalValue / liquidityUsdValue) * 100).toFixed(2)
+
+          let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
+          let apr = ((rewardPerTimestampAmountTotalValue / farmUsdValue) * 100).toFixed(2)
+
+          console.log(farmUsdValue, rewardPerTimestampAmountTotalValue, apr);
+
+
+
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
           }
@@ -931,6 +941,8 @@ export default Vue.extend({
             newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
           }
 
+          console.log(newFarmInfo.apr_details);
+
           if (wallet) {
             let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
             //getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther());
@@ -950,6 +962,7 @@ export default Vue.extend({
             //endedFarmsPoolId.push(poolId)
           }
         }
+
         if (userInfo && lp) {
           userInfo = cloneDeep(userInfo)
 
@@ -984,6 +997,8 @@ export default Vue.extend({
             pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
           }
         }
+
+
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
@@ -1009,7 +1024,7 @@ export default Vue.extend({
             (newFarmInfo as any).poolId
           } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
 
-          if (!isPFO) {
+          if (!isPFO || true) {
             farms.push({
               labelized,
               userInfo,
@@ -2579,7 +2594,7 @@ export default Vue.extend({
 .reward-col {
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .collapse-row {

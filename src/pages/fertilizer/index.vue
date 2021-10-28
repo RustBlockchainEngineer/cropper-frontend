@@ -338,7 +338,7 @@ export default Vue.extend({
       let responseData2 = {}
       let responseData
       try {
-        responseData = await fetch('https://api.cropper.finance/farms/?t='+ Math.round((new Date().getTime()) / 60000)).then((res) => res.json())
+        responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
         // dummy data
         responseData = [
@@ -356,7 +356,7 @@ export default Vue.extend({
                 'https://api.cropper.finance/pfo/?farmId=' +
                   this.labelizedAmms[element.slug].pfarmID +
                   '&t=' +
-                  Math.round(moment().unix() / 60)
+                  Math.round(moment().unix() / 60000)
               ).then((res) => res.json())
             } catch {
             } finally {

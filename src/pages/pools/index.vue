@@ -407,6 +407,7 @@ export default class Pools extends Vue {
   autoRefreshTime: number = 60
   countdown: number = 0
   timer: any = null
+  timer_init: any = null
   loading: boolean = false
   stakedOnly: boolean = false
   searchButton = true
@@ -742,22 +743,23 @@ export default class Pools extends Vue {
   }
 
   mounted() {
-    this.timer = setInterval(async () => {
-      await this.flush()
-      if (this.pools.length > 0) {
-        var hash = window.location.hash
-        if (hash) {
-          hash = hash.substring(1)
-          this.searchName = hash
-        } else {
-          const query = new URLSearchParams(window.location.search)
-          if (query.get('s')) this.searchName = query.get('s') as string
+    this.timer_init = setInterval(async () => {
+      if(!this.poolLoaded){
+        await this.flush()
+        if (this.pools.length > 0) {
+          var hash = window.location.hash
+          if (hash) {
+            hash = hash.substring(1)
+            this.searchName = hash
+          } else {
+            const query = new URLSearchParams(window.location.search)
+            if (query.get('s')) this.searchName = query.get('s') as string
+          }
+          this.poolLoaded = true
         }
-        clearInterval(this.timer)
-        this.poolLoaded = true
-        this.setTimer()
       }
     }, 1000)
+    this.setTimer()
   }
 
   setTimer() {
@@ -882,7 +884,6 @@ section {
 
     .mobilescroller {
       max-width: calc(100vh - 40px);
-      overflow: scroll;
 
       .pools-table-pc {
         display: none;
@@ -931,6 +932,8 @@ section {
     }
 
     .detailButton {
+      position: absolute;
+      right: 0;
       background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
       display: inline-block;
       padding: 1px;
@@ -1035,7 +1038,6 @@ section {
       align-items: center;
       
       .lp-icons {
-        padding: 0 10px;
         display: block !important;
         width: 100%;
         flex-direction: unset;
@@ -1054,7 +1056,7 @@ section {
           }
 
           span {
-            margin: 0 16px;
+            margin: 0 10px;
           }
         };
         
