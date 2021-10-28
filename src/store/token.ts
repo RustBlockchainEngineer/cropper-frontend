@@ -35,6 +35,12 @@ export const actions:any = actionTree(
           if (itemToken.tags && itemToken.tags.includes('lp-token')) {
             return
           }
+          if (itemToken.tags && itemToken.tags.includes('wormhole')) {
+            return
+          }
+          if (itemToken.tags && itemToken.tags.includes('wormhole')) {
+            return
+          }
           if (!Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)) {
             TOKENS[itemToken.symbol + itemToken.address + 'solana'] = {
               symbol: itemToken.symbol,
