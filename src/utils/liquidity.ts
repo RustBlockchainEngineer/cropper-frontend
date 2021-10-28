@@ -8,7 +8,7 @@ import {
   canWrap,
   LIQUIDITY_POOLS
 } from '@/utils/pools'
-import { NATIVE_SOL, TOKENS, TokenInfo, LP_TOKENS } from '@/utils/tokens'
+import { NATIVE_SOL, TOKENS, TokenInfo,} from '@/utils/tokens'
 import {
   createTokenAccountIfNotExist,
   sendTransaction,
@@ -825,26 +825,6 @@ export const AMM_INFO_LAYOUT_V4 = struct([
   publicKey('pnlOwner')
 ])
 
-export async function getLpMintInfo(conn: any, mintAddress: string, coin: any, pc: any): Promise<TokenInfo> {
-  let lpInfo = Object.values(LP_TOKENS).find((item) => item.mintAddress === mintAddress)
-  if (!lpInfo) {
-    const mintAll = await getMultipleAccounts(conn, [new PublicKey(mintAddress)], commitment)
-    if (mintAll !== null) {
-      const data = Buffer.from(mintAll[0]?.account.data ?? '')
-      const mintLayoutData = MINT_LAYOUT.decode(data)
-      lpInfo = {
-        symbol: 'unknown',
-        name: 'unknown',
-        coin,
-        pc,
-        mintAddress: mintAddress,
-        decimals: mintLayoutData.decimals
-      }
-    }
-  }
-  return lpInfo
-}
-
 export async function getLpMintListDecimals(
   conn: any,
   mintAddressInfos: string[]
@@ -852,14 +832,9 @@ export async function getLpMintListDecimals(
   const reLpInfoDict: { [name: string]: number } = {}
   const mintList = [] as PublicKey[]
   mintAddressInfos.forEach((item) => {
-    let lpInfo = Object.values(LP_TOKENS).find((itemLpToken) => itemLpToken.mintAddress === item)
-    if (!lpInfo) {
-      mintList.push(new PublicKey(item))
-      lpInfo = {
-        decimals: null
-      }
-    }
-    reLpInfoDict[item] = lpInfo.decimals
+    mintList.push(new PublicKey(item))
+    // @ts-ignore
+    reLpInfoDict[item] = null
   })
 
   const mintAll = await getMultipleAccounts(conn, mintList, commitment)

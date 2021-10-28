@@ -873,6 +873,10 @@ section {
     margin-top: 0;
     padding: 20px 20px !important;
 
+    .card-body {
+      overflow-x: unset !important;
+    }
+
     .ant-collapse-content {
       background-color: #01033c;
       border-top: none !important;

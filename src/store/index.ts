@@ -8,6 +8,7 @@ import * as liquidity from './liquidity'
 import * as farm from './farm'
 import * as ido from './ido'
 import * as transaction from './transaction'
+import * as token from './token'
 
 import { getAccessorType, mutationTree, actionTree } from 'typed-vuex'
 
@@ -66,7 +67,7 @@ export const actions = actionTree(
   }
 )
 
-export const accessorType = getAccessorType({
+export const accessorType:any = getAccessorType({
   actions,
   getters,
   mutations,
@@ -81,6 +82,7 @@ export const accessorType = getAccessorType({
     liquidity,
     farm,
     ido,
-    transaction
+    transaction,
+    token
   }
 })

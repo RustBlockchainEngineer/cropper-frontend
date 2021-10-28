@@ -16,7 +16,7 @@ import { TokenAmount, lt } from '@/utils/safe-math'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
 import { FarmAccountLayout, UserInfoAccountLayout, YieldFarm } from '@/utils/farm'
-import { LP_TOKENS, TOKENS } from '@/utils/tokens'
+
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 

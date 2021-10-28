@@ -501,7 +501,6 @@ async function ray_swap(
   if (!from || !to) {
     throw new Error('Miss token info')
   }
-  console.log(fromTokenAccount)
   // @ts-ignore
   const amountIn = new TokenAmount(aIn, from.decimals, false)
   // @ts-ignore

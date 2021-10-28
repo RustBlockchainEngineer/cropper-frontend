@@ -12,7 +12,7 @@
               class="reload-btn"
               @click="
                 () => {
-                  getOrderBooks()
+                  //getOrderBooks()
                   $accessor.wallet.getTokenAccounts()
                 }
               "
@@ -620,7 +620,6 @@ export default Vue.extend({
       userCheckUnofficial: true,
       userCheckUnofficialMint: undefined as string | undefined,
       userCheckUnofficialShow: false,
-      findUrlAmmId: false,
       mainAmmId: undefined as string | undefined,
 
       available_dex: [] as string[],
@@ -646,7 +645,7 @@ export default Vue.extend({
     title: 'CropperFinance Swap'
   },
   computed: {
-    ...mapState(['wallet', 'swap', 'liquidity', 'url', 'setting'])
+    ...mapState(['wallet', 'swap', 'liquidity', 'url', 'setting', 'token'])
   },
   watch: {
     fromCoinAmount(newAmount: string, oldAmount: string) {
@@ -724,15 +723,22 @@ export default Vue.extend({
     'liquidity.infos': {
       handler(_newInfos: any) {
         this.updateAmounts()
-        const { from, to, ammId } = this.$route.query
-        if (this.findUrlAmmId) {
-          // @ts-ignore
-          this.setCoinFromMint(ammId, from, to)
-        }
+        const { from, to, ammId} = this.$route.query
+        // @ts-ignore
+        this.setCoinFromMint(ammId, from, to)
         this.findMarket()
       },
       deep: true
     },
+    'token.initialized': {
+      handler(newState: boolean) {
+        const { from, to, ammId} = this.$route.query
+        // @ts-ignore
+        this.setCoinFromMint(ammId, from, to)
+      },
+      deep: true
+    },
+    
     'swap.markets': {
       handler(_newInfos: any) {
         this.findMarket()
@@ -747,6 +753,7 @@ export default Vue.extend({
     }
   },
   mounted() {
+    this.$accessor.token.loadTokens()
     this.updateCoinInfo(this.wallet.tokenAccounts)
     this.setMarketTimer()
     const { from, to, ammId } = this.$route.query
@@ -811,7 +818,6 @@ export default Vue.extend({
       this.setCoinFromMintLoading = true
       let fromCoin, toCoin
       try {
-        this.findUrlAmmId = !this.liquidity.initialized
         this.userNeedAmmIdOrMarket = ammIdOrMarket
         // @ts-ignore
         // const liquidityUser = getLiquidityInfoSimilar(ammIdOrMarket, from, to)
@@ -1034,17 +1040,18 @@ export default Vue.extend({
                 }
               }
             }
-            if (marketAddress && this.marketAddress !== marketAddress) {
+            
+            /*if (marketAddress && this.marketAddress !== marketAddress) {
               this.isWrap = false
               this.marketAddress = marketAddress
               Market.load(this.$web3, new PublicKey(marketAddress), {}, new PublicKey(SERUM_PROGRAM_ID_V3)).then(
                 (market) => {
                   this.available_dex.push(ENDPOINT_SRM)
                   this.market = market
-                  this.getOrderBooks()
+                  //this.getOrderBooks()
                 }
               )
-            }
+            }*/
 
             //two-step swap with USDC
             const lpList_usdc_1 = getPoolListByTokenMintAddresses(
@@ -1341,13 +1348,13 @@ export default Vue.extend({
           if (this.countdown < this.autoRefreshTime) {
             this.countdown += 1
             if (this.countdown === this.autoRefreshTime) {
-              this.getOrderBooks()
+              //this.getOrderBooks()
               this.$accessor.wallet.getTokenAccounts()
               this.countdown = 0
             }
           }
         }
-      }, 1000)
+      }, 1000) 
     },
     needCreateTokens() {
       if ( this.fromCoin !== null && this.toCoin !== null) {

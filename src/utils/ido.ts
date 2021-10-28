@@ -7,7 +7,7 @@ import {
   IDO_PROGRAM_ID_V2,
   IDO_PROGRAM_ID_V3
 } from './ids'
-import { TOKENS, TokenInfo } from './tokens'
+import { TokenInfo } from './tokens'
 import { TokenAmount } from './safe-math'
 import { findProgramAddress, sendTransaction, createAssociatedTokenAccount } from './web3'
 
