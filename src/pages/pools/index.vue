@@ -1245,7 +1245,9 @@ section {
 
 <style lang="less">
 ::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
+  @media (max-width: @mobile-b-width) {
+    display: none; /* Chrome Safari */
+  }
 }
 
 .addliq .btnContainer {

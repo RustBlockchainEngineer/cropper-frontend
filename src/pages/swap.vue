@@ -1891,10 +1891,16 @@ main {
       }
       .price-impact-orange {
         color: #ffb900 !important;
+        label {
+          opacity: 1 !important;
+        }
       }
       .price-impact-red {
         color: #f00 !important;
         font-weight: bold !important;
+        label {
+          opacity: 1 !important;
+        }
       }
       .swapThrough {
         text-transform: capitalize;

@@ -1747,9 +1747,7 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
-}
+
 .card-body {
   padding: 0;
   margin: 0;
@@ -2292,6 +2290,13 @@ export default Vue.extend({
 </style>
 
 <style lang="less">
+
+::-webkit-scrollbar {
+  @media (max-width: @mobile-b-width) {
+    display: none; /* Chrome Safari */
+  }
+}
+
 .farm {
   .page-head {
     margin-top: 10px;
