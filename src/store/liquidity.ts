@@ -17,7 +17,7 @@ import {
   SERUM_PROGRAM_ID_V3, 
   CRP_LP_VERSION_V1} from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
-import { LP_TOKENS, NATIVE_SOL, TOKENS } from '@/utils/tokens'
+import { NATIVE_SOL, TOKENS } from '@/utils/tokens'
 
 const AUTO_REFRESH_TIME = 60
 
@@ -94,7 +94,7 @@ async function getCropperPools(conn:any){
     lpMintAddressList.push(ammLayout.lpMintAddress.toString())
   })
   const lpMintListDecimls = await getLpMintListDecimals(conn, lpMintAddressList)
-  
+
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
     const ammInfo = CRP_AMM_LAYOUT_V1.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
 
@@ -159,11 +159,12 @@ async function getCropperPools(conn:any){
       pc.name = 'SOL'
       pc.mintAddress = '11111111111111111111111111111111'
     }
-    const lp = Object.values(LP_TOKENS).find((item) => item.mintAddress === ammInfo.lpMintAddress) ?? {
+    const lp = {
       symbol: `${coin.symbol}-${pc.symbol}`,
       name: `${coin.symbol}-${pc.symbol}`,
       coin,
       pc,
+      tags: ['cropper'],
       mintAddress: ammInfo.lpMintAddress.toString(),
       decimals: lpMintListDecimls[ammInfo.lpMintAddress]
     }
@@ -310,11 +311,12 @@ async function getRaydiumPools(conn:any){
       pc.name = 'SOL'
       pc.mintAddress = '11111111111111111111111111111111'
     }
-    const lp = Object.values(LP_TOKENS).find((item) => item.mintAddress === ammInfo.lpMintAddress) ?? {
+    const lp = {
       symbol: `${coin.symbol}-${pc.symbol}`,
       name: `${coin.symbol}-${pc.symbol}`,
       coin,
       pc,
+      tags:['cropper'],
       mintAddress: ammInfo.lpMintAddress.toString(),
       decimals: lpMintListDecimls[ammInfo.lpMintAddress]
     }
@@ -329,7 +331,7 @@ async function getRaydiumPools(conn:any){
     )
 
     const itemLiquidity: LiquidityPoolInfo = {
-      name: `${coin.symbol}-${pc.symbol}`,
+      name: `${coin?.symbol}-${pc?.symbol}`,
       coin,
       pc,
       lp,

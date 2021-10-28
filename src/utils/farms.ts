@@ -1,4 +1,4 @@
-import { LP_TOKENS, TOKENS, TokenInfo } from '@/utils/tokens'
+import { TokenInfo } from '@/utils/tokens'
 
 import { STAKE_PROGRAM_ID, STAKE_PROGRAM_ID_V4, STAKE_PROGRAM_ID_V5 } from '@/utils/ids'
 import { cloneDeep } from 'lodash-es'

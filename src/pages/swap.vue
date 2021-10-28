@@ -620,7 +620,6 @@ export default Vue.extend({
       userCheckUnofficial: true,
       userCheckUnofficialMint: undefined as string | undefined,
       userCheckUnofficialShow: false,
-      findUrlAmmId: false,
       mainAmmId: undefined as string | undefined,
 
       available_dex: [] as string[],
@@ -646,7 +645,7 @@ export default Vue.extend({
     title: 'CropperFinance Swap'
   },
   computed: {
-    ...mapState(['wallet', 'swap', 'liquidity', 'url', 'setting'])
+    ...mapState(['wallet', 'swap', 'liquidity', 'url', 'setting', 'token'])
   },
   watch: {
     fromCoinAmount(newAmount: string, oldAmount: string) {
@@ -724,15 +723,22 @@ export default Vue.extend({
     'liquidity.infos': {
       handler(_newInfos: any) {
         this.updateAmounts()
-        const { from, to, ammId } = this.$route.query
-        if (this.findUrlAmmId) {
-          // @ts-ignore
-          this.setCoinFromMint(ammId, from, to)
-        }
+        const { from, to, ammId} = this.$route.query
+        // @ts-ignore
+        this.setCoinFromMint(ammId, from, to)
         this.findMarket()
       },
       deep: true
     },
+    'token.initialized': {
+      handler(newState: boolean) {
+        const { from, to, ammId} = this.$route.query
+        // @ts-ignore
+        this.setCoinFromMint(ammId, from, to)
+      },
+      deep: true
+    },
+    
     'swap.markets': {
       handler(_newInfos: any) {
         this.findMarket()
@@ -747,6 +753,7 @@ export default Vue.extend({
     }
   },
   mounted() {
+    this.$accessor.token.loadTokens()
     this.updateCoinInfo(this.wallet.tokenAccounts)
     this.setMarketTimer()
     const { from, to, ammId } = this.$route.query
@@ -811,7 +818,6 @@ export default Vue.extend({
       this.setCoinFromMintLoading = true
       let fromCoin, toCoin
       try {
-        this.findUrlAmmId = !this.liquidity.initialized
         this.userNeedAmmIdOrMarket = ammIdOrMarket
         // @ts-ignore
         // const liquidityUser = getLiquidityInfoSimilar(ammIdOrMarket, from, to)
@@ -1470,7 +1476,7 @@ export default Vue.extend({
       } else if (this.endpoint === ENDPOINT_MULTI_CRP || this.endpoint === ENDPOINT_MULTI_USDC) {
         if (this.needCreateTokens() || this.needWrapSol()) {
           console.log(this.fromCoin?.mintAddress, this.midTokenMint, this.toCoin?.mintAddress)
-          let fromMint = this.fromCoin.mintAddress
+          let fromMint = this.fromCoin?.mintAddress
           let midMint = this.midTokenMint
           let toMint = this.toCoin?.mintAddress
           if (fromMint === NATIVE_SOL.mintAddress) fromMint = TOKENS.WSOL.mintAddress
