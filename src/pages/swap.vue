@@ -358,7 +358,7 @@
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <span class="name">
+              <span class="name" :class="`price-impact-${priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'}`">
                 <label> {{ priceImpact.toFixed(2) }}% </label>
               </span>
             </div>
@@ -1881,6 +1881,13 @@ main {
           margin-top: -15px;
           width: 15px;
         }
+      }
+      .price-impact-orange {
+        color: #ffb900 !important;
+      }
+      .price-impact-red {
+        color: #f00 !important;
+        font-weight: bold !important;
       }
       .swapThrough {
         text-transform: capitalize;

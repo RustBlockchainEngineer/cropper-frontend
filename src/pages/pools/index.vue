@@ -918,7 +918,8 @@ section {
         background: #01033c;
         border-radius: 22px;
         border: transparent;
-
+        cursor: pointer;
+        
         img {
           margin-left: 5px;
           transform: rotate(0);
