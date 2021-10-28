@@ -352,7 +352,7 @@
 
             <div v-if="priceImpact" class="fs-container flexDiv minimum">
               <span class="name">
-                <label>Price Impact</label>
+                <label :class="`price-impact-${priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'}`">Price Impact</label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title"> The difference between the market price and estimated price due to trade size </template>
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
@@ -433,7 +433,7 @@
               "
               :loading="swaping"
               style="width: 100%"
-              :class="`swap-btn ${priceImpact > 10 ? '' : priceImpact > 5 ? '' : ''}`"
+              :class="`swap-btn ${priceImpact > 5 ? '' : priceImpact > 2 ? '' : ''}`"
               @click="placeOrder"
             >
               <template v-if="!fromCoin || !toCoin"> Select</template>
