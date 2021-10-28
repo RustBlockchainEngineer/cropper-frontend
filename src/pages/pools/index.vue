@@ -1390,7 +1390,6 @@ section {
     margin-right: 0;
   }
   .card-body {
-    overflow-x: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
