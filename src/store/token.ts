@@ -48,7 +48,7 @@ export const actions:any = actionTree(
             return
           }
 
-          if (itemToken.name.includes("(Allbridge") ) {
+          if (itemToken.name.includes("(Allbridge") || itemToken.name.includes("((Wormhole") ) {
             return
           }
 
