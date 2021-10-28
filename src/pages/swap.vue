@@ -1034,7 +1034,8 @@ export default Vue.extend({
                 }
               }
             }
-            if (marketAddress && this.marketAddress !== marketAddress) {
+            
+            /*if (marketAddress && this.marketAddress !== marketAddress) {
               this.isWrap = false
               this.marketAddress = marketAddress
               Market.load(this.$web3, new PublicKey(marketAddress), {}, new PublicKey(SERUM_PROGRAM_ID_V3)).then(
@@ -1044,7 +1045,7 @@ export default Vue.extend({
                   //this.getOrderBooks()
                 }
               )
-            }
+            }*/
 
             //two-step swap with USDC
             const lpList_usdc_1 = getPoolListByTokenMintAddresses(
