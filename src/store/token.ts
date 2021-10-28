@@ -48,6 +48,10 @@ export const actions:any = actionTree(
             return
           }
 
+          if (itemToken.name.includes("(Allbridge") ) {
+            return
+          }
+
           if (!Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)) {
             TOKENS[itemToken.symbol + itemToken.address + 'solana'] = {
               symbol: itemToken.symbol,
