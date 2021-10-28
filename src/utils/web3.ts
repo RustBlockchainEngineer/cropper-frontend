@@ -20,10 +20,7 @@ import { GLOBAL_STATE_LAYOUT } from './crp-swap'
 export const web3Config = {
   strategy: 'speed',
   rpcs: [
-    { url: 'https://lokidfxnwlabdq.main.genesysgo.net:8899', weight: 70 },
-    { url: 'https://free.rpcpool.com', weight: 40 },
-    { url: 'https://solana-api.projectserum.com', weight: 40 },
-    { url: 'https://api.mainnet-beta.solana.com', weight: 40 }
+    { url: 'https://cropper.genesysgo.net', weight: 70 },
   ]
 }
 
