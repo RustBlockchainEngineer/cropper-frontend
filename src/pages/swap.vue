@@ -12,7 +12,7 @@
               class="reload-btn"
               @click="
                 () => {
-                  getOrderBooks()
+                  //getOrderBooks()
                   $accessor.wallet.getTokenAccounts()
                 }
               "
@@ -1041,7 +1041,7 @@ export default Vue.extend({
                 (market) => {
                   this.available_dex.push(ENDPOINT_SRM)
                   this.market = market
-                  this.getOrderBooks()
+                  //this.getOrderBooks()
                 }
               )
             }
@@ -1336,18 +1336,18 @@ export default Vue.extend({
       }
     },
     setMarketTimer() {
-      this.marketTimer = setInterval(() => {
+      /*this.marketTimer = setInterval(() => {
         if (!this.loading) {
           if (this.countdown < this.autoRefreshTime) {
             this.countdown += 1
             if (this.countdown === this.autoRefreshTime) {
-              this.getOrderBooks()
+              //this.getOrderBooks()
               this.$accessor.wallet.getTokenAccounts()
               this.countdown = 0
             }
           }
         }
-      }, 1000)
+      }, 1000) */
     },
     needCreateTokens() {
       if ( this.fromCoin !== null && this.toCoin !== null) {
