@@ -66,7 +66,7 @@ export const mutations = mutationTree(state, {
 
 async function getSerumMarkets(conn:any){
   return [];
-
+  /*
   let exists = localStorage.getItem('market');
 
   if(exists){
@@ -82,6 +82,7 @@ async function getSerumMarkets(conn:any){
   localStorage.setItem('market', JSON.stringify(allMarket));
 
   return allMarket;
+  */
 }
 
 async function getCropperPools(conn:any){
@@ -94,7 +95,7 @@ async function getCropperPools(conn:any){
   const marketAll = await getSerumMarkets(conn);
 
   const marketToLayout: { [name: string]: any } = {}
-  marketAll.forEach((item) => {
+  marketAll.forEach((item: any) => {
     marketToLayout[item.publicKey.toString()] = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
   })
 
@@ -249,7 +250,7 @@ async function getRaydiumPools(conn:any){
 
 
   const marketToLayout: { [name: string]: any } = {}
-  marketAll.forEach((item) => {
+  marketAll.forEach((item: any) => {
     marketToLayout[item.publicKey.toString()] = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
   })
 
