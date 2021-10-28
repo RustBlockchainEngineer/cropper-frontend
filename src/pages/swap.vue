@@ -1343,7 +1343,7 @@ export default Vue.extend({
       }
     },
     setMarketTimer() {
-      /*this.marketTimer = setInterval(() => {
+      this.marketTimer = setInterval(() => {
         if (!this.loading) {
           if (this.countdown < this.autoRefreshTime) {
             this.countdown += 1
@@ -1354,7 +1354,7 @@ export default Vue.extend({
             }
           }
         }
-      }, 1000) */
+      }, 1000) 
     },
     needCreateTokens() {
       if ( this.fromCoin !== null && this.toCoin !== null) {
