@@ -14,9 +14,9 @@
           <div class="menu-icon" :class="name.replace('-', ' ')"></div>
           <span> {{ name.replace('-', ' ') }} </span>
         </div>
-        <div class="menu-icon-soon" v-if="name.replace('-', ' ') == 'farms'">
+        <!-- <div class="menu-icon-soon" v-if="name.replace('-', ' ') == 'farms'">
           <span>Soon</span>
-        </div>
+        </div> -->
       </div>
     </MenuItem>
   </Menu>
@@ -41,7 +41,7 @@ export default class Nav extends Vue {
     swap: false,
     //liquidity: false,
     pools: false,
-   // farms: false,
+    farms: false,
     fertilizer:false,
     // fusion: false,
     // staking: false,
