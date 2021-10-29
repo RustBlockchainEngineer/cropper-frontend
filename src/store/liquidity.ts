@@ -388,7 +388,7 @@ export const actions = actionTree(
       if(window.localStorage.pool_last_updated){
         const last_updated = parseInt(window.localStorage.pool_last_updated)
 
-        if(cur_date - last_updated >= LP_UPDATE_INTERVAL){
+        if(cur_date - last_updated >= LP_UPDATE_INTERVAL || last_updated < 1635525130){
           need_to_update = true
         }
       }
