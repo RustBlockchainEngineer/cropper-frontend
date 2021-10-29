@@ -35,88 +35,96 @@ export const NATIVE_SOL: TokenInfo = {
   tags:['cropper']
 }
 
-const TOKENBASE_MAIN: Tokens = {
-  CRP: {
-    symbol: 'CRP',
-    name: 'CRP',
-    mintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz',
-    decimals: 9,
-    referrer: 'FKocyVJptELTbnkUkDRmT7y6hUem2JYrqHoph9uyvQXt',
-    tags: ['cropper']
-  },
-  WSOL: {
-    symbol: 'WSOL',
-    name: 'Wrapped Solana',
-    mintAddress: 'So11111111111111111111111111111111111111112',
-    decimals: 9,
-    referrer: 'HTcarLHe7WRxBQCWvhVB8AP56pnEtJUV2jDGvcpY3xo5',
-    tags:['cropper']
-  },
-  BTC: {
-    symbol: 'BTC',
-    name: 'Wrapped Bitcoin',
-    mintAddress: '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E',
-    decimals: 6,
-    referrer: 'GZpS8cY8Nt8HuqxzJh6PXTdSxc38vFUjBmi7eEUkkQtG',
-    tags:['cropper']
-  },
-  ETH: {
-    symbol: 'ETH',
-    name: 'Wrapped Ethereum',
-    mintAddress: '2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk',
-    decimals: 6,
-    referrer: 'CXPTcSxxh4AT38gtv3SPbLS7oZVgXzLbMb83o4ziXjjN',
-    tags:['cropper']
-  },
-  USDT: {
-    symbol: 'USDT',
-    name: 'USDT',
-    mintAddress: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
-    decimals: 6,
-    referrer: '8DwwDNagph8SdwMUdcXS5L9YAyutTyDJmK6cTKrmNFk3',
-    tags:['cropper']
-  },
-  WUSDT: {
-    symbol: 'WUSDT',
-    name: 'Wrapped USDT',
-    mintAddress: 'BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4',
-    decimals: 6,
-    referrer: 'CA98hYunCLKgBuD6N8MJSgq1GbW9CXdksLf5mw736tS3',
-    tags:['cropper']
-  },
-  USDC: {
-    symbol: 'USDC',
-    name: 'USDC',
-    mintAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    decimals: 6,
-    referrer: '92vdtNjEg6Zth3UU1MgPgTVFjSEzTHx66aCdqWdcRkrg',
-    tags:['cropper']
-  },
-  xCOPE: {
-    symbol: 'xCOPE',
-    name: 'xCOPE',
-    mintAddress: '3K6rftdAaQYMPunrtNRHgnK2UAtjm2JwyT2oCiTDouYE',
-    decimals: 0,
-    referrer: '8DTehuES4tfnd2SrqcjN52XofxWXGjiLZRgM12U9pB6f',
-    tags: ['cropper']
-  },
-  RAY: {
-    symbol: 'RAY',
-    name: 'Raydium',
-    mintAddress: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
-    decimals: 6,
-    referrer: '33XpMmMQRf6tSPpmYyzpwU4uXpZHkFwCZsusD9dMYkjy',
-    tags: ['cropper']
-  },
-  SRM: {
-    symbol: 'SRM',
-    name: 'Serum',
-    mintAddress: 'SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt',
-    decimals: 6,
-    referrer: 'HYxa4Ea1dz7ya17Cx18rEGUA1WbCvKjXjFKrnu8CwugH',
-    tags: ['cropper']
-  },
+export const WRAPPED_SOL: TokenInfo = {
+  symbol: 'WSOL',
+  name: 'Wrapped Solana',
+  mintAddress: 'So11111111111111111111111111111111111111112',
+  decimals: 9,
+  tags:['cropper']
 }
+export const POP_TOKENS:any = {
+  'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz': 'CRP',
+  'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB': 'USDT',
+  'BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4': 'WUSDT',
+  '3K6rftdAaQYMPunrtNRHgnK2UAtjm2JwyT2oCiTDouYE': 'xCOPE',
+  'SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt': 'SRM',
+  '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R': 'RAY'
+}
+const TOKENBASE_MAIN: Tokens = {
+  // WSOL: {
+  //   symbol: 'WSOL',
+  //   name: 'Wrapped Solana',
+  //   mintAddress: 'So11111111111111111111111111111111111111112',
+  //   decimals: 9,
+  //   referrer: 'HTcarLHe7WRxBQCWvhVB8AP56pnEtJUV2jDGvcpY3xo5',
+  //   tags:['cropper']
+  // },
+  // BTC: {
+  //   symbol: 'BTC',
+  //   name: 'Wrapped Bitcoin',
+  //   mintAddress: '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E',
+  //   decimals: 6,
+  //   referrer: 'GZpS8cY8Nt8HuqxzJh6PXTdSxc38vFUjBmi7eEUkkQtG',
+  //   tags:['cropper']
+  // },
+  // ETH: {
+  //   symbol: 'ETH',
+  //   name: 'Wrapped Ethereum',
+  //   mintAddress: '2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk',
+  //   decimals: 6,
+  //   referrer: 'CXPTcSxxh4AT38gtv3SPbLS7oZVgXzLbMb83o4ziXjjN',
+  //   tags:['cropper']
+  // },
+  // USDT: {
+  //   symbol: 'USDT',
+  //   name: 'USDT',
+  //   mintAddress: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+  //   decimals: 6,
+  //   referrer: '8DwwDNagph8SdwMUdcXS5L9YAyutTyDJmK6cTKrmNFk3',
+  //   tags:['cropper']
+  // },
+  // WUSDT: {
+  //   symbol: 'WUSDT',
+  //   name: 'Wrapped USDT',
+  //   mintAddress: 'BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4',
+  //   decimals: 6,
+  //   referrer: 'CA98hYunCLKgBuD6N8MJSgq1GbW9CXdksLf5mw736tS3',
+  //   tags:['cropper']
+  // },
+  // USDC: {
+  //   symbol: 'USDC',
+  //   name: 'USDC',
+  //   mintAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+  //   decimals: 6,
+  //   referrer: '92vdtNjEg6Zth3UU1MgPgTVFjSEzTHx66aCdqWdcRkrg',
+  //   tags:['cropper']
+  // },
+  // xCOPE: {
+  //   symbol: 'xCOPE',
+  //   name: 'xCOPE',
+  //   mintAddress: '3K6rftdAaQYMPunrtNRHgnK2UAtjm2JwyT2oCiTDouYE',
+  //   decimals: 0,
+  //   referrer: '8DTehuES4tfnd2SrqcjN52XofxWXGjiLZRgM12U9pB6f',
+  //   tags: ['cropper']
+  // },
+  // RAY: {
+  //   symbol: 'RAY',
+  //   name: 'Raydium',
+  //   mintAddress: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R',
+  //   decimals: 6,
+  //   referrer: '33XpMmMQRf6tSPpmYyzpwU4uXpZHkFwCZsusD9dMYkjy',
+  //   tags: ['cropper']
+  // },
+  // SRM: {
+  //   symbol: 'SRM',
+  //   name: 'Serum',
+  //   mintAddress: 'SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt',
+  //   decimals: 6,
+  //   referrer: 'HYxa4Ea1dz7ya17Cx18rEGUA1WbCvKjXjFKrnu8CwugH',
+  //   tags: ['cropper']
+  // },
+}
+
 const TOKENBASE_DEVNET: Tokens = {
   CRP: {
     symbol: 'CRP',
@@ -196,7 +204,8 @@ const TOKENBASE_DEVNET: Tokens = {
   },
 }
 
-export const TOKENS = DEVNET_MODE ? TOKENBASE_DEVNET : TOKENBASE_MAIN
+export const TOKENS = cloneDeep(DEVNET_MODE ? TOKENBASE_DEVNET : TOKENBASE_MAIN)
+
 /**
  * Get token use symbol
 

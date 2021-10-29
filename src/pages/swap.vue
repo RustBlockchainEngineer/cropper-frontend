@@ -556,7 +556,7 @@ import {
   isOfficalMarket,
   LiquidityPoolInfo
 } from '@/utils/pools'
-const CRP = getTokenBySymbol('CRP')
+
 const ENDPOINT_SRM = 'Serum Dex'
 const ENDPOINT_CRP = 'CropperFinance Pool'
 const ENDPOINT_RAY = 'Raydium Pool'
@@ -595,7 +595,7 @@ export default Vue.extend({
       coinSelectShow: false,
       selectFromCoin: true,
       fixedFromCoin: true,
-      fromCoin: CRP as TokenInfo | null,
+      fromCoin: null as TokenInfo | null,
       toCoin: null as TokenInfo | null,
       fromCoinAmount: '',
       toCoinAmount: '',
@@ -732,6 +732,7 @@ export default Vue.extend({
     },
     'token.initialized': {
       handler(newState: boolean) {
+        this.fromCoin = getTokenBySymbol('CRP')
         const { from, to, ammId} = this.$route.query
         // @ts-ignore
         this.setCoinFromMint(ammId, from, to)

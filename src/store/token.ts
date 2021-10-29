@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
 
 import { DEVNET_MODE } from '@/utils/ids'
-import { TOKENS } from '@/utils/tokens'
+import { POP_TOKENS, TOKENS, WRAPPED_SOL } from '@/utils/tokens'
 
 export const state = () => ({
   initialized: false,
@@ -35,8 +35,10 @@ export const actions:any = actionTree(
           if (itemToken.tags && itemToken.tags.includes('lp-token')) {
             return
           }
-          if (!Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)) {
-            TOKENS[itemToken.symbol + itemToken.address + 'solana'] = {
+          const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
+          if (!token) {// + itemToken.address + 'solana'
+            let key = POP_TOKENS[itemToken.address] ?? itemToken.address
+            TOKENS[key] = {
               symbol: itemToken.symbol,
               name: itemToken.name,
               mintAddress: itemToken.address,
@@ -45,19 +47,17 @@ export const actions:any = actionTree(
               tags: ['solana']
             }
           } else {
-            const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
+            token.picUrl = itemToken.logoURI
+
             if (token.symbol !== itemToken.symbol && !token.tags.includes('cropper')) {
               token.symbol = itemToken.symbol
               token.name = itemToken.name
               token.decimals = itemToken.decimals
               token.tags.push('solana')
             }
-            const picToken = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
-            if (picToken) {
-              picToken.picUrl = itemToken.logoURI
-            }
           }
         })
+        TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
       }
 
       logger('Token list updated')
