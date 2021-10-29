@@ -72,7 +72,7 @@ async function getCropperPools(conn:any){
     }
   ])
 
-  const marketAll = [];
+  const marketAll: any = [];
 
   const marketToLayout: { [name: string]: any } = {}
   marketAll.forEach((item: any) => {
