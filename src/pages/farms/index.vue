@@ -75,11 +75,13 @@
 
           <span class="title">Farms</span>
           <span class="buttonsd">
+            <!--
             <NuxtLink to="/farms/create-farm/">
               <div class="create">
                 <Button size="large" ghost>+ Create a farm </Button>
               </div>
             </NuxtLink>
+            -->
 
             <div class="farm-button-group">
               <div class="count-down-group">
@@ -702,7 +704,7 @@ export default Vue.extend({
       ],
       lifeOptions: [
         { value: 0, label: 'Opened' },
-        { value: 1, label: 'Future' },
+      //  { value: 1, label: 'Future' },
         { value: 2, label: 'Ended' },
         { value: 3, label: 'All' }
       ],
@@ -786,7 +788,6 @@ export default Vue.extend({
 
   mounted() {
 
-        this.$router.push('/');
 
     this.updateFarms()
 
@@ -848,6 +849,7 @@ export default Vue.extend({
         responseData.forEach((element: any) => {
           this.labelizedAmms[element.ammID] = element.labelized
           this.labelizedAmmsExtended[element.ammID] = element
+          console.log(element.ammID, element)
         })
       }
 
@@ -884,6 +886,7 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
+        if(end_timestamp.toNumber() < 1635452141) { continue; }
 
         if (reward && lp) {
           const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
