@@ -15,7 +15,8 @@ import {
   LIQUIDITY_POOL_PROGRAM_ID_V4,
   CRP_LP_PROGRAM_ID_V1, 
   SERUM_PROGRAM_ID_V3, 
-  CRP_LP_VERSION_V1} from '@/utils/ids'
+  CRP_LP_VERSION_V1,
+  LP_UPDATE_INTERVAL} from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { NATIVE_SOL, TOKENS } from '@/utils/tokens'
 
@@ -396,8 +397,34 @@ export const actions = actionTree(
       commit('setLoading', true)
 
       const conn = this.$web3
-      await getCropperPools(conn);
-      await getRaydiumPools(conn);
+      let need_to_update = false
+      let cur_date = new Date().getTime()
+
+      if(window.localStorage.pool_last_updated){
+        const last_updated = parseInt(window.localStorage.pool_last_updated)
+
+        if(cur_date - last_updated >= LP_UPDATE_INTERVAL){
+          need_to_update = true
+        }
+      }
+      else
+      {
+        need_to_update = true
+      }
+      
+      if(need_to_update)
+      {
+        await getCropperPools(conn);
+        await getRaydiumPools(conn);
+        window.localStorage.pool_last_updated = new Date().getTime()
+        window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
+      }
+      else{
+        const pools = JSON.parse(window.localStorage.pools)
+        pools.forEach((pool:LiquidityPoolInfo)=>{
+          LIQUIDITY_POOLS.push(pool)
+        })
+      }
 
       const liquidityPools = {} as any
       const publicKeys = [] as any

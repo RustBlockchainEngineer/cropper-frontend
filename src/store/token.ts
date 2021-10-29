@@ -3,7 +3,7 @@ import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
 
-import { DEVNET_MODE } from '@/utils/ids'
+import { DEVNET_MODE, TOKEN_UPDATE_INTERVAL } from '@/utils/ids'
 import { POP_TOKENS, TOKENS, WRAPPED_SOL } from '@/utils/tokens'
 
 export const state = () => ({
@@ -29,11 +29,26 @@ export const actions:any = actionTree(
     async loadTokens({ commit }) {
 
       commit('setLoading', true)
-      if(DEVNET_MODE == false){
+
+      let need_to_update = false
+      let cur_date = new Date().getTime()
+
+      if(window.localStorage.token_last_updated){
+        const last_updated = parseInt(window.localStorage.token_last_updated)
+        console.log(cur_date - last_updated)
+        if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL){
+          need_to_update = true
+        }
+      }
+      else
+      {
+        need_to_update = true
+      }
+
+      if(DEVNET_MODE == false && need_to_update == true)
+      {
         let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
         const tokens = myJson.tokens
-
-
 
         tokens.forEach((itemToken: any) => {
 
@@ -77,6 +92,20 @@ export const actions:any = actionTree(
           }
         })
         TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
+      }
+
+      if(need_to_update)
+      {
+        window.localStorage.token_last_updated = new Date().getTime()
+        window.localStorage.tokens = JSON.stringify(TOKENS)
+      }
+      else
+      {
+        const tokens = JSON.parse(window.localStorage.tokens)
+
+        for (const [key, value] of Object.entries(tokens)) {
+          TOKENS[key] = value
+        }
       }
 
       logger('Token list updated')
