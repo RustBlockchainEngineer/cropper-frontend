@@ -35,7 +35,6 @@ export const actions:any = actionTree(
 
       if(window.localStorage.token_last_updated){
         const last_updated = parseInt(window.localStorage.token_last_updated)
-        console.log(cur_date - last_updated)
         if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL){
           need_to_update = true
         }

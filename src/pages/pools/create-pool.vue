@@ -753,6 +753,7 @@ export default class CreatePool extends Vue {
     const connection = this.$web3
     const wallet: any = this.$wallet
 
+    window.localStorage.pool_last_updated = undefined
     await this.$accessor.liquidity.requestInfos()
 
     //get liquidity pool info
@@ -1094,6 +1095,7 @@ export default class CreatePool extends Vue {
         )
         this.updateLocalData()
         this.createAmmFlag = true
+        window.localStorage.pool_last_updated = undefined
         await this.$accessor.liquidity.requestInfos()
       })
       .catch((error) => {

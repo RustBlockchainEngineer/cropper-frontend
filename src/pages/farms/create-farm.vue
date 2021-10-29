@@ -754,6 +754,7 @@ export default class CreateFarm extends Vue {
     const connection = this.$web3
     const wallet: any = this.$wallet
 
+    window.localStorage.pool_last_updated = undefined
     await this.$accessor.liquidity.requestInfos()
 
     //get liquidity pool info
@@ -1142,6 +1143,7 @@ export default class CreateFarm extends Vue {
         )
         this.updateLocalData()
         this.createAmmFlag = true
+        window.localStorage.pool_last_updated = undefined
         await this.$accessor.liquidity.requestInfos()
         this.current = 5
       })
