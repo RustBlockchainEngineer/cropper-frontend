@@ -33,7 +33,7 @@ export const actions = actionTree(
       ]
 
       startMarkets()
-
+      /*
       getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), filters)
         .then((marketInfos) => {
           const markets: any = {}
@@ -50,6 +50,7 @@ export const actions = actionTree(
           logger('Markets updated')
         })
         .catch()
+      */
     }
   }
 )

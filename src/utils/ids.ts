@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 export const CRP_LP_VERSION_V1 = 1001
 export const CRP_LP_VERSION_V2 = 1002
-export const DEVNET_MODE = false;
+export const DEVNET_MODE = true;
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
@@ -19,7 +19,7 @@ export const LIQUIDITY_POOL_PROGRAM_ID_V4 = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24
 
 export const CRP_LP_PROGRAM_ID_V1 = DEVNET_MODE? '7ZZJNL4xD8db6yrT46SeMFZXcVr9MLepGpEtnKW2k6sW': 'CTMAxxk34HjKWxQ3QLZK1HpaLXmBveao3ESePXbiyfzh'//@zhaohui
 
-export const FARM_PROGRAM_ID = DEVNET_MODE ? '4fCNwyqoBnRnDrKmHYKA3L7cczEWrVthz2jsJbw8MKLo':'88UY5DEkkEe1QEXBY9uFbBWfKmYuqYWRob6dujQU8e6C';//@Hongbo
+export const FARM_PROGRAM_ID = DEVNET_MODE ? '2pDuAkcQRbVBYqTHfrvqh4ApiEr7mqV3f2jyCjJWem9d':'88UY5DEkkEe1QEXBY9uFbBWfKmYuqYWRob6dujQU8e6C';//@Hongbo
 export const FARM_INITIAL_SUPER_OWNER = DEVNET_MODE ? "4GJ3z4skEHJADz3MVeNYBg4YV8H27rBQey2YYdiPC8PA":"AwtDEd9GThBNWNahvLZUok1BiRULNQ86VruXkYAckCtV";//@Hongbo
 export const FARM_INITIAL_FEE_OWNER = DEVNET_MODE ? "4GJ3z4skEHJADz3MVeNYBg4YV8H27rBQey2YYdiPC8PA":"DyDdJM9KVsvosfXbcHDp4pRpmbMHkRq3pcarBykPy4ir";;//@Hongbo
 export const FARM_INITIAL_ALLOWED_CREATOR = FARM_INITIAL_SUPER_OWNER;//@Hongbo

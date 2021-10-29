@@ -64,6 +64,27 @@ export const mutations = mutationTree(state, {
   }
 })
 
+async function getSerumMarkets(conn:any){
+  return [];
+  /*
+  let exists = localStorage.getItem('market');
+
+  if(exists){
+    return JSON.parse(localStorage.getItem('market'));
+  }
+
+  let allMarket = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
+    {
+      dataSize: _MARKET_STATE_LAYOUT_V2.span
+    }
+  ])
+
+  localStorage.setItem('market', JSON.stringify(allMarket));
+
+  return allMarket;
+  */
+}
+
 async function getCropperPools(conn:any){
   const ammAll = await getFilteredProgramAccounts(conn, new PublicKey(CRP_LP_PROGRAM_ID_V1), [
     {
@@ -71,14 +92,10 @@ async function getCropperPools(conn:any){
     }
   ])
 
-  const marketAll = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
-    {
-      dataSize: _MARKET_STATE_LAYOUT_V2.span
-    }
-  ])
+  const marketAll = await getSerumMarkets(conn);
 
   const marketToLayout: { [name: string]: any } = {}
-  marketAll.forEach((item) => {
+  marketAll.forEach((item: any) => {
     marketToLayout[item.publicKey.toString()] = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
   })
 
@@ -228,13 +245,12 @@ async function getRaydiumPools(conn:any){
       dataSize: AMM_INFO_LAYOUT_V4.span
     }
   ])
-  const marketAll = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
-    {
-      dataSize: _MARKET_STATE_LAYOUT_V2.span
-    }
-  ])
+
+  const marketAll = await getSerumMarkets(conn);
+
+
   const marketToLayout: { [name: string]: any } = {}
-  marketAll.forEach((item) => {
+  marketAll.forEach((item: any) => {
     marketToLayout[item.publicKey.toString()] = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
   })
 

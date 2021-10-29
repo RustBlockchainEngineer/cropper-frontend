@@ -873,6 +873,10 @@ section {
     margin-top: 0;
     padding: 20px 20px !important;
 
+    .card-body {
+      overflow-x: unset !important;
+    }
+
     .ant-collapse-content {
       background-color: #01033c;
       border-top: none !important;
@@ -918,7 +922,8 @@ section {
         background: #01033c;
         border-radius: 22px;
         border: transparent;
-
+        cursor: pointer;
+        
         img {
           margin-left: 5px;
           transform: rotate(0);
@@ -1240,7 +1245,9 @@ section {
 
 <style lang="less">
 ::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
+  @media (max-width: @mobile-b-width) {
+    display: none; /* Chrome Safari */
+  }
 }
 
 .addliq .btnContainer {
@@ -1383,7 +1390,6 @@ section {
     margin-right: 0;
   }
   .card-body {
-    overflow-x: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }

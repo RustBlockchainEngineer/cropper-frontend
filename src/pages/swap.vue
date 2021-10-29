@@ -352,13 +352,13 @@
 
             <div v-if="priceImpact" class="fs-container flexDiv minimum">
               <span class="name">
-                <label>Price Impact</label>
+                <label :class="`price-impact-${priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'}`">Price Impact</label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title"> The difference between the market price and estimated price due to trade size </template>
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <span class="name">
+              <span class="name" :class="`price-impact-${priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'}`">
                 <label> {{ priceImpact.toFixed(2) }}% </label>
               </span>
             </div>
@@ -433,7 +433,7 @@
               "
               :loading="swaping"
               style="width: 100%"
-              :class="`swap-btn ${priceImpact > 10 ? '' : priceImpact > 5 ? '' : ''}`"
+              :class="`swap-btn ${priceImpact > 5 ? '' : priceImpact > 2 ? '' : ''}`"
               @click="placeOrder"
             >
               <template v-if="!fromCoin || !toCoin"> Select</template>
@@ -1344,7 +1344,7 @@ export default Vue.extend({
       }
     },
     setMarketTimer() {
-      /*this.marketTimer = setInterval(() => {
+      this.marketTimer = setInterval(() => {
         if (!this.loading) {
           if (this.countdown < this.autoRefreshTime) {
             this.countdown += 1
@@ -1355,7 +1355,7 @@ export default Vue.extend({
             }
           }
         }
-      }, 1000) */
+      }, 1000) 
     },
     needCreateTokens() {
       if ( this.fromCoin !== null && this.toCoin !== null) {
@@ -1888,6 +1888,19 @@ main {
         .tooltipIcon {
           margin-top: -15px;
           width: 15px;
+        }
+      }
+      .price-impact-orange {
+        color: #ffb900 !important;
+        label {
+          opacity: 1 !important;
+        }
+      }
+      .price-impact-red {
+        color: #f00 !important;
+        font-weight: bold !important;
+        label {
+          opacity: 1 !important;
         }
       }
       .swapThrough {

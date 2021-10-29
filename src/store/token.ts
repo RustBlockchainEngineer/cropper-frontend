@@ -27,12 +27,31 @@ export const actions:any = actionTree(
   { state, getters, mutations },
   {
     async loadTokens({ commit }) {
+
       commit('setLoading', true)
       if(DEVNET_MODE == false){
         let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
         const tokens = myJson.tokens
+
+
+
         tokens.forEach((itemToken: any) => {
-          if (itemToken.tags && itemToken.tags.includes('lp-token')) {
+
+          if (itemToken.chainId != 101) {
+            return
+          }
+          if (itemToken.tags && 
+            ( 
+              itemToken.tags.includes('lp-token') || 
+              itemToken.tags.includes('wormhole') ||
+              itemToken.tags.includes('lending') ||
+              itemToken.tags.includes('stake-pool')
+            )
+          ) {
+            return
+          }
+
+          if (itemToken.name.includes("(Allbridge") || itemToken.name.includes("((Wormhole") ) {
             return
           }
           const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)

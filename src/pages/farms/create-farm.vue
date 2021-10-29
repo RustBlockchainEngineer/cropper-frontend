@@ -561,7 +561,7 @@ const Step = Steps.Step
 
 @Component({
   head: {
-    title: 'CropperFinance Create Pool'
+    title: 'CropperFinance Create Farm'
   },
   components: {
     Steps,
