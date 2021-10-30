@@ -226,10 +226,11 @@
                   >
                     Soon
                   </div>
+                  <div v-if="farm.labelized" class="labelized">Labelized</div>
                 </Col>
 
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
-                  <Col span="12">
+                  <Col span="24">
                     <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
                       <span class="labmobile">Pending Reward</span>-
                     </div>
@@ -237,9 +238,6 @@
                       <span class="labmobile">Pending Reward</span
                       >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
                     </div>
-                  </Col>
-                  <Col span="12">
-                    <div v-if="farm.labelized" class="labelized">Labelized</div>
                   </Col>
                 </Col>
 
