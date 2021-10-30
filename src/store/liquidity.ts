@@ -406,8 +406,17 @@ export const actions = actionTree(
       }
       else{
         const pools = JSON.parse(window.localStorage.pools)
+
+        let ammSet: any = {};
+
+        LIQUIDITY_POOLS.forEach((pool) => {
+          ammSet[pool.ammId] = pool.ammId
+        })
+
         pools.forEach((pool:LiquidityPoolInfo)=>{
-          LIQUIDITY_POOLS.push(pool)
+          if(!ammSet[pool.ammId]){
+            LIQUIDITY_POOLS.push(pool)
+          }
         })
       }
 
