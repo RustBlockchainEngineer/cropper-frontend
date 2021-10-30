@@ -247,7 +247,7 @@
                   </div>
                   <div v-else class="value">
                     <span class="labmobile">Staked</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
+                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalanceUSD ? '$ ' + farm.userInfo.depositBalanceUSD : farm.userInfo.depositBalance.format() }}
                   </div>
                 </Col>
 
@@ -353,7 +353,7 @@
                   </div>
                   <div v-else class="value">
                     <span class="labmobile">Staked</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
+                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalanceUSD ? '$ ' + farm.userInfo.depositBalanceUSD : farm.userInfo.depositBalance.format() }}
                   </div>
                 </Col>
 
@@ -911,6 +911,7 @@ export default Vue.extend({
           const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
           const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
           let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
+          newFarmInfo.lpUSDvalue = liquidityItemValue
 
           let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
           let apr = ((rewardPerTimestampAmountTotalValue / farmUsdValue) * 100).toFixed(2)
@@ -990,6 +991,15 @@ export default Vue.extend({
             .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
             
+          if(newFarmInfo.lpUSDvalue){
+            userInfo.depositBalanceUSD = 
+                      Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format(), 2)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+          }
+
+
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
         } else {
           userInfo = {
