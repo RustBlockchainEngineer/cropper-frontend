@@ -993,7 +993,7 @@ export default Vue.extend({
             
           if(newFarmInfo.lpUSDvalue){
             userInfo.depositBalanceUSD = 
-                      Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format(), 2)
+                      (Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100) 
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
