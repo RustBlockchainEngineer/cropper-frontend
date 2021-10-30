@@ -1035,6 +1035,7 @@ export default Vue.extend({
   },
 
   mounted() {
+    this.$accessor.token.loadTokens()
     this.updateFarms()
 
     var hash = window.location.hash
