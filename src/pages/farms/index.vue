@@ -1034,11 +1034,9 @@ export default Vue.extend({
             }
           }
 
-          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=Earn ${
-            (newFarmInfo as any).reward.name
-          } with our new farm on @CropperFinance&url=https://cropper.finance/farms/?s=${
+          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${(newFarmInfo as any).lp.coin.symbol}-${(newFarmInfo as any).lp.pc.symbol} on @CropperFinance with ${newFarmInfo.apr}%25 APR%0A%0ACome and join me at https://cropper.finance/farms/?s=${
             (newFarmInfo as any).poolId
-          } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
+          }%0A%0AFarm now, Harvest later.&url= `
 
           if (!isPFO || true) {
             farms.push({
