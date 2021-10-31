@@ -848,7 +848,6 @@ export default Vue.extend({
         responseData.forEach((element: any) => {
           this.labelizedAmms[element.ammID] = element.labelized
           this.labelizedAmmsExtended[element.ammID] = element
-          console.log(element.ammID, element)
         })
       }
 
@@ -916,7 +915,6 @@ export default Vue.extend({
           let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
           let apr = ((rewardPerTimestampAmountTotalValue / farmUsdValue) * 100).toFixed(2)
 
-          console.log(farmUsdValue, rewardPerTimestampAmountTotalValue, apr);
 
 
 
@@ -943,8 +941,6 @@ export default Vue.extend({
             newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
             newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
           }
-
-          console.log(newFarmInfo.apr_details);
 
           if (wallet) {
             let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
@@ -1020,7 +1016,15 @@ export default Vue.extend({
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
-              labelized = true
+
+              if(this.labelizedAmmsExtended[newFarmInfo.poolId].farmhidden == true){
+                 continue; 
+              }
+
+              if(this.labelizedAmmsExtended[newFarmInfo.poolId].labelized == true){
+                labelized = true
+              }
+
               if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId].pfo == true &&
                 newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID
@@ -1963,6 +1967,7 @@ export default Vue.extend({
         font-size: 18px;
         line-height: 21.19px;
         font-weight: 400;
+        text-align: center
       }
     }
   }
