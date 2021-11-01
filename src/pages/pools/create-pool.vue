@@ -80,7 +80,7 @@
               style="align-items: baseline; line-height: 40px; padding-bottom: 20px"
             >
               <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                ><div style="padding-bottom: 10px; word-break: break-word">
+                ><div style="padding-bottom: 10px; word-break: break-word; text-align: center;">
                   This tool is for advanced users. Before attempting to create a new liquidity pool, we suggest going
                   through this
                   <a
@@ -92,7 +92,7 @@
                 </div>
               </Col>
               <Col style="line-height: 20px" :span="24"
-                ><input v-model="inputMarket" :disabled="!marketInputFlag"
+                ><input v-model="inputMarket" :disabled="!marketInputFlag" placeholder="Input Market ID here"
               /></Col>
 
               <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
@@ -753,6 +753,7 @@ export default class CreatePool extends Vue {
     const connection = this.$web3
     const wallet: any = this.$wallet
 
+    window.localStorage.pool_last_updated = undefined
     await this.$accessor.liquidity.requestInfos()
 
     //get liquidity pool info
@@ -1094,6 +1095,7 @@ export default class CreatePool extends Vue {
         )
         this.updateLocalData()
         this.createAmmFlag = true
+        window.localStorage.pool_last_updated = undefined
         await this.$accessor.liquidity.requestInfos()
       })
       .catch((error) => {

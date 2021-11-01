@@ -3,8 +3,8 @@ import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
 
-import { DEVNET_MODE } from '@/utils/ids'
-import { TOKENS } from '@/utils/tokens'
+import { DEVNET_MODE, TOKEN_UPDATE_INTERVAL } from '@/utils/ids'
+import { POP_TOKENS, TOKENS, WRAPPED_SOL } from '@/utils/tokens'
 
 export const state = () => ({
   initialized: false,
@@ -29,34 +29,53 @@ export const actions:any = actionTree(
     async loadTokens({ commit }) {
 
       commit('setLoading', true)
-      if(DEVNET_MODE == false){
+
+      let need_to_update = false
+      let cur_date = new Date().getTime()
+
+      if(window.localStorage.token_last_updated){
+        const last_updated = parseInt(window.localStorage.token_last_updated)
+        if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1635525130){
+          need_to_update = true
+        }
+      }
+      else
+      {
+        need_to_update = true
+      }
+
+      if(DEVNET_MODE == false && need_to_update == true)
+      {
         let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
         const tokens = myJson.tokens
 
-
+        let allowed = await fetch('https://api.cropper.finance/tokens/').then((res) => res.json())
 
         tokens.forEach((itemToken: any) => {
 
-          if (itemToken.chainId != 101) {
-            return
-          }
+          if(itemToken.chainId != 101) return
+
           if (itemToken.tags && 
             ( 
               itemToken.tags.includes('lp-token') || 
               itemToken.tags.includes('wormhole') ||
               itemToken.tags.includes('lending') ||
-              itemToken.tags.includes('stake-pool')
+              itemToken.tags.includes('stake-pool') || 
+              !allowed[itemToken.address] ||
+              itemToken.name.includes("(Allbridge") || 
+              itemToken.name.includes("((Wormhole")
             )
+             && itemToken.symbol != 'wUSDT'
+             && itemToken.symbol != 'wSOL'
+             && itemToken.symbol != 'USDC'
           ) {
             return
           }
 
-          if (itemToken.name.includes("(Allbridge") || itemToken.name.includes("((Wormhole") ) {
-            return
-          }
-
-          if (!Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)) {
-            TOKENS[itemToken.symbol + itemToken.address + 'solana'] = {
+          const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
+          if (!token) {// + itemToken.address + 'solana'
+            let key = POP_TOKENS[itemToken.address] ?? itemToken.address
+            TOKENS[key] = {
               symbol: itemToken.symbol,
               name: itemToken.name,
               mintAddress: itemToken.address,
@@ -65,20 +84,32 @@ export const actions:any = actionTree(
               tags: ['solana']
             }
           } else {
-            const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
+            token.picUrl = itemToken.logoURI
             if (token.symbol !== itemToken.symbol && !token.tags.includes('cropper')) {
               token.symbol = itemToken.symbol
               token.name = itemToken.name
+              token.mintAddress = itemToken.address
               token.decimals = itemToken.decimals
               token.tags.push('solana')
             }
-            const picToken = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
-            if (picToken) {
-              picToken.picUrl = itemToken.logoURI
-            }
           }
         })
+        TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
 
+      }
+
+      if(need_to_update)
+      {
+        window.localStorage.token_last_updated = new Date().getTime()
+        window.localStorage.tokens = JSON.stringify(TOKENS)
+      }
+      else
+      {
+        const tokens = JSON.parse(window.localStorage.tokens)
+
+        for (const [key, value] of Object.entries(tokens)) {
+          TOKENS[key] = value
+        }
       }
 
       logger('Token list updated')

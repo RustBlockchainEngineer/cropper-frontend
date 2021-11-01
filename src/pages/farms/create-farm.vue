@@ -738,8 +738,6 @@ export default class CreateFarm extends Vue {
   }
 
   mounted() {
-  
-        this.$router.push('/');
     const localMarket = localStorage.getItem('createMarket')
     if (localMarket !== null && localMarket.length > 30) {
       this.inputMarket = localMarket
@@ -754,6 +752,7 @@ export default class CreateFarm extends Vue {
     const connection = this.$web3
     const wallet: any = this.$wallet
 
+    window.localStorage.pool_last_updated = undefined
     await this.$accessor.liquidity.requestInfos()
 
     //get liquidity pool info
@@ -1142,6 +1141,7 @@ export default class CreateFarm extends Vue {
         )
         this.updateLocalData()
         this.createAmmFlag = true
+        window.localStorage.pool_last_updated = undefined
         await this.$accessor.liquidity.requestInfos()
         this.current = 5
       })

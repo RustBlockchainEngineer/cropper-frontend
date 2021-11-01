@@ -12,7 +12,7 @@
               class="reload-btn"
               @click="
                 () => {
-                  //getOrderBooks()
+                  getOrderBooks()
                   $accessor.wallet.getTokenAccounts()
                 }
               "
@@ -556,7 +556,7 @@ import {
   isOfficalMarket,
   LiquidityPoolInfo
 } from '@/utils/pools'
-const CRP = getTokenBySymbol('CRP')
+
 const ENDPOINT_SRM = 'Serum Dex'
 const ENDPOINT_CRP = 'CropperFinance Pool'
 const ENDPOINT_RAY = 'Raydium Pool'
@@ -595,7 +595,7 @@ export default Vue.extend({
       coinSelectShow: false,
       selectFromCoin: true,
       fixedFromCoin: true,
-      fromCoin: CRP as TokenInfo | null,
+      fromCoin: null as TokenInfo | null,
       toCoin: null as TokenInfo | null,
       fromCoinAmount: '',
       toCoinAmount: '',
@@ -732,6 +732,7 @@ export default Vue.extend({
     },
     'token.initialized': {
       handler(newState: boolean) {
+        this.fromCoin = getTokenBySymbol('CRP')
         const { from, to, ammId} = this.$route.query
         // @ts-ignore
         this.setCoinFromMint(ammId, from, to)
@@ -1041,17 +1042,18 @@ export default Vue.extend({
               }
             }
             
-            /*if (marketAddress && this.marketAddress !== marketAddress) {
+            if (marketAddress && this.marketAddress !== marketAddress) {
               this.isWrap = false
               this.marketAddress = marketAddress
               Market.load(this.$web3, new PublicKey(marketAddress), {}, new PublicKey(SERUM_PROGRAM_ID_V3)).then(
                 (market) => {
                   this.available_dex.push(ENDPOINT_SRM)
                   this.market = market
-                  //this.getOrderBooks()
+                  this.getOrderBooks()
                 }
               )
-            }*/
+            }
+
 
             //two-step swap with USDC
             const lpList_usdc_1 = getPoolListByTokenMintAddresses(
@@ -1348,7 +1350,7 @@ export default Vue.extend({
           if (this.countdown < this.autoRefreshTime) {
             this.countdown += 1
             if (this.countdown === this.autoRefreshTime) {
-              //this.getOrderBooks()
+              this.getOrderBooks()
               this.$accessor.wallet.getTokenAccounts()
               this.countdown = 0
             }
@@ -1476,7 +1478,6 @@ export default Vue.extend({
           })
       } else if (this.endpoint === ENDPOINT_MULTI_CRP || this.endpoint === ENDPOINT_MULTI_USDC) {
         if (this.needCreateTokens() || this.needWrapSol()) {
-          console.log(this.fromCoin?.mintAddress, this.midTokenMint, this.toCoin?.mintAddress)
           let fromMint = this.fromCoin?.mintAddress
           let midMint = this.midTokenMint
           let toMint = this.toCoin?.mintAddress

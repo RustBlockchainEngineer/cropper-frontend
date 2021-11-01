@@ -15,7 +15,8 @@ import {
   LIQUIDITY_POOL_PROGRAM_ID_V4,
   CRP_LP_PROGRAM_ID_V1, 
   SERUM_PROGRAM_ID_V3, 
-  CRP_LP_VERSION_V1} from '@/utils/ids'
+  CRP_LP_VERSION_V1,
+  LP_UPDATE_INTERVAL} from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { NATIVE_SOL, TOKENS } from '@/utils/tokens'
 
@@ -64,27 +65,6 @@ export const mutations = mutationTree(state, {
   }
 })
 
-async function getSerumMarkets(conn:any){
-  return [];
-  /*
-  let exists = localStorage.getItem('market');
-
-  if(exists){
-    return JSON.parse(localStorage.getItem('market'));
-  }
-
-  let allMarket = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
-    {
-      dataSize: _MARKET_STATE_LAYOUT_V2.span
-    }
-  ])
-
-  localStorage.setItem('market', JSON.stringify(allMarket));
-
-  return allMarket;
-  */
-}
-
 async function getCropperPools(conn:any){
   const ammAll = await getFilteredProgramAccounts(conn, new PublicKey(CRP_LP_PROGRAM_ID_V1), [
     {
@@ -92,7 +72,7 @@ async function getCropperPools(conn:any){
     }
   ])
 
-  const marketAll = await getSerumMarkets(conn);
+  const marketAll: any = [];
 
   const marketToLayout: { [name: string]: any } = {}
   marketAll.forEach((item: any) => {
@@ -246,7 +226,13 @@ async function getRaydiumPools(conn:any){
     }
   ])
 
-  const marketAll = await getSerumMarkets(conn);
+  const marketAll = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
+    {
+      dataSize: _MARKET_STATE_LAYOUT_V2.span
+    }
+  ]);
+
+  console.log(marketAll);
 
 
   const marketToLayout: { [name: string]: any } = {}
@@ -396,8 +382,43 @@ export const actions = actionTree(
       commit('setLoading', true)
 
       const conn = this.$web3
-      await getCropperPools(conn);
-      await getRaydiumPools(conn);
+      let need_to_update = false
+      let cur_date = new Date().getTime()
+
+      if(window.localStorage.pool_last_updated){
+        const last_updated = parseInt(window.localStorage.pool_last_updated)
+
+        if(cur_date - last_updated >= LP_UPDATE_INTERVAL || last_updated < 1635525130){
+          need_to_update = true
+        }
+      }
+      else
+      {
+        need_to_update = true
+      }
+      
+      if(need_to_update)
+      {
+        await getCropperPools(conn);
+        await getRaydiumPools(conn);
+        window.localStorage.pool_last_updated = new Date().getTime()
+        window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
+      }
+      else{
+        const pools = JSON.parse(window.localStorage.pools)
+
+        let ammSet: any = {};
+
+        LIQUIDITY_POOLS.forEach((pool) => {
+          ammSet[pool.ammId] = pool.ammId
+        })
+
+        pools.forEach((pool:LiquidityPoolInfo)=>{
+          if(!ammSet[pool.ammId]){
+            LIQUIDITY_POOLS.push(pool)
+          }
+        })
+      }
 
       const liquidityPools = {} as any
       const publicKeys = [] as any
