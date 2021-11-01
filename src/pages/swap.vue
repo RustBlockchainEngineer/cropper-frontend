@@ -288,10 +288,10 @@
               </span>
               <div v-if="endpoint == endpoint_multi_crp || endpoint == endpoint_multi_usdc">
                 <span class="swapThrough green">
-                  {{ endpoint_crp }}
+                  {{ sub_endpoint_1 }}
                 </span>
                 <span class="swapThrough purple">
-                  {{ endpoint_ray }}
+                  {{ sub_endpoint_2 }}
                 </span>
               </div>
               <div v-else>
@@ -532,7 +532,7 @@ import { getTokenBySymbol, TokenInfo, NATIVE_SOL, TOKENS } from '@/utils/tokens'
 import { inputRegex, escapeRegExp } from '@/utils/regex'
 import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
-import { SERUM_PROGRAM_ID_V3 } from '@/utils/ids'
+import { SERUM_PROGRAM_ID_V3, ENDPOINT_CRP, ENDPOINT_RAY, ENDPOINT_SRM } from '@/utils/ids'
 import {
   getOutAmount,
   getSwapOutAmount,
@@ -547,6 +547,8 @@ import {
 import { TokenAmount, gt } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
 import { canWrap, getLiquidityInfoSimilar } from '@/utils/liquidity'
+import { getPoolLocation } from '@/utils/pools'
+
 import {
   getLpListByTokenMintAddresses,
   getPoolListByTokenMintAddresses,
@@ -557,9 +559,7 @@ import {
   LiquidityPoolInfo
 } from '@/utils/pools'
 
-const ENDPOINT_SRM = 'Serum Dex'
-const ENDPOINT_CRP = 'CropperFinance Pool'
-const ENDPOINT_RAY = 'Raydium Pool'
+
 const ENDPOINT_MULTI_CRP = 'Two-Step Swap with CRP'
 const ENDPOINT_MULTI_USDC = 'Two-Step Swap with USDC'
 export default Vue.extend({
@@ -635,10 +635,13 @@ export default Vue.extend({
       setCoinFromMintLoading: false,
       asksAndBidsLoading: true,
       windowWidth: 0,
-      endpoint_crp: 'CropperFinance Pool',
-      endpoint_ray: 'Raydium Pool',
+      // endpoint_crp: 'CropperFinance Pool',
+      // endpoint_ray: 'Raydium Pool',
+      sub_endpoint_1: undefined as string | undefined,
+      sub_endpoint_2: undefined as string | undefined,
+
       endpoint_multi_crp: 'Two-Step Swap with CRP',
-      endpoint_multi_usdc: 'Two-Step Swap with USDC'
+      endpoint_multi_usdc: 'Two-Step Swap with USDC',
     }
   },
   head: {
@@ -987,6 +990,7 @@ export default Vue.extend({
               this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
               typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
             )
+
             if (crpLPList.length > 0) {
               this.available_dex.push(ENDPOINT_CRP)
               break;
@@ -1014,6 +1018,7 @@ export default Vue.extend({
               this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
               typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
             )
+
             if (rayLPList.length > 0) {
               this.available_dex.push(ENDPOINT_RAY)
               break;
@@ -1053,7 +1058,6 @@ export default Vue.extend({
                 }
               )
             }*/
-
             //two-step swap with USDC
             const lpList_usdc_1 = getPoolListByTokenMintAddresses(
               this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
@@ -1262,6 +1266,8 @@ export default Vue.extend({
                   ).fixed()
                   impact = final.priceImpact
                   endpoint = ENDPOINT_MULTI_CRP
+                  this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
+                  this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
                   best_dex_type = 'multi'
                   midTokenSymbol = 'CRP'
                 }
@@ -1311,7 +1317,7 @@ export default Vue.extend({
                 toCoinAmount = final.amountOut.fixed()
                 toCoinWithSlippage = final.amountOutWithSlippage
                 this.midAmountWithSlippage = amountOutWithSlippage.fixed()
-                const price = +new TokenAmount(
+                price = +new TokenAmount(
                   parseFloat(toCoinAmount) / parseFloat(this.fromCoinAmount),
                   // @ts-ignore
                   this.toCoin.decimals,
@@ -1321,6 +1327,8 @@ export default Vue.extend({
                 endpoint = ENDPOINT_MULTI_USDC
                 best_dex_type = 'multi'
                 midTokenSymbol = 'USDC'
+                this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
+                this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
               }
             }
           }
@@ -1341,6 +1349,7 @@ export default Vue.extend({
         this.outToPirceValue = 0
         this.priceImpact = 0
         this.endpoint = ''
+        this.midTokenSymbol = undefined
       }
     },
     setMarketTimer() {

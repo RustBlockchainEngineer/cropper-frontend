@@ -1,8 +1,14 @@
 import { PublicKey } from '@solana/web3.js'
+
+export const ENDPOINT_SRM = 'Serum Dex'
+export const ENDPOINT_CRP = 'CropperFinance Pool'
+export const ENDPOINT_RAY = 'Raydium Pool'
+
 export const CRP_LP_VERSION_V1 = 1001
 export const CRP_LP_VERSION_V2 = 1002
 export const LP_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
 export const TOKEN_UPDATE_INTERVAL = 24 * 60 * 60 * 1000
+export const MARKET_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
 export const DEVNET_MODE = false;
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')

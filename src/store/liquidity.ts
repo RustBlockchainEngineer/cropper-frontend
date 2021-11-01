@@ -16,7 +16,8 @@ import {
   CRP_LP_PROGRAM_ID_V1, 
   SERUM_PROGRAM_ID_V3, 
   CRP_LP_VERSION_V1,
-  LP_UPDATE_INTERVAL} from '@/utils/ids'
+  LP_UPDATE_INTERVAL,
+  MARKET_UPDATE_INTERVAL} from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { NATIVE_SOL, TOKENS } from '@/utils/tokens'
 
@@ -66,24 +67,52 @@ export const mutations = mutationTree(state, {
 })
 
 async function getSerumMarkets(conn:any){
-  return [];
-  /*
-  let exists = localStorage.getItem('market');
 
-  if(exists){
-    return JSON.parse(localStorage.getItem('market'));
-  }
+  let need_to_update = false
+  let cur_date = new Date().getTime()
 
-  let allMarket = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
-    {
-      dataSize: _MARKET_STATE_LAYOUT_V2.span
+  if(window.localStorage.market_last_updated){
+    const last_updated = parseInt(window.localStorage.market_last_updated)
+    if(cur_date - last_updated >= MARKET_UPDATE_INTERVAL){
+      need_to_update = true
     }
-  ])
+  }
+  else
+  {
+    need_to_update = true
+  }
+  // need_to_update = true
+  let markets: any = {}
 
-  localStorage.setItem('market', JSON.stringify(allMarket));
-
-  return allMarket;
-  */
+  if(need_to_update)
+  {
+    let marketAll = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
+      {
+        dataSize: _MARKET_STATE_LAYOUT_V2.span
+      }
+    ])
+    marketAll.forEach((item: any) => {
+      const market = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
+      markets[item.publicKey] = {
+        asks : market.asks.toString(),
+        bids : market.bids.toString(),
+        eventQueue : market.eventQueue.toString(),
+        baseVault : market.baseVault.toString(),
+        quoteVault : market.quoteVault.toString(),
+        vaultSignerNonce: market.vaultSignerNonce.toArrayLike(Buffer, 'le', 8)
+      }
+    })
+  }
+  if(need_to_update)
+  {
+    window.localStorage.market_last_updated = new Date().getTime()
+    window.localStorage.markets = JSON.stringify(markets)
+  }
+  else
+  {
+    markets = JSON.parse(window.localStorage.markets)
+  }
+  return markets
 }
 
 async function getCropperPools(conn:any){
@@ -92,13 +121,6 @@ async function getCropperPools(conn:any){
       dataSize: CRP_AMM_LAYOUT_V1.span
     }
   ])
-
-  const marketAll = await getSerumMarkets(conn);
-
-  const marketToLayout: { [name: string]: any } = {}
-  marketAll.forEach((item: any) => {
-    marketToLayout[item.publicKey.toString()] = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
-  })
 
   const lpMintAddressList: string[] = []
   ammAll.forEach((item) => {
@@ -120,8 +142,6 @@ async function getCropperPools(conn:any){
       !Object.keys(lpMintListDecimls).includes(ammInfo.lpMintAddress.toString()) ||
       ammInfo.pcMintAddress.toString() === ammInfo.serumMarket.toString() ||
       ammInfo.lpMintAddress.toString() === '11111111111111111111111111111111'
-      //  || @zhaohui
-      // !Object.keys(marketToLayout).includes(ammInfo.serumMarket.toString())
     ) {
       continue
     }
@@ -192,12 +212,6 @@ async function getCropperPools(conn:any){
       [ammAll[indexAmmInfo].publicKey.toBuffer()],
       new PublicKey(CRP_LP_PROGRAM_ID_V1)
     );
-    const market = marketToLayout[ammInfo.serumMarket]
-
-    const serumVaultSigner = new PublicKey(SERUM_PROGRAM_ID_V3) ;/*@zhaohui await PublicKey.createProgramAddress(
-      [ammInfo.serumMarket.toBuffer(), market.vaultSignerNonce.toArrayLike(Buffer, 'le', 8)],
-      new PublicKey(SERUM_PROGRAM_ID_V3)
-    )*/
 
     const itemLiquidity: LiquidityPoolInfo = {
       name: `${coin.symbol}-${pc.symbol}`,
@@ -222,7 +236,7 @@ async function getCropperPools(conn:any){
       serumEventQueue: "", //market.eventQueue.toString(),
       serumCoinVaultAccount: "", //market.baseVault.toString(),
       serumPcVaultAccount: "", //market.quoteVault.toString(),
-      serumVaultSigner: serumVaultSigner.toString(),
+      serumVaultSigner: "",
       official: false
     }
     if (!LIQUIDITY_POOLS.find((item) => item.ammId === itemLiquidity.ammId)) {
@@ -247,13 +261,7 @@ async function getRaydiumPools(conn:any){
     }
   ])
 
-  const marketAll = await getSerumMarkets(conn);
-
-
-  const marketToLayout: { [name: string]: any } = {}
-  marketAll.forEach((item: any) => {
-    marketToLayout[item.publicKey.toString()] = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
-  })
+  const marketToLayout = await getSerumMarkets(conn);
 
   const lpMintAddressList: string[] = []
   ammAll.forEach((item) => {
@@ -341,9 +349,9 @@ async function getRaydiumPools(conn:any){
     const { publicKey } = await createAmmAuthority(new PublicKey(LIQUIDITY_POOL_PROGRAM_ID_V4))
 
     const market = marketToLayout[ammInfo.serumMarket]
-
     const serumVaultSigner = await PublicKey.createProgramAddress(
-      [ammInfo.serumMarket.toBuffer(), market.vaultSignerNonce.toArrayLike(Buffer, 'le', 8)],
+      [ammInfo.serumMarket.toBuffer(), market.vaultSignerNonce],
+
       new PublicKey(SERUM_PROGRAM_ID_V3)
     )
 
@@ -411,7 +419,7 @@ export const actions = actionTree(
       {
         need_to_update = true
       }
-      
+
       if(need_to_update)
       {
         await getCropperPools(conn);

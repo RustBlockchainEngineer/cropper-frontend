@@ -1,6 +1,8 @@
 import {
   CRP_LP_VERSION_V1,
   DEVNET_MODE,
+  ENDPOINT_CRP,
+  ENDPOINT_RAY,
   LIQUIDITY_POOL_PROGRAM_ID_V2,
   LIQUIDITY_POOL_PROGRAM_ID_V3,
   LIQUIDITY_POOL_PROGRAM_ID_V4,
@@ -266,7 +268,16 @@ export function isOfficalMarket(marketAddress: string) {
 
   return false
 }
-
+export function getPoolLocation(version:number)
+{
+  if(version == 4)
+  {
+    return ENDPOINT_RAY
+  }
+  else if(version == CRP_LP_VERSION_V1){
+    return ENDPOINT_CRP
+  }
+}
 export function getAllCropperPools() {
 
   const polo:any = []
