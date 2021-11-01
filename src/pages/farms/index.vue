@@ -727,7 +727,7 @@ export default Vue.extend({
         { value: 2, label: 'Ended' },
         { value: 3, label: 'All' }
       ],
-      searchCertifiedFarm: 0,
+      searchCertifiedFarm: 2,
       searchLifeFarm: 0,
       stakedOnly: false,
       totalCount: 110,
