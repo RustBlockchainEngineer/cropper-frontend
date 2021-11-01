@@ -12,7 +12,7 @@
               class="reload-btn"
               @click="
                 () => {
-                  //getOrderBooks()
+                  getOrderBooks()
                   $accessor.wallet.getTokenAccounts()
                 }
               "
@@ -1047,17 +1047,17 @@ export default Vue.extend({
               }
             }
             
-            /*if (marketAddress && this.marketAddress !== marketAddress) {
+            if (marketAddress && this.marketAddress !== marketAddress) {
               this.isWrap = false
               this.marketAddress = marketAddress
               Market.load(this.$web3, new PublicKey(marketAddress), {}, new PublicKey(SERUM_PROGRAM_ID_V3)).then(
                 (market) => {
                   this.available_dex.push(ENDPOINT_SRM)
                   this.market = market
-                  //this.getOrderBooks()
+                  this.getOrderBooks()
                 }
               )
-            }*/
+            }
             //two-step swap with USDC
             const lpList_usdc_1 = getPoolListByTokenMintAddresses(
               this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
@@ -1358,7 +1358,7 @@ export default Vue.extend({
           if (this.countdown < this.autoRefreshTime) {
             this.countdown += 1
             if (this.countdown === this.autoRefreshTime) {
-              //this.getOrderBooks()
+              this.getOrderBooks()
               this.$accessor.wallet.getTokenAccounts()
               this.countdown = 0
             }
@@ -1486,7 +1486,6 @@ export default Vue.extend({
           })
       } else if (this.endpoint === ENDPOINT_MULTI_CRP || this.endpoint === ENDPOINT_MULTI_USDC) {
         if (this.needCreateTokens() || this.needWrapSol()) {
-          console.log(this.fromCoin?.mintAddress, this.midTokenMint, this.toCoin?.mintAddress)
           let fromMint = this.fromCoin?.mintAddress
           let midMint = this.midTokenMint
           let toMint = this.toCoin?.mintAddress

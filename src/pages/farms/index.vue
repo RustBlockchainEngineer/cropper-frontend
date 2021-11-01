@@ -29,6 +29,8 @@
       :loading="unstaking"
       @onOk="unstakeAndRemove"
       @onCancel="cancelUnstake"
+      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.
+If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
     />
     <CoinModal
       v-if="addRewardModalOpening"
@@ -75,11 +77,13 @@
 
           <span class="title">Farms</span>
           <span class="buttonsd">
+            <!--
             <NuxtLink to="/farms/create-farm/">
               <div class="create">
                 <Button size="large" ghost>+ Create a farm </Button>
               </div>
             </NuxtLink>
+            -->
 
             <div class="farm-button-group">
               <div class="count-down-group">
@@ -224,10 +228,11 @@
                   >
                     Soon
                   </div>
+                  <div v-if="farm.labelized" class="labelized">Labelized</div>
                 </Col>
 
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
-                  <Col span="12">
+                  <Col span="24">
                     <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
                       <span class="labmobile">Pending Reward</span>-
                     </div>
@@ -235,9 +240,6 @@
                       <span class="labmobile">Pending Reward</span
                       >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
                     </div>
-                  </Col>
-                  <Col span="12">
-                    <div v-if="farm.labelized" class="labelized">Labelized</div>
                   </Col>
                 </Col>
 
@@ -247,7 +249,7 @@
                   </div>
                   <div v-else class="value">
                     <span class="labmobile">Staked</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
+                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalanceUSD ? '$ ' + farm.userInfo.depositBalanceUSD : farm.userInfo.depositBalance.format() }}
                   </div>
                 </Col>
 
@@ -353,7 +355,7 @@
                   </div>
                   <div v-else class="value">
                     <span class="labmobile">Staked</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalance.format() }}
+                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalanceUSD ? '$ ' + farm.userInfo.depositBalanceUSD : farm.userInfo.depositBalance.format() }}
                   </div>
                 </Col>
 
@@ -562,16 +564,6 @@
                           </a>
                         </div>
 
-                        <div
-                          class="btncontainer noMobile"
-                          v-if="
-                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                          "
-                        >
-                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
-                        </div>
 
                         <div
                           class="btncontainer"
@@ -585,6 +577,35 @@
                         </div>
                       </div>
                     </div>
+                  
+
+                    <div class="owner" v-if="
+                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                            farm.farmInfo.poolInfo.is_allowed &&
+                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                          ">
+                          <br /><hr /><br />
+
+                      <div class="title" style="text-align:left"><b>Remaining rewards : </b>{{ Math.round((new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals)).toEther() * 1000) / 1000 }}</div>
+
+                      <div class="title" style="text-align:left"><b>End time : </b>{{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toISOString()  }}</div>
+
+                      <br />
+
+
+                        <div
+                          class="btncontainer noMobile"
+                          v-if="
+                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                            farm.farmInfo.poolInfo.is_allowed &&
+                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                          "
+                        >
+                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
+                        </div>
+
+                    </div>
+
                   </div>
                 </Col>
               </Row>
@@ -702,11 +723,11 @@ export default Vue.extend({
       ],
       lifeOptions: [
         { value: 0, label: 'Opened' },
-        { value: 1, label: 'Future' },
+      //  { value: 1, label: 'Future' },
         { value: 2, label: 'Ended' },
         { value: 3, label: 'All' }
       ],
-      searchCertifiedFarm: 0,
+      searchCertifiedFarm: 2,
       searchLifeFarm: 0,
       stakedOnly: false,
       totalCount: 110,
@@ -786,7 +807,7 @@ export default Vue.extend({
 
   mounted() {
 
-        this.$router.push('/');
+    this.$accessor.token.loadTokens()
 
     this.updateFarms()
 
@@ -884,6 +905,7 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
+        if(end_timestamp.toNumber() < 1635452141) { continue; }
 
         if (reward && lp) {
           const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
@@ -909,11 +931,11 @@ export default Vue.extend({
           const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
           const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
           let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
+          newFarmInfo.lpUSDvalue = liquidityItemValue
 
           let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
           let apr = ((rewardPerTimestampAmountTotalValue / farmUsdValue) * 100).toFixed(2)
 
-          console.log(farmUsdValue, rewardPerTimestampAmountTotalValue, apr);
 
 
 
@@ -940,8 +962,6 @@ export default Vue.extend({
             newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
             newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
           }
-
-          console.log(newFarmInfo.apr_details);
 
           if (wallet) {
             let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
@@ -988,6 +1008,15 @@ export default Vue.extend({
             .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
             
+          if(newFarmInfo.lpUSDvalue){
+            userInfo.depositBalanceUSD = 
+                      (Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100) 
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+          }
+
+
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
         } else {
           userInfo = {
@@ -1008,7 +1037,15 @@ export default Vue.extend({
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
-              labelized = true
+
+              if(this.labelizedAmmsExtended[newFarmInfo.poolId].farmhidden == true){
+                 continue; 
+              }
+
+              if(this.labelizedAmmsExtended[newFarmInfo.poolId].labelized == true){
+                labelized = true
+              }
+
               if (
                 this.labelizedAmmsExtended[newFarmInfo.poolId].pfo == true &&
                 newFarmInfo.poolId == this.labelizedAmmsExtended[newFarmInfo.poolId].pfarmID
@@ -1018,11 +1055,9 @@ export default Vue.extend({
             }
           }
 
-          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=Earn ${
-            (newFarmInfo as any).reward.name
-          } with our new farm on @CropperFinance&url=https://cropper.finance/farms/?s=${
+          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${(newFarmInfo as any).lp.coin.symbol}-${(newFarmInfo as any).lp.pc.symbol} on @CropperFinance with ${newFarmInfo.apr}%25 APR%0A%0ACome and join me at https://cropper.finance/farms/?s=${
             (newFarmInfo as any).poolId
-          } &hashtags=${(newFarmInfo as any).lp.coin.symbol},${(newFarmInfo as any).lp.pc.symbol},yieldfarming,Solana`
+          }%0A%0AFarm now, Harvest later.&url= `
 
           if (!isPFO || true) {
             farms.push({
@@ -1951,6 +1986,7 @@ export default Vue.extend({
         font-size: 18px;
         line-height: 21.19px;
         font-weight: 400;
+        text-align: center
       }
     }
   }

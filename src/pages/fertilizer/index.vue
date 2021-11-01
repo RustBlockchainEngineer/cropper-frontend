@@ -261,6 +261,7 @@ export default Vue.extend({
     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
   async mounted() {
+    this.$accessor.token.loadTokens()
     await this.updateLabelizedAmms()
 
     let timer = setInterval(async () => {

@@ -738,8 +738,6 @@ export default class CreateFarm extends Vue {
   }
 
   mounted() {
-  
-        this.$router.push('/');
     const localMarket = localStorage.getItem('createMarket')
     if (localMarket !== null && localMarket.length > 30) {
       this.inputMarket = localMarket

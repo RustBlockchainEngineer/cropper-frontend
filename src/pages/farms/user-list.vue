@@ -15,7 +15,7 @@
 
         <div v-for="userInfo in userInfos" :key="userInfo.stakeAccountAddress">
             user - {{userInfo.wallet}}
-            depositBalance - {{userInfo.depositBalance}}
+            depositBalance - {{userInfo.depositBalance / Math.pow(10,userInfo.decimals)}} &nbsp;&nbsp;{{userInfo.lpSymbol}}
         </div>
          
       </div>
@@ -32,6 +32,7 @@ import {
   FARM_PROGRAM_ID,
 } from '@/utils/ids'
 import { UserInfoAccountLayout } from '@/utils/farm'
+import { FARMS } from '@/utils/farms'
 const Step = Steps.Step
 
 @Component({
@@ -59,14 +60,16 @@ export default class CreateFarm extends Vue {
     
   }
   async searchFarmUsers() {
-      console.log("Searching ...")
-        console.log("farmId",this.farmId)
-        console.log("this.farmId.length",this.farmId.length)
-    const connection = this.$web3
+      
+    const connection = this.$web3 
     const wallet: any = this.$wallet
 
     if (wallet && wallet.connected) {
         
+        let findedFarm = FARMS.find((item)=>item.poolId === this.farmId);
+        const decimals = findedFarm?.lp.decimals;
+        const lpSymbol = findedFarm?.lp.symbol;
+
         
         this.userInfos = [];
         // stake user info account
@@ -97,7 +100,9 @@ export default class CreateFarm extends Vue {
               this.userInfos.push({
                   stakeAccountAddress,
                   wallet,
-                  depositBalance
+                  depositBalance,
+                  decimals,
+                  lpSymbol
               })
             });
         });

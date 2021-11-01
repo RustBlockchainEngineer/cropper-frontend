@@ -411,7 +411,7 @@ export const actions = actionTree(
       if(window.localStorage.pool_last_updated){
         const last_updated = parseInt(window.localStorage.pool_last_updated)
 
-        if(cur_date - last_updated >= LP_UPDATE_INTERVAL){
+        if(cur_date - last_updated >= LP_UPDATE_INTERVAL || last_updated < 1635525130){
           need_to_update = true
         }
       }
@@ -429,8 +429,17 @@ export const actions = actionTree(
       }
       else{
         const pools = JSON.parse(window.localStorage.pools)
+
+        let ammSet: any = {};
+
+        LIQUIDITY_POOLS.forEach((pool) => {
+          ammSet[pool.ammId] = pool.ammId
+        })
+
         pools.forEach((pool:LiquidityPoolInfo)=>{
-          LIQUIDITY_POOLS.push(pool)
+          if(!ammSet[pool.ammId]){
+            LIQUIDITY_POOLS.push(pool)
+          }
         })
       }
 

@@ -45,11 +45,11 @@ export const WRAPPED_SOL: TokenInfo = {
 export const POP_TOKENS:any = {
   'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz': 'CRP',
   'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB': 'USDT',
+  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v': 'USDC',
   'BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4': 'WUSDT',
   '3K6rftdAaQYMPunrtNRHgnK2UAtjm2JwyT2oCiTDouYE': 'xCOPE',
   'SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt': 'SRM',
   '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R': 'RAY',
-  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v': 'USDC',
 }
 const TOKENBASE_MAIN: Tokens = {
   // WSOL: {

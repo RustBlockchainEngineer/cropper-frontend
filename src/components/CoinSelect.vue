@@ -232,6 +232,8 @@ export default Vue.extend({
         token.cache = true
         token.symbol = 'unknown'
         token.name = 'unknown'
+
+        window.localStorage.pool_last_updated = 0
       }
     },
 
