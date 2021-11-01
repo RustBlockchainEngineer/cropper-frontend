@@ -102,6 +102,7 @@ export default Vue.extend({
     line-height: 18px;
     color: #fff;
   }
+
   .coin-input {
     background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
     padding: 2px;
@@ -139,16 +140,18 @@ export default Vue.extend({
       img {
         width: 11px;
         height: 6px;
+        margin-left: 10px;
       }
 
       .fc-container {
         img {
           height: 18px;
           width: 18px;
+          margin-left: 0;
         }
 
         span {
-          margin: 0 10px 0 7px;
+          margin-left: 7px;
           font-size: 18px;
           line-height: 22px;
           font-weight: 400;

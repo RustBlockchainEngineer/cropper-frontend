@@ -39,7 +39,7 @@
           </div>
 
           <Row>
-            <Col :span="isMobile ? 24 : 6" :class="isMobile ? '' : 'step'">
+            <Col :span="isMobile ? 24 : 6" class="step" :class="{ 'bordered-right': !wallet.connected }">
               <Steps :current="current" size="small" direction="vertical" style="width: auto" :status="stepsStatus">
                 <Step
                   ><template slot="title">
@@ -65,7 +65,9 @@
                 </Step>
                 <Step
                   ><template slot="title">
-                    <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">{{ stepTitleMarketInfo }}</div>
+                    <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">
+                      {{ stepTitleMarketInfo }}
+                    </div>
                     <div v-else-if="current === 2 && stepsStatus === 'error'" style="color: red">
                       {{ stepTitleMarketInfo }}
                     </div>
@@ -75,7 +77,9 @@
                 <Step
                   ><template slot="title">
                     <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">{{ stepTitleInit }}</div>
-                    <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">{{ stepTitleInit }}</div>
+                    <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">
+                      {{ stepTitleInit }}
+                    </div>
                     <div v-else style="color: #40426c">{{ stepTitleInit }}</div>
                   </template></Step
                 >
@@ -83,14 +87,16 @@
                 <Step
                   ><template slot="title">
                     <div v-if="current > 4 && stepsStatus !== 'error'">Pool & Farm Created</div>
-                    <div v-else-if="current === 4 && stepsStatus === 'error'" style="color: red">Pool & Farm Created</div>
+                    <div v-else-if="current === 4 && stepsStatus === 'error'" style="color: red">
+                      Pool & Farm Created
+                    </div>
                     <div v-else slot="title" style="color: #40426c">Pool Created</div>
                   </template></Step
                 >
                 <Step
                   ><template slot="title">
-                    <div v-if="current > 5 || (current === 5 && stepsStatus !== 'error')">Farm Informations</div>
-                    <div v-else-if="current === 5 && stepsStatus === 'error'" style="color: red">Farm Informations</div>
+                    <div v-if="current > 5 || (current === 5 && stepsStatus !== 'error')">Farm Initialization</div>
+                    <div v-else-if="current === 5 && stepsStatus === 'error'" style="color: red">Farm Initialization</div>
                     <div v-else style="color: #40426c">Farm Initialization</div>
                   </template></Step
                 >
@@ -104,12 +110,27 @@
               </Steps>
             </Col>
 
-            <Col :span="isMobile ? 24 : 18" class="notstep">
+            <Col :span="isMobile ? 24 : 18" class="notstep" :class="{ 'bordered-left': wallet.connected }">
+              <Row v-if="current === 0 && !wallet.connected">
+                <Col
+                  :span="isMobile ? 24 : 24"
+                  style="text-align: center"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                >
+                  <div v-if="!wallet.connected" class="create">
+                    <Button size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
+                      Connect wallet
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+
               <Row v-if="current === 0 && wallet.connected">
                 <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                   <div>
                     <b>Farm Type:</b>
-                    <br />
+                  </div>
+                  <div class="inner-content">
                     <RadioGroup v-model="farmType" @change="selectFarm">
                       <Radio :value="1">Single yield farm</Radio>
                       <Radio :value="2">Dual yield farm (Soon)</Radio>
@@ -119,13 +140,12 @@
                 <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                   <div>
                     <b>Token pairing and AMM ID:</b>
-                    <br />
+                  </div>
+                  <div class="inner-content">
                     <RadioGroup v-model="ammType" @change="selectAMM">
                       <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
                       <Row class="existing-amm">
-                        <Col
-                          :span="isMobile ? 24 : 8"
-                        >
+                        <Col :span="isMobile ? 24 : 8">
                           <CoinNameInput
                             :label="'Token A'"
                             :mint-address="tokenA ? tokenA.mintAddress : ''"
@@ -133,9 +153,7 @@
                             @onSelect="openTokenASelect"
                           />
                         </Col>
-                        <Col
-                          :span="isMobile ? 24 : 8"
-                        >
+                        <Col :span="isMobile ? 24 : 8">
                           <CoinNameInput
                             :label="'Token B'"
                             :mint-address="tokenB ? tokenB.mintAddress : ''"
@@ -144,13 +162,14 @@
                           />
                         </Col>
                       </Row>
-                      <Row class="selected-pool">
+                      <div class="selected-pool" v-if="userCreateAmmId">
                         Selected Pool
                         <div class="selected-pool-box">
                           <span>AMM ID: {{ userCreateAmmId }}</span>
-                          <span>Pool Liquidity: {{ userCreatePoolLiquidity }}</span>
+                          <span v-if="userCreatePoolLiquidity">Pool Liquidity: {{ userCreatePoolLiquidity }}</span>
+                          <img src="@/assets/icons/close-icon.svg" @click="removeSelected" />
                         </div>
-                      </Row>
+                      </div>
                       <Radio :value="2">Create a new AMM ID</Radio>
                     </RadioGroup>
                   </div>
@@ -158,7 +177,8 @@
                 <Col
                   v-if="ammType === 1"
                   :span="isMobile ? 24 : 24"
-                  style="padding-bottom: 20px; padding-top: 10px; text-align: center"
+                  style="text-align: center"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
                 >
                   <div class="create">
                     <Button
@@ -176,7 +196,8 @@
                 <Col
                   v-if="ammType === 2"
                   :span="isMobile ? 24 : 24"
-                  style="padding-bottom: 20px; padding-top: 10px; text-align: center"
+                  style="text-align: center"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
                 >
                   <div class="create">
                     <Button
@@ -192,19 +213,125 @@
                   </div>
                 </Col>
               </Row>
-              <Row
-                v-if="current === 0 && !wallet.connected"
-                style="align-items: baseline; line-height: 40px; padding-bottom: 20px"
-              >
-                <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
-                  <div v-if="!wallet.connected" class="create">
-                    <Button size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
+
+              <!-- Create Farm -->
+              <Row v-if="current === 5">
+                <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                  <div>
+                    <b>Reward emission:</b>
+                  </div>
+                  <div class="inner-content">
+                    <CoinInput
+                      v-model="fromCoinAmount"
+                      label="Initial Reward Token Amount"
+                      :balance-offset="rewardCoin && rewardCoin.symbol === 'SOL' ? -0.05 : 0"
+                      :mint-address="rewardCoin ? rewardCoin.mintAddress : ''"
+                      :coin-name="rewardCoin ? rewardCoin.symbol : ''"
+                      :balance="rewardCoin ? rewardCoin.balance : null"
+                      :show-half="true"
+                      @onInput="(amount) => (fromCoinAmount = amount)"
+                      @onFocus="
+                        () => {
+                          fixedFromCoin = true
+                        }
+                      "
+                      @onMax="
+                        () => {
+                          fixedFromCoin = true
+                          fromCoinAmount = rewardCoin && rewardCoin.balance ? rewardCoin.balance.fixed() : '0'
+                        }
+                      "
+                      @onSelect="openFromCoinSelect"
+                    />
+                  </div>
+                </Col>
+                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                  <div>
+                    <b>Farm duration:</b>
+                  </div>
+                  <div class="inner-content">
+                    <!-- <DatePicker
+                      v-model="startTime"
+                      show-time
+                      format="YYYY-MM-DD HH:mm:ss"
+                      placeholder="Start"
+                      @openChange="handleStartOpenChange"
+                    />
+                    <DatePicker
+                      v-model="endTime"
+                      show-time
+                      format="YYYY-MM-DD HH:mm:ss"
+                      placeholder="End"
+                      @openChange="handleEndOpenChange"
+                    /> -->
+                    <div class="reward-weekly">
+                      <b>Reward per week:</b>&nbsp; {{ rewardPerWeek }} &nbsp;{{ rewardCoin != null ? rewardCoin.symbol : '' }}
+                    </div>
+                    <div class="amm-id">
+                      <b>AMM ID:</b>&nbsp;{{ userCreateAmmId }}</div>
+                  </div>
+                </Col>
+
+                <Col :span="isMobile ? 24 : 24" style="text-align: center">
+                  <div class="create">
+                    <Button
+                      v-if="!wallet.connected"
+                      size="large"
+                      ghost
+                      style="width: 100%"
+                      @click="$accessor.wallet.openModal"
+                    >
                       Connect wallet
+                    </Button>
+                    <Button
+                      v-else
+                      size="large"
+                      :disabled="!wallet.connected"
+                      ghost
+                      style="z-index: 999; width: 100%"
+                      @click="confirmFarmInfo"
+                    >
+                      Confirm
                     </Button>
                   </div>
                 </Col>
               </Row>
-              <Row v-if="current === 1" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
+
+              <Row v-if="current === 6">
+                <Col
+                  v-if="!isCRPTokenPair"
+                  style="line-height: 20px"
+                  :span="24"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                >
+                  <div>Farm has been successfully created!</div>
+                </Col>
+                <Col :span="isMobile ? 24 : 24">
+                  <div class="create">
+                    <Button
+                      v-if="!wallet.connected"
+                      size="large"
+                      ghost
+                      style="width: 100%"
+                      @click="$accessor.wallet.openModal"
+                    >
+                      Connect wallet
+                    </Button>
+                    <Button
+                      v-else
+                      size="large"
+                      :disabled="!wallet.connected"
+                      ghost
+                      style="z-index: 999; width: 100%"
+                      @click="gotoFarms"
+                    >
+                      View Farms
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row v-if="current === 1">
                 <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                   <div style="padding-bottom: 10px; word-break: break-word">
                     This tool is for advanced users. Before attempting to create a new liquidity pool, we suggest going
@@ -225,7 +352,11 @@
                   ><input v-model="inputMarket" :disabled="!marketInputFlag"
                 /></Col>
 
-                <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
+                <Col
+                  :span="isMobile ? 24 : 24"
+                  style="text-align: center"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                >
                   <div class="create">
                     <Button
                       v-if="!wallet.connected"
@@ -246,11 +377,14 @@
                       :loading="getMarketLoading"
                       @click="marketInputFlag ? getMarketMsg() : rewriteMarket()"
                     >
-                      {{ !wallet.connected ? 'Connect' : getMarketLoading ? '' : marketInputFlag ? 'Confirm' : 'Cancel' }}
+                      {{
+                        !wallet.connected ? 'Connect' : getMarketLoading ? '' : marketInputFlag ? 'Confirm' : 'Cancel'
+                      }}
                     </Button>
                   </div>
                 </Col>
               </Row>
+
               <div v-if="current >= 2 && current < 5" style="margin-top: 10px" class="msgClass">
                 <Row>
                   <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'"
@@ -433,127 +567,6 @@
                   </Col>
                 </Row>
               </div>
-
-              <!-- Create Farm -->
-              <Row v-if="current === 5" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
-                <Col style="line-height: 20px" :span="24">
-                  <CoinInput
-                    v-model="fromCoinAmount"
-                    label="Initial Reward Token Amount"
-                    :balance-offset="rewardCoin && rewardCoin.symbol === 'SOL' ? -0.05 : 0"
-                    :mint-address="rewardCoin ? rewardCoin.mintAddress : ''"
-                    :coin-name="rewardCoin ? rewardCoin.symbol : ''"
-                    :balance="rewardCoin ? rewardCoin.balance : null"
-                    :show-half="true"
-                    @onInput="(amount) => (fromCoinAmount = amount)"
-                    @onFocus="
-                      () => {
-                        fixedFromCoin = true
-                      }
-                    "
-                    @onMax="
-                      () => {
-                        fixedFromCoin = true
-                        fromCoinAmount = rewardCoin && rewardCoin.balance ? rewardCoin.balance.fixed() : '0'
-                      }
-                    "
-                    @onSelect="openFromCoinSelect"
-                  />
-                </Col>
-
-                <Col
-                  style="line-height: 20px"
-                  :span="isMobile ? 24 : 12"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                >
-                  <DatePicker
-                    v-model="startTime"
-                    show-time
-                    format="YYYY-MM-DD HH:mm:ss"
-                    placeholder="Start"
-                    @openChange="handleStartOpenChange"
-                  />
-                </Col>
-
-                <Col
-                  style="line-height: 20px"
-                  :span="isMobile ? 24 : 12"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                >
-                  <DatePicker
-                    v-model="endTime"
-                    show-time
-                    format="YYYY-MM-DD HH:mm:ss"
-                    placeholder="End"
-                    @openChange="handleEndOpenChange"
-                  />
-                </Col>
-                <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
-                  <div>
-                    Reward Per Week:&nbsp;{{ rewardPerWeek }} &nbsp;{{ rewardCoin != null ? rewardCoin.symbol : '' }}
-                  </div>
-                </Col>
-                <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
-                  <div>AMM ID:&nbsp;{{ userCreateAmmId }}</div>
-                </Col>
-
-                <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
-                  <div class="create">
-                    <Button
-                      v-if="!wallet.connected"
-                      size="large"
-                      ghost
-                      style="width: 100%"
-                      @click="$accessor.wallet.openModal"
-                    >
-                      Connect wallet
-                    </Button>
-                    <Button
-                      v-else
-                      size="large"
-                      :disabled="!wallet.connected"
-                      ghost
-                      style="z-index: 999; width: 100%"
-                      @click="confirmFarmInfo"
-                    >
-                      Confirm
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-              <Row v-if="current === 6" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
-                <Col
-                  v-if="!isCRPTokenPair"
-                  style="line-height: 20px"
-                  :span="24"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                >
-                  <div>Farm has been successfully created!</div>
-                </Col>
-                <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
-                  <div class="create">
-                    <Button
-                      v-if="!wallet.connected"
-                      size="large"
-                      ghost
-                      style="width: 100%"
-                      @click="$accessor.wallet.openModal"
-                    >
-                      Connect wallet
-                    </Button>
-                    <Button
-                      v-else
-                      size="large"
-                      :disabled="!wallet.connected"
-                      ghost
-                      style="z-index: 999; width: 100%"
-                      @click="gotoFarms"
-                    >
-                      View Farms
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
             </Col>
           </Row>
         </div>
@@ -907,12 +920,15 @@ export default class CreateFarm extends Vue {
   onAmmIdSelect(liquidityInfo: LiquidityPoolInfo | undefined) {
     this.ammIdSelectShow = false
     if (liquidityInfo) {
-      console.log(( liquidityInfo.pc.balance ? getBigNumber((liquidityInfo.pc.balance as TokenAmount).toEther()) : 0));
-      let SymbolA = liquidityInfo.coin.symbol;
-      let SymbolB = liquidityInfo.pc.symbol;;
-      let SymbolA_value = liquidityInfo.coin.balance ? getBigNumber((liquidityInfo.coin.balance as TokenAmount).toEther()) : 0;
-      let SymbolB_value = liquidityInfo.pc.balance ? getBigNumber((liquidityInfo.pc.balance as TokenAmount).toEther()) : 0;
-      this.userCreatePoolLiquidity = SymbolA_value + " " + SymbolA + " | " + SymbolB_value + " " + SymbolB;
+      let SymbolA = liquidityInfo.coin.symbol
+      let SymbolB = liquidityInfo.pc.symbol
+      let SymbolA_value = liquidityInfo.coin.balance
+        ? getBigNumber((liquidityInfo.coin.balance as TokenAmount).toEther())
+        : 0
+      let SymbolB_value = liquidityInfo.pc.balance
+        ? getBigNumber((liquidityInfo.pc.balance as TokenAmount).toEther())
+        : 0
+      this.userCreatePoolLiquidity = SymbolA_value + ' ' + SymbolA + ' | ' + SymbolB_value + ' ' + SymbolB
       this.userCreateAmmId = liquidityInfo.ammId
     } else {
       this.userCreateAmmId = ''
@@ -946,6 +962,8 @@ export default class CreateFarm extends Vue {
     }
   }
   onCoinSelect(tokenInfo: TokenInfo) {
+    this.userCreateAmmId = ''
+    this.userCreatePoolLiquidity = ''
     if (tokenInfo !== null) {
       if (this.selectFromCoin) {
         this.rewardCoin = cloneDeep(tokenInfo)
@@ -1195,11 +1213,16 @@ export default class CreateFarm extends Vue {
   }
 
   selectFarm(e: { target: { value: any } }) {
-    console.log(e.target.value);
+    console.log(e.target.value)
   }
 
   selectAMM(e: { target: { value: any } }) {
-    console.log(e.target.value);
+    console.log(e.target.value)
+  }
+
+  removeSelected() {
+    this.userCreateAmmId = ''
+    this.userCreatePoolLiquidity = ''
   }
 }
 </script>
@@ -1210,10 +1233,15 @@ export default class CreateFarm extends Vue {
     min-height: 60px;
   }
 
-  .ant-steps-item-active {
+  .ant-steps-item-active,
+  .ant-steps-item-finish {
     .ant-steps-item-tail::after,
     .ant-steps-item-icon {
       background-color: #13ecab !important;
+    }
+
+    .ant-steps-item-title {
+      color: #13ecab !important;
     }
   }
 
@@ -1247,25 +1275,24 @@ export default class CreateFarm extends Vue {
 
 .ant-radio-group {
   width: 100%;
-  padding-left: 30px;
 }
 
-.ant-radio-wrapper{
+.ant-radio-wrapper {
   display: flex;
   align-items: center;
   font-size: 20px;
   line-height: 25px;
-  color: #40426C;
-  margin-top: 20px;
+  color: #40426c;
+  margin-bottom: 20px;
 }
 
-.ant-radio-wrapper-checked{
+.ant-radio-wrapper-checked {
   color: #fff;
 }
 
 .ant-radio {
   .ant-radio-inner {
-    background: #16164A;
+    background: #16164a;
     border: 2px solid #40426c;
     box-sizing: border-box;
     border-radius: 7px;
@@ -1289,11 +1316,11 @@ export default class CreateFarm extends Vue {
 
 .ant-radio-checked {
   .ant-radio-inner {
-    border-color: #EF745D;
+    border-color: #ef745d;
   }
 
   .ant-radio-inner::after {
-    background-color: #EF745D;
+    background-color: #ef745d;
   }
 }
 
@@ -1301,18 +1328,18 @@ export default class CreateFarm extends Vue {
   border: none;
 }
 
-.ant-radio-wrapper:hover .ant-radio-inner, .ant-radio:hover .ant-radio-inner{
-  border-color: #EF745D;
+.ant-radio-wrapper:hover .ant-radio-inner,
+.ant-radio:hover .ant-radio-inner {
+  border-color: #ef745d;
 }
 
-.ant-radio .ant-radio-input:focus + .ant-radio-inner  {
+.ant-radio .ant-radio-input:focus + .ant-radio-inner {
   border-color: #40426c;
 }
 
-.ant-radio-checked .ant-radio-input:focus + .ant-radio-inner  {
-  border-color: #EF745D;
+.ant-radio-checked .ant-radio-input:focus + .ant-radio-inner {
+  border-color: #ef745d;
 }
-
 </style>
 
 <style lang="less" scoped>
@@ -1366,10 +1393,10 @@ main {
   }
 
   .design-farm {
-    border: 4px solid #16164A;
+    border: 4px solid #16164a;
     border-radius: 14px;
     padding: 40px 60px;
-    background-color: #16164A;
+    background-color: #16164a;
 
     .title {
       font-size: 30px;
@@ -1379,12 +1406,19 @@ main {
     }
   }
 
+  .bordered-left {
+    border-left: 3px solid #ffffff30;
+  }
+
+  .bordered-right {
+    border-right: 3px solid #ffffff30;
+  }
+
   .step {
     padding-top: 20px;
   }
 
   .notstep {
-    border-left: 3px solid #ffffff30;
     vertical-align: middle;
     padding: 0 50px;
 
@@ -1393,7 +1427,11 @@ main {
       line-height: 40px;
 
       .item-title {
-        margin-bottom: 50px;
+        margin-bottom: 30px;
+
+        .inner-content {
+          padding: 20px 0 0 30px;
+        }
 
         b {
           font-weight: bold;
@@ -1403,7 +1441,7 @@ main {
 
         .existing-amm,
         .selected-pool {
-          padding: 25px 0 25px 30px;
+          padding: 0 0 25px 30px;
         }
 
         .selected-pool {
@@ -1411,6 +1449,7 @@ main {
           line-height: 18px;
 
           .selected-pool-box {
+            position: relative;
             margin-top: 10px;
             padding: 17px 0;
             background: rgba(255, 255, 255, 0.06);
@@ -1419,13 +1458,27 @@ main {
             font-size: 18px;
             line-height: 22px;
             text-align: center;
-            color: #FFF;
+            color: #fff;
 
-            span:nth-child(1) {
+            span:nth-child(2) {
               display: block;
-              margin-bottom: 12px;
+              margin-top: 12px;
+            }
+
+            img {
+              position: absolute;
+              top: 6px;
+              right: 9px;
+              cursor: pointer;
             }
           }
+        }
+
+        .reward-weekly,
+        .amm-id {
+          font-size: 18px;
+          line-height: 22px;
+          margin-bottom: 15px;
         }
       }
     }
