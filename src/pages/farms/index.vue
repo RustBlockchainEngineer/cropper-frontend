@@ -564,16 +564,6 @@ If the pop up for the second operation does not appear, it may have popped up be
                           </a>
                         </div>
 
-                        <div
-                          class="btncontainer noMobile"
-                          v-if="
-                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                          "
-                        >
-                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
-                        </div>
 
                         <div
                           class="btncontainer"
@@ -587,6 +577,35 @@ If the pop up for the second operation does not appear, it may have popped up be
                         </div>
                       </div>
                     </div>
+                  
+
+                    <div class="owner" v-if="
+                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                            farm.farmInfo.poolInfo.is_allowed &&
+                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                          ">
+                          <br /><hr /><br />
+
+                      <div class="title" style="text-align:left"><b>Remaining rewards : </b>{{ Math.round((new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals)).toEther() * 1000) / 1000 }}</div>
+
+                      <div class="title" style="text-align:left"><b>End time : </b>{{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toISOString()  }}</div>
+
+                      <br />
+
+
+                        <div
+                          class="btncontainer noMobile"
+                          v-if="
+                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                            farm.farmInfo.poolInfo.is_allowed &&
+                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                          "
+                        >
+                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
+                        </div>
+
+                    </div>
+
                   </div>
                 </Col>
               </Row>
