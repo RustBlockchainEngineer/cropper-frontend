@@ -111,7 +111,6 @@ export const actions:any = actionTree(
           TOKENS[key] = value
         }
       }
-
       logger('Token list updated')
 
       commit('setInitialized')
