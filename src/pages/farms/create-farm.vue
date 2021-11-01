@@ -18,23 +18,29 @@
     <div class="card">
       <div class="card-body" style="grid-row-gap: 0; row-gap: 0; padding-bottom: 15px">
         <div class="page-head fs-container">
-          <span class="title">Create a farm</span>
+          <span class="title">Design your own farm</span>
         </div>
 
         <Row>
-          <Col :span="isMobile ? 24 : 6" :style="isMobile ? '' : 'border-right: 1px solid #444A58;padding-top:20px'">
+          <Col :span="isMobile ? 24 : 6" :class="isMobile ? '' : 'step'">
             <Steps :current="current" size="small" direction="vertical" style="width: auto" :status="stepsStatus">
               <Step
                 ><template slot="title">
-                  <div>Select an option</div>
+                  <div style="color: #13ecab">Select options</div>
                 </template></Step
               >
               <Step>
-                <p slot="title" :style="current > 1 ? '' : 'color: rgb(87, 117, 147)'">
+                <p slot="title" :style="current > 1 ? '' : 'color: #40426C'">
                   {{ stepTitleInputMarket }}
                   <Tooltip placement="right">
-                    <div slot="title">For details on creating a market ID,
-                      <a href="//cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool" target="_blank"> click here</a>
+                    <div slot="title">
+                      For details on creating a market ID,
+                      <a
+                        href="//cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                        target="_blank"
+                      >
+                        click here</a
+                      >
                     </div>
                     <Icon type="info-circle" />
                   </Tooltip>
@@ -46,14 +52,14 @@
                   <div v-else-if="current === 2 && stepsStatus === 'error'" style="color: red">
                     {{ stepTitleMarketInfo }}
                   </div>
-                  <div v-else style="color: rgb(87, 117, 147)">{{ stepTitleMarketInfo }}</div>
+                  <div v-else style="color: #40426c">{{ stepTitleMarketInfo }}</div>
                 </template></Step
               >
               <Step
                 ><template slot="title">
                   <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">{{ stepTitleInit }}</div>
                   <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">{{ stepTitleInit }}</div>
-                  <div v-else style="color: rgb(87, 117, 147)">{{ stepTitleInit }}</div>
+                  <div v-else style="color: #40426c">{{ stepTitleInit }}</div>
                 </template></Step
               >
 
@@ -61,75 +67,76 @@
                 ><template slot="title">
                   <div v-if="current > 4 && stepsStatus !== 'error'">Pool & Farm Created</div>
                   <div v-else-if="current === 4 && stepsStatus === 'error'" style="color: red">Pool & Farm Created</div>
-                  <div v-else slot="title" style="color: rgb(87, 117, 147)">Pool Created</div>
+                  <div v-else slot="title" style="color: #40426c">Pool Created</div>
                 </template></Step
               >
               <Step
                 ><template slot="title">
                   <div v-if="current > 5 || (current === 5 && stepsStatus !== 'error')">Farm Informations</div>
                   <div v-else-if="current === 5 && stepsStatus === 'error'" style="color: red">Farm Informations</div>
-                  <div v-else style="color: rgb(87, 117, 147)">Farm Informations</div>
+                  <div v-else style="color: #40426c">Farm Initialization</div>
                 </template></Step
               >
               <Step
                 ><template slot="title">
                   <div v-if="current > 6 || (current === 6 && stepsStatus !== 'error')">Farm Created</div>
                   <div v-else-if="current === 6 && stepsStatus === 'error'" style="color: red">Farm Created</div>
-                  <div v-else style="color: rgb(87, 117, 147)">Farm Created</div>
+                  <div v-else style="color: #40426c">Farm Created</div>
                 </template></Step
               >
             </Steps>
           </Col>
 
           <Col :span="isMobile ? 24 : 18" class="notstep">
-            <Row
-              v-if="current === 0 && wallet.connected"
-              style="align-items: baseline; line-height: 40px; padding-bottom: 20px"
-            >
-              <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                ><div style="padding-bottom: 10px; word-break: break-word">
-                  Here are two options. You can use existing CropperFinance Liquidity Pool to create your farm or if not
-                  any Liquidity Pool exist for your pair, create a new one.
-                </div>
-                <br />
+            <Row v-if="current === 0 && wallet.connected">
+              <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                 <div>
-                  <b
-                    >Option 1 - Select token pairing or input Amm Id (we strongly recommend to input the AMM id to be
-                    sure you use the right pool):</b
-                  >
+                  <b>Farm Type:</b>
+                  <br />
+                  <RadioGroup v-model="farmType" @change="selectFarm">
+                    <Radio :value="1">Single yield farm</Radio>
+                    <Radio :value="2">Dual yield farm (Soon)</Radio>
+                  </RadioGroup>
                 </div>
               </Col>
-              <Col
-                style="line-height: 20px"
-                :span="isMobile ? 24 : 12"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-              >
-                <CoinNameInput
-                  :label="'Token A'"
-                  :mint-address="tokenA ? tokenA.mintAddress : ''"
-                  :coin-name="tokenA ? tokenA.symbol : ''"
-                  @onSelect="openTokenASelect"
-                />
+              <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <div>
+                  <b>Token pairing and AMM ID:</b>
+                  <br />
+                  <RadioGroup v-model="ammType" @change="selectAMM">
+                    <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
+                    <Row class="existing-amm">
+                      <Col
+                        :span="isMobile ? 24 : 8"
+                      >
+                        <CoinNameInput
+                          :label="'Token A'"
+                          :mint-address="tokenA ? tokenA.mintAddress : ''"
+                          :coin-name="tokenA ? tokenA.symbol : ''"
+                          @onSelect="openTokenASelect"
+                        />
+                      </Col>
+                      <Col
+                        :span="isMobile ? 24 : 8"
+                      >
+                        <CoinNameInput
+                          :label="'Token B'"
+                          :mint-address="tokenB ? tokenB.mintAddress : ''"
+                          :coin-name="tokenB ? tokenB.symbol : ''"
+                          @onSelect="openTokenBSelect"
+                        />
+                      </Col>
+                    </Row>
+                    <Radio :value="2">Create a new AMM ID</Radio>
+                  </RadioGroup>
+                </div>
               </Col>
-              <Col
-                style="line-height: 20px"
-                :span="isMobile ? 24 : 12"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-              >
-                <CoinNameInput
-                  :label="'Token B'"
-                  :mint-address="tokenB ? tokenB.mintAddress : ''"
-                  :coin-name="tokenB ? tokenB.symbol : ''"
-                  @onSelect="openTokenBSelect"
-                />
-              </Col>
-              <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+              <!-- <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                 <div>AMM ID:</div>
               </Col>
-              <Col style="line-height: 20px" :span="24"><input v-model="userCreateAmmId" /></Col>
-
+              <Col :span="24"><input v-model="userCreateAmmId" /></Col> -->
               <Col
-                v-if="userCreateAmmId != ''"
+                v-if="ammType === 1"
                 :span="isMobile ? 24 : 24"
                 style="padding-bottom: 20px; padding-top: 10px; text-align: center"
               >
@@ -147,16 +154,7 @@
                 </div>
               </Col>
               <Col
-                v-if="userCreateAmmId === ''"
-                style="line-height: 20px"
-                :span="24"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                ><br />
-                <div><b>Option 2 - Create a new Pool</b></div>
-              </Col>
-
-              <Col
-                v-if="userCreateAmmId === ''"
+                v-if="ammType === 2"
                 :span="isMobile ? 24 : 24"
                 style="padding-bottom: 20px; padding-top: 10px; text-align: center"
               >
@@ -187,11 +185,16 @@
               </Col>
             </Row>
             <Row v-if="current === 1" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
-              <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+              <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                 <div style="padding-bottom: 10px; word-break: break-word">
                   This tool is for advanced users. Before attempting to create a new liquidity pool, we suggest going
                   through this
-                  <a href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool" target="_blank"> detailed guide.</a>
+                  <a
+                    href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                    target="_blank"
+                  >
+                    detailed guide.</a
+                  >
                 </div>
                 <div>Input Serum Market ID:</div>
                 <div>CRP/USDC: HPU7v2yCGM6sRujWEMaTPiiiX2qMb6fun3eWjTzSgSw1</div>
@@ -540,7 +543,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
-import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker } from 'ant-design-vue'
+import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Checkbox, Radio } from 'ant-design-vue'
 import { getMarket, createAmm, clearLocal } from '@/utils/market'
 import BigNumber from '@/../node_modules/bignumber.js/bignumber'
 import { NATIVE_SOL, TokenInfo, TOKENS } from '@/utils/tokens'
@@ -558,6 +561,7 @@ import moment from 'moment'
 import { YieldFarm } from '@/utils/farm'
 import { getPoolListByTokenMintAddresses, LIQUIDITY_POOLS, LiquidityPoolInfo } from '@/utils/pools'
 const Step = Steps.Step
+const RadioGroup = Radio.Group
 
 @Component({
   head: {
@@ -571,7 +575,10 @@ const Step = Steps.Step
     Step,
     Tooltip,
     Icon,
-    DatePicker
+    DatePicker,
+    Checkbox,
+    RadioGroup,
+    Radio
   }
 })
 export default class CreateFarm extends Vue {
@@ -613,9 +620,9 @@ export default class CreateFarm extends Vue {
 
   createAmmFlag: boolean = false
 
-  stepTitleInputMarket: string = 'Import Serum Market ID'
+  stepTitleInputMarket: string = 'Market ID'
   stepTitleMarketInfo: string = 'Price & Initial Liquidity'
-  stepTitleInit: string = 'Initialize'
+  stepTitleInit: string = 'Pool initialization'
 
   marketTickSize: number = 1
 
@@ -626,6 +633,9 @@ export default class CreateFarm extends Vue {
   userLocalAmmIdList: string[] = []
 
   expectAmmId: undefined | string
+
+  farmType: number = 1
+  ammType: number = 1
 
   get rewardPerWeek() {
     let result = 0
@@ -1153,26 +1163,134 @@ export default class CreateFarm extends Vue {
         throw error
       })
   }
+
+  selectFarm(e: { target: { value: any } }) {
+    console.log(e.target.value);
+  }
+
+  selectAMM(e: { target: { value: any } }) {
+    console.log(e.target.value);
+  }
 }
 </script>
+
+<style lang="less">
+.ant-steps-vertical {
+  .ant-steps-item-content {
+    min-height: 60px;
+  }
+
+  .ant-steps-item-active {
+    .ant-steps-item-tail::after,
+    .ant-steps-item-icon {
+      background-color: #13ecab !important;
+    }
+  }
+
+  .ant-steps-item {
+    .ant-steps-item-container {
+      .ant-steps-item-tail::after {
+        background-color: #40426c;
+      }
+
+      .ant-steps-item-icon {
+        width: 26px;
+        height: 26px;
+        background-color: #40426c;
+
+        .ant-steps-icon {
+          font-size: 20px;
+          font-weight: 600;
+          line-height: 25px;
+          color: #01033c;
+        }
+      }
+
+      .ant-steps-item-title {
+        font-size: 20px;
+        line-height: 25px;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.ant-radio-group {
+  width: 100%;
+  padding-left: 30px;
+}
+
+.ant-radio-wrapper{
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  line-height: 25px;
+  color: #40426C;
+  margin-top: 20px;
+}
+
+.ant-radio-wrapper-checked{
+  color: #fff;
+}
+
+.ant-radio {
+  .ant-radio-inner {
+    background: #16164A;
+    border: 2px solid #40426c;
+    box-sizing: border-box;
+    border-radius: 7px;
+    width: 21px;
+    height: 21px;
+  }
+
+  .ant-radio-inner::after {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    border-radius: 4px;
+    top: 2px;
+    left: 2px;
+    transform: scale(1);
+    opacity: 1;
+    transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+    background-color: transparent;
+  }
+}
+
+.ant-radio-checked {
+  .ant-radio-inner {
+    border-color: #EF745D;
+  }
+
+  .ant-radio-inner::after {
+    background-color: #EF745D;
+  }
+}
+
+.ant-radio-checked::after {
+  border: none;
+}
+
+.ant-radio-wrapper:hover .ant-radio-inner, .ant-radio:hover .ant-radio-inner{
+  border-color: #EF745D;
+}
+
+.ant-radio .ant-radio-input:focus + .ant-radio-inner  {
+  border-color: #40426c;
+}
+
+.ant-radio-checked .ant-radio-input:focus + .ant-radio-inner  {
+  border-color: #EF745D;
+}
+
+</style>
+
 <style lang="less" scoped>
 main {
   background-color: #01033c;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
-}
-
-.steps {
-  display: inline-block;
-  width: 30%;
-  border-right: 1px solid #444a58;
-  padding-top: 24px;
-}
-
-.notstep {
-  vertical-align: middle;
-  padding: 10px 40px;
 }
 
 .create-pool {
@@ -1201,46 +1319,60 @@ main {
     }
   }
 
+  .card {
+    background: #16164A;
+    border: 4px solid #16164A;
+    border-radius: 14px;
+  }
+
   .card-body {
-    padding: 10px 60px 15px;
+    padding: 40px 60px;
+    background-color: #16164A;
+
+    .title {
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 37px;
+      background: transparent;
+    }
+  }
+
+  .step {
+    border-right: 3px solid #ffffff30;
+    padding-top: 20px;
+  }
+
+  .notstep {
+    vertical-align: middle;
+    padding: 0 50px;
+
+    .ant-row {
+      align-items: baseline;
+      line-height: 40px;
+
+      .item-title {
+        margin-bottom: 50px;
+
+        b {
+          font-weight: bold;
+          font-size: 20px;
+          line-height: 25px;
+        }
+
+        .existing-amm {
+          padding: 25px 0 25px 30px;
+        }
+      }
+    }
   }
 }
-.create-pool-mobile {
-  width: 100%;
-}
+
 .coin-select .coin-input button:hover {
   background-color: rgba(0, 0, 0, 0.9471) !important;
 }
 
-input {
-  background: transparent;
-  outline: none;
-  border: none;
-  border-bottom: 1px #ccc solid;
-  width: 90%;
-  margin: 0 5%;
-}
-.item-title {
-  text-align: left;
-  padding-right: 5%;
-}
-.item-title-mobile {
-  text-align: left;
-  padding-right: 5%;
-}
-div {
-  word-break: break-all;
-  word-wrap: break-word;
-}
-.item-msg-mobile {
-  padding-left: 10px;
-}
 .ant-layout {
   background: #01033c !important;
-}
-
-.ant-col {
-  margin-bottom: 10px;
 }
 .msgClass div {
   line-height: 30px;

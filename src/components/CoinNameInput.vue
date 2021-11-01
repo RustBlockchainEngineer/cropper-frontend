@@ -11,7 +11,7 @@
             <span>{{ coinName }}</span>
           </div>
           <span v-else>Select a token</span>
-          <Icon type="caret-down" />
+          <img src="@/assets/icons/arrow-down.svg" />
         </button>
       </div>
     </div>
@@ -20,15 +20,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Icon } from 'ant-design-vue'
-
 import { lt } from '@/utils/safe-math'
 
 export default Vue.extend({
-  components: {
-    Icon
-  },
-
   model: {
     prop: 'value',
     event: 'onInput'
@@ -99,25 +93,27 @@ export default Vue.extend({
 @import '../styles/variables';
 
 .coin-select {
-  background: rgba(0,0,0,0.9471);
-  border-radius: 13px;
-
+  display: flex;
+  align-items: center;
+  
   .label {
-    padding: 0.75rem 1rem 0;
-    font-size: 12px;
-    line-height: 14px;
-    color: rgb(133, 133, 141);
+    margin-right: 15px;
+    font-size: 15px;
+    line-height: 18px;
+    color: #fff;
   }
   .coin-input {
-    padding: 0.75rem 0.75rem 0.75rem 1rem;
+    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    padding: 2px;
+    border-radius: 8px;
 
     button {
       border: none;
-      background-color: transparent;
+      background-color: #01033C;
       font-weight: 600;
       font-size: 14px;
       line-height: 22px;
-      border-radius: 4px;
+      border-radius: 8px;
       white-space: nowrap;
       cursor: pointer;
 
@@ -132,18 +128,31 @@ export default Vue.extend({
       }
     }
     .select-button {
-      padding: 0.5rem;
+      padding: 10px 18px;
       line-height: 24px;
 
       .anticon {
         margin-left: 4px;
         font-size: 8px;
       }
-
+      
       img {
-        margin-right: 5px;
-        height: 24px;
-        width: 24px;
+        width: 11px;
+        height: 6px;
+      }
+
+      .fc-container {
+        img {
+          height: 18px;
+          width: 18px;
+        }
+
+        span {
+          margin: 0 10px 0 7px;
+          font-size: 18px;
+          line-height: 22px;
+          font-weight: 400;
+        }
       }
     }
 
