@@ -216,7 +216,7 @@
 
               <!-- Create Farm -->
               <Row v-if="current === 5">
-                <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="isMobile ? 24 : 16" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                   <div>
                     <b>Reward emission:</b>
                   </div>
@@ -243,27 +243,36 @@
                       "
                       @onSelect="openFromCoinSelect"
                     />
+                    <div class="label">
+                      <span><em><u>Note:</u> you will be able to add rewards into your farm whenever you want.</em></span>
+                    </div>
                   </div>
                 </Col>
-                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="isMobile ? 24 : 16" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                   <div>
                     <b>Farm duration:</b>
                   </div>
                   <div class="inner-content">
-                    <!-- <DatePicker
-                      v-model="startTime"
-                      show-time
-                      format="YYYY-MM-DD HH:mm:ss"
-                      placeholder="Start"
-                      @openChange="handleStartOpenChange"
-                    />
-                    <DatePicker
-                      v-model="endTime"
-                      show-time
-                      format="YYYY-MM-DD HH:mm:ss"
-                      placeholder="End"
-                      @openChange="handleEndOpenChange"
-                    /> -->
+                    <label class="label-today">From today</label>
+                    <div class="calendar-from">
+                      <img src="@/assets/icons/calendar-from.svg" />
+                      <DatePicker
+                        v-model="startTime"
+                        format="dddd, DD MMMM YYYY"
+                        @openChange="handleStartOpenChange"
+                        disabled
+                      />
+                    </div>
+                    <label class="label-to">To</label>
+                    <div class="calendar-to">
+                      <img src="@/assets/icons/calendar-to.svg" />
+                      <DatePicker
+                        v-model="endTime"
+                        format="dddd, DD MMMM YYYY"
+                        @openChange="handleEndOpenChange"
+                      />
+                      <img src="@/assets/icons/arrow-down.svg" />
+                    </div>
                     <div class="reward-weekly">
                       <b>Reward per week:</b>&nbsp; {{ rewardPerWeek }} &nbsp;{{ rewardCoin != null ? rewardCoin.symbol : '' }}
                     </div>
@@ -1340,6 +1349,150 @@ export default class CreateFarm extends Vue {
 .ant-radio-checked .ant-radio-input:focus + .ant-radio-inner {
   border-color: #ef745d;
 }
+
+.ant-calendar-picker {
+  margin-bottom: 15px;
+  width: 100%;
+
+  i {
+    display: none;
+  }
+}
+
+.ant-calendar-picker-input.ant-input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px;
+  padding: 25px 0;
+  text-align: center;
+  border: none;
+  color: #ffffff50;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.ant-calendar-picker-container {
+  width: 585px;
+
+  .ant-calendar {
+    top: 60px;
+    background: #1A1D6B;
+    box-shadow: 0 30px 84px rgba(19, 10, 46, 0.08), 0 8px 32px rgba(19, 10, 46, 0.07), 0 3px 14px rgba(19, 10, 46, 0.03), 0 1px 3px rgba(19, 10, 46, 0.13);
+    border-radius: 12px;
+    border: none;
+
+    .ant-calendar-panel {
+      .ant-calendar-input-wrap {
+        display: none;
+      }
+
+      // Day Panel
+      .ant-calendar-date-panel {
+        background: #1A1D6B;
+        .ant-calendar-header {
+          border: none;
+        }
+        .ant-calendar-footer {
+          display: none;
+        }
+      }
+
+      // Month Panel
+      .ant-calendar-month-panel {
+        background: #1A1D6B;
+        .ant-calendar-month-panel-header {
+          border: none;
+        }
+        .ant-calendar-month-panel-footer {
+          display: none;
+        }
+      }
+
+      // Year Panel
+      .ant-calendar-year-panel {
+        background: #1A1D6B;
+        .ant-calendar-year-panel-header {
+          border: none;
+        }
+        .ant-calendar-year-panel-footer {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .ant-calendar table, .ant-calendar th {
+    // Day Selection
+    .ant-calendar-selected-day .ant-calendar-date {
+      background: #EF745D;
+    }
+
+    .ant-calendar-cell {
+      .ant-calendar-date {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 40px;
+        color: #F8F7FA;
+      }
+
+      .ant-calendar-date:hover {
+        background-color: #EF745D;
+      }
+    }
+
+    .ant-calendar-last-month-cell {
+      visibility: hidden;
+    }
+
+    .ant-calendar-next-month-btn-day {
+      display: none;
+    }
+    
+    // Month Selection
+    .ant-calendar-month-panel-selected-cell .ant-calendar-month-panel-month{
+      background: #EF745D;
+    }
+
+    .ant-calendar-month-panel-cell {
+      .ant-calendar-month-panel-month {
+        max-width: 75px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 40px;
+        color: #F8F7FA;
+      }
+
+      .ant-calendar-month-panel-month:hover {
+        background-color: #EF745D;
+      }
+    }
+
+    // Year Selection
+    .ant-calendar-year-panel-selected-cell .ant-calendar-year-panel-year{
+      background: #EF745D;
+    }
+
+    .ant-calendar-year-panel-cell {
+      .ant-calendar-year-panel-year {
+        max-width: 75px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 40px;
+        color: #F8F7FA;
+      }
+
+      .ant-calendar-year-panel-year:hover {
+        background-color: #EF745D;
+      }
+    }
+  }
+}
 </style>
 
 <style lang="less" scoped>
@@ -1428,22 +1581,7 @@ main {
 
       .item-title {
         margin-bottom: 30px;
-
-        .inner-content {
-          padding: 20px 0 0 30px;
-        }
-
-        b {
-          font-weight: bold;
-          font-size: 20px;
-          line-height: 25px;
-        }
-
-        .existing-amm,
-        .selected-pool {
-          padding: 0 0 25px 30px;
-        }
-
+        
         .selected-pool {
           font-size: 15px;
           line-height: 18px;
@@ -1474,11 +1612,69 @@ main {
           }
         }
 
+        .inner-content {
+          padding: 20px 0 0 30px;
+          max-width: 615px;
+
+          .label {
+            font-size: 18px;
+            line-height: 14px;
+            color: rgb(133, 133, 141);
+            width: max-content;
+          }
+
+          .label-today,
+          .label-to {
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 22px;
+            margin-bottom: 10px;
+          }
+
+          .label-today {
+            color: #80819D;
+          }
+
+          .label-to {
+            color: #fff;
+          }
+
+          .calendar-from,
+          .calendar-to {
+            position: relative;
+
+            img:nth-child(1) {
+              position: absolute;
+              top: 15%;
+              left: 20%;
+            }
+
+            img:nth-child(3) {
+              position: absolute;
+              top: 35%;
+              right: 5%;
+              width: 11px;
+              height: 6px;
+            }
+          }
+        }
+
+        b {
+          font-weight: bold;
+          font-size: 20px;
+          line-height: 25px;
+        }
+
+        .existing-amm,
+        .selected-pool {
+          padding: 0 0 25px 30px;
+        }
+
         .reward-weekly,
         .amm-id {
           font-size: 18px;
           line-height: 22px;
-          margin-bottom: 15px;
+          margin-top: 15px;
         }
       }
     }

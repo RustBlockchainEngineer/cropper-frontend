@@ -59,9 +59,6 @@
         <button class="input-button" @click="inputBalanceByPercent(1)">MAX</button>
       </div> -->
     </div>
-    <div class="label fs-container">
-      <span><em><u>Note:</u> you will be able to add rewards into your farm whenever you want.</em></span>
-    </div>
   </div>
 </template>
 
