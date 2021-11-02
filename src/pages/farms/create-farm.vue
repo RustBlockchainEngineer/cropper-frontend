@@ -650,7 +650,7 @@ export default class CreateFarm extends Vue {
   allowedFarmCreator: string = FARM_INITIAL_ALLOWED_CREATOR
   coinSelectShow: boolean = false
   startTime: any = moment()
-  endTime: any = moment()
+  endTime: any = moment().add(28, 'days');
   endOpen: any = false
   isCRPTokenPair: boolean = false
   ammIdSelectShow: boolean = false
