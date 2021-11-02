@@ -1242,6 +1242,8 @@ export default class CreateFarm extends Vue {
   }
 
   removeSelected() {
+    this.tokenA = null
+    this.tokenB = null
     this.userCreateAmmId = ''
     this.userCreatePoolLiquidity = ''
   }
