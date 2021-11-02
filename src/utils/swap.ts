@@ -24,7 +24,6 @@ import { swapInstruction_v5 } from '@/utils/crp-swap'
 // eslint-disable-next-line
 import { TOKEN_PROGRAM_ID, SYSTEM_PROGRAM_ID, MEMO_PROGRAM_ID, SERUM_PROGRAM_ID_V3, CRP_LP_PROGRAM_ID_V1, AMM_STATE_SEED, CRP_LP_VERSION_V1 } from './ids'
 import { closeAccount } from '@project-serum/serum/lib/token-instructions'
-import { initAMMGlobalState } from './global_state'
 
 export function getOutAmount(
   market: any,
