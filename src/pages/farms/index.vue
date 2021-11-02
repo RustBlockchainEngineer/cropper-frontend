@@ -77,13 +77,12 @@ If the pop up for the second operation does not appear, it may have popped up be
 
           <span class="title">Farms</span>
           <span class="buttonsd">
-            <!--
             <NuxtLink to="/farms/create-farm/">
               <div class="create">
                 <Button size="large" ghost>+ Create a farm </Button>
               </div>
             </NuxtLink>
-            -->
+           
 
             <div class="farm-button-group">
               <div class="count-down-group">

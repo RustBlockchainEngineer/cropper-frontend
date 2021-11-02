@@ -146,10 +146,10 @@ export default Vue.extend({
   border-radius: 13px;
 
   .label {
-    padding: 0.75rem 1rem 0;
     font-size: 18px;
     line-height: 14px;
-    color: rgb(133, 133, 141);
+    color: #85858d;
+    padding-left: 10px;
   }
 
   input {
@@ -180,7 +180,7 @@ export default Vue.extend({
   .coin-input {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 14px;
-    margin: 9px;
+    margin: 10px 0 12px 0;
     padding: 0.75rem 0.75rem 0.75rem 1rem;
 
     button {

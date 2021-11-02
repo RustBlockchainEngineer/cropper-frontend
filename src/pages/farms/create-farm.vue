@@ -11,528 +11,587 @@
     <AmmIdSelect
       :show="ammIdSelectShow"
       :liquidity-list="ammIdSelectList"
-      :user-close="true"
+      :user-close="false"
       @onClose="() => (ammIdSelectShow = false)"
       @onSelect="onAmmIdSelect"
     />
     <div class="card">
-      <div class="card-body" style="grid-row-gap: 0; row-gap: 0; padding-bottom: 15px">
+      <div class="card-body">
         <div class="page-head fs-container">
-          <span class="title">Create a farm</span>
+          <span class="title">Farm creation</span>
+          <span class="buttonsd">
+            <NuxtLink to="">
+              <div class="create">
+                <Button size="large" ghost>+ Detailed guide </Button>
+              </div>
+            </NuxtLink>
+            <NuxtLink to="">
+              <div class="create">
+                <Button size="large" ghost>+ Get support </Button>
+              </div>
+            </NuxtLink>
+          </span>
         </div>
 
-        <Row>
-          <Col :span="isMobile ? 24 : 6" :style="isMobile ? '' : 'border-right: 1px solid #444A58;padding-top:20px'">
-            <Steps :current="current" size="small" direction="vertical" style="width: auto" :status="stepsStatus">
-              <Step
-                ><template slot="title">
-                  <div>Select an option</div>
-                </template></Step
-              >
-              <Step>
-                <p slot="title" :style="current > 1 ? '' : 'color: rgb(87, 117, 147)'">
-                  {{ stepTitleInputMarket }}
-                  <Tooltip placement="right">
-                    <div slot="title">For details on creating a market ID,
-                      <a href="//cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool" target="_blank"> click here</a>
-                    </div>
-                    <Icon type="info-circle" />
-                  </Tooltip>
-                </p>
-              </Step>
-              <Step
-                ><template slot="title">
-                  <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">{{ stepTitleMarketInfo }}</div>
-                  <div v-else-if="current === 2 && stepsStatus === 'error'" style="color: red">
-                    {{ stepTitleMarketInfo }}
-                  </div>
-                  <div v-else style="color: rgb(87, 117, 147)">{{ stepTitleMarketInfo }}</div>
-                </template></Step
-              >
-              <Step
-                ><template slot="title">
-                  <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">{{ stepTitleInit }}</div>
-                  <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">{{ stepTitleInit }}</div>
-                  <div v-else style="color: rgb(87, 117, 147)">{{ stepTitleInit }}</div>
-                </template></Step
-              >
+        <div class="design-farm">
+          <div class="page-head fs-container">
+            <span class="title">Design your own farm</span>
+          </div>
 
-              <Step
-                ><template slot="title">
-                  <div v-if="current > 4 && stepsStatus !== 'error'">Pool & Farm Created</div>
-                  <div v-else-if="current === 4 && stepsStatus === 'error'" style="color: red">Pool & Farm Created</div>
-                  <div v-else slot="title" style="color: rgb(87, 117, 147)">Pool Created</div>
-                </template></Step
-              >
-              <Step
-                ><template slot="title">
-                  <div v-if="current > 5 || (current === 5 && stepsStatus !== 'error')">Farm Informations</div>
-                  <div v-else-if="current === 5 && stepsStatus === 'error'" style="color: red">Farm Informations</div>
-                  <div v-else style="color: rgb(87, 117, 147)">Farm Informations</div>
-                </template></Step
-              >
-              <Step
-                ><template slot="title">
-                  <div v-if="current > 6 || (current === 6 && stepsStatus !== 'error')">Farm Created</div>
-                  <div v-else-if="current === 6 && stepsStatus === 'error'" style="color: red">Farm Created</div>
-                  <div v-else style="color: rgb(87, 117, 147)">Farm Created</div>
-                </template></Step
-              >
-            </Steps>
-          </Col>
-
-          <Col :span="isMobile ? 24 : 18" class="notstep">
-            <Row
-              v-if="current === 0 && wallet.connected"
-              style="align-items: baseline; line-height: 40px; padding-bottom: 20px"
+          <Row>
+            <Col
+              :span="isMobile ? 24 : 6"
+              class="step"
+              :class="{ 'bordered-right': !wallet.connected || current === 1 }"
             >
-              <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                ><div style="padding-bottom: 10px; word-break: break-word">
-                  Here are two options. You can use existing CropperFinance Liquidity Pool to create your farm or if not
-                  any Liquidity Pool exist for your pair, create a new one.
-                </div>
-                <br />
-                <div>
-                  <b
-                    >Option 1 - Select token pairing or input Amm Id (we strongly recommend to input the AMM id to be
-                    sure you use the right pool):</b
-                  >
-                </div>
-              </Col>
-              <Col
-                style="line-height: 20px"
-                :span="isMobile ? 24 : 12"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-              >
-                <CoinNameInput
-                  :label="'Token A'"
-                  :mint-address="tokenA ? tokenA.mintAddress : ''"
-                  :coin-name="tokenA ? tokenA.symbol : ''"
-                  @onSelect="openTokenASelect"
-                />
-              </Col>
-              <Col
-                style="line-height: 20px"
-                :span="isMobile ? 24 : 12"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-              >
-                <CoinNameInput
-                  :label="'Token B'"
-                  :mint-address="tokenB ? tokenB.mintAddress : ''"
-                  :coin-name="tokenB ? tokenB.symbol : ''"
-                  @onSelect="openTokenBSelect"
-                />
-              </Col>
-              <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
-                <div>AMM ID:</div>
-              </Col>
-              <Col style="line-height: 20px" :span="24"><input v-model="userCreateAmmId" /></Col>
-
-              <Col
-                v-if="userCreateAmmId != ''"
-                :span="isMobile ? 24 : 24"
-                style="padding-bottom: 20px; padding-top: 10px; text-align: center"
-              >
-                <div class="create">
-                  <Button
-                    size="large"
-                    ghost
-                    class="button_div"
-                    :disabled="!wallet.connected"
-                    style="z-index: 999; width: 100%"
-                    @click="useExistingAMMID()"
-                  >
-                    Use existing
-                  </Button>
-                </div>
-              </Col>
-              <Col
-                v-if="userCreateAmmId === ''"
-                style="line-height: 20px"
-                :span="24"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                ><br />
-                <div><b>Option 2 - Create a new Pool</b></div>
-              </Col>
-
-              <Col
-                v-if="userCreateAmmId === ''"
-                :span="isMobile ? 24 : 24"
-                style="padding-bottom: 20px; padding-top: 10px; text-align: center"
-              >
-                <div class="create">
-                  <Button
-                    size="large"
-                    ghost
-                    class="button_div"
-                    :disabled="!wallet.connected"
-                    style="z-index: 999; width: 100%"
-                    @click="createNewAMMID()"
-                  >
-                    Create a new
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-            <Row
-              v-if="current === 0 && !wallet.connected"
-              style="align-items: baseline; line-height: 40px; padding-bottom: 20px"
-            >
-              <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
-                <div v-if="!wallet.connected" class="create">
-                  <Button size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
-                    Connect wallet
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-            <Row v-if="current === 1" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
-              <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
-                <div style="padding-bottom: 10px; word-break: break-word">
-                  This tool is for advanced users. Before attempting to create a new liquidity pool, we suggest going
-                  through this
-                  <a href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool" target="_blank"> detailed guide.</a>
-                </div>
-                <div>Input Serum Market ID:</div>
-                <div>CRP/USDC: HPU7v2yCGM6sRujWEMaTPiiiX2qMb6fun3eWjTzSgSw1</div>
-                <div>CRP/USDT: 3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSw9u7tcG</div>
-                <div>B2B/CRP: 2hEeVE354k6mpvHvzg8K8HvEAkL9HUMiZbcjarkuy7W7</div>
-              </Col>
-              <Col style="line-height: 20px" :span="24"
-                ><input v-model="inputMarket" :disabled="!marketInputFlag"
-              /></Col>
-
-              <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
-                <div class="create">
-                  <Button
-                    v-if="!wallet.connected"
-                    size="large"
-                    ghost
-                    style="width: 100%"
-                    @click="$accessor.wallet.openModal"
-                  >
-                    Connect wallet
-                  </Button>
-                  <Button
-                    v-else
-                    size="large"
-                    ghost
-                    class="button_div"
-                    :disabled="!wallet.connected"
-                    style="z-index: 999; width: 100%"
-                    :loading="getMarketLoading"
-                    @click="marketInputFlag ? getMarketMsg() : rewriteMarket()"
-                  >
-                    {{ !wallet.connected ? 'Connect' : getMarketLoading ? '' : marketInputFlag ? 'Confirm' : 'Cancel' }}
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-            <div v-if="current >= 2 && current < 5" style="margin-top: 10px" class="msgClass">
-              <Row>
-                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                  ><b>Market Info:</b></Col
+              <Steps :current="current" size="small" direction="vertical" style="width: auto" :status="stepsStatus">
+                <Step
+                  ><template slot="title">
+                    <div style="color: #13ecab">Select options</div>
+                  </template></Step
                 >
-                <Col :span="isMobile ? 24 : 24">
-                  <div style="padding-left: 10px">
-                    <div
-                      style="width: 100%; display: inline-block"
-                      :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                    >
-                      Base Token Mint Address:
-                      {{ getNameForMint(marketMsg.baseMintAddress.toBase58()) }}
+                <Step>
+                  <p slot="title" :style="current > 1 ? '' : 'color: #40426C'">
+                    {{ stepTitleInputMarket }}
+                    <Tooltip placement="right">
+                      <div slot="title">
+                        For details on creating a market ID,
+                        <a
+                          href="//cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                          target="_blank"
+                        >
+                          click here</a
+                        >
+                      </div>
+                      <Icon type="info-circle" />
+                    </Tooltip>
+                  </p>
+                </Step>
+                <Step>
+                  <template slot="title">
+                    <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">
+                      {{ stepTitleMarketInfo }}
                     </div>
-                    <div
-                      style="width: 100%; display: inline-block"
-                      :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                    >
-                      Quote Token Mint Address:
-                      {{ getNameForMint(marketMsg.quoteMintAddress.toBase58()) }}
+                    <div v-else-if="current === 2 && stepsStatus === 'error'" style="color: red">
+                      {{ stepTitleMarketInfo }}
                     </div>
+                    <div v-else style="color: #40426c">{{ stepTitleMarketInfo }}</div>
+                  </template></Step
+                >
+                <Step>
+                  <template slot="title">
+                    <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">{{ stepTitleInit }}</div>
+                    <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">
+                      {{ stepTitleInit }}
+                    </div>
+                    <div v-else style="color: #40426c">{{ stepTitleInit }}</div>
+                  </template></Step
+                >
 
-                    <div
-                      style="width: 32%; display: inline-block"
-                      :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                    >
-                      Tick Size: {{ marketTickSize }}
+                <Step
+                  ><template slot="title">
+                    <div v-if="current > 4 && stepsStatus !== 'error'">Pool & Farm Created</div>
+                    <div v-else-if="current === 4 && stepsStatus === 'error'" style="color: red">
+                      Pool & Farm Created
                     </div>
-
-                    <div
-                      style="width: 32%; display: inline-block"
-                      :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                    >
-                      Min Order Size: {{ marketMsg.minOrderSize }}
+                    <div v-else slot="title" style="color: #40426c">Pool Created</div>
+                  </template></Step
+                >
+                <Step>
+                  <template slot="title">
+                    <div v-if="current > 5 || (current === 5 && stepsStatus !== 'error')">Farm Initialization</div>
+                    <div v-else-if="current === 5 && stepsStatus === 'error'" style="color: red">
+                      Farm Initialization
                     </div>
+                    <div v-else style="color: #40426c">Farm Initialization</div>
+                  </template></Step
+                >
+                <Step>
+                  <template slot="title">
+                    <div v-if="current > 6 || (current === 6 && stepsStatus !== 'error')">Farm Created</div>
+                    <div v-else-if="current === 6 && stepsStatus === 'error'" style="color: red">Farm Created</div>
+                    <div v-else style="color: #40426c">Farm Created</div>
+                  </template></Step
+                >
+              </Steps>
+            </Col>
 
-                    <div
-                      style="width: 32%; display: inline-block"
-                      :class="isMobile ? 'item-title-mobile' : 'item-title'"
+            <Col
+              :span="isMobile ? 24 : 18"
+              class="notstep"
+              :class="{ 'bordered-left': wallet.connected && current != 1 }"
+            >
+              <Row v-if="current === 0 && !wallet.connected">
+                <Col
+                  :span="isMobile ? 24 : 24"
+                  style="text-align: center"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                >
+                  <div v-if="!wallet.connected" class="create">
+                    <Button size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
+                      Connect wallet
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row v-if="current === 0 && wallet.connected">
+                <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                  <div>
+                    <b>Farm Type:</b>
+                  </div>
+                  <div class="inner-content">
+                    <RadioGroup v-model="farmType" @change="selectFarm">
+                      <Radio :value="1">Single yield farm</Radio>
+                      <Radio :value="2" disabled>Dual yield farm (Soon)</Radio>
+                    </RadioGroup>
+                  </div>
+                </Col>
+                <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                  <div>
+                    <b>Token pairing and AMM ID:</b>
+                  </div>
+                  <div class="inner-content max-100">
+                    <RadioGroup v-model="ammType" @change="selectAMM">
+                      <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
+                      <Row class="existing-amm">
+                        <Col :span="isMobile ? 24 : 12">
+                          <CoinNameInput
+                            :label="'Token A'"
+                            :mint-address="tokenA ? tokenA.mintAddress : ''"
+                            :coin-name="tokenA ? tokenA.symbol : ''"
+                            @onSelect="openTokenASelect"
+                          />
+                        </Col>
+                        <Col :span="isMobile ? 24 : 12">
+                          <CoinNameInput
+                            :label="'Token B'"
+                            :mint-address="tokenB ? tokenB.mintAddress : ''"
+                            :coin-name="tokenB ? tokenB.symbol : ''"
+                            @onSelect="openTokenBSelect"
+                          />
+                        </Col>
+                      </Row>
+                      <div class="selected-pool" v-if="userCreateAmmId">
+                        Selected Pool
+                        <div class="selected-pool-box">
+                          <span>AMM ID: {{ userCreateAmmId }}</span>
+                          <span v-if="userCreatePoolLiquidity">Pool Liquidity: {{ userCreatePoolLiquidity }}</span>
+                          <img src="@/assets/icons/close-icon.svg" @click="removeSelected" />
+                        </div>
+                      </div>
+                      <Radio :value="2">Create a new AMM ID</Radio>
+                    </RadioGroup>
+                  </div>
+                </Col>
+                <Col
+                  v-if="ammType === 1"
+                  :span="isMobile ? 24 : 24"
+                  style="text-align: center"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                >
+                  <div class="create">
+                    <Button
+                      size="large"
+                      ghost
+                      class="button_div"
+                      :disabled="!wallet.connected"
+                      style="z-index: 999; width: 100%"
+                      @click="useExistingAMMID()"
                     >
-                      Current Price:
-                      {{
-                        marketMsg.tickSize.toString().split('.').length === 2
-                          ? marketPrice.toFixed(marketMsg.tickSize.toString().split('.')[1].length)
-                          : parseInt((marketPrice / marketMsg.tickSize).toFixed(0)) * marketMsg.tickSize
-                      }}
+                      Use existing
+                    </Button>
+                  </div>
+                </Col>
+                <Col
+                  v-if="ammType === 2"
+                  :span="isMobile ? 24 : 24"
+                  style="text-align: center"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                >
+                  <div class="create">
+                    <Button
+                      size="large"
+                      ghost
+                      class="button_div"
+                      :disabled="!wallet.connected"
+                      style="z-index: 999; width: 100%"
+                      @click="createNewAMMID()"
+                    >
+                      Create a new
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+
+              <!-- Create Farm -->
+              <Row v-if="current === 5">
+                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                  <div>
+                    <b>Reward emission:</b>
+                  </div>
+                  <div class="inner-content">
+                    <CoinInput
+                      v-model="fromCoinAmount"
+                      label="Initial Reward Token Amount"
+                      :balance-offset="rewardCoin && rewardCoin.symbol === 'SOL' ? -0.05 : 0"
+                      :mint-address="rewardCoin ? rewardCoin.mintAddress : ''"
+                      :coin-name="rewardCoin ? rewardCoin.symbol : ''"
+                      :balance="rewardCoin ? rewardCoin.balance : null"
+                      :show-half="true"
+                      @onInput="(amount) => (fromCoinAmount = amount)"
+                      @onFocus="
+                        () => {
+                          fixedFromCoin = true
+                        }
+                      "
+                      @onMax="
+                        () => {
+                          fixedFromCoin = true
+                          fromCoinAmount = rewardCoin && rewardCoin.balance ? rewardCoin.balance.fixed() : '0'
+                        }
+                      "
+                      @onSelect="openFromCoinSelect"
+                    />
+                    <div class="label">
+                      <span
+                        ><em><u>Note:</u> you will be able to add rewards into your farm whenever you want.</em></span
+                      >
                     </div>
                   </div>
                 </Col>
-                <div
-                  style="margin-left: 20%; margin-top: 30px; width: 40%; display: inline-block"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                >
-                  Set <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b> Starting Price in
-                  <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b
-                  >:
-                </div>
-                <div style="width: 20%; display: inline-block">
-                  <input
-                    v-model="inputPrice"
-                    type="number"
-                    :disabled="createAmmFlag"
-                    :step="1"
-                    accuracy="2"
-                    style="width: 100%"
-                  />
-                </div>
-                <div
-                  style="margin-left: 20%; margin-top: 10px; width: 40%; display: inline-block"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                >
-                  <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b> Initial Liquidity:
-                </div>
-                <div style="width: 20%; display: inline-block">
-                  <input
-                    v-model="inputBaseValue"
-                    type="number"
-                    :disabled="createAmmFlag"
-                    :step="1"
-                    accuracy="2"
-                    style="width: 100%"
-                  />
-                </div>
-                <div
-                  style="margin-left: 20%; margin-top: 10px; width: 40%; display: inline-block"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                >
-                  <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b> Initial Liquidity:
-                </div>
-                <div style="width: 20%; display: inline-block">
-                  <input
-                    v-model="inputQuoteValue"
-                    type="number"
-                    :disabled="createAmmFlag"
-                    :step="1"
-                    accuracy="2"
-                    style="width: 100%"
-                  />
-                </div>
-                <Col :span="24" style="padding-top: 10px">
-                  <div class="create" v-if="!wallet.connected">
+                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                  <div>
+                    <b>Farm duration:</b>
+                  </div>
+                  <div class="inner-content">
+                    <label class="label-today">From today</label>
+                    <div class="calendar-from">
+                      <img src="@/assets/icons/calendar-from.svg" />
+                      <DatePicker
+                        v-model="startTime"
+                        format="dddd, DD MMMM YYYY"
+                        @openChange="handleStartOpenChange"
+                        disabled
+                      />
+                    </div>
+                    <label class="label-to">To</label>
+                    <div class="calendar-to">
+                      <img src="@/assets/icons/calendar-to.svg" />
+                      <DatePicker v-model="endTime" format="dddd, DD MMMM YYYY" @openChange="handleEndOpenChange" />
+                      <img src="@/assets/icons/arrow-down.svg" :style="endOpen ? 'transform: rotate(180deg);' : ''"/>
+                    </div>
+                    <div class="reward-weekly">
+                      <b>Reward per week:</b>&nbsp; {{ rewardPerWeek }} &nbsp;{{
+                        rewardCoin != null ? rewardCoin.symbol : ''
+                      }}
+                    </div>
+                    <div class="amm-id"><b>AMM ID:</b>&nbsp;{{ userCreateAmmId }}</div>
+                  </div>
+                </Col>
+
+                <Col :span="isMobile ? 24 : 24" style="text-align: center">
+                  <div class="create">
                     <Button
-                      style="position: absolute; z-index: 999; width: 100%"
+                      v-if="!wallet.connected"
                       size="large"
                       ghost
+                      style="width: 100%"
                       @click="$accessor.wallet.openModal"
                     >
                       Connect wallet
                     </Button>
-                  </div>
-                  <Row v-else-if="current == 4">
-                    <Col span="24" style="text-align: center; margin-top: 10px"
-                      ><br /><br /><strong>Pool has been successfully created!</strong></Col
+                    <Button
+                      v-else
+                      size="large"
+                      :disabled="!wallet.connected"
+                      ghost
+                      style="z-index: 999; width: 100%"
+                      @click="confirmFarmInfo"
                     >
-                    <!-- <Col
-                  style="margin-top: 10px"
-                  :span="isMobile ? 24 : 6"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
-                  >New AMM ID:</Col
-                >
-                <Col style="margin-top: 10px" :span="isMobile ? 24 : 18">
-                  {{ userCreateAmmId }}
-                </Col> -->
-                    <Col span="24" style="word-break: break-word; line-height: 20px; text-align: center">
-                      <div class="create">
-                        <Button
-                          size="large"
-                          :disabled="!wallet.connected"
-                          ghost
-                          style="z-index: 999; width: 100%"
-                          @click="goToFarmInfo"
-                        >
-                          Input Farm Info
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                  <div v-else style="text-align: center; padding-top: 20px">
-                    <!--
-                <Button
-                  size="large"
-                  ghost
-                  class="button_div"
-                  :disabled="!wallet.connected"
-                  style="z-index: 999; width: 20%"
-                  :loading="getMarketLoading"
-                  @click="marketInputFlag ? getMarketMsg() : rewriteMarket()"
-                >
-                  {{ !wallet.connected ? 'Connect' : getMarketLoading ? '' : marketInputFlag ? 'OK' : 'Cancel' }}
-                </Button> -->
-
-                    <p
-                      style="
-                        padding-top: 20px;
-                        padding-left: 20%;
-                        padding-right: 20%;
-                        word-break: break-word;
-                        line-height: 20px;
-                        margin: 0;
-                      "
-                    >
-                      After clicking 'Confirm' you will need to approve two transactions in your wallet to initialize
-                      the pool, create the AMM account, and add liquidity.
-                    </p>
-                    <br />
-                    <div class="create">
-                      <Button
-                        size="large"
-                        ghost
-                        class="button_div"
-                        style="z-index: 999"
-                        :loading="createAmmFlag"
-                        :disabled="createAmmFlag || !(inputPrice !== null && isAmountValid)"
-                        @click="createKey"
-                      >
-                        {{ createAmmFlag ? '' : 'Confirm and initialize Liquidity Pool' }}
-                      </Button>
-                    </div>
+                      Confirm
+                    </Button>
                   </div>
                 </Col>
               </Row>
-            </div>
 
-            <!-- Create Farm -->
-            <Row v-if="current === 5" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
-              <Col style="line-height: 20px" :span="24">
-                <CoinInput
-                  v-model="fromCoinAmount"
-                  label="Initial Reward Token Amount"
-                  :balance-offset="rewardCoin && rewardCoin.symbol === 'SOL' ? -0.05 : 0"
-                  :mint-address="rewardCoin ? rewardCoin.mintAddress : ''"
-                  :coin-name="rewardCoin ? rewardCoin.symbol : ''"
-                  :balance="rewardCoin ? rewardCoin.balance : null"
-                  :show-half="true"
-                  @onInput="(amount) => (fromCoinAmount = amount)"
-                  @onFocus="
-                    () => {
-                      fixedFromCoin = true
-                    }
-                  "
-                  @onMax="
-                    () => {
-                      fixedFromCoin = true
-                      fromCoinAmount = rewardCoin && rewardCoin.balance ? rewardCoin.balance.fixed() : '0'
-                    }
-                  "
-                  @onSelect="openFromCoinSelect"
-                />
-              </Col>
+              <Row v-if="current === 6">
+                <Col
+                  v-if="!isCRPTokenPair"
+                  style="line-height: 20px"
+                  :span="24"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                >
+                  <div>Farm has been successfully created!</div>
+                </Col>
+                <Col :span="isMobile ? 24 : 24">
+                  <div class="create">
+                    <Button
+                      v-if="!wallet.connected"
+                      size="large"
+                      ghost
+                      style="width: 100%"
+                      @click="$accessor.wallet.openModal"
+                    >
+                      Connect wallet
+                    </Button>
+                    <Button
+                      v-else
+                      size="large"
+                      :disabled="!wallet.connected"
+                      ghost
+                      style="z-index: 999; width: 100%"
+                      @click="gotoFarms"
+                    >
+                      View Farms
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
 
-              <Col
-                style="line-height: 20px"
-                :span="isMobile ? 24 : 12"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-              >
-                <DatePicker
-                  v-model="startTime"
-                  show-time
-                  format="YYYY-MM-DD HH:mm:ss"
-                  placeholder="Start"
-                  @openChange="handleStartOpenChange"
-                />
-              </Col>
+              <Row v-if="current === 1">
+                <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                  <div>
+                    <b>Create a new liquidity pool:</b>
+                  </div>
+                  <div class="inner-content max-80">
+                    <input v-model="inputMarket" :disabled="!marketInputFlag" placeholder="Input market ID here" />
+                    <div class="detailed-guide">
+                      <em
+                        ><u>Note:</u> This tool is for advanced users. Before attempting to create a new liquidity pool,
+                        we suggest going through this
+                        <a
+                          href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                          target="_blank"
+                        >
+                          detailed guide.</a
+                        ></em
+                      >
+                    </div>
+                    <!-- <div>Input Serum Market ID:</div>
+                    <div>CRP/USDC: HPU7v2yCGM6sRujWEMaTPiiiX2qMb6fun3eWjTzSgSw1</div>
+                    <div>CRP/USDT: 3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSw9u7tcG</div>
+                    <div>B2B/CRP: 2hEeVE354k6mpvHvzg8K8HvEAkL9HUMiZbcjarkuy7W7</div> -->
+                  </div>
+                </Col>
+                <Col
+                  :span="isMobile ? 24 : 24"
+                  style="text-align: center"
+                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                >
+                  <div class="create">
+                    <Button
+                      v-if="!wallet.connected"
+                      size="large"
+                      ghost
+                      style="width: 100%"
+                      @click="$accessor.wallet.openModal"
+                    >
+                      Connect wallet
+                    </Button>
+                    <Button
+                      v-else
+                      size="large"
+                      ghost
+                      class="button_div"
+                      :disabled="!wallet.connected"
+                      style="z-index: 999; width: 100%"
+                      :loading="getMarketLoading"
+                      @click="marketInputFlag ? getMarketMsg() : rewriteMarket()"
+                    >
+                      {{
+                        !wallet.connected ? 'Connect' : getMarketLoading ? '' : marketInputFlag ? 'Confirm' : 'Cancel'
+                      }}
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
 
-              <Col
-                style="line-height: 20px"
-                :span="isMobile ? 24 : 12"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-              >
-                <DatePicker
-                  v-model="endTime"
-                  show-time
-                  format="YYYY-MM-DD HH:mm:ss"
-                  placeholder="End"
-                  @openChange="handleEndOpenChange"
-                />
-              </Col>
-              <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
-                <div>
-                  Reward Per Week:&nbsp;{{ rewardPerWeek }} &nbsp;{{ rewardCoin != null ? rewardCoin.symbol : '' }}
-                </div>
-              </Col>
-              <Col style="line-height: 20px" :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
-                <div>AMM ID:&nbsp;{{ userCreateAmmId }}</div>
-              </Col>
+              <div v-if="current >= 2 && current < 5" style="margin-top: 10px" class="msgClass">
+                <Row>
+                  <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                    ><b>Market Info:</b></Col
+                  >
+                  <Col :span="isMobile ? 24 : 24">
+                    <div style="padding-left: 10px">
+                      <div
+                        style="width: 100%; display: inline-block"
+                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                      >
+                        Base Token Mint Address:
+                        {{ getNameForMint(marketMsg.baseMintAddress.toBase58()) }}
+                      </div>
+                      <div
+                        style="width: 100%; display: inline-block"
+                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                      >
+                        Quote Token Mint Address:
+                        {{ getNameForMint(marketMsg.quoteMintAddress.toBase58()) }}
+                      </div>
 
-              <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
-                <div class="create">
+                      <div
+                        style="width: 32%; display: inline-block"
+                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                      >
+                        Tick Size: {{ marketTickSize }}
+                      </div>
+
+                      <div
+                        style="width: 32%; display: inline-block"
+                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                      >
+                        Min Order Size: {{ marketMsg.minOrderSize }}
+                      </div>
+
+                      <div
+                        style="width: 32%; display: inline-block"
+                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                      >
+                        Current Price:
+                        {{
+                          marketMsg.tickSize.toString().split('.').length === 2
+                            ? marketPrice.toFixed(marketMsg.tickSize.toString().split('.')[1].length)
+                            : parseInt((marketPrice / marketMsg.tickSize).toFixed(0)) * marketMsg.tickSize
+                        }}
+                      </div>
+                    </div>
+                  </Col>
+                  <div
+                    style="margin-left: 20%; margin-top: 30px; width: 40%; display: inline-block"
+                    :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  >
+                    Set <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b> Starting Price in
+                    <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b
+                    >:
+                  </div>
+                  <div style="width: 20%; display: inline-block">
+                    <input
+                      v-model="inputPrice"
+                      type="number"
+                      :disabled="createAmmFlag"
+                      :step="1"
+                      accuracy="2"
+                      style="width: 100%"
+                    />
+                  </div>
+                  <div
+                    style="margin-left: 20%; margin-top: 10px; width: 40%; display: inline-block"
+                    :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  >
+                    <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b> Initial Liquidity:
+                  </div>
+                  <div style="width: 20%; display: inline-block">
+                    <input
+                      v-model="inputBaseValue"
+                      type="number"
+                      :disabled="createAmmFlag"
+                      :step="1"
+                      accuracy="2"
+                      style="width: 100%"
+                    />
+                  </div>
+                  <div
+                    style="margin-left: 20%; margin-top: 10px; width: 40%; display: inline-block"
+                    :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  >
+                    <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b> Initial Liquidity:
+                  </div>
+                  <div style="width: 20%; display: inline-block">
+                    <input
+                      v-model="inputQuoteValue"
+                      type="number"
+                      :disabled="createAmmFlag"
+                      :step="1"
+                      accuracy="2"
+                      style="width: 100%"
+                    />
+                  </div>
+                  <Col :span="24" style="padding-top: 10px">
+                    <div class="create" v-if="!wallet.connected">
+                      <Button
+                        style="position: absolute; z-index: 999; width: 100%"
+                        size="large"
+                        ghost
+                        @click="$accessor.wallet.openModal"
+                      >
+                        Connect wallet
+                      </Button>
+                    </div>
+                    <Row v-else-if="current == 4">
+                      <Col span="24" style="text-align: center; margin-top: 10px"
+                        ><br /><br /><strong>Pool has been successfully created!</strong></Col
+                      >
+                      <!-- <Col
+                    style="margin-top: 10px"
+                    :span="isMobile ? 24 : 6"
+                    :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                    >New AMM ID:</Col
+                  >
+                  <Col style="margin-top: 10px" :span="isMobile ? 24 : 18">
+                    {{ userCreateAmmId }}
+                  </Col> -->
+                      <Col span="24" style="word-break: break-word; line-height: 20px; text-align: center">
+                        <div class="create">
+                          <Button
+                            size="large"
+                            :disabled="!wallet.connected"
+                            ghost
+                            style="z-index: 999; width: 100%"
+                            @click="goToFarmInfo"
+                          >
+                            Input Farm Info
+                          </Button>
+                        </div>
+                      </Col>
+                    </Row>
+                    <div v-else style="text-align: center; padding-top: 20px">
+                      <!--
                   <Button
-                    v-if="!wallet.connected"
                     size="large"
                     ghost
-                    style="width: 100%"
-                    @click="$accessor.wallet.openModal"
-                  >
-                    Connect wallet
-                  </Button>
-                  <Button
-                    v-else
-                    size="large"
+                    class="button_div"
                     :disabled="!wallet.connected"
-                    ghost
-                    style="z-index: 999; width: 100%"
-                    @click="confirmFarmInfo"
+                    style="z-index: 999; width: 20%"
+                    :loading="getMarketLoading"
+                    @click="marketInputFlag ? getMarketMsg() : rewriteMarket()"
                   >
-                    Confirm
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-            <Row v-if="current === 6" style="align-items: baseline; line-height: 40px; padding-bottom: 20px">
-              <Col
-                v-if="!isCRPTokenPair"
-                style="line-height: 20px"
-                :span="24"
-                :class="isMobile ? 'item-title-mobile' : 'item-title'"
-              >
-                <div>Farm has been successfully created!</div>
-              </Col>
-              <Col :span="isMobile ? 24 : 24" style="padding-bottom: 20px; padding-top: 10px; text-align: center">
-                <div class="create">
-                  <Button
-                    v-if="!wallet.connected"
-                    size="large"
-                    ghost
-                    style="width: 100%"
-                    @click="$accessor.wallet.openModal"
-                  >
-                    Connect wallet
-                  </Button>
-                  <Button
-                    v-else
-                    size="large"
-                    :disabled="!wallet.connected"
-                    ghost
-                    style="z-index: 999; width: 100%"
-                    @click="gotoFarms"
-                  >
-                    View Farms
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+                    {{ !wallet.connected ? 'Connect' : getMarketLoading ? '' : marketInputFlag ? 'OK' : 'Cancel' }}
+                  </Button> -->
+
+                      <p
+                        style="
+                          padding-top: 20px;
+                          padding-left: 20%;
+                          padding-right: 20%;
+                          word-break: break-word;
+                          line-height: 20px;
+                          margin: 0;
+                        "
+                      >
+                        After clicking 'Confirm' you will need to approve two transactions in your wallet to initialize
+                        the pool, create the AMM account, and add liquidity.
+                      </p>
+                      <br />
+                      <div class="create">
+                        <Button
+                          size="large"
+                          ghost
+                          class="button_div"
+                          style="z-index: 999"
+                          :loading="createAmmFlag"
+                          :disabled="createAmmFlag || !(inputPrice !== null && isAmountValid)"
+                          @click="createKey"
+                        >
+                          {{ createAmmFlag ? '' : 'Confirm and initialize Liquidity Pool' }}
+                        </Button>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+        </div>
       </div>
     </div>
   </div>
@@ -540,9 +599,10 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
-import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker } from 'ant-design-vue'
+import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Radio } from 'ant-design-vue'
 import { getMarket, createAmm, clearLocal } from '@/utils/market'
 import BigNumber from '@/../node_modules/bignumber.js/bignumber'
+import { TokenAmount } from '@/utils/safe-math'
 import { NATIVE_SOL, TokenInfo, TOKENS } from '@/utils/tokens'
 import { createAssociatedId } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
@@ -557,7 +617,9 @@ import { cloneDeep, get } from 'lodash-es'
 import moment from 'moment'
 import { YieldFarm } from '@/utils/farm'
 import { getPoolListByTokenMintAddresses, LIQUIDITY_POOLS, LiquidityPoolInfo } from '@/utils/pools'
+import { Token } from '@solana/spl-token'
 const Step = Steps.Step
+const RadioGroup = Radio.Group
 
 @Component({
   head: {
@@ -571,7 +633,9 @@ const Step = Steps.Step
     Step,
     Tooltip,
     Icon,
-    DatePicker
+    DatePicker,
+    RadioGroup,
+    Radio
   }
 })
 export default class CreateFarm extends Vue {
@@ -613,19 +677,23 @@ export default class CreateFarm extends Vue {
 
   createAmmFlag: boolean = false
 
-  stepTitleInputMarket: string = 'Import Serum Market ID'
+  stepTitleInputMarket: string = 'Market ID'
   stepTitleMarketInfo: string = 'Price & Initial Liquidity'
-  stepTitleInit: string = 'Initialize'
+  stepTitleInit: string = 'Pool initialization'
 
   marketTickSize: number = 1
 
   userCreateAmmId: string = ''
+  userCreatePoolLiquidity: string = ''
 
   liquidityValueChangeFlag: boolean = true
 
   userLocalAmmIdList: string[] = []
 
   expectAmmId: undefined | string
+
+  farmType: number = 1
+  ammType: number = 1
 
   get rewardPerWeek() {
     let result = 0
@@ -873,6 +941,15 @@ export default class CreateFarm extends Vue {
   onAmmIdSelect(liquidityInfo: LiquidityPoolInfo | undefined) {
     this.ammIdSelectShow = false
     if (liquidityInfo) {
+      let SymbolA = liquidityInfo.coin.symbol
+      let SymbolB = liquidityInfo.pc.symbol
+      let SymbolA_value = liquidityInfo.coin.balance
+        ? getBigNumber((liquidityInfo.coin.balance as TokenAmount).toEther())
+        : 0
+      let SymbolB_value = liquidityInfo.pc.balance
+        ? getBigNumber((liquidityInfo.pc.balance as TokenAmount).toEther())
+        : 0
+      this.userCreatePoolLiquidity = SymbolA_value + ' ' + SymbolA + ' | ' + SymbolB_value + ' ' + SymbolB
       this.userCreateAmmId = liquidityInfo.ammId
     } else {
       this.userCreateAmmId = ''
@@ -906,6 +983,8 @@ export default class CreateFarm extends Vue {
     }
   }
   onCoinSelect(tokenInfo: TokenInfo) {
+    this.userCreateAmmId = ''
+    this.userCreatePoolLiquidity = ''
     if (tokenInfo !== null) {
       if (this.selectFromCoin) {
         this.rewardCoin = cloneDeep(tokenInfo)
@@ -1153,26 +1232,307 @@ export default class CreateFarm extends Vue {
         throw error
       })
   }
+
+  selectFarm(e: { target: { value: any } }) {
+    console.log(e.target.value)
+  }
+
+  selectAMM(e: { target: { value: any } }) {
+    console.log(e.target.value)
+  }
+
+  removeSelected() {
+    this.userCreateAmmId = ''
+    this.userCreatePoolLiquidity = ''
+  }
 }
 </script>
+
+<style lang="less">
+.ant-steps-vertical {
+  .ant-steps-item-content {
+    min-height: 60px;
+  }
+
+  .ant-steps-item-active,
+  .ant-steps-item-finish {
+    .ant-steps-item-tail::after,
+    .ant-steps-item-icon {
+      background-color: #13ecab !important;
+    }
+
+    .ant-steps-item-title {
+      color: #13ecab !important;
+    }
+  }
+
+  .ant-steps-item-error {
+    .ant-steps-item-icon {
+      background-color: red !important;
+    }
+  }
+
+  .ant-steps-item {
+    .ant-steps-item-container {
+      .ant-steps-item-tail::after {
+        background-color: #40426c;
+      }
+
+      .ant-steps-item-icon {
+        width: 26px;
+        height: 26px;
+        background-color: #40426c;
+
+        .ant-steps-icon {
+          font-size: 20px;
+          font-weight: 600;
+          line-height: 25px;
+          color: #01033c;
+        }
+      }
+
+      .ant-steps-item-title {
+        font-size: 20px;
+        line-height: 25px;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.ant-radio-group {
+  width: 100%;
+}
+
+.ant-radio-wrapper {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  line-height: 25px;
+  color: #40426c;
+  margin-bottom: 20px;
+}
+
+.ant-radio-wrapper-disabled {
+  .ant-radio-inner {
+    border-color: #40426c !important;
+  }
+  span {
+    color: #40426c;
+  }
+}
+.ant-radio-wrapper-checked {
+  color: #fff;
+}
+
+.ant-radio {
+  .ant-radio-inner {
+    background: #16164a;
+    border: 2px solid #40426c;
+    box-sizing: border-box;
+    border-radius: 7px;
+    width: 21px;
+    height: 21px;
+  }
+
+  .ant-radio-inner::after {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    border-radius: 4px;
+    top: 2px;
+    left: 2px;
+    transform: scale(1);
+    opacity: 1;
+    transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+    background-color: transparent;
+  }
+}
+
+.ant-radio-checked {
+  .ant-radio-inner {
+    border-color: #ef745d;
+  }
+
+  .ant-radio-inner::after {
+    background-color: #ef745d;
+  }
+}
+
+.ant-radio-checked::after {
+  border: none;
+}
+
+.ant-radio-wrapper:hover .ant-radio-inner,
+.ant-radio:hover .ant-radio-inner {
+  border-color: #ef745d;
+}
+
+.ant-radio .ant-radio-input:focus + .ant-radio-inner {
+  border-color: #40426c;
+}
+
+.ant-radio-checked .ant-radio-input:focus + .ant-radio-inner {
+  border-color: #ef745d;
+}
+
+.ant-calendar-picker {
+  margin-bottom: 15px;
+  width: 100%;
+
+  i {
+    display: none;
+  }
+}
+
+.ant-calendar-picker-input.ant-input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px;
+  padding: 25px 0;
+  text-align: center;
+  border: none;
+  color: #ffffff50;
+  font-size: 18px;
+  line-height: 22px;
+  cursor: pointer;
+}
+
+.ant-calendar-picker-container {
+  .ant-calendar {
+    top: 60px;
+    background: #1a1d6b;
+    box-shadow: 0 30px 84px rgba(19, 10, 46, 0.08), 0 8px 32px rgba(19, 10, 46, 0.07), 0 3px 14px rgba(19, 10, 46, 0.03),
+      0 1px 3px rgba(19, 10, 46, 0.13);
+    border-radius: 12px;
+    border: none;
+
+    .ant-calendar-panel {
+      width: 585px;
+
+      .ant-calendar-input-wrap {
+        display: none;
+      }
+
+      // Day Panel
+      .ant-calendar-date-panel {
+        background: #1a1d6b;
+        .ant-calendar-header {
+          border: none;
+        }
+        .ant-calendar-footer {
+          display: none;
+        }
+      }
+
+      // Month Panel
+      .ant-calendar-month-panel {
+        background: #1a1d6b;
+        .ant-calendar-month-panel-header {
+          border: none;
+        }
+        .ant-calendar-month-panel-footer {
+          display: none;
+        }
+      }
+
+      // Year Panel
+      .ant-calendar-year-panel {
+        background: #1a1d6b;
+        .ant-calendar-year-panel-header {
+          border: none;
+        }
+        .ant-calendar-year-panel-footer {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .ant-calendar-last-month-cell,
+  .ant-calendar-next-month-btn-day {
+    .ant-calendar-date {
+      color: #c9c8cc40 !important;
+    }
+  }
+
+  .ant-calendar table,
+  .ant-calendar th {
+    // Day Selection
+    .ant-calendar-selected-day .ant-calendar-date {
+      background: #ef745d;
+    }
+
+    .ant-calendar-today .ant-calendar-date {
+      border-color: #ef745d;
+    }
+
+    .ant-calendar-cell {
+      .ant-calendar-date {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 40px;
+        color: #f8f7fa;
+      }
+
+      .ant-calendar-date:hover {
+        background-color: #ef745d;
+      }
+    }
+
+    // Month Selection
+    .ant-calendar-month-panel-selected-cell .ant-calendar-month-panel-month {
+      background: #ef745d;
+    }
+
+    .ant-calendar-month-panel-cell {
+      .ant-calendar-month-panel-month {
+        max-width: 75px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 40px;
+        color: #f8f7fa;
+      }
+
+      .ant-calendar-month-panel-month:hover {
+        background-color: #ef745d;
+      }
+    }
+
+    // Year Selection
+    .ant-calendar-year-panel-selected-cell .ant-calendar-year-panel-year {
+      background: #ef745d;
+    }
+
+    .ant-calendar-year-panel-cell {
+      .ant-calendar-year-panel-year {
+        max-width: 75px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 40px;
+        color: #f8f7fa;
+      }
+
+      .ant-calendar-year-panel-year:hover {
+        background-color: #ef745d;
+      }
+    }
+  }
+}
+</style>
+
 <style lang="less" scoped>
 main {
   background-color: #01033c;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
-}
-
-.steps {
-  display: inline-block;
-  width: 30%;
-  border-right: 1px solid #444a58;
-  padding-top: 24px;
-}
-
-.notstep {
-  vertical-align: middle;
-  padding: 10px 40px;
 }
 
 .create-pool {
@@ -1183,11 +1543,14 @@ main {
   }
 
   .create {
-    padding: 9px 19px;
+    padding: 9px 0;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
     display: inline-block;
+    width: 163px;
+    margin-right: 10px;
+    text-align: center;
 
     button {
       background: unset !important;
@@ -1198,49 +1561,199 @@ main {
       font-size: 18px;
       line-height: 42px;
       letter-spacing: -0.05em;
+      padding: 0;
     }
   }
 
   .card-body {
-    padding: 10px 60px 15px;
+    grid-row-gap: 0;
+    row-gap: 0;
+    padding-bottom: 15px;
+
+    .fs-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .design-farm {
+    border: 4px solid #16164a;
+    border-radius: 14px;
+    padding: 40px 60px;
+    background-color: #16164a;
+
+    .title {
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 37px;
+      background: transparent;
+    }
+  }
+
+  .bordered-left {
+    border-left: 3px solid #ffffff30;
+  }
+
+  .bordered-right {
+    border-right: 3px solid #ffffff30;
+  }
+
+  .step {
+    padding-top: 20px;
+  }
+
+  .notstep {
+    vertical-align: middle;
+    padding-left: 50px;
+
+    .ant-row {
+      align-items: baseline;
+      line-height: 40px;
+
+      .item-title {
+        margin-bottom: 30px;
+
+        .selected-pool {
+          font-size: 15px;
+          line-height: 18px;
+
+          .selected-pool-box {
+            position: relative;
+            margin-top: 10px;
+            padding: 17px 0;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 6px;
+            font-size: 18px;
+            line-height: 22px;
+            text-align: center;
+            color: #fff;
+
+            span:nth-child(2) {
+              display: block;
+              margin-top: 12px;
+            }
+
+            img {
+              position: absolute;
+              top: 6px;
+              right: 9px;
+              cursor: pointer;
+            }
+          }
+        }
+
+        .max-100 {
+          max-width: 100% !important ;
+        }
+
+        .max-80 {
+          max-width: 80% !important ;
+        }
+
+        .inner-content {
+          padding: 20px 0 0 30px;
+          max-width: 615px;
+
+          .label {
+            font-size: 18px;
+            line-height: 14px;
+            color: rgb(133, 133, 141);
+            width: max-content;
+            padding-left: 10px;
+          }
+
+          .label-today,
+          .label-to {
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 22px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+          }
+
+          .label-today {
+            color: #80819d;
+          }
+
+          .label-to {
+            color: #fff;
+          }
+
+          .calendar-from,
+          .calendar-to {
+            position: relative;
+
+            img:nth-child(1) {
+              position: absolute;
+              top: 15%;
+              left: 20%;
+            }
+
+            img:nth-child(3) {
+              position: absolute;
+              top: 35%;
+              right: 5%;
+              width: 11px;
+              height: 6px;
+              transition: transform 0.3s;
+            }
+          }
+
+          input {
+            border: 4px solid #16164a;
+            background: #16164a;
+            border-radius: 14px;
+            padding: 20px 25px;
+            font-size: 16px;
+            line-height: 19px;
+            color: #ffffff50;
+            outline: 0;
+            width: 100%;
+          }
+
+          .detailed-guide {
+            font-size: 18px;
+            line-height: 22px;
+            color: #80819d;
+            text-align: center;
+
+            a {
+              color: #13ecab;
+            }
+          }
+        }
+
+        b {
+          font-weight: bold;
+          font-size: 20px;
+          line-height: 25px;
+        }
+
+        .existing-amm,
+        .selected-pool {
+          padding: 0 0 25px 30px;
+        }
+
+        .reward-weekly,
+        .amm-id {
+          font-size: 18px;
+          line-height: 22px;
+          margin-top: 15px;
+          padding-left: 10px;
+        }
+      }
+    }
   }
 }
-.create-pool-mobile {
-  width: 100%;
-}
+
 .coin-select .coin-input button:hover {
   background-color: rgba(0, 0, 0, 0.9471) !important;
 }
 
-input {
-  background: transparent;
-  outline: none;
-  border: none;
-  border-bottom: 1px #ccc solid;
-  width: 90%;
-  margin: 0 5%;
-}
-.item-title {
-  text-align: left;
-  padding-right: 5%;
-}
-.item-title-mobile {
-  text-align: left;
-  padding-right: 5%;
-}
-div {
-  word-break: break-all;
-  word-wrap: break-word;
-}
-.item-msg-mobile {
-  padding-left: 10px;
-}
 .ant-layout {
   background: #01033c !important;
-}
-
-.ant-col {
-  margin-bottom: 10px;
 }
 .msgClass div {
   line-height: 30px;

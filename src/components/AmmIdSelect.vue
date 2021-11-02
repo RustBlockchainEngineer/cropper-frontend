@@ -4,14 +4,9 @@
     :visible="show"
     :footer="null"
     :mask-closable="false"
-    :closable="false"
     @cancel="$emit('onClose')"
   >
     <div class="select-token">
-      <div class="sort fs-container">
-        <span class="title">AMM ID</span>
-      </div>
-
       <div class="token-list">
         <div
           v-for="liquidity in liquidityList"
@@ -20,18 +15,18 @@
           @click="$emit('onSelect', liquidity)"
         >
           <div>
-            <span
-              >{{ liquidity.ammId
-              }}</span
-            >
+            AMM ID:
+            <span>{{ liquidity.ammId}}</span>
           </div>
 
-          <div class="fs-container">
+          <div>
             Pool liquidity:
-            {{ liquidity.coin.balance ? liquidity.coin.balance.toEther() : 0 }}
-            {{ liquidity.coin.symbol }},
-            {{ liquidity.pc.balance ? liquidity.pc.balance.toEther() : 0 }}
-            {{ liquidity.pc.symbol }}
+            <span>
+              {{ liquidity.coin.balance ? liquidity.coin.balance.toEther() : 0 }}
+              {{ liquidity.coin.symbol }} | 
+              {{ liquidity.pc.balance ? liquidity.pc.balance.toEther() : 0 }}
+              {{ liquidity.pc.symbol }}
+            </span>
           </div>
         </div>
       </div>
@@ -87,11 +82,21 @@ export default Vue.extend({
 
     .token-info {
       width: 100%;
-      justify-content: space-between;
-      padding: 4px 0;
+      padding: 17px 0;
       cursor: pointer;
       opacity: 1;
-      height: 70px;
+      font-size: 18px;
+      line-height: 22px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      text-align: center;
+      border-radius: 6px;
+      margin-bottom: 6px;
+
+      div:nth-child(1) {
+        margin-bottom: 12px;
+      }
+
       &:hover,
       &:active {
         background: rgb(107, 128, 185);
