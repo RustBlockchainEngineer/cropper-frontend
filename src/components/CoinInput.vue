@@ -148,7 +148,8 @@ export default Vue.extend({
   .label {
     font-size: 18px;
     line-height: 14px;
-    color: rgb(133, 133, 141);
+    color: #85858d;
+    padding-left: 10px;
   }
 
   input {

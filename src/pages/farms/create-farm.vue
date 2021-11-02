@@ -50,7 +50,7 @@
                     <div style="color: #13ecab">Select options</div>
                   </template></Step
                 >
-                <Step v-if="ammType != 1">
+                <Step>
                   <p slot="title" :style="current > 1 ? '' : 'color: #40426C'">
                     {{ stepTitleInputMarket }}
                     <Tooltip placement="right">
@@ -67,7 +67,7 @@
                     </Tooltip>
                   </p>
                 </Step>
-                <Step v-if="ammType != 1">
+                <Step>
                   <template slot="title">
                     <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">
                       {{ stepTitleMarketInfo }}
@@ -78,7 +78,7 @@
                     <div v-else style="color: #40426c">{{ stepTitleMarketInfo }}</div>
                   </template></Step
                 >
-                <Step v-if="ammType != 1">
+                <Step>
                   <template slot="title">
                     <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">{{ stepTitleInit }}</div>
                     <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">
@@ -88,7 +88,7 @@
                   </template></Step
                 >
 
-                <Step v-if="ammType != 1"
+                <Step
                   ><template slot="title">
                     <div v-if="current > 4 && stepsStatus !== 'error'">Pool & Farm Created</div>
                     <div v-else-if="current === 4 && stepsStatus === 'error'" style="color: red">
@@ -279,7 +279,7 @@
                     <div class="calendar-to">
                       <img src="@/assets/icons/calendar-to.svg" />
                       <DatePicker v-model="endTime" format="dddd, DD MMMM YYYY" @openChange="handleEndOpenChange" />
-                      <img src="@/assets/icons/arrow-down.svg" />
+                      <img src="@/assets/icons/arrow-down.svg" :style="endOpen ? 'transform: rotate(180deg);' : ''"/>
                     </div>
                     <div class="reward-weekly">
                       <b>Reward per week:</b>&nbsp; {{ rewardPerWeek }} &nbsp;{{
@@ -1387,6 +1387,7 @@ export default class CreateFarm extends Vue {
   color: #ffffff50;
   font-size: 18px;
   line-height: 22px;
+  cursor: pointer;
 }
 
 .ant-calendar-picker-container {
@@ -1653,6 +1654,7 @@ main {
             line-height: 14px;
             color: rgb(133, 133, 141);
             width: max-content;
+            padding-left: 10px;
           }
 
           .label-today,
@@ -1661,6 +1663,7 @@ main {
             font-size: 18px;
             line-height: 22px;
             margin-bottom: 10px;
+            padding-left: 10px;
           }
 
           .label-today {
@@ -1687,6 +1690,7 @@ main {
               right: 5%;
               width: 11px;
               height: 6px;
+              transition: transform 0.3s;
             }
           }
 
@@ -1730,6 +1734,7 @@ main {
           font-size: 18px;
           line-height: 22px;
           margin-top: 15px;
+          padding-left: 10px;
         }
       }
     }
