@@ -616,7 +616,7 @@ import { getBigNumber } from '@/utils/layouts'
 import { cloneDeep, get } from 'lodash-es'
 import moment from 'moment'
 import { YieldFarm } from '@/utils/farm'
-import { getPoolListByTokenMintAddresses, LIQUIDITY_POOLS, LiquidityPoolInfo } from '@/utils/pools'
+import { getCRPPoolListByTokenMintAddresses, LIQUIDITY_POOLS, LiquidityPoolInfo } from '@/utils/pools'
 import { Token } from '@solana/spl-token'
 const Step = Steps.Step
 const RadioGroup = Radio.Group
@@ -1002,7 +1002,7 @@ export default class CreateFarm extends Vue {
           }
         }
         if (this.tokenA && this.tokenB) {
-          const liquidityListV5 = getPoolListByTokenMintAddresses(
+          const liquidityListV5 = getCRPPoolListByTokenMintAddresses(
             this.tokenA.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.tokenA.mintAddress,
             this.tokenB.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.tokenB.mintAddress,
             undefined
