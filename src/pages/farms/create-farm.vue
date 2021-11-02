@@ -143,7 +143,7 @@
                   <div class="inner-content">
                     <RadioGroup v-model="farmType" @change="selectFarm">
                       <Radio :value="1">Single yield farm</Radio>
-                      <Radio :value="2">Dual yield farm (Soon)</Radio>
+                      <Radio :value="2" disabled>Dual yield farm (Soon)</Radio>
                     </RadioGroup>
                   </div>
                 </Col>
@@ -155,7 +155,7 @@
                     <RadioGroup v-model="ammType" @change="selectAMM">
                       <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
                       <Row class="existing-amm">
-                        <Col :span="isMobile ? 24 : 8">
+                        <Col :span="isMobile ? 24 : 12">
                           <CoinNameInput
                             :label="'Token A'"
                             :mint-address="tokenA ? tokenA.mintAddress : ''"
@@ -163,7 +163,7 @@
                             @onSelect="openTokenASelect"
                           />
                         </Col>
-                        <Col :span="isMobile ? 24 : 8">
+                        <Col :span="isMobile ? 24 : 12">
                           <CoinNameInput
                             :label="'Token B'"
                             :mint-address="tokenB ? tokenB.mintAddress : ''"
@@ -226,7 +226,7 @@
 
               <!-- Create Farm -->
               <Row v-if="current === 5">
-                <Col :span="isMobile ? 24 : 16" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                   <div>
                     <b>Reward emission:</b>
                   </div>
@@ -260,7 +260,7 @@
                     </div>
                   </div>
                 </Col>
-                <Col :span="isMobile ? 24 : 16" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
                   <div>
                     <b>Farm duration:</b>
                   </div>
@@ -599,7 +599,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
-import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Checkbox, Radio } from 'ant-design-vue'
+import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Radio } from 'ant-design-vue'
 import { getMarket, createAmm, clearLocal } from '@/utils/market'
 import BigNumber from '@/../node_modules/bignumber.js/bignumber'
 import { TokenAmount } from '@/utils/safe-math'
@@ -634,7 +634,6 @@ const RadioGroup = Radio.Group
     Tooltip,
     Icon,
     DatePicker,
-    Checkbox,
     RadioGroup,
     Radio
   }
@@ -1314,6 +1313,14 @@ export default class CreateFarm extends Vue {
   margin-bottom: 20px;
 }
 
+.ant-radio-wrapper-disabled {
+  .ant-radio-inner {
+    border-color: #40426c !important;
+  }
+  span {
+    color: #40426c;
+  }
+}
 .ant-radio-wrapper-checked {
   color: #fff;
 }
@@ -1598,7 +1605,7 @@ main {
 
   .notstep {
     vertical-align: middle;
-    padding: 0 50px;
+    padding-left: 50px;
 
     .ant-row {
       align-items: baseline;
