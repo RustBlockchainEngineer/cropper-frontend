@@ -141,7 +141,7 @@
                   <div>
                     <b>Token pairing and AMM ID:</b>
                   </div>
-                  <div class="inner-content">
+                  <div class="inner-content max-100">
                     <RadioGroup v-model="ammType" @change="selectAMM">
                       <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
                       <Row class="existing-amm">
@@ -1371,8 +1371,6 @@ export default class CreateFarm extends Vue {
 }
 
 .ant-calendar-picker-container {
-  width: 585px;
-
   .ant-calendar {
     top: 60px;
     background: #1A1D6B;
@@ -1381,6 +1379,8 @@ export default class CreateFarm extends Vue {
     border: none;
 
     .ant-calendar-panel {
+      width: 585px;
+
       .ant-calendar-input-wrap {
         display: none;
       }
@@ -1420,10 +1420,21 @@ export default class CreateFarm extends Vue {
     }
   }
 
+  .ant-calendar-last-month-cell,
+  .ant-calendar-next-month-btn-day {
+    .ant-calendar-date {
+      color: #C9C8CC40 !important;
+    }
+  }
+  
   .ant-calendar table, .ant-calendar th {
     // Day Selection
     .ant-calendar-selected-day .ant-calendar-date {
       background: #EF745D;
+    }
+
+    .ant-calendar-today .ant-calendar-date {
+      border-color: #EF745D;
     }
 
     .ant-calendar-cell {
@@ -1442,14 +1453,6 @@ export default class CreateFarm extends Vue {
       }
     }
 
-    .ant-calendar-last-month-cell {
-      visibility: hidden;
-    }
-
-    .ant-calendar-next-month-btn-day {
-      display: none;
-    }
-    
     // Month Selection
     .ant-calendar-month-panel-selected-cell .ant-calendar-month-panel-month{
       background: #EF745D;
@@ -1610,6 +1613,10 @@ main {
               cursor: pointer;
             }
           }
+        }
+
+        .max-100 {
+          max-width: 100% !important ;
         }
 
         .inner-content {
