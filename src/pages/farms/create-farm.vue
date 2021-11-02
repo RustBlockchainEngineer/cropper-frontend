@@ -39,14 +39,18 @@
           </div>
 
           <Row>
-            <Col :span="isMobile ? 24 : 6" class="step" :class="{ 'bordered-right': !wallet.connected }">
+            <Col
+              :span="isMobile ? 24 : 6"
+              class="step"
+              :class="{ 'bordered-right': !wallet.connected || current === 1 }"
+            >
               <Steps :current="current" size="small" direction="vertical" style="width: auto" :status="stepsStatus">
                 <Step
                   ><template slot="title">
                     <div style="color: #13ecab">Select options</div>
                   </template></Step
                 >
-                <Step>
+                <Step v-if="ammType != 1">
                   <p slot="title" :style="current > 1 ? '' : 'color: #40426C'">
                     {{ stepTitleInputMarket }}
                     <Tooltip placement="right">
@@ -63,8 +67,8 @@
                     </Tooltip>
                   </p>
                 </Step>
-                <Step
-                  ><template slot="title">
+                <Step v-if="ammType != 1">
+                  <template slot="title">
                     <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">
                       {{ stepTitleMarketInfo }}
                     </div>
@@ -74,8 +78,8 @@
                     <div v-else style="color: #40426c">{{ stepTitleMarketInfo }}</div>
                   </template></Step
                 >
-                <Step
-                  ><template slot="title">
+                <Step v-if="ammType != 1">
+                  <template slot="title">
                     <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">{{ stepTitleInit }}</div>
                     <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">
                       {{ stepTitleInit }}
@@ -84,7 +88,7 @@
                   </template></Step
                 >
 
-                <Step
+                <Step v-if="ammType != 1"
                   ><template slot="title">
                     <div v-if="current > 4 && stepsStatus !== 'error'">Pool & Farm Created</div>
                     <div v-else-if="current === 4 && stepsStatus === 'error'" style="color: red">
@@ -93,15 +97,17 @@
                     <div v-else slot="title" style="color: #40426c">Pool Created</div>
                   </template></Step
                 >
-                <Step
-                  ><template slot="title">
+                <Step>
+                  <template slot="title">
                     <div v-if="current > 5 || (current === 5 && stepsStatus !== 'error')">Farm Initialization</div>
-                    <div v-else-if="current === 5 && stepsStatus === 'error'" style="color: red">Farm Initialization</div>
+                    <div v-else-if="current === 5 && stepsStatus === 'error'" style="color: red">
+                      Farm Initialization
+                    </div>
                     <div v-else style="color: #40426c">Farm Initialization</div>
                   </template></Step
                 >
-                <Step
-                  ><template slot="title">
+                <Step>
+                  <template slot="title">
                     <div v-if="current > 6 || (current === 6 && stepsStatus !== 'error')">Farm Created</div>
                     <div v-else-if="current === 6 && stepsStatus === 'error'" style="color: red">Farm Created</div>
                     <div v-else style="color: #40426c">Farm Created</div>
@@ -110,7 +116,11 @@
               </Steps>
             </Col>
 
-            <Col :span="isMobile ? 24 : 18" class="notstep" :class="{ 'bordered-left': wallet.connected }">
+            <Col
+              :span="isMobile ? 24 : 18"
+              class="notstep"
+              :class="{ 'bordered-left': wallet.connected && current != 1 }"
+            >
               <Row v-if="current === 0 && !wallet.connected">
                 <Col
                   :span="isMobile ? 24 : 24"
@@ -244,7 +254,9 @@
                       @onSelect="openFromCoinSelect"
                     />
                     <div class="label">
-                      <span><em><u>Note:</u> you will be able to add rewards into your farm whenever you want.</em></span>
+                      <span
+                        ><em><u>Note:</u> you will be able to add rewards into your farm whenever you want.</em></span
+                      >
                     </div>
                   </div>
                 </Col>
@@ -266,18 +278,15 @@
                     <label class="label-to">To</label>
                     <div class="calendar-to">
                       <img src="@/assets/icons/calendar-to.svg" />
-                      <DatePicker
-                        v-model="endTime"
-                        format="dddd, DD MMMM YYYY"
-                        @openChange="handleEndOpenChange"
-                      />
+                      <DatePicker v-model="endTime" format="dddd, DD MMMM YYYY" @openChange="handleEndOpenChange" />
                       <img src="@/assets/icons/arrow-down.svg" />
                     </div>
                     <div class="reward-weekly">
-                      <b>Reward per week:</b>&nbsp; {{ rewardPerWeek }} &nbsp;{{ rewardCoin != null ? rewardCoin.symbol : '' }}
+                      <b>Reward per week:</b>&nbsp; {{ rewardPerWeek }} &nbsp;{{
+                        rewardCoin != null ? rewardCoin.symbol : ''
+                      }}
                     </div>
-                    <div class="amm-id">
-                      <b>AMM ID:</b>&nbsp;{{ userCreateAmmId }}</div>
+                    <div class="amm-id"><b>AMM ID:</b>&nbsp;{{ userCreateAmmId }}</div>
                   </div>
                 </Col>
 
@@ -342,25 +351,29 @@
 
               <Row v-if="current === 1">
                 <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
-                  <div style="padding-bottom: 10px; word-break: break-word">
-                    This tool is for advanced users. Before attempting to create a new liquidity pool, we suggest going
-                    through this
-                    <a
-                      href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
-                      target="_blank"
-                    >
-                      detailed guide.</a
-                    >
+                  <div>
+                    <b>Create a new liquidity pool:</b>
                   </div>
-                  <div>Input Serum Market ID:</div>
-                  <div>CRP/USDC: HPU7v2yCGM6sRujWEMaTPiiiX2qMb6fun3eWjTzSgSw1</div>
-                  <div>CRP/USDT: 3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSw9u7tcG</div>
-                  <div>B2B/CRP: 2hEeVE354k6mpvHvzg8K8HvEAkL9HUMiZbcjarkuy7W7</div>
+                  <div class="inner-content max-80">
+                    <input v-model="inputMarket" :disabled="!marketInputFlag" placeholder="Input market ID here" />
+                    <div class="detailed-guide">
+                      <em
+                        ><u>Note:</u> This tool is for advanced users. Before attempting to create a new liquidity pool,
+                        we suggest going through this
+                        <a
+                          href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                          target="_blank"
+                        >
+                          detailed guide.</a
+                        ></em
+                      >
+                    </div>
+                    <!-- <div>Input Serum Market ID:</div>
+                    <div>CRP/USDC: HPU7v2yCGM6sRujWEMaTPiiiX2qMb6fun3eWjTzSgSw1</div>
+                    <div>CRP/USDT: 3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSw9u7tcG</div>
+                    <div>B2B/CRP: 2hEeVE354k6mpvHvzg8K8HvEAkL9HUMiZbcjarkuy7W7</div> -->
+                  </div>
                 </Col>
-                <Col style="line-height: 20px" :span="24"
-                  ><input v-model="inputMarket" :disabled="!marketInputFlag"
-                /></Col>
-
                 <Col
                   :span="isMobile ? 24 : 24"
                   style="text-align: center"
@@ -1254,6 +1267,12 @@ export default class CreateFarm extends Vue {
     }
   }
 
+  .ant-steps-item-error {
+    .ant-steps-item-icon {
+      background-color: red !important;
+    }
+  }
+
   .ant-steps-item {
     .ant-steps-item-container {
       .ant-steps-item-tail::after {
@@ -1373,8 +1392,9 @@ export default class CreateFarm extends Vue {
 .ant-calendar-picker-container {
   .ant-calendar {
     top: 60px;
-    background: #1A1D6B;
-    box-shadow: 0 30px 84px rgba(19, 10, 46, 0.08), 0 8px 32px rgba(19, 10, 46, 0.07), 0 3px 14px rgba(19, 10, 46, 0.03), 0 1px 3px rgba(19, 10, 46, 0.13);
+    background: #1a1d6b;
+    box-shadow: 0 30px 84px rgba(19, 10, 46, 0.08), 0 8px 32px rgba(19, 10, 46, 0.07), 0 3px 14px rgba(19, 10, 46, 0.03),
+      0 1px 3px rgba(19, 10, 46, 0.13);
     border-radius: 12px;
     border: none;
 
@@ -1387,7 +1407,7 @@ export default class CreateFarm extends Vue {
 
       // Day Panel
       .ant-calendar-date-panel {
-        background: #1A1D6B;
+        background: #1a1d6b;
         .ant-calendar-header {
           border: none;
         }
@@ -1398,7 +1418,7 @@ export default class CreateFarm extends Vue {
 
       // Month Panel
       .ant-calendar-month-panel {
-        background: #1A1D6B;
+        background: #1a1d6b;
         .ant-calendar-month-panel-header {
           border: none;
         }
@@ -1409,7 +1429,7 @@ export default class CreateFarm extends Vue {
 
       // Year Panel
       .ant-calendar-year-panel {
-        background: #1A1D6B;
+        background: #1a1d6b;
         .ant-calendar-year-panel-header {
           border: none;
         }
@@ -1423,18 +1443,19 @@ export default class CreateFarm extends Vue {
   .ant-calendar-last-month-cell,
   .ant-calendar-next-month-btn-day {
     .ant-calendar-date {
-      color: #C9C8CC40 !important;
+      color: #c9c8cc40 !important;
     }
   }
-  
-  .ant-calendar table, .ant-calendar th {
+
+  .ant-calendar table,
+  .ant-calendar th {
     // Day Selection
     .ant-calendar-selected-day .ant-calendar-date {
-      background: #EF745D;
+      background: #ef745d;
     }
 
     .ant-calendar-today .ant-calendar-date {
-      border-color: #EF745D;
+      border-color: #ef745d;
     }
 
     .ant-calendar-cell {
@@ -1445,17 +1466,17 @@ export default class CreateFarm extends Vue {
         align-items: center;
         justify-content: center;
         border-radius: 40px;
-        color: #F8F7FA;
+        color: #f8f7fa;
       }
 
       .ant-calendar-date:hover {
-        background-color: #EF745D;
+        background-color: #ef745d;
       }
     }
 
     // Month Selection
-    .ant-calendar-month-panel-selected-cell .ant-calendar-month-panel-month{
-      background: #EF745D;
+    .ant-calendar-month-panel-selected-cell .ant-calendar-month-panel-month {
+      background: #ef745d;
     }
 
     .ant-calendar-month-panel-cell {
@@ -1466,17 +1487,17 @@ export default class CreateFarm extends Vue {
         align-items: center;
         justify-content: center;
         border-radius: 40px;
-        color: #F8F7FA;
+        color: #f8f7fa;
       }
 
       .ant-calendar-month-panel-month:hover {
-        background-color: #EF745D;
+        background-color: #ef745d;
       }
     }
 
     // Year Selection
-    .ant-calendar-year-panel-selected-cell .ant-calendar-year-panel-year{
-      background: #EF745D;
+    .ant-calendar-year-panel-selected-cell .ant-calendar-year-panel-year {
+      background: #ef745d;
     }
 
     .ant-calendar-year-panel-cell {
@@ -1487,11 +1508,11 @@ export default class CreateFarm extends Vue {
         align-items: center;
         justify-content: center;
         border-radius: 40px;
-        color: #F8F7FA;
+        color: #f8f7fa;
       }
 
       .ant-calendar-year-panel-year:hover {
-        background-color: #EF745D;
+        background-color: #ef745d;
       }
     }
   }
@@ -1584,7 +1605,7 @@ main {
 
       .item-title {
         margin-bottom: 30px;
-        
+
         .selected-pool {
           font-size: 15px;
           line-height: 18px;
@@ -1619,6 +1640,10 @@ main {
           max-width: 100% !important ;
         }
 
+        .max-80 {
+          max-width: 80% !important ;
+        }
+
         .inner-content {
           padding: 20px 0 0 30px;
           max-width: 615px;
@@ -1639,7 +1664,7 @@ main {
           }
 
           .label-today {
-            color: #80819D;
+            color: #80819d;
           }
 
           .label-to {
@@ -1662,6 +1687,29 @@ main {
               right: 5%;
               width: 11px;
               height: 6px;
+            }
+          }
+
+          input {
+            border: 4px solid #16164a;
+            background: #16164a;
+            border-radius: 14px;
+            padding: 20px 25px;
+            font-size: 16px;
+            line-height: 19px;
+            color: #ffffff50;
+            outline: 0;
+            width: 100%;
+          }
+
+          .detailed-guide {
+            font-size: 18px;
+            line-height: 22px;
+            color: #80819d;
+            text-align: center;
+
+            a {
+              color: #13ecab;
             }
           }
         }
