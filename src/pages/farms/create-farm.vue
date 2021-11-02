@@ -50,7 +50,7 @@
                     <div style="color: #13ecab">Select options</div>
                   </template></Step
                 >
-                <Step>
+                <Step v-if="ammType != 1">
                   <p slot="title" :style="current > 1 ? '' : 'color: #40426C'">
                     {{ stepTitleInputMarket }}
                     <Tooltip placement="right">
@@ -67,7 +67,7 @@
                     </Tooltip>
                   </p>
                 </Step>
-                <Step>
+                <Step v-if="ammType != 1">
                   <template slot="title">
                     <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">
                       {{ stepTitleMarketInfo }}
@@ -78,7 +78,7 @@
                     <div v-else style="color: #40426c">{{ stepTitleMarketInfo }}</div>
                   </template></Step
                 >
-                <Step>
+                <Step v-if="ammType != 1">
                   <template slot="title">
                     <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">{{ stepTitleInit }}</div>
                     <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">
@@ -88,8 +88,8 @@
                   </template></Step
                 >
 
-                <Step
-                  ><template slot="title">
+                <Step v-if="ammType != 1">
+                  <template slot="title">
                     <div v-if="current > 4 && stepsStatus !== 'error'">Pool & Farm Created</div>
                     <div v-else-if="current === 4 && stepsStatus === 'error'" style="color: red">
                       Pool & Farm Created
@@ -1272,6 +1272,13 @@ export default class CreateFarm extends Vue {
     }
   }
 
+  .ant-steps-item-process,
+  .ant-steps-item-finish {
+    .ant-steps-item-title {
+      font-weight: 700 !important;
+    }
+  }
+
   .ant-steps-item {
     .ant-steps-item-container {
       .ant-steps-item-tail::after {
@@ -1294,7 +1301,7 @@ export default class CreateFarm extends Vue {
       .ant-steps-item-title {
         font-size: 20px;
         line-height: 25px;
-        font-weight: 700;
+        font-weight: normal;
       }
     }
   }
