@@ -199,7 +199,7 @@
                   style="text-align: center"
                   class="item-title"
                 >
-                  <div class="create">
+                  <div class="next">
                     <Button
                       size="large"
                       ghost
@@ -218,7 +218,7 @@
                   style="text-align: center"
                   class="item-title"
                 >
-                  <div class="create disable-create">
+                  <div class="next disable-next">
                     <Button
                       size="large"
                       ghost
@@ -1584,6 +1584,43 @@ main {
   }
 
   .create {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 9px 0;
+    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    width: 163px;
+    text-align: center;
+
+    @media (max-width: @mobile-b-width) {
+      width: 140px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+    }
+
+    button {
+      background: unset !important;
+      color: #fff;
+      border-color: transparent;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 42px;
+      letter-spacing: -0.05em;
+      padding: 0;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 14px;
+        line-height: 24px;
+      }
+    }
+  }
+
+  .next {
     height: 45px;
     display: flex;
     align-items: center;
@@ -1598,7 +1635,6 @@ main {
 
     @media (max-width: @mobile-b-width) {
       width: 140px;
-      height: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1624,7 +1660,7 @@ main {
     }
   }
 
-  .disable-create {
+  .disable-next {
     background: #828282;
     border: 2px solid #FFFFFF24;
   }
@@ -1884,13 +1920,12 @@ main {
         }
         
         .create-amm {
-          .note-reminder {
-            line-height: 22px;
+          line-height: 22px;
 
-            @media (max-width: @mobile-b-width) {
-              line-height: 18px;
-            }
+          @media (max-width: @mobile-b-width) {
+            line-height: 18px;
           }
+
           em {
             font-size: 18px;
             color: #80819D;
@@ -1901,6 +1936,9 @@ main {
           }
 
           .link-pool {
+            margin-bottom: 10px;
+            display: block;
+            
             em {
               color: #13ECAB;
             }
