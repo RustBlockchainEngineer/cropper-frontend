@@ -131,7 +131,7 @@ export default Vue.extend({
     .select-button {
       padding: 10px 18px;
       line-height: 24px;
-      width: 125px;
+      width: 130px;
 
       .anticon {
         margin-left: 4px;

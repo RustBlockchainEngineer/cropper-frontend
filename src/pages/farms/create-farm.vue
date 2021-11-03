@@ -1751,6 +1751,11 @@ main {
 
         .max-80 {
           max-width: 80% !important ;
+
+          @media (max-width: @mobile-b-width) {
+            max-width: 100% !important;
+            padding: 0 !important;
+          }
         }
 
         .inner-content {
@@ -1845,6 +1850,12 @@ main {
           }
         }
 
+        b {
+          font-weight: bold;
+          font-size: 20px;
+          line-height: 25px;
+        }
+
         .reward-emission,
         .farm-duration {
           @media (max-width: @mobile-b-width) {
@@ -1852,7 +1863,7 @@ main {
             margin: 0 -10px;
           }
         }
-
+        
         .existing-amm,
         .selected-pool {
           padding: 0 30px 25px 30px;
@@ -1873,17 +1884,11 @@ main {
             word-break: break-all;
             font-size: 15px;
             line-height: 18px;
-          }
-        }
 
-        b {
-          font-weight: bold;
-          font-size: 20px;
-          line-height: 25px;
-
-          @media (max-width: @mobile-b-width) {
-            font-size: 15px;
-            line-height: 18px;
+            b {
+              font-size: 15px;
+              line-height: 18px;
+            }
           }
         }
       }
