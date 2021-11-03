@@ -99,8 +99,8 @@
                 > -->
                 <Step>
                   <template slot="title">
-                    <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">Farm Initialization</div>
-                    <div v-else-if="current === 2 && stepsStatus === 'error'" style="color: red">
+                    <div v-if="current > 1 || (current === 1 && stepsStatus !== 'error')">Farm Initialization</div>
+                    <div v-else-if="current === 1 && stepsStatus === 'error'" style="color: red">
                       Farm Initialization
                     </div>
                     <div v-else style="color: #40426c">Farm Initialization</div>
@@ -108,8 +108,8 @@
                 >
                 <Step>
                   <template slot="title">
-                    <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">Farm Created</div>
-                    <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">Farm Created</div>
+                    <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">Farm Created</div>
+                    <div v-else-if="current === 2 && stepsStatus === 'error'" style="color: red">Farm Created</div>
                     <div v-else style="color: #40426c">Farm Created</div>
                   </template></Step
                 >
@@ -324,19 +324,35 @@
                       @click="confirmFarmInfo"
                     >
                       Confirm
+                      <div v-if="activeSpin" class="spinner-container">
+                        <Spin :spinning="true">
+                          <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
+                        </Spin>
+                      </div>
                     </Button>
                   </div>
                 </Col>
               </Row>
 
-              <Row v-if="current === 6">
+              <Row v-if="current === 2">
                 <Col
                   v-if="!isCRPTokenPair"
-                  style="line-height: 20px"
                   :span="24"
                   class="item-title"
                 >
-                  <div>Farm has been successfully created!</div>
+                  <div class="farm-created">
+                    <b>Congratulations! Your farm has been successfully created!</b>
+                  </div>
+                </Col>
+                <Col class="lp-icons" :span="24">
+                  <div class="lp-icons-group">
+                    <div class="icons">
+                      <CoinIcon :mint-address="tokenA.mintAddress" />
+                      <span>{{ tokenA.symbol }} - </span>
+                      <CoinIcon :mint-address="tokenB.mintAddress" />
+                      <span>{{ tokenB.symbol }}</span>
+                    </div>
+                  </div>
                 </Col>
                 <Col :span="isMobile ? 24 : 24">
                   <div class="next">
@@ -591,7 +607,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
-import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Radio } from 'ant-design-vue'
+import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Radio, Spin } from 'ant-design-vue'
 import { getMarket, createAmm, clearLocal } from '@/utils/market'
 import BigNumber from '@/../node_modules/bignumber.js/bignumber'
 import { TokenAmount } from '@/utils/safe-math'
@@ -627,7 +643,8 @@ const RadioGroup = Radio.Group
     Icon,
     DatePicker,
     RadioGroup,
-    Radio
+    Radio,
+    Spin
   }
 })
 export default class CreateFarm extends Vue {
@@ -687,6 +704,7 @@ export default class CreateFarm extends Vue {
   farmType: number = 1
   ammType: number = 1
   showSelectedPool: boolean = false
+  activeSpin: boolean = false
 
   get rewardPerWeek() {
     let result = 0
@@ -809,6 +827,7 @@ export default class CreateFarm extends Vue {
     this.updateLocalData()
   }
   async confirmFarmInfo() {
+    this.activeSpin = true
     //EgaHTGJeDbytze85LqMStxgTJgq22yjTvYSfqoiZevSK
     const connection = this.$web3
     const wallet: any = this.$wallet
@@ -1437,6 +1456,17 @@ export default class CreateFarm extends Vue {
         display: none;
       }
 
+      // Decade Panel
+      .ant-calendar-decade-panel {
+        background: #1a1d6b;
+        .ant-calendar-decade-panel-header {
+          border: none;
+        }
+        .ant-calendar-decade-panel-footer {
+          display: none;
+        }
+      }
+
       // Day Panel
       .ant-calendar-date-panel {
         background: #1a1d6b;
@@ -1547,6 +1577,27 @@ export default class CreateFarm extends Vue {
         background-color: #ef745d;
       }
     }
+
+    // Decade Selection
+    .ant-calendar-decade-panel-selected-cell .ant-calendar-decade-panel-decade {
+      background: #ef745d;
+    }
+
+    .ant-calendar-decade-panel-cell {
+      .ant-calendar-decade-panel-decade {
+        max-width: 75px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 40px;
+        color: #f8f7fa;
+      }
+
+      .ant-calendar-decade-panel-decade:hover {
+        background-color: #ef745d;
+      }
+    }
   }
 }
 </style>
@@ -1643,6 +1694,14 @@ main {
       @media (max-width: @mobile-b-width) {
         font-size: 14px;
         line-height: 24px;
+      }
+
+      .spinner-container {
+        .ant-spin {
+          position: absolute;
+          top: 10px;
+          right: 15px;
+        }
       }
     }
   }
@@ -1959,6 +2018,52 @@ main {
               line-height: 18px;
             }
           }
+        }
+
+        .farm-created {
+          line-height: 25px;
+
+          @media (max-width: @mobile-b-width) {
+            text-align: center;
+          }
+        }
+      }
+      .lp-icons {
+        margin-bottom: 30px;
+
+        .lp-icons-group {
+          height: 51px;
+          background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+          border-radius: 8px;
+          padding: 2px;
+
+          @media (max-width: @mobile-b-width) {
+            margin: auto;
+          }
+
+          .icons {
+            height: 47px;
+            background-color: #01033c;
+            border-radius: 8px;
+            align-items: center;
+            padding: 0 20px;
+          }
+
+          .icons span {
+            margin-left: 12px;
+            margin-right: 12px;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 21px;
+          }
+        }
+
+        .title {
+          font-weight: normal;
+          font-size: 18px;
+          line-height: 21px;
+          color: #fff;
+          opacity: 0.5;
         }
       }
     }
