@@ -133,7 +133,7 @@
                   </a>
                   <img src="@/assets/icons/copy.png" @click="$accessor.copy(extAmmId)" />
                 </div>
-                <div class="symbol">{{ 'CRP - ' + toCoin.symbol }}</div>
+                <div class="symbol">{{ midTokenSymbol + ' - ' + toCoin.symbol }}</div>
                 <div class="address">
                   {{ extAmmId ? extAmmId.substr(0, 14) : '' }}
                   ...

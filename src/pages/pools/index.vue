@@ -646,14 +646,14 @@ export default class Pools extends Vue {
 
     const polo: any = []
 
-
-
-
-
     getAllCropperPools().forEach(function (value: any) {
       const liquidityItem = get(liquidity.infos, value.lp_mint)
-      let lp = getPoolByLpMintAddress(value.lp_mint)
 
+      if(!liquidityItem){
+        return 
+      }
+
+      let lp = getPoolByLpMintAddress(value.lp_mint)
 
       if(!price.prices[liquidityItem?.coin.symbol as string] && price.prices[liquidityItem?.pc.symbol as string]){
         price.prices[liquidityItem?.coin.symbol as string] = price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
