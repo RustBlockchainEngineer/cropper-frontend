@@ -98,7 +98,7 @@ export default Vue.extend({
   
   .label {
     margin-right: 15px;
-    font-size: 15px;
+    font-size: 15px !important;
     line-height: 18px;
     color: #fff;
   }
@@ -131,6 +131,7 @@ export default Vue.extend({
     .select-button {
       padding: 10px 18px;
       line-height: 24px;
+      width: 130px;
 
       .anticon {
         margin-left: 4px;

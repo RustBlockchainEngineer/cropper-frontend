@@ -148,8 +148,13 @@ export default Vue.extend({
   .label {
     font-size: 18px;
     line-height: 14px;
-    color: #85858d;
+    color: #ffffff50;
     padding-left: 10px;
+
+    @media (max-width: @mobile-b-width) {
+      font-size: 12px !important;
+      line-height: 15px;
+    }
   }
 
   input {
@@ -161,10 +166,15 @@ export default Vue.extend({
     font-size: 18px;
     line-height: 24px;
     flex: 1 1 auto;
-    color: @text-color;
+    color: #fff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    @media (max-width: @mobile-b-width) {
+      font-size: 15px;
+      line-height: 18px;
+    }
 
     &:active,
     &:focus,

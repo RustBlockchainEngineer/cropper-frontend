@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :class="isMobile ? 'create-pool-mobile' : 'create-pool'">
+  <div class="container create-pool">
     <CoinSelect
       v-if="coinSelectShow && wallet.connected"
       :farmTokenASelect="selectTokenA"
@@ -11,7 +11,7 @@
     <AmmIdSelect
       :show="ammIdSelectShow"
       :liquidity-list="ammIdSelectList"
-      :user-close="false"
+      :userClose="false"
       @onClose="() => (ammIdSelectShow = false)"
       @onSelect="onAmmIdSelect"
     />
@@ -125,7 +125,7 @@
                 <Col
                   :span="isMobile ? 24 : 24"
                   style="text-align: center"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  class="item-title"
                 >
                   <div v-if="!wallet.connected" class="create">
                     <Button size="large" ghost style="width: 100%" @click="$accessor.wallet.openModal">
@@ -136,7 +136,7 @@
               </Row>
 
               <Row v-if="current === 0 && wallet.connected">
-                <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="24" class="item-title">
                   <div>
                     <b>Farm Type:</b>
                   </div>
@@ -147,13 +147,14 @@
                     </RadioGroup>
                   </div>
                 </Col>
-                <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="24" class="item-title">
                   <div>
                     <b>Token pairing and AMM ID:</b>
                   </div>
                   <div class="inner-content max-100">
                     <RadioGroup v-model="ammType" @change="selectAMM">
-                      <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
+                      <Radio :value="1" v-if="isMobile">Use existing AMM ID</Radio>
+                      <Radio :value="1" v-if="!isMobile">Use existing CropperFinance's AMM ID</Radio>
                       <Row class="existing-amm">
                         <Col :span="isMobile ? 24 : 12">
                           <CoinNameInput
@@ -175,8 +176,8 @@
                       <div class="selected-pool" v-if="userCreateAmmId">
                         Selected Pool
                         <div class="selected-pool-box">
-                          <span>AMM ID: {{ userCreateAmmId }}</span>
-                          <span v-if="userCreatePoolLiquidity">Pool Liquidity: {{ userCreatePoolLiquidity }}</span>
+                          <div class="pool-info">AMM ID: <span>{{ userCreateAmmId }}</span></div>
+                          <div v-if="userCreatePoolLiquidity" class="pool-info">Pool Liquidity: <span>{{ userCreatePoolLiquidity }}</span></div>
                           <img src="@/assets/icons/close-icon.svg" @click="removeSelected" />
                         </div>
                       </div>
@@ -188,7 +189,7 @@
                   v-if="ammType === 1"
                   :span="isMobile ? 24 : 24"
                   style="text-align: center"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  class="item-title"
                 >
                   <div class="create">
                     <Button
@@ -207,7 +208,7 @@
                   v-if="ammType === 2"
                   :span="isMobile ? 24 : 24"
                   style="text-align: center"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  class="item-title"
                 >
                   <div class="create">
                     <Button
@@ -226,11 +227,11 @@
 
               <!-- Create Farm -->
               <Row v-if="current === 5">
-                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="isMobile ? 24 : 24" class="item-title">
                   <div>
                     <b>Reward emission:</b>
                   </div>
-                  <div class="inner-content">
+                  <div class="inner-content reward-emission">
                     <CoinInput
                       v-model="fromCoinAmount"
                       label="Initial Reward Token Amount"
@@ -260,11 +261,11 @@
                     </div>
                   </div>
                 </Col>
-                <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="isMobile ? 24 : 24" class="item-title">
                   <div>
                     <b>Farm duration:</b>
                   </div>
-                  <div class="inner-content">
+                  <div class="inner-content farm-duration">
                     <label class="label-today">From today</label>
                     <div class="calendar-from">
                       <img src="@/assets/icons/calendar-from.svg" />
@@ -320,7 +321,7 @@
                   v-if="!isCRPTokenPair"
                   style="line-height: 20px"
                   :span="24"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  class="item-title"
                 >
                   <div>Farm has been successfully created!</div>
                 </Col>
@@ -350,7 +351,7 @@
               </Row>
 
               <Row v-if="current === 1">
-                <Col :span="24" :class="isMobile ? 'item-title-mobile' : 'item-title'">
+                <Col :span="24" class="item-title">
                   <div>
                     <b>Create a new liquidity pool:</b>
                   </div>
@@ -377,7 +378,7 @@
                 <Col
                   :span="isMobile ? 24 : 24"
                   style="text-align: center"
-                  :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  class="item-title"
                 >
                   <div class="create">
                     <Button
@@ -409,21 +410,21 @@
 
               <div v-if="current >= 2 && current < 5" style="margin-top: 10px" class="msgClass">
                 <Row>
-                  <Col :span="isMobile ? 24 : 24" :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                  <Col :span="isMobile ? 24 : 24" class="item-title"
                     ><b>Market Info:</b></Col
                   >
                   <Col :span="isMobile ? 24 : 24">
                     <div style="padding-left: 10px">
                       <div
                         style="width: 100%; display: inline-block"
-                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                        class="item-title"
                       >
                         Base Token Mint Address:
                         {{ getNameForMint(marketMsg.baseMintAddress.toBase58()) }}
                       </div>
                       <div
                         style="width: 100%; display: inline-block"
-                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                        class="item-title"
                       >
                         Quote Token Mint Address:
                         {{ getNameForMint(marketMsg.quoteMintAddress.toBase58()) }}
@@ -431,21 +432,21 @@
 
                       <div
                         style="width: 32%; display: inline-block"
-                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                        class="item-title"
                       >
                         Tick Size: {{ marketTickSize }}
                       </div>
 
                       <div
                         style="width: 32%; display: inline-block"
-                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                        class="item-title"
                       >
                         Min Order Size: {{ marketMsg.minOrderSize }}
                       </div>
 
                       <div
                         style="width: 32%; display: inline-block"
-                        :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                        class="item-title"
                       >
                         Current Price:
                         {{
@@ -458,7 +459,7 @@
                   </Col>
                   <div
                     style="margin-left: 20%; margin-top: 30px; width: 40%; display: inline-block"
-                    :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                    class="item-title"
                   >
                     Set <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b> Starting Price in
                     <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b
@@ -476,7 +477,7 @@
                   </div>
                   <div
                     style="margin-left: 20%; margin-top: 10px; width: 40%; display: inline-block"
-                    :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                    class="item-title"
                   >
                     <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b> Initial Liquidity:
                   </div>
@@ -492,7 +493,7 @@
                   </div>
                   <div
                     style="margin-left: 20%; margin-top: 10px; width: 40%; display: inline-block"
-                    :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                    class="item-title"
                   >
                     <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b> Initial Liquidity:
                   </div>
@@ -524,7 +525,7 @@
                       <!-- <Col
                     style="margin-top: 10px"
                     :span="isMobile ? 24 : 6"
-                    :class="isMobile ? 'item-title-mobile' : 'item-title'"
+                    class="item-title"
                     >New AMM ID:</Col
                   >
                   <Col style="margin-top: 10px" :span="isMobile ? 24 : 18">
@@ -1404,10 +1405,21 @@ export default class CreateFarm extends Vue {
   font-size: 18px;
   line-height: 22px;
   cursor: pointer;
+
+  @media (max-width: @mobile-b-width) {
+    font-size: 14px;
+    line-height: 18px;
+  }
 }
 
 .ant-calendar-picker-container {
+
+  @media (max-width: @mobile-b-width) {
+    width: calc(100% - 60px);
+  }
+
   .ant-calendar {
+    width: 585px;
     top: 60px;
     background: #1a1d6b;
     box-shadow: 0 30px 84px rgba(19, 10, 46, 0.08), 0 8px 32px rgba(19, 10, 46, 0.07), 0 3px 14px rgba(19, 10, 46, 0.03),
@@ -1415,8 +1427,14 @@ export default class CreateFarm extends Vue {
     border-radius: 12px;
     border: none;
 
+    @media (max-width: @mobile-b-width) {
+      max-width: 585px;
+      width: 100%;
+      margin: auto;
+    }
+
     .ant-calendar-panel {
-      width: 585px;
+      width: 100%;
 
       .ant-calendar-input-wrap {
         display: none;
@@ -1547,6 +1565,10 @@ main {
 .create-pool {
   max-width: 90%;
 
+  @media (max-width: @mobile-b-width) {
+    min-width: 100%;
+  }
+
   .ant-calendar-date:hover {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
   }
@@ -1561,6 +1583,15 @@ main {
     margin-right: 10px;
     text-align: center;
 
+    @media (max-width: @mobile-b-width) {
+      width: 140px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+    }
+
     button {
       background: unset !important;
       color: #fff;
@@ -1571,6 +1602,11 @@ main {
       line-height: 42px;
       letter-spacing: -0.05em;
       padding: 0;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 14px;
+        line-height: 24px;
+      }
     }
   }
 
@@ -1583,6 +1619,23 @@ main {
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      @media (max-width: @mobile-b-width) {
+        display: block;
+      }
+
+      .buttonsd {
+        @media (max-width: @mobile-b-width) {
+          padding: 20px 15px;
+          border: 4px solid #16164a;
+          box-sizing: border-box;
+          border-radius: 14px;
+          margin-top: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
     }
   }
 
@@ -1592,11 +1645,21 @@ main {
     padding: 40px 60px;
     background-color: #16164a;
 
+    @media (max-width: @mobile-b-width) {
+      padding: 20px 16px;
+    }
+
     .title {
       font-size: 30px;
       font-weight: 600;
       line-height: 37px;
       background: transparent;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 23px;
+        font-weight: 600;
+        line-height: 28px;
+      }
     }
   }
 
@@ -1608,13 +1671,28 @@ main {
     border-right: 3px solid #ffffff30;
   }
 
+  .bordered-left,
+  .bordered-right {
+    @media (max-width: @mobile-b-width) {
+      border: none;
+    }
+  }
+
   .step {
     padding-top: 20px;
+
+    @media (max-width: @mobile-b-width) {
+      padding-top: 0;
+    }
   }
 
   .notstep {
     vertical-align: middle;
     padding-left: 50px;
+
+    @media (max-width: @mobile-b-width) {
+      padding-left: 0;
+    }
 
     .ant-row {
       align-items: baseline;
@@ -1630,7 +1708,7 @@ main {
           .selected-pool-box {
             position: relative;
             margin-top: 10px;
-            padding: 17px 0;
+            padding: 17px 10px;
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 6px;
@@ -1638,9 +1716,9 @@ main {
             line-height: 22px;
             text-align: center;
             color: #fff;
-
-            span:nth-child(2) {
-              display: block;
+            word-break: break-word;
+            
+            .pool-info:nth-child(2) {
               margin-top: 12px;
             }
 
@@ -1651,6 +1729,20 @@ main {
               cursor: pointer;
             }
           }
+
+          @media (max-width: @mobile-b-width) {
+            margin-left: -30px;
+
+            .selected-pool-box {
+              text-align: left;
+              font-size: 15px;
+              line-height: 18px;
+
+              .pool-info span {
+                display: block;
+              }
+            }
+          }
         }
 
         .max-100 {
@@ -1659,27 +1751,47 @@ main {
 
         .max-80 {
           max-width: 80% !important ;
+
+          @media (max-width: @mobile-b-width) {
+            max-width: 100% !important;
+            padding: 0 !important;
+          }
         }
 
         .inner-content {
           padding: 20px 0 0 30px;
           max-width: 615px;
+          
+          @media (max-width: @mobile-b-width) {
+            max-width: @mobile-b-width;
+          }
 
           .label {
             font-size: 18px;
-            line-height: 14px;
+            line-height: 22px;
             color: rgb(133, 133, 141);
             width: max-content;
             padding-left: 10px;
+
+            @media (max-width: @mobile-b-width) {
+              width: 100%;
+              font-size: 15px;
+              line-height: 18px;
+              text-align: center;
+            }
           }
 
           .label-today,
           .label-to {
-            font-weight: normal;
             font-size: 18px;
             line-height: 22px;
             margin-bottom: 10px;
             padding-left: 10px;
+
+            @media (max-width: @mobile-b-width) {
+              font-size: 12px;
+              line-height: 15px;
+            }
           }
 
           .label-today {
@@ -1698,6 +1810,10 @@ main {
               position: absolute;
               top: 15%;
               left: 20%;
+
+              @media (max-width: @mobile-b-width) {
+                left: 7%;
+              }
             }
 
             img:nth-child(3) {
@@ -1740,9 +1856,21 @@ main {
           line-height: 25px;
         }
 
+        .reward-emission,
+        .farm-duration {
+          @media (max-width: @mobile-b-width) {
+            padding: 0;
+            margin: 0 -10px;
+          }
+        }
+        
         .existing-amm,
         .selected-pool {
-          padding: 0 0 25px 30px;
+          padding: 0 30px 25px 30px;
+
+          @media (max-width: @mobile-b-width) {
+            padding: 0 0 25px 0;
+          }
         }
 
         .reward-weekly,
@@ -1751,6 +1879,17 @@ main {
           line-height: 22px;
           margin-top: 15px;
           padding-left: 10px;
+
+          @media (max-width: @mobile-b-width) {
+            word-break: break-all;
+            font-size: 15px;
+            line-height: 18px;
+
+            b {
+              font-size: 15px;
+              line-height: 18px;
+            }
+          }
         }
       }
     }

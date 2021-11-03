@@ -134,7 +134,7 @@ export default Vue.extend({
 
   .wallet-container.mobile {
     float: right;
-    margin-top: -170px;
+    margin-top: -130px;
   }
 }
 </style>

@@ -550,7 +550,7 @@ export default class Wallet extends Vue {
   }
 }
 .ant-modal-content {
-  background-color: #0E1046;
+  background-color: #1A1D6B;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 4px;
   
@@ -606,13 +606,13 @@ header .btncontainer {
   }
 
   .ant-modal-header{
-    background-color: #0E1046;
+    background-color: #1A1D6B;
     display: flex;
     justify-content: space-between;
   }
   .ant-modal-title{
     width: 100%;
-    background-color: #0E1046;
+    background-color: #1A1D6B;
     text-align: center;
     font-weight: bold;
     font-size: 40px;

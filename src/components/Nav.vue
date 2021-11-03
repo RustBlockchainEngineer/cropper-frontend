@@ -190,11 +190,10 @@ export default class Nav extends Vue {
 }
 
 .ant-menu-horizontal {
-  line-height: 102px;
+  line-height: 62px;
   border-bottom: none;
 
   @media (max-width: @mobile-b-width) {
-    line-height: 62px;
     display: flex;
     border-top: 1px solid #ffffff30;
     border-bottom: 1px solid #ffffff30;
@@ -207,7 +206,7 @@ export default class Nav extends Vue {
   border-bottom: none;
   font-size: 16px;
   font-weight: 600;
-  height: 100px;
+  height: 60px;
 
   @media (max-width: @mobile-m-width) {
     font-size: 12px;
