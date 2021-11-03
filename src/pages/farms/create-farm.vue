@@ -162,6 +162,7 @@
                             :mint-address="tokenA ? tokenA.mintAddress : ''"
                             :coin-name="tokenA ? tokenA.symbol : ''"
                             @onSelect="openTokenASelect"
+                            :disabled="ammType != 1 ? true : false"
                           />
                         </Col>
                         <Col :span="isMobile ? 24 : 12">
@@ -170,6 +171,7 @@
                             :mint-address="tokenB ? tokenB.mintAddress : ''"
                             :coin-name="tokenB ? tokenB.symbol : ''"
                             @onSelect="openTokenBSelect"
+                            :disabled="ammType != 1 ? true : false"
                           />
                         </Col>
                       </Row>

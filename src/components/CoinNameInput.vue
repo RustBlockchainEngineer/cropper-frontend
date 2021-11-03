@@ -1,6 +1,6 @@
 <template>
   <div class="coin-select">
-    <div class="label fs-container">
+    <div class="label fs-container" :class="disabled ? 'disabled' : '' ">
       <span>{{ label }}</span>
     </div>
     <div class="coin-input">
@@ -8,10 +8,11 @@
         <button class="select-button fc-container" @click="$emit('onSelect')">
           <div v-if="coinName" class="fc-container">
             <CoinIcon :mint-address="mintAddress" />
-            <span>{{ coinName }}</span>
+            <span :class="disabled ? 'coin-disabled' : '' ">{{ coinName }}</span>
           </div>
-          <span v-else>Select a token</span>
-          <img src="@/assets/icons/arrow-down.svg" />
+          <span v-else :class="disabled ? 'coin-disabled' : '' ">Select a token</span>
+          <img v-if="!disabled" src="@/assets/icons/arrow-down.svg" />
+          <img v-else src="@/assets/icons/arrow-down-grey.svg" />
         </button>
       </div>
     </div>
@@ -103,6 +104,10 @@ export default Vue.extend({
     color: #fff;
   }
 
+  .label.disabled {
+    color: #40426C;
+  }
+  
   .coin-input {
     background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
     padding: 2px;
@@ -142,6 +147,10 @@ export default Vue.extend({
         width: 11px;
         height: 6px;
         margin-left: 10px;
+      }
+
+      .coin-disabled {
+        color: #40426C;
       }
 
       .fc-container {
