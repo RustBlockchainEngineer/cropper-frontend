@@ -44,7 +44,7 @@ export const actions:any = actionTree(
         need_to_update = true
       }
 
-      if(DEVNET_MODE == false && need_to_update == true)
+      if(!DEVNET_MODE && need_to_update == true)
       {
         let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
         const tokens = myJson.tokens
