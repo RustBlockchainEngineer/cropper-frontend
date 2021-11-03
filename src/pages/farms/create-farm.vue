@@ -50,7 +50,7 @@
                     <div style="color: #13ecab">Select options</div>
                   </template></Step
                 >
-                <Step v-if="ammType != 1">
+                <!-- <Step v-if="ammType != 1">
                   <p slot="title" :style="current > 1 ? '' : 'color: #40426C'">
                     {{ stepTitleInputMarket }}
                     <Tooltip placement="right">
@@ -96,7 +96,7 @@
                     </div>
                     <div v-else slot="title" style="color: #40426c">Pool Created</div>
                   </template></Step
-                >
+                > -->
                 <Step>
                   <template slot="title">
                     <div v-if="current > 5 || (current === 5 && stepsStatus !== 'error')">Farm Initialization</div>
@@ -182,6 +182,14 @@
                         </div>
                       </div>
                       <Radio :value="2">Create a new AMM ID</Radio>
+                      <Row class="create-amm" v-if="ammType != 1">
+                        <NuxtLink to="/pools/create-pool" class="link-pool">
+                          <u><em>https://cropper.finance/pools/create-pool/</em></u>
+                        </NuxtLink>
+                        <div class="note-reminder">
+                          <em><u>Note: </u>Reminder: Only USDC, USDT, SOL and CRP pairs will be eligible to farm creation.</em>
+                        </div>
+                      </Row>
                     </RadioGroup>
                   </div>
                 </Col>
@@ -200,7 +208,7 @@
                       style="z-index: 999; width: 100%"
                       @click="useExistingAMMID()"
                     >
-                      Use existing
+                      Next
                     </Button>
                   </div>
                 </Col>
@@ -210,16 +218,16 @@
                   style="text-align: center"
                   class="item-title"
                 >
-                  <div class="create">
+                  <div class="create disable-create">
                     <Button
                       size="large"
                       ghost
                       class="button_div"
-                      :disabled="!wallet.connected"
+                      :disabled="true"
                       style="z-index: 999; width: 100%"
                       @click="createNewAMMID()"
                     >
-                      Create a new
+                      Next
                     </Button>
                   </div>
                 </Col>
@@ -1576,13 +1584,16 @@ main {
   }
 
   .create {
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
     padding: 9px 0;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
-    display: inline-block;
     width: 163px;
-    margin-right: 10px;
     text-align: center;
 
     @media (max-width: @mobile-b-width) {
@@ -1595,6 +1606,7 @@ main {
     }
 
     button {
+      height: 45px;
       background: unset !important;
       color: #fff;
       border-color: transparent;
@@ -1610,6 +1622,11 @@ main {
         line-height: 24px;
       }
     }
+  }
+
+  .disable-create {
+    background: #828282;
+    border: 2px solid #FFFFFF24;
   }
 
   .card-body {
@@ -1866,7 +1883,32 @@ main {
           }
         }
         
+        .create-amm {
+          .note-reminder {
+            line-height: 22px;
+
+            @media (max-width: @mobile-b-width) {
+              line-height: 18px;
+            }
+          }
+          em {
+            font-size: 18px;
+            color: #80819D;
+
+            @media (max-width: @mobile-b-width) {
+              font-size: 15px;
+            }
+          }
+
+          .link-pool {
+            em {
+              color: #13ECAB;
+            }
+          }
+        }
+
         .existing-amm,
+        .create-amm,
         .selected-pool {
           padding: 0 30px 25px 30px;
 
