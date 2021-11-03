@@ -5,7 +5,7 @@
     </div>
     <div class="coin-input">
       <div class="main-input fs-container">
-        <button class="select-button fc-container" @click="$emit('onSelect')">
+        <button class="select-button fc-container" @click="selectCoin">
           <div v-if="coinName" class="fc-container">
             <CoinIcon :mint-address="mintAddress" />
             <span :class="disabled ? 'coin-disabled' : '' ">{{ coinName }}</span>
@@ -85,6 +85,9 @@ export default Vue.extend({
       const inputValue = (availableBalance * percent).toFixed(this.balance.decimals)
       this.focusInput()
       this.$emit('onInput', inputValue)
+    },
+    selectCoin() {
+      if (this.disabled == false) this.$emit('onSelect')
     }
   }
 })

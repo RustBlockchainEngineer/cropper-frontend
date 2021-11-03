@@ -22,12 +22,12 @@
           <span class="buttonsd">
             <NuxtLink to="">
               <div class="create">
-                <Button size="large" ghost>+ Detailed guide </Button>
+                <Button size="large" ghost>Detailed guide </Button>
               </div>
             </NuxtLink>
             <NuxtLink to="">
               <div class="create">
-                <Button size="large" ghost>+ Get support </Button>
+                <Button size="large" ghost>Get support </Button>
               </div>
             </NuxtLink>
           </span>
@@ -175,7 +175,7 @@
                           />
                         </Col>
                       </Row>
-                      <div class="selected-pool" v-if="showSelectedPool">
+                      <div class="selected-pool" v-if="showSelectedPool && ammType == 1">
                         Selected Pool
                         <div class="selected-pool-box">
                           <div class="pool-info">AMM ID: <span>{{ userCreateAmmId }}</span></div>
@@ -262,8 +262,10 @@
                           fromCoinAmount = rewardCoin && rewardCoin.balance ? rewardCoin.balance.fixed() : '0'
                         }
                       "
-                      @onSelect="openFromCoinSelect"
                     />
+                    <!-- <CoinInput
+                      @onSelect="openFromCoinSelect"
+                    /> -->
                     <div class="label">
                       <span
                         ><em><u>Note:</u> you will be able to add rewards into your farm whenever you want.</em></span
