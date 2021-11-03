@@ -20,16 +20,16 @@
         <div class="page-head fs-container">
           <span class="title">Farm creation</span>
           <span class="buttonsd">
-            <NuxtLink to="">
+            <a href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm" target="_blank">
               <div class="create">
                 <Button size="large" ghost>Detailed guide </Button>
               </div>
-            </NuxtLink>
-            <NuxtLink to="">
+            </a>
+            <a href="https://t.me/CropperFinance" target="_blank">
               <div class="create">
                 <Button size="large" ghost>Get support </Button>
               </div>
-            </NuxtLink>
+            </a>
           </span>
         </div>
 
@@ -42,7 +42,7 @@
             <Col
               :span="isMobile ? 24 : 6"
               class="step"
-              :class="{ 'bordered-right': !wallet.connected || current === 1 }"
+              :class="{ 'bordered-right': !wallet.connected }"
             >
               <Steps :current="current" size="small" direction="vertical" style="width: auto" :status="stepsStatus">
                 <Step
@@ -99,8 +99,8 @@
                 > -->
                 <Step>
                   <template slot="title">
-                    <div v-if="current > 5 || (current === 5 && stepsStatus !== 'error')">Farm Initialization</div>
-                    <div v-else-if="current === 5 && stepsStatus === 'error'" style="color: red">
+                    <div v-if="current > 2 || (current === 2 && stepsStatus !== 'error')">Farm Initialization</div>
+                    <div v-else-if="current === 2 && stepsStatus === 'error'" style="color: red">
                       Farm Initialization
                     </div>
                     <div v-else style="color: #40426c">Farm Initialization</div>
@@ -108,8 +108,8 @@
                 >
                 <Step>
                   <template slot="title">
-                    <div v-if="current > 6 || (current === 6 && stepsStatus !== 'error')">Farm Created</div>
-                    <div v-else-if="current === 6 && stepsStatus === 'error'" style="color: red">Farm Created</div>
+                    <div v-if="current > 3 || (current === 3 && stepsStatus !== 'error')">Farm Created</div>
+                    <div v-else-if="current === 3 && stepsStatus === 'error'" style="color: red">Farm Created</div>
                     <div v-else style="color: #40426c">Farm Created</div>
                   </template></Step
                 >
@@ -119,7 +119,7 @@
             <Col
               :span="isMobile ? 24 : 18"
               class="notstep"
-              :class="{ 'bordered-left': wallet.connected && current != 1 }"
+              :class="{ 'bordered-left': wallet.connected }"
             >
               <Row v-if="current === 0 && !wallet.connected">
                 <Col
@@ -236,7 +236,7 @@
               </Row>
 
               <!-- Create Farm -->
-              <Row v-if="current === 5">
+              <Row v-if="current === 1">
                 <Col :span="isMobile ? 24 : 24" class="item-title">
                   <div>
                     <b>Reward emission:</b>
@@ -250,6 +250,7 @@
                       :coin-name="rewardCoin ? rewardCoin.symbol : ''"
                       :balance="rewardCoin ? rewardCoin.balance : null"
                       :show-half="true"
+                      :show-arrow="false"
                       @onInput="(amount) => (fromCoinAmount = amount)"
                       @onFocus="
                         () => {
@@ -362,7 +363,7 @@
                 </Col>
               </Row>
 
-              <Row v-if="current === 1">
+              <!-- <Row v-if="current === 1">
                 <Col :span="24" class="item-title">
                   <div>
                     <b>Create a new liquidity pool:</b>
@@ -381,10 +382,10 @@
                         ></em
                       >
                     </div>
-                    <!-- <div>Input Serum Market ID:</div>
+                    <div>Input Serum Market ID:</div>
                     <div>CRP/USDC: HPU7v2yCGM6sRujWEMaTPiiiX2qMb6fun3eWjTzSgSw1</div>
                     <div>CRP/USDT: 3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSw9u7tcG</div>
-                    <div>B2B/CRP: 2hEeVE354k6mpvHvzg8K8HvEAkL9HUMiZbcjarkuy7W7</div> -->
+                    <div>B2B/CRP: 2hEeVE354k6mpvHvzg8K8HvEAkL9HUMiZbcjarkuy7W7</div>
                   </div>
                 </Col>
                 <Col
@@ -418,9 +419,9 @@
                     </Button>
                   </div>
                 </Col>
-              </Row>
+              </Row> -->
 
-              <div v-if="current >= 2 && current < 5" style="margin-top: 10px" class="msgClass">
+              <!-- <div v-if="current >= 2 && current < 5" style="margin-top: 10px" class="msgClass">
                 <Row>
                   <Col :span="isMobile ? 24 : 24" class="item-title"
                     ><b>Market Info:</b></Col
@@ -534,15 +535,6 @@
                       <Col span="24" style="text-align: center; margin-top: 10px"
                         ><br /><br /><strong>Pool has been successfully created!</strong></Col
                       >
-                      <!-- <Col
-                    style="margin-top: 10px"
-                    :span="isMobile ? 24 : 6"
-                    class="item-title"
-                    >New AMM ID:</Col
-                  >
-                  <Col style="margin-top: 10px" :span="isMobile ? 24 : 18">
-                    {{ userCreateAmmId }}
-                  </Col> -->
                       <Col span="24" style="word-break: break-word; line-height: 20px; text-align: center">
                         <div class="create">
                           <Button
@@ -558,19 +550,6 @@
                       </Col>
                     </Row>
                     <div v-else style="text-align: center; padding-top: 20px">
-                      <!--
-                  <Button
-                    size="large"
-                    ghost
-                    class="button_div"
-                    :disabled="!wallet.connected"
-                    style="z-index: 999; width: 20%"
-                    :loading="getMarketLoading"
-                    @click="marketInputFlag ? getMarketMsg() : rewriteMarket()"
-                  >
-                    {{ !wallet.connected ? 'Connect' : getMarketLoading ? '' : marketInputFlag ? 'OK' : 'Cancel' }}
-                  </Button> -->
-
                       <p
                         style="
                           padding-top: 20px;
@@ -601,7 +580,7 @@
                     </div>
                   </Col>
                 </Row>
-              </div>
+              </div> -->
             </Col>
           </Row>
         </div>
@@ -946,7 +925,7 @@ export default class CreateFarm extends Vue {
       })
       return
     }
-    this.current = 5
+    this.current = 1
   }
   createNewAMMID() {
     this.userCreateAmmId = ''
@@ -1236,7 +1215,7 @@ export default class CreateFarm extends Vue {
         this.createAmmFlag = true
         window.localStorage.pool_last_updated = undefined
         await this.$accessor.liquidity.requestInfos()
-        this.current = 5
+        this.current = 1
       })
       .catch((error) => {
         this.stepsStatus = 'error'
@@ -1415,7 +1394,7 @@ export default class CreateFarm extends Vue {
   padding: 25px 0;
   text-align: center;
   border: none;
-  color: #ffffff50;
+  color: #fff;
   font-size: 18px;
   line-height: 22px;
   cursor: pointer;
@@ -1424,6 +1403,10 @@ export default class CreateFarm extends Vue {
     font-size: 14px;
     line-height: 18px;
   }
+}
+
+.ant-calendar-picker-input.ant-input[disabled] {
+  color: #ffffff50;
 }
 
 .ant-calendar-picker-container {

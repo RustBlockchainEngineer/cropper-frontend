@@ -36,7 +36,7 @@
             <span>{{ coinName }}</span>
           </div>
           <span v-else>Select a token</span>
-          <Icon type="down" />
+          <Icon v-if="showArrow" type="down" />
         </button>
       </div>
       <!-- <input // Maybe it will use soon or later
@@ -108,6 +108,10 @@ export default Vue.extend({
       default: true
     },
     showHalf: {
+      type: Boolean,
+      default: false
+    },
+    showArrow: {
       type: Boolean,
       default: false
     },
