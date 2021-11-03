@@ -173,7 +173,7 @@
                           />
                         </Col>
                       </Row>
-                      <div class="selected-pool" v-if="userCreateAmmId">
+                      <div class="selected-pool" v-if="showSelectedPool">
                         Selected Pool
                         <div class="selected-pool-box">
                           <div class="pool-info">AMM ID: <span>{{ userCreateAmmId }}</span></div>
@@ -695,6 +695,7 @@ export default class CreateFarm extends Vue {
 
   farmType: number = 1
   ammType: number = 1
+  showSelectedPool: boolean = false
 
   get rewardPerWeek() {
     let result = 0
@@ -952,6 +953,7 @@ export default class CreateFarm extends Vue {
         : 0
       this.userCreatePoolLiquidity = SymbolA_value + ' ' + SymbolA + ' | ' + SymbolB_value + ' ' + SymbolB
       this.userCreateAmmId = liquidityInfo.ammId
+      this.showSelectedPool = true
     } else {
       this.userCreateAmmId = ''
       this.current++
@@ -984,8 +986,7 @@ export default class CreateFarm extends Vue {
     }
   }
   onCoinSelect(tokenInfo: TokenInfo) {
-    this.userCreateAmmId = ''
-    this.userCreatePoolLiquidity = ''
+    this.showSelectedPool = false
     if (tokenInfo !== null) {
       if (this.selectFromCoin) {
         this.rewardCoin = cloneDeep(tokenInfo)
@@ -1247,6 +1248,7 @@ export default class CreateFarm extends Vue {
     this.tokenB = null
     this.userCreateAmmId = ''
     this.userCreatePoolLiquidity = ''
+    this.showSelectedPool = false
   }
 }
 </script>
