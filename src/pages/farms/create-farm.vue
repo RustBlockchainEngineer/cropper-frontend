@@ -189,7 +189,7 @@
                           <u><em>https://cropper.finance/pools/create-pool/</em></u>
                         </NuxtLink>
                         <div class="note-reminder">
-                          <em><u>Note: </u>Only USDC, USDT, SOL and CRP pairs will be eligible to farm creation.</em>
+                          <em><u>Note:</u> Only USDC, USDT, SOL and CRP pairs will be eligible to farm creation.</em>
                         </div>
                       </Row>
                     </RadioGroup>
@@ -1964,6 +1964,11 @@ main {
             margin: 0 -10px;
           }
         }
+
+        .note-reminder u,
+        .reward-emission .label u {
+          text-underline-position: under;
+        }
         
         .create-amm {
           line-height: 22px;
@@ -1985,8 +1990,13 @@ main {
             margin-bottom: 10px;
             display: block;
 
-            em {
-              color: #13ECAB;
+            u {
+              text-underline-position: under;
+              text-decoration-color: #13ECAB;
+
+              em {
+                color: #13ECAB;
+              }
             }
           }
         }
