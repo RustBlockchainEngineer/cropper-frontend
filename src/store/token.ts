@@ -44,73 +44,72 @@ export const actions:any = actionTree(
         need_to_update = true
       }
 
-      if(!DEVNET_MODE && need_to_update == true)
+      if(!DEVNET_MODE )
       {
-        let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
-        const tokens = myJson.tokens
+        if(need_to_update)
+        {
+          let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
+          const tokens = myJson.tokens
 
-        let allowed = await fetch('https://api.cropper.finance/tokens/').then((res) => res.json())
+          let allowed = await fetch('https://api.cropper.finance/tokens/').then((res) => res.json())
 
-        tokens.forEach((itemToken: any) => {
+          tokens.forEach((itemToken: any) => {
 
-          if(itemToken.chainId != 101) return
+            if(itemToken.chainId != 101) return
 
-          if (itemToken.tags && 
-            ( 
-              itemToken.tags.includes('lp-token') || 
-              itemToken.tags.includes('wormhole') ||
-              itemToken.tags.includes('lending') ||
-              itemToken.tags.includes('stake-pool') || 
-              !allowed[itemToken.address] ||
-              itemToken.name.includes("(Allbridge") || 
-              itemToken.name.includes("((Wormhole")
-            )
-             && itemToken.symbol != 'wUSDT'
-             && itemToken.symbol != 'wSOL'
-             && itemToken.symbol != 'USDC'
-          ) {
-            return
-          }
-
-          const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
-          if (!token) {// + itemToken.address + 'solana'
-            let key = POP_TOKENS[itemToken.address] ?? itemToken.address
-            TOKENS[key] = {
-              symbol: itemToken.symbol,
-              name: itemToken.name,
-              mintAddress: itemToken.address,
-              decimals: itemToken.decimals,
-              picUrl: itemToken.logoURI,
-              tags: ['solana']
+            if (itemToken.tags && 
+              ( 
+                itemToken.tags.includes('lp-token') || 
+                itemToken.tags.includes('wormhole') ||
+                itemToken.tags.includes('lending') ||
+                itemToken.tags.includes('stake-pool') || 
+                !allowed[itemToken.address] ||
+                itemToken.name.includes("(Allbridge") || 
+                itemToken.name.includes("((Wormhole")
+              )
+              && itemToken.symbol != 'wUSDT'
+              && itemToken.symbol != 'wSOL'
+              && itemToken.symbol != 'USDC'
+            ) {
+              return
             }
-          } else {
-            token.picUrl = itemToken.logoURI
-            if (token.symbol !== itemToken.symbol && !token.tags.includes('cropper')) {
-              token.symbol = itemToken.symbol
-              token.name = itemToken.name
-              token.mintAddress = itemToken.address
-              token.decimals = itemToken.decimals
-              token.tags.push('solana')
+
+            const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
+            if (!token) {// + itemToken.address + 'solana'
+              let key = POP_TOKENS[itemToken.address] ?? itemToken.address
+              TOKENS[key] = {
+                symbol: itemToken.symbol,
+                name: itemToken.name,
+                mintAddress: itemToken.address,
+                decimals: itemToken.decimals,
+                picUrl: itemToken.logoURI,
+                tags: ['solana']
+              }
+            } else {
+              token.picUrl = itemToken.logoURI
+              if (token.symbol !== itemToken.symbol && !token.tags.includes('cropper')) {
+                token.symbol = itemToken.symbol
+                token.name = itemToken.name
+                token.mintAddress = itemToken.address
+                token.decimals = itemToken.decimals
+                token.tags.push('solana')
+              }
             }
+          })
+          TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
+          window.localStorage.token_last_updated = new Date().getTime()
+          window.localStorage.tokens = JSON.stringify(TOKENS)
+        }
+        else
+        {
+          const tokens = JSON.parse(window.localStorage.tokens)
+  
+          for (const [key, value] of Object.entries(tokens)) {
+            TOKENS[key] = value
           }
-        })
-        TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
-
-      }
-
-      if(need_to_update)
-      {
-        window.localStorage.token_last_updated = new Date().getTime()
-        window.localStorage.tokens = JSON.stringify(TOKENS)
-      }
-      else
-      {
-        const tokens = JSON.parse(window.localStorage.tokens)
-
-        for (const [key, value] of Object.entries(tokens)) {
-          TOKENS[key] = value
         }
       }
+
       logger('Token list updated')
 
       commit('setInitialized')
