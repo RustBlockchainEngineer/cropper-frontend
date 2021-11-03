@@ -300,7 +300,7 @@
                 </Col>
 
                 <Col :span="isMobile ? 24 : 24" style="text-align: center">
-                  <div class="create">
+                  <div class="next">
                     <Button
                       v-if="!wallet.connected"
                       size="large"
@@ -334,7 +334,7 @@
                   <div>Farm has been successfully created!</div>
                 </Col>
                 <Col :span="isMobile ? 24 : 24">
-                  <div class="create">
+                  <div class="next">
                     <Button
                       v-if="!wallet.connected"
                       size="large"
@@ -1938,7 +1938,7 @@ main {
           .link-pool {
             margin-bottom: 10px;
             display: block;
-            
+
             em {
               color: #13ECAB;
             }
