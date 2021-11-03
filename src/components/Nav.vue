@@ -206,7 +206,7 @@ export default class Nav extends Vue {
   border-bottom: none;
   font-size: 16px;
   font-weight: 600;
-  height: 100px;
+  height: 60px;
 
   @media (max-width: @mobile-m-width) {
     font-size: 12px;

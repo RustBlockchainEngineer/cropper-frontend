@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="stdGradientButton">
+      <div class="stdGradientButton" :style="userClose ? '' : 'display: none'">
         <Button v-if="userClose" size="large" ghost @click="$emit('onSelect', undefined)">Create a new one</Button>
       </div>
     </div>
@@ -75,7 +75,6 @@ export default Vue.extend({
 
   .token-list {
     max-height: 60vh;
-    padding-right: 10px;
     overflow: auto;
     direction: ltr;
     will-change: transform;
@@ -93,6 +92,13 @@ export default Vue.extend({
       border-radius: 6px;
       margin-bottom: 6px;
 
+      @media (max-width: @mobile-b-width) {
+        padding: 10px;
+        text-align: left;
+        font-size: 15px;
+        line-height: 18px;
+      }
+
       div:nth-child(1) {
         margin-bottom: 12px;
       }
@@ -100,6 +106,12 @@ export default Vue.extend({
       &:hover,
       &:active {
         background: rgb(107, 128, 185);
+      }
+
+      span {
+        @media (max-width: @mobile-b-width) {
+          display: block;
+        }
       }
     }
 
