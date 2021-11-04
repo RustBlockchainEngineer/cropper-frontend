@@ -203,7 +203,7 @@
 
                   <div class="noDesktop labells">
                     <div v-if="farm.labelized" class="labelized">Labelized</div>
-                    <div v-if="farm.permissionless" class="permissionless">Permissionless</div>
+                    <div v-else class="permissionless">Permissionless</div>
                     <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="ended">Ended</div>
                     <div
                       v-if="
@@ -229,7 +229,7 @@
                     Soon
                   </div>
                   <div v-if="farm.labelized" class="labelized">Labelized</div>
-                  <div v-if="farm.permissionless" class="permissionless">Permissionless</div>
+                  <div v-else class="permissionless">Permissionless</div>
                 </Col>
 
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
