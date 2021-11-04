@@ -1,20 +1,19 @@
 <template>
   <div class="wallet-btn">
-
     <div class="btncontainer" v-if="!wallet.connected" ghost @click="$accessor.wallet.openModal">
-    <Button>
-      <img src="@/assets/icons/wallet.svg" style="margin: 0 10px"/>
-      Connect
-    </Button>
+      <Button>
+        <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+        Connect
+      </Button>
     </div>
 
     <div class="btncontainer" v-else ghost @click="$accessor.wallet.openModal">
-    <Button>
-      <img src="@/assets/icons/wallet.svg" style="margin: 0 10px"/>
-      {{ wallet.address.substr(0, 4) }}
-      ...
-      {{ wallet.address.substr(wallet.address.length - 4, 4) }}
-    </Button>
+      <Button>
+        <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+        {{ wallet.address.substr(0, 4) }}
+        ...
+        {{ wallet.address.substr(wallet.address.length - 4, 4) }}
+      </Button>
     </div>
 
     <Modal
@@ -36,7 +35,6 @@
         <div class="stdGradientButton">
           <Button ghost @click="disconnect"> DISCONNECT </Button>
         </div>
-
       </div>
     </Modal>
   </div>
@@ -250,7 +248,6 @@ export default class Wallet extends Vue {
 
   /* ========== LIFECYCLE ========== */
   async beforeMount() {
-
     await this.$accessor.token.loadTokens()
     await this.$accessor.price.requestPrices()
     await this.$accessor.liquidity.requestInfos()
@@ -550,10 +547,10 @@ export default class Wallet extends Vue {
   }
 }
 .ant-modal-content {
-  background-color: #1A1D6B;
+  background-color: #1a1d6b;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 4px;
-  
+
   .ant-modal-close {
     color: @text-color;
   }
@@ -581,76 +578,69 @@ export default class Wallet extends Vue {
   }
 }
 
-  
 header .btncontainer {
-    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
-    display: block;
-    text-align: center;
+  background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+  display: block;
+  text-align: center;
+  position: relative;
+  margin: auto;
+  padding: 2px;
+  border-radius: 63px;
+  height: 54px;
+
+  button {
+    background: #01033c !important;
     position: relative;
-    margin: auto;
-    padding: 2px;
     border-radius: 63px;
-    height: 54px;
-
-    button{
-      background: #01033C !important;
-      position: relative;
-      border-radius: 63px;
-      height: 48px;
-      border-color: transparent;
-      top: -7px;
-      margin: 0 1px 0 1px;
-      border: none;
-      color: white !important;
-    }
+    height: 48px;
+    border-color: transparent;
+    top: -7px;
+    margin: 0 1px 0 1px;
+    border: none;
+    color: white !important;
   }
+}
 
-  .ant-modal-header{
-    background-color: #1A1D6B;
-    display: flex;
-    justify-content: space-between;
+.ant-modal-header {
+  background-color: #1a1d6b;
+  display: flex;
+  justify-content: space-between;
+}
+.ant-modal-title {
+  width: 100%;
+  background-color: #1a1d6b;
+  text-align: center;
+  font-weight: bold;
+  font-size: 40px;
+  line-height: 80px;
+  letter-spacing: -0.05em;
+  color: #fff;
+  border-bottom: 1px solid #ffffff20;
+
+  @media (max-width: @mobile-b-width) {
+    font-size: 30px;
   }
-  .ant-modal-title{
-    width: 100%;
-    background-color: #1A1D6B;
-    text-align: center;
-    font-weight: bold;
-    font-size: 40px;
-    line-height: 80px;
-    letter-spacing: -0.05em;
-    color: #FFF;
-    border-bottom: 1px solid #FFFFFF20;
-
-    @media (max-width: @mobile-b-width) {
-      font-size: 30px;
-    }
-  }
-
+}
 </style>
 
 <style lang="less" scoped>
 .wallet-info {
   text-align: center;
-
-  .stdGradientButton button{
-    height:72px
-  }
 }
 
+.wallet-info .address {
+  border-radius: 7px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 17px;
+}
 
-  .wallet-info .address{
-    border-radius: 7px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    font-size: 17px;
-  }
-
-  .btncontainer{
-    display: inline-block !important;
-  }
+.btncontainer {
+  display: inline-block !important;
+}
 
 .tx-history-panel {
-display:none;
+  display: none;
   h2 {
     margin-top: 32px;
     text-align: left;

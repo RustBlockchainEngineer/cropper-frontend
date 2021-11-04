@@ -193,6 +193,17 @@
                         </div>
                       </Row>
                     </RadioGroup>
+                    <div class="info-guide">
+                      <img src="@/assets/info1.png" />
+                      <em>
+                        This tool is for advanced users. Before attempting to create a new farm, we suggest going through this
+                        <a
+                          href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                          target="_blank"
+                        >
+                          detailed guide.</a
+                        ></em>
+                    </div>
                   </div>
                 </Col>
                 <Col
@@ -301,6 +312,13 @@
                       }}
                     </div>
                     <div class="amm-id"><b>AMM ID:</b>&nbsp;{{ userCreateAmmId }}</div>
+                    <div class="info-guide">
+                      <img src="@/assets/info1.png" />
+                      <em>
+                        You will have to <b>validate 2 transactions.</b> <br/>
+                        If the pop up for the second transaction does not appear, it may have popped up behind your browser. You can check this by minimizing your browser.
+                      </em>
+                    </div>
                   </div>
                 </Col>
 
@@ -1867,6 +1885,12 @@ main {
             max-width: @mobile-b-width;
           }
 
+          b {
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 25px;
+          }
+
           .label {
             font-size: 18px;
             line-height: 22px;
@@ -1902,6 +1926,26 @@ main {
           .label-to {
             color: #fff;
           }
+          
+          .info-guide {
+            font-size: 15px;
+            line-height: 18px;
+            display: flex;
+            align-items: start;
+
+            em b {
+              font-size: 15px;
+              line-height: 18px;
+            }
+
+            img {
+              margin-right: 10px;
+            }
+            
+            a {
+              color: #13ecab;
+            }
+          }
 
           .calendar-from,
           .calendar-to {
@@ -1926,35 +1970,6 @@ main {
               transition: transform 0.3s;
             }
           }
-
-          input {
-            border: 4px solid #16164a;
-            background: #16164a;
-            border-radius: 14px;
-            padding: 20px 25px;
-            font-size: 16px;
-            line-height: 19px;
-            color: #ffffff50;
-            outline: 0;
-            width: 100%;
-          }
-
-          .detailed-guide {
-            font-size: 18px;
-            line-height: 22px;
-            color: #80819d;
-            text-align: center;
-
-            a {
-              color: #13ecab;
-            }
-          }
-        }
-
-        b {
-          font-weight: bold;
-          font-size: 20px;
-          line-height: 25px;
         }
 
         .reward-emission,
@@ -2028,6 +2043,10 @@ main {
               line-height: 18px;
             }
           }
+        }
+
+        .amm-id {
+          margin-bottom: 20px;
         }
 
         .farm-created {
