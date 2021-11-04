@@ -256,6 +256,24 @@
                         : farm.userInfo.depositBalance.format()
                     }}
                   </div>
+                  <Tooltip placement="bottomLeft" v-if="!(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp)">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-line">
+                          LP Tokens <span>{{ farm.farmInfo.currentLPtokens }}</span>
+                        </div>
+                        <hr />
+                        <div class="tooltip-line">
+                          {{ farm.farmInfo.lp.coin.symbol }} <span> 343,000.18 </span>
+                        </div>
+                        <hr />
+                        <div class="tooltip-line">
+                          {{ farm.farmInfo.lp.pc.symbol }} <span> 689,678.02 </span>
+                        </div>
+                      </div>
+                    </template>
+                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                  </Tooltip>
                 </Col>
 
                 <Col class="state noMobile" :span="isMobile ? 6 : 3">
@@ -359,8 +377,28 @@
                     <span class="labmobile">Staked</span>-
                   </div>
                   <div v-else class="value">
-                    <span class="labmobile">Staked</span
-                    >{{
+                    <span class="labmobile">
+                      Staked
+                      <Tooltip placement="bottomLeft" v-if="!(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp)">
+                        <template slot="title">
+                          <div>
+                            <div class="tooltip-line">
+                              LP Tokens <span>{{ farm.farmInfo.currentLPtokens }}</span>
+                            </div>
+                            <hr />
+                            <div class="tooltip-line">
+                              {{ farm.farmInfo.lp.coin.symbol }} <span> 343,000.18 </span>
+                            </div>
+                            <hr />
+                            <div class="tooltip-line">
+                              {{ farm.farmInfo.lp.pc.symbol }} <span> 689,678.02 </span>
+                            </div>
+                          </div>
+                        </template>
+                        <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                      </Tooltip>
+                    </span>
+                    {{
                       !wallet.connected
                         ? 0
                         : farm.userInfo.depositBalanceUSD
@@ -380,30 +418,34 @@
                   >
                     <span class="labmobile">Total apr</span> -
                   </div>
-                  <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
-
-                  <Tooltip
-                    placement="bottomLeft"
-                    v-if="
-                      !(
-                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                      )
-                    "
-                  >
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-line">
-                          Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                        </div>
-                        <hr />
-                        <div class="tooltip-line">
-                          Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
-                  </Tooltip>
+                  <div v-else class="value">
+                    <span class="labmobile">
+                      Total apr
+                      <Tooltip
+                        placement="bottomLeft"
+                        v-if="
+                          !(
+                            farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                            currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                          )
+                        "
+                      >
+                        <template slot="title">
+                          <div>
+                            <div class="tooltip-line">
+                              Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
+                            </div>
+                            <hr />
+                            <div class="tooltip-line">
+                              Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
+                            </div>
+                          </div>
+                        </template>
+                        <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                      </Tooltip>
+                    </span>
+                    {{ farm.farmInfo.apr }}%
+                  </div>
                 </Col>
 
                 <Col v-if="!isMobile && poolType" class="state noDesktop" :span="3">
@@ -2187,9 +2229,8 @@ export default Vue.extend({
       font-weight: normal;
       font-size: 18px;
       line-height: 21px;
-      color: #fff;
-      opacity: 0.5;
-      display: block;
+      color: #ffffff50;
+      display: flex;
     }
 
     .farm-head {
@@ -2245,11 +2286,6 @@ export default Vue.extend({
           background-color: transparent;
         }
       }
-    }
-
-    .anticon.anticon-right,
-    .info-icon {
-      display: none !important;
     }
 
     .ant-pagination {
@@ -2675,6 +2711,12 @@ export default Vue.extend({
 
 .info-icon {
   margin-left: 12px;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: @mobile-b-width) {
+    margin-left: 5px;
+  }
 }
 
 .planet-img-left {
