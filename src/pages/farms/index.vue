@@ -985,6 +985,15 @@ export default Vue.extend({
           )
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
+          
+      if(!this.price.prices[liquidityItem?.coin.symbol as string] && this.price.prices[liquidityItem?.pc.symbol as string]){
+        this.price.prices[liquidityItem?.coin.symbol as string] = this.price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+      }
+
+
+      if(!this.price.prices[liquidityItem?.pc.symbol as string] && this.price.prices[liquidityItem?.coin.symbol as string]){
+        this.price.prices[liquidityItem?.pc.symbol as string] = this.price.prices[liquidityItem?.coin.symbol as string] * getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+      }
 
           const rewardPerTimestampAmountTotalValue =
             getBigNumber(rewardPerTimestampAmount.toEther()) *
