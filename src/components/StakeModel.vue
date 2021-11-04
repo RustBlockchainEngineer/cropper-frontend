@@ -60,6 +60,20 @@
           </div>
         </div>
 
+        <div class="info-guide">
+          <img src="@/assets/icons/info-icon.svg" />
+          <em>
+            You will have to <b>validate 2 transactions.</b> <br/>
+            If the pop up for the second transaction does not appear, it may have popped up behind your browser. You can check this by minimizing your browser.
+          </em>
+        </div>
+
+        <div v-if="!labelizedPermission" class="info-guide">
+          <img src="@/assets/icons/info-icon.svg" />
+          <em>
+            Cropper has not ran any due dilligence on permissionless farms. <b>Use it at your own risks.</b>
+          </em>
+        </div>
 
         <div class="stdGradientButton">
           <Button
@@ -92,13 +106,6 @@
             <template v-else>Supply & Stake</template>
           </Button>
         </div>
-
-        <div style="text-align:center">
-            You will have to validate 2 operations, Supply Liquidity & Stake LP.<br />
-            If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser.
-        </div>
-
-
       </div>
     </div>
   </Modal>
@@ -131,8 +138,12 @@ export default Vue.extend({
       default: false
     },
     farmInfo:{
-        type: Object,
-        required: true
+      type: Object,
+      required: true
+    },
+    labelizedPermission: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -221,5 +232,21 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 @import '../styles/variables';
+.info-guide {
+  font-size: 15px;
+  line-height: 18px;
+  display: flex;
+  align-items: flex-start;
+  margin: 10px 0;
+  
+  em b {
+    font-size: 15px;
+    line-height: 18px;
+  }
+
+  img {
+    margin-right: 10px;
+  }
+}
 
 </style>

@@ -12,6 +12,7 @@
       title="Supply & Stake LP"
       :loading="staking"
       :farmInfo="farmInfo"
+      :labelizedPermission="labelizedPermission"
       @onOk="supplyAndStake"
       @onCancel="cancelStake"
     />
@@ -30,8 +31,9 @@
       @onOk="unstakeAndRemove"
       @onCancel="cancelUnstake"
       text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.
-If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
+      If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
     />
+
     <CoinModal
       v-if="addRewardModalOpening"
       title="Add Reward"
@@ -82,7 +84,6 @@ If the pop up for the second operation does not appear, it may have popped up be
                 <Button size="large" ghost>+ Create a farm </Button>
               </div>
             </NuxtLink>
-           
 
             <div class="farm-button-group">
               <div class="count-down-group">
@@ -198,7 +199,6 @@ If the pop up for the second operation does not appear, it may have popped up be
                       <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
                       <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
                     </div>
-
                   </div>
 
                   <div class="noDesktop labells">
@@ -248,7 +248,13 @@ If the pop up for the second operation does not appear, it may have popped up be
                   </div>
                   <div v-else class="value">
                     <span class="labmobile">Staked</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalanceUSD ? '$ ' + farm.userInfo.depositBalanceUSD : farm.userInfo.depositBalance.format() }}
+                    >{{
+                      !wallet.connected
+                        ? 0
+                        : farm.userInfo.depositBalanceUSD
+                        ? '$ ' + farm.userInfo.depositBalanceUSD
+                        : farm.userInfo.depositBalance.format()
+                    }}
                   </div>
                 </Col>
 
@@ -284,7 +290,7 @@ If the pop up for the second operation does not appear, it may have popped up be
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
+                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
                   </Tooltip>
                 </Col>
 
@@ -354,7 +360,13 @@ If the pop up for the second operation does not appear, it may have popped up be
                   </div>
                   <div v-else class="value">
                     <span class="labmobile">Staked</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.depositBalanceUSD ? '$ ' + farm.userInfo.depositBalanceUSD : farm.userInfo.depositBalance.format() }}
+                    >{{
+                      !wallet.connected
+                        ? 0
+                        : farm.userInfo.depositBalanceUSD
+                        ? '$ ' + farm.userInfo.depositBalanceUSD
+                        : farm.userInfo.depositBalance.format()
+                    }}
                   </div>
                 </Col>
 
@@ -390,7 +402,7 @@ If the pop up for the second operation does not appear, it may have popped up be
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
+                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
                   </Tooltip>
                 </Col>
 
@@ -442,8 +454,6 @@ If the pop up for the second operation does not appear, it may have popped up be
                         </div>
                       </div>
                       <div class="btncontainer">
-
-
                         <Button
                           v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                           :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
@@ -453,7 +463,6 @@ If the pop up for the second operation does not appear, it may have popped up be
                         >
                           Harvest & Unstake
                         </Button>
-
 
                         <Button
                           v-else
@@ -465,7 +474,6 @@ If the pop up for the second operation does not appear, it may have popped up be
                         >
                           Harvest
                         </Button>
-
                       </div>
                     </div>
                   </div>
@@ -484,8 +492,13 @@ If the pop up for the second operation does not appear, it may have popped up be
                         <Button size="large" ghost> Connect Wallet </Button>
                       </div>
                       <div v-else class="fs-container">
-                        <div class="btncontainer" v-if="!farm.userInfo.depositBalance.isNullOrZero() && 
-                        farm.farmInfo.poolInfo.end_timestamp > currentTimestamp">
+                        <div
+                          class="btncontainer"
+                          v-if="
+                            !farm.userInfo.depositBalance.isNullOrZero() &&
+                            farm.farmInfo.poolInfo.end_timestamp > currentTimestamp
+                          "
+                        >
                           <Button
                             class="unstake btn-bg-fill"
                             size="large"
@@ -512,7 +525,7 @@ If the pop up for the second operation does not appear, it may have popped up be
                               farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                               farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
                             "
-                            @click="openStakeModal(farm.farmInfo, farm.farmInfo.lp)"
+                            @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
                           >
                             {{
                               !farm.farmInfo.poolInfo.is_allowed
@@ -563,7 +576,6 @@ If the pop up for the second operation does not appear, it may have popped up be
                           </a>
                         </div>
 
-
                         <div
                           class="btncontainer"
                           v-if="
@@ -576,35 +588,46 @@ If the pop up for the second operation does not appear, it may have popped up be
                         </div>
                       </div>
                     </div>
-                  
 
-                    <div class="owner" v-if="
-                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                          ">
-                          <br /><hr /><br />
+                    <div
+                      class="owner"
+                      v-if="
+                        farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                        farm.farmInfo.poolInfo.is_allowed &&
+                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                      "
+                    >
+                      <br />
+                      <hr />
+                      <br />
 
-                      <div class="title" style="text-align:left"><b>Remaining rewards : </b>{{ Math.round((new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals)).toEther() * 1000) / 1000 }}</div>
+                      <div class="title" style="text-align: left">
+                        <b>Remaining rewards : </b
+                        >{{
+                          Math.round(
+                            new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals).toEther() *
+                              1000
+                          ) / 1000
+                        }}
+                      </div>
 
-                      <div class="title" style="text-align:left"><b>End time : </b>{{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toISOString()  }}</div>
+                      <div class="title" style="text-align: left">
+                        <b>End time : </b>{{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toISOString() }}
+                      </div>
 
                       <br />
 
-
-                        <div
-                          class="btncontainer noMobile"
-                          v-if="
-                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                          "
-                        >
-                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
-                        </div>
-
+                      <div
+                        class="btncontainer noMobile"
+                        v-if="
+                          farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                          farm.farmInfo.poolInfo.is_allowed &&
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                        "
+                      >
+                        <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
+                      </div>
                     </div>
-
                   </div>
                 </Col>
               </Row>
@@ -653,7 +676,14 @@ import { getUnixTs } from '@/utils'
 import { getBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
-import { FarmProgram, FarmProgramAccountLayout, FARM_PREFIX, PAY_FARM_FEE, REWARD_MULTIPLER, YieldFarm } from '@/utils/farm'
+import {
+  FarmProgram,
+  FarmProgramAccountLayout,
+  FARM_PREFIX,
+  PAY_FARM_FEE,
+  REWARD_MULTIPLER,
+  YieldFarm
+} from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER } from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
@@ -722,7 +752,7 @@ export default Vue.extend({
       ],
       lifeOptions: [
         { value: 0, label: 'Opened' },
-      //  { value: 1, label: 'Future' },
+        //  { value: 1, label: 'Future' },
         { value: 2, label: 'Ended' },
         { value: 3, label: 'All' }
       ],
@@ -731,7 +761,8 @@ export default Vue.extend({
       stakedOnly: false,
       totalCount: 110,
       pageSize: 10,
-      currentPage: 1
+      currentPage: 1,
+      labelizedPermission: false as any
     }
   },
 
@@ -805,7 +836,6 @@ export default Vue.extend({
   },
 
   mounted() {
-
     this.$accessor.token.loadTokens()
 
     this.updateFarms()
@@ -881,7 +911,7 @@ export default Vue.extend({
     },
 
     async updateFarms() {
-      console.log("updating farms ...")
+      console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
 
@@ -892,7 +922,6 @@ export default Vue.extend({
       const farms: any = []
       const endedFarmsPoolId: string[] = []
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
-        
         let userInfo = get(this.farm.stakeAccounts, poolId)
         let isPFO = false
 
@@ -904,10 +933,14 @@ export default Vue.extend({
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
-        if(end_timestamp.toNumber() < 1635452141) { continue; }
+        if (end_timestamp.toNumber() < 1635452141) {
+          continue
+        }
 
         if (reward && lp) {
-          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(
+            end_timestamp.toNumber() - last_timestamp.toNumber()
+          )
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           
@@ -943,9 +976,6 @@ export default Vue.extend({
 
           let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
           let apr = ((rewardPerTimestampAmountTotalValue / farmUsdValue) * 100).toFixed(2)
-
-
-
 
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
@@ -997,33 +1027,33 @@ export default Vue.extend({
           const { rewardDebt, depositBalance } = userInfo
           let currentTimestamp = this.currentTimestamp
 
-          
-          if(currentTimestamp > end_timestamp.toNumber()){
-            currentTimestamp = end_timestamp.toNumber();
+          if (currentTimestamp > end_timestamp.toNumber()) {
+            currentTimestamp = end_timestamp.toNumber()
           }
-          
+
           const duration = currentTimestamp - last_timestamp.toNumber()
-          
-          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(end_timestamp.toNumber() - last_timestamp.toNumber());
+
+          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(
+            end_timestamp.toNumber() - last_timestamp.toNumber()
+          )
           const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(newFarmInfo.lp.balance.wei)
-            .plus(getBigNumber(reward_per_share_net));
-          
+            .plus(getBigNumber(reward_per_share_net))
+
           const pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
-            
-          if(newFarmInfo.lpUSDvalue){
-            userInfo.depositBalanceUSD = 
-                      (Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100) 
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
+          if (newFarmInfo.lpUSDvalue) {
+            userInfo.depositBalanceUSD = (
+              Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100
+            )
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
-
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
         } else {
@@ -1035,7 +1065,6 @@ export default Vue.extend({
           }
         }
 
-
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
@@ -1045,12 +1074,11 @@ export default Vue.extend({
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
-
-              if(this.labelizedAmmsExtended[newFarmInfo.poolId].farmhidden == true){
-                 continue; 
+              if (this.labelizedAmmsExtended[newFarmInfo.poolId].farmhidden == true) {
+                continue
               }
 
-              if(this.labelizedAmmsExtended[newFarmInfo.poolId].labelized == true){
+              if (this.labelizedAmmsExtended[newFarmInfo.poolId].labelized == true) {
                 labelized = true
               }
 
@@ -1063,7 +1091,11 @@ export default Vue.extend({
             }
           }
 
-          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${(newFarmInfo as any).lp.coin.symbol}-${(newFarmInfo as any).lp.pc.symbol} on @CropperFinance with ${newFarmInfo.apr}%25 APR%0A%0ACome and join me at https://cropper.finance/farms/?s=${
+          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
+            (newFarmInfo as any).lp.coin.symbol
+          }-${(newFarmInfo as any).lp.pc.symbol} on @CropperFinance with ${
+            newFarmInfo.apr
+          }%25 APR%0A%0ACome and join me at https://cropper.finance/farms/?s=${
             (newFarmInfo as any).poolId
           }%0A%0AFarm now, Harvest later.&url= `
 
@@ -1167,7 +1199,7 @@ export default Vue.extend({
       }
     },
 
-    openStakeModal(poolInfo: FarmInfo, lp: any) {
+    openStakeModal(labelized: any, poolInfo: FarmInfo, lp: any) {
       /*
       const coin = cloneDeep(lp)
       const lpBalance = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`)
@@ -1175,6 +1207,7 @@ export default Vue.extend({
 
       this.lp = coin
       */
+      this.labelizedPermission = labelized
       this.farmInfo = cloneDeep(poolInfo)
       const coinBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.coin.mintAddress}.balance`)
       const pcBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.pc.mintAddress}.balance`)
@@ -1790,7 +1823,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-
 .card-body {
   padding: 0;
   margin: 0;
@@ -1994,7 +2026,7 @@ export default Vue.extend({
         font-size: 18px;
         line-height: 21.19px;
         font-weight: 400;
-        text-align: center
+        text-align: center;
       }
     }
   }
@@ -2047,9 +2079,9 @@ export default Vue.extend({
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164A;
+        background: #16164a;
         border-radius: 22px;
-        border:transparent;
+        border: transparent;
       }
     }
 
@@ -2065,10 +2097,10 @@ export default Vue.extend({
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164A;
+        background: #16164a;
         border-radius: 22px;
-        border:transparent;
-        
+        border: transparent;
+
         img {
           margin-left: 5px;
           transform: rotate(0);
@@ -2334,7 +2366,6 @@ export default Vue.extend({
 </style>
 
 <style lang="less">
-
 ::-webkit-scrollbar {
   @media (max-width: @mobile-b-width) {
     display: none; /* Chrome Safari */
