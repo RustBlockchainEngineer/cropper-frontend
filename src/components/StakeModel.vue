@@ -236,7 +236,7 @@ export default Vue.extend({
   font-size: 15px;
   line-height: 18px;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   margin: 10px 0;
   
   em b {

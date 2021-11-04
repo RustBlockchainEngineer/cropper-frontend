@@ -1931,7 +1931,7 @@ main {
             font-size: 15px;
             line-height: 18px;
             display: flex;
-            align-items: start;
+            align-items: flex-start;
 
             em b {
               font-size: 15px;
