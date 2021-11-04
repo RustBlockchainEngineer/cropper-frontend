@@ -61,15 +61,15 @@
         </div>
 
         <div class="info-guide">
-          <img src="@/assets/info1.png" />
+          <img src="@/assets/icons/info-icon.svg" />
           <em>
             You will have to <b>validate 2 transactions.</b> <br/>
             If the pop up for the second transaction does not appear, it may have popped up behind your browser. You can check this by minimizing your browser.
           </em>
         </div>
 
-        <div v-if="labelizedPermission" class="info-guide">
-          <img src="@/assets/info1.png" />
+        <div v-if="!labelizedPermission" class="info-guide">
+          <img src="@/assets/icons/info-icon.svg" />
           <em>
             Cropper has not ran any due dilligence on permissionless farms. <b>Use it at your own risks.</b>
           </em>

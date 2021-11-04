@@ -194,7 +194,7 @@
                       </Row>
                     </RadioGroup>
                     <div class="info-guide">
-                      <img src="@/assets/info1.png" />
+                      <img src="@/assets/icons/info-icon.svg" />
                       <em>
                         This tool is for advanced users. Before attempting to create a new farm, we suggest going through this
                         <a
@@ -313,7 +313,7 @@
                     </div>
                     <div class="amm-id"><b>AMM ID:</b>&nbsp;{{ userCreateAmmId }}</div>
                     <div class="info-guide">
-                      <img src="@/assets/info1.png" />
+                      <img src="@/assets/icons/info-icon.svg" />
                       <em>
                         You will have to <b>validate 2 transactions.</b> <br/>
                         If the pop up for the second transaction does not appear, it may have popped up behind your browser. You can check this by minimizing your browser.

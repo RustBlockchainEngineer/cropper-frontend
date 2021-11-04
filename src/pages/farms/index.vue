@@ -290,7 +290,7 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
+                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
                   </Tooltip>
                 </Col>
 
@@ -402,7 +402,7 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon"><img src="@/assets/info2.png" width="16" height="16" /></div>
+                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
                   </Tooltip>
                 </Col>
 
