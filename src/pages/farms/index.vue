@@ -203,6 +203,7 @@
 
                   <div class="noDesktop labells">
                     <div v-if="farm.labelized" class="labelized">Labelized</div>
+                    <div v-if="farm.permissionless" class="permissionless">Permissionless</div>
                     <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="ended">Ended</div>
                     <div
                       v-if="
@@ -228,6 +229,7 @@
                     Soon
                   </div>
                   <div v-if="farm.labelized" class="labelized">Labelized</div>
+                  <div v-if="farm.permissionless" class="permissionless">Permissionless</div>
                 </Col>
 
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
@@ -2016,13 +2018,14 @@ export default Vue.extend({
         background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
         border-radius: 8px;
         padding: 2px;
+        width: 220px;
 
         .icons {
           height: 47px;
           background-color: #01033c;
           border-radius: 8px;
           align-items: center;
-          padding: 0 20px;
+          justify-content: center;
         }
 
         .icons span {
@@ -2700,6 +2703,15 @@ export default Vue.extend({
 
 .labelized {
   background: #724cee;
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 14px;
+  font-weight: 400;
+  width: fit-content;
+}
+
+.permissionless {
+  background: #ef745d;
   border-radius: 6px;
   padding: 5px 9px;
   font-size: 14px;
