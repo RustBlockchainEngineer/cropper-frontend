@@ -83,7 +83,9 @@
               <Icon slot="prefix" type="search" />
             </Input>
           </div>
-          <div class="tool-option"></div>
+          <div class="tool-option">
+            <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
+          </div>
           <div class="tool-option"></div>
 
           <div class="tool-option last-option">
@@ -100,7 +102,9 @@
               <Icon slot="prefix" type="search" />
             </Input>
           </div>
-
+          <div class="tool-option">
+            <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
+          </div>
           <div class="tool-option last-option">
             <div class="toggle">
               <label class="label">Staked only</label>
@@ -252,7 +256,7 @@
 import { get, cloneDeep } from 'lodash-es'
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
-import { Table, Radio, Tooltip, Collapse, Row, Spin, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
+import { Table, Radio, Tooltip, Collapse, Row, Spin, Select, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
 import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
 import { getBigNumber } from '@/utils/layouts'
@@ -305,6 +309,7 @@ declare const window: any
     Toggle,
     Tooltip,
     Button,
+    Select,
     Input,
     Icon,
     Spin,
@@ -415,6 +420,12 @@ export default class Pools extends Vue {
   totalCount = 110
   pageSize = 50
   currentPage = 1
+  certifiedOptions = [
+    { value: 0, label: 'Labelized' },
+    { value: 1, label: 'Permissionless' },
+    { value: 2, label: 'All' }
+  ]
+  searchCertifiedFarm = 2
 
   get liquidity() {
     this.$accessor.wallet.getTokenAccounts()
@@ -448,6 +459,18 @@ export default class Pools extends Vue {
   @Watch('searchName', { immediate: true, deep: true })
   async onSearchChange(newSearchName: string) {
     this.showPool(newSearchName, this.stakedOnly)
+  }
+  @Watch('searchCertifiedFarm', { immediate: true, deep: true})
+  selectHandler(newSearchCertifiedFarm: number) {
+    this.pools = this.poolsFormated()
+    if (newSearchCertifiedFarm == 0) {
+      //labelized
+      this.pools = this.pools.filter((pool: any) => pool.liquidity > 0)
+    } else if (newSearchCertifiedFarm == 1) {
+      //permissionless
+      this.pools = this.pools.filter((pool: any) => pool.liquidity < 0)
+    }
+    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
   }
 
   showPool(searchName: any = '', stakedOnly: boolean = false, pageNum: any = 1) {
@@ -483,6 +506,9 @@ export default class Pools extends Vue {
     let start = (this.currentPage - 1) * this.pageSize
     let end = this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max
     this.poolsShow = this.poolsShow.slice(start, end)
+    this.poolsShow.sort(function(a: any, b: any) {
+      return b.liquidity - a.liquidity
+    });
   }
 
   async delay(ms: number) {
