@@ -84,7 +84,7 @@
             </Input>
           </div>
           <div class="tool-option">
-            <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
+            <!-- <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select> -->
           </div>
           <div class="tool-option"></div>
 
