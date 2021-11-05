@@ -2042,10 +2042,6 @@ export default Vue.extend({
     }
   }
 
-  .table-head {
-    border-bottom: 1px solid #ffffff20;
-  }
-
   .farm-head {
     display: flex;
     align-items: center;
@@ -2470,6 +2466,7 @@ export default Vue.extend({
 
   .ant-collapse-header {
     padding: 0 !important;
+    border-top: 1px solid #ffffff20;
 
     .farm-head {
       padding: 30px 5px !important;
