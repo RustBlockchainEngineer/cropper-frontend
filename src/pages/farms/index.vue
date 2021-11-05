@@ -2450,6 +2450,10 @@ export default Vue.extend({
   }
 }
 
+.ant-tooltip-arrow {
+  display: none;
+}
+
 .farm {
   .page-head {
     margin-top: 10px;
