@@ -258,19 +258,19 @@
                         : farm.userInfo.depositBalance.format()
                     }}
                   </div>
-                  <Tooltip placement="bottomLeft" v-if="!(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp)">
+                  <Tooltip placement="bottomLeft" v-if="!(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) && farm.userInfo.depositFormat > 0">
                     <template slot="title">
                       <div>
                         <div class="tooltip-line">
-                          LP Tokens <span>{{ farm.farmInfo.currentLPtokens }}</span>
+                          LP Tokens <span>{{ farm.userInfo.depositFormat }}</span>
                         </div>
                         <hr />
                         <div class="tooltip-line">
-                          {{ farm.farmInfo.lp.coin.symbol }} <span> 343,000.18 </span>
+                          {{ farm.farmInfo.lp.coin.symbol }} <span> {{farm.userInfo.depositCoin}} </span>
                         </div>
                         <hr />
                         <div class="tooltip-line">
-                          {{ farm.farmInfo.lp.pc.symbol }} <span> 689,678.02 </span>
+                          {{ farm.farmInfo.lp.pc.symbol }} <span> {{farm.userInfo.depositPc}} </span>
                         </div>
                       </div>
                     </template>
@@ -381,19 +381,19 @@
                   <div v-else class="value">
                     <span class="labmobile">
                       Staked
-                      <Tooltip placement="bottomLeft" v-if="!(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp)">
+                      <Tooltip placement="bottomLeft" v-if="!(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) && farm.userInfo.depositFormat > 0">
                         <template slot="title">
                           <div>
                             <div class="tooltip-line">
-                              LP Tokens <span>{{ farm.farmInfo.currentLPtokens }}</span>
+                              LP Tokens <span>{{ farm.userInfo.depositFormat }}</span>
                             </div>
                             <hr />
                             <div class="tooltip-line">
-                              {{ farm.farmInfo.lp.coin.symbol }} <span> 343,000.18 </span>
+                              {{ farm.farmInfo.lp.coin.symbol }} <span> {{farm.userInfo.depositCoin}} </span>
                             </div>
                             <hr />
                             <div class="tooltip-line">
-                              {{ farm.farmInfo.lp.pc.symbol }} <span> 689,678.02 </span>
+                              {{ farm.farmInfo.lp.pc.symbol }} <span> {{farm.userInfo.depositPc}} </span>
                             </div>
                           </div>
                         </template>
@@ -981,6 +981,10 @@ export default Vue.extend({
           continue
         }
 
+
+        let partCoin = 0;
+        let partPc = 0;
+
         if (reward && lp) {
           const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(
             end_timestamp.toNumber() - last_timestamp.toNumber()
@@ -988,14 +992,14 @@ export default Vue.extend({
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           
-      if(!this.price.prices[liquidityItem?.coin.symbol as string] && this.price.prices[liquidityItem?.pc.symbol as string]){
-        this.price.prices[liquidityItem?.coin.symbol as string] = this.price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
-      }
+          if(!this.price.prices[liquidityItem?.coin.symbol as string] && this.price.prices[liquidityItem?.pc.symbol as string]){
+            this.price.prices[liquidityItem?.coin.symbol as string] = this.price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+          }
 
 
-      if(!this.price.prices[liquidityItem?.pc.symbol as string] && this.price.prices[liquidityItem?.coin.symbol as string]){
-        this.price.prices[liquidityItem?.pc.symbol as string] = this.price.prices[liquidityItem?.coin.symbol as string] * getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
-      }
+          if(!this.price.prices[liquidityItem?.pc.symbol as string] && this.price.prices[liquidityItem?.coin.symbol as string]){
+            this.price.prices[liquidityItem?.pc.symbol as string] = this.price.prices[liquidityItem?.coin.symbol as string] * getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+          }
 
           const rewardPerTimestampAmountTotalValue =
             getBigNumber(rewardPerTimestampAmount.toEther()) *
@@ -1014,6 +1018,10 @@ export default Vue.extend({
           const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
 
           const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
+
+          partCoin = (getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / liquidityTotalSupply);
+          partPc = (getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / liquidityTotalSupply);
+
           const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
           let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
           newFarmInfo.lpUSDvalue = liquidityItemValue
@@ -1090,6 +1098,21 @@ export default Vue.extend({
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
+
+
+          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
+            )
+              .toString()
+
+          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000
+            )
+              .toString()
+
+          userInfo.depositPc =  (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000
+            )
+              .toString()
+
+
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
