@@ -167,7 +167,23 @@
               <div class="title">Farm Name</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">Status</div>
+              <div class="title">
+                Status
+                <Tooltip placement="bottomRight">
+                  <template slot="title">
+                    <div>
+                      <div class="tooltip-text">
+                        <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project. 
+                      </div>
+                      <br />
+                      <div class="tooltip-text">
+                        <b>Permissionless:</b> This project  created its farm without any review from the Cropper Team.
+                      </div>
+                    </div>
+                  </template>
+                  <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                </Tooltip>
+              </div>
             </Col>
             <Col class="state reward-col" :span="isMobile ? 12 : 6">
               <div class="title">{{ isMobile ? 'Reward' : 'Pending Rewards' }}</div>
@@ -2086,8 +2102,8 @@ export default Vue.extend({
         font-weight: normal;
         font-size: 18px;
         line-height: 21px;
-        color: #fff;
-        opacity: 0.5;
+        color: #ffffff50;
+        display: flex;
       }
 
       .value {
