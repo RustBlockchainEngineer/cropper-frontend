@@ -206,7 +206,7 @@
                       :disabled="createAmmFlag"
                       :step="1"
                       accuracy="2"
-                      style="width: 100%"
+                      style="width: 100%;"
                     />
                   </div>
                   <div
@@ -1478,6 +1478,12 @@ main {
 
   @media (max-width: @mobile-b-width) {
     min-width: 100%;
+  }
+
+  input[type="number"]{
+    border:unset;
+    background:transparent;
+    border-bottom:1px solid #fff
   }
 
   .ant-calendar-date:hover {
