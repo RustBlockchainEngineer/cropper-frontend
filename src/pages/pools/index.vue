@@ -423,9 +423,8 @@ export default class Pools extends Vue {
   certifiedOptions = [
     { value: 0, label: 'Labelized' },
     { value: 1, label: 'Permissionless' },
-    { value: 2, label: 'All' }
   ]
-  searchCertifiedFarm = 2
+  searchCertifiedFarm = 0
 
   get liquidity() {
     this.$accessor.wallet.getTokenAccounts()
