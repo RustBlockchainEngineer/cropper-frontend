@@ -204,7 +204,7 @@
                   <div class="noDesktop labells">
                     <div v-if="farm.labelized" class="labelized">Labelized</div>
                     <div v-else class="permissionless">Permissionless</div>
-                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="ended">Ended</div>
+                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                     <div
                       v-if="
                         currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
@@ -218,6 +218,8 @@
                 </Col>
 
                 <Col class="state noMobile" :span="isMobile ? 6 : 3">
+                  <div v-if="farm.labelized" class="labelized">Labelized</div>
+                  <div v-else class="permissionless">Permissionless</div>
                   <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                   <div
                     v-if="
@@ -228,8 +230,6 @@
                   >
                     Soon
                   </div>
-                  <div v-if="farm.labelized" class="labelized">Labelized</div>
-                  <div v-else class="permissionless">Permissionless</div>
                 </Col>
 
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
@@ -351,7 +351,7 @@
               </Row>
 
               <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
-                <Col class="state noDesktop" :span="isMobile ? 6 : 3">
+                <!-- <Col class="state noDesktop" :span="isMobile ? 6 : 3">
                   <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                   <div
                     v-if="
@@ -362,7 +362,7 @@
                   >
                     Soon
                   </div>
-                </Col>
+                </Col> -->
 
                 <Col class="state reward-col noDesktop" :span="isMobile ? 12 : 6">
                   <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
@@ -2202,6 +2202,10 @@ export default Vue.extend({
       display: inline-block;
     }
 
+    .labells {
+      display: inline-flex;
+    }
+
     .largeserach input {
       height: 47px !important;
     }
@@ -2740,6 +2744,7 @@ export default Vue.extend({
   font-size: 14px;
   font-weight: 400;
   width: fit-content;
+  margin-right: 10px;
 }
 
 .reward-col {
