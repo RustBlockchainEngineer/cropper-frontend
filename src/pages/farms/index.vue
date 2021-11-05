@@ -164,7 +164,7 @@
 
           <Row class="farm-head table-head">
             <Col class="lp-icons" :span="isMobile ? 12 : 6">
-              <div class="title">Labelized</div>
+              <div class="title">Farm Name</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
               <div class="title">Status</div>
@@ -2041,7 +2041,7 @@ export default Vue.extend({
         background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
         border-radius: 8px;
         padding: 2px;
-        width: 220px;
+        width: 240px;
 
         .icons {
           height: 47px;
