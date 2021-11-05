@@ -198,7 +198,7 @@
                       <em>
                         This tool is for advanced users. Before attempting to create a new farm, we suggest going through this
                         <a
-                          href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                          href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
                           target="_blank"
                         >
                           detailed guide.</a
