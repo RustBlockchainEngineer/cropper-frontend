@@ -464,10 +464,10 @@ export default class Pools extends Vue {
     this.pools = this.poolsFormated()
     if (newSearchCertifiedFarm == 0) {
       //labelized
-      this.pools = this.pools.filter((pool: any) => pool.liquidity > 0)
+      this.pools = this.pools.filter((pool: any) => pool.labelized)
     } else if (newSearchCertifiedFarm == 1) {
       //permissionless
-      this.pools = this.pools.filter((pool: any) => pool.liquidity < 0)
+      this.pools = this.pools.filter((pool: any) => !pool.labelized)
     }
     this.showPool(this.searchName, this.stakedOnly, this.currentPage)
   }
