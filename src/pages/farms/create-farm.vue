@@ -341,7 +341,15 @@
                       style="z-index: 999; width: 100%"
                       @click="addRewardToFarm"
                     >
-                      Add rewards
+                      
+
+                      <span v-if="activeSpin">
+                        Please wait &nbsp; &nbsp; 
+                      </span>
+                      <span v-else>
+                        Add rewards
+                      </span>
+                      
                       <div v-if="activeSpin" class="spinner-container">
                         <Spin :spinning="true">
                           <Icon slot="indicator" type="loading" style="font-size: 24px" spin />

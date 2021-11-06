@@ -38,7 +38,6 @@ export const ALLOWED_TOKENB_LIST = [
   "CRP",
   "USDC",
   "USDT",
-  "SOL",
 ]
 enum FarmInstruction
 {
