@@ -84,7 +84,7 @@
             </Input>
           </div>
           <div class="tool-option">
-            <!-- <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select> -->
+            <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
           </div>
           <div class="tool-option"></div>
 
@@ -124,6 +124,13 @@
                   <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.pc.mintAddress : ''" />
                   {{ getPoolByLpMintAddress(text).lp.pc.symbol }}
                 </div>
+
+                <div v-if="displayPoolID">
+                  {{getPoolByLpMintAddress(text).ammId}}
+                </div>
+
+
+
               </span>
             </span>
             <span slot="liquidity" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
@@ -325,6 +332,15 @@ declare const window: any
     } finally {
     }
 
+
+    try {
+      window.labelised = await fetch('https://api.cropper.finance/pool/').then((res) => res.json())
+    } catch {
+    } finally {
+    }
+
+
+
     const pools = getAllCropperPools()
     return { pools }
   }
@@ -393,6 +409,7 @@ export default class Pools extends Vue {
   poolCollapse: any = true
   showCollapse: any = []
   pools: any = []
+  displayPoolID : any = 0
   poolsShow: any = []
   poolType: string = 'RaydiumPools'
   fromCoin: any = false
@@ -423,6 +440,7 @@ export default class Pools extends Vue {
   certifiedOptions = [
     { value: 0, label: 'Labelized' },
     { value: 1, label: 'Permissionless' },
+    { value: 2, label: 'All' },
   ]
   searchCertifiedFarm = 0
 
@@ -460,7 +478,8 @@ export default class Pools extends Vue {
     this.showPool(newSearchName, this.stakedOnly)
   }
   @Watch('searchCertifiedFarm', { immediate: true, deep: true})
-  selectHandler(newSearchCertifiedFarm: number) {
+  selectHandler(newSearchCertifiedFarm: number = 0) {
+
     this.pools = this.poolsFormated()
     if (newSearchCertifiedFarm == 0) {
       //labelized
@@ -474,11 +493,22 @@ export default class Pools extends Vue {
 
   showPool(searchName: any = '', stakedOnly: boolean = false, pageNum: any = 1) {
     const pool = []
+
+    this.pools = this.poolsFormated()
+
+    if (this.searchCertifiedFarm == 0) {
+      //labelized
+      this.pools = this.pools.filter((pool: any) => pool.labelized)
+    } else if (this.searchCertifiedFarm == 1) {
+      //permissionless
+      this.pools = this.pools.filter((pool: any) => !pool.labelized)
+    }
+
     for (const item of this.pools) {
       pool.push(item)
     }
     this.poolsShow = pool
-    
+
     if (
       searchName != '' &&
       this.poolsShow.filter((pool: any) => (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase())
@@ -737,6 +767,10 @@ export default class Pools extends Vue {
       value.nameSymbol = value.coin1.symbol+ ' - ' +value.coin2.symbol;
 
 
+      if(window.labelised.includes(value.ammId)){
+        value.labelized = 1;
+      }
+
 
       if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
         if (wallet) {
@@ -785,7 +819,10 @@ export default class Pools extends Vue {
           } else {
             const query = new URLSearchParams(window.location.search)
             if (query.get('s')) this.searchName = query.get('s') as string
+
+            if (query.get('d')) this.displayPoolID = query.get('d') as string
           }
+
           this.poolLoaded = true
         }
       }
