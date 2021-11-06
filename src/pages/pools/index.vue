@@ -478,7 +478,7 @@ export default class Pools extends Vue {
       pool.push(item)
     }
     this.poolsShow = pool
-
+    
     if (
       searchName != '' &&
       this.poolsShow.filter((pool: any) => (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase())
@@ -489,7 +489,7 @@ export default class Pools extends Vue {
       )
     } else if (searchName != '') {
       this.poolsShow = this.poolsShow.filter((pool: any) =>
-        (pool.name as string).toLowerCase().includes((searchName as string).toLowerCase())
+        (pool.nameSymbol as string).toLowerCase().includes((searchName as string).toLowerCase())
       )
     }
 
@@ -732,6 +732,11 @@ export default class Pools extends Vue {
       } else {
         value.apy = 0
       }
+
+
+      value.nameSymbol = value.coin1.symbol+ ' - ' +value.coin2.symbol;
+
+
 
       if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
         if (wallet) {
