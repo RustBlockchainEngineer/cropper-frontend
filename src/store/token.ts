@@ -74,6 +74,9 @@ export const actions:any = actionTree(
               return
             }
 
+
+            if(itemToken.address == 'FCqfQSujuPxy6V42UvafBhsysWtEq1vhjfMN1PUbgaxA') { return ; }
+
             const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
             if (!token) {// + itemToken.address + 'solana'
               let key = POP_TOKENS[itemToken.address] ?? itemToken.address
