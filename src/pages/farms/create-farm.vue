@@ -315,8 +315,7 @@
                     <div class="info-guide">
                       <img src="@/assets/icons/info-icon.svg" />
                       <em>
-                        You will have to <b>validate 2 transactions.</b> <br/>
-                        If the pop up for the second transaction does not appear, it may have popped up behind your browser. You can check this by minimizing your browser.
+                        You will have to <b>validate 2 transactions.</b>
                       </em>
                     </div>
                   </div>
@@ -349,7 +348,7 @@
                       <span v-else>
                         Add rewards
                       </span>
-                      
+
                       <div v-if="activeSpin" class="spinner-container">
                         <Spin :spinning="true">
                           <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
