@@ -334,6 +334,21 @@
                       Connect wallet
                     </Button>
                     <Button
+                      v-else-if="farm_created"
+                      size="large"
+                      :disabled="!wallet.connected"
+                      ghost
+                      style="z-index: 999; width: 100%"
+                      @click="addRewardToFarm"
+                    >
+                      Add rewards
+                      <div v-if="activeSpin" class="spinner-container">
+                        <Spin :spinning="true">
+                          <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
+                        </Spin>
+                      </div>
+                    </Button>
+                    <Button
                       v-else
                       size="large"
                       :disabled="!wallet.connected"
@@ -341,7 +356,12 @@
                       style="z-index: 999; width: 100%"
                       @click="confirmFarmInfo"
                     >
-                      Confirm
+                      <span v-if="activeSpin">
+                        Please wait &nbsp; &nbsp; 
+                      </span>
+                      <span v-else>
+                        Confirm
+                      </span>
                       <div v-if="activeSpin" class="spinner-container">
                         <Spin :spinning="true">
                           <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
@@ -723,6 +743,7 @@ export default class CreateFarm extends Vue {
   ammType: number = 1
   showSelectedPool: boolean = false
   activeSpin: boolean = false
+  farm_created: boolean = false
 
   get rewardPerWeek() {
     let result = 0
@@ -844,6 +865,91 @@ export default class CreateFarm extends Vue {
     }
     this.updateLocalData()
   }
+
+  async addRewardToFarm() { 
+    this.activeSpin = true
+    //EgaHTGJeDbytze85LqMStxgTJgq22yjTvYSfqoiZevSK
+    const connection = this.$web3
+    const wallet: any = this.$wallet
+
+    window.localStorage.pool_last_updated = undefined
+    await this.$accessor.liquidity.requestInfos()
+
+    //get liquidity pool info
+    let liquidityPoolInfo: any = LIQUIDITY_POOLS.find((item) => item.ammId === this.userCreateAmmId)
+
+    //check liquidity pool
+    if (liquidityPoolInfo == undefined) {
+      this.$notify.error({
+        key: 'Liquidity',
+        message: 'Finding liquidity pool',
+        description: "Can't find liquidity pool"
+      })
+      return
+    }
+
+    //check reward coin
+    if (this.rewardCoin === null) {
+      this.$notify.error({
+        key: 'reward',
+        message: 'Checking reward coin',
+        description: 'Select reward coin, please'
+      })
+      return
+    }
+
+    let rewardMintPubkey = new PublicKey(this.rewardCoin?.mintAddress as string)
+    let rewardDecimals: number = this.rewardCoin?.decimals as any
+    let lpMintPubkey = new PublicKey(liquidityPoolInfo.lp.mintAddress)
+    let ammPubkey = new PublicKey(this.userCreateAmmId)
+
+    let startTimestamp: any = this.startTime.unix()
+    let endTimestamp: any = this.endTime.unix()
+
+    let initialRewardAmount: number = Number.parseFloat(this.fromCoinAmount)
+    let userRewardTokenPubkey = new PublicKey(
+      get(this.wallet.tokenAccounts, `${rewardMintPubkey.toBase58()}.tokenAccountAddress`)
+    )
+    let userRewardTokenBalance = get(this.wallet.tokenAccounts, `${rewardMintPubkey.toBase58()}.balance`)
+
+    //check if creator has some reward
+    if (userRewardTokenBalance <= 0 || userRewardTokenBalance < initialRewardAmount) {
+      this.$notify.error({
+        key: 'Initial Balance',
+        message: 'Checking Inital Reward',
+        description: 'Not enough Initial Reward token balance'
+      })
+      return
+    }
+
+    //check start and end
+    if (startTimestamp >= endTimestamp) {
+      this.$notify.error({
+        key: 'Period',
+        message: 'Checking period',
+        description: 'end time must be late than start time'
+      })
+      return
+    }
+    try {
+
+
+      let fetchedFarm = await YieldFarm.loadFarm(connection, this.farmId, new PublicKey(FARM_PROGRAM_ID))
+
+
+
+      if (fetchedFarm) {
+        await fetchedFarm.addReward(wallet, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals))
+        this.current += 1
+      }
+
+
+    } catch {
+      this.activeSpin = false;
+      console.log('creating farm failed')
+    }
+  }
+
   async confirmFarmInfo() {
     this.activeSpin = true
     //EgaHTGJeDbytze85LqMStxgTJgq22yjTvYSfqoiZevSK
@@ -932,12 +1038,14 @@ export default class CreateFarm extends Vue {
       }
 
       this.farmId = createdFarm.farmId
-      let fetchedFarm = await YieldFarm.loadFarm(connection, createdFarm.farmId, new PublicKey(FARM_PROGRAM_ID))
-      if (fetchedFarm) {
-        await fetchedFarm.addReward(wallet, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals))
-        this.current += 1
-      }
+      window.localStorage['owner_'+ createdFarm.farmId] = 1;
+
+      this.activeSpin = false;
+      this.farm_created = true;
+
     } catch {
+      this.activeSpin = false;
+      this.farm_created = false;
       console.log('creating farm failed')
     }
   }

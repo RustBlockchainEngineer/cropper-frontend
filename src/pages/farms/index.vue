@@ -1048,6 +1048,9 @@ export default Vue.extend({
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
           }
+          
+          if(Math.round((apr as any) * 100) / 100 == 0 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
+
           if (isNaN(liquidityUsdValue)) {
             liquidityUsdValue = 0
           }
