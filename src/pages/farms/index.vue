@@ -1054,7 +1054,7 @@ export default Vue.extend({
             liquidityUsdValue = 0
           }
 
-          if(Math.round((apr as any) * 100) / 100 == 0 && liquidityUsdValue == 0 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
+          if(rewardPerTimestampAmountTotalValue == 0 && liquidityUsdValue == 0 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
 
           // @ts-ignore
           newFarmInfo.apr = apr
