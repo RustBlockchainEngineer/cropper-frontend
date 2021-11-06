@@ -816,7 +816,7 @@ export default Vue.extend({
         { value: 2, label: 'Ended' },
         { value: 3, label: 'All' }
       ],
-      searchCertifiedFarm: 2,
+      searchCertifiedFarm: 0,
       searchLifeFarm: 0,
       stakedOnly: false,
       totalCount: 110,
@@ -1054,7 +1054,7 @@ export default Vue.extend({
             liquidityUsdValue = 0
           }
 
-          if(rewardPerTimestampAmountTotalValue == 0 && liquidityUsdValue == 0 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
+          if(rewardPerTimestampAmountTotalValue > 0 && liquidityUsdValue == 0 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
 
           // @ts-ignore
           newFarmInfo.apr = apr
