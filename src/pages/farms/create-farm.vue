@@ -656,7 +656,7 @@ import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Radio, Spin } from 
 import { getMarket, createAmm, clearLocal } from '@/utils/market'
 import BigNumber from '@/../node_modules/bignumber.js/bignumber'
 import { TokenAmount } from '@/utils/safe-math'
-import { NATIVE_SOL, TokenInfo, TOKENS } from '@/utils/tokens'
+import { NATIVE_SOL, TokenInfo, TOKENS, getTokenByMintAddress } from '@/utils/tokens'
 import { createAssociatedId } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
 import {
@@ -712,6 +712,7 @@ export default class CreateFarm extends Vue {
 
   farmId: any = null
   current: number = 0
+  rewardTokenForced: any = null
 
   marketInputFlag: boolean = true
   marketFlag: boolean = false
@@ -871,6 +872,12 @@ export default class CreateFarm extends Vue {
       clearLocal()
     }
     this.updateLocalData()
+
+
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('rtf')) this.rewardTokenForced = query.get('rtf') as string
+    
+
   }
 
   async addRewardToFarm() { 
@@ -1180,6 +1187,12 @@ export default class CreateFarm extends Vue {
         }
       }
     }
+
+    if(this.rewardTokenForced){
+      this.rewardCoin = getTokenByMintAddress(this.rewardTokenForced);
+    }
+
+
     this.coinSelectShow = false
     this.selectFromCoin = false
     this.selectTokenA = false

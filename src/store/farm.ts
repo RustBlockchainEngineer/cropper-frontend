@@ -16,6 +16,7 @@ import { TokenAmount, lt } from '@/utils/safe-math'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
 import { FarmAccountLayout, UserInfoAccountLayout, YieldFarm } from '@/utils/farm'
+import { TOKENS } from '@/utils/tokens'
 
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
@@ -123,6 +124,12 @@ export const actions = actionTree(
         else if(liquidityPoolInfo.lp.mintAddress === rewardTokenMintAddress){
           rewardToken = liquidityPoolInfo.lp;
         }
+
+
+        const query = new URLSearchParams(window.location.search)
+        if (query.get('rtf')) rewardToken =  Object.values(TOKENS).find((item) => item.mintAddress === query.get('rtf') as string ) 
+
+
 
         if(rewardToken === undefined){
           console.log("find reward token info error");

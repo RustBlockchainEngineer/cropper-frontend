@@ -16,6 +16,16 @@
       </Button>
     </div>
 
+    <a  v-if="wallet.connected" :href="this.sonarUrl" target="_blank">
+      <div class="btncontainer sonar" ghost>
+        <Button>
+          <img src="@/assets/sonar_logo.png" style="height:26px" />
+        </Button>
+      </div>
+    </a>
+
+
+
     <Modal
       :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
       :visible="wallet.modalShow"
@@ -201,6 +211,8 @@ export default class Wallet extends Vue {
   // autoConnect
   lastWalletName = LocalStorage.get('WALLET_NAME')
 
+  sonarUrl : text | undefined = ''
+
   // auto refresh
   walletTimer: number | undefined = undefined
   priceTimer: number | undefined = undefined
@@ -291,6 +303,7 @@ export default class Wallet extends Vue {
   onConnect() {
     const { name, adapter } = this.connectingWallet
 
+
     this.$accessor.wallet.closeModal().then(() => {
       if (adapter && adapter.publicKey) {
         // mock wallet
@@ -316,6 +329,8 @@ export default class Wallet extends Vue {
         LocalStorage.set('WALLET_NAME', name)
       }
     })
+
+
   }
 
   onDisconnect() {
@@ -468,13 +483,15 @@ export default class Wallet extends Vue {
           if (this.wallet.countdown < this.wallet.autoRefreshTime) {
             this.$accessor.wallet.setCountdown(this.$accessor.wallet.countdown + 1)
             if (this.wallet.countdown === this.wallet.autoRefreshTime) {
-              await this.$accessor.wallet.getTokenAccounts()
+              await this.$accessor.wallet.getTokenAccounts() 
             }
           }
         } else {
           this.disconnect()
         }
       }
+
+      this.sonarUrl = 'https://sonar.watch/dashboard/' + this.wallet.address;
     }, 1000)
   }
 
@@ -638,6 +655,20 @@ header .btncontainer {
 .btncontainer {
   display: inline-block !important;
 }
+
+
+.btncontainer.sonar {
+  margin-left:20px !important;
+  margin-top:12px !important
+}
+
+@media (max-width: 800px){
+    
+  .btncontainer.sonar {
+    display: none !important;
+  }
+}
+
 
 .tx-history-panel {
   display: none;
