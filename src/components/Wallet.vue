@@ -211,7 +211,7 @@ export default class Wallet extends Vue {
   // autoConnect
   lastWalletName = LocalStorage.get('WALLET_NAME')
 
-  sonarUrl : text | undefined = ''
+  sonarUrl: any = ''
 
   // auto refresh
   walletTimer: number | undefined = undefined
