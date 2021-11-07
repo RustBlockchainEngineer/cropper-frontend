@@ -114,9 +114,6 @@
                   </div>
                   <div class="desc">{{ farm.desc }}</div>
 
-                  <div class="btncontainer" @click="goToProject(farm)">
-                    <Button size="large" ghost> Join now </Button>
-                  </div>
                 </Col>
               </Row>
             </CollapsePanel>
@@ -183,9 +180,6 @@
                   </div>
                 </Col>
               </Row>
-              <div class="btncontainer" @click="goToProject(farm)">
-                <Button size="large" ghost> Join now </Button>
-              </div>
             </CollapsePanel>
           </Collapse>
         </div>

@@ -1035,6 +1035,13 @@ export default Vue.extend({
   },
 
   mounted() {
+
+
+    this.$router.push({
+      path: '/'
+    })
+
+
     this.$accessor.token.loadTokens()
     this.updateFarms()
 

@@ -16,7 +16,7 @@ import { TokenAmount, lt } from '@/utils/safe-math'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
 import { FarmAccountLayout, UserInfoAccountLayout, YieldFarm } from '@/utils/farm'
-import { TOKENS } from '@/utils/tokens'
+import { TOKENS, getTokenByMintAddress } from '@/utils/tokens'
 
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
@@ -101,6 +101,8 @@ export const actions = actionTree(
         const rewardTokenMintAddress = _farmData.reward_mint_address.toBase58();
         const ownerAddress = _farmData.owner.toBase58();
 
+
+
         //get liquidity pool info
         let liquidityPoolInfo:LiquidityPoolInfo = LIQUIDITY_POOLS.find((item) => item.lp.mintAddress === lpTokenMintAddress) as any;
 
@@ -131,8 +133,14 @@ export const actions = actionTree(
 
 
 
+        if(rewardTokenMintAddress){
+          rewardToken = getTokenByMintAddress(rewardTokenMintAddress);
+        }
+
+
         if(rewardToken === undefined){
           console.log("find reward token info error");
+          console.log(rewardTokenMintAddress);
           return;
         }
 
@@ -157,6 +165,9 @@ export const actions = actionTree(
         if(findedFarm == undefined){
           FARMS.push(_farmInfo)
         }
+
+
+        console.log(_farmInfo);
 
         _farmInfo.lp.balance = new TokenAmount(0, lpTokenInfo.decimals);
         _farmInfo.reward.balance = new TokenAmount(0, rewardToken.decimals);

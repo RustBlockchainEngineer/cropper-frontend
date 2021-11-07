@@ -659,7 +659,11 @@ header .btncontainer {
 
 .btncontainer.sonar {
   margin-left:20px !important;
-  margin-top:12px !important
+  margin-top:12px !important;
+
+  button {
+    top: -8px;
+  }
 }
 
 @media (max-width: 800px){
