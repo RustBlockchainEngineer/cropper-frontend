@@ -1834,6 +1834,7 @@ main {
 }
 .btn-grad {
   background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+  background-origin: border-box;
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   height: 62px;
@@ -1876,6 +1877,7 @@ main {
 }
 .count-down-group {
   background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+  background-origin: border-box;
   height: 62px;
   border-radius: 63px;
   position: relative;
@@ -1902,6 +1904,7 @@ main {
     height: 50px;
     border-radius: 25px;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background-origin: border-box;
     margin-left: 15px;
     display: flex;
     align-items: center;
@@ -1994,8 +1997,10 @@ main {
     padding: 2px;
     max-height: 50px;
     border-radius: 8px;
+
     button {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+      background-origin: border-box !important;
       border: 2px solid rgba(255, 255, 255, 0.14);
       position: relative;
       border-radius: 8px;
@@ -2163,6 +2168,7 @@ main {
 }
 .ant-tooltip-inner {
   background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+  background-origin: border-box !important;
   border: 2px solid rgba(255, 255, 255, 0.14);
   box-shadow: 18px 11px 14px rgb(0 0 0 / 25%);
   border-radius: 8px;
@@ -2181,12 +2187,13 @@ main {
       padding: 10px 13px;
       line-height: 20px;
     }
+
     .info {
       border-radius: 6px;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.14);
       padding: 8px;
-      margin-bottom: 10px;
+      margin-top: 10px;
       
       .symbol {
         font-size: 13px;
@@ -2208,6 +2215,10 @@ main {
         height: 15px;
         cursor: pointer;
       }
+    }
+
+    .info:nth-child(1) {
+      margin-top: 0 !important
     }
   }
 }

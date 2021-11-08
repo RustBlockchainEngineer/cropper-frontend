@@ -120,6 +120,7 @@ export default class Nav extends Vue {
   padding: 2px;
   border-radius: 8px;
   background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+  background-origin: border-box;
   margin-top: -10px;
 
   span {

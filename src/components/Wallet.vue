@@ -597,6 +597,7 @@ export default class Wallet extends Vue {
 
 header .btncontainer {
   background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+  background-origin: border-box;
   display: block;
   text-align: center;
   position: relative;

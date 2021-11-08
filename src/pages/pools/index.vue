@@ -1469,7 +1469,7 @@ section {
     background: #01033c !important;
     border-bottom: unset !important;
     border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
-    padding: 25px 16px;
+    padding: 5px 16px;
   }
 
   .lp-iconscontainer {
@@ -1615,7 +1615,7 @@ section {
         border-radius: 8px !important;
         border: none !important;
         
-        button {
+        button[disabled] {
           border-radius: 8px;
           background: #01033C !important;
         }

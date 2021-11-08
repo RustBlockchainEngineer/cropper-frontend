@@ -281,6 +281,7 @@ export default Vue.extend({
       border-radius:8px; 
       padding:2px;
       background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+      background-origin: border-box;
       -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
         linear-gradient(#fff 0 0);

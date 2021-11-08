@@ -436,6 +436,7 @@ h1 {
 
 #btn-LA {
     background: linear-gradient(273.22deg, #13ECAB 4.19%, #C834F7 95.92%);
+    background-origin: border-box;
     padding: 3px;
     width: 164px;
     height: 47px;
@@ -469,6 +470,7 @@ h1 {
 
 #btn-RM {
     background: linear-gradient(273.22deg, #C834F7 4.19%, #13ECAB 95.92%);
+    background-origin: border-box;
     padding: 3px;
     width: 164px;
     height: 47px;
@@ -1129,12 +1131,14 @@ h1 {
     padding: 3px;
     border-radius: 13px;
     background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    background-origin: border-box;
 }
 
 .grid-item-1 .item-1 {
     width: 100%;
     height: 100%;
     background: linear-gradient(1.25turn, #063F2F, #350F42);
+    background-origin: border-box;
     text-align: center;
     margin: auto;
     border-radius: 13px;
@@ -1169,12 +1173,14 @@ h1 {
     padding: 3px;
     border-radius: 13px;
     background: linear-gradient(285.27deg, rgba(19, 236, 171, 0.8) -14.12%, rgba(200, 52, 247, 0.8) 80.42%);
+    background-origin: border-box;
 }
 
 .grid-item-2 .item-2 {
     width: 100%;
     height: 100%;
     background: linear-gradient(1.25turn, #350F42, #063F2F);
+    background-origin: border-box;
     text-align: center;
     margin: auto;
     border-radius: 13px;
@@ -1207,12 +1213,14 @@ h1 {
     padding: 3px;
     border-radius: 13px;
     background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    background-origin: border-box;
 }
 
 .grid-item-3 .item-3 {
     width: 100%;
     height: 100%;
     background: linear-gradient(1.25turn, #063F2F, #350F42);
+    background-origin: border-box;
     text-align: center;
     margin: auto;
     border-radius: 13px;
@@ -1244,12 +1252,14 @@ h1 {
     padding: 3px;
     border-radius: 13px;
     background: linear-gradient(285.27deg, rgba(19, 236, 171, 0.8) -14.12%, rgba(200, 52, 247, 0.8) 80.42%);
+    background-origin: border-box;
 }
 
 .grid-item-4 .item-4 {
     width: 100%;
     height: 100%;
     background: linear-gradient(1.25turn, #350F42, #063F2F);
+    background-origin: border-box;
     text-align: center;
     margin: auto;
     border-radius: 13px;
@@ -1306,10 +1316,12 @@ h1 {
 
 #section-2b .grid-item-3 {
     background: linear-gradient(91.9deg, rgba(200, 52, 247, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    background-origin: border-box;
 }
 
 #section-2b .grid-item-3 .item-3 {
     background: linear-gradient(1.25turn, #350F42, #350F42);
+    background-origin: border-box;
 }
 
 
@@ -2632,26 +2644,32 @@ h1 {
 
 #section-2b .grid-item-3 {
     background: linear-gradient(180deg, rgba(200, 52, 247, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    background-origin: border-box;
 }
 
 #section-2b .grid-item-1 {
     background: linear-gradient(180deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+    background-origin: border-box;
 }
 
 #section-2b .grid-item-4 {
     background: linear-gradient(180deg, rgba(200, 52, 247, 0.8) -8.51%, rgba(19, 236, 171, 0.8) 110.83%);
+    background-origin: border-box;
 }
 
 #section-2b .grid-item-3 .item-3 {
     background: linear-gradient(1.25turn, #350F42, #350F42);
+    background-origin: border-box;
 }
 
 #section-2b .grid-item-4 .item-4 {
     background: linear-gradient(180deg, #350F42, #063F2F);
+    background-origin: border-box;
 }
 
 #section-2b .grid-item-1 .item-1 {
     background: linear-gradient(180deg, #063F2F, #350F42);
+    background-origin: border-box;
 }
 .title-section-left img {
     margin-left: 10px;
