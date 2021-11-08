@@ -135,11 +135,13 @@ main {
 
   .ant-calendar-date:hover {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background-origin: border-box;
   }
 
   .create {
     padding: 9px 19px;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
     display: inline-block;

@@ -2037,6 +2037,7 @@ export default Vue.extend({
     .lp-icons-group {
       height: 51px;
       background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+      background-origin: border-box;
       border-radius: 8px;
       padding: 2px;
 
@@ -2165,6 +2166,7 @@ export default Vue.extend({
 
       .btncontainer {
         background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+        background-origin: border-box;
         padding: 2px;
         height: 60px;
         border-radius: 8px;
@@ -2332,6 +2334,7 @@ export default Vue.extend({
 
       .btncontainer {
         background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+        background-origin: border-box;
         border: 2px solid rgba(255, 255, 255, 0.14);
         border-radius: 8px;
         color: #fff;
@@ -2400,6 +2403,7 @@ export default Vue.extend({
 
         .largepdding .btncontainer {
           background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+          background-origin: border-box;
           border: 2px solid rgba(255, 255, 255, 0.14);
           border-radius: 8px;
           color: #fff;
@@ -2497,6 +2501,7 @@ export default Vue.extend({
             .lp-icons-group {
               height: 51px;
               background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+              background-origin: border-box;
               border-radius: 8px;
               padding: 2px;
 
@@ -2601,6 +2606,7 @@ export default Vue.extend({
 
     .detailButton {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background-origin: border-box;
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
@@ -2619,6 +2625,7 @@ export default Vue.extend({
 
     .openButton {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background-origin: border-box;
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
@@ -3378,6 +3385,7 @@ export default Vue.extend({
 
 .btncontainer {
   background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+  background-origin: border-box;
   display: inline-block;
   width: unset;
   text-align: center;
