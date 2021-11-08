@@ -1469,7 +1469,7 @@ section {
     background: #01033c !important;
     border-bottom: unset !important;
     border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
-    padding: 25px 16px;
+    padding: 0 16px;
   }
 
   .lp-iconscontainer {

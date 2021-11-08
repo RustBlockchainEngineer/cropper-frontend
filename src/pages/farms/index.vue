@@ -2524,7 +2524,7 @@ export default Vue.extend({
     border-top: 1px solid #ffffff20;
 
     .farm-head {
-      padding: 30px 5px !important;
+      padding: 0 5px !important;
     }
 
     .ant-collapse-arrow {
