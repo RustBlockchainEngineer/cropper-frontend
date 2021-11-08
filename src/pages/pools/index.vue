@@ -1615,7 +1615,7 @@ section {
         border-radius: 8px !important;
         border: none !important;
         
-        button {
+        button[disabled] {
           border-radius: 8px;
           background: #01033C !important;
         }
