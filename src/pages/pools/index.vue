@@ -1594,9 +1594,9 @@ section {
 
     &.small {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
-      background-origin: border-box;
+      background-origin: border-box !important;
       border: 2px solid rgba(255, 255, 255, 0.14) !important;
-      border-radius: 8px;
+      border-radius: 8px !important;
       width: 48px !important;
       height: 48px !important;
 
@@ -1618,13 +1618,17 @@ section {
         }
       }
 
+      button[disabled] {
+        border-radius: 8px;
+        background: #01033C !important;
+      }
+
       &.minus-btn {
         background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
-        background-origin: border-box;
-        padding: 2px !important;
+        background-origin: border-box !important;
         border-radius: 8px !important;
-        border: none !important;
-        
+        border: 2px solid rgba(255, 255, 255, 0.14) !important;
+
         button[disabled] {
           border-radius: 8px;
           background: #01033C !important;
