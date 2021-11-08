@@ -2086,7 +2086,6 @@ export default Vue.extend({
       .lp-icons-group {
         height: 51px;
         background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-        background-origin: border-box;
         border-radius: 8px;
         padding: 2px;
         width: 240px;
@@ -2201,7 +2200,6 @@ export default Vue.extend({
 
     .detailButton {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-      background-origin: border-box;
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
@@ -2220,7 +2218,6 @@ export default Vue.extend({
 
     .openButton {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-      background-origin: border-box;
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
@@ -2526,6 +2523,13 @@ export default Vue.extend({
     padding: 0 !important;
     border-top: 1px solid #ffffff20;
 
+<<<<<<< HEAD
+=======
+    .farm-head {
+      padding: 5px 5px !important;
+    }
+
+>>>>>>> aff0c38786a1dc1dfac17e9f7b28372cfaf68d3b
     .ant-collapse-arrow {
       z-index: 2;
       margin-right: 20px;
@@ -2545,7 +2549,6 @@ export default Vue.extend({
 .farm.container {
   .create {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-    background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
 
@@ -2581,7 +2584,6 @@ export default Vue.extend({
 
   .btncontainer {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
-    background-origin: border-box;
     display: inline-block;
     width: unset;
     text-align: center;
@@ -2625,7 +2627,6 @@ export default Vue.extend({
 
 .count-down-group {
   background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-  background-origin: border-box;
   height: 60px;
   border-radius: 63px;
   position: relative;
@@ -2655,7 +2656,6 @@ export default Vue.extend({
     height: 50px;
     border-radius: 25px;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-    background-origin: border-box;
     margin-left: 15px;
     display: flex;
     align-items: center;
@@ -2760,7 +2760,6 @@ export default Vue.extend({
         width: 28px;
         height: 28px;
         background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-        background-origin: border-box;
         top: -10px;
         left: -2px;
       }
