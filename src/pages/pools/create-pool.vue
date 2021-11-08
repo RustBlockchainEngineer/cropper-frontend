@@ -460,6 +460,7 @@ import { NATIVE_SOL, TokenInfo, TOKENS } from '@/utils/tokens'
 import { TokenAmount } from '@/utils/safe-math'
 import { createAssociatedId } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
+import { DEVNET_MODE } from '../../utils/ids'
 import {
   AMM_ASSOCIATED_SEED,
   FARM_PROGRAM_ID,
@@ -740,8 +741,9 @@ export default class CreatePool extends Vue {
   onInputMarketChanged(val: string) {
     this.alreadyExists = false
     this.inputMarket = val.replace(/(^\s*)|(\s*$)/g, '')
-    if (
-      this.pools.filter(
+
+    // @ts-ignore
+    if (DEVNET_MODE != true && this.pools.filter(
         (pool: any) => (pool.serumMarket as string).toLowerCase() == (this.inputMarket as string).toLowerCase()
       ).length > 0
     ) {
