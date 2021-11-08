@@ -820,7 +820,7 @@ export default Vue.extend({
       searchLifeFarm: 0,
       stakedOnly: false,
       totalCount: 110,
-      pageSize: 10,
+      pageSize: 50,
       currentPage: 1,
       labelizedPermission: false as any
     }
