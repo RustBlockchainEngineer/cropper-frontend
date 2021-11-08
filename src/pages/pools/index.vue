@@ -124,14 +124,12 @@
                   <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.pc.mintAddress : ''" />
                   {{ getPoolByLpMintAddress(text).lp.pc.symbol }}
                 </div>
-
-                <div v-if="displayPoolID">
-                  {{getPoolByLpMintAddress(text).ammId}}
-                </div>
-
-
-
               </span>
+
+              <div v-if="displayPoolID">
+                AMMID : {{getPoolByLpMintAddress(text).ammId}}<br />
+                serumMarket : {{getPoolByLpMintAddress(text).serumMarket}}
+              </div>
             </span>
             <span slot="liquidity" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
             <span slot="volume_24h" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
