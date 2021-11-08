@@ -437,23 +437,18 @@ export class YieldFarm {
     let farmUserAccountInfos = await YieldFarm.getFilteredProgramAccounts(connection, farmProgramId, filters)
     let userInfo:any;
     farmUserAccountInfos.forEach((farmUserAccountInfo) => {
-      
       const { data} = farmUserAccountInfo.accountInfo
-      
       const userInfoData = UserInfoAccountLayout.decode(data)
-      
       const wallet = userInfoData.wallet;
       const _farmId = userInfoData.farmId.toBase58();
       const depositBalance = userInfoData.deposit_balance;
       const rewardDebt = userInfoData.reward_debt
-
       if(_farmId == farmId.toBase58())
       {
         userInfo = new UserInfo(farmUserAccountInfo.publicKey,wallet,farmId,depositBalance,rewardDebt);
       }
     })
     return userInfo;
-    
   }
   static async findOrCreateUserInfoAccount(
     connection:Connection,
@@ -906,16 +901,25 @@ export class YieldFarm {
 
     // if no userinfo account, create new one
     
-    const userInfoAccount = await createProgramAccountIfNotExist(
-      connection,
-      infoAccount,
-      owner,
-      programId,
-      null,
-      UserInfoAccountLayout,
-      transaction,
-      signers
-    )
+    // const userInfoAccount = await createProgramAccountIfNotExist(
+    //   connection,
+    //   infoAccount,
+    //   owner,
+    //   programId,
+    //   null,
+    //   UserInfoAccountLayout,
+    //   transaction,
+    //   signers
+    // )
+    let userInfoKey = null;
+    if(infoAccount){
+      userInfoKey = new PublicKey(infoAccount);
+    }
+    else{
+      const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
+      const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
+      userInfoKey = foundUserInfoKey;
+    }
 
     const fetchFarm = await YieldFarm.loadFarm(
       connection,
@@ -939,7 +943,7 @@ export class YieldFarm {
       farmId,
       fetchFarm.authority,
       owner,
-      userInfoAccount,
+      userInfoKey,
       userLpAccount,
       userRewardTokenAccount,
       fetchFarm.poolLpTokenAccount,
@@ -1012,28 +1016,21 @@ export class YieldFarm {
       atas
     )
 
-    // if no userinfo account, create new one
-    
-    const userInfoAccount = await createProgramAccountIfNotExist(
-      connection,
-      infoAccount,
-      owner,
-      programId,
-      null,
-      UserInfoAccountLayout,
-      transaction,
-      signers
-    )
-    let [authority, nonce] = await PublicKey.findProgramAddress(
+    let userInfoKey = null;
+    if(infoAccount){
+      userInfoKey = new PublicKey(infoAccount);
+    }
+    else{
+      const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
+      const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
+      userInfoKey = foundUserInfoKey;
+    }
+
+    let [authority] = await PublicKey.findProgramAddress(
       [farmId.toBuffer()],
       programId,
     );
 
-    const fetchFarm = await YieldFarm.loadFarm(
-      connection,
-      farmId,
-      programId
-    )
     let rewardATA = await YieldFarm.checkWalletATA(connection, programData.feeOwner, farmInfo.reward.mintAddress);
     if(!rewardATA){
       rewardATA = await createAssociatedTokenAccountIfNotExist(
@@ -1046,12 +1043,11 @@ export class YieldFarm {
 
     const seeds = [Buffer.from(FARM_PREFIX),programId.toBuffer()];
     const [programAccount] = await PublicKey.findProgramAddress(seeds, programId);
-    
     const instruction = YieldFarm.createWithdrawInstruction(
       farmId,
       authority,
       owner,
-      userInfoAccount,
+      userInfoKey,
       userLpAccount,
       userRewardTokenAccount,
       new PublicKey(farmInfo.poolLpTokenAccount),

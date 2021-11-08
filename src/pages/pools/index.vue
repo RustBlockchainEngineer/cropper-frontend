@@ -975,6 +975,7 @@ section {
 
     .openButton {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background-origin: border-box;
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
@@ -1006,6 +1007,7 @@ section {
       position: absolute;
       right: 0;
       background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
+      background-origin: border-box;
       display: inline-block;
       padding: 1px;
       border-radius: 23px;
@@ -1322,6 +1324,7 @@ section {
 
   button {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+    background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14) !important;
     border-radius: 8px;
   }
@@ -1418,6 +1421,7 @@ section {
         width: 28px;
         height: 28px;
         background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+        background-origin: border-box;
         top: -10px;
         left: -2px;
       }
@@ -1474,6 +1478,7 @@ section {
 
   .lp-iconscontainer {
     background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+    background-origin: border-box;
     padding: 2px;
     border-radius: 8px;
     width: 100%;
@@ -1505,6 +1510,7 @@ section {
   .create {
     padding: 9px 19px;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
 
@@ -1535,6 +1541,7 @@ section {
 
   .count-down-group {
     background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    background-origin: border-box;
     height: 60px;
     border-radius: 63px;
     position: relative;
@@ -1564,6 +1571,7 @@ section {
       height: 50px;
       border-radius: 25px;
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background-origin: border-box;
       margin-left: 15px;
       display: flex;
       align-items: center;
@@ -1586,8 +1594,9 @@ section {
 
     &.small {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+      background-origin: border-box !important;
       border: 2px solid rgba(255, 255, 255, 0.14) !important;
-      border-radius: 8px;
+      border-radius: 8px !important;
       width: 48px !important;
       height: 48px !important;
 
@@ -1609,12 +1618,17 @@ section {
         }
       }
 
+      button[disabled] {
+        border-radius: 8px;
+        background: #01033C !important;
+      }
+
       &.minus-btn {
         background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
-        padding: 2px !important;
+        background-origin: border-box !important;
         border-radius: 8px !important;
-        border: none !important;
-        
+        border: 2px solid rgba(255, 255, 255, 0.14) !important;
+
         button[disabled] {
           border-radius: 8px;
           background: #01033C !important;

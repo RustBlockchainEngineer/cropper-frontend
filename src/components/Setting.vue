@@ -116,6 +116,7 @@ export default class Setting extends Vue {
     &:hover,
     &:focus{
       background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+      background-origin: border-box;
     }
 
   }
