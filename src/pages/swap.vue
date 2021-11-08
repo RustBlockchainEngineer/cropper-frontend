@@ -1170,7 +1170,7 @@ export default Vue.extend({
       let endpoint = ''
       let best_dex_type = undefined
       let midTokenSymbol = undefined
-      let liquidity = new BigNumber(0)
+
       if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
         if (this.isWrap) {
           // wrap & unwrap
@@ -1254,8 +1254,6 @@ export default Vue.extend({
                 impact = priceImpact
                 endpoint = dex_type
 
-                liquidity = this.fromCoin?.mintAddress == poolInfo.coin.mintAddress ? poolInfo.coin.balance.toEther(): poolInfo.pc.balance.toEther()
-                // console.log("Single", this.fromCoin?.symbol, liquidity.toFixed(3))
                 best_dex_type = 'single'
                 
               }

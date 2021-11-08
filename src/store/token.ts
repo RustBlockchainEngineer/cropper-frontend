@@ -46,6 +46,20 @@ export const actions:any = actionTree(
 
       if(!DEVNET_MODE )
       {
+        if(need_to_update == false)
+        {
+          const tokens = JSON.parse(window.localStorage.tokens)
+  
+          for (const [key, value] of Object.entries(tokens)) {
+            TOKENS[key] = value
+          }
+
+          if(Object.entries(TOKENS).length == 0)
+          {
+            need_to_update = true
+          }
+        }
+
         if(need_to_update)
         {
           let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
@@ -103,14 +117,7 @@ export const actions:any = actionTree(
           window.localStorage.token_last_updated = new Date().getTime()
           window.localStorage.tokens = JSON.stringify(TOKENS)
         }
-        else
-        {
-          const tokens = JSON.parse(window.localStorage.tokens)
-  
-          for (const [key, value] of Object.entries(tokens)) {
-            TOKENS[key] = value
-          }
-        }
+
       }
 
       logger('Token list updated')
