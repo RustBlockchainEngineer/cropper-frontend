@@ -662,7 +662,7 @@ header .btncontainer {
   margin-top:12px !important;
 
   button {
-    top: -8px;
+    top: -9px;
   }
 }
 
