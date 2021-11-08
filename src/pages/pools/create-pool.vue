@@ -614,8 +614,8 @@ export default class CreatePool extends Vue {
     this.alreadyExists = false
     this.inputMarket = val.replace(/(^\s*)|(\s*$)/g, '')
 
-    // @ts-ignore
     if (
+    // @ts-ignore
       DEVNET_MODE != true &&
       this.pools.filter(
         (pool: any) => (pool.serumMarket as string).toLowerCase() == (this.inputMarket as string).toLowerCase()
