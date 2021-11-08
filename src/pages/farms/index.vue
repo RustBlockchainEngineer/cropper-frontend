@@ -1054,7 +1054,7 @@ export default Vue.extend({
             liquidityUsdValue = 0
           }
 
-          if(rewardPerTimestampAmountTotalValue <= 0 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
+          if( (rewardPerTimestampAmountTotalValue * 86400 * 7) < 1 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
 
           // @ts-ignore
           newFarmInfo.apr = apr
