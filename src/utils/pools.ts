@@ -73,7 +73,7 @@ export function getPoolByTokenMintAddresses(
   return pool
 }
 
-export function getCRPPoolListByTokenMintAddresses(
+export function getCropperPoolListByTokenMintAddresses(
   coinMintAddress: string,
   pcMintAddress: string,
   ammIdOrMarket: string | undefined
@@ -96,7 +96,7 @@ export function getCRPPoolListByTokenMintAddresses(
   return cloneDeep(crp_pools)
 }
 
-export function getRAYPoolListByTokenMintAddresses(
+export function getRaydiumPoolListByTokenMintAddresses(
   coinMintAddress: string,
   pcMintAddress: string,
   ammIdOrMarket: string | undefined
@@ -124,11 +124,11 @@ export function getPoolListByTokenMintAddresses(
   pcMintAddress: string,
   ammIdOrMarket: string | undefined
 ): LiquidityPoolInfo[] {
-  const crp_pools = getCRPPoolListByTokenMintAddresses(coinMintAddress, pcMintAddress, ammIdOrMarket)
+  const crp_pools = getCropperPoolListByTokenMintAddresses(coinMintAddress, pcMintAddress, ammIdOrMarket)
   if(crp_pools.length){
     return crp_pools
   }
-  else return getRAYPoolListByTokenMintAddresses(coinMintAddress, pcMintAddress, ammIdOrMarket)
+  else return getRaydiumPoolListByTokenMintAddresses(coinMintAddress, pcMintAddress, ammIdOrMarket)
 }
 
 export function getLpMintByTokenMintAddresses(
@@ -218,6 +218,36 @@ export function getAddressForWhat(address: string) {
   }
 
   return {}
+}
+
+export function findBestCropperLP(pools:any, baseMint:string, quoteMint:string, amountIn:string)
+{
+  const lpList = getCropperPoolListByTokenMintAddresses(
+    baseMint === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : baseMint,
+    quoteMint === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : quoteMint,
+    undefined
+  )
+  
+  let bestLP:any = null
+  let maxAmount = 0
+  lpList.forEach(lpInfo => {
+    let poolInfo = pools[lpInfo.lp.mintAddress]
+    if(poolInfo.fees)
+    {
+      const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
+        poolInfo,
+        baseMint,
+        quoteMint,
+        amountIn,
+        1
+      )
+      if(!bestLP || maxAmount < amountOut.wei.toNumber()){
+        maxAmount = amountOut.wei.toNumber()
+        bestLP = poolInfo
+      }
+    }
+  });
+  return bestLP
 }
 
 export function findBestLP(pools:any, baseMint:string, quoteMint:string, amountIn:string)

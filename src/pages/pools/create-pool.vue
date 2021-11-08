@@ -616,7 +616,7 @@ export default class CreatePool extends Vue {
 
     // @ts-ignore
     if (
-      DEVNET_MODE != true &&
+      // DEVNET_MODE != true &&
       this.pools.filter(
         (pool: any) => (pool.serumMarket as string).toLowerCase() == (this.inputMarket as string).toLowerCase()
       ).length > 0

@@ -61,11 +61,11 @@ export function getSwapOutAmount(
   amount: string,
   slippage: number
 ){
-  const getSwapOutAmount_fcn = (poolInfo.version == CRP_LP_VERSION_V1)? getSwapOutAmount_crp: getSwapOutAmount_ray
+  const getSwapOutAmount_fcn = (poolInfo.version == CRP_LP_VERSION_V1)? getCropperSwapOutAmount: getRaydiumSwapOutAmount
   return getSwapOutAmount_fcn(poolInfo, fromCoinMint, toCoinMint, amount, slippage);
 }
 
-function getSwapOutAmount_crp(
+function getCropperSwapOutAmount(
   poolInfo: any,
   fromCoinMint: string,
   toCoinMint: string,
@@ -141,7 +141,7 @@ function getSwapOutAmount_crp(
   }
 }
 
-function getSwapOutAmount_ray(
+function getRaydiumSwapOutAmount(
   poolInfo: any,
   fromCoinMint: string,
   toCoinMint: string,

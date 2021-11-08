@@ -419,17 +419,11 @@ export const actions = actionTree(
       {
         need_to_update = true
       }
-
-      if(need_to_update)
-      {
-        await getCropperPools(conn);
-        await getRaydiumPools(conn);
-        window.localStorage.pool_last_updated = new Date().getTime()
-        window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
-      }
-      else{
+      // need_to_update = true;
+      // console.log("Need to reload liquidity pools ", need_to_update)
+      if(!need_to_update){
         const pools = JSON.parse(window.localStorage.pools)
-
+  
         let ammSet: any = {};
 
         LIQUIDITY_POOLS.forEach((pool) => {
@@ -441,6 +435,18 @@ export const actions = actionTree(
             LIQUIDITY_POOLS.push(pool)
           }
         })
+        if(LIQUIDITY_POOLS.length == 0)
+        {
+          need_to_update = true
+        }
+      }
+
+      if(need_to_update)
+      {
+        await getCropperPools(conn);
+        await getRaydiumPools(conn);
+        window.localStorage.pool_last_updated = new Date().getTime()
+        window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
       }
 
       const liquidityPools = {} as any

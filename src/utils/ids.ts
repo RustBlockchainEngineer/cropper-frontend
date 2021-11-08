@@ -9,7 +9,7 @@ export const CRP_LP_VERSION_V2 = 1002
 export const LP_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
 export const TOKEN_UPDATE_INTERVAL = 24 * 60 * 60 * 1000
 export const MARKET_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
-export const DEVNET_MODE = true; // please let it devnet so requesters can test in devnet env
+export const DEVNET_MODE = false; // please let it devnet so requesters can test in devnet env
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
