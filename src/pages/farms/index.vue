@@ -192,10 +192,16 @@
               <div class="title">Staked</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">Total APR</div>
+              <div class="title table-apr" @click="sortByAPR">Total APR
+                <Icon v-if="sortAPRAsc" type="arrow-up" />
+                <Icon v-else type="arrow-down" />
+              </div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">Liquidity</div>
+              <div class="title table-liquidity" @click="sortByLiquidity">Liquidity
+                <Icon v-if="sortLiquidityAsc" type="arrow-up" />
+                <Icon v-else type="arrow-down" />
+              </div>
             </Col>
           </Row>
           <Collapse v-model="showCollapse" expand-icon-position="right">
@@ -822,7 +828,9 @@ export default Vue.extend({
       totalCount: 110,
       pageSize: 50,
       currentPage: 1,
-      labelizedPermission: false as any
+      labelizedPermission: false as any,
+      sortAPRAsc: true as boolean,
+      sortLiquidityAsc: true as boolean,
     }
   },
 
@@ -1265,6 +1273,10 @@ export default Vue.extend({
 
       if (stakedOnly) {
         this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0)
+      }
+
+      if (this.sortLiquidityAsc) {
+        this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       }
 
       this.totalCount = this.showFarms.length
@@ -1905,6 +1917,24 @@ export default Vue.extend({
       let seconds = remain
 
       return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
+    },
+    sortByAPR() {
+      if (this.sortAPRAsc) {
+        this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
+        this.sortAPRAsc = false;
+      } else {
+        this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.apr - b.farmInfo.apr)
+        this.sortAPRAsc = true;
+      }
+    },
+    sortByLiquidity() {
+      if (this.sortLiquidityAsc) {
+        this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+        this.sortLiquidityAsc = false;
+      } else {
+        this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
+        this.sortLiquidityAsc = true;
+      }
     }
   }
 })
@@ -2066,6 +2096,10 @@ export default Vue.extend({
           border-radius: 8px;
           align-items: center;
           justify-content: center;
+
+          @media (max-width: @mobile-b-width) {
+            justify-content: flex-start;
+          }
         }
 
         .icons span {
@@ -2112,6 +2146,18 @@ export default Vue.extend({
         line-height: 21.19px;
         font-weight: 400;
         text-align: center;
+      }
+
+      .table-apr,
+      .table-liquidity {
+        cursor: pointer;
+
+        i {
+          color: white;
+          margin-left: 10px;
+          display: flex;
+          align-items: center;
+        }
       }
     }
   }
