@@ -1390,6 +1390,9 @@ export default Vue.extend({
               message: 'Adding Reward failed',
               description: error.message
             })
+
+            this.$accessor.farm.requestInfos()
+            this.$accessor.wallet.getTokenAccounts()
           })
           .finally(() => {
             this.adding = false
@@ -1466,6 +1469,9 @@ export default Vue.extend({
               message: 'Paying farm fee failed',
               description: error.message
             })
+
+            this.$accessor.farm.requestInfos()
+            this.$accessor.wallet.getTokenAccounts()
           })
           .finally(() => {
             this.paying = false
@@ -1611,6 +1617,7 @@ export default Vue.extend({
             message: 'Add liquidity failed',
             description: error.message
           })
+          
         })
         .finally(async () => {})
     },
@@ -1656,6 +1663,8 @@ export default Vue.extend({
             amount: amount
           }
           this.stakeLPError = true
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
         })
         .finally(() => {
           this.staking = false
@@ -1814,6 +1823,8 @@ export default Vue.extend({
             message: 'Stake failed',
             description: error.message
           })
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
         })
         .finally(() => {})
     },
@@ -1843,6 +1854,9 @@ export default Vue.extend({
             message: 'Remove liquidity failed',
             description: error.message
           })
+
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
         })
         .finally(() => {
           this.unstaking = false
@@ -1910,6 +1924,9 @@ export default Vue.extend({
             message: 'Harvest failed',
             description: error.message
           })
+
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
         })
         .finally(() => {
           this.$accessor.farm.requestInfos()
