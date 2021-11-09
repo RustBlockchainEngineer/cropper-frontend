@@ -16,15 +16,13 @@
       </Button>
     </div>
 
-    <a  v-if="wallet.connected" :href="this.sonarUrl" target="_blank">
+    <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
       <div class="btncontainer sonar" ghost>
         <Button>
           <img src="@/assets/sonar_logo.png" style="height:26px" />
         </Button>
       </div>
     </a>
-
-
 
     <Modal
       :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
@@ -617,6 +615,17 @@ header .btncontainer {
     border: none;
     color: white !important;
   }
+
+  @media (max-width: @mobile-b-width) {
+    height: 46px;
+    display: flex !important;
+    align-items: center;
+
+    button {
+      height: 42px;
+      top: 0;
+    }
+  }
 }
 
 .ant-modal-header {
@@ -653,24 +662,34 @@ header .btncontainer {
   font-size: 17px;
 }
 
-.btncontainer {
-  display: inline-block !important;
-}
-
-
-.btncontainer.sonar {
-  margin-left:20px !important;
-  margin-top:12px !important;
-
-  button {
-    top: -9px;
-  }
-}
-
-@media (max-width: 800px){
-    
+.sonar-container {
   .btncontainer.sonar {
-    display: none !important;
+    margin-left:20px !important;
+
+    @media (max-width: @mobile-b-width) {
+      margin-left: 10px !important;
+      width: 46px;
+      height: 46px;
+    }
+
+    button {
+      top: -9px;
+
+      @media (max-width: @mobile-b-width) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        margin: 0;
+        top: 0;
+      }
+    }
+  }
+
+  @media (max-width: @mobile-b-width) {
+    display: inline-flex;
+    align-items: center;
   }
 }
 
