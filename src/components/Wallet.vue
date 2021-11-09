@@ -16,15 +16,13 @@
       </Button>
     </div>
 
-    <a  v-if="wallet.connected" :href="this.sonarUrl" target="_blank">
+    <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
       <div class="btncontainer sonar" ghost>
         <Button>
-          <img src="@/assets/sonar_logo.png" style="height:26px" />
+          <img src="@/assets/sonar_logo.png"/>
         </Button>
       </div>
     </a>
-
-
 
     <Modal
       :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
@@ -598,7 +596,8 @@ export default class Wallet extends Vue {
 header .btncontainer {
   background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
   background-origin: border-box;
-  display: block;
+  display: flex;
+  align-items: center;
   text-align: center;
   position: relative;
   margin: auto;
@@ -610,12 +609,19 @@ header .btncontainer {
     background: #01033c !important;
     position: relative;
     border-radius: 63px;
-    height: 48px;
+    height: 50px;
     border-color: transparent;
-    top: -7px;
-    margin: 0 1px 0 1px;
     border: none;
     color: white !important;
+
+    @media (max-width: @mobile-b-width) {
+      height: 42px;
+    }
+  }
+
+  @media (max-width: @mobile-b-width) {
+    height: 46px;
+    top: 5px;
   }
 }
 
@@ -624,6 +630,7 @@ header .btncontainer {
   display: flex;
   justify-content: space-between;
 }
+
 .ant-modal-title {
   width: 100%;
   background-color: #1a1d6b;
@@ -653,24 +660,37 @@ header .btncontainer {
   font-size: 17px;
 }
 
-.btncontainer {
-  display: inline-block !important;
-}
-
-
-.btncontainer.sonar {
-  margin-left:20px !important;
-  margin-top:12px !important;
-
-  button {
-    top: -9px;
-  }
-}
-
-@media (max-width: 800px){
-    
+.sonar-container {
   .btncontainer.sonar {
-    display: none !important;
+    margin-left:20px !important;
+
+    @media (max-width: @mobile-b-width) {
+      margin-left: 10px !important;
+      width: 46px;
+      height: 46px;
+    }
+
+    button {
+      
+      img {
+        height: 26px;
+      }
+
+      @media (max-width: @mobile-b-width) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        margin: 0;
+        top: 0;
+      }
+    }
+  }
+
+  @media (max-width: @mobile-b-width) {
+    display: inline-flex;
+    align-items: center;
   }
 }
 

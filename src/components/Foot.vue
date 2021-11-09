@@ -2,7 +2,7 @@
   <Footer>
     <div :class="isMobile ? 'mobile' : 'pc'">
       <div class="logo">
-        <a href="/"><img src="@/assets/icons/logo-text.svg"  width="224.76" height="45.38" /></a>
+        <a href="/"><img src="@/assets/icons/logo-desktop.svg"  width="224.76" height="45.38" /></a>
       </div>
       <div class="icon_list" v-if="!isMobile">
         <label>Our Social</label>

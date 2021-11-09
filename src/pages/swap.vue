@@ -291,7 +291,7 @@
                 <span class="swapThrough green">
                   {{ sub_endpoint_1 }}
                 </span>
-                <span class="swapThrough purple">
+                <span v-if="sub_endpoint_1 != sub_endpoint_2" class="swapThrough purple">
                   {{ sub_endpoint_2 }}
                 </span>
               </div>
@@ -1173,15 +1173,6 @@ export default Vue.extend({
     updateAmounts() {
       let max_coinAmount = 0
 
-      let toCoinAmount = ''
-      // @ts-ignore
-      let toCoinWithSlippage = null
-      let price = 0
-      let impact = 0
-      let endpoint = ''
-      let best_dex_type = undefined
-      let midTokenSymbol = undefined
-
       if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
         if (this.isWrap) {
           // wrap & unwrap
@@ -1214,17 +1205,17 @@ export default Vue.extend({
                 if (!toCoinWithSlippage || toCoinWithSlippage.wei.isLessThan(outWithSlippage.wei)) {
                   if (max_coinAmount < parseFloat(out.fixed())) {
                     max_coinAmount = parseFloat(out.fixed())
-                    toCoinAmount = out.fixed()
-                    toCoinWithSlippage = outWithSlippage
-                    price = +new TokenAmount(
-                      parseFloat(toCoinAmount) / parseFloat(this.fromCoinAmount),
+                    this.toCoinAmount = out.fixed()
+                    this.toCoinWithSlippage = outWithSlippage.fixed()
+                    this.outToPirceValue = +new TokenAmount(
+                      parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
                       // @ts-ignore
                       this.toCoin.decimals,
                       false
                     ).fixed()
-                    impact = priceImpact
-                    endpoint = ENDPOINT_SRM
-                    best_dex_type = 'dex'
+                    this.priceImpact = priceImpact
+                    this.endpoint = ENDPOINT_SRM
+                    this.best_dex_type = 'dex'
                   }
                 }
               }
@@ -1238,7 +1229,6 @@ export default Vue.extend({
               this.fromCoinAmount,
             )
 
-            this.mainAmmId = poolInfo.ammId
             const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
               poolInfo,
               // @ts-ignore
@@ -1249,24 +1239,23 @@ export default Vue.extend({
               this.setting.slippage
             )
             if (!amountOut.isNullOrZero()){
-              console.log("Single swap amount ", amountOut.fixed())
 
               if(max_coinAmount < parseFloat(amountOut.fixed())) {
                 max_coinAmount = parseFloat(amountOut.fixed())
 
-                toCoinAmount = amountOut.fixed()
-                toCoinWithSlippage = amountOutWithSlippage
-                price = +new TokenAmount(
-                  parseFloat(toCoinAmount) / parseFloat(this.fromCoinAmount),
+                this.toCoinAmount = amountOut.fixed()
+                this.toCoinWithSlippage = amountOutWithSlippage.fixed()
+                this.outToPirceValue = +new TokenAmount(
+                  parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
                   // @ts-ignore
                   this.toCoin.decimals,
                   false
                 ).fixed()
-                impact = priceImpact
-                endpoint = dex_type
+                this.priceImpact = priceImpact
+                this.endpoint = dex_type
 
-                best_dex_type = 'single'
-                
+                this.best_dex_type = 'single'
+                this.mainAmmId = poolInfo.ammId
               }
             }
 
@@ -1281,7 +1270,6 @@ export default Vue.extend({
                 midTokenMint,
                 this.fromCoinAmount
               )
-              this.mainAmmId = fromPoolInfo.ammId
 
               let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
                 fromPoolInfo,
@@ -1299,7 +1287,6 @@ export default Vue.extend({
                 this.toCoin!.mintAddress,
                 amountOut.fixed()
               )
-              this.extAmmId = toPoolInfo.ammId
 
               let final = getSwapOutAmount(
                 toPoolInfo,
@@ -1311,25 +1298,30 @@ export default Vue.extend({
               )
 
               if (!final.amountOut.isNullOrZero()) {
-                console.log("Multistep swap amount with CRP ", final.amountOut.fixed())
                 if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
                   max_coinAmount = parseFloat(final.amountOut.fixed())
-                  toCoinAmount = final.amountOut.fixed()
-                  toCoinWithSlippage = final.amountOutWithSlippage
+                  this.toCoinAmount = final.amountOut.fixed()
+                  this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
                   this.midAmountWithSlippage = amountOutWithSlippage.fixed()
                   this.midAmount = amountOut.fixed()
-                  price = +new TokenAmount(
-                    parseFloat(toCoinAmount) / parseFloat(this.fromCoinAmount),
+                  this.outToPirceValue = +new TokenAmount(
+                    parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
                     // @ts-ignore
                     this.toCoin.decimals,
                     false
                   ).fixed()
-                  impact = final.priceImpact
-                  endpoint = ENDPOINT_MULTI_CRP
+
+                  this.priceImpact = final.priceImpact
+                  this.endpoint = ENDPOINT_MULTI_CRP
+                  
+                  this.best_dex_type = 'multi'
+                  this.midTokenSymbol = 'CRP'
+
                   this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
                   this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
-                  best_dex_type = 'multi'
-                  midTokenSymbol = 'CRP'
+                  this.mainAmmId = fromPoolInfo.ammId
+                  this.extAmmId = toPoolInfo.ammId
+                  
                 }
               }
           } else if (dex_type == ENDPOINT_MULTI_USDC || dex_type == ENDPOINT_MULTI_USDC_MIXED) {
@@ -1343,7 +1335,7 @@ export default Vue.extend({
                 midTokenMint,
                 this.fromCoinAmount
               )
-            this.mainAmmId = fromPoolInfo.ammId
+
             let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
               fromPoolInfo,
               // @ts-ignore
@@ -1360,7 +1352,6 @@ export default Vue.extend({
               this.toCoin!.mintAddress,
               amountOut.fixed()
             )
-            this.extAmmId = toPoolInfo.ammId
 
             let final = getSwapOutAmount(
               toPoolInfo,
@@ -1372,41 +1363,34 @@ export default Vue.extend({
             )
 
             if (!final.amountOut.isNullOrZero()) {
-              console.log("Multistep swap amount with USDC ", final.amountOut.fixed())
-
               if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
                 max_coinAmount = parseFloat(final.amountOut.fixed())
-                toCoinAmount = final.amountOut.fixed()
-                toCoinWithSlippage = final.amountOutWithSlippage
+                this.toCoinAmount = final.amountOut.fixed()
+                this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
                 this.midAmountWithSlippage = amountOutWithSlippage.fixed()
-                price = +new TokenAmount(
-                  parseFloat(toCoinAmount) / parseFloat(this.fromCoinAmount),
+                this.outToPirceValue = +new TokenAmount(
+                  parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
                   // @ts-ignore
                   this.toCoin.decimals,
                   false
                 ).fixed()
-                impact = final.priceImpact
-                endpoint = ENDPOINT_MULTI_USDC
+                this.priceImpact = final.priceImpact
+                this.endpoint = ENDPOINT_MULTI_USDC
                 
-                best_dex_type = 'multi'
-                midTokenSymbol = 'USDC'
+                this.best_dex_type = 'multi'
+                this.midTokenSymbol = 'USDC'
+
                 this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
                 this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
+
+                this.mainAmmId = fromPoolInfo.ammId
+                this.extAmmId = toPoolInfo.ammId
               }
             }
           }
         })
       }
-      if (toCoinWithSlippage) {
-        this.toCoinAmount = toCoinAmount
-        // @ts-ignore
-        this.toCoinWithSlippage = toCoinWithSlippage.fixed()
-        this.outToPirceValue = price
-        this.priceImpact = impact
-        this.endpoint = endpoint
-        this.best_dex_type = best_dex_type
-        this.midTokenSymbol = midTokenSymbol
-      } else {
+      if (max_coinAmount === 0)  {
         this.toCoinAmount = ''
         this.toCoinWithSlippage = ''
         this.outToPirceValue = 0
@@ -2300,6 +2284,7 @@ main {
             font-size: 12px !important;
             .fs-container .name {
               font-size: 14px !important;
+              display: block;
               .tooltipIcon {
                 margin: 0 5px 0 0;
                 width: 12px;
