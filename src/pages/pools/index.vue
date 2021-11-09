@@ -40,7 +40,6 @@
               <button>
                 Search
                 <img src="@/assets/icons/arrow-down.svg" />
-
               </button>
             </div>
           </span>
@@ -114,7 +113,13 @@
         </div>
 
         <div v-if="poolLoaded" class="mobilescroller">
-          <Table :columns="columns" :data-source="poolsShow" :pagination="false" row-key="lp_mint" class="pools-table-pc">
+          <Table
+            :columns="columns"
+            :data-source="poolsShow"
+            :pagination="false"
+            row-key="lp_mint"
+            class="pools-table-pc"
+          >
             <span slot="name" slot-scope="text" class="lp-icons">
               {{ void (pool = getPoolByLpMintAddress(text)) }}
               <span class="lp-iconscontainer">
@@ -127,8 +132,8 @@
               </span>
 
               <div v-if="displayPoolID">
-                AMMID : {{getPoolByLpMintAddress(text).ammId}}<br />
-                serumMarket : {{getPoolByLpMintAddress(text).serumMarket}}
+                AMMID : {{ getPoolByLpMintAddress(text).ammId }}<br />
+                serumMarket : {{ getPoolByLpMintAddress(text).serumMarket }}
               </div>
             </span>
             <span slot="liquidity" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
@@ -141,7 +146,7 @@
               >{{ text }}
 
               <div class="btncontainer small plus-btn">
-                <Button size="small" ghost :disabled="!wallet.connected" @click="openPoolAddModal(pool)">
+                <Button size="small" ghost @click="openPoolAddModal(pool)">
                   <Icon type="plus" />
                 </Button>
               </div>
@@ -217,7 +222,7 @@
                   <div class="liquidity-content">Your liquidity</div>
                   <div class="liquidity-value">${{ new TokenAmount(data.current, 2, false).format() }}</div>
                   <div class="btncontainer small plus-btn">
-                    <Button size="small" ghost :disabled="!wallet.connected" @click="openPoolAddModal(data)">
+                    <Button size="small" ghost @click="openPoolAddModal(data)">
                       <Icon type="plus" />
                     </Button>
                   </div>
@@ -261,7 +266,20 @@
 import { get, cloneDeep } from 'lodash-es'
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
-import { Table, Radio, Tooltip, Collapse, Row, Spin, Select, Button, Input, Icon, Pagination, Switch as Toggle } from 'ant-design-vue'
+import {
+  Table,
+  Radio,
+  Tooltip,
+  Collapse,
+  Row,
+  Spin,
+  Select,
+  Button,
+  Input,
+  Icon,
+  Pagination,
+  Switch as Toggle
+} from 'ant-design-vue'
 import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
 import { getBigNumber } from '@/utils/layouts'
@@ -330,14 +348,11 @@ declare const window: any
     } finally {
     }
 
-
     try {
       window.labelised = await fetch('https://api.cropper.finance/pool/').then((res) => res.json())
     } catch {
     } finally {
     }
-
-
 
     const pools = getAllCropperPools()
     return { pools }
@@ -407,7 +422,7 @@ export default class Pools extends Vue {
   poolCollapse: any = true
   showCollapse: any = []
   pools: any = []
-  displayPoolID : any = 0
+  displayPoolID: any = 0
   poolsShow: any = []
   poolType: string = 'RaydiumPools'
   fromCoin: any = false
@@ -438,7 +453,7 @@ export default class Pools extends Vue {
   certifiedOptions = [
     { value: 0, label: 'Labelized' },
     { value: 1, label: 'Permissionless' },
-    { value: 2, label: 'All' },
+    { value: 2, label: 'All' }
   ]
   searchCertifiedFarm = 0
 
@@ -475,9 +490,8 @@ export default class Pools extends Vue {
   async onSearchChange(newSearchName: string) {
     this.showPool(newSearchName, this.stakedOnly)
   }
-  @Watch('searchCertifiedFarm', { immediate: true, deep: true})
+  @Watch('searchCertifiedFarm', { immediate: true, deep: true })
   selectHandler(newSearchCertifiedFarm: number = 0) {
-
     this.pools = this.poolsFormated()
     if (newSearchCertifiedFarm == 0) {
       //labelized
@@ -533,9 +547,9 @@ export default class Pools extends Vue {
     let start = (this.currentPage - 1) * this.pageSize
     let end = this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max
     this.poolsShow = this.poolsShow.slice(start, end)
-    this.poolsShow.sort(function(a: any, b: any) {
+    this.poolsShow.sort(function (a: any, b: any) {
       return b.liquidity - a.liquidity
-    });
+    })
   }
 
   async delay(ms: number) {
@@ -702,22 +716,25 @@ export default class Pools extends Vue {
     getAllCropperPools().forEach(function (value: any) {
       const liquidityItem = get(liquidity.infos, value.lp_mint)
 
-      if(!liquidityItem){
-        return 
+      if (!liquidityItem) {
+        return
       }
 
       let lp = getPoolByLpMintAddress(value.lp_mint)
 
-      if(!price.prices[liquidityItem?.coin.symbol as string] && price.prices[liquidityItem?.pc.symbol as string]){
-        price.prices[liquidityItem?.coin.symbol as string] = price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+      if (!price.prices[liquidityItem?.coin.symbol as string] && price.prices[liquidityItem?.pc.symbol as string]) {
+        price.prices[liquidityItem?.coin.symbol as string] =
+          (price.prices[liquidityItem?.pc.symbol as string] *
+            getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())) /
+          getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())
       }
 
-
-      if(!price.prices[liquidityItem?.pc.symbol as string] && price.prices[liquidityItem?.coin.symbol as string]){
-        price.prices[liquidityItem?.pc.symbol as string] = price.prices[liquidityItem?.coin.symbol as string] * getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+      if (!price.prices[liquidityItem?.pc.symbol as string] && price.prices[liquidityItem?.coin.symbol as string]) {
+        price.prices[liquidityItem?.pc.symbol as string] =
+          (price.prices[liquidityItem?.coin.symbol as string] *
+            getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())) /
+          getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())
       }
-
-
 
       const liquidityCoinValue =
         getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
@@ -729,7 +746,6 @@ export default class Pools extends Vue {
 
       const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
       const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
-
 
       value.liquidity = liquidityTotalValue
 
@@ -761,14 +777,11 @@ export default class Pools extends Vue {
         value.apy = 0
       }
 
+      value.nameSymbol = value.coin1.symbol + ' - ' + value.coin2.symbol
 
-      value.nameSymbol = value.coin1.symbol+ ' - ' +value.coin2.symbol;
-
-
-      if(window.labelised.includes(value.ammId)){
-        value.labelized = 1;
+      if (window.labelised.includes(value.ammId)) {
+        value.labelized = 1
       }
-
 
       if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
         if (wallet) {
@@ -788,12 +801,16 @@ export default class Pools extends Vue {
   }
 
   openPoolAddModal(poolInfo: any) {
-    this.poolInf = cloneDeep(poolInfo)
-    const coinBalance = get(this.wallet.tokenAccounts, `${this.poolInf.coin1.mintAddress}.balance`)
-    const pcBalance = get(this.wallet.tokenAccounts, `${this.poolInf.coin2.mintAddress}.balance`)
-    this.poolInf.lp.coin.balance = coinBalance
-    this.poolInf.lp.pc.balance = pcBalance
-    this.stakeModalOpening = true
+    if (!this.wallet.connected) {
+      this.$accessor.wallet.openModal()
+    } else {
+      this.poolInf = cloneDeep(poolInfo)
+      const coinBalance = get(this.wallet.tokenAccounts, `${this.poolInf.coin1.mintAddress}.balance`)
+      const pcBalance = get(this.wallet.tokenAccounts, `${this.poolInf.coin2.mintAddress}.balance`)
+      this.poolInf.lp.coin.balance = coinBalance
+      this.poolInf.lp.pc.balance = pcBalance
+      this.stakeModalOpening = true
+    }
   }
 
   cancelPoolAdd() {
@@ -807,7 +824,7 @@ export default class Pools extends Vue {
   mounted() {
     this.$accessor.token.loadTokens()
     this.timer_init = setInterval(async () => {
-      if(!this.poolLoaded){
+      if (!this.poolLoaded) {
         await this.flush()
         if (this.pools.length > 0) {
           var hash = window.location.hash
@@ -975,6 +992,7 @@ section {
 
     .openButton {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background-origin: border-box;
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
@@ -989,7 +1007,7 @@ section {
         border-radius: 22px;
         border: transparent;
         cursor: pointer;
-        
+
         img {
           margin-left: 5px;
           transform: rotate(0);
@@ -1005,7 +1023,8 @@ section {
     .detailButton {
       position: absolute;
       right: 0;
-      background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
+      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%) !important;
+      background-origin: border-box !important;
       display: inline-block;
       padding: 1px;
       border-radius: 23px;
@@ -1016,7 +1035,7 @@ section {
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164A;
+        background: #16164a;
         border-radius: 22px;
         border: transparent;
       }
@@ -1083,7 +1102,7 @@ section {
     .ant-collapse,
     .ant-collapse > .ant-collapse-item {
       position: relative;
-      border-bottom: 1px solid #01033C;
+      border-bottom: 1px solid #01033c;
     }
 
     .farm-head.table-head {
@@ -1107,7 +1126,7 @@ section {
       padding-bottom: 25px !important;
       display: flex;
       align-items: center;
-      
+
       .lp-icons {
         display: block !important;
         width: 100%;
@@ -1129,8 +1148,8 @@ section {
           span {
             margin: 0 10px;
           }
-        };
-        
+        }
+
         .lp-icons-group {
           background: transparent;
           .icons {
@@ -1179,7 +1198,7 @@ section {
       text-align: center;
       font-size: 18px;
       margin-bottom: 6px;
-      background: #01033C;
+      background: #01033c;
       border-radius: 14px;
       padding: 18px 0;
 
@@ -1187,14 +1206,14 @@ section {
         font-weight: normal;
         font-size: 14px;
         line-height: 17px;
-        color: #FFFFFF50;
+        color: #ffffff50;
         margin-bottom: 15px;
       }
 
       .liquidity-value {
         font-size: 26px;
         line-height: 32px;
-        color: #FFF;
+        color: #fff;
         margin-bottom: 15px;
       }
     }
@@ -1322,6 +1341,7 @@ section {
 
   button {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+    background-origin: border-box !important;
     border: 2px solid rgba(255, 255, 255, 0.14) !important;
     border-radius: 8px;
   }
@@ -1418,6 +1438,7 @@ section {
         width: 28px;
         height: 28px;
         background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+        background-origin: border-box;
         top: -10px;
         left: -2px;
       }
@@ -1443,7 +1464,7 @@ section {
       @media (max-width: @mobile-b-width) {
         right: 30px !important;
         z-index: 2;
-        }
+      }
     }
   }
   .ant-collapse-content {
@@ -1474,9 +1495,10 @@ section {
 
   .lp-iconscontainer {
     background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+    background-origin: border-box;
     padding: 2px;
     border-radius: 8px;
-    width: 100%;
+    width: 270px;
 
     .icons {
       display: block !important;
@@ -1505,6 +1527,7 @@ section {
   .create {
     padding: 9px 19px;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
 
@@ -1534,7 +1557,8 @@ section {
   }
 
   .count-down-group {
-    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+    background-origin: border-box;
     height: 60px;
     border-radius: 63px;
     position: relative;
@@ -1564,6 +1588,7 @@ section {
       height: 50px;
       border-radius: 25px;
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background-origin: border-box;
       margin-left: 15px;
       display: flex;
       align-items: center;
@@ -1586,6 +1611,7 @@ section {
 
     &.small {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+      background-origin: border-box !important;
       border: 2px solid rgba(255, 255, 255, 0.14) !important;
       border-radius: 8px;
       width: 48px !important;
@@ -1610,14 +1636,15 @@ section {
       }
 
       &.minus-btn {
-        background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
+        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%) !important;
+        background-origin: border-box !important;
         padding: 2px !important;
         border-radius: 8px !important;
         border: none !important;
-        
+
         button[disabled] {
           border-radius: 8px;
-          background: #01033C !important;
+          background: #01033c !important;
         }
       }
     }
