@@ -2280,6 +2280,7 @@ main {
             font-size: 12px !important;
             .fs-container .name {
               font-size: 14px !important;
+              display: block;
               .tooltipIcon {
                 margin: 0 5px 0 0;
                 width: 12px;
