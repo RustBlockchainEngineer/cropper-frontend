@@ -1394,6 +1394,9 @@ export default Vue.extend({
           .finally(() => {
             this.adding = false
             this.addRewardModalOpening = false
+
+            this.$accessor.farm.requestInfos()
+            this.$accessor.wallet.getTokenAccounts()
           })
       }
     },
@@ -1466,6 +1469,8 @@ export default Vue.extend({
           })
           .finally(() => {
             this.paying = false
+            this.$accessor.farm.requestInfos()
+            this.$accessor.wallet.getTokenAccounts()
           })
       }
     },
@@ -1656,6 +1661,8 @@ export default Vue.extend({
           this.staking = false
           this.stakeModalOpening = false
           this.farmInfo = null
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
         })
     },
     onRetryStakeLP() {
@@ -1840,6 +1847,8 @@ export default Vue.extend({
         .finally(() => {
           this.unstaking = false
           this.unstakeModalOpening = false
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
         })
     },
 
@@ -1905,6 +1914,8 @@ export default Vue.extend({
         .finally(() => {
           this.$accessor.farm.requestInfos()
           this.harvesting = false
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
         })
     },
     getCountdownFromPeriod(period: number) {
