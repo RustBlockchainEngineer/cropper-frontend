@@ -48,7 +48,7 @@ export default Vue.extend({
   margin-top: 40px;
   
   .logo {
-    height: 26px;
+    height: 32px;
   }
 
   .mobile-nav {

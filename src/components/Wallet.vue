@@ -19,7 +19,7 @@
     <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
       <div class="btncontainer sonar" ghost>
         <Button>
-          <img src="@/assets/sonar_logo.png" style="height:26px" />
+          <img src="@/assets/sonar_logo.png"/>
         </Button>
       </div>
     </a>
@@ -596,7 +596,8 @@ export default class Wallet extends Vue {
 header .btncontainer {
   background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
   background-origin: border-box;
-  display: block;
+  display: flex;
+  align-items: center;
   text-align: center;
   position: relative;
   margin: auto;
@@ -608,23 +609,19 @@ header .btncontainer {
     background: #01033c !important;
     position: relative;
     border-radius: 63px;
-    height: 48px;
+    height: 50px;
     border-color: transparent;
-    top: -7px;
-    margin: 0 1px 0 1px;
     border: none;
     color: white !important;
+
+    @media (max-width: @mobile-b-width) {
+      height: 42px;
+    }
   }
 
   @media (max-width: @mobile-b-width) {
     height: 46px;
-    display: flex !important;
-    align-items: center;
-
-    button {
-      height: 42px;
-      top: 0;
-    }
+    top: 5px;
   }
 }
 
@@ -633,6 +630,7 @@ header .btncontainer {
   display: flex;
   justify-content: space-between;
 }
+
 .ant-modal-title {
   width: 100%;
   background-color: #1a1d6b;
@@ -673,7 +671,10 @@ header .btncontainer {
     }
 
     button {
-      top: -9px;
+      
+      img {
+        height: 26px;
+      }
 
       @media (max-width: @mobile-b-width) {
         display: flex;
