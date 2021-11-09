@@ -2,7 +2,7 @@
   <Header class="header fs-container" :class="isMobile ? 'mobile' : ''">
     <NuxtLink to="/">
       <img class="logo" v-if="!isMobile" src="@/assets/icons/logo-desktop.svg" />
-      <img class="logo" v-else src="@/assets/icons/logo-mobile.svg" />
+      <img class="logo" v-else src="@/assets/icons/logo-mobile.png" />
     </NuxtLink>
 
     <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
