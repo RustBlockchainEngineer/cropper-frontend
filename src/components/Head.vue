@@ -1,6 +1,9 @@
 <template>
   <Header class="header fs-container" :class="isMobile ? 'mobile' : ''">
-    <NuxtLink to="/"><img class="logo" src="@/assets/icons/logo-text.svg" /></NuxtLink>
+    <NuxtLink to="/">
+      <img class="logo" v-if="!isMobile" src="@/assets/icons/logo-desktop.svg" />
+      <img class="logo" v-else src="@/assets/icons/logo-mobile.png" />
+    </NuxtLink>
 
     <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
       <Nav @onSelect="() => (navOpened = false)" />
@@ -45,7 +48,7 @@ export default Vue.extend({
   margin-top: 40px;
   
   .logo {
-    height: 26px;
+    height: 32px;
   }
 
   .mobile-nav {

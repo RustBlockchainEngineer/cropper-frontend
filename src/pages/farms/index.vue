@@ -193,14 +193,14 @@
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
               <div class="title table-apr" @click="sortByAPR">Total APR
-                <Icon v-if="sortAPRAsc" type="arrow-up" />
-                <Icon v-else type="arrow-down" />
+                <Icon v-if="sortAPRAsc" type="arrow-up" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-down" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
               </div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
               <div class="title table-liquidity" @click="sortByLiquidity">Liquidity
-                <Icon v-if="sortLiquidityAsc" type="arrow-up" />
-                <Icon v-else type="arrow-down" />
+                <Icon v-if="sortLiquidityAsc" type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
               </div>
             </Col>
           </Row>
@@ -831,6 +831,7 @@ export default Vue.extend({
       labelizedPermission: false as any,
       sortAPRAsc: true as boolean,
       sortLiquidityAsc: true as boolean,
+      sortMethod: 'apr' as string
     }
   },
 
@@ -1919,6 +1920,7 @@ export default Vue.extend({
       return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
     },
     sortByAPR() {
+      this.sortMethod = 'apr'
       if (this.sortAPRAsc) {
         this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
         this.sortAPRAsc = false;
@@ -1928,6 +1930,7 @@ export default Vue.extend({
       }
     },
     sortByLiquidity() {
+      this.sortMethod = 'liquidity'
       if (this.sortLiquidityAsc) {
         this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
         this.sortLiquidityAsc = false;
@@ -2086,6 +2089,7 @@ export default Vue.extend({
       .lp-icons-group {
         height: 51px;
         background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+        background-origin: border-box;
         border-radius: 8px;
         padding: 2px;
         width: 240px;
@@ -2158,6 +2162,10 @@ export default Vue.extend({
           display: flex;
           align-items: center;
         }
+
+        .sort-icon-active {
+          color: #13ECAB;
+        }
       }
     }
   }
@@ -2200,6 +2208,7 @@ export default Vue.extend({
 
     .detailButton {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background-origin: border-box;
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
@@ -2218,6 +2227,7 @@ export default Vue.extend({
 
     .openButton {
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background-origin: border-box;
       display: inline-block;
       padding: 2px;
       border-radius: 23px;
@@ -2546,6 +2556,7 @@ export default Vue.extend({
 .farm.container {
   .create {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
 
@@ -2581,6 +2592,7 @@ export default Vue.extend({
 
   .btncontainer {
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+    background-origin: border-box !important;
     display: inline-block;
     width: unset;
     text-align: center;
@@ -2624,6 +2636,7 @@ export default Vue.extend({
 
 .count-down-group {
   background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+  background-origin: border-box;
   height: 60px;
   border-radius: 63px;
   position: relative;
@@ -2653,6 +2666,7 @@ export default Vue.extend({
     height: 50px;
     border-radius: 25px;
     background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background-origin: border-box;
     margin-left: 15px;
     display: flex;
     align-items: center;
@@ -2757,6 +2771,7 @@ export default Vue.extend({
         width: 28px;
         height: 28px;
         background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+        background-origin: border-box;
         top: -10px;
         left: -2px;
       }

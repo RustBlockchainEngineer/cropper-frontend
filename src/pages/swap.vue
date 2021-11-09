@@ -290,7 +290,7 @@
                 <span class="swapThrough green">
                   {{ sub_endpoint_1 }}
                 </span>
-                <span class="swapThrough purple">
+                <span v-if="sub_endpoint_1 != sub_endpoint_2" class="swapThrough purple">
                   {{ sub_endpoint_2 }}
                 </span>
               </div>
@@ -2264,6 +2264,7 @@ main {
             font-size: 12px !important;
             .fs-container .name {
               font-size: 14px !important;
+              display: block;
               .tooltipIcon {
                 margin: 0 5px 0 0;
                 width: 12px;
