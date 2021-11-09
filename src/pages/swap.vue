@@ -13,6 +13,7 @@
               @click="
                 () => {
                   getOrderBooks()
+                  flush()
                   $accessor.wallet.getTokenAccounts()
                 }
               "
@@ -676,6 +677,7 @@ export default Vue.extend({
           this.fetchUnsettledByMarket()
         }
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
+      this.flush()
       },
       deep: true
     },
@@ -784,6 +786,15 @@ export default Vue.extend({
         this.coinSelectShow = true
       }, 1)
     },
+
+    async flush() {
+      clearInterval(this.marketTimer)
+      this.countdown = 0
+      this.setMarketTimer();
+      this.$accessor.token.loadTokens()
+      this.updateCoinInfo(this.wallet.tokenAccounts)
+    },
+
     openToCoinSelect() {
       this.selectFromCoin = false
       this.closeAllModal('coinSelectShow')
@@ -1493,6 +1504,7 @@ export default Vue.extend({
           })
           .finally(() => {
             this.swaping = false
+            this.flush()
           })
       } else if (this.endpoint === ENDPOINT_CRP || this.endpoint === ENDPOINT_RAY) {
         const poolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.mainAmmId)
@@ -1535,6 +1547,7 @@ export default Vue.extend({
           })
           .finally(() => {
             this.swaping = false
+            this.flush()
           })
       } else if (this.endpoint === ENDPOINT_MULTI_CRP || this.endpoint === ENDPOINT_MULTI_USDC) {
         if (this.needCreateTokens() || this.needWrapSol()) {
@@ -1583,6 +1596,7 @@ export default Vue.extend({
             })
             .finally(() => {
               this.swaping = false
+              this.flush()
             })
           }
         else
@@ -1626,6 +1640,7 @@ export default Vue.extend({
               })
               const description = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
               this.$accessor.transaction.sub({ txid, description })
+              this.flush();
 
             })
             .catch((error) => {
@@ -1637,6 +1652,7 @@ export default Vue.extend({
             })
             .finally(() => {
               this.swaping = false
+              this.flush()
             })
         }
       } else {
@@ -1670,6 +1686,7 @@ export default Vue.extend({
             })
             const description = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
             this.$accessor.transaction.sub({ txid, description })
+            this.flush();
           })
           .catch((error) => {
             this.$notify.error({
@@ -1680,6 +1697,7 @@ export default Vue.extend({
           })
           .finally(() => {
             this.swaping = false
+            this.flush()
           })
       }
     },
@@ -1738,6 +1756,7 @@ export default Vue.extend({
         this.quoteSymbol = info.quoteSymbol ?? ''
         this.quoteUnsettledAmount = info.quoteUnsettledAmount
         this.unsettledOpenOrders = info.openOrders // have to establish an extra state, to store this value
+        this.flush();
       } catch (e) {
       } finally {
         this.isFetchingUnsettled = false
@@ -1789,6 +1808,7 @@ export default Vue.extend({
         })
         .then(() => {
           this.fetchUnsettledByMarket()
+          this.flush();
         })
         .catch((error) => {
           this.$notify.error({
