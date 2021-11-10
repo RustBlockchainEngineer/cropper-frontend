@@ -1863,20 +1863,29 @@ main {
   display: flex;
   margin-top: 10px;
   justify-content: space-between;
+
+  @media (max-width: @mobile-b-width) {
+    justify-content: center;
+  }
+
   h1 {
-    // font-family: Gilroy;
     font-size: 64px;
     font-style: normal;
     font-weight: 700;
     line-height: 80px;
     letter-spacing: -0.05em;
     text-align: left;
+    margin-bottom: 0;
   }
+
   .buttonGroup {
     display: flex;
     justify-content: space-between;
-    top: -25px;
     position: relative;
+
+    @media (max-width: @mobile-b-width) {
+      top: -25px;
+    }
   }
 }
 .count-down-group {
@@ -1885,14 +1894,12 @@ main {
   height: 62px;
   border-radius: 63px;
   position: relative;
-  padding-left: 2px;
-  padding-right: 2px;
+  padding: 2px;
 }
 .count-down {
   background-color: #01033c;
   border-radius: 63px;
-  height: 58px;
-  top: 2px;
+  height: 100%;
   display: inline-flex;
   align-items: center;
   padding: 3px 3px 3px 20px;
@@ -1900,9 +1907,11 @@ main {
   font-weight: 400;
   line-height: 42px;
   position: relative;
+
   .ant-progress {
     margin-left: 15px;
   }
+  
   .reload-btn {
     width: 50px;
     height: 50px;
@@ -2249,13 +2258,23 @@ main {
       display: none;
     }
     .swapHead {
-      margin: 62px 22px -25px 22px;
+      margin: 40px 22px -25px 22px;
       h1 {
         display: none;
       }
       .buttonGroup {
         .count-down-group {
-          zoom: 0.66;
+          height: 40px;
+
+          .count-down {
+            font-size: 18px;
+            line-height: 28px;
+
+            .reload-btn {
+              height: 30px;
+              width: 30px;
+            }
+          }
         }
         .btn-grad {
           height: 40px;

@@ -609,14 +609,11 @@ header .btncontainer {
     background: #01033c !important;
     position: relative;
     border-radius: 63px;
-    height: 50px;
+    height: 100%;
+    width: 100%;
     border-color: transparent;
     border: none;
     color: white !important;
-
-    @media (max-width: @mobile-b-width) {
-      height: 42px;
-    }
   }
 
   @media (max-width: @mobile-b-width) {
@@ -671,19 +668,12 @@ header .btncontainer {
     }
 
     button {
-      
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       img {
         height: 26px;
-      }
-
-      @media (max-width: @mobile-b-width) {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 42px;
-        height: 42px;
-        margin: 0;
-        top: 0;
       }
     }
   }
