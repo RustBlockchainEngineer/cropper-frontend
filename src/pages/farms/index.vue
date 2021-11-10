@@ -2675,8 +2675,7 @@ export default Vue.extend({
 .count-down {
   background-color: #01033c;
   border-radius: 63px;
-  height: 56px;
-  top: 2px;
+  height: 100%;
   display: inline-flex;
   align-items: center;
   padding: 3px 3px 3px 20px;
