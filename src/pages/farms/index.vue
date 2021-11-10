@@ -2589,7 +2589,7 @@ export default Vue.extend({
     border-radius: 8px;
 
     @media (max-width: @mobile-b-width) {
-      padding: 9px 19px;
+      padding: 8px 18px;
     }
 
     button {
@@ -2601,7 +2601,7 @@ export default Vue.extend({
       font-size: 18px;
       line-height: 42px;
       letter-spacing: -0.05em;
-      height: 60px;
+      height: 56px;
       width: 163px;
 
       @media (max-width: @mobile-b-width) {
