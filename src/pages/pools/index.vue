@@ -722,6 +722,7 @@ export default class Pools extends Vue {
 
       let lp = getPoolByLpMintAddress(value.lp_mint)
 
+
       if (!price.prices[liquidityItem?.coin.symbol as string] && price.prices[liquidityItem?.pc.symbol as string]) {
         price.prices[liquidityItem?.coin.symbol as string] =
           (price.prices[liquidityItem?.pc.symbol as string] *
@@ -753,26 +754,50 @@ export default class Pools extends Vue {
         window.poolsDatas = {}
       }
 
-      if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['1day']) {
-        value.volume_24h = window.poolsDatas[value.ammId]['1day']
+      if (window.poolsDatas[value.ammId]) {
+
+        value.volume_24h = 0
+        if(window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress] && window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['1day']){
+          value.volume_24h += window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['1day'] *
+            price.prices[liquidityItem?.coin.symbol as string]
+        }
+
+        if(window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress] && window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['1day']){
+          value.volume_24h += window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['1day'] *
+            price.prices[liquidityItem?.pc.symbol as string]
+        }
+
+        console.log(value.ammId, liquidityItem?.coin.symbol, liquidityItem?.pc.mintAddress, window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress], liquidityItem?.coin.mintAddress, window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]);
+
       } else {
         value.volume_24h = 0
       }
 
-      if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['7day']) {
-        value.volume_7d = window.poolsDatas[value.ammId]['7day']
+      if (window.poolsDatas[value.ammId]) {
+
+        value.volume_7d = 0
+        if(window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress] && window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['7day']){
+          value.volume_7d += window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['7day'] *
+            price.prices[liquidityItem?.coin.symbol as string]
+        }
+
+        if(window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress] && window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['7day']){
+          value.volume_7d += window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['7day'] *
+            price.prices[liquidityItem?.pc.symbol as string]
+        }
+
       } else {
         value.volume_7d = 0
       }
 
-      if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['fees']) {
-        value.fee_24h = window.poolsDatas[value.ammId]['fees']
+      if (window.poolsDatas[value.ammId]) {
+        value.fee_24h = value.volume_24h * 0.003
       } else {
         value.fee_24h = 0
       }
 
-      if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['fees']) {
-        value.apy = (window.poolsDatas[value.ammId]['fees'] * 365 * 100) / liquidityTotalValue
+      if (window.poolsDatas[value.ammId]) {
+        value.apy = (value.fee_24h * 365 * 100) / liquidityTotalValue
       } else {
         value.apy = 0
       }
