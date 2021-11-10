@@ -1473,9 +1473,11 @@ section {
       border-top: none !important;
     }
   }
+
   .card .card-body .buttons i {
     margin-right: 0;
   }
+
   .card-body {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -1569,8 +1571,7 @@ section {
   .count-down {
     background-color: #01033c;
     border-radius: 63px;
-    height: 56px;
-    top: 2px;
+    height: 100%;
     display: inline-flex;
     align-items: center;
     padding: 3px 3px 3px 20px;
