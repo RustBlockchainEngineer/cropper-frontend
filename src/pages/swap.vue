@@ -1958,11 +1958,13 @@ main {
       .name {
         color: #fff;
         font-size: 18px;
+        display: flex;
+        align-items: center;
         label {
           opacity: 0.5;
         }
         .tooltipIcon {
-          margin-top: -15px;
+          margin-left: 5px;
           width: 15px;
         }
       }
@@ -2038,16 +2040,11 @@ main {
   }
   .fst {
     transform: rotate(90deg);
-    margin: 8px;
-
-    @media (max-width: @mobile-b-width) {
-      height: fit-content;
-      margin: 20px 0 0 0;
-    }
+    margin: 10px;
   }
   .coin-budge {
     align-items: center;
-    border: solid 1px;
+    border: solid 1px #ffffff50;
     border-radius: 6px;
     display: flex;
     padding: 4px 8px;
@@ -2303,9 +2300,7 @@ main {
             font-size: 12px !important;
             .fs-container .name {
               font-size: 14px !important;
-              display: block;
               .tooltipIcon {
-                margin: 0 5px 0 0;
                 width: 12px;
               }
             }
@@ -2317,20 +2312,23 @@ main {
             .flexDiv {
               display: block;
               border-bottom: 1px solid #4d4d4d;
-              div {
-                margin: 10px;
-                float: left;
-              }
             }
+
             .pathway {
               span:nth-of-type(2) {
                 justify-content: center;
-                margin: auto auto 10px auto;
               }
             }
-            .swapping div{
-              margin-bottom: 15px;
+
+            .pathway,
+            .swapping {
+              padding-bottom: 15px;
+
+              .name {
+                margin-bottom: 10px;
+              }
             }
+
             .slippage,
             .minimum {
               padding-bottom: 20px;
