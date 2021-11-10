@@ -627,8 +627,7 @@ export default Vue.extend({
     height: 60px;
     border-radius: 63px;
     position: relative;
-    padding-left: 2px;
-    padding-right: 2px;
+    padding: 2px;
   }
 
   .count-down {
