@@ -166,6 +166,13 @@
               </div>
             </span>
           </Table>
+
+          <div class="pagination-container">
+            <div class="pagination-body">
+              <Pagination v-if="totalCount > pageSize" :total="totalCount" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
+              </Pagination>
+            </div>
+          </div>
         </div>
 
         <div v-if="poolLoaded" class="noDesktop">
@@ -245,9 +252,9 @@
             </CollapsePanel>
           </Collapse>
 
-          <div style="text-align: center; width: 100%">
-            <div style="width: 80%; display: inline-block">
-              <Pagination :total="totalCount" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
+          <div class="pagination-container">
+            <div class="pagination-body">
+              <Pagination v-if="totalCount > pageSize" :total="totalCount" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
               </Pagination>
             </div>
           </div>
@@ -912,9 +919,14 @@ section {
   margin-bottom: 20px;
   padding: 15px;
 
-  .mobilescroller {
-    .pools-table-mobile {
-      display: none;
+  .pagination-container {
+    margin-top: 30px;
+    text-align: center; 
+    width: 100%;
+
+    .pagination-body {
+      width: 80%; 
+      display: inline-block;
     }
   }
 
@@ -1001,13 +1013,8 @@ section {
         display: none;
       }
 
-      .pools-table-mobile {
-        display: block;
-
-        .ant-collapse-item .ant-collapse-content {
-          background-color: #01033c;
-          border-top: none !important;
-        }
+      .pagination-container {
+        display: none;
       }
     }
 
@@ -1248,9 +1255,6 @@ section {
       display: none !important;
     }
 
-    .ant-pagination {
-      margin-top: 40px;
-    }
     .ant-collapse.ant-collapse-icon-position-right {
       max-width: 100%;
       background: #16164a;
@@ -1581,6 +1585,12 @@ section {
     line-height: 21px;
     color: #fff;
     opacity: 0.5;
+  }
+
+  .ant-table-pagination.ant-pagination {
+    text-align: center;
+    float: none;
+    margin-top: 40px;
   }
 
   .count-down-group {

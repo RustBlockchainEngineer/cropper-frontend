@@ -699,9 +699,9 @@
               </Row>
             </CollapsePanel>
           </Collapse>
-          <div style="text-align: center; width: 100%">
-            <div style="width: 80%; display: inline-block">
-              <Pagination :total="totalCount" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
+          <div class="pagination-container">
+            <div class="pagination-body">
+              <Pagination v-if="totalCount > pageSize" :total="totalCount" :pageSize="pageSize" :defaultCurrent="1" v-model="currentPage">
               </Pagination>
             </div>
           </div>
@@ -2211,6 +2211,16 @@ export default Vue.extend({
 
   p {
     margin-bottom: 0;
+  }
+
+  .pagination-container {
+    text-align: center; 
+    width: 100%;
+
+    .pagination-body {
+      width: 80%; 
+      display: inline-block;
+    }
   }
 }
 .radioButtonStyle {
