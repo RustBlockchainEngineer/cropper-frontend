@@ -86,7 +86,7 @@
                     <b>Create a new liquidity pool:</b>
                   </div>
                   <div class="inner-content max-80">
-                    <label>Input market Id here</label>
+                    <label>Input market ID here</label>
                     <input
                       v-model="inputMarket"
                       :disabled="!marketInputFlag"
