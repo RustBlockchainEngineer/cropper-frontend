@@ -1093,6 +1093,8 @@ export class YieldFarm {
       {pubkey: programAccount, isSigner: false, isWritable: true},
       {pubkey: tokenProgramId, isSigner: false, isWritable: false},
       {pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false},
+      {pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false},
+      {pubkey: SYSTEM_PROGRAM_ID, isSigner: false, isWritable: false},
     ];
     const commandDataLayout = struct([
       u8('instruction'),
