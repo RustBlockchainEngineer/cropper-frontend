@@ -17,7 +17,8 @@ import {
   SERUM_PROGRAM_ID_V3, 
   CRP_LP_VERSION_V1,
   LP_UPDATE_INTERVAL,
-  MARKET_UPDATE_INTERVAL} from '@/utils/ids'
+  MARKET_UPDATE_INTERVAL,
+  DEVNET_MODE} from '@/utils/ids'
 import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { NATIVE_SOL, TOKENS } from '@/utils/tokens'
 
@@ -71,7 +72,7 @@ async function getSerumMarkets(conn:any){
   let need_to_update = false
   let cur_date = new Date().getTime()
 
-  if(window.localStorage.market_last_updated){
+  if(window.localStorage.market_last_updated && DEVNET_MODE == false){
     const last_updated = parseInt(window.localStorage.market_last_updated)
     if(cur_date - last_updated >= MARKET_UPDATE_INTERVAL){
       need_to_update = true
@@ -102,11 +103,11 @@ async function getSerumMarkets(conn:any){
         vaultSignerNonce: market.vaultSignerNonce.toArrayLike(Buffer, 'le', 8)
       }
     })
-  }
-  if(need_to_update)
-  {
-    window.localStorage.market_last_updated = new Date().getTime()
-    window.localStorage.markets = JSON.stringify(markets)
+    if(DEVNET_MODE == false)
+    {
+      window.localStorage.market_last_updated = new Date().getTime()
+      window.localStorage.markets = JSON.stringify(markets)
+    }
   }
   else
   {
@@ -281,7 +282,7 @@ async function getRaydiumPools(conn:any){
     if (
       !Object.keys(lpMintListDecimls).includes(ammInfo.lpMintAddress.toString()) ||
       ammInfo.pcMintAddress.toString() === ammInfo.serumMarket.toString() ||
-      ammInfo.lpMintAddress.toString() === '11111111111111111111111111111111' ||
+      ammInfo.lpMintAddress.toString() === '11111111111111111111111111111111' || 
       !Object.keys(marketToLayout).includes(ammInfo.serumMarket.toString())
     ) {
       continue
@@ -408,7 +409,7 @@ export const actions = actionTree(
       let need_to_update = false
       let cur_date = new Date().getTime()
 
-      if(window.localStorage.pool_last_updated){
+      if(window.localStorage.pool_last_updated && DEVNET_MODE == false){
         const last_updated = parseInt(window.localStorage.pool_last_updated)
 
         if(cur_date - last_updated >= LP_UPDATE_INTERVAL || last_updated < 1635525130){
@@ -420,7 +421,7 @@ export const actions = actionTree(
         need_to_update = true
       }
       // need_to_update = true;
-      // console.log("Need to reload liquidity pools ", need_to_update)
+      console.log("Need to reload liquidity pools ", need_to_update)
       if(!need_to_update){
         const pools = JSON.parse(window.localStorage.pools)
   
@@ -445,13 +446,15 @@ export const actions = actionTree(
       {
         await getCropperPools(conn);
         await getRaydiumPools(conn);
-        window.localStorage.pool_last_updated = new Date().getTime()
-        window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
+        if(DEVNET_MODE == false)
+        { 
+          window.localStorage.pool_last_updated = new Date().getTime()
+          window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
+        }
       }
 
       const liquidityPools = {} as any
       const publicKeys = [] as any
-
       const amm_state_info = await getAMMGlobalStateAccount(conn);
 
       LIQUIDITY_POOLS.forEach((pool) => {

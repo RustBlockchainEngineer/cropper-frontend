@@ -461,35 +461,6 @@ export async function swap(
   twoStepSwap: boolean = false
 ){
   
-  const swap_fcn = (poolInfo.version == CRP_LP_VERSION_V1)? crp_swap: ray_swap;
-  return await swap_fcn(
-    connection, 
-    wallet, 
-    poolInfo, 
-    fromCoinMint, 
-    toCoinMint,
-    fromTokenAccount, 
-    toTokenAccount, 
-    aIn, 
-    aOut,
-    wsolAddress,
-    twoStepSwap)
-}
-
-async function ray_swap(
-  connection: Connection,
-  wallet: any,
-  poolInfo: any,
-  fromCoinMint: string,
-  toCoinMint: string,
-  fromTokenAccount: string,
-  toTokenAccount: string,
-  aIn: string,
-  aOut: string,
-  wsolAddress: string,
-  twoStepSwap:boolean
-) {
-
   const transaction = new Transaction()
   const signers: Account[] = []
 
@@ -505,84 +476,125 @@ async function ray_swap(
   // @ts-ignore
   const amountOut = new TokenAmount(aOut, to.decimals, false)
 
-  if (twoStepSwap == false && fromCoinMint === NATIVE_SOL.mintAddress && wsolAddress) {
-    transaction.add(
-      closeAccount({
-        source: new PublicKey(wsolAddress),
-        destination: owner,
-        owner
-      })
-    )
-  }
-
   let fromMint = fromCoinMint
   let toMint = toCoinMint
 
-  if (fromMint === NATIVE_SOL.mintAddress) {
-    fromMint = TOKENS.WSOL.mintAddress
-  }
-  if (toMint === NATIVE_SOL.mintAddress) {
-    toMint = TOKENS.WSOL.mintAddress
-  }
+  if (fromMint === NATIVE_SOL.mintAddress) fromMint = TOKENS.WSOL.mintAddress
+  if (toMint === NATIVE_SOL.mintAddress) toMint = TOKENS.WSOL.mintAddress
 
   let wrappedSolAccount: PublicKey | null = null
   let wrappedSolAccount2: PublicKey | null = null
+  let newFromTokenAccount = PublicKey.default
+  let newToTokenAccount = PublicKey.default 
+  if(twoStepSwap == false)
+  {
+    console.log(fromCoinMint, wsolAddress)
+    if(fromCoinMint === NATIVE_SOL.mintAddress && wsolAddress) {
+      transaction.add(
+        closeAccount({
+          source: new PublicKey(wsolAddress),
+          destination: owner,
+          owner
+        })
+      )
+    }
+    if (fromCoinMint === NATIVE_SOL.mintAddress ) {
+      wrappedSolAccount = await createTokenAccountIfNotExist(
+        connection,
+        null,
+        owner,
+        TOKENS.WSOL.mintAddress,
+        getBigNumber(amountIn.wei) + 1e7,
+        transaction,
+        signers
+      )
+    }
+    else{
+      newFromTokenAccount = await createAssociatedTokenAccountIfNotExist(fromTokenAccount, owner, fromMint, transaction)
+    }
+    if (toCoinMint === NATIVE_SOL.mintAddress) {
+      wrappedSolAccount2 = await createTokenAccountIfNotExist(
+        connection,
+        null,
+        owner,
+        TOKENS.WSOL.mintAddress,
+        1e7,
+        transaction,
+        signers
+      )
+    }
+    else{
+      newToTokenAccount = await createAssociatedTokenAccountIfNotExist(toTokenAccount, owner, toMint, transaction)
+    }
+  }
+  else
+  {
+    newFromTokenAccount = new PublicKey(fromTokenAccount)
+    newToTokenAccount = new PublicKey(toTokenAccount)
+  }
 
-  if (fromCoinMint === NATIVE_SOL.mintAddress && twoStepSwap == false) {
-    wrappedSolAccount = await createTokenAccountIfNotExist(
-      connection,
-      null,
-      owner,
-      TOKENS.WSOL.mintAddress,
-      getBigNumber(amountIn.wei) + 1e7,
-      transaction,
-      signers
+  if(poolInfo.version == 4){
+    transaction.add(
+      swapInstruction_v4(
+        new PublicKey(poolInfo.programId),
+        new PublicKey(poolInfo.ammId),
+        new PublicKey(poolInfo.ammAuthority),
+        new PublicKey(poolInfo.ammOpenOrders),
+        new PublicKey(poolInfo.ammTargetOrders),
+        new PublicKey(poolInfo.poolCoinTokenAccount),
+        new PublicKey(poolInfo.poolPcTokenAccount),
+        new PublicKey(poolInfo.serumProgramId),
+        new PublicKey(poolInfo.serumMarket),
+        new PublicKey(poolInfo.serumBids),
+        new PublicKey(poolInfo.serumAsks),
+        new PublicKey(poolInfo.serumEventQueue),
+        new PublicKey(poolInfo.serumCoinVaultAccount),
+        new PublicKey(poolInfo.serumPcVaultAccount),
+        new PublicKey(poolInfo.serumVaultSigner),
+        wrappedSolAccount ?? newFromTokenAccount,
+        wrappedSolAccount2 ?? newToTokenAccount,
+        owner,
+        Math.floor(getBigNumber(amountIn.toWei())),
+        Math.floor(getBigNumber(amountOut.toWei()))
+      )
     )
   }
-  if (toCoinMint === NATIVE_SOL.mintAddress  && twoStepSwap == false) {
-    wrappedSolAccount2 = await createTokenAccountIfNotExist(
-      connection,
-      null,
-      owner,
-      TOKENS.WSOL.mintAddress,
-      1e7,
-      transaction,
-      signers
+  else{
+      
+    let normal_dir = (fromCoinMint == poolInfo.coin.mintAddress)
+
+    const stateId = await getAMMGlobalStateAddress();
+    const state_info = await getAMMGlobalStateAccount(connection);
+
+    let feeTokenAccount = (fromCoinMint === NATIVE_SOL.mintAddress) ? 
+                          state_info.feeOwner.toString() :
+                          await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint))
+
+    let poolFromAccount = normal_dir? poolInfo.poolCoinTokenAccount: poolInfo.poolPcTokenAccount
+    let poolToAccount = normal_dir? poolInfo.poolPcTokenAccount: poolInfo.poolCoinTokenAccount
+
+    transaction.add(
+      swapInstruction_v5(
+        new PublicKey(poolInfo.ammId),
+        new PublicKey(poolInfo.ammAuthority),
+        owner,
+        stateId,
+        wrappedSolAccount ?? newFromTokenAccount,
+        new PublicKey(poolFromAccount),
+        new PublicKey(poolToAccount),
+        wrappedSolAccount2 ?? newToTokenAccount,
+        new PublicKey(poolInfo.lp.mintAddress),
+        new PublicKey(feeTokenAccount),
+        state_info.feeOwner,
+        new PublicKey(poolInfo.programId),
+        TOKEN_PROGRAM_ID,
+        SYSTEM_PROGRAM_ID,
+        Math.floor(getBigNumber(amountIn.toWei())),
+        Math.floor(getBigNumber(amountOut.toWei())),
+        undefined
+      )
     )
   }
-
-  const newFromTokenAccount = await createAssociatedTokenAccountIfNotExist(
-    fromTokenAccount,
-    owner,
-    fromMint,
-    transaction
-  )
-  const newToTokenAccount = await createAssociatedTokenAccountIfNotExist(toTokenAccount, owner, toMint, transaction)
-
-  transaction.add(
-    swapInstruction_v4(
-      new PublicKey(poolInfo.programId),
-      new PublicKey(poolInfo.ammId),
-      new PublicKey(poolInfo.ammAuthority),
-      new PublicKey(poolInfo.ammOpenOrders),
-      new PublicKey(poolInfo.ammTargetOrders),
-      new PublicKey(poolInfo.poolCoinTokenAccount),
-      new PublicKey(poolInfo.poolPcTokenAccount),
-      new PublicKey(poolInfo.serumProgramId),
-      new PublicKey(poolInfo.serumMarket),
-      new PublicKey(poolInfo.serumBids),
-      new PublicKey(poolInfo.serumAsks),
-      new PublicKey(poolInfo.serumEventQueue),
-      new PublicKey(poolInfo.serumCoinVaultAccount),
-      new PublicKey(poolInfo.serumPcVaultAccount),
-      new PublicKey(poolInfo.serumVaultSigner),
-      wrappedSolAccount ?? newFromTokenAccount,
-      wrappedSolAccount2 ?? newToTokenAccount,
-      owner,
-      Math.floor(getBigNumber(amountIn.toWei())),
-      Math.floor(getBigNumber(amountOut.toWei()))
-    )
-  )
 
   if (wrappedSolAccount) {
     transaction.add(
@@ -706,39 +718,6 @@ async function crp_swap(
     transaction
   )
 
-  let normal_dir = (fromCoinMint == poolInfo.coin.mintAddress)
-
-  const stateId = await getAMMGlobalStateAddress();
-  const state_info = await getAMMGlobalStateAccount(connection);
-
-  let feeTokenAccount = (fromCoinMint === NATIVE_SOL.mintAddress) ? 
-                        state_info.feeOwner.toString() :
-                        await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint))
-
-  let poolFromAccount = normal_dir? poolInfo.poolCoinTokenAccount: poolInfo.poolPcTokenAccount
-  let poolToAccount = normal_dir? poolInfo.poolPcTokenAccount: poolInfo.poolCoinTokenAccount
-
-  transaction.add(
-    swapInstruction_v5(
-      new PublicKey(poolInfo.ammId),
-      new PublicKey(poolInfo.ammAuthority),
-      owner,
-      stateId,
-      wrappedSolAccount ?? newFromTokenAccount,
-      new PublicKey(poolFromAccount),
-      new PublicKey(poolToAccount),
-      wrappedSolAccount2 ?? newToTokenAccount,
-      new PublicKey(poolInfo.lp.mintAddress),
-      new PublicKey(feeTokenAccount),
-      state_info.feeOwner,
-      new PublicKey(poolInfo.programId),
-      TOKEN_PROGRAM_ID,
-      SYSTEM_PROGRAM_ID,
-      Math.floor(getBigNumber(amountIn.toWei())),
-      Math.floor(getBigNumber(amountOut.toWei())),
-      undefined
-    )
-  )
 
   if (wrappedSolAccount) {
     transaction.add(

@@ -1546,7 +1546,7 @@ export default Vue.extend({
             // @ts-ignore
             this.$wallet,
             // @ts-ignore
-            this.fromCoin.mintAddress,
+            fromMint,
             // @ts-ignore
             get(this.wallet.tokenAccounts, `${fromMint}.tokenAccountAddress`),
             // @ts-ignore
@@ -1589,6 +1589,14 @@ export default Vue.extend({
           const toPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.extAmmId)
           const midTokenSymbol = this.endpoint === ENDPOINT_MULTI_CRP ? TOKENS.CRP.symbol : TOKENS.USDC.symbol
 
+          let fromMint = this.fromCoin?.mintAddress
+          let midMint = this.midTokenMint
+          let toMint = this.toCoin?.mintAddress
+
+          if (fromMint === NATIVE_SOL.mintAddress) fromMint = TOKENS.WSOL.mintAddress
+          if (midMint === NATIVE_SOL.mintAddress) midMint = TOKENS.WSOL.mintAddress
+          if (toMint === NATIVE_SOL.mintAddress) toMint = TOKENS.WSOL.mintAddress
+
           twoStepSwap(
             this.$web3,
             // @ts-ignore
@@ -1602,11 +1610,11 @@ export default Vue.extend({
             // @ts-ignore
             this.toCoin.mintAddress,
             // @ts-ignore
-            get(this.wallet.tokenAccounts, `${this.fromCoin.mintAddress}.tokenAccountAddress`),
+            get(this.wallet.tokenAccounts, `${fromMint}.tokenAccountAddress`),
             // @ts-ignore
-            get(this.wallet.tokenAccounts, `${this.midTokenMint}.tokenAccountAddress`),
+            get(this.wallet.tokenAccounts, `${midMint}.tokenAccountAddress`),
             // @ts-ignore
-            get(this.wallet.tokenAccounts, `${this.toCoin.mintAddress}.tokenAccountAddress`),
+            get(this.wallet.tokenAccounts, `${toMint}.tokenAccountAddress`),
             this.fromCoinAmount,
             this.midAmountWithSlippage,
             get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.tokenAccountAddress`),
