@@ -599,6 +599,43 @@ export class YieldFarm {
       wallet
     );
   }
+  static async createFarmAndAddRewardWithParams(
+    connection:Connection,
+    wallet:any,
+    rewardMintPubkey:PublicKey,
+    lpMintPubkey:PublicKey,
+    ammPubkey:PublicKey,
+    startTimestamp:number,
+    endTimestamp:number,
+
+    userRewardTokenAccount: PublicKey,
+    amount: number,
+  ){
+    const farmAccount = new Account();
+    const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+
+    let [authority, nonce] = await PublicKey.findProgramAddress(
+      [farmAccount.publicKey.toBuffer()],
+      farmProgramId,
+    );
+    return await YieldFarm.createFarmAndAddReward(
+      connection,
+      farmAccount,
+      farmProgramId,
+      TOKEN_PROGRAM_ID,
+      lpMintPubkey,
+      rewardMintPubkey,
+      ammPubkey,
+      authority,
+      nonce,
+      startTimestamp,
+      endTimestamp,
+      wallet,
+
+      userRewardTokenAccount,
+      amount,
+    );
+  }
   static async createFarm(
     connection: Connection,
     farmAccount: Account,
@@ -735,6 +772,128 @@ export class YieldFarm {
       
     ]);
     return tx;
+  }
+
+  static async createFarmAndAddReward(
+    connection: Connection,
+    farmAccount: Account,
+    farmProgramId: PublicKey,
+    tokenProgramId: PublicKey,
+    lpTokenPoolMint: PublicKey,
+    rewardTokenPoolMint: PublicKey,
+    ammPubkey: PublicKey,
+    authority: PublicKey,
+    nonce: number,
+    startTimestamp:number,
+    endTimestamp:number,
+    creator: Account,
+    
+    userRewardTokenAccount: PublicKey,
+    amount: number,
+  ): Promise<YieldFarm> {
+    let instructions: TransactionInstruction[] = [];
+    
+    const accountRentExempt = await connection.getMinimumBalanceForRentExemption(
+      AccountLayout.span
+    );
+    let poolRewardTokenAccount = await createSplAccount(
+      instructions,
+      creator.publicKey,
+      accountRentExempt,
+      rewardTokenPoolMint,
+      authority,
+      AccountLayout.span
+    );
+
+    let poolLpTokenAccount = await createSplAccount(
+      instructions,
+      creator.publicKey,
+      accountRentExempt,
+      lpTokenPoolMint,
+      authority,
+      AccountLayout.span
+    );
+
+    // Allocate memory for the account
+    const balanceNeeded = await YieldFarm.getMinBalanceRentForExemptStakePool(
+      connection,
+    );
+    instructions.push(
+      SystemProgram.createAccount({ 
+        fromPubkey: creator.publicKey,
+        newAccountPubkey: farmAccount.publicKey,
+        lamports: balanceNeeded,
+        space: FarmAccountLayout.span,
+        programId: farmProgramId,
+      }),
+    );
+
+    
+    const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
+
+    const instruction = YieldFarm.createInitFarmInstruction(
+      farmAccount,
+      authority, 
+      creator, 
+      poolLpTokenAccount.publicKey,  
+      poolRewardTokenAccount.publicKey, 
+      lpTokenPoolMint, 
+      rewardTokenPoolMint, 
+      ammPubkey, 
+      nonce, 
+      farmProgramId,
+      startTimestamp,
+      endTimestamp,
+      programAccount
+    );
+    instructions.push(instruction);
+
+    const farm = new YieldFarm(
+      connection,
+      farmAccount.publicKey,
+      farmProgramId,
+      tokenProgramId,
+      lpTokenPoolMint, 
+      rewardTokenPoolMint, 
+      authority, 
+      poolRewardTokenAccount.publicKey, 
+      poolLpTokenAccount.publicKey, 
+      nonce, 
+      startTimestamp,
+      endTimestamp,
+      creator
+    );
+
+    const addRewardInstruction = YieldFarm.createAddRewardInstruction(
+      farm.farmId,
+      farm.authority,
+      creator,
+      userRewardTokenAccount,
+      farm.poolRewardTokenAccount,
+      farm.poolLpTokenAccount,
+      farm.lpTokenPoolMint,
+      farm.tokenProgramId,
+      farm.farmProgramId,
+      amount,
+      programAccount
+    );
+    instructions.push(addRewardInstruction);
+
+    let transaction = new Transaction()
+    instructions.forEach((inst)=>{
+      transaction.add(inst)
+    });
+
+    let tx = await sendTransaction(connection, creator, transaction, [
+      poolRewardTokenAccount,
+      poolLpTokenAccount,
+      farmAccount,
+    ]);
+    console.log("creating farm txid=",tx);
+
+    //check transation
+    return farm;
   }
   
   static createAddRewardInstruction(
@@ -1076,7 +1235,7 @@ export class YieldFarm {
     tokenProgramId: PublicKey,
     farmProgramId: PublicKey,
     amount: number,
-    programAccount: PublicKey,
+    programAccount: PublicKey, 
   ): TransactionInstruction {
     
     const keys = [

@@ -797,6 +797,121 @@ export default class CreateFarm extends Vue {
       console.log('creating farm failed')
     }
   }
+
+  async createFarmAndAddReward() {
+    this.activeSpin = true
+    //EgaHTGJeDbytze85LqMStxgTJgq22yjTvYSfqoiZevSK
+    const connection = this.$web3
+    const wallet: any = this.$wallet
+
+    window.localStorage.pool_last_updated = undefined
+    await this.$accessor.liquidity.requestInfos()
+
+    //get liquidity pool info
+    let liquidityPoolInfo: any = LIQUIDITY_POOLS.find((item) => item.ammId === this.userCreateAmmId)
+
+    //check liquidity pool
+    if (liquidityPoolInfo == undefined) {
+      this.$notify.error({
+        key: 'Liquidity',
+        message: 'Finding liquidity pool',
+        description: "Can't find liquidity pool"
+      })
+      return
+    }
+
+    //check reward coin
+    if (this.rewardCoin === null) {
+      this.$notify.error({
+        key: 'reward',
+        message: 'Checking reward coin',
+        description: 'Select reward coin, please'
+      })
+      return
+    }
+
+    let rewardMintPubkey = new PublicKey(this.rewardCoin?.mintAddress as string)
+    let rewardDecimals: number = this.rewardCoin?.decimals as any
+    let lpMintPubkey = new PublicKey(liquidityPoolInfo.lp.mintAddress)
+    let ammPubkey = new PublicKey(this.userCreateAmmId)
+
+    let startTimestamp: any = this.startTime.unix()
+    let endTimestamp: any = this.endTime.unix()
+
+    let initialRewardAmount: number = Number.parseFloat(this.fromCoinAmount)
+    let userRewardTokenPubkey = new PublicKey(
+      get(this.wallet.tokenAccounts, `${rewardMintPubkey.toBase58()}.tokenAccountAddress`)
+    )
+    let userRewardTokenBalance = get(this.wallet.tokenAccounts, `${rewardMintPubkey.toBase58()}.balance`)
+
+    //check if creator has some reward
+    if (userRewardTokenBalance <= 0 || userRewardTokenBalance < initialRewardAmount) {
+      this.$notify.error({
+        key: 'Initial Balance',
+        message: 'Checking Inital Reward',
+        description: 'Not enough Initial Reward token balance'
+      })
+      return
+    }
+
+    //check start and end
+    if (startTimestamp >= endTimestamp) {
+      this.$notify.error({
+        key: 'Period',
+        message: 'Checking period',
+        description: 'end time must be late than start time'
+      })
+      return
+    }
+    try {
+      let createdFarm = await YieldFarm.createFarmAndAddRewardWithParams(
+        connection,
+        wallet,
+        rewardMintPubkey,
+        lpMintPubkey,
+        ammPubkey,
+        startTimestamp,
+        endTimestamp,
+
+        userRewardTokenPubkey, 
+        initialRewardAmount * Math.pow(10, rewardDecimals)
+      )
+      await this.delay(500)
+
+      // wait for the synchronization
+      let loopCount = 0
+      while ((await connection.getAccountInfo(createdFarm.farmId)) === null) {
+        if (loopCount > 5) {
+          // allow loop for 5 times
+          break
+        }
+        loopCount++
+      }
+
+      this.farmId = createdFarm.farmId
+      window.localStorage['owner_'+ createdFarm.farmId] = 1;
+
+      this.activeSpin = false;
+      this.farm_created = true;
+
+    } catch {
+      this.activeSpin = false;
+      this.farm_created = false;
+      console.log('creating farm failed')
+    }
+
+    try {
+      let fetchedFarm = await YieldFarm.loadFarm(connection, this.farmId, new PublicKey(FARM_PROGRAM_ID))
+      if (!fetchedFarm){
+        console.log("can't fetch farm",this.farmId);
+      }
+    } catch {
+      this.activeSpin = false;
+      console.log('creating farm failed')
+    }
+
+    this.current += 1
+  }
   async delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
