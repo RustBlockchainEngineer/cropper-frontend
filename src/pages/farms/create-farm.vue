@@ -314,7 +314,7 @@
                       :disabled="!wallet.connected"
                       ghost
                       style="z-index: 999; width: 100%"
-                      @click="createFarmAndAddReward"
+                      @click="confirmFarmInfo"
                     >
                       <span v-if="activeSpin">
                         Please wait &nbsp; &nbsp; 
