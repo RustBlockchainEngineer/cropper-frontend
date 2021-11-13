@@ -3,19 +3,27 @@
     <div class="card">
       <div class="card-body" style="grid-row-gap: 0; row-gap: 0; padding-bottom: 15px">
         <div class="page-head fs-container">
-          <span class="title">User List</span>
+          <span class="title">Farm Analyzer</span>
         </div>
         
         <Input v-model="farmId" size="large" class="input-search" placeholder="input farm id">
             <Icon slot="prefix" type="search" />
         </Input>
-        <Button size="large" ghost @click="searchFarmUsers">
-            Search
+        <Button size="large" ghost @click="searchFarm">
+            Analyzer
         </Button>
 
-        <div v-for="userInfo in userInfos" :key="userInfo.stakeAccountAddress">
-            user - {{userInfo.wallet}}
-            depositBalance - {{userInfo.depositBalance / Math.pow(10,userInfo.decimals)}} &nbsp;&nbsp;{{userInfo.lpSymbol}}
+        <div v-if="farmFound">
+            name : {{foundFarm.name}}<br />
+            lp token name : {{foundFarm.lp.symbol}}<br />
+            lp token decimals : {{foundFarm.lp.decimals}}<br />
+            lp token balance : {{foundFarm.lp.balance.wei.toNumber() / Math.pow(10,foundFarm.lp.decimals)}}<br />
+            reward token name : {{foundFarm.reward.symbol}}<br />
+            reward token decimals : {{foundFarm.reward.decimals}}<br />
+            reward token balance : {{foundFarm.reward.balance.wei.toNumber() / Math.pow(10,foundFarm.reward.decimals)}}<br />
+            start time : {{getDateTime(foundFarm.poolInfo.start_timestamp.toNumber())}}<br />
+            end time : {{getDateTime(foundFarm.poolInfo.end_timestamp.toNumber())}}<br />
+            last updated time : {{getDateTime(foundFarm.poolInfo.last_timestamp.toNumber())}}<br />
         </div>
          
       </div>
@@ -24,15 +32,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'nuxt-property-decorator'
+import { Vue, Component } from 'nuxt-property-decorator'
 import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Input } from 'ant-design-vue'
-import {  getFilteredProgramAccounts } from '@/utils/web3'
-import { PublicKey } from '@solana/web3.js'
-import {
-  FARM_PROGRAM_ID,
-} from '@/utils/ids'
-import { UserInfoAccountLayout } from '@/utils/farm'
-import { FARMS } from '@/utils/farms'
 const Step = Steps.Step
 
 @Component({
@@ -55,58 +56,27 @@ export default class CreateFarm extends Vue {
   userInfos: any = []
 
   farmId: string = ""
-
+  foundFarm: any = undefined
+  farmFound:boolean = false;
   mounted() {
     
   }
-  async searchFarmUsers() {
-      
-    const connection = this.$web3 
-    const wallet: any = this.$wallet
 
-    if (wallet && wallet.connected) {
-        
-        let foundFarm = FARMS.find((item)=>item.poolId === this.farmId);
-        const decimals = foundFarm?.lp.decimals;
-        const lpSymbol = foundFarm?.lp.symbol;
-
-        
-        this.userInfos = [];
-        // stake user info account
-        const stakeFilters = [
-          {
-            memcmp: {
-              offset: 32,
-              bytes: this.farmId
-            }
-          },
-          {
-            dataSize: UserInfoAccountLayout.span
-          }
-        ]
-
-        getFilteredProgramAccounts(connection, new PublicKey(FARM_PROGRAM_ID), stakeFilters)
-          .then((stakeAccountInfos) => {
-              console.log("found - ",stakeAccountInfos.length)
-            stakeAccountInfos.forEach((stakeAccountInfo) => {
-              const stakeAccountAddress = stakeAccountInfo.publicKey.toBase58()
-              const { data } = stakeAccountInfo.accountInfo
-
-              const userStakeInfo = UserInfoAccountLayout.decode(data)
-
-              const wallet = userStakeInfo.wallet.toBase58()
-              const depositBalance = userStakeInfo.deposit_balance.toNumber();
-
-              this.userInfos.push({
-                  stakeAccountAddress,
-                  wallet,
-                  depositBalance,
-                  decimals,
-                  lpSymbol
-              })
-            });
-        });
+  async searchFarm() {
+    for (const [poolId, farmInfo] of Object.entries(this.$accessor.farm.infos)) {
+        if(poolId === this.farmId){
+            this.foundFarm = farmInfo;
+            this.farmFound = true;
+            return;
+        }
     }
+    this.farmFound = false;
+
+            
+  }
+  getDateTime(timestamp:number){
+      var d = new Date(timestamp * 1000);
+      return d.toString();
   }
 }
 </script>
