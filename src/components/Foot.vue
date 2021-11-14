@@ -126,7 +126,7 @@ export default class Foot extends Vue {
     home: '/',
     app: '/swap/',
     twitter: 'https://twitter.com/CropperFinance',
-    discord: 'https://discord.gg/TH7k2N5k',
+    discord: 'https://discord.gg/9hdP7cM3ec',
     medium: 'https://cropperfinance.medium.com/',
     telegram_en: 'https://t.me/CropperFinance',
     telegram_cn: 'https://t.me/cropperChineseofficial',
