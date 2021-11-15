@@ -523,6 +523,10 @@ export default class Pools extends Vue {
       this.pools = this.pools.filter((pool: any) => !pool.labelized)
     }
 
+    this.pools.sort(function (a: any, b: any) {
+      return b.liquidity - a.liquidity
+    })
+
     for (const item of this.pools) {
       pool.push(item)
     }
@@ -554,9 +558,6 @@ export default class Pools extends Vue {
     let start = (this.currentPage - 1) * this.pageSize
     let end = this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max
     this.poolsShow = this.poolsShow.slice(start, end)
-    this.poolsShow.sort(function (a: any, b: any) {
-      return b.liquidity - a.liquidity
-    })
   }
 
   async delay(ms: number) {

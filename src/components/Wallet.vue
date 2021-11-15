@@ -1,36 +1,68 @@
 <template>
-  <div class="wallet-btn">
-    <div class="btncontainer" v-if="!wallet.connected" ghost @click="$accessor.wallet.openModal">
-      <Button>
-        <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
-        Connect
-      </Button>
-    </div>
-
-    <div class="btncontainer" v-else ghost @click="$accessor.wallet.openModal">
-      <Button>
-        <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
-        {{ wallet.address.substr(0, 4) }}
-        ...
-        {{ wallet.address.substr(wallet.address.length - 4, 4) }}
-      </Button>
-    </div>
-
-    <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
-      <div class="btncontainer sonar" ghost>
+  <div class="wallet">
+    <div class="wallet-btn">
+      <div class="btncontainer" v-if="!wallet.connected" ghost @click="openPopIn">
         <Button>
-          <img src="@/assets/sonar_logo.png"/>
+          <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+          Connect
         </Button>
       </div>
-    </a>
 
-    <Modal
-      :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
-      :visible="wallet.modalShow"
-      :footer="null"
-      centered
-      @cancel="$accessor.wallet.closeModal"
-    >
+      <div class="btncontainer" v-else ghost @click="$accessor.wallet.openModal">
+        <Button>
+          <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+          {{ wallet.address.substr(0, 4) }}
+          ...
+          {{ wallet.address.substr(wallet.address.length - 4, 4) }}
+        </Button>
+      </div>
+
+      <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
+        <div class="btncontainer sonar" ghost>
+          <Button>
+            <Tooltip placement="bottom">
+              <template slot="title">
+                My Dashboard
+              </template>
+              <img src="@/assets/sonar_logo.png"/>
+            </Tooltip>
+          </Button>
+        </div>
+      </a>
+
+      <Modal
+        :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
+        :visible="wallet.modalShow"
+        :footer="null"
+        centered
+        @cancel="$accessor.wallet.closeModal"
+      >
+        <div v-if="!wallet.connected" class="select-wallet">
+          <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
+            <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
+            <span>{{ name }}</span>
+          </Button>
+        </div>
+        <div v-else class="wallet-info">
+          <p class="address">{{ wallet.address }}</p>
+
+          <div class="stdGradientButton">
+            <Button ghost @click="disconnect"> DISCONNECT </Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+    
+    <div v-if="!wallet.connected && popIn" class="wallet-list">
+      <div class="select-wallet-header">
+        <div class="select-wallet-header-title">
+          <b>Connect wallet</b>
+        </div>
+        <div class="select-wallet-header-close">
+          <img src="@/assets/icons/close-icon.svg" @click="closePopIn" />
+        </div>
+      </div>
+
       <div v-if="!wallet.connected" class="select-wallet">
         <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
           <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
@@ -44,13 +76,13 @@
           <Button ghost @click="disconnect"> DISCONNECT </Button>
         </div>
       </div>
-    </Modal>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { Button, Modal, Icon } from 'ant-design-vue'
+import { Button, Modal, Icon, Tooltip } from 'ant-design-vue'
 import {
   AccountInfo,
   Context
@@ -95,7 +127,8 @@ interface WalletInfo {
   components: {
     Button,
     Modal,
-    Icon
+    Icon,
+    Tooltip
   }
 })
 export default class Wallet extends Vue {
@@ -222,6 +255,7 @@ export default class Wallet extends Vue {
 
   debugCount = 0
 
+  popIn = false as boolean
   /* ========== COMPUTED ========== */
   get wallet() {
     return this.$accessor.wallet
@@ -544,54 +578,19 @@ export default class Wallet extends Vue {
       }
     }, 1000)
   }
+  
+  openPopIn() {
+    this.popIn = true
+  }
+  
+  closePopIn() {
+    this.popIn = false
+  }
 }
 </script>
 
 <style lang="less">
 @import '../styles/variables';
-
-.wallet-btn {
-  display: inline-flex;
-  align-items: center;
-}
-.ant-modal {
-  width: 800px !important;
-
-  @media (max-width: @mobile-b-width) {
-    width: calc(100% - 40px) !important;
-  }
-}
-.ant-modal-content {
-  background-color: #1a1d6b;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 4px;
-
-  .ant-modal-close {
-    color: @text-color;
-  }
-}
-
-.select-wallet {
-  button {
-    border: none;
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
-    width: 100%;
-    height: 48px;
-    text-align: left;
-    margin-bottom: 10px;
-
-    img {
-      height: 32px;
-      width: 32px;
-      border-radius: 50%;
-    }
-  }
-}
 
 header .btncontainer {
   background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
@@ -622,10 +621,60 @@ header .btncontainer {
   }
 }
 
+.ant-modal {
+  width: 800px !important;
+
+  @media (max-width: @mobile-b-width) {
+    width: calc(100% - 40px) !important;
+  }
+}
+
+.ant-modal-content {
+  background-color: #1a1d6b;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px;
+
+  .ant-modal-close {
+    color: @text-color;
+  }
+}
+
+.ant-tooltip {
+  padding-top: 18px;
+
+  .ant-tooltip-inner {
+    color: white !important;
+  }
+}
+
 .ant-modal-header {
   background-color: #1a1d6b;
   display: flex;
   justify-content: space-between;
+}
+
+.ant-modal-body {
+  .select-wallet {
+    button {
+      border: none;
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      width: 100%;
+      height: 48px;
+      text-align: left;
+      margin-bottom: 10px;
+
+      img {
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+      }
+    }
+  }
 }
 
 .ant-modal-title {
@@ -641,6 +690,70 @@ header .btncontainer {
 
   @media (max-width: @mobile-b-width) {
     font-size: 30px;
+  }
+}
+
+.wallet-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.wallet-list {
+  position: absolute;
+  right: 100px;
+  margin-top: 10px;
+  max-height: 500px;
+  overflow-y: scroll;
+  padding: 0 24px;
+  z-index: 999;
+  background: #3238EA;
+  box-shadow: -2px 2px 5px 0 #00000080;
+  border-radius: 10px;
+
+  @media (max-width: @mobile-b-width) {
+    max-height: 350px;
+    right: 20px;
+  }
+  
+  .select-wallet {
+    button {
+      border: none;
+      background: rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 4px 4px 0 #00000040;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      width: 100%;
+      height: 48px;
+      text-align: left;
+      margin-bottom: 10px;
+
+      img {
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+      }
+    }
+  }
+  
+  .select-wallet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    .select-wallet-header-title {
+      font-size: 15px;
+      line-height: 19px;
+      color: #fff;
+    }
+
+    .select-wallet-header-close img{
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
   }
 }
 </style>

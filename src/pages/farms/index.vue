@@ -831,7 +831,7 @@ export default Vue.extend({
       labelizedPermission: false as any,
       sortAPRAsc: true as boolean,
       sortLiquidityAsc: true as boolean,
-      sortMethod: 'apr' as string
+      sortMethod: 'liquidity' as string
     }
   },
 
@@ -1210,7 +1210,33 @@ export default Vue.extend({
         }
       }
 
-      this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+      if (this.sortMethod == 'apr') {
+        if (this.sortAPRAsc) {
+          console.log("sortAPRAsc");
+          this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
+          // this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
+          this.sortAPRAsc = false;
+        } else {
+          console.log("sortAPRDesc");
+          this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
+          // this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.apr - b.farmInfo.apr)
+          this.sortAPRAsc = true;
+        }
+      } else if(this.sortMethod == 'liquidity') {
+        if (this.sortLiquidityAsc) {
+          console.log("sortLiquidityAsc");
+          this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+          // this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+          this.sortLiquidityAsc = false;
+        } else {
+          console.log("sortLiquidityDesc");
+          this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
+          // this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
+          this.sortLiquidityAsc = true;
+        }
+      }
+      
+      // this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(
         this.searchName,
@@ -1953,23 +1979,25 @@ export default Vue.extend({
     },
     sortByAPR() {
       this.sortMethod = 'apr'
-      if (this.sortAPRAsc) {
-        this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
-        this.sortAPRAsc = false;
-      } else {
-        this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.apr - b.farmInfo.apr)
-        this.sortAPRAsc = true;
-      }
+      // if (this.sortAPRAsc) {
+      //   this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
+      //   this.sortAPRAsc = false;
+      // } else {
+      //   this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.apr - b.farmInfo.apr)
+      //   this.sortAPRAsc = true;
+      // }
+      this.updateFarms()
     },
     sortByLiquidity() {
       this.sortMethod = 'liquidity'
-      if (this.sortLiquidityAsc) {
-        this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
-        this.sortLiquidityAsc = false;
-      } else {
-        this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
-        this.sortLiquidityAsc = true;
-      }
+      // if (this.sortLiquidityAsc) {
+      //   this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+      //   this.sortLiquidityAsc = false;
+      // } else {
+      //   this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
+      //   this.sortLiquidityAsc = true;
+      // }
+      this.updateFarms()
     }
   }
 })
