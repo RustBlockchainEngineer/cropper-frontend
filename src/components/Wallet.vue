@@ -32,7 +32,7 @@
 
       <Modal
         :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
-        :visible="wallet.modalShow"
+        :visible="wallet.modalShow && isModal"
         :footer="null"
         centered
         @cancel="$accessor.wallet.closeModal"
@@ -53,7 +53,7 @@
       </Modal>
     </div>
     
-    <div v-if="!wallet.connected && popIn" class="wallet-list">
+    <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
       <div class="select-wallet-header">
         <div class="select-wallet-header-title">
           <b>Connect wallet</b>
@@ -106,9 +106,11 @@ import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal'
 import { BloctoWalletAdapter } from '@solana/wallet-adapter-blocto'
 import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie'
 // import { TorusWalletAdapter } from '@solana/wallet-adapter-torus'
+const Vco = require('v-click-outside')
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
+Vue.use(Vco)
 
 interface WalletInfo {
   // official website
@@ -131,6 +133,7 @@ interface WalletInfo {
     Tooltip
   }
 })
+
 export default class Wallet extends Vue {
   /* ========== DATA ========== */
   // TrustWallet ezDeFi
@@ -256,6 +259,7 @@ export default class Wallet extends Vue {
   debugCount = 0
 
   popIn = false as boolean
+  isModal = true as boolean
   /* ========== COMPUTED ========== */
   get wallet() {
     return this.$accessor.wallet
@@ -362,7 +366,7 @@ export default class Wallet extends Vue {
       }
     })
 
-
+    this.isModal = true
   }
 
   onDisconnect() {
@@ -388,6 +392,8 @@ export default class Wallet extends Vue {
       message: 'Wallet disconnected',
       description: ''
     })
+
+    this.isModal = false
   }
 
   onWalletError(error: Error) {
@@ -586,6 +592,10 @@ export default class Wallet extends Vue {
   closePopIn() {
     this.popIn = false
   }
+
+  outPopIn() {
+    this.popIn = false
+  }
 }
 </script>
 
@@ -755,6 +765,11 @@ header .btncontainer {
       cursor: pointer;
     }
   }
+}
+
+
+.wallet-list::-webkit-scrollbar {
+  display: block !important; /* Chrome Safari */
 }
 </style>
 

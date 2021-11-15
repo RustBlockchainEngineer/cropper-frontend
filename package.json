@@ -58,7 +58,8 @@
     "nuxt": "^2.15.2",
     "nuxt-clipboard": "^0.0.2",
     "nuxt-property-decorator": "^2.9.1",
-    "nuxt-typed-vuex": "^0.1.22"
+    "nuxt-typed-vuex": "^0.1.22",
+    "v-click-outside": "^3.1.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.4",
