@@ -1054,7 +1054,7 @@ export default Vue.extend({
           let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
 
           let baseCalculation = farmUsdValue;
-          if(baseCalculation < 0.01){ baseCalculation = 0.01 }
+          if(baseCalculation < 0.01){ baseCalculation = 1 }
 
           let apr = ((rewardPerTimestampAmountTotalValue / baseCalculation) * 100).toFixed(2)
 
