@@ -23,6 +23,8 @@ import { getBigNumber } from './layouts';
 import { TokenAmount } from './safe-math';
 import { TOKENS } from './tokens';
 
+const FIXED_MULTIPLE_USER_ACCOUNTS = false;
+
 
 export const PAY_FARM_FEE = 5000;
 export const REWARD_MULTIPLER = 1000000000;
@@ -1075,9 +1077,25 @@ export class YieldFarm {
       userInfoKey = new PublicKey(infoAccount);
     }
     else{
-      const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
-      const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
-      userInfoKey = foundUserInfoKey;
+      if(FIXED_MULTIPLE_USER_ACCOUNTS){
+        const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
+        const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
+        userInfoKey = foundUserInfoKey;
+      }
+      else{
+        // not fixed multiple stake accounts problem
+        userInfoKey = await createProgramAccountIfNotExist(
+          connection,
+          infoAccount,
+          owner,
+          programId,
+          null,
+          UserInfoAccountLayout,
+          transaction,
+          signers
+        );
+      }
+      
     }
 
     const fetchFarm = await YieldFarm.loadFarm(
