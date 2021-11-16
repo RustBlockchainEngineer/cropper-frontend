@@ -831,7 +831,9 @@ export default Vue.extend({
       labelizedPermission: false as any,
       sortAPRAsc: true as boolean,
       sortLiquidityAsc: true as boolean,
-      sortMethod: 'liquidity' as string
+      sortMethod: 'liquidity' as string,
+
+      userMigrations: [] as any[],
     }
   },
 
@@ -844,6 +846,14 @@ export default Vue.extend({
   },
 
   watch: {
+    'wallet.connected':{
+      handler(connected: boolean) {
+        if(connected){
+          this.checkFarmMigration();
+        }
+      },
+      deep: true
+    },
     'wallet.tokenAccounts': {
       handler(newTokenAccounts: any) {
         this.updateCurrentLp(newTokenAccounts)
@@ -923,7 +933,8 @@ export default Vue.extend({
       this.searchLifeFarm = 3
     }
 
-    this.checkIfFarmProgramExist()
+    this.checkIfFarmProgramExist();
+
   },
 
   methods: {
@@ -936,6 +947,20 @@ export default Vue.extend({
 
       await this.delay(1500)
       this.checkIfFarmProgramExist()
+    },
+    async checkFarmMigration(){
+      this.userMigrations = [];
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      let migrations = [];
+      try {
+        migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
+      } catch {
+        // dummy data
+        migrations = []
+      } finally {
+        
+      }
     },
     async checkIfFarmProgramExist() {
       const conn = this.$web3
@@ -959,10 +984,7 @@ export default Vue.extend({
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
         // dummy data
-        responseData = [
-          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
-          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
-        ]
+        responseData = []
       } finally {
         responseData.forEach((element: any) => {
           this.labelizedAmms[element.ammID] = element.labelized
