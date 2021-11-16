@@ -713,7 +713,7 @@ header .btncontainer {
   height: 0;
   position: absolute;
   width: 0;
-  right: 18px;
+  right: 20px;
   top: -20px;
   border: 10px solid transparent;
   border-right-color: #3238EA;
