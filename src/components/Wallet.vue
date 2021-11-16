@@ -764,6 +764,10 @@ header .btncontainer {
     }
   }
   
+  .select-wallet::-webkit-scrollbar {
+    display: block !important; /* Chrome Safari */
+  }
+
   .select-wallet-header {
     padding: 0 15px 0 24px;
     display: flex;
@@ -782,11 +786,6 @@ header .btncontainer {
       cursor: pointer;
     }
   }
-}
-
-
-.wallet-list::-webkit-scrollbar {
-  display: block !important; /* Chrome Safari */
 }
 </style>
 
