@@ -730,12 +730,15 @@ export default class Pools extends Vue {
 
       let lp = getPoolByLpMintAddress(value.lp_mint)
 
+      let newCoin = 0;
+      let newPc = 0;
 
       if (!price.prices[liquidityItem?.coin.symbol as string] && price.prices[liquidityItem?.pc.symbol as string]) {
         price.prices[liquidityItem?.coin.symbol as string] =
           (price.prices[liquidityItem?.pc.symbol as string] *
             getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())) /
           getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())
+        newCoin = 1;
       }
 
       if (!price.prices[liquidityItem?.pc.symbol as string] && price.prices[liquidityItem?.coin.symbol as string]) {
@@ -743,6 +746,7 @@ export default class Pools extends Vue {
           (price.prices[liquidityItem?.coin.symbol as string] *
             getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())) /
           getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())
+        newPc = 1;
       }
 
       const liquidityCoinValue =
@@ -829,6 +833,15 @@ export default class Pools extends Vue {
         }
         polo.push(value)
       }
+
+      if(newCoin){
+        delete price.prices[liquidityItem?.coin.symbol as string];
+      }
+
+      if(newPc){
+        delete price.prices[liquidityItem?.pc.symbol as string];
+      }
+
     })
     return polo
   }

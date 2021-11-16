@@ -1039,13 +1039,17 @@ export default Vue.extend({
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           
+          let newCoin = 0;
+          let newPc = 0;
+
           if(!this.price.prices[liquidityItem?.coin.symbol as string] && this.price.prices[liquidityItem?.pc.symbol as string]){
             this.price.prices[liquidityItem?.coin.symbol as string] = this.price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+            newCoin = 1;
           }
-
 
           if(!this.price.prices[liquidityItem?.pc.symbol as string] && this.price.prices[liquidityItem?.coin.symbol as string]){
             this.price.prices[liquidityItem?.pc.symbol as string] = this.price.prices[liquidityItem?.coin.symbol as string] * getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+            newPc = 1;
           }
 
           const rewardPerTimestampAmountTotalValue =
@@ -1127,6 +1131,15 @@ export default Vue.extend({
           if (rewardPerTimestampAmount.toEther().toString() === '0') {
             //endedFarmsPoolId.push(poolId)
           }
+
+          if(newCoin){
+            delete this.price.prices[liquidityItem?.coin.symbol as string];
+          }
+
+          if(newPc){
+            delete this.price.prices[liquidityItem?.pc.symbol as string];
+          }
+
         }
 
         if (userInfo && lp) {
