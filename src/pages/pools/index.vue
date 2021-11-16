@@ -112,60 +112,113 @@
           </div>
         </div>
 
-        <div v-if="poolLoaded" class="mobilescroller">
-          <Table
-            :columns="columns"
-            :data-source="poolsShow"
-            :pagination="false"
-            row-key="lp_mint"
-            class="pools-table-pc"
-          >
-            <span slot="name" slot-scope="text" class="lp-icons">
-              {{ void (pool = getPoolByLpMintAddress(text)) }}
-              <span class="lp-iconscontainer">
-                <div class="icons">
-                  <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.coin.mintAddress : ''" />
-                  {{ getPoolByLpMintAddress(text).lp.coin.symbol }} -
-                  <CoinIcon :mint-address="pool ? getPoolByLpMintAddress(text).lp.pc.mintAddress : ''" />
-                  {{ getPoolByLpMintAddress(text).lp.pc.symbol }}
+        <div v-if="poolLoaded" class="noMobile pools-table">
+          <Row class="pools-table-header">
+            <Col class="header-column" span="5">
+              Name
+            </Col>
+            <Col class="header-column" span="2">
+              <div class="header-column-title" @click="sortbyColumn('liquidity')">Liquidity
+                <Icon v-if="sortLiquidityAsc" type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+              </div>
+            </Col>
+            <Col class="header-column" span="3">
+              <div class="header-column-title" @click="sortbyColumn('volh')">Volume (24hrs)
+                <Icon v-if="sortVolHAsc" type="arrow-up" :class="sortMethod === 'volh' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-down" :class="sortMethod === 'volh' ? 'sort-icon-active' : '' "/>
+              </div>
+            </Col>
+            <Col class="header-column" span="3">
+              <div class="header-column-title" @click="sortbyColumn('vold')">Volume (7d)
+                <Icon v-if="sortVolDAsc" type="arrow-up" :class="sortMethod === 'vold' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-down" :class="sortMethod === 'vold' ? 'sort-icon-active' : '' "/>
+              </div>
+            </Col>
+            <Col class="header-column" span="3">
+              <div class="header-column-title" @click="sortbyColumn('feesh')">Fees (24 hrs)
+                <Icon v-if="sortFeesAsc" type="arrow-up" :class="sortMethod === 'feesh' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-down" :class="sortMethod === 'feesh' ? 'sort-icon-active' : '' "/>
+              </div>
+            </Col>
+            <Col class="header-column" span="2">
+              <div class="header-column-title" @click="sortbyColumn('apy')">APY
+                <Icon v-if="sortAPYAsc" type="arrow-up" :class="sortMethod === 'apy' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-down" :class="sortMethod === 'apy' ? 'sort-icon-active' : '' "/>
+              </div>
+            </Col>
+            <Col class="header-column" span="3">
+              <div class="header-column-title" @click="sortbyColumn('yliquidity')">Your Liquidity
+                <Icon v-if="sortCurrentAsc" type="arrow-up" :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-down" :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : '' "/>
+              </div>
+            </Col>
+            <Col class="header-column" span="3">
+              Add / Remove
+            </Col>
+          </Row>
+          
+          <div class="pools-table-body">
+            <Row class="pools-table-item" v-for="data in poolsShow" :key="data.lp_mint">
+              <Col span="5">
+                <div class="lp-iconscontainer">
+                  <div class="icons">
+                    <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
+                    {{ data.lp.coin.symbol }}
+                    <span>-</span>
+                    <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
+                    {{ data.lp.pc.symbol }}
+                  </div>
+
+                  <div v-if="displayPoolID">
+                    AMMID : {{ data.ammId }}<br />
+                    SerumMarket : {{ data.serumMarket }}
+                  </div>
                 </div>
-              </span>
+              </Col>
 
-              <div v-if="displayPoolID">
-                AMMID : {{ getPoolByLpMintAddress(text).ammId }}<br />
-                serumMarket : {{ getPoolByLpMintAddress(text).serumMarket }}
-              </div>
-            </span>
-            <span slot="liquidity" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
-            <span slot="volume_24h" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
-            <span slot="volume_7d" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
-            <span slot="fee_24h" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
-            <span slot="apy" slot-scope="text"> {{ new TokenAmount(text, 2, false).format() }}%</span>
-            <span slot="current" slot-scope="text"> ${{ new TokenAmount(text, 2, false).format() }}</span>
-            <span slot="apu" slot-scope="text, pool"
-              >{{ text }}
+              <Col class="state" span="2">
+                ${{ new TokenAmount(data.liquidity, 2, false).format() }}
+              </Col>
 
-              <div class="btncontainer small plus-btn">
-                <Button size="small" ghost @click="openPoolAddModal(pool)">
-                  <Icon type="plus" />
-                </Button>
-              </div>
+              <Col class="state" span="3">
+                ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
+              </Col>
+              <Col class="state" span="3">
+                ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
+              </Col>
+              <Col class="state" span="3">
+                ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
+              </Col>
+              <Col class="state" span="2">
+                {{ new TokenAmount(data.apy, 2, false).format() }}%
+              </Col>
+              <Col class="state" span="3">
+                ${{ new TokenAmount(data.current, 2, false).format() }}
+              </Col>
+              <Col class="state" span="3">
+                <div class="btncontainer small plus-btn">
+                  <Button size="small" ghost @click="openPoolAddModal(data)">
+                    <Icon type="plus" />
+                  </Button>
+                </div>
 
-              &nbsp;
+                &nbsp;
 
-              <div class="btncontainer small minus-btn">
-                <Button
-                  size="small"
-                  class="minus"
-                  ghost
-                  :disabled="!wallet.connected || !pool.current"
-                  @click="openUnstakeModal(pool, pool.lp, 1)"
-                >
-                  <Icon type="minus" />
-                </Button>
-              </div>
-            </span>
-          </Table>
+                <div class="btncontainer small minus-btn">
+                  <Button
+                    size="small"
+                    class="minus"
+                    ghost
+                    :disabled="!wallet.connected || !data.current"
+                    @click="openUnstakeModal(data, data.lp, 1)"
+                  >
+                    <Icon type="minus" />
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </div>
 
           <div class="pagination-container">
             <div class="pagination-body">
@@ -259,6 +312,7 @@
             </div>
           </div>
         </div>
+
         <div v-else class="fc-container">
           <Spin :spinning="true">
             <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
@@ -279,6 +333,7 @@ import {
   Tooltip,
   Collapse,
   Row,
+  Col,
   Spin,
   Select,
   Button,
@@ -334,6 +389,7 @@ declare const window: any
     Collapse,
     CollapsePanel,
     Row,
+    Col,
     RadioGroup,
     RadioButton,
     Toggle,
@@ -366,66 +422,6 @@ declare const window: any
   }
 })
 export default class Pools extends Vue {
-  columns = [
-    {
-      title: 'Name',
-      dataIndex: 'lp_mint',
-      key: 'lp_mint',
-      scopedSlots: { customRender: 'name' }
-    },
-    {
-      title: 'Liquidity',
-      dataIndex: 'liquidity',
-      key: 'liquidity',
-      scopedSlots: { customRender: 'liquidity' },
-      defaultSortOrder: 'descend',
-      sorter: (a: any, b: any) => a.liquidity - b.liquidity
-    },
-    {
-      title: 'Volume (24hrs)',
-      dataIndex: 'volume_24h',
-      key: 'volume_24h',
-      scopedSlots: { customRender: 'volume_24h' },
-      sorter: (a: any, b: any) => a.volume_24h - b.volume_24h
-    },
-    {
-      title: 'Volume (7d)',
-      dataIndex: 'volume_7d',
-      key: 'volume_7d',
-      scopedSlots: { customRender: 'volume_7d' },
-      sorter: (a: any, b: any) => a.volume_7d - b.volume_7d
-    },
-    {
-      title: 'Fees (24hrs)',
-      dataIndex: 'fee_24h',
-      key: 'fee_24h',
-      scopedSlots: { customRender: 'fee_24h' },
-      sorter: (a: any, b: any) => a.fee_24h - b.fee_24h
-    },
-
-    {
-      title: 'APY',
-      dataIndex: 'apy',
-      key: 'apy',
-      scopedSlots: { customRender: 'apy' },
-      sorter: (a: any, b: any) => a.apy - b.apy
-    },
-
-    {
-      title: 'Your Liquidity',
-      dataIndex: 'current',
-      key: 'current',
-      scopedSlots: { customRender: 'current' },
-      sorter: (a: any, b: any) => a.current - b.current
-    },
-
-    {
-      title: 'Add / Remove',
-      dataIndex: 'apu',
-      scopedSlots: { customRender: 'apu' },
-      key: 'apu'
-    }
-  ]
   poolCollapse: any = true
   showCollapse: any = []
   pools: any = []
@@ -463,6 +459,13 @@ export default class Pools extends Vue {
     { value: 2, label: 'All' }
   ]
   searchCertifiedFarm = 0
+  sortMethod: string = 'liquidity'
+  sortLiquidityAsc: boolean = true
+  sortVolHAsc: boolean = false
+  sortVolDAsc: boolean = false
+  sortFeesAsc: boolean = false
+  sortAPYAsc: boolean = false
+  sortCurrentAsc: boolean = false
 
   get liquidity() {
     this.$accessor.wallet.getTokenAccounts()
@@ -510,6 +513,11 @@ export default class Pools extends Vue {
     this.showPool(this.searchName, this.stakedOnly, this.currentPage)
   }
 
+  sortbyColumn(col: string) {
+    this.sortMethod = col
+    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+  }
+
   showPool(searchName: any = '', stakedOnly: boolean = false, pageNum: any = 1) {
     const pool = []
 
@@ -523,9 +531,58 @@ export default class Pools extends Vue {
       this.pools = this.pools.filter((pool: any) => !pool.labelized)
     }
 
-    this.pools.sort(function (a: any, b: any) {
-      return b.liquidity - a.liquidity
-    })
+    // sort by column
+    if (this.sortMethod == 'liquidity') {
+      if (this.sortLiquidityAsc) {
+        this.sortLiquidityAsc = false
+        this.pools.sort(function (a: any, b: any) { return b.liquidity - a.liquidity })
+      } else {
+        this.sortLiquidityAsc = true
+        this.pools.sort(function (a: any, b: any) { return a.liquidity - b.liquidity })
+      }
+    } else if (this.sortMethod == 'volh') {
+      if (this.sortVolHAsc) {
+        this.sortVolHAsc = false
+        this.pools.sort(function (a: any, b: any) { return b.volume_24h - a.volume_24h })
+      } else {
+        this.sortVolHAsc = true
+        this.pools.sort(function (a: any, b: any) { return a.volume_24h - b.volume_24h })
+      }
+    } else if (this.sortMethod == 'vold') {
+      if (this.sortVolDAsc) {
+        this.sortVolDAsc = false
+        this.pools.sort(function (a: any, b: any) { return b.volume_7d - a.volume_7d })
+      } else {
+        this.sortVolDAsc = true
+        this.pools.sort(function (a: any, b: any) { return a.volume_7d - b.volume_7d })
+      }
+      
+    } else if (this.sortMethod == 'feesh') {
+      if (this.sortFeesAsc) {
+        this.sortFeesAsc = false
+        this.pools.sort(function (a: any, b: any) { return b.fee_24h - a.fee_24h })
+      } else {
+        this.sortFeesAsc = true
+        this.pools.sort(function (a: any, b: any) { return a.fee_24h - b.fee_24h })
+      }
+    } else if (this.sortMethod == 'apy') {
+      if (this.sortAPYAsc) { 
+        this.sortAPYAsc = false
+        this.pools.sort(function (a: any, b: any) { return b.apy - a.apy })
+      } else {
+        this.sortAPYAsc = true
+        this.pools.sort(function (a: any, b: any) { return a.apy - b.apy })
+      }
+    } else if (this.sortMethod == 'yliquidity') {
+      if (this.sortCurrentAsc) {
+        this.sortCurrentAsc = false
+        this.pools.sort(function (a: any, b: any) { return b.current - a.current })
+      }
+      else {
+        this.sortCurrentAsc = true
+        this.pools.sort(function (a: any, b: any) { return a.current - b.current })
+      }
+    }
 
     for (const item of this.pools) {
       pool.push(item)
@@ -920,6 +977,75 @@ section {
   margin-bottom: 20px;
   padding: 15px;
 
+  .pools-table {
+    .pools-table-header {
+      .header-column {
+        font-size: 18px;
+        line-height: 21px;
+        color: #ffffff50;
+        text-align: center;
+        padding: 16px 0;
+
+        .header-column-title {
+          cursor: pointer;
+          display: flex;
+
+          i {
+            color: white;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+          }
+
+          .sort-icon-active {
+            color: #13ECAB;
+          }
+        }
+      }
+    }
+
+    .pools-table-body {
+      .pools-table-item {
+        padding: 16px 0;
+        border-top: 1px solid hsla(0,0%,100%,.2);
+        display: flex;
+        align-items: center;
+
+        .lp-iconscontainer {
+          background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+          background-origin: border-box;
+          padding: 2px;
+          border-radius: 8px;
+          width: 100%;
+
+          .icons {
+            display: block !important;
+            border-radius: 8px;
+            font-weight: normal;
+            padding: 14px 20px;
+            font-size: 18px;
+            line-height: 20px;
+            white-space: nowrap;
+            position: relative;
+            background: #01033c;
+            text-align: center;
+            width: 100%;
+
+            img {
+              border-radius: 50%;
+              width: 24px;
+              height: 24px;
+            }
+          }
+        }
+
+        .state {
+          text-align: center;
+        }
+      }
+    }
+  }
+
   .pagination-container {
     margin-top: 30px;
     text-align: center; 
@@ -969,11 +1095,13 @@ section {
   h6 {
     margin-bottom: 0;
   }
+
   .action {
     display: grid;
     grid-gap: 4px;
   }
 }
+
 .radioButtonStyle {
   width: 50%;
   text-align: center;
@@ -1005,18 +1133,6 @@ section {
 
     thead.ant-table-thead {
       display: none !important;
-    }
-
-    .mobilescroller {
-      max-width: calc(100vh - 40px);
-
-      .pools-table-pc {
-        display: none;
-      }
-
-      .pagination-container {
-        display: none;
-      }
     }
 
     .details {
