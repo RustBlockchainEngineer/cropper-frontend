@@ -460,7 +460,7 @@ export default class Pools extends Vue {
   ]
   searchCertifiedFarm = 0
   sortMethod: string = 'liquidity'
-  sortLiquidityAsc: boolean = true
+  sortLiquidityAsc: boolean = false
   sortVolHAsc: boolean = false
   sortVolDAsc: boolean = false
   sortFeesAsc: boolean = false
