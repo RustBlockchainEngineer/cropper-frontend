@@ -162,7 +162,7 @@
                   type="arrow-down"
                   :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''"
                 />
-                <Icon v-else type="arrow-down" :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''" />
+                <Icon v-else type="arrow-up" :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''" />
               </div>
             </Col>
             <Col class="header-column" span="3"> Add / Remove </Col>
