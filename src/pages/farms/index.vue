@@ -200,15 +200,15 @@
               <div class="title">Staked</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-apr" @click="sortByAPR">Total APR
-                <Icon v-if="sortAPRAsc" type="arrow-up" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
-                <Icon v-else type="arrow-down" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
+              <div class="title table-apr" @click="sortByColumn('apr')">Total APR
+                <Icon v-if="sortAPRAsc" type="arrow-down" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-up" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
               </div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-liquidity" @click="sortByLiquidity">Liquidity
-                <Icon v-if="sortLiquidityAsc" type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
-                <Icon v-else type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+              <div class="title table-liquidity" @click="sortByColumn('liquidity')">Liquidity
+                <Icon v-if="sortLiquidityAsc" type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
               </div>
             </Col>
           </Row>
@@ -217,7 +217,7 @@
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
                 <span class="details noDesktop">
                   <div class="detailButton">
-                    <button>Details</button>
+                    <button></button>
                   </div>
                 </span>
 
@@ -261,7 +261,7 @@
                     Soon
                   </div>
                 </Col>
-
+                
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
                   <Col span="24">
                     <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
@@ -362,39 +362,8 @@
                     }}
                   </div>
                 </Col>
-
-                <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
-                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
-                    Connect Wallet
-                  </Button>
-                  <div v-else class="fs-container">
-                    <Button
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                      size="large"
-                      ghost
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                    >
-                      Harvest & Unstake
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
-                <!-- <Col class="state noDesktop" :span="isMobile ? 6 : 3">
-                  <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                  <div
-                    v-if="
-                      currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="label soon"
-                  >
-                    Soon
-                  </div>
-                </Col> -->
-
-                <Col class="state reward-col noDesktop" :span="isMobile ? 12 : 6">
+                
+                <Col class="state noDesktop reward-col" :span="isMobile ? 12 : 6">
                   <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
                     <span class="labmobile">Pending Reward</span>-
                   </div>
@@ -498,7 +467,25 @@
                     }}
                   </div>
                 </Col>
+                
+                <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
+                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
+                    Connect Wallet
+                  </Button>
+                  <div v-else class="fs-container">
+                    <Button
+                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                      size="large"
+                      ghost
+                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                    >
+                      Harvest & Unstake
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
 
+              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
                 <Col v-if="!isMobile && !poolType" class="state noDesktop" :span="3">
                   <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
                     Connect Wallet
@@ -837,7 +824,7 @@ export default Vue.extend({
       pageSize: 50,
       currentPage: 1,
       labelizedPermission: false as any,
-      sortAPRAsc: true as boolean,
+      sortAPRAsc: false as boolean,
       sortLiquidityAsc: true as boolean,
       sortMethod: 'liquidity' as string,
 
@@ -1312,23 +1299,15 @@ export default Vue.extend({
 
       if (this.sortMethod == 'apr') {
         if (this.sortAPRAsc) {
-          console.log("sortAPRAsc");
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
-          this.sortAPRAsc = false;
         } else {
-          console.log("sortAPRDesc");
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
-          this.sortAPRAsc = true;
         }
       } else if(this.sortMethod == 'liquidity') {
         if (this.sortLiquidityAsc) {
-          console.log("sortLiquidityAsc");
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
-          this.sortLiquidityAsc = false;
         } else {
-          console.log("sortLiquidityDesc");
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
-          this.sortLiquidityAsc = true;
         }
       }
       
@@ -2072,28 +2051,23 @@ export default Vue.extend({
 
       return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
     },
-    sortByAPR() {
-      this.sortMethod = 'apr'
-      // if (this.sortAPRAsc) {
-      //   this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
-      //   this.sortAPRAsc = false;
-      // } else {
-      //   this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.apr - b.farmInfo.apr)
-      //   this.sortAPRAsc = true;
-      // }
+    sortByColumn(mode: string) {
+      this.sortMethod = mode
+      if (mode == 'apr') {
+        if (this.sortAPRAsc) {
+          this.sortAPRAsc = false;
+        } else {
+          this.sortAPRAsc = true;
+        }
+      } else if(mode == 'liquidity') {
+        if (this.sortLiquidityAsc) {
+          this.sortLiquidityAsc = false;
+        } else {
+          this.sortLiquidityAsc = true;
+        }
+      }
       this.updateFarms()
     },
-    sortByLiquidity() {
-      this.sortMethod = 'liquidity'
-      // if (this.sortLiquidityAsc) {
-      //   this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
-      //   this.sortLiquidityAsc = false;
-      // } else {
-      //   this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
-      //   this.sortLiquidityAsc = true;
-      // }
-      this.updateFarms()
-    }
   }
 })
 </script>
@@ -2356,7 +2330,11 @@ export default Vue.extend({
 }
 
 .noDesktop {
-  display: none;
+  display: none !important;
+
+  @media (max-width: @mobile-b-width) {
+    display: block !important;
+  }
 }
 
 @media (max-width: @mobile-b-width) {
@@ -2375,16 +2353,18 @@ export default Vue.extend({
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
       background-origin: border-box;
       display: inline-block;
-      padding: 2px;
-      border-radius: 23px;
+      padding: 1px;
+      border-radius: 63px;
+      width: 45px;
+      height: 45px;
 
       button {
-        height: 42px;
-        padding: 11px 40px 11px 24px;
+        height: 100%;
+        width: 100%;
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164a;
+        background: #00033c;
         border-radius: 22px;
         border: transparent;
       }
@@ -2403,7 +2383,7 @@ export default Vue.extend({
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164a;
+        background: #00033c;
         border-radius: 22px;
         border: transparent;
 
@@ -2517,8 +2497,10 @@ export default Vue.extend({
       display: block;
       align-items: unset;
       .lp-icons {
-        padding: 0 10px;
-        display: block !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20% 0 10px;
         width: 100%;
         flex-direction: unset;
         float: unset;
@@ -2541,6 +2523,22 @@ export default Vue.extend({
         margin-top: 11px;
         .ant-col-12 {
           width: 100%;
+        }
+      }
+
+      .state.noDesktop {
+        padding: 0 20% 0 10px;
+        display: block !important;
+        width: 100%;
+        flex-direction: unset;
+        float: unset;
+        flex: unset;
+        text-align: right;
+        font-size: 18px;
+        margin-bottom: 6px;
+
+        .value {
+          text-align: unset !important;
         }
       }
     }
@@ -2704,7 +2702,8 @@ export default Vue.extend({
 
     .ant-collapse-arrow {
       z-index: 2;
-      margin-right: 20px;
+      margin-right: 16px;
+      margin-top: -1px;
     }
   }
 
