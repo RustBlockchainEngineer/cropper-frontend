@@ -1106,13 +1106,17 @@ export default Vue.extend({
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           
+          let newCoin = 0;
+          let newPc = 0;
+
           if(!this.price.prices[liquidityItem?.coin.symbol as string] && this.price.prices[liquidityItem?.pc.symbol as string]){
             this.price.prices[liquidityItem?.coin.symbol as string] = this.price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+            newCoin = 1;
           }
-
 
           if(!this.price.prices[liquidityItem?.pc.symbol as string] && this.price.prices[liquidityItem?.coin.symbol as string]){
             this.price.prices[liquidityItem?.pc.symbol as string] = this.price.prices[liquidityItem?.coin.symbol as string] * getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+            newPc = 1;
           }
 
           const rewardPerTimestampAmountTotalValue =
@@ -1194,6 +1198,15 @@ export default Vue.extend({
           if (rewardPerTimestampAmount.toEther().toString() === '0') {
             //endedFarmsPoolId.push(poolId)
           }
+
+          if(newCoin){
+            delete this.price.prices[liquidityItem?.coin.symbol as string];
+          }
+
+          if(newPc){
+            delete this.price.prices[liquidityItem?.pc.symbol as string];
+          }
+
         }
 
         if (userInfo && lp) {
@@ -1303,29 +1316,24 @@ export default Vue.extend({
         if (this.sortAPRAsc) {
           console.log("sortAPRAsc");
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
-          // this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
           this.sortAPRAsc = false;
         } else {
           console.log("sortAPRDesc");
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
-          // this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.apr - b.farmInfo.apr)
           this.sortAPRAsc = true;
         }
       } else if(this.sortMethod == 'liquidity') {
         if (this.sortLiquidityAsc) {
           console.log("sortLiquidityAsc");
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
-          // this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
           this.sortLiquidityAsc = false;
         } else {
           console.log("sortLiquidityDesc");
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
-          // this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
           this.sortLiquidityAsc = true;
         }
       }
       
-      // this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(
         this.searchName,
