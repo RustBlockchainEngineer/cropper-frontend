@@ -120,38 +120,38 @@
                 Liquidity
                 <Icon
                   v-if="sortLiquidityAsc"
-                  type="arrow-up"
+                  type="arrow-down"
                   :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''"
                 />
-                <Icon v-else type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''" />
+                <Icon v-else type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''" />
               </div>
             </Col>
             <Col class="header-column" span="3">
               <div class="header-column-title" @click="sortbyColumn('volh')">
                 Volume (24hrs)
-                <Icon v-if="sortVolHAsc" type="arrow-up" :class="sortMethod === 'volh' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-down" :class="sortMethod === 'volh' ? 'sort-icon-active' : ''" />
+                <Icon v-if="sortVolHAsc" type="arrow-down" :class="sortMethod === 'volh' ? 'sort-icon-active' : ''" />
+                <Icon v-else type="arrow-up" :class="sortMethod === 'volh' ? 'sort-icon-active' : ''" />
               </div>
             </Col>
             <Col class="header-column" span="3">
               <div class="header-column-title" @click="sortbyColumn('vold')">
                 Volume (7d)
-                <Icon v-if="sortVolDAsc" type="arrow-up" :class="sortMethod === 'vold' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-down" :class="sortMethod === 'vold' ? 'sort-icon-active' : ''" />
+                <Icon v-if="sortVolDAsc" type="arrow-down" :class="sortMethod === 'vold' ? 'sort-icon-active' : ''" />
+                <Icon v-else type="arrow-up" :class="sortMethod === 'vold' ? 'sort-icon-active' : ''" />
               </div>
             </Col>
             <Col class="header-column" span="3">
               <div class="header-column-title" @click="sortbyColumn('feesh')">
                 Fees (24 hrs)
-                <Icon v-if="sortFeesAsc" type="arrow-up" :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-down" :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''" />
+                <Icon v-if="sortFeesAsc" type="arrow-down" :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''" />
+                <Icon v-else type="arrow-up" :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''" />
               </div>
             </Col>
             <Col class="header-column" span="2">
               <div class="header-column-title" @click="sortbyColumn('apy')">
                 APY
-                <Icon v-if="sortAPYAsc" type="arrow-up" :class="sortMethod === 'apy' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-down" :class="sortMethod === 'apy' ? 'sort-icon-active' : ''" />
+                <Icon v-if="sortAPYAsc" type="arrow-down" :class="sortMethod === 'apy' ? 'sort-icon-active' : ''" />
+                <Icon v-else type="arrow-up" :class="sortMethod === 'apy' ? 'sort-icon-active' : ''" />
               </div>
             </Col>
             <Col class="header-column" span="3">
@@ -159,7 +159,7 @@
                 Your Liquidity
                 <Icon
                   v-if="sortCurrentAsc"
-                  type="arrow-up"
+                  type="arrow-down"
                   :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''"
                 />
                 <Icon v-else type="arrow-down" :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''" />
@@ -470,7 +470,7 @@ export default class Pools extends Vue {
   ]
   searchCertifiedFarm = 0
   sortMethod: string = 'liquidity'
-  sortLiquidityAsc: boolean = false
+  sortLiquidityAsc: boolean = true
   sortVolHAsc: boolean = false
   sortVolDAsc: boolean = false
   sortFeesAsc: boolean = false
