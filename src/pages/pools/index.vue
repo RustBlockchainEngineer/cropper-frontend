@@ -1050,17 +1050,17 @@ export default class Pools extends Vue {
 <style lang="less" scoped>
 .ant-layout,
 .ant-layout-content {
-  background: #01033c !important;
+  background: #000539 !important;
 }
 
 section {
-  background: #01033c !important;
+  background: #000539 !important;
 }
 
 .pool.container {
   max-width: 1350px;
   width: 100%;
-  background: #01033c;
+  background: #000539;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
@@ -1115,7 +1115,7 @@ section {
             line-height: 20px;
             white-space: nowrap;
             position: relative;
-            background: #01033c;
+            background: #000539;
             text-align: center;
             width: 100%;
 
@@ -1163,7 +1163,7 @@ section {
 
   .page-head a {
     z-index: 2;
-    background: #01033c;
+    background: #000539;
     float: right;
     margin-left: 20px;
 
@@ -1215,7 +1215,7 @@ section {
     }
 
     .ant-collapse-content {
-      background-color: #01033c;
+      background-color: #000539;
       border-top: none !important;
     }
 
@@ -1240,7 +1240,7 @@ section {
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #01033c;
+        background: #000539;
         border-radius: 22px;
         border: transparent;
         cursor: pointer;
@@ -1339,7 +1339,7 @@ section {
     .ant-collapse,
     .ant-collapse > .ant-collapse-item {
       position: relative;
-      border-bottom: 1px solid #01033c;
+      border-bottom: 1px solid #000539;
     }
 
     .farm-head.table-head {
@@ -1435,7 +1435,7 @@ section {
       text-align: center;
       font-size: 18px;
       margin-bottom: 6px;
-      background: #01033c;
+      background: #000539;
       border-radius: 14px;
       padding: 18px 0;
 
@@ -1494,7 +1494,7 @@ section {
 
     .start,
     .harvest {
-      background: #01033c;
+      background: #000539;
       border-radius: 14px;
       .reward .token {
         font-size: 26px;
@@ -1723,7 +1723,7 @@ section {
   }
 
   td {
-    background: #01033c !important;
+    background: #000539 !important;
     border-bottom: unset !important;
     border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
     padding: 5px 16px;
@@ -1745,7 +1745,7 @@ section {
       line-height: 20px;
       white-space: nowrap;
       position: relative;
-      background: #01033c;
+      background: #000539;
       text-align: center;
       width: 100%;
 
@@ -1808,7 +1808,7 @@ section {
   }
 
   .count-down {
-    background-color: #01033c;
+    background-color: #000539;
     border-radius: 63px;
     height: 100%;
     display: inline-flex;
@@ -1843,7 +1843,7 @@ section {
   }
 
   .btncontainer {
-    background: #01033c !important;
+    background: #000539 !important;
     padding: 0 !important;
     border-radius: 5px !important;
     display: inline-block;
@@ -1884,7 +1884,7 @@ section {
 
         button[disabled] {
           border-radius: 8px;
-          background: #01033c !important;
+          background: #000539 !important;
         }
       }
     }

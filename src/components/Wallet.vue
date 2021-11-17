@@ -1,14 +1,14 @@
 <template>
   <div class="wallet">
     <div class="wallet-btn">
-      <div class="btncontainer" v-if="!wallet.connected" ghost @click="openPopIn">
+      <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-if="!wallet.connected" ghost @click="openPopIn">
         <Button>
           <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
-          Connect
+          Connect wallet
         </Button>
       </div>
 
-      <div class="btncontainer" v-else ghost @click="$accessor.wallet.openModal">
+      <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-else ghost @click="$accessor.wallet.openModal">
         <Button>
           <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
           {{ wallet.address.substr(0, 4) }}
@@ -18,13 +18,13 @@
       </div>
 
       <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
-        <div class="btncontainer sonar" ghost>
+        <div class="btncontainer sonar connected" ghost>
           <Button>
             <Tooltip placement="bottom">
               <template slot="title">
                 My Dashboard
               </template>
-              <img src="@/assets/sonar_logo.png"/>
+              <img src="@/assets/icons/sonar-watch.svg"/>
             </Tooltip>
           </Button>
         </div>
@@ -602,20 +602,20 @@ export default class Wallet extends Vue {
 <style lang="less">
 @import '../styles/variables';
 
-header .btncontainer {
-  background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+.btncontainer {
+  background: linear-gradient(190.83deg, #23A7B2 -119.02%, #273A93 86.38%);
   background-origin: border-box;
   display: flex;
   align-items: center;
   text-align: center;
   position: relative;
   margin: auto;
-  padding: 2px;
+  padding: 3px;
   border-radius: 63px;
-  height: 54px;
+  height: 50px;
 
   button {
-    background: #01033c !important;
+    background: transparent;
     position: relative;
     border-radius: 63px;
     height: 100%;
@@ -629,38 +629,6 @@ header .btncontainer {
     height: 46px;
     top: 5px;
   }
-}
-
-.ant-modal {
-  width: 800px !important;
-
-  @media (max-width: @mobile-b-width) {
-    width: calc(100% - 40px) !important;
-  }
-}
-
-.ant-modal-content {
-  background-color: #1a1d6b;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 4px;
-
-  .ant-modal-close {
-    color: @text-color;
-  }
-}
-
-.ant-tooltip {
-  padding-top: 18px;
-
-  .ant-tooltip-inner {
-    color: white !important;
-  }
-}
-
-.ant-modal-header {
-  background-color: #1a1d6b;
-  display: flex;
-  justify-content: space-between;
 }
 
 .ant-modal-body {
@@ -685,6 +653,39 @@ header .btncontainer {
       }
     }
   }
+}
+
+.ant-modal {
+  width: 800px !important;
+
+  @media (max-width: @mobile-b-width) {
+    width: calc(100% - 40px) !important;
+  }
+}
+
+.ant-modal-content {
+  background-color: #1a1d6b;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px;
+
+  .ant-modal-close {
+    color: @text-color;
+  }
+}
+
+
+.ant-tooltip {
+  padding-top: 18px;
+
+  .ant-tooltip-inner {
+    color: white !important;
+  }
+}
+
+.ant-modal-header {
+  background-color: #1a1d6b;
+  display: flex;
+  justify-content: space-between;
 }
 
 .ant-modal-title {
@@ -787,6 +788,22 @@ header .btncontainer {
     }
   }
 }
+
+.btncontainer.unconnected button{
+  background: #000539;
+}
+
+.btncontainer.connected button{
+  &:hover, &:focus {
+    background: #000539;
+  }
+}
+.btncontainer.unconnected button:hover,
+.btncontainer.unconnected button:focus
+{
+  background: transparent;
+}
+
 </style>
 
 <style lang="less" scoped>
@@ -804,6 +821,8 @@ header .btncontainer {
 .sonar-container {
   .btncontainer.sonar {
     margin-left:20px !important;
+    width: 50px;
+    height: 50px;
 
     @media (max-width: @mobile-b-width) {
       margin-left: 10px !important;

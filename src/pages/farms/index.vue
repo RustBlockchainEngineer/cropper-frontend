@@ -625,7 +625,7 @@
 
                         <div class="btncontainer">
                           <a target="_blank" :href="farm.farmInfo.twitterShare">
-                            <Button size="large" ghost style="background-color: #01033c !important"> Share </Button>
+                            <Button size="large" ghost style="background-color: #000539 !important"> Share </Button>
                           </a>
                         </div>
 
@@ -2023,7 +2023,7 @@ export default Vue.extend({
 .farm.container {
   max-width: 1350px;
   width: 100%;
-  background: #01033c;
+  background: #000539;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
@@ -2035,7 +2035,7 @@ export default Vue.extend({
   }
 
   .page-head a {
-    background: #01033c;
+    background: #000539;
     margin-left: 20px;
     float: right;
     .btncontainer {
@@ -2160,7 +2160,7 @@ export default Vue.extend({
 
         .icons {
           height: 47px;
-          background-color: #01033c;
+          background-color: #000539;
           border-radius: 8px;
           align-items: center;
           justify-content: center;
@@ -2533,7 +2533,7 @@ export default Vue.extend({
 
     .start,
     .harvest {
-      background: #01033c;
+      background: #000539;
       border-radius: 14px;
       margin: auto;
       .reward .token {
@@ -2643,13 +2643,13 @@ export default Vue.extend({
   }
 
   .ant-collapse-content {
-    background-color: #01033c;
+    background-color: #000539;
     border-top: none !important;
   }
 }
 
 .ant-collapse {
-  background-color: #01033c;
+  background-color: #000539;
 }
 
 .farm.container {
@@ -2716,7 +2716,7 @@ export default Vue.extend({
 
     .btncontainer {
       .btn-bg-fill {
-        background-color: #01033c !important;
+        background-color: #000539 !important;
       }
     }
   }
@@ -2743,7 +2743,7 @@ export default Vue.extend({
 }
 
 .count-down {
-  background-color: #01033c;
+  background-color: #000539;
   border-radius: 63px;
   height: 100%;
   display: inline-flex;
@@ -2955,7 +2955,7 @@ export default Vue.extend({
 }
 
 main {
-  background-color: #01033c;
+  background-color: #000539;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
