@@ -19,7 +19,6 @@ import { FarmAccountLayout, UserInfoAccountLayout, YieldFarm } from '@/utils/far
 import { TOKENS, getTokenByMintAddress } from '@/utils/tokens'
 
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
-import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 const AUTO_REFRESH_TIME = 60
 
@@ -140,7 +139,6 @@ export const actions = actionTree(
 
         if(rewardToken === undefined){
           console.log("find reward token info error");
-          console.log(rewardTokenMintAddress);
           return;
         }
 
@@ -166,8 +164,6 @@ export const actions = actionTree(
           FARMS.push(_farmInfo)
         }
 
-
-        console.log(_farmInfo);
 
         _farmInfo.lp.balance = new TokenAmount(0, lpTokenInfo.decimals);
         _farmInfo.reward.balance = new TokenAmount(0, rewardToken.decimals);

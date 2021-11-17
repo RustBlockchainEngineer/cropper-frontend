@@ -1156,7 +1156,7 @@ export class YieldFarm {
     return result;
   }
   
-  public static async withdrawAndDeposit(
+  public static async migrate(
     connection: Connection,
     wallet: any ,
     oldFarmInfo: FarmInfo,
@@ -1267,7 +1267,7 @@ export class YieldFarm {
       // not fixed multiple stake accounts problem
       newUserInfoKey = await createProgramAccountIfNotExist(
         connection,
-        infoAccount,
+        null,
         owner,
         programId,
         null,
