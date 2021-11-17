@@ -53,6 +53,14 @@
       @onCancel="cancelStakeLP"
     />
 
+    <FarmMigration
+      v-if="userMigrations.length > 0"
+      title="Farm Migration"
+      :migrationFarms="userMigrations"
+      @onMigrate="migrateFarm"
+      @onCancel="cancelStake"
+    />
+
     <div class="card">
       <div class="card-body">
         <div class="page-head fs-container">
@@ -734,7 +742,7 @@ import {
   Switch as Toggle,
   Pagination
 } from 'ant-design-vue'
-import { get, cloneDeep } from 'lodash-es'
+import { get, cloneDeep, forIn } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { FarmInfo } from '@/utils/farms'
 import { deposit, withdraw } from '@/utils/stake'
@@ -950,17 +958,76 @@ export default Vue.extend({
     },
     async checkFarmMigration(){
       this.userMigrations = [];
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
-      let migrations = [];
+      
       try {
-        migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
+        const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json());
+
+        forIn(migrations, (newFarmId, oldFarmId, _object) => {
+          let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
+          let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
+          if(userInfoNew == undefined && userInfoOld != undefined && userInfoOld.depositBalance > 0){
+            this.userMigrations.push({oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance});
+          }
+        });
+        
       } catch {
         // dummy data
-        migrations = []
+        this.userMigrations = []
       } finally {
         
       }
+    },
+    migrateFarm(migrationFarm:any){
+      const amount = migrationFarm.depositBalance;
+
+      const oldFarm = get(this.farm.infos, migrationFarm.oldFarmId);
+      const oldFarmInfo = cloneDeep(oldFarm)
+
+      const newFarm = get(this.farm.infos, migrationFarm.oldFarmId);
+      const newFarmInfo = cloneDeep(newFarm)
+
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      const lp = oldFarm.lp
+
+      const lpAccount = get(this.wallet.tokenAccounts, `${oldFarmInfo.lp.mintAddress}.tokenAccountAddress`)
+      const rewardAccount = get(this.wallet.tokenAccounts, `${oldFarmInfo.reward.mintAddress}.tokenAccountAddress`)
+      const infoAccount = get(this.farm.stakeAccounts, `${oldFarmInfo.poolId}.stakeAccountAddress`)
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+      YieldFarm.migrate(conn, wallet, oldFarmInfo, newFarmInfo, lpAccount, rewardAccount, infoAccount, amount)
+        .then(async (txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+              ])
+          })
+
+          const description = `Migrate ${amount} ${lp.name}`
+          this.$accessor.transaction.sub({ txid, description })
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Migrate failed',
+            description: error.message
+          })
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
+        })
+        .finally(() => {})
+
     },
     async checkIfFarmProgramExist() {
       const conn = this.$web3
@@ -1872,7 +1939,7 @@ export default Vue.extend({
         .catch((error) => {
           this.$notify.error({
             key,
-            message: 'Stake failed',
+            message: 'Unstake failed',
             description: error.message
           })
           this.$accessor.farm.requestInfos()

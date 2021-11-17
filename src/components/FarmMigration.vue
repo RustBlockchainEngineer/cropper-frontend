@@ -2,7 +2,10 @@
   <Modal :title="title" :visible="true" :footer="null" :width="400" centered @cancel="$emit('onCancel')">
     <div class="card">
       <div class="card-body">
-        
+      <div v-for="migrationFarm in migrationFarms" :key="migrationFarm.oldFarmId">
+        {{migrationFarm.oldFarmId}} -> {{migrationFarm.newFarmId}} {{migrationFarm.depositBalance}}
+        <Button ghost @click="$emit('onMigrate', migrationFarm)"> Migrate </Button>
+      </div>
       </div>
     </div>
   </Modal>
@@ -10,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Modal,  /*Button,Icon*/ } from 'ant-design-vue'
+import { Modal,  Button,/*Icon*/ } from 'ant-design-vue'
 import { mapState } from 'vuex'
 import { gt } from '@/utils/safe-math'
 
@@ -21,12 +24,16 @@ export default Vue.extend({
   components: {
     //Icon,
     Modal,
-    //Button
+    Button
   },
   props: {
     title: {
       type: String,
       default: ''
+    },
+    migrationFarms:{
+      type: Object,
+      required: true
     },
   },
   data() {

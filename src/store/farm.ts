@@ -19,7 +19,6 @@ import { FarmAccountLayout, UserInfoAccountLayout, YieldFarm } from '@/utils/far
 import { TOKENS, getTokenByMintAddress } from '@/utils/tokens'
 
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
-import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 const AUTO_REFRESH_TIME = 60
 
