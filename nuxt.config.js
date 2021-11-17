@@ -68,20 +68,91 @@ export default {
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/stylelint
     '@nuxtjs/stylelint-module',
+    '@nuxtjs/pwa',
     // https://typed-vuex.roe.dev
     'nuxt-typed-vuex'
   ],
-
+  pwa: {
+    meta: {
+      title: 'CropperFinance',
+      author: 'Lionel',
+    },
+    manifest: {
+      short_name: "CropperFinance",
+      name: "CropperFinance",
+      description: "The ultimate permissionless yield farming protocol",
+      start_url: ".",
+      display: "standalone",
+      icons: [
+        {
+          src: "favicon.ico",
+          sizes: "64x64 32x32 24x24 16x16",
+          type: "image/x-icon"
+        },
+        {
+          src: "apple-icon-72x72.png",
+          sizes: "72x72",
+          type: "image/png"
+        },
+        {
+          src: "apple-icon-152x152.png",
+          sizes: "152x152",
+          type: "image/png"
+        },
+        {
+          src: "logo192.png",
+          type: "image/png",
+          sizes: "192x192"
+        },
+        {
+          src: "logo512.png",
+          type: "image/png",
+          sizes: "512x512"
+        }
+      ],
+      name: 'CropperFinance',
+      short_name: 'CropperFinance',
+      lang: 'en',
+      display: 'standalone'
+    },
+    workbox: {
+      runtimeCaching: [
+        {
+          urlPattern: 'https://fonts.googleapis.com/.*',
+          handler: 'cacheFirst',
+          method: 'GET',
+          strategyOptions: { cacheableResponse: { statuses: [0, 200] } }
+        },
+        {
+          urlPattern: 'https://fonts.gstatic.com/.*',
+          handler: 'cacheFirst',
+          method: 'GET',
+          strategyOptions: { cacheableResponse: { statuses: [0, 200] } }
+        },
+        {
+          urlPattern: 'https://cdn.snipcart.com/.*',
+          method: 'GET',
+          strategyOptions: { cacheableResponse: { statuses: [0, 200] } }
+        },
+        {
+          urlPattern: 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js',
+          handler: 'cacheFirst',
+          method: 'GET',
+          strategyOptions: { cacheableResponse: { statuses: [0, 200] } }
+        }
+      ]
+    }
+  },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     'nuxt-clipboard',
     '@nuxtjs/dayjs',
-    '@nuxtjs/google-gtag'
+    '@nuxtjs/google-gtag',
+    '@nuxtjs/pwa'
     // '@nuxtjs/sentry'
   ],
-
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
 
