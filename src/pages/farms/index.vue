@@ -854,14 +854,6 @@ export default Vue.extend({
   },
 
   watch: {
-    'wallet.connected':{
-      handler(connected: boolean) {
-        if(connected){
-          this.checkFarmMigration();
-        }
-      },
-      deep: true
-    },
     'wallet.tokenAccounts': {
       handler(newTokenAccounts: any) {
         this.updateCurrentLp(newTokenAccounts)
@@ -878,7 +870,8 @@ export default Vue.extend({
 
     'farm.stakeAccounts': {
       handler() {
-        this.updateFarms()
+        this.updateFarms();
+        this.checkFarmMigration();
       },
       deep: true
     },
@@ -961,12 +954,17 @@ export default Vue.extend({
       
       try {
         const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json());
+        //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
 
         forIn(migrations, (newFarmId, oldFarmId, _object) => {
+          
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
           let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
-          if(userInfoNew == undefined && userInfoOld != undefined && userInfoOld.depositBalance > 0){
-            this.userMigrations.push({oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance});
+          console.log("userInfoNew",userInfoNew)
+          console.log("userInfoOld",userInfoOld)
+          console.log("userInfoOld.depositBalance",userInfoOld.depositBalance.wei.toNumber())
+          if(userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0){
+            this.userMigrations.push({oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)});
           }
         });
         
@@ -974,7 +972,7 @@ export default Vue.extend({
         // dummy data
         this.userMigrations = []
       } finally {
-        
+        console.log("this.userMigrations",this.userMigrations)
       }
     },
     migrateFarm(migrationFarm:any){
@@ -983,7 +981,7 @@ export default Vue.extend({
       const oldFarm = get(this.farm.infos, migrationFarm.oldFarmId);
       const oldFarmInfo = cloneDeep(oldFarm)
 
-      const newFarm = get(this.farm.infos, migrationFarm.oldFarmId);
+      const newFarm = get(this.farm.infos, migrationFarm.newFarmId);
       const newFarmInfo = cloneDeep(newFarm)
 
       const conn = this.$web3

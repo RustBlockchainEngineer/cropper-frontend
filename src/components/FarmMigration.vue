@@ -32,7 +32,7 @@ export default Vue.extend({
       default: ''
     },
     migrationFarms:{
-      type: Object,
+      type: Array,
       required: true
     },
   },
