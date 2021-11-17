@@ -192,15 +192,15 @@
               <div class="title">Staked</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-apr" @click="sortByAPR">Total APR
-                <Icon v-if="sortAPRAsc" type="arrow-up" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
-                <Icon v-else type="arrow-down" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
+              <div class="title table-apr" @click="sortByColumn('apr')">Total APR
+                <Icon v-if="sortAPRAsc" type="arrow-down" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-up" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
               </div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-liquidity" @click="sortByLiquidity">Liquidity
-                <Icon v-if="sortLiquidityAsc" type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
-                <Icon v-else type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+              <div class="title table-liquidity" @click="sortByColumn('liquidity')">Liquidity
+                <Icon v-if="sortLiquidityAsc" type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
               </div>
             </Col>
           </Row>
@@ -816,7 +816,7 @@ export default Vue.extend({
       pageSize: 50,
       currentPage: 1,
       labelizedPermission: false as any,
-      sortAPRAsc: true as boolean,
+      sortAPRAsc: false as boolean,
       sortLiquidityAsc: true as boolean,
       sortMethod: 'liquidity' as string,
 
@@ -1234,23 +1234,15 @@ export default Vue.extend({
 
       if (this.sortMethod == 'apr') {
         if (this.sortAPRAsc) {
-          console.log("sortAPRAsc");
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
-          this.sortAPRAsc = false;
         } else {
-          console.log("sortAPRDesc");
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
-          this.sortAPRAsc = true;
         }
       } else if(this.sortMethod == 'liquidity') {
         if (this.sortLiquidityAsc) {
-          console.log("sortLiquidityAsc");
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
-          this.sortLiquidityAsc = false;
         } else {
-          console.log("sortLiquidityDesc");
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
-          this.sortLiquidityAsc = true;
         }
       }
       
@@ -1994,28 +1986,23 @@ export default Vue.extend({
 
       return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
     },
-    sortByAPR() {
-      this.sortMethod = 'apr'
-      // if (this.sortAPRAsc) {
-      //   this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
-      //   this.sortAPRAsc = false;
-      // } else {
-      //   this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.apr - b.farmInfo.apr)
-      //   this.sortAPRAsc = true;
-      // }
+    sortByColumn(mode: string) {
+      this.sortMethod = mode
+      if (mode == 'apr') {
+        if (this.sortAPRAsc) {
+          this.sortAPRAsc = false;
+        } else {
+          this.sortAPRAsc = true;
+        }
+      } else if(mode == 'liquidity') {
+        if (this.sortLiquidityAsc) {
+          this.sortLiquidityAsc = false;
+        } else {
+          this.sortLiquidityAsc = true;
+        }
+      }
       this.updateFarms()
     },
-    sortByLiquidity() {
-      this.sortMethod = 'liquidity'
-      // if (this.sortLiquidityAsc) {
-      //   this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
-      //   this.sortLiquidityAsc = false;
-      // } else {
-      //   this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
-      //   this.sortLiquidityAsc = true;
-      // }
-      this.updateFarms()
-    }
   }
 })
 </script>
