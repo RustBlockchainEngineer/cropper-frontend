@@ -2651,6 +2651,7 @@ export default Vue.extend({
     .ant-collapse-arrow {
       z-index: 2;
       margin-right: 16px;
+      margin-top: -1px;
     }
   }
 
