@@ -209,7 +209,7 @@
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
                 <span class="details noDesktop">
                   <div class="detailButton">
-                    <button>Details</button>
+                    <button></button>
                   </div>
                 </span>
 
@@ -253,7 +253,7 @@
                     Soon
                   </div>
                 </Col>
-
+                
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
                   <Col span="24">
                     <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
@@ -354,39 +354,8 @@
                     }}
                   </div>
                 </Col>
-
-                <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
-                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
-                    Connect Wallet
-                  </Button>
-                  <div v-else class="fs-container">
-                    <Button
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                      size="large"
-                      ghost
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                    >
-                      Harvest & Unstake
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
-                <!-- <Col class="state noDesktop" :span="isMobile ? 6 : 3">
-                  <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                  <div
-                    v-if="
-                      currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="label soon"
-                  >
-                    Soon
-                  </div>
-                </Col> -->
-
-                <Col class="state reward-col noDesktop" :span="isMobile ? 12 : 6">
+                
+                <Col class="state noDesktop reward-col" :span="isMobile ? 12 : 6">
                   <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
                     <span class="labmobile">Pending Reward</span>-
                   </div>
@@ -490,7 +459,25 @@
                     }}
                   </div>
                 </Col>
+                
+                <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
+                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
+                    Connect Wallet
+                  </Button>
+                  <div v-else class="fs-container">
+                    <Button
+                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                      size="large"
+                      ghost
+                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                    >
+                      Harvest & Unstake
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
 
+              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
                 <Col v-if="!isMobile && !poolType" class="state noDesktop" :span="3">
                   <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
                     Connect Wallet
@@ -2291,7 +2278,11 @@ export default Vue.extend({
 }
 
 .noDesktop {
-  display: none;
+  display: none !important;
+
+  @media (max-width: @mobile-b-width) {
+    display: block !important;
+  }
 }
 
 @media (max-width: @mobile-b-width) {
@@ -2310,16 +2301,18 @@ export default Vue.extend({
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
       background-origin: border-box;
       display: inline-block;
-      padding: 2px;
-      border-radius: 23px;
+      padding: 1px;
+      border-radius: 63px;
+      width: 45px;
+      height: 45px;
 
       button {
-        height: 42px;
-        padding: 11px 40px 11px 24px;
+        height: 100%;
+        width: 100%;
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164a;
+        background: #00033c;
         border-radius: 22px;
         border: transparent;
       }
@@ -2338,7 +2331,7 @@ export default Vue.extend({
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164a;
+        background: #00033c;
         border-radius: 22px;
         border: transparent;
 
@@ -2452,8 +2445,10 @@ export default Vue.extend({
       display: block;
       align-items: unset;
       .lp-icons {
-        padding: 0 10px;
-        display: block !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20% 0 10px;
         width: 100%;
         flex-direction: unset;
         float: unset;
@@ -2476,6 +2471,22 @@ export default Vue.extend({
         margin-top: 11px;
         .ant-col-12 {
           width: 100%;
+        }
+      }
+
+      .state.noDesktop {
+        padding: 0 20% 0 10px;
+        display: block !important;
+        width: 100%;
+        flex-direction: unset;
+        float: unset;
+        flex: unset;
+        text-align: right;
+        font-size: 18px;
+        margin-bottom: 6px;
+
+        .value {
+          text-align: unset !important;
         }
       }
     }
@@ -2639,7 +2650,7 @@ export default Vue.extend({
 
     .ant-collapse-arrow {
       z-index: 2;
-      margin-right: 20px;
+      margin-right: 16px;
     }
   }
 
