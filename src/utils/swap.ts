@@ -16,7 +16,8 @@ import {
   getAMMGlobalStateAccount,
   getOneFilteredTokenAccountsByOwner,
   getAMMGlobalStateAddress,
-  createAtaSolIfNotExistAndWrap
+  createAtaSolIfNotExistAndWrap,
+  createAssociatedTokenAccountIfNotExist2
 } from '@/utils/web3'
 import { TokenAmount } from '@/utils/safe-math'
 import { ACCOUNT_LAYOUT } from '@/utils/layouts'
@@ -561,14 +562,16 @@ export async function swap(
   }
   else{
       
-    let normal_dir = (fromCoinMint == poolInfo.coin.mintAddress)
-
     const stateId = await getAMMGlobalStateAddress();
     const state_info = await getAMMGlobalStateAccount(connection);
+    let feeTokenAccount = await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromMint))
 
-    let feeTokenAccount = (fromCoinMint === NATIVE_SOL.mintAddress) ? 
-                          state_info.feeOwner.toString() :
-                          await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint))
+    feeTokenAccount = (await createAssociatedTokenAccountIfNotExist2(
+                                        feeTokenAccount, 
+                                        state_info.feeOwner, 
+                                        owner,  
+                                        fromMint, 
+                                        transaction)).toString()
 
     transaction.add(
       swapInstruction_v5(
@@ -582,10 +585,8 @@ export async function swap(
         wrappedSolAccount2 ?? newToTokenAccount,
         new PublicKey(poolInfo.lp.mintAddress),
         new PublicKey(feeTokenAccount),
-        state_info.feeOwner,
         new PublicKey(poolInfo.programId),
         TOKEN_PROGRAM_ID,
-        SYSTEM_PROGRAM_ID,
         Math.floor(getBigNumber(amountIn.toWei())),
         Math.floor(getBigNumber(amountOut.toWei())),
         undefined
