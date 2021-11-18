@@ -91,6 +91,10 @@ export const actions:any = actionTree(
 
             if(itemToken.address == 'FCqfQSujuPxy6V42UvafBhsysWtEq1vhjfMN1PUbgaxA') { return ; }
 
+              if(itemToken.symbol == 'PANDA'){
+                itemToken.decimals = 9;
+              }
+
             const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
             if (!token) {// + itemToken.address + 'solana'
               let key = POP_TOKENS[itemToken.address] ?? itemToken.address
@@ -104,6 +108,7 @@ export const actions:any = actionTree(
               }
             } else {
               token.picUrl = itemToken.logoURI
+
               if (token.symbol !== itemToken.symbol && !token.tags.includes('cropper')) {
                 token.symbol = itemToken.symbol
                 token.name = itemToken.name
