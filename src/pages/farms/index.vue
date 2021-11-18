@@ -2765,6 +2765,7 @@ export default Vue.extend({
     padding: 2px;
     margin: 0;
     border-radius: 8px !important;
+    height: auto;
     max-height: 60px !important;
 
     button {
