@@ -1327,18 +1327,14 @@ export default Vue.extend({
 
       if (this.sortAsc) {
         if (this.sortMethod == 'apr') {
-          console.log('asc, apr')
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
         } else if (this.sortMethod == 'liquidity') {
-          console.log('asc, liquidity')
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
         }
       } else {
         if (this.sortMethod == 'apr') {
-          console.log('desc, apr')
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
         } else if (this.sortMethod == 'liquidity') {
-          console.log('desc, liquidity')
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
         }
       }
@@ -2438,12 +2434,10 @@ export default Vue.extend({
         text-align: center;
 
         a {
-          float: right;
           display: inline-block;
         }
 
         > div {
-          float: left;
           margin-right: -66px;
           display: inline-block;
         }

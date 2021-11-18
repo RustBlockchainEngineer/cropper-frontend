@@ -54,7 +54,7 @@
               </div>
             </NuxtLink>
 
-            <div class="farm-button-group">
+            <div class="pool-btn-group">
               <div class="count-down-group">
                 <div class="count-down">
                   <span v-if="autoRefreshTime - countdown < 10">0</span>
@@ -235,7 +235,7 @@
         <div v-if="poolLoaded" class="noDesktop">
           <Collapse v-model="showCollapse" expand-icon-position="right" class="pools-table-mobile">
             <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
-              <Row slot="header" class="farm-head">
+              <Row slot="header" class="pool-head">
                 <Col class="lp-icons" :span="24">
                   <div class="icons">
                     <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
@@ -1155,12 +1155,6 @@ section {
     margin-top: 10px;
   }
 
-  .page-head .title {
-    position: absolute;
-    left: 0 !important;
-    transform: translate(0, 0) !important;
-  }
-
   .page-head a {
     z-index: 2;
     background: @color-bg;
@@ -1176,7 +1170,7 @@ section {
     float: right;
   }
 
-  .page-head .farm-button-group {
+  .page-head .pool-btn-group {
     float: right;
   }
 
@@ -1320,12 +1314,10 @@ section {
         margin-top: 20px;
 
         a {
-          float: right;
           display: inline-block;
         }
 
         > div {
-          float: left;
           margin-right: -66px;
           display: inline-block;
         }
@@ -1342,7 +1334,7 @@ section {
       border-bottom: 1px solid @color-bg;
     }
 
-    .farm-head.table-head {
+    .pool-head.table-head {
       display: none;
     }
 
@@ -1357,7 +1349,7 @@ section {
       display: block;
     }
 
-    .farm-head {
+    .pool-head {
       min-width: 100%;
       padding-top: 25px !important;
       padding-bottom: 25px !important;
@@ -1581,115 +1573,115 @@ section {
   }
 }
 
-.tool-bar {
-  height: 100px;
-  border-radius: 14px;
-  border: 4px solid #16164a;
-  width: 100%;
+.pool.container {
+  .tool-bar {
+    height: 100px;
+    border-radius: 14px;
+    border: 4px solid #16164a;
+    width: 100%;
 
-  .tool-option {
-    width: 24%;
-    height: 100%;
-    display: inline-block;
-    border-right: 3px solid #16164a;
-    position: relative;
-
-    .input-search {
+    .tool-option {
+      width: 24%;
       height: 100%;
-      position: absolute;
-      width: 100%;
+      display: inline-block;
+      border-right: 3px solid #16164a;
+      position: relative;
 
-      .ant-input-prefix {
-        left: 10%;
-        font-size: 20px;
-        color: white;
-      }
-
-      .ant-input {
-        padding: 0 10% 0 20%;
-        height: 100% !important;
-        border: none;
-      }
-
-      .ant-input::placeholder {
-        color: white;
-        opacity: 0.5;
-      }
-    }
-
-    .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
-      opacity: 1 !important;
-    }
-
-    .ant-select {
-      border: none;
-      height: 100%;
-      position: absolute;
-      width: 100%;
-
-      .ant-select-selection {
+      .input-search {
         height: 100%;
+        position: absolute;
         width: 100%;
+
+        .ant-input-prefix {
+          left: 10%;
+          font-size: 20px;
+          color: white;
+        }
+
+        .ant-input {
+          padding: 0 10% 0 20%;
+          height: 100% !important;
+          border: none;
+        }
+
+        .ant-input::placeholder {
+          color: white;
+          opacity: 0.5;
+        }
+      }
+
+      .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
+        opacity: 1 !important;
+      }
+
+      .ant-select {
+        border: none;
+        height: 100%;
+        position: absolute;
+        width: 100%;
+
+        .ant-select-selection {
+          height: 100%;
+          width: 100%;
+          display: inline-flex;
+          align-items: center;
+          padding-left: 10%;
+          border: none;
+
+          .ant-select-selection__rendered {
+            margin-left: 0 !important;
+            font-size: 16px;
+            opacity: 0.5;
+          }
+
+          .ant-select-arrow {
+            right: 10%;
+            font-size: 13px;
+          }
+        }
+      }
+
+      .toggle {
+        position: absolute;
+        width: 100%;
+        height: 100%;
         display: inline-flex;
         align-items: center;
-        padding-left: 10%;
-        border: none;
+        justify-content: center;
 
-        .ant-select-selection__rendered {
-          margin-left: 0 !important;
+        .label {
           font-size: 16px;
           opacity: 0.5;
         }
 
-        .ant-select-arrow {
-          right: 10%;
-          font-size: 13px;
+        .ant-switch {
+          margin-left: 14px;
+          background-color: white;
+          height: 11px;
+          border-radius: 30px;
+        }
+
+        .ant-switch::after {
+          width: 28px;
+          height: 28px;
+          background: @gradient-color-icon;
+          background-origin: border-box;
+          top: -10px;
+          left: -2px;
+        }
+
+        .ant-switch-checked::after {
+          margin-left: 2px;
+          left: 100%;
         }
       }
     }
 
-    .toggle {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      .label {
-        font-size: 16px;
-        opacity: 0.5;
-      }
-
-      .ant-switch {
-        margin-left: 14px;
-        background-color: white;
-        height: 11px;
-        border-radius: 30px;
-      }
-
-      .ant-switch::after {
-        width: 28px;
-        height: 28px;
-        background: @gradient-color-icon;
-        background-origin: border-box;
-        top: -10px;
-        left: -2px;
-      }
-
-      .ant-switch-checked::after {
-        margin-left: 2px;
-        left: 100%;
-      }
+    .last-option {
+      border-right: none !important;
     }
   }
 
-  .last-option {
-    border-right: none !important;
-  }
-}
-
-.pool.container {
   .ant-collapse-header {
     @media @max-b-mobile {
       padding-right: 16px !important;
