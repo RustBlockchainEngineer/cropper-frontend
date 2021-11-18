@@ -1228,7 +1228,7 @@ section {
     }
 
     .openButton {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       display: inline-block;
       padding: 2px;
@@ -1574,7 +1574,7 @@ section {
   display: inline-block !important;
 
   button {
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+    background: @gradient-color-icon !important;
     background-origin: border-box !important;
     border: 2px solid rgba(255, 255, 255, 0.14) !important;
     border-radius: 8px;
@@ -1671,7 +1671,7 @@ section {
       .ant-switch::after {
         width: 28px;
         height: 28px;
-        background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+        background: @gradient-color-icon;
         background-origin: border-box;
         top: -10px;
         left: -2px;
@@ -1762,7 +1762,7 @@ section {
 
   .create {
     padding: 8px 18px;
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
@@ -1827,7 +1827,7 @@ section {
       width: 50px;
       height: 50px;
       border-radius: 25px;
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       margin-left: 15px;
       display: flex;
@@ -1850,7 +1850,7 @@ section {
     width: unset;
 
     &.small {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+      background: @gradient-color-icon !important;
       background-origin: border-box !important;
       border: 2px solid rgba(255, 255, 255, 0.14) !important;
       border-radius: 8px;

@@ -483,7 +483,7 @@ span.inputContent {
   }
 }
 .btncontainer {
-  background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+  background: @gradient-color-icon;
   background-origin: border-box;
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;

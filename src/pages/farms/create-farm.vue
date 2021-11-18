@@ -1614,7 +1614,7 @@ main {
   }
 
   .ant-calendar-date:hover {
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
   }
 
@@ -1622,7 +1622,7 @@ main {
     display: inline-block;
     margin-right: 10px;
     padding: 9px 0;
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
@@ -1663,7 +1663,7 @@ main {
     justify-content: center;
     margin: auto;
     padding: 9px 0;
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;

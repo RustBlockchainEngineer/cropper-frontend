@@ -650,7 +650,7 @@ export default Vue.extend({
       width: 50px;
       height: 50px;
       border-radius: 25px;
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       margin-left: 15px;
       display: flex;
@@ -672,7 +672,7 @@ export default Vue.extend({
   }
 
   .create {
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
@@ -758,7 +758,7 @@ export default Vue.extend({
     }
 
     .btncontainer {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       border: 2px solid rgba(255, 255, 255, 0.14);
       border-radius: 8px;

@@ -1845,7 +1845,7 @@ main {
   transform: rotate(90deg);
 }
 .btn-grad {
-  background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+  background: @gradient-color-icon;
   background-origin: border-box;
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
@@ -1924,7 +1924,7 @@ main {
     width: 50px;
     height: 50px;
     border-radius: 25px;
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     margin-left: 15px;
     display: flex;
@@ -2022,7 +2022,7 @@ main {
     border-radius: 8px;
 
     button {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+      background: @gradient-color-icon !important;
       background-origin: border-box !important;
       border: 2px solid rgba(255, 255, 255, 0.14);
       position: relative;
@@ -2185,7 +2185,7 @@ main {
   }
 }
 .ant-tooltip-inner {
-  background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+  background: @gradient-color-icon !important;
   background-origin: border-box !important;
   border: 2px solid rgba(255, 255, 255, 0.14);
   box-shadow: 18px 11px 14px rgb(0 0 0 / 25%);

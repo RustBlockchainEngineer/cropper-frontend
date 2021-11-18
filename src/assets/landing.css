@@ -1959,7 +1959,7 @@ h1 {
 }
 
 #section-7 .industry-control .active{
-    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     box-sizing: border-box;

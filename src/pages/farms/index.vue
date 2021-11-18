@@ -114,7 +114,7 @@
 
         <div v-if="farm.initialized" class="page-content">
           <Row class="tool-bar noMobile">
-            <Col :span="isMobile ? '24' : '4'" class="tool-option">
+            <Col :span="isMobile ? '24' : '5'" class="tool-option">
               <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
               </Input>
@@ -122,27 +122,49 @@
             <Col :span="isMobile ? '24' : '6'" class="tool-option">
               <div class="toggle">
                 <label class="label" :class="!searchCertifiedFarm ? 'active-label' : '' ">Labelized</label>
-                <Toggle v-model="searchCertifiedFarm" :disabled="!wallet.connected || searchLifeFarm === 1" />
+                <Toggle v-model="searchCertifiedFarm" :disabled="!wallet.connected" />
                 <label class="label" :class="searchCertifiedFarm ? 'active-label' : '' ">Permissionless</label>
               </div>
             </Col>
             <Col :span="isMobile ? '24' : '5'" class="tool-option">
               <div class="toggle">
                 <label class="label" :class="!searchLifeFarm ? 'active-label' : '' ">Open</label>
-                <Toggle v-model="searchLifeFarm" :disabled="!wallet.connected || searchLifeFarm === 1" />
+                <Toggle v-model="searchLifeFarm" :disabled="!wallet.connected" />
                 <label class="label" :class="searchLifeFarm ? 'active-label' : '' ">Ended</label>
               </div>
             </Col>
             <Col :span="isMobile ? '24' : '4'" class="tool-option">
               <div class="toggle deposit-toggle">
                 <label class="label">My deposit</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
               </div>
             </Col>
-            <Col :span="isMobile ? '24' : '5'" class="tool-option">
-              <div class="toggle">
-                <label class="label">Staked Only</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
+            <Col :span="isMobile ? '24' : '4'" class="tool-option">
+              <div class="sort-by">
+                <label class="label">Sort by:</label>
+                <label class="label active-label">
+                  <img :class="sortAsc ? 'sort-up' : 'sort-down' " src="@/assets/icons/sort-up.svg" />
+                  {{this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR'}}
+                </label>
+                <img :class="showSortOption ? 'collapse-down' : 'collapse-up' " src="@/assets/icons/collapse-arrow.svg" @click="() => { this.showSortOption = !this.showSortOption }"/>
+              </div>
+              <div v-if="showSortOption" class="sort-options">
+                  <div class="option" @click="setSortOption('liquidity', true)">
+                    <img src="@/assets/icons/sort-up.svg" />
+                    Liquidity
+                  </div>
+                 <div class="option" @click="setSortOption('liquidity', false)">
+                    <img src="@/assets/icons/sort-down.svg" />
+                    Liquidity
+                  </div>
+                  <div class="option" @click="setSortOption('apr', true)">
+                    <img src="@/assets/icons/sort-up.svg" />
+                    APR
+                  </div>
+                  <div class="option" @click="setSortOption('apr', false)">
+                    <img src="@/assets/icons/sort-down.svg" />
+                    APR
+                  </div>
               </div>
             </Col>
           </Row>
@@ -198,21 +220,13 @@
               <div class="title">Staked</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-apr" @click="sortByColumn('apr')">
+              <div class="title table-apr">
                 Total APR
-                <Icon v-if="sortAPRAsc" type="arrow-down" :class="sortMethod === 'apr' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'apr' ? 'sort-icon-active' : ''" />
               </div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-liquidity" @click="sortByColumn('liquidity')">
+              <div class="title table-liquidity">
                 Liquidity
-                <Icon
-                  v-if="sortLiquidityAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''"
-                />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''" />
               </div>
             </Col>
           </Row>
@@ -828,17 +842,16 @@ export default Vue.extend({
       labelizedAmms: {} as any,
       labelizedAmmsExtended: {} as any,
       poolsDatas: {} as any,
-      searchCertifiedFarm: 0,
-      searchLifeFarm: 0,
-      stakedOnly: false,
+      searchCertifiedFarm: false as boolean,
+      searchLifeFarm: false as boolean,
+      stakedOnly: false as boolean,
+      showSortOption: false as boolean,
       totalCount: 110,
       pageSize: 50,
       currentPage: 1,
       labelizedPermission: false as any,
-      sortAPRAsc: false as boolean,
-      sortLiquidityAsc: true as boolean,
       sortMethod: 'liquidity' as string,
-
+      sortAsc: false as boolean,
       userMigrations: [] as any[]
     }
   },
@@ -925,11 +938,6 @@ export default Vue.extend({
     } else {
       const query = new URLSearchParams(window.location.search)
       if (query.get('s')) this.searchName = query.get('s') as string
-    }
-
-    if (this.searchName) {
-      this.searchCertifiedFarm = 2
-      this.searchLifeFarm = 3
     }
 
     this.checkIfFarmProgramExist()
@@ -1317,17 +1325,21 @@ export default Vue.extend({
         }
       }
 
-      if (this.sortMethod == 'apr') {
-        if (this.sortAPRAsc) {
-          this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
-        } else {
+      if (this.sortAsc) {
+        if (this.sortMethod == 'apr') {
+          console.log('asc, apr')
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
-        }
-      } else if (this.sortMethod == 'liquidity') {
-        if (this.sortLiquidityAsc) {
-          this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
-        } else {
+        } else if (this.sortMethod == 'liquidity') {
+          console.log('asc, liquidity')
           this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
+        }
+      } else {
+        if (this.sortMethod == 'apr') {
+          console.log('desc, apr')
+          this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
+        } else if (this.sortMethod == 'liquidity') {
+          console.log('desc, liquidity')
+          this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
         }
       }
 
@@ -1342,8 +1354,8 @@ export default Vue.extend({
     },
     filterFarms(
       searchName: string,
-      searchCertifiedFarm: number,
-      searchLifeFarm: number,
+      searchCertifiedFarm: boolean,
+      searchLifeFarm: boolean,
       stakedOnly: boolean,
       pageNum: number = 1
     ) {
@@ -1372,38 +1384,29 @@ export default Vue.extend({
         )
       }
 
-      if (searchCertifiedFarm == 0) {
+      if (!searchCertifiedFarm) {
         //labelized
         this.showFarms = this.showFarms.filter((farm: any) => farm.labelized)
-      } else if (searchCertifiedFarm == 1) {
+      } else {
         //permissionless
         this.showFarms = this.showFarms.filter((farm: any) => !farm.labelized)
       }
 
       const currentTimestamp = moment().unix()
-      if (searchLifeFarm == 0) {
+      if (!searchLifeFarm) {
         //Opened
         this.showFarms = this.showFarms.filter(
           (farm: any) =>
             farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
             farm.farmInfo.poolInfo.end_timestamp > currentTimestamp
         )
-      } else if (searchLifeFarm == 1) {
-        //Future
-        this.showFarms = this.showFarms.filter((farm: any) => farm.farmInfo.poolInfo.start_timestamp > currentTimestamp)
-      } else if (searchLifeFarm == 2) {
+      } else {
         //Ended
         this.showFarms = this.showFarms.filter((farm: any) => farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)
       }
 
       if (stakedOnly) {
         this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0)
-      }
-
-      if (this.sortLiquidityAsc) {
-        this.showFarms = this.showFarms.sort(
-          (a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue
-        )
       }
 
       this.totalCount = this.showFarms.length
@@ -2072,21 +2075,10 @@ export default Vue.extend({
 
       return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
     },
-    sortByColumn(mode: string) {
+    setSortOption(mode: string, asc: boolean) {
       this.sortMethod = mode
-      if (mode == 'apr') {
-        if (this.sortAPRAsc) {
-          this.sortAPRAsc = false
-        } else {
-          this.sortAPRAsc = true
-        }
-      } else if (mode == 'liquidity') {
-        if (this.sortLiquidityAsc) {
-          this.sortLiquidityAsc = false
-        } else {
-          this.sortLiquidityAsc = true
-        }
-      }
+      this.sortAsc = asc;
+      this.showSortOption = false;
       this.updateFarms()
     }
   }
@@ -2355,7 +2347,7 @@ export default Vue.extend({
     }
 
     .detailButton {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       display: inline-block;
       padding: 1px;
@@ -2376,7 +2368,7 @@ export default Vue.extend({
     }
 
     .openButton {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       display: inline-block;
       padding: 2px;
@@ -2741,7 +2733,7 @@ export default Vue.extend({
 
   .page-content {
     .tool-bar {
-      height: 64px;
+      height: @toolbar-height;
       border-radius: 14px;
       border: 4px solid @color-outline;
       width: 100%;
@@ -2768,45 +2760,18 @@ export default Vue.extend({
           }
 
           .ant-input {
-            padding: 0 10% 0 20%;
+            padding: 0 10% 0 25%;
             height: 100% !important;
             border: none;
             border-radius: 14px;
-          }
 
-          .ant-input::placeholder {
-            color: white;
-            opacity: 0.5;
-          }
-        }
-
-        .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
-          opacity: 1 !important;
-        }
-
-        .ant-select {
-          border: none;
-          height: 100%;
-          position: absolute;
-          width: 100%;
-
-          .ant-select-selection {
-            height: 100%;
-            width: 100%;
-            display: inline-flex;
-            align-items: center;
-            padding-left: 10%;
-            border: none;
-
-            .ant-select-selection__rendered {
-              margin-left: 0 !important;
-              font-size: 16px;
+            &::placeholder {
+              color: white;
               opacity: 0.5;
             }
 
-            .ant-select-arrow {
-              right: 10%;
-              font-size: 13px;
+            &:focus {
+              box-shadow: none;
             }
           }
         }
@@ -2832,6 +2797,84 @@ export default Vue.extend({
           &.deposit-toggle {
             .ant-switch-checked {
               background-color: @color-disable !important;
+            }
+          }
+        }
+
+        .sort-by {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+
+          .label {
+            font-size: 16px;
+            opacity: 0.5;
+
+            &.active-label {
+              font-weight: 700;
+              opacity: 1;
+            }
+
+            .sort-up, .sort-down {
+              margin-right: 5px;
+              transition: 0.5s;
+            }
+
+            .sort-down {
+              transform: rotate(180deg);
+            }
+          }
+
+          .collapse-down,
+          .collapse-up {
+            cursor: pointer;
+            transition: 0.5s;
+          }
+
+          .collapse-down {
+            transform: rotate(180deg);
+          }
+        }
+
+        .sort-options {
+          position: absolute;
+          width: 100%;
+          top: @toolbar-height;
+          padding: 18px;
+          background: @gradient-color-primary;
+          background-origin: border-box;
+          border: 2px solid @color-border;
+          box-shadow: 18px 11px 14px #00000025;
+          border-radius: 8px;
+          z-index: 999;
+
+          .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #C4C4C420;
+            font-size: 16px;
+            line-height: 19px;
+            cursor: pointer;
+
+            &:hover {
+              background: @gradient-color-primary;
+              border: 1px solid @color-border;
+              border-radius: 6px;
+            }
+
+            &.active {
+              background: @gradient-color-primary;
+              border: 1px solid @color-border;
+            }
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            img {
+              margin-right: 20px;
             }
           }
         }
@@ -2870,7 +2913,7 @@ export default Vue.extend({
 
 .farm.container {
   .create {
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
@@ -2906,7 +2949,7 @@ export default Vue.extend({
   }
 
   .btncontainer {
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+    background: @gradient-color-icon !important;
     background-origin: border-box !important;
     display: inline-block;
     width: unset;
