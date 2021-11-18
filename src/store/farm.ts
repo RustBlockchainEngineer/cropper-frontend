@@ -11,7 +11,7 @@ import { commitment, getFilteredProgramAccounts, getMultipleAccounts } from '@/u
 
 import { ACCOUNT_LAYOUT, getBigNumber } from '@/utils/layouts'
 import { PublicKey } from '@solana/web3.js'
-import { FARM_PROGRAM_ID, STAKE_PROGRAM_ID, STAKE_PROGRAM_ID_V4, STAKE_PROGRAM_ID_V5 } from '@/utils/ids'
+import { FARM_PROGRAM_ID_V1, STAKE_PROGRAM_ID, STAKE_PROGRAM_ID_V4, STAKE_PROGRAM_ID_V5 } from '@/utils/ids'
 import { TokenAmount, lt } from '@/utils/safe-math'
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
@@ -88,7 +88,7 @@ export const actions = actionTree(
           dataSize: FarmAccountLayout.span
         }
       ]
-      const farmAccountInfos = await getFilteredProgramAccounts(conn, new PublicKey(FARM_PROGRAM_ID), farmFilters)
+      const farmAccountInfos = await getFilteredProgramAccounts(conn, new PublicKey(FARM_PROGRAM_ID_V1), farmFilters)
       const publicKeys = [] as any
 
       farmAccountInfos.forEach((farmAccountInfo) => {
@@ -152,7 +152,7 @@ export const actions = actionTree(
           legacy: false,
           dual: false,
           version: 1,
-          programId: FARM_PROGRAM_ID,
+          programId: FARM_PROGRAM_ID_V1,
 
           poolId: farmAccountAddress,
           poolAuthority: ownerAddress,
@@ -217,7 +217,7 @@ export const actions = actionTree(
 
         const stakeAccounts: any = {}
 
-        getFilteredProgramAccounts(conn, new PublicKey(FARM_PROGRAM_ID), stakeFilters)
+        getFilteredProgramAccounts(conn, new PublicKey(FARM_PROGRAM_ID_V1), stakeFilters)
           .then((stakeAccountInfos) => {
             stakeAccountInfos.forEach((stakeAccountInfo) => {
               const stakeAccountAddress = stakeAccountInfo.publicKey.toBase58()

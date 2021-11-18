@@ -17,13 +17,13 @@ import {loadAccount} from './account';
 import { AccountLayout, MintLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { createSplAccount } from './crp-swap';
 import { createAssociatedTokenAccountIfNotExist, createProgramAccountIfNotExist, findAssociatedTokenAddress, sendTransaction } from './web3';
-import { FARM_INITIAL_FEE_OWNER, FARM_PROGRAM_ID, CRP_LP_PROGRAM_ID_V1, SYSTEM_PROGRAM_ID } from './ids';
+import { FARM_INITIAL_FEE_OWNER, FARM_PROGRAM_ID_V1, CRP_LP_PROGRAM_ID_V1, SYSTEM_PROGRAM_ID } from './ids';
 import { FarmInfo } from './farms';
 import { getBigNumber } from './layouts';
 import { TokenAmount } from './safe-math';
 import { TOKENS } from './tokens';
 
-const FIXED_MULTIPLE_USER_ACCOUNTS = false;
+const NEW_VERSION = false;
 
 
 export const PAY_FARM_FEE = 5000;
@@ -111,7 +111,7 @@ export const UserInfoAccountLayout = struct([
   }
 
   static async loadProgramAccount(connection:Connection){
-    const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+    const farmProgramId = new PublicKey(FARM_PROGRAM_ID_V1);
     const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
     const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
 
@@ -231,7 +231,7 @@ export const UserInfoAccountLayout = struct([
     harvestFeeNumerator: number,
     harvestFeeDenominator: number,
   ){
-    let farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+    let farmProgramId = new PublicKey(FARM_PROGRAM_ID_V1);
 
     const seeds = [Buffer.from(FARM_PREFIX),farmProgramId.toBuffer()];
     const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
@@ -580,7 +580,7 @@ export class YieldFarm {
     endTimestamp:number,
   ){
     const farmAccount = new Account();
-    const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+    const farmProgramId = new PublicKey(FARM_PROGRAM_ID_V1);
 
     let [authority, nonce] = await PublicKey.findProgramAddress(
       [farmAccount.publicKey.toBuffer()],
@@ -614,7 +614,7 @@ export class YieldFarm {
     amount: number,
   ){
     const farmAccount = new Account();
-    const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+    const farmProgramId = new PublicKey(FARM_PROGRAM_ID_V1);
 
     let [authority, nonce] = await PublicKey.findProgramAddress(
       [farmAccount.publicKey.toBuffer()],
@@ -911,7 +911,7 @@ export class YieldFarm {
     amount: number,
     programAccount: PublicKey,
   ): TransactionInstruction {
-    const keys = [
+    let keys = [
       {pubkey: farmId, isSigner: false, isWritable: true},
       {pubkey: authority, isSigner: false, isWritable: false},
       {pubkey: depositor.publicKey, isSigner: false, isWritable: false},
@@ -923,6 +923,19 @@ export class YieldFarm {
       {pubkey: tokenProgramId, isSigner: false, isWritable: false},
       {pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false},
     ];
+    if(!NEW_VERSION){
+      keys = [
+        {pubkey: farmId, isSigner: false, isWritable: true},
+        {pubkey: authority, isSigner: false, isWritable: false},
+        {pubkey: depositor.publicKey, isSigner: false, isWritable: false},
+        {pubkey: userRewardTokenAccount, isSigner: false, isWritable: true},
+        {pubkey: poolRewardTokenAccount, isSigner: false, isWritable: true},
+        {pubkey: poolMint, isSigner: false, isWritable: true},
+        {pubkey: programAccount, isSigner: false, isWritable: true},
+        {pubkey: tokenProgramId, isSigner: false, isWritable: false},
+        {pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false},
+      ];
+    }
     const commandDataLayout = struct([
       u8('instruction'),
       nu64('amount'),
@@ -1077,7 +1090,7 @@ export class YieldFarm {
       userInfoKey = new PublicKey(infoAccount);
     }
     else{
-      if(FIXED_MULTIPLE_USER_ACCOUNTS){
+      if(NEW_VERSION){
         const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
         const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
         userInfoKey = foundUserInfoKey;
@@ -1199,7 +1212,7 @@ export class YieldFarm {
       userInfoKey = new PublicKey(infoAccount);
     }
     else{
-      if(FIXED_MULTIPLE_USER_ACCOUNTS){
+      if(NEW_VERSION){
         const seeds = [Buffer.from(FARM_PREFIX),oldFarmId.toBuffer(),owner.toBuffer()];
         const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
         userInfoKey = foundUserInfoKey;
@@ -1258,7 +1271,7 @@ export class YieldFarm {
     const newFarmId = new PublicKey(newFarmInfo.poolId)
     
     let newUserInfoKey = null;
-    if(FIXED_MULTIPLE_USER_ACCOUNTS){
+    if(NEW_VERSION){
       const seeds = [Buffer.from(FARM_PREFIX),newFarmId.toBuffer(),owner.toBuffer()];
       const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
       newUserInfoKey = foundUserInfoKey;
@@ -1344,7 +1357,7 @@ export class YieldFarm {
       userInfoKey = new PublicKey(infoAccount);
     }
     else{
-      if(FIXED_MULTIPLE_USER_ACCOUNTS){
+      if(NEW_VERSION){
         const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
         const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
         userInfoKey = foundUserInfoKey;
