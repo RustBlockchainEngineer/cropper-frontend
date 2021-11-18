@@ -570,9 +570,6 @@ export async function swap(
                           state_info.feeOwner.toString() :
                           await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromCoinMint))
 
-    let poolFromAccount = normal_dir? poolInfo.poolCoinTokenAccount: poolInfo.poolPcTokenAccount
-    let poolToAccount = normal_dir? poolInfo.poolPcTokenAccount: poolInfo.poolCoinTokenAccount
-
     transaction.add(
       swapInstruction_v5(
         new PublicKey(poolInfo.ammId),
@@ -580,8 +577,8 @@ export async function swap(
         owner,
         stateId,
         wrappedSolAccount ?? newFromTokenAccount,
-        new PublicKey(poolFromAccount),
-        new PublicKey(poolToAccount),
+        new PublicKey(poolInfo.poolCoinTokenAccount),
+        new PublicKey(poolInfo.poolPcTokenAccount),
         wrappedSolAccount2 ?? newToTokenAccount,
         new PublicKey(poolInfo.lp.mintAddress),
         new PublicKey(feeTokenAccount),
@@ -624,126 +621,6 @@ export async function swap(
   {
     return await sendTransaction(connection, wallet, transaction, signers)
   }
-}
-
-
-async function crp_swap(
-  connection: Connection,
-  wallet: any,
-  poolInfo: any,
-  fromCoinMint: string,
-  toCoinMint: string,
-  fromTokenAccount: string,
-  toTokenAccount: string,
-  aIn: string,
-  aOut: string,
-  wsolAddress:string,
-  twoStepSwap: boolean,
-) {
- 
-  const transaction = new Transaction()
-  const signers: Account[] = []
-
-  const owner = wallet.publicKey
-
-  const from = getTokenByMintAddress(fromCoinMint)
-  const to = getTokenByMintAddress(toCoinMint)
-  if (!from || !to) {
-    throw new Error('Miss token info')
-  }
-
-  const amountIn = new TokenAmount(aIn, from.decimals, false)
-  const amountOut = new TokenAmount(aOut, to.decimals, false)
-
-  if (twoStepSwap == false && fromCoinMint === NATIVE_SOL.mintAddress && wsolAddress) {
-    
-    transaction.add(
-      closeAccount({
-        source: new PublicKey(wsolAddress),
-        destination: owner,
-        owner
-      })
-    )
-  }
-
-
-  let fromMint = fromCoinMint
-  let toMint = toCoinMint
-
-  if (fromMint === NATIVE_SOL.mintAddress) {
-    fromMint = TOKENS.WSOL.mintAddress
-  }
-  if (toMint === NATIVE_SOL.mintAddress) {
-    toMint = TOKENS.WSOL.mintAddress
-  }
-
-  let wrappedSolAccount: PublicKey | null = null
-  let wrappedSolAccount2: PublicKey | null = null
-
-  if (fromCoinMint === NATIVE_SOL.mintAddress  && twoStepSwap == false) {
-    wrappedSolAccount = await createTokenAccountIfNotExist(
-      connection,
-      null,
-      owner,
-      TOKENS.WSOL.mintAddress,
-      getBigNumber(amountIn.wei) + 1e7,
-      transaction,
-      signers
-    )
-  }
-  if (toCoinMint === NATIVE_SOL.mintAddress  && twoStepSwap == false) {
-    wrappedSolAccount2 = await createTokenAccountIfNotExist(
-      connection,
-      null,
-      owner,
-      TOKENS.WSOL.mintAddress,
-      1e7,
-      transaction,
-      signers
-    )
-  }
-
-  //@zhaohui
-  let newFromTokenAccount = await createAssociatedTokenAccountIfNotExist(
-    fromTokenAccount,
-    owner,
-    fromMint,
-    transaction
-  )
-
-  let newToTokenAccount = await createAssociatedTokenAccountIfNotExist(
-    toTokenAccount,
-    owner,
-    toMint,
-    transaction
-  )
-
-
-  if (wrappedSolAccount) {
-    transaction.add(
-      closeAccount({
-        source: wrappedSolAccount,
-        destination: owner,
-        owner
-      })
-    )
-  }
-  if (wrappedSolAccount2) {
-    transaction.add(
-      closeAccount({
-        source: wrappedSolAccount2,
-        destination: owner,
-        owner
-      })
-    )
-  }
-  if(twoStepSwap){
-    return {
-      transaction, 
-      signers
-    }
-  }
-  return await sendTransaction(connection, wallet, transaction, signers)
 }
 
 export async function place(
