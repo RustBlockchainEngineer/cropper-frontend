@@ -1,36 +1,68 @@
 <template>
-  <div class="wallet-btn">
-    <div class="btncontainer" v-if="!wallet.connected" ghost @click="$accessor.wallet.openModal">
-      <Button>
-        <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
-        Connect
-      </Button>
-    </div>
-
-    <div class="btncontainer" v-else ghost @click="$accessor.wallet.openModal">
-      <Button>
-        <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
-        {{ wallet.address.substr(0, 4) }}
-        ...
-        {{ wallet.address.substr(wallet.address.length - 4, 4) }}
-      </Button>
-    </div>
-
-    <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
-      <div class="btncontainer sonar" ghost>
+  <div class="wallet">
+    <div class="wallet-btn">
+      <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-if="!wallet.connected" ghost @click="openPopIn">
         <Button>
-          <img src="@/assets/sonar_logo.png"/>
+          <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+          Connect wallet
         </Button>
       </div>
-    </a>
 
-    <Modal
-      :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
-      :visible="wallet.modalShow"
-      :footer="null"
-      centered
-      @cancel="$accessor.wallet.closeModal"
-    >
+      <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-else ghost @click="$accessor.wallet.openModal">
+        <Button>
+          <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+          {{ wallet.address.substr(0, 4) }}
+          ...
+          {{ wallet.address.substr(wallet.address.length - 4, 4) }}
+        </Button>
+      </div>
+
+      <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
+        <div class="btncontainer sonar connected" ghost>
+          <Button>
+            <Tooltip placement="bottom">
+              <template slot="title">
+                My Dashboard
+              </template>
+              <img src="@/assets/icons/sonar-watch.svg"/>
+            </Tooltip>
+          </Button>
+        </div>
+      </a>
+
+      <Modal
+        :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
+        :visible="wallet.modalShow && isModal"
+        :footer="null"
+        centered
+        @cancel="$accessor.wallet.closeModal"
+      >
+        <div v-if="!wallet.connected" class="select-wallet">
+          <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
+            <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
+            <span>{{ name }}</span>
+          </Button>
+        </div>
+        <div v-else class="wallet-info">
+          <p class="address">{{ wallet.address }}</p>
+
+          <div class="stdGradientButton">
+            <Button ghost @click="disconnect"> DISCONNECT </Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+    
+    <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
+      <div class="select-wallet-header">
+        <div class="select-wallet-header-title">
+          <b>Connect wallet</b>
+        </div>
+        <div class="select-wallet-header-close">
+          <img src="@/assets/icons/close-icon.svg" @click="closePopIn" />
+        </div>
+      </div>
+
       <div v-if="!wallet.connected" class="select-wallet">
         <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
           <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
@@ -44,13 +76,13 @@
           <Button ghost @click="disconnect"> DISCONNECT </Button>
         </div>
       </div>
-    </Modal>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { Button, Modal, Icon } from 'ant-design-vue'
+import { Button, Modal, Icon, Tooltip } from 'ant-design-vue'
 import {
   AccountInfo,
   Context
@@ -74,9 +106,11 @@ import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal'
 import { BloctoWalletAdapter } from '@solana/wallet-adapter-blocto'
 import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie'
 // import { TorusWalletAdapter } from '@solana/wallet-adapter-torus'
+const Vco = require('v-click-outside')
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
+Vue.use(Vco)
 
 interface WalletInfo {
   // official website
@@ -95,9 +129,11 @@ interface WalletInfo {
   components: {
     Button,
     Modal,
-    Icon
+    Icon,
+    Tooltip
   }
 })
+
 export default class Wallet extends Vue {
   /* ========== DATA ========== */
   // TrustWallet ezDeFi
@@ -222,6 +258,8 @@ export default class Wallet extends Vue {
 
   debugCount = 0
 
+  popIn = false as boolean
+  isModal = true as boolean
   /* ========== COMPUTED ========== */
   get wallet() {
     return this.$accessor.wallet
@@ -328,7 +366,7 @@ export default class Wallet extends Vue {
       }
     })
 
-
+    this.isModal = true
   }
 
   onDisconnect() {
@@ -354,6 +392,8 @@ export default class Wallet extends Vue {
       message: 'Wallet disconnected',
       description: ''
     })
+
+    this.isModal = false
   }
 
   onWalletError(error: Error) {
@@ -544,69 +584,38 @@ export default class Wallet extends Vue {
       }
     }, 1000)
   }
+  
+  openPopIn() {
+    this.popIn = true
+  }
+  
+  closePopIn() {
+    this.popIn = false
+  }
+
+  outPopIn() {
+    this.popIn = false
+  }
 }
 </script>
 
 <style lang="less">
 @import '../styles/variables';
 
-.wallet-btn {
-  display: inline-flex;
-  align-items: center;
-}
-.ant-modal {
-  width: 800px !important;
-
-  @media (max-width: @mobile-b-width) {
-    width: calc(100% - 40px) !important;
-  }
-}
-.ant-modal-content {
-  background-color: #1a1d6b;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 4px;
-
-  .ant-modal-close {
-    color: @text-color;
-  }
-}
-
-.select-wallet {
-  button {
-    border: none;
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
-    width: 100%;
-    height: 48px;
-    text-align: left;
-    margin-bottom: 10px;
-
-    img {
-      height: 32px;
-      width: 32px;
-      border-radius: 50%;
-    }
-  }
-}
-
-header .btncontainer {
-  background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+.btncontainer {
+  background: linear-gradient(190.83deg, #23A7B2 -119.02%, #273A93 86.38%);
   background-origin: border-box;
   display: flex;
   align-items: center;
   text-align: center;
   position: relative;
   margin: auto;
-  padding: 2px;
+  padding: 3px;
   border-radius: 63px;
-  height: 54px;
+  height: 50px;
 
   button {
-    background: #01033c !important;
+    background: transparent;
     position: relative;
     border-radius: 63px;
     height: 100%;
@@ -619,6 +628,57 @@ header .btncontainer {
   @media (max-width: @mobile-b-width) {
     height: 46px;
     top: 5px;
+  }
+}
+
+.ant-modal-body {
+  .select-wallet {
+    button {
+      border: none;
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      width: 100%;
+      height: 48px;
+      text-align: left;
+      margin-bottom: 10px;
+
+      img {
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+
+.ant-modal {
+  width: 800px !important;
+
+  @media (max-width: @mobile-b-width) {
+    width: calc(100% - 40px) !important;
+  }
+}
+
+.ant-modal-content {
+  background-color: #1a1d6b;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px;
+
+  .ant-modal-close {
+    color: @text-color;
+  }
+}
+
+
+.ant-tooltip {
+  padding-top: 18px;
+
+  .ant-tooltip-inner {
+    color: white !important;
   }
 }
 
@@ -643,6 +703,107 @@ header .btncontainer {
     font-size: 30px;
   }
 }
+
+.wallet-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.wallet-list::before {
+  content: ' ';
+  height: 0;
+  position: absolute;
+  width: 0;
+  right: 20px;
+  top: -20px;
+  border: 10px solid transparent;
+  border-right-color: #3238EA;
+  transform: rotate(90deg);
+}
+
+.wallet-list {
+  position: absolute;
+  right: 100px;
+  margin-top: 10px;
+  z-index: 999;
+  background: linear-gradient(175.44deg, #3238EA 3.7%, #3137E7 6.44%, #171B7D 116.76%);
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+
+  @media (max-width: @mobile-b-width) {
+    right: 20px;
+  }
+  
+  .select-wallet {
+    max-height: 460px;
+    overflow-y: scroll;
+    padding: 0 24px;
+
+    @media (max-width: @mobile-b-width) {
+      max-height: 230px;
+    }
+
+    button {
+      border: none;
+      background: rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 4px 4px 0 #00000040;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      width: 100%;
+      height: 48px;
+      text-align: left;
+      margin-bottom: 10px;
+
+      img {
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+      }
+    }
+  }
+  
+  .select-wallet::-webkit-scrollbar {
+    display: block !important; /* Chrome Safari */
+  }
+
+  .select-wallet-header {
+    padding: 0 15px 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    .select-wallet-header-title {
+      font-size: 15px;
+      line-height: 19px;
+      color: #fff;
+    }
+
+    .select-wallet-header-close img{
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+.btncontainer.unconnected button{
+  background: #000539;
+}
+
+.btncontainer.connected button{
+  &:hover, &:focus {
+    background: #000539;
+  }
+}
+.btncontainer.unconnected button:hover,
+.btncontainer.unconnected button:focus
+{
+  background: transparent;
+}
+
 </style>
 
 <style lang="less" scoped>
@@ -660,6 +821,8 @@ header .btncontainer {
 .sonar-container {
   .btncontainer.sonar {
     margin-left:20px !important;
+    width: 50px;
+    height: 50px;
 
     @media (max-width: @mobile-b-width) {
       margin-left: 10px !important;

@@ -14,9 +14,6 @@
           <div class="menu-icon" :class="name.replace('-', ' ')"></div>
           <span> {{ name.replace('-', ' ') }} </span>
         </div>
-        <!-- <div class="menu-icon-soon" v-if="name.replace('-', ' ') == 'farms'">
-          <span>Soon</span>
-        </div> -->
       </div>
     </MenuItem>
   </Menu>
@@ -107,42 +104,9 @@ export default class Nav extends Vue {
   align-items: center;
 
   span {
-    height: 30px;
     display: flex;
     align-items: center;
   }
-}
-
-.menu-icon-soon {
-  display: none;
-  align-items: center;
-  height: 30px;
-  padding: 2px;
-  border-radius: 8px;
-  background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
-  background-origin: border-box;
-  margin-top: -10px;
-
-  span {
-    border-radius: 8px;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    background-color: #01033c;
-    height: 26px;
-    color: white;
-    width: 100%;
-    justify-content: center;
-    font-size: 14px;
-  }
-
-  @media (max-width: @mobile-b-width) {
-    margin-bottom: 20px;
-  }
-}
-
-.menu-icon-group:hover + .menu-icon-soon {
-  display: block;
 }
 
 .menu-icon {
@@ -201,16 +165,20 @@ export default class Nav extends Vue {
     margin-top: 10px;
     justify-content: space-between;
   }
-}
 
-.ant-menu-horizontal > .ant-menu-item {
-  border-bottom: none;
-  font-size: 16px;
-  font-weight: 600;
-  height: 60px;
+  .ant-menu-item {
+    border-bottom: none;
+    font-size: 16px;
+    font-weight: 400;
+    height: 60px;
 
-  @media (max-width: @mobile-m-width) {
-    font-size: 12px;
+    @media (max-width: @mobile-m-width) {
+      font-size: 12px;
+    }
+  }
+
+  .ant-menu-item-selected {
+    font-weight: 600;
   }
 }
 

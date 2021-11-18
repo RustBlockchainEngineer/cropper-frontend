@@ -19,7 +19,6 @@ import { FarmAccountLayout, UserInfoAccountLayout, YieldFarm } from '@/utils/far
 import { TOKENS, getTokenByMintAddress } from '@/utils/tokens'
 
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
-import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 
 const AUTO_REFRESH_TIME = 60
 
@@ -140,7 +139,6 @@ export const actions = actionTree(
 
         if(rewardToken === undefined){
           console.log("find reward token info error");
-          console.log(rewardTokenMintAddress);
           return;
         }
 
@@ -161,13 +159,11 @@ export const actions = actionTree(
           poolLpTokenAccount: _farmData.pool_lp_token_account.toBase58(), // lp vault
           poolRewardTokenAccount: _farmData.pool_reward_token_account.toBase58() // reward vault
         };
-        let findedFarm = FARMS.find((item)=>item.poolId === farmAccountAddress)
-        if(findedFarm == undefined){
+        let foundFarm = FARMS.find((item)=>item.poolId === farmAccountAddress)
+        if(foundFarm == undefined){
           FARMS.push(_farmInfo)
         }
 
-
-        console.log(_farmInfo);
 
         _farmInfo.lp.balance = new TokenAmount(0, lpTokenInfo.decimals);
         _farmInfo.reward.balance = new TokenAmount(0, rewardToken.decimals);
@@ -183,14 +179,14 @@ export const actions = actionTree(
           const address = info.publicKey.toBase58()
           const data = Buffer.from(info.account.data)
           const parsed = ACCOUNT_LAYOUT.decode(data);
-          let findedFarmForLP = FARMS.find((item)=>item.poolLpTokenAccount === address)
-          if(findedFarmForLP != undefined){
-            farms[findedFarmForLP.poolId].lp.balance.wei = farms[findedFarmForLP.poolId].lp.balance.wei.plus(getBigNumber(parsed.amount))
+          let foundFarmForLP = FARMS.find((item)=>item.poolLpTokenAccount === address)
+          if(foundFarmForLP != undefined){
+            farms[foundFarmForLP.poolId].lp.balance.wei = farms[foundFarmForLP.poolId].lp.balance.wei.plus(getBigNumber(parsed.amount))
           }
 
-          let findedFarmForReward = FARMS.find((item)=>item.poolRewardTokenAccount === address)
-          if(findedFarmForReward != undefined){
-            farms[findedFarmForReward.poolId].reward.balance.wei = farms[findedFarmForReward.poolId].reward.balance.wei.plus(getBigNumber(parsed.amount))
+          let foundFarmForReward = FARMS.find((item)=>item.poolRewardTokenAccount === address)
+          if(foundFarmForReward != undefined){
+            farms[foundFarmForReward.poolId].reward.balance.wei = farms[foundFarmForReward.poolId].reward.balance.wei.plus(getBigNumber(parsed.amount))
           }
         }
       });

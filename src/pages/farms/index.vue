@@ -53,6 +53,14 @@
       @onCancel="cancelStakeLP"
     />
 
+    <FarmMigration
+      v-if="userMigrations.length > 0"
+      title="Farm Migration"
+      :migrationFarms="userMigrations"
+      @onMigrate="migrateFarm"
+      @onCancel="cancelStake"
+    />
+
     <div class="card">
       <div class="card-body">
         <div class="page-head fs-container">
@@ -192,15 +200,15 @@
               <div class="title">Staked</div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-apr" @click="sortByAPR">Total APR
-                <Icon v-if="sortAPRAsc" type="arrow-up" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
-                <Icon v-else type="arrow-down" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
+              <div class="title table-apr" @click="sortByColumn('apr')">Total APR
+                <Icon v-if="sortAPRAsc" type="arrow-down" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-up" :class="sortMethod === 'apr' ? 'sort-icon-active' : '' "/>
               </div>
             </Col>
             <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-liquidity" @click="sortByLiquidity">Liquidity
-                <Icon v-if="sortLiquidityAsc" type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
-                <Icon v-else type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+              <div class="title table-liquidity" @click="sortByColumn('liquidity')">Liquidity
+                <Icon v-if="sortLiquidityAsc" type="arrow-down" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
+                <Icon v-else type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : '' "/>
               </div>
             </Col>
           </Row>
@@ -209,7 +217,7 @@
               <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
                 <span class="details noDesktop">
                   <div class="detailButton">
-                    <button>Details</button>
+                    <button></button>
                   </div>
                 </span>
 
@@ -253,7 +261,7 @@
                     Soon
                   </div>
                 </Col>
-
+                
                 <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
                   <Col span="24">
                     <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
@@ -354,39 +362,8 @@
                     }}
                   </div>
                 </Col>
-
-                <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
-                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
-                    Connect Wallet
-                  </Button>
-                  <div v-else class="fs-container">
-                    <Button
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                      size="large"
-                      ghost
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                    >
-                      Harvest & Unstake
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
-                <!-- <Col class="state noDesktop" :span="isMobile ? 6 : 3">
-                  <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                  <div
-                    v-if="
-                      currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="label soon"
-                  >
-                    Soon
-                  </div>
-                </Col> -->
-
-                <Col class="state reward-col noDesktop" :span="isMobile ? 12 : 6">
+                
+                <Col class="state noDesktop reward-col" :span="isMobile ? 12 : 6">
                   <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
                     <span class="labmobile">Pending Reward</span>-
                   </div>
@@ -490,7 +467,25 @@
                     }}
                   </div>
                 </Col>
+                
+                <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
+                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
+                    Connect Wallet
+                  </Button>
+                  <div v-else class="fs-container">
+                    <Button
+                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                      size="large"
+                      ghost
+                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                    >
+                      Harvest & Unstake
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
 
+              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
                 <Col v-if="!isMobile && !poolType" class="state noDesktop" :span="3">
                   <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
                     Connect Wallet
@@ -638,7 +633,7 @@
 
                         <div class="btncontainer">
                           <a target="_blank" :href="farm.farmInfo.twitterShare">
-                            <Button size="large" ghost style="background-color: #01033c !important"> Share </Button>
+                            <Button size="large" ghost style="background-color: #000539 !important"> Share </Button>
                           </a>
                         </div>
 
@@ -734,7 +729,7 @@ import {
   Switch as Toggle,
   Pagination
 } from 'ant-design-vue'
-import { get, cloneDeep } from 'lodash-es'
+import { get, cloneDeep, forIn } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { FarmInfo } from '@/utils/farms'
 import { deposit, withdraw } from '@/utils/stake'
@@ -829,9 +824,11 @@ export default Vue.extend({
       pageSize: 50,
       currentPage: 1,
       labelizedPermission: false as any,
-      sortAPRAsc: true as boolean,
+      sortAPRAsc: false as boolean,
       sortLiquidityAsc: true as boolean,
-      sortMethod: 'apr' as string
+      sortMethod: 'liquidity' as string,
+
+      userMigrations: [] as any[],
     }
   },
 
@@ -860,7 +857,8 @@ export default Vue.extend({
 
     'farm.stakeAccounts': {
       handler() {
-        this.updateFarms()
+        this.updateFarms();
+        this.checkFarmMigration();
       },
       deep: true
     },
@@ -923,7 +921,8 @@ export default Vue.extend({
       this.searchLifeFarm = 3
     }
 
-    this.checkIfFarmProgramExist()
+    this.checkIfFarmProgramExist();
+
   },
 
   methods: {
@@ -936,6 +935,84 @@ export default Vue.extend({
 
       await this.delay(1500)
       this.checkIfFarmProgramExist()
+    },
+    async checkFarmMigration(){
+      this.userMigrations = [];
+      
+      try {
+        const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json());
+        //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
+
+        forIn(migrations, (newFarmId, oldFarmId, _object) => {
+          
+          let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
+          let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
+          console.log("userInfoNew",userInfoNew)
+          console.log("userInfoOld",userInfoOld)
+          console.log("userInfoOld.depositBalance",userInfoOld.depositBalance.wei.toNumber())
+          if(userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0){
+            this.userMigrations.push({oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)});
+          }
+        });
+        
+      } catch {
+        // dummy data
+        this.userMigrations = []
+      } finally {
+        console.log("this.userMigrations",this.userMigrations)
+      }
+    },
+    migrateFarm(migrationFarm:any){
+      const amount = migrationFarm.depositBalance;
+
+      const oldFarm = get(this.farm.infos, migrationFarm.oldFarmId);
+      const oldFarmInfo = cloneDeep(oldFarm)
+
+      const newFarm = get(this.farm.infos, migrationFarm.newFarmId);
+      const newFarmInfo = cloneDeep(newFarm)
+
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      const lp = oldFarm.lp
+
+      const lpAccount = get(this.wallet.tokenAccounts, `${oldFarmInfo.lp.mintAddress}.tokenAccountAddress`)
+      const rewardAccount = get(this.wallet.tokenAccounts, `${oldFarmInfo.reward.mintAddress}.tokenAccountAddress`)
+      const infoAccount = get(this.farm.stakeAccounts, `${oldFarmInfo.poolId}.stakeAccountAddress`)
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+      YieldFarm.migrate(conn, wallet, oldFarmInfo, newFarmInfo, lpAccount, rewardAccount, infoAccount, amount)
+        .then(async (txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+              ])
+          })
+
+          const description = `Migrate ${amount} ${lp.name}`
+          this.$accessor.transaction.sub({ txid, description })
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Migrate failed',
+            description: error.message
+          })
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
+        })
+        .finally(() => {})
+
     },
     async checkIfFarmProgramExist() {
       const conn = this.$web3
@@ -959,10 +1036,7 @@ export default Vue.extend({
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
         // dummy data
-        responseData = [
-          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
-          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
-        ]
+        responseData = []
       } finally {
         responseData.forEach((element: any) => {
           this.labelizedAmms[element.ammID] = element.labelized
@@ -1017,13 +1091,17 @@ export default Vue.extend({
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           
+          let newCoin = 0;
+          let newPc = 0;
+
           if(!this.price.prices[liquidityItem?.coin.symbol as string] && this.price.prices[liquidityItem?.pc.symbol as string]){
             this.price.prices[liquidityItem?.coin.symbol as string] = this.price.prices[liquidityItem?.pc.symbol as string] * getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+            newCoin = 1;
           }
-
 
           if(!this.price.prices[liquidityItem?.pc.symbol as string] && this.price.prices[liquidityItem?.coin.symbol as string]){
             this.price.prices[liquidityItem?.pc.symbol as string] = this.price.prices[liquidityItem?.coin.symbol as string] * getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+            newPc = 1;
           }
 
           const rewardPerTimestampAmountTotalValue =
@@ -1052,7 +1130,11 @@ export default Vue.extend({
           newFarmInfo.lpUSDvalue = liquidityItemValue
 
           let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
-          let apr = ((rewardPerTimestampAmountTotalValue / farmUsdValue) * 100).toFixed(2)
+
+          let baseCalculation = farmUsdValue;
+          if(baseCalculation < 0.01){ baseCalculation = 1 }
+
+          let apr = ((rewardPerTimestampAmountTotalValue / baseCalculation) * 100).toFixed(2)
 
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
@@ -1101,6 +1183,15 @@ export default Vue.extend({
           if (rewardPerTimestampAmount.toEther().toString() === '0') {
             //endedFarmsPoolId.push(poolId)
           }
+
+          if(newCoin){
+            delete this.price.prices[liquidityItem?.coin.symbol as string];
+          }
+
+          if(newPc){
+            delete this.price.prices[liquidityItem?.pc.symbol as string];
+          }
+
         }
 
         if (userInfo && lp) {
@@ -1206,7 +1297,20 @@ export default Vue.extend({
         }
       }
 
-      this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+      if (this.sortMethod == 'apr') {
+        if (this.sortAPRAsc) {
+          this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
+        } else {
+          this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
+        }
+      } else if(this.sortMethod == 'liquidity') {
+        if (this.sortLiquidityAsc) {
+          this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+        } else {
+          this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
+        }
+      }
+      
       this.endedFarmsPoolId = endedFarmsPoolId
       this.filterFarms(
         this.searchName,
@@ -1820,7 +1924,7 @@ export default Vue.extend({
         .catch((error) => {
           this.$notify.error({
             key,
-            message: 'Stake failed',
+            message: 'Unstake failed',
             description: error.message
           })
           this.$accessor.farm.requestInfos()
@@ -1947,26 +2051,23 @@ export default Vue.extend({
 
       return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
     },
-    sortByAPR() {
-      this.sortMethod = 'apr'
-      if (this.sortAPRAsc) {
-        this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.apr - a.farmInfo.apr)
-        this.sortAPRAsc = false;
-      } else {
-        this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.apr - b.farmInfo.apr)
-        this.sortAPRAsc = true;
+    sortByColumn(mode: string) {
+      this.sortMethod = mode
+      if (mode == 'apr') {
+        if (this.sortAPRAsc) {
+          this.sortAPRAsc = false;
+        } else {
+          this.sortAPRAsc = true;
+        }
+      } else if(mode == 'liquidity') {
+        if (this.sortLiquidityAsc) {
+          this.sortLiquidityAsc = false;
+        } else {
+          this.sortLiquidityAsc = true;
+        }
       }
+      this.updateFarms()
     },
-    sortByLiquidity() {
-      this.sortMethod = 'liquidity'
-      if (this.sortLiquidityAsc) {
-        this.showFarms = this.showFarms.sort((a: any, b:any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
-        this.sortLiquidityAsc = false;
-      } else {
-        this.showFarms = this.showFarms.sort((a: any, b:any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
-        this.sortLiquidityAsc = true;
-      }
-    }
   }
 })
 </script>
@@ -1987,7 +2088,7 @@ export default Vue.extend({
 .farm.container {
   max-width: 1350px;
   width: 100%;
-  background: #01033c;
+  background: #000539;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
@@ -1999,7 +2100,7 @@ export default Vue.extend({
   }
 
   .page-head a {
-    background: #01033c;
+    background: #000539;
     margin-left: 20px;
     float: right;
     .btncontainer {
@@ -2124,7 +2225,7 @@ export default Vue.extend({
 
         .icons {
           height: 47px;
-          background-color: #01033c;
+          background-color: #000539;
           border-radius: 8px;
           align-items: center;
           justify-content: center;
@@ -2229,7 +2330,11 @@ export default Vue.extend({
 }
 
 .noDesktop {
-  display: none;
+  display: none !important;
+
+  @media (max-width: @mobile-b-width) {
+    display: block !important;
+  }
 }
 
 @media (max-width: @mobile-b-width) {
@@ -2248,16 +2353,18 @@ export default Vue.extend({
       background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
       background-origin: border-box;
       display: inline-block;
-      padding: 2px;
-      border-radius: 23px;
+      padding: 1px;
+      border-radius: 63px;
+      width: 45px;
+      height: 45px;
 
       button {
-        height: 42px;
-        padding: 11px 40px 11px 24px;
+        height: 100%;
+        width: 100%;
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164a;
+        background: #00033c;
         border-radius: 22px;
         border: transparent;
       }
@@ -2276,7 +2383,7 @@ export default Vue.extend({
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #16164a;
+        background: #00033c;
         border-radius: 22px;
         border: transparent;
 
@@ -2390,8 +2497,10 @@ export default Vue.extend({
       display: block;
       align-items: unset;
       .lp-icons {
-        padding: 0 10px;
-        display: block !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20% 0 10px;
         width: 100%;
         flex-direction: unset;
         float: unset;
@@ -2414,6 +2523,22 @@ export default Vue.extend({
         margin-top: 11px;
         .ant-col-12 {
           width: 100%;
+        }
+      }
+
+      .state.noDesktop {
+        padding: 0 20% 0 10px;
+        display: block !important;
+        width: 100%;
+        flex-direction: unset;
+        float: unset;
+        flex: unset;
+        text-align: right;
+        font-size: 18px;
+        margin-bottom: 6px;
+
+        .value {
+          text-align: unset !important;
         }
       }
     }
@@ -2473,7 +2598,7 @@ export default Vue.extend({
 
     .start,
     .harvest {
-      background: #01033c;
+      background: #000539;
       border-radius: 14px;
       margin: auto;
       .reward .token {
@@ -2577,18 +2702,19 @@ export default Vue.extend({
 
     .ant-collapse-arrow {
       z-index: 2;
-      margin-right: 20px;
+      margin-right: 16px;
+      margin-top: -1px;
     }
   }
 
   .ant-collapse-content {
-    background-color: #01033c;
+    background-color: #000539;
     border-top: none !important;
   }
 }
 
 .ant-collapse {
-  background-color: #01033c;
+  background-color: #000539;
 }
 
 .farm.container {
@@ -2655,7 +2781,7 @@ export default Vue.extend({
 
     .btncontainer {
       .btn-bg-fill {
-        background-color: #01033c !important;
+        background-color: #000539 !important;
       }
     }
   }
@@ -2682,7 +2808,7 @@ export default Vue.extend({
 }
 
 .count-down {
-  background-color: #01033c;
+  background-color: #000539;
   border-radius: 63px;
   height: 100%;
   display: inline-flex;
@@ -2894,7 +3020,7 @@ export default Vue.extend({
 }
 
 main {
-  background-color: #01033c;
+  background-color: #000539;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;

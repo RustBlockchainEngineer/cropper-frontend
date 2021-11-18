@@ -27,3 +27,5 @@ dist/*
 dist/_nuxt/119f984.js
 dist/_nuxt/4d11502.js
 .eslintcache
+
+sw.*

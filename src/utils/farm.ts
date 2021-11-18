@@ -23,6 +23,8 @@ import { getBigNumber } from './layouts';
 import { TokenAmount } from './safe-math';
 import { TOKENS } from './tokens';
 
+const FIXED_MULTIPLE_USER_ACCOUNTS = false;
+
 
 export const PAY_FARM_FEE = 5000;
 export const REWARD_MULTIPLER = 1000000000;
@@ -1075,9 +1077,25 @@ export class YieldFarm {
       userInfoKey = new PublicKey(infoAccount);
     }
     else{
-      const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
-      const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
-      userInfoKey = foundUserInfoKey;
+      if(FIXED_MULTIPLE_USER_ACCOUNTS){
+        const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
+        const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
+        userInfoKey = foundUserInfoKey;
+      }
+      else{
+        // not fixed multiple stake accounts problem
+        userInfoKey = await createProgramAccountIfNotExist(
+          connection,
+          infoAccount,
+          owner,
+          programId,
+          null,
+          UserInfoAccountLayout,
+          transaction,
+          signers
+        );
+      }
+      
     }
 
     const fetchFarm = await YieldFarm.loadFarm(
@@ -1138,7 +1156,153 @@ export class YieldFarm {
     return result;
   }
   
-  
+  public static async migrate(
+    connection: Connection,
+    wallet: any ,
+    oldFarmInfo: FarmInfo,
+    newFarmInfo: FarmInfo,
+    lpAccount: string | undefined | null,
+    rewardAccount: string | undefined | null,
+    infoAccount: string | undefined | null,
+    amount: string,
+  ){
+    
+    const programData = await FarmProgram.loadProgramAccount(connection);
+
+    const value = getBigNumber(new TokenAmount(amount, oldFarmInfo.lp.decimals, false).wei)
+    const transaction = new Transaction()
+    const signers: any = []
+    const owner = wallet.publicKey
+    const atas: string[] = []
+    const programId = new PublicKey(oldFarmInfo.programId)
+    const oldFarmId = new PublicKey(oldFarmInfo.poolId)
+
+    const userLpAccount = await createAssociatedTokenAccountIfNotExist(
+      lpAccount,
+      owner,
+      oldFarmInfo.lp.mintAddress,
+      transaction,
+      atas
+    )
+
+    // if no account, create new one
+    const userRewardTokenAccount = await createAssociatedTokenAccountIfNotExist(
+      rewardAccount,
+      owner,
+      oldFarmInfo.reward.mintAddress,
+      transaction,
+      atas
+    )
+
+    let userInfoKey = null;
+    if(infoAccount){
+      userInfoKey = new PublicKey(infoAccount);
+    }
+    else{
+      if(FIXED_MULTIPLE_USER_ACCOUNTS){
+        const seeds = [Buffer.from(FARM_PREFIX),oldFarmId.toBuffer(),owner.toBuffer()];
+        const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
+        userInfoKey = foundUserInfoKey;
+      }
+      else{
+        // not fixed multiple stake accounts problem
+        userInfoKey = await createProgramAccountIfNotExist(
+          connection,
+          infoAccount,
+          owner,
+          programId,
+          null,
+          UserInfoAccountLayout,
+          transaction,
+          signers
+        );
+      }
+    }
+
+    let [authority] = await PublicKey.findProgramAddress(
+      [oldFarmId.toBuffer()],
+      programId,
+    );
+
+    let rewardATA = await YieldFarm.checkWalletATA(connection, programData.feeOwner, oldFarmInfo.reward.mintAddress);
+    if(!rewardATA){
+      rewardATA = await createAssociatedTokenAccountIfNotExist(
+        null,
+        programData.feeOwner,
+        oldFarmInfo.reward.mintAddress,
+        transaction
+      )
+    }
+
+    const seeds = [Buffer.from(FARM_PREFIX),programId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, programId);
+    const withdrawInstruction = YieldFarm.createWithdrawInstruction(
+      oldFarmId,
+      authority,
+      owner,
+      userInfoKey,
+      userLpAccount,
+      userRewardTokenAccount,
+      new PublicKey(oldFarmInfo.poolLpTokenAccount),
+      new PublicKey(oldFarmInfo.poolRewardTokenAccount),
+      new PublicKey(oldFarmInfo.lp.mintAddress),
+      rewardATA,
+      TOKEN_PROGRAM_ID,
+      programId,
+      value,
+      programAccount
+    );
+    transaction.add(withdrawInstruction);
+
+
+    const newFarmId = new PublicKey(newFarmInfo.poolId)
+    
+    let newUserInfoKey = null;
+    if(FIXED_MULTIPLE_USER_ACCOUNTS){
+      const seeds = [Buffer.from(FARM_PREFIX),newFarmId.toBuffer(),owner.toBuffer()];
+      const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
+      newUserInfoKey = foundUserInfoKey;
+    }
+    else{
+      // not fixed multiple stake accounts problem
+      newUserInfoKey = await createProgramAccountIfNotExist(
+        connection,
+        null,
+        owner,
+        programId,
+        null,
+        UserInfoAccountLayout,
+        transaction,
+        signers
+      );
+    }
+
+    const fetchFarm = await YieldFarm.loadFarm(
+      connection,
+      newFarmId,
+      programId
+    )
+    
+    const depositInstruction = YieldFarm.createDepositInstruction(
+      newFarmId,
+      fetchFarm.authority,
+      owner,
+      newUserInfoKey,
+      userLpAccount,
+      userRewardTokenAccount,
+      fetchFarm.poolLpTokenAccount,
+      fetchFarm.poolRewardTokenAccount,
+      fetchFarm.lpTokenPoolMint,
+      rewardATA,
+      TOKEN_PROGRAM_ID,
+      programId,
+      value,
+      programAccount
+    );
+    transaction.add(depositInstruction);
+
+    return await sendTransaction(connection, wallet, transaction, signers);
+  }
   public static async withdraw( 
     connection: Connection,
     wallet: any ,
@@ -1180,9 +1344,25 @@ export class YieldFarm {
       userInfoKey = new PublicKey(infoAccount);
     }
     else{
-      const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
-      const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
-      userInfoKey = foundUserInfoKey;
+      if(FIXED_MULTIPLE_USER_ACCOUNTS){
+        const seeds = [Buffer.from(FARM_PREFIX),farmId.toBuffer(),owner.toBuffer()];
+        const [foundUserInfoKey] = await PublicKey.findProgramAddress(seeds, programId);
+        userInfoKey = foundUserInfoKey;
+      }
+      else{
+        // not fixed multiple stake accounts problem
+        userInfoKey = await createProgramAccountIfNotExist(
+          connection,
+          infoAccount,
+          owner,
+          programId,
+          null,
+          UserInfoAccountLayout,
+          transaction,
+          signers
+        );
+      }
+      
     }
 
     let [authority] = await PublicKey.findProgramAddress(

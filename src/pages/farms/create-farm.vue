@@ -1305,7 +1305,7 @@ export default class CreateFarm extends Vue {
           font-size: 20px;
           font-weight: 600;
           line-height: 25px;
-          color: #01033c;
+          color: #000539;
         }
       }
 
@@ -1600,7 +1600,7 @@ export default class CreateFarm extends Vue {
 
 <style lang="less" scoped>
 main {
-  background-color: #01033c;
+  background-color: #000539;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -2054,7 +2054,7 @@ main {
 
           .icons {
             height: 47px;
-            background-color: #01033c;
+            background-color: #000539;
             border-radius: 8px;
             align-items: center;
             padding: 0 20px;
@@ -2086,7 +2086,7 @@ main {
 }
 
 .ant-layout {
-  background: #01033c !important;
+  background: #000539 !important;
 }
 .msgClass div {
   line-height: 30px;

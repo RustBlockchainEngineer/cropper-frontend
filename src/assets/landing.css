@@ -14,7 +14,7 @@ body {
     justify-content: center;
     margin: 0;
     padding: 0;
-    background-color: #01033C;
+    background-color: #000539;
     z-index: -1;
     overflow-x:hidden
 }
@@ -45,9 +45,9 @@ body .landing{
 
 .lunch-app-button{
     height: 50px;
-    background-color: #01033C;
+    background-color: #000539;
     border-radius: 63px;
-    border-color: #01033C;
+    border-color: #000539;
     padding: 6px 28px;
     font-size: 16px;
     line-height: 42px;
@@ -531,7 +531,7 @@ h1 {
     justify-content: center;
     display: flex;
     align-items: center;
-    background-color: #01033c;
+    background-color: #000539;
     color: white;
     font-family: Gilroy;
     font-style: normal;
@@ -1103,7 +1103,7 @@ h1 {
     height: 100%;
     justify-content: center;
     align-items: center;
-    background-color: #01033c;
+    background-color: #000539;
     color: white;
     font-family: Gilroy;
     font-style: normal;
@@ -1595,7 +1595,7 @@ h1 {
     height: 100%;
     justify-content: center;
     align-items: center;
-    background-color: #01033c;
+    background-color: #000539;
     color: white;
     font-family: Gilroy;
     font-style: normal;
@@ -1794,7 +1794,7 @@ h1 {
     height: 64px;
     justify-content: center;
     align-items: center;
-    background-color: #01033c;
+    background-color: #000539;
     color: white;
     font-family: Gilroy;
     font-style: normal;
@@ -1946,7 +1946,7 @@ h1 {
     margin: 30px;
     width: 143px;
     height: 70px;
-    background-color: #01033c;
+    background-color: #000539;
     font-family: Gilroy;
     font-style: normal;
     font-weight: 600;
@@ -1954,7 +1954,7 @@ h1 {
     line-height: 32px;
     letter-spacing: -0.05em;
     color: #FFFFFF;
-    border-color: #01033c;
+    border-color: #000539;
     opacity: 0.5;
     cursor: pointer;
 }
@@ -1991,7 +1991,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #01033c;
+    background-color: #000539;
     width: 100%;
     height: 100%;
     border-radius: 6px;

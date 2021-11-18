@@ -2,7 +2,7 @@
   <Header class="header fs-container" :class="isMobile ? 'mobile' : ''">
     <NuxtLink to="/">
       <img class="logo" v-if="!isMobile" src="@/assets/icons/logo-desktop.svg" />
-      <img class="logo" v-else src="@/assets/icons/logo-mobile.png" />
+      <img class="logo" v-else src="@/assets/icons/logo-mobile.svg" />
     </NuxtLink>
 
     <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
@@ -48,7 +48,7 @@ export default Vue.extend({
   margin-top: 40px;
   
   .logo {
-    height: 32px;
+    height: 55px;
   }
 
   .mobile-nav {
@@ -130,6 +130,10 @@ export default Vue.extend({
     padding: 0 !important;
     display: block;
 
+    .logo {
+      height: 32px;
+    }
+
     .nav-button {
       display: none;
     }
@@ -137,7 +141,7 @@ export default Vue.extend({
 
   .wallet-container.mobile {
     float: right;
-    margin-top: -130px;
+    margin-top: -140px;
   }
 }
 </style>

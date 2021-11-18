@@ -1834,7 +1834,7 @@ export default Vue.extend({
 }
 main {
   background-image: unset;
-  background-color: #01033c;
+  background-color: #000539;
   background-size: cover;
   background-position: center bottom;
 }
@@ -1905,7 +1905,7 @@ main {
   padding: 2px;
 }
 .count-down {
-  background-color: #01033c;
+  background-color: #000539;
   border-radius: 63px;
   height: 100%;
   display: inline-flex;
@@ -2113,7 +2113,7 @@ main {
 .swapWrapper {
   max-width: 1350px;
   width: 100%;
-  background: #01033c;
+  background: #000539;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
@@ -2178,10 +2178,10 @@ main {
   .ant-menu-horizontal,
   .ant-layout-header,
   .ant-layout-footer {
-    background: #01033c !important;
+    background: #000539 !important;
   }
   .ant-layout-content {
-    background: #01033c !important;
+    background: #000539 !important;
   }
 }
 .ant-tooltip-inner {
