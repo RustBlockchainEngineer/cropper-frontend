@@ -565,6 +565,9 @@ export async function swap(
     const stateId = await getAMMGlobalStateAddress();
     const state_info = await getAMMGlobalStateAccount(connection);
     let feeTokenAccount = await getOneFilteredTokenAccountsByOwner(connection, state_info.feeOwner, new PublicKey(fromMint))
+    let normal_dir = (fromCoinMint == poolInfo.coin.mintAddress)
+    let poolFromAccount = normal_dir? poolInfo.poolCoinTokenAccount: poolInfo.poolPcTokenAccount
+    let poolToAccount = normal_dir? poolInfo.poolPcTokenAccount: poolInfo.poolCoinTokenAccount
 
     feeTokenAccount = (await createAssociatedTokenAccountIfNotExist2(
                                         feeTokenAccount, 
@@ -580,8 +583,8 @@ export async function swap(
         owner,
         stateId,
         wrappedSolAccount ?? newFromTokenAccount,
-        new PublicKey(poolInfo.poolCoinTokenAccount),
-        new PublicKey(poolInfo.poolPcTokenAccount),
+        new PublicKey(poolFromAccount),
+        new PublicKey(poolToAccount),
         wrappedSolAccount2 ?? newToTokenAccount,
         new PublicKey(poolInfo.lp.mintAddress),
         new PublicKey(feeTokenAccount),
