@@ -1834,7 +1834,7 @@ export default Vue.extend({
 }
 main {
   background-image: unset;
-  background-color: #000539;
+  background-color: @color-bg;
   background-size: cover;
   background-position: center bottom;
 }
@@ -1872,7 +1872,7 @@ main {
   margin-top: 10px;
   justify-content: space-between;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     justify-content: center;
   }
 
@@ -1891,7 +1891,7 @@ main {
     justify-content: space-between;
     position: relative;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       top: -25px;
     }
   }
@@ -1905,7 +1905,7 @@ main {
   padding: 2px;
 }
 .count-down {
-  background-color: #000539;
+  background-color: @color-bg;
   border-radius: 63px;
   height: 100%;
   display: inline-flex;
@@ -2113,7 +2113,7 @@ main {
 .swapWrapper {
   max-width: 1350px;
   width: 100%;
-  background: #000539;
+  background: @color-bg;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
@@ -2178,10 +2178,10 @@ main {
   .ant-menu-horizontal,
   .ant-layout-header,
   .ant-layout-footer {
-    background: #000539 !important;
+    background: @color-bg !important;
   }
   .ant-layout-content {
-    background: #000539 !important;
+    background: @color-bg !important;
   }
 }
 .ant-tooltip-inner {
@@ -2254,7 +2254,7 @@ main {
 //   height: 10px;
 // }
 // ******* Mobile *******
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   .swapWrapper {
     margin: auto;
     padding: 0;

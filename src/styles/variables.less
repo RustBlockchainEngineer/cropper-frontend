@@ -7,42 +7,74 @@
 @heading-color: @text-color;
 @layout-header-background: @bg-color;
 @layout-body-background: @bg-color;
+
+@color-pools: #724CEE;
+@color-farms: #EF745D;
+@color-swap: #48A469;
+@color-fertilizer: #3990F5;
+@color-bg: #000539;
+
+//gradient
+@gradient-color-labelized: linear-gradient(90deg, #342074 6.7%, #0B2E6A 26.23%);
+@gradient-color-labelized-brighter: linear-gradient(90deg, #503D91 6.7%, #1E3A68 25.41%);
+@gradient-color-permissionless: linear-gradient(90deg, #50251D 6.7%, #0B2E6A 26.65%);
+@gradient-color-permissionless-brighter: linear-gradient(90deg, #73514A 6.7%, #1E3A69 27.48%);
+@gradient-color-border: linear-gradient(97.63deg, #2767A5 -29.92%, #2CBBD1 103.89%);
+@gradient-color-deposit: linear-gradient(97.63deg, #273893 -29.92%, #26559B -11.8%, #2CCAD9 103.89%);
+@gradient-color-harvest: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+@gradient-color-icon: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
+@gradient-color-primary: linear-gradient(190.83deg, #23A7B2 -119.02%, #273A93 86.38%);
+@gradient-color-wallet: linear-gradient(175.44deg, #3238EA 3.7%, #3137E7 6.44%, #171B7D 116.76%);
 // menu
 @menu-bg: @bg-color;
 @menu-item-color: rgba(241, 241, 242, 0.5);
 @menu-highlight-color: rgba(241, 241, 242, 1);
 @menu-dark-item-active-bg: #6a49fe;
+
 // button
 
 // card
 @card-background: rgba(19, 26, 53, 0.75);
+
 // modal
 @modal-header-bg: #1c274f;
 @modal-heading-color: @text-color;
+
 // tooltip
 @tooltip-bg: @modal-header-bg;
 @tooltip-color: @text-color;
 @tooltip-max-width: 400px;
+
 // tabs
-// @tabs-highlight-color: @text-color;
-// @tabs-title-font-size: 24px;
-// @tabs-scrolling-size: 0;
-// @tabs-horizontal-margin: 0 16px 0 0;
-// @tabs-horizontal-padding: 0;
+@tabs-highlight-color: @text-color;
+@tabs-title-font-size: 24px;
+@tabs-scrolling-size: 0;
+@tabs-horizontal-margin: 0 16px 0 0;
+@tabs-horizontal-padding: 0;
+
 // collapse
 @collapse-header-bg: #000829;
 @collapse-content-bg: @collapse-header-bg;
+
 // process
 @progress-default-color: @primary-color;
+
 // table
 @table-header-bg: transparent;
 @table-row-hover-bg: transparent;
 @table-header-sort-active-bg: transparent;
 @table-header-filter-active-bg: transparent;
+
 // radio
 @radio-button-bg: #1c274f;
 @radio-button-checked-bg: #f1f1f2;
+
 // mobile
 @mobile-b-width: 700px;
 @mobile-m-width: 435px;
 @mobile-s-width: 375px;
+
+// media
+@max-s-mobile: ~"(max-width: 375px)";
+@max-m-mobile: ~"(max-width: 435px)";
+@max-b-mobile: ~"(max-width: 700px)";

@@ -112,7 +112,7 @@ export default class CreateFarm extends Vue {
 </script>
 <style lang="less" scoped>
 main {
-  background-color: #000539;
+  background-color: @color-bg;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -193,7 +193,7 @@ div {
   padding-left: 10px;
 }
 .ant-layout {
-  background: #000539 !important;
+  background: @color-bg !important;
 }
 
 .ant-col {

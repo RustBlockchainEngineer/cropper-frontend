@@ -78,7 +78,7 @@ export default Vue.extend({
   line-height: 21px;
   color: #FFFFFF50;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     font-size: 14px;
     line-height: 18px;
   }
@@ -93,7 +93,7 @@ export default Vue.extend({
     line-height: 21px;
     color: #FFFFFF50;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       font-size: 12px;
       line-height: 15px;
     }

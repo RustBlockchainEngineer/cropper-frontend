@@ -1048,7 +1048,7 @@ export default class CreatePool extends Vue {
           font-size: 20px;
           font-weight: 600;
           line-height: 25px;
-          color: #000539;
+          color: @color-bg;
         }
       }
 
@@ -1064,7 +1064,7 @@ export default class CreatePool extends Vue {
 
 <style lang="less" scoped>
 main {
-  background-color: #000539;
+  background-color: @color-bg;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -1073,7 +1073,7 @@ main {
 .create-pool {
   max-width: 90%;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     min-width: 100%;
   }
 
@@ -1099,7 +1099,7 @@ main {
     width: 163px;
     text-align: center;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       width: 140px;
       height: 50px;
       display: flex;
@@ -1119,7 +1119,7 @@ main {
       letter-spacing: -0.05em;
       padding: 0;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         font-size: 14px;
         line-height: 24px;
       }
@@ -1140,7 +1140,7 @@ main {
     width: 163px;
     text-align: center;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       width: 140px;
       display: flex;
       align-items: center;
@@ -1160,7 +1160,7 @@ main {
       letter-spacing: -0.05em;
       padding: 0;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         font-size: 14px;
         line-height: 24px;
       }
@@ -1190,12 +1190,12 @@ main {
       justify-content: space-between;
       align-items: center;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         display: block;
       }
 
       .buttonsd {
-        @media (max-width: @mobile-b-width) {
+        @media @max-b-mobile {
           padding: 20px 15px;
           border: 4px solid #16164a;
           box-sizing: border-box;
@@ -1215,7 +1215,7 @@ main {
     padding: 40px 60px;
     background-color: #16164a;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       padding: 20px 16px;
     }
 
@@ -1225,7 +1225,7 @@ main {
       line-height: 37px;
       background: transparent;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         font-size: 23px;
         font-weight: 600;
         line-height: 28px;
@@ -1243,7 +1243,7 @@ main {
 
   .bordered-left,
   .bordered-right {
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       border: none;
     }
   }
@@ -1251,7 +1251,7 @@ main {
   .step {
     padding-top: 30px;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       padding-top: 0;
     }
   }
@@ -1261,7 +1261,7 @@ main {
     padding-top: 30px;
     padding-left: 50px;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       padding-left: 0;
     }
 
@@ -1301,7 +1301,7 @@ main {
             }
           }
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             margin-left: -30px;
 
             .selected-pool-box {
@@ -1323,7 +1323,7 @@ main {
         .max-80 {
           max-width: 80% !important ;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             max-width: 100% !important;
             padding: 0 !important;
           }
@@ -1349,7 +1349,7 @@ main {
           padding: 20px 0 0 30px;
           max-width: 615px;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             max-width: @mobile-b-width;
           }
 
@@ -1377,7 +1377,7 @@ main {
             width: max-content;
             padding-left: 10px;
 
-            @media (max-width: @mobile-b-width) {
+            @media @max-b-mobile {
               width: 100%;
               font-size: 15px;
               line-height: 18px;
@@ -1392,7 +1392,7 @@ main {
             margin-bottom: 10px;
             padding-left: 10px;
 
-            @media (max-width: @mobile-b-width) {
+            @media @max-b-mobile {
               font-size: 12px;
               line-height: 15px;
             }
@@ -1415,7 +1415,7 @@ main {
               top: 15%;
               left: 20%;
 
-              @media (max-width: @mobile-b-width) {
+              @media @max-b-mobile {
                 left: 7%;
               }
             }
@@ -1505,7 +1505,7 @@ main {
 
         .reward-emission,
         .farm-duration {
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             padding: 0;
             margin: 0 -10px;
           }
@@ -1519,7 +1519,7 @@ main {
         .create-amm {
           line-height: 22px;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             line-height: 18px;
           }
 
@@ -1527,7 +1527,7 @@ main {
             font-size: 18px;
             color: #80819d;
 
-            @media (max-width: @mobile-b-width) {
+            @media @max-b-mobile {
               font-size: 15px;
             }
           }
@@ -1552,7 +1552,7 @@ main {
         .selected-pool {
           padding: 0 30px 25px 30px;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             padding: 0 0 25px 0;
           }
         }
@@ -1564,7 +1564,7 @@ main {
           margin-top: 15px;
           padding-left: 10px;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             word-break: break-all;
             font-size: 15px;
             line-height: 18px;
@@ -1579,7 +1579,7 @@ main {
         .pool-created {
           line-height: 25px;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             text-align: center;
           }
         }
@@ -1594,13 +1594,13 @@ main {
           border-radius: 8px;
           padding: 2px;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             margin: auto;
           }
 
           .icons {
             height: 47px;
-            background-color: #000539;
+            background-color: @color-bg;
             border-radius: 8px;
             align-items: center;
             padding: 0 20px;
@@ -1632,6 +1632,6 @@ main {
 }
 
 .ant-layout {
-  background: #000539 !important;
+  background: @color-bg !important;
 }
 </style>

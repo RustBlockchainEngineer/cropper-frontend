@@ -124,7 +124,7 @@ export default Vue.extend({
   }
 }
 
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   .header.mobile {
     margin: 10px 20px 80px 20px;
     padding: 0 !important;

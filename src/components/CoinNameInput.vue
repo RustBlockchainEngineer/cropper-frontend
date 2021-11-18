@@ -119,7 +119,7 @@ export default Vue.extend({
 
     button {
       border: none;
-      background-color: #000539;
+      background-color: @color-bg;
       font-weight: 600;
       font-size: 14px;
       line-height: 22px;

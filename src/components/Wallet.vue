@@ -603,7 +603,7 @@ export default class Wallet extends Vue {
 @import '../styles/variables';
 
 .btncontainer {
-  background: linear-gradient(190.83deg, #23A7B2 -119.02%, #273A93 86.38%);
+  background: @gradient-color-primary;
   background-origin: border-box;
   display: flex;
   align-items: center;
@@ -625,7 +625,7 @@ export default class Wallet extends Vue {
     color: white !important;
   }
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     height: 46px;
     top: 5px;
   }
@@ -658,7 +658,7 @@ export default class Wallet extends Vue {
 .ant-modal {
   width: 800px !important;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     width: calc(100% - 40px) !important;
   }
 }
@@ -699,7 +699,7 @@ export default class Wallet extends Vue {
   color: #fff;
   border-bottom: 1px solid #ffffff20;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     font-size: 30px;
   }
 }
@@ -726,11 +726,11 @@ export default class Wallet extends Vue {
   right: 100px;
   margin-top: 10px;
   z-index: 999;
-  background: linear-gradient(175.44deg, #3238EA 3.7%, #3137E7 6.44%, #171B7D 116.76%);
+  background: @gradient-color-wallet;
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     right: 20px;
   }
   
@@ -739,7 +739,7 @@ export default class Wallet extends Vue {
     overflow-y: scroll;
     padding: 0 24px;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       max-height: 230px;
     }
 
@@ -790,12 +790,12 @@ export default class Wallet extends Vue {
 }
 
 .btncontainer.unconnected button{
-  background: #000539;
+  background: @color-bg;
 }
 
 .btncontainer.connected button{
   &:hover, &:focus {
-    background: #000539;
+    background: @color-bg;
   }
 }
 .btncontainer.unconnected button:hover,
@@ -824,7 +824,7 @@ export default class Wallet extends Vue {
     width: 50px;
     height: 50px;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       margin-left: 10px !important;
       width: 46px;
       height: 46px;
@@ -841,7 +841,7 @@ export default class Wallet extends Vue {
     }
   }
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     display: inline-flex;
     align-items: center;
   }
