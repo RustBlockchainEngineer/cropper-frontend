@@ -92,65 +92,62 @@
             </NuxtLink>
           </span>
 
-          <span class="buttonsd">
-            <div class="farm-button-group">
-              <div class="count-down-group">
-                <div class="count-down">
-                  <span v-if="farm.autoRefreshTime - farm.countdown < 10">0</span>
-                  {{ farm.autoRefreshTime - farm.countdown }}
-                  <div
-                    class="reload-btn"
-                    @click="
-                      () => {
-                        $accessor.farm.requestInfos()
-                        $accessor.wallet.getTokenAccounts()
-                      }
-                    "
-                  >
-                    <img src="@/assets/icons/loading.svg" />
-                  </div>
-                  <!-- <Progress
-                      type="circle"
-                      :width="20"
-                      :stroke-width="10"
-                      :percent="(100 / farm.autoRefreshTime) * farm.countdown"
-                      :show-info="false"
-                      :class="farm.loading ? 'disabled' : ''"
-                      @click="
-                        () => {
-                          $accessor.farm.requestInfos()
-                          $accessor.wallet.getTokenAccounts()
-                        }
-                      "
-                    /> -->
-                </div>
-              </div>
+          <span class="information">
+            <div class="my-info">
+              <p>TVL : <b>5,456,009 $</b></p>
+              <p>Your deposit: <b>28,009 $</b></p>
+            </div>
+
+            <div
+              class="reload-btn"
+              @click="
+                () => {
+                  $accessor.farm.requestInfos()
+                  $accessor.wallet.getTokenAccounts()
+                }
+              "
+            >
+              <img src="@/assets/icons/loading.svg" />
             </div>
           </span>
         </div>
 
-        <div v-if="farm.initialized">
-          <div class="tool-bar noMobile">
-            <div class="tool-option">
+        <div v-if="farm.initialized" class="page-content">
+          <Row class="tool-bar noMobile">
+            <Col :span="isMobile ? '24' : '4'" class="tool-option">
               <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
               </Input>
-            </div>
-            <div class="tool-option">
-              <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
-            </div>
-            <div class="tool-option">
-              <Select :options="lifeOptions" v-model="searchLifeFarm"> </Select>
-            </div>
-            <div class="tool-option last-option">
+            </Col>
+            <Col :span="isMobile ? '24' : '6'" class="tool-option">
+              <div class="toggle">
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : '' ">Labelized</label>
+                <Toggle v-model="searchCertifiedFarm" :disabled="!wallet.connected || searchLifeFarm === 1" />
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : '' ">Permissionless</label>
+              </div>
+            </Col>
+            <Col :span="isMobile ? '24' : '5'" class="tool-option">
+              <div class="toggle">
+                <label class="label" :class="!searchLifeFarm ? 'active-label' : '' ">Open</label>
+                <Toggle v-model="searchLifeFarm" :disabled="!wallet.connected || searchLifeFarm === 1" />
+                <label class="label" :class="searchLifeFarm ? 'active-label' : '' ">Ended</label>
+              </div>
+            </Col>
+            <Col :span="isMobile ? '24' : '4'" class="tool-option">
+              <div class="toggle deposit-toggle">
+                <label class="label">My deposit</label>
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
+              </div>
+            </Col>
+            <Col :span="isMobile ? '24' : '5'" class="tool-option">
               <div class="toggle">
                 <label class="label">Staked Only</label>
                 <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
               </div>
-            </div>
-          </div>
+            </Col>
+          </Row>
 
-          <div class="tool-bar noDesktop" v-if="displayfilters">
+          <!-- <div class="tool-bar noDesktop" v-if="displayfilters">
             <div class="tool-option">
               <Input v-model="searchName" size="large" class="input-search largeserach" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
@@ -162,13 +159,13 @@
             <div class="tool-option">
               <Select :options="lifeOptions" v-model="searchLifeFarm"> </Select>
             </div>
-            <div class="tool-option last-option">
+            <div class="tool-option">
               <div class="toggle">
                 <label class="label">Staked Only</label>
                 <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
               </div>
             </div>
-          </div>
+          </div> -->
 
           <Row class="farm-head table-head">
             <Col class="lp-icons" :span="isMobile ? 12 : 6">
@@ -747,9 +744,9 @@ import {
   Row,
   Col,
   Button,
-  Radio,
+  // Radio,
   Input,
-  Select,
+  // Select,
   Switch as Toggle,
   Pagination
 } from 'ant-design-vue'
@@ -790,7 +787,8 @@ export default Vue.extend({
     Row,
     Col,
     Button,
-    Select,
+    // Radio,
+    // Select,
     Pagination
   },
 
@@ -830,17 +828,6 @@ export default Vue.extend({
       labelizedAmms: {} as any,
       labelizedAmmsExtended: {} as any,
       poolsDatas: {} as any,
-      certifiedOptions: [
-        { value: 0, label: 'Labelized' },
-        { value: 1, label: 'Permissionless' },
-        { value: 2, label: 'All' }
-      ],
-      lifeOptions: [
-        { value: 0, label: 'Opened' },
-        //  { value: 1, label: 'Future' },
-        { value: 2, label: 'Ended' },
-        { value: 3, label: 'All' }
-      ],
       searchCertifiedFarm: 0,
       searchLifeFarm: 0,
       stakedOnly: false,
@@ -2112,13 +2099,6 @@ export default Vue.extend({
   margin: 0;
 }
 
-.farm-button-group {
-  position: relative;
-  float: right;
-  display: inline-flex;
-  align-items: center;
-}
-
 .farm.container {
   max-width: 1350px;
   width: 100%;
@@ -2645,51 +2625,51 @@ export default Vue.extend({
       margin-right: 5px;
     }
 
-    .tool-bar {
-      height: unset;
-      border: unset;
+    // .tool-bar {
+    //   height: unset;
+    //   border: unset;
 
-      .tool-option {
-        background: #00033c;
-        width: 100%;
-        height: 54px;
-        display: block;
-        position: relative;
-        margin: 10px 0;
-        border: 4px solid #16164a;
-        box-sizing: border-box;
-        border-radius: 10px;
-        .input-search {
-          height: 47px !important;
-          .ant-input {
-            padding: 19px 60px;
-            border: none;
-            height: 47px !important;
-          }
-        }
+    //   .tool-option {
+    //     background: #00033c;
+    //     width: 100%;
+    //     height: 54px;
+    //     display: block;
+    //     position: relative;
+    //     margin: 10px 0;
+    //     border: 4px solid #16164a;
+    //     box-sizing: border-box;
+    //     border-radius: 10px;
 
-        .toggle {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          display: inline-flex;
-          align-items: center;
-          justify-content: left;
-          padding-left: 10%;
+    //     .input-search {
+    //       height: 47px !important;
+    //       .ant-input {
+    //         padding: 19px 60px;
+    //         border: none;
+    //         height: 47px !important;
+    //       }
+    //     }
 
-          .ant-switch {
-            position: absolute;
-            right: 10%;
-          }
-        }
-      }
-    }
+    //     .toggle {
+    //       position: absolute;
+    //       width: 100%;
+    //       height: 100%;
+    //       display: inline-flex;
+    //       align-items: center;
+    //       justify-content: left;
+    //       padding-left: 10%;
+
+    //       .ant-switch {
+    //         position: absolute;
+    //         right: 10%;
+    //       }
+    //     }
+    //   }
+    // }
   }
 }
 </style>
 
 <style lang="less">
-
 ::-webkit-scrollbar {
   @media @max-b-mobile {
     display: none; /* Chrome Safari */
@@ -2705,6 +2685,10 @@ export default Vue.extend({
     margin-top: 10px;
 
     .title {
+      text-align: center;
+      position: relative;
+      float: left;
+
       a {
         position: absolute;
         top: 5px;
@@ -2721,6 +2705,135 @@ export default Vue.extend({
           justify-content: center;
           color: white;
           font-size: 18px;
+        }
+      }
+    }
+
+    .information {
+      display: flex;
+      align-items: center;
+      text-align: right;
+
+      .my-info {
+        font-size: 15px;
+        line-height: 18px;
+      }
+
+      .reload-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+        background: @gradient-color-primary;
+        background-origin: border-box;
+        margin-left: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        img {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+  }
+
+  .page-content {
+    .tool-bar {
+      height: 64px;
+      border-radius: 14px;
+      border: 4px solid @color-outline;
+      width: 100%;
+
+      .tool-option {
+        height: 100%;
+        display: inline-block;
+        border-right: 4px solid @color-outline;
+        position: relative;
+
+        &:last-child {
+          border-right: none !important;
+        }
+
+        .input-search {
+          height: 100%;
+          position: absolute;
+          width: 100%;
+
+          .ant-input-prefix {
+            left: 10%;
+            font-size: 20px;
+            color: white;
+          }
+
+          .ant-input {
+            padding: 0 10% 0 20%;
+            height: 100% !important;
+            border: none;
+            border-radius: 14px;
+          }
+
+          .ant-input::placeholder {
+            color: white;
+            opacity: 0.5;
+          }
+        }
+
+        .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
+          opacity: 1 !important;
+        }
+
+        .ant-select {
+          border: none;
+          height: 100%;
+          position: absolute;
+          width: 100%;
+
+          .ant-select-selection {
+            height: 100%;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            padding-left: 10%;
+            border: none;
+
+            .ant-select-selection__rendered {
+              margin-left: 0 !important;
+              font-size: 16px;
+              opacity: 0.5;
+            }
+
+            .ant-select-arrow {
+              right: 10%;
+              font-size: 13px;
+            }
+          }
+        }
+
+        .toggle {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+
+          .label {
+            font-size: 16px;
+            opacity: 0.5;
+
+            &.active-label {
+              font-weight: 700;
+              opacity: 1;
+            }
+          }
+
+          &.deposit-toggle {
+            .ant-switch-checked {
+              background-color: @color-disable !important;
+            }
+          }
         }
       }
     }
@@ -2815,8 +2928,6 @@ export default Vue.extend({
   }
 
   .fs-container {
-    justify-content: space-evenly;
-
     .btncontainer {
       .btn-bg-fill {
         background-color: @color-bg !important;
@@ -2836,157 +2947,6 @@ export default Vue.extend({
   }
 }
 
-.count-down-group {
-  background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-  background-origin: border-box;
-  height: 60px;
-  border-radius: 63px;
-  position: relative;
-  padding: 2px;
-}
-
-.count-down {
-  background-color: @color-bg;
-  border-radius: 63px;
-  height: 100%;
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 3px 3px 20px;
-  font-size: 26px;
-  font-weight: 400;
-  line-height: 42px;
-  position: relative;
-
-  .ant-progress {
-    margin-left: 15px;
-  }
-
-  .reload-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-    background-origin: border-box;
-    margin-left: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-
-    .anticon {
-      font-size: 16px !important;
-      color: white !important;
-    }
-  }
-}
-
-.tool-bar {
-  height: 100px;
-  border-radius: 14px;
-  border: 4px solid #16164a;
-  width: 100%;
-
-  .tool-option {
-    width: 24%;
-    height: 100%;
-    display: inline-block;
-    border-right: 3px solid #16164a;
-    position: relative;
-
-    .input-search {
-      height: 100%;
-      position: absolute;
-      width: 100%;
-
-      .ant-input-prefix {
-        left: 10%;
-        font-size: 20px;
-        color: white;
-      }
-
-      .ant-input {
-        padding: 0 10% 0 20%;
-        height: 100% !important;
-        border: none;
-      }
-
-      .ant-input::placeholder {
-        color: white;
-        opacity: 0.5;
-      }
-    }
-
-    .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
-      opacity: 1 !important;
-    }
-
-    .ant-select {
-      border: none;
-      height: 100%;
-      position: absolute;
-      width: 100%;
-
-      .ant-select-selection {
-        height: 100%;
-        width: 100%;
-        display: inline-flex;
-        align-items: center;
-        padding-left: 10%;
-        border: none;
-
-        .ant-select-selection__rendered {
-          margin-left: 0 !important;
-          font-size: 16px;
-          opacity: 0.5;
-        }
-
-        .ant-select-arrow {
-          right: 10%;
-          font-size: 13px;
-        }
-      }
-    }
-
-    .toggle {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      .label {
-        font-size: 16px;
-        opacity: 0.5;
-      }
-
-      .ant-switch {
-        margin-left: 14px;
-        background-color: white;
-        height: 11px;
-        border-radius: 30px;
-      }
-
-      .ant-switch::after {
-        width: 28px;
-        height: 28px;
-        background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-        background-origin: border-box;
-        top: -10px;
-        left: -2px;
-      }
-
-      .ant-switch-checked::after {
-        margin-left: 2px;
-        left: 100%;
-      }
-    }
-  }
-
-  .last-option {
-    border-right: none !important;
-  }
-}
 .label.soon {
   background: #48a469;
   border-radius: 4px;

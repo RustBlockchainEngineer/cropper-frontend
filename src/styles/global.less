@@ -153,19 +153,11 @@ a{
 }
 
 .page-head {
-  margin-top: 20px;
-  margin-bottom: 40px;
   position:relative;
 
   .title {
     font-size: 35px;
     font-weight: 700;
-    text-align: center;
-    display: inline-block;
-    vertical-align: middle;
-    z-index: 2;
-    background: @color-bg;
-    position: relative;
   }
   
   @media screen and (max-width: 1024px) {
@@ -236,9 +228,9 @@ a{
     margin: 0 auto !important;
 
     > .fs-container{
-      display: unset;
-      align-items: unset;
-      justify-content: unset;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       text-align: left;
     }
 

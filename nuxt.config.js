@@ -47,6 +47,10 @@ export default {
     {
       src: '@/styles/global.less',
       lang: 'less'
+    },
+    {
+      src: '@/styles/variables.less',
+      lang: 'less'
     }
   ],
 
