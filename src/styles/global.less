@@ -253,7 +253,7 @@ a{
 }
 
 .lp-icons {
-  display: flex !important;
+  display: inline-block;
   align-items: center;
 
   .icons {
@@ -289,24 +289,23 @@ a{
 
 .ant-tooltip-inner {
   display: inline-block;
-  background: linear-gradient(295.75deg, #21BDB8 -53.35%, #280684 100%) !important;
+  background: @gradient-color-primary !important;
   background-origin: border-box !important;
   border: 2px solid rgba(255, 255, 255, 0.14);
   box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25) !important;
   border-radius: 8px !important;
-  padding: 15px !important;
+  padding: 25px !important;
   font-size: 14px;
   line-height: 16px;
   color: #FFFFFF50 !important;
+  min-width: 187px !important;
 
   @media @max-b-mobile {
     max-width: 300px !important;
   }
 
   span {
-    font-size: 20px;
-    line-height: 22px;
-    color: #FFF;
+    font-weight: 600;
   }
 
   hr {
@@ -317,6 +316,8 @@ a{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-size: 16px;
+    line-height: 20px;
   }
 
   .tooltip-text {

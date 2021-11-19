@@ -113,6 +113,7 @@
         </div>
 
         <div v-if="farm.initialized" class="page-content">
+          <!-- Filter bar for desktop -->
           <Row class="tool-bar noMobile">
             <Col :span="isMobile ? '24' : '5'" class="tool-option">
               <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
@@ -121,16 +122,16 @@
             </Col>
             <Col :span="isMobile ? '24' : '6'" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : '' ">Labelized</label>
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
                 <Toggle v-model="searchCertifiedFarm" :disabled="!wallet.connected" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : '' ">Permissionless</label>
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
               </div>
             </Col>
             <Col :span="isMobile ? '24' : '5'" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchLifeFarm ? 'active-label' : '' ">Open</label>
+                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''">Open</label>
                 <Toggle v-model="searchLifeFarm" :disabled="!wallet.connected" />
-                <label class="label" :class="searchLifeFarm ? 'active-label' : '' ">Ended</label>
+                <label class="label" :class="searchLifeFarm ? 'active-label' : ''">Ended</label>
               </div>
             </Col>
             <Col :span="isMobile ? '24' : '4'" class="tool-option">
@@ -143,31 +144,41 @@
               <div class="sort-by">
                 <label class="label">Sort by:</label>
                 <label class="label active-label">
-                  <img :class="sortAsc ? 'sort-up' : 'sort-down' " src="@/assets/icons/sort-up.svg" />
-                  {{this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR'}}
+                  <img :class="sortAsc ? 'sort-up' : 'sort-down'" src="@/assets/icons/sort-up.svg" />
+                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR' }}
                 </label>
-                <img :class="showSortOption ? 'collapse-down' : 'collapse-up' " src="@/assets/icons/collapse-arrow.svg" @click="() => { this.showSortOption = !this.showSortOption }"/>
+                <img
+                  :class="showSortOption ? 'collapse-down' : 'collapse-up'"
+                  src="@/assets/icons/collapse-arrow.svg"
+                  @click="
+                    () => {
+                      this.showSortOption = !this.showSortOption
+                    }
+                  "
+                />
               </div>
               <div v-if="showSortOption" class="sort-options">
-                  <div class="option" @click="setSortOption('liquidity', true)">
-                    <img src="@/assets/icons/sort-up.svg" />
-                    Liquidity
-                  </div>
-                 <div class="option" @click="setSortOption('liquidity', false)">
-                    <img src="@/assets/icons/sort-down.svg" />
-                    Liquidity
-                  </div>
-                  <div class="option" @click="setSortOption('apr', true)">
-                    <img src="@/assets/icons/sort-up.svg" />
-                    APR
-                  </div>
-                  <div class="option" @click="setSortOption('apr', false)">
-                    <img src="@/assets/icons/sort-down.svg" />
-                    APR
-                  </div>
+                <div class="option" @click="setSortOption('liquidity', true)">
+                  <img src="@/assets/icons/sort-up.svg" />
+                  Liquidity
+                </div>
+                <div class="option" @click="setSortOption('liquidity', false)">
+                  <img src="@/assets/icons/sort-down.svg" />
+                  Liquidity
+                </div>
+                <div class="option" @click="setSortOption('apr', true)">
+                  <img src="@/assets/icons/sort-up.svg" />
+                  APR
+                </div>
+                <div class="option" @click="setSortOption('apr', false)">
+                  <img src="@/assets/icons/sort-down.svg" />
+                  APR
+                </div>
               </div>
             </Col>
           </Row>
+
+          <!-- Filter bar for mobile -->
 
           <!-- <div class="tool-bar noDesktop" v-if="displayfilters">
             <div class="tool-option">
@@ -189,57 +200,23 @@
             </div>
           </div> -->
 
-          <Row class="farm-head table-head">
-            <Col class="lp-icons" :span="isMobile ? 12 : 6">
-              <div class="title">Farm Name</div>
-            </Col>
-            <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">
-                Status
-                <Tooltip placement="bottomRight">
-                  <template slot="title">
-                    <div>
-                      <div class="tooltip-text">
-                        <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and
-                        project.
-                      </div>
-                      <br />
-                      <div class="tooltip-text">
-                        <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
-                      </div>
-                    </div>
-                  </template>
-                  <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
-                </Tooltip>
-              </div>
-            </Col>
-            <Col class="state reward-col" :span="isMobile ? 12 : 6">
-              <div class="title">{{ isMobile ? 'Reward' : 'Pending Rewards' }}</div>
-            </Col>
-            <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">Staked</div>
-            </Col>
-            <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-apr">
-                Total APR
-              </div>
-            </Col>
-            <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title table-liquidity">
-                Liquidity
-              </div>
-            </Col>
-          </Row>
-          <Collapse v-model="showCollapse" expand-icon-position="right">
-            <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
-              <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
-                <span class="details noDesktop">
-                  <div class="detailButton">
-                    <button></button>
-                  </div>
-                </span>
+          <!-- Farm table for desktop -->
 
-                <Col class="lp-icons" :span="isMobile ? 12 : 6">
+          <div class="farm-shortcut">
+            <div class="farm-prelist" v-for="list in preList" :key="list">
+              {{ list }}
+            </div>
+          </div>
+
+          <div class="farm-table">
+            <Row
+              class="farm-item"
+              :class="farm.labelized === 'labelized' ? 'labelized' : 'permissionless'"
+              v-for="farm in showFarms"
+              :key="farm.farmInfo.poolId"
+            >
+              <Col class="lp-icons" span="7">
+                <div class="lp-farm">
                   <div class="lp-icons-group">
                     <div class="icons">
                       <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
@@ -248,64 +225,149 @@
                       <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
                     </div>
                   </div>
-
-                  <div class="noDesktop labells">
-                    <div v-if="farm.labelized" class="labelized">Labelized</div>
-                    <div v-else class="permissionless">Permissionless</div>
-                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                    <div
-                      v-if="
-                        currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                      "
-                      class="soon"
-                    >
-                      Soon
-                    </div>
+                  <div class="social-icons-group">
+                    <a href="#" class="social-icon">
+                      <img src="@/assets/icons/upload-icon.svg" />
+                    </a>
+                    <a href="#" class="social-icon">
+                      <img src="@/assets/icons/twitter-icon.svg" />
+                    </a>
                   </div>
-                </Col>
+                </div>
 
-                <Col class="state noMobile" :span="isMobile ? 6 : 3">
-                  <div v-if="farm.labelized" class="labelized">Labelized</div>
-                  <div v-else class="permissionless">Permissionless</div>
+                <div class="farm-labels">
+                  <div v-if="farm.labelized" class="label labelized">Labelized</div>
+                  <div v-else class="label permissionless">Permissionless</div>
+
                   <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                  <div
+                  <div v-if="currentTimestamp < farm.farmInfo.poolInfo.end_timestamp" class="label new">New</div>
+                </div>
+
+                <div class="farm-infos">
+                  <div class="farm-info-group">
+                    <div class="farm-info-img">
+                      <img src="@/assets/icons/time-icon.svg" />
+                    </div>
+                    from {{ new Date(farm.farmInfo.poolInfo.start_timestamp * 1e3).toLocaleDateString('en-US') }} to
+                    {{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toLocaleDateString('en-US') }}
+                  </div>
+                  <div>
+                    <div class="farm-info-group">
+                      <div class="farm-info-img">
+                        <img src="@/assets/icons/reward-icon.svg" />
+                      </div>
+                      Remaining rewards
+                      {{
+                        Math.round(
+                          new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals).toEther() *
+                            1000
+                        ) / 1000
+                      }}
+                      {{ farm.farmInfo.lp.coin.symbol }}
+                    </div>
+                  </div>
+                </div>
+              </Col>
+
+              <Col class="state" span="3">
+                <div class="title">Total Deposited</div>
+                <br />
+                <div
+                  v-if="
+                    farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                    currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                  "
+                  class="value"
+                >
+                  -
+                </div>
+                <div v-else class="value">
+                  {{
+                    Math.round(farm.farmInfo.liquidityUsdValue)
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                  }}$
+                </div>
+              </Col>
+
+              <Col class="state" span="4">
+                <div class="title">
+                  Total APR
+                  <Tooltip
+                    placement="bottomLeft"
                     v-if="
-                      currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
-                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                      !(
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                      )
                     "
-                    class="label soon"
                   >
-                    Soon
-                  </div>
-                </Col>
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-line">
+                          Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
+                        </div>
+                        <hr />
+                        <div class="tooltip-line">
+                          Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
+                        </div>
+                      </div>
+                    </template>
+                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                  </Tooltip>
+                </div>
+                <br />
+                <div
+                  v-if="
+                    farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                    currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                  "
+                  class="value"
+                >
+                  -
+                </div>
+                <div v-else class="value">
+                  {{ farm.farmInfo.apr }}%
+                  <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
+                  <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
+                </div>
+              </Col>
 
-                <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
-                  <Col span="24">
-                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                      <span class="labmobile">Pending Reward</span>-
-                    </div>
-                    <div v-else class="value">
-                      <span class="labmobile">Pending Reward</span
-                      >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
-                    </div>
-                  </Col>
-                </Col>
+              <Col class="state" span="4">
+                <div class="title">Pending Rewards</div>
+                <br />
+                <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
+                <div v-else class="value">
+                  {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                </div>
 
-                <Col v-if="!isMobile" class="state noMobile" :span="3">
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                    <span class="labmobile">Staked</span>-
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Staked</span
-                    >{{
-                      !wallet.connected
-                        ? 0
-                        : farm.userInfo.depositBalanceUSD
-                        ? '$ ' + farm.userInfo.depositBalanceUSD
-                        : farm.userInfo.depositBalance.format()
-                    }}
-                  </div>
+                <div class="btn-container btn-container-harvest">
+                  <Button
+                    v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                    :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                    size="large"
+                    ghost
+                    @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                  >
+                    Harvest & Withdraw
+                  </Button>
+
+                  <Button
+                    v-else
+                    size="large"
+                    ghost
+                    :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
+                    :loading="harvesting"
+                    @click="harvest(farm.farmInfo)"
+                  >
+                    Harvest
+                  </Button>
+                </div>
+              </Col>
+
+              <Col class="state" span="3">
+                <div class="title">
+                  Value Deposited
                   <Tooltip
                     placement="bottomLeft"
                     v-if="
@@ -329,413 +391,612 @@
                     </template>
                     <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
                   </Tooltip>
-                </Col>
+                </div>
+                <br />
+                <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
+                <div v-else class="value">
+                  {{
+                    !wallet.connected
+                      ? 0
+                      : farm.userInfo.depositBalanceUSD
+                      ? '$ ' + farm.userInfo.depositBalanceUSD
+                      : farm.userInfo.depositBalance.format()
+                  }}
+                </div>
+              </Col>
 
-                <Col class="state noMobile" :span="isMobile ? 6 : 3">
+              <Col class="state" span="3">
+                <div class="action-btn-group">
                   <div
+                    class="btn-container btn-container-fill"
                     v-if="
-                      farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                      currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="value"
-                  >
-                    <span class="labmobile">Total apr</span> -
-                  </div>
-                  <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
-
-                  <Tooltip
-                    placement="bottomLeft"
-                    v-if="
-                      !(
-                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                      )
+                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                      farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
                     "
                   >
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-line">
-                          Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                        </div>
-                        <hr />
-                        <div class="tooltip-line">
-                          Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
-                  </Tooltip>
-                </Col>
-
-                <Col v-if="!isMobile && poolType" class="state noMobile" :span="3">
-                  <div
-                    v-if="
-                      farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                      currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="value"
-                  >
-                    <span class="labmobile">Liquidity</span> -
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Liquidity</span> ${{
-                      Math.round(farm.farmInfo.liquidityUsdValue)
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                    }}
-                  </div>
-                </Col>
-
-                <Col class="state noDesktop reward-col" :span="isMobile ? 12 : 6">
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                    <span class="labmobile">Pending Reward</span>-
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Pending Reward</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
-                  </div>
-                </Col>
-
-                <Col v-if="!isMobile" class="state noDesktop" :span="3">
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
-                    <span class="labmobile">Staked</span>-
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">
-                      Staked
-                      <Tooltip
-                        placement="bottomLeft"
-                        v-if="
-                          !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) &&
-                          farm.userInfo.depositFormat > 0
-                        "
-                      >
-                        <template slot="title">
-                          <div>
-                            <div class="tooltip-line">
-                              LP Tokens <span>{{ farm.userInfo.depositFormat }}</span>
-                            </div>
-                            <hr />
-                            <div class="tooltip-line">
-                              {{ farm.farmInfo.lp.coin.symbol }} <span> {{ farm.userInfo.depositCoin }} </span>
-                            </div>
-                            <hr />
-                            <div class="tooltip-line">
-                              {{ farm.farmInfo.lp.pc.symbol }} <span> {{ farm.userInfo.depositPc }} </span>
-                            </div>
-                          </div>
-                        </template>
-                        <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
-                      </Tooltip>
-                    </span>
-                    {{
-                      !wallet.connected
-                        ? 0
-                        : farm.userInfo.depositBalanceUSD
-                        ? '$ ' + farm.userInfo.depositBalanceUSD
-                        : farm.userInfo.depositBalance.format()
-                    }}
-                  </div>
-                </Col>
-
-                <Col class="state noDesktop" :span="isMobile ? 6 : 3">
-                  <div
-                    v-if="
-                      farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                      currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="value"
-                  >
-                    <span class="labmobile">Total apr</span> -
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">
-                      Total apr
-                      <Tooltip
-                        placement="bottomLeft"
-                        v-if="
-                          !(
-                            farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                            currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                          )
-                        "
-                      >
-                        <template slot="title">
-                          <div>
-                            <div class="tooltip-line">
-                              Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
-                            </div>
-                            <hr />
-                            <div class="tooltip-line">
-                              Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
-                            </div>
-                          </div>
-                        </template>
-                        <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
-                      </Tooltip>
-                    </span>
-                    {{ farm.farmInfo.apr }}%
-                  </div>
-                </Col>
-
-                <Col v-if="!isMobile && poolType" class="state noDesktop" :span="3">
-                  <div
-                    v-if="
-                      farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
-                      currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                    "
-                    class="value"
-                  >
-                    <span class="labmobile">Liquidity</span> -
-                  </div>
-                  <div v-else class="value">
-                    <span class="labmobile">Liquidity</span> ${{
-                      Math.round(farm.farmInfo.liquidityUsdValue)
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                    }}
-                  </div>
-                </Col>
-
-                <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
-                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
-                    Connect Wallet
-                  </Button>
-                  <div v-else class="fs-container">
                     <Button
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                       size="large"
-                      ghost
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                      :disabled="
+                        !farm.farmInfo.poolInfo.is_allowed ||
+                        farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                      "
+                      @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
                     >
-                      Harvest & Unstake
+                      {{
+                        !farm.farmInfo.poolInfo.is_allowed
+                          ? 'Not Allowed'
+                          : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                          ? 'Ended'
+                          : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                          ? 'Unstarted'
+                          : 'Deposit'
+                      }}
                     </Button>
                   </div>
-                </Col>
-              </Row>
 
-              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
-                <Col v-if="!isMobile && !poolType" class="state noDesktop" :span="3">
-                  <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
-                    Connect Wallet
-                  </Button>
-                  <div v-else class="fs-container">
+                  <div
+                    class="btn-container btn-container-outline"
+                    v-if="
+                      currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                      farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
+                      farm.farmInfo.currentLPtokens > 0.001
+                    "
+                  >
                     <Button
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                       size="large"
                       ghost
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                      :disabled="
+                        !farm.farmInfo.poolInfo.is_allowed ||
+                        farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                      "
+                      @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
                     >
-                      Harvest & Unstake
+                      {{
+                        !farm.farmInfo.poolInfo.is_allowed
+                          ? 'Not Allowed'
+                          : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                          ? 'Ended'
+                          : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                          ? 'Unstarted'
+                          : 'Deposit LP'
+                      }}
                     </Button>
                   </div>
-                </Col>
 
-                <Col :span="isMobile ? 24 : 4"> </Col>
-
-                <Col :span="isMobile ? 24 : 8">
-                  <div class="harvest">
-                    <div class="title">Pending Reward</div>
-                    <div class="pending">
-                      <div class="reward">
-                        <div class="token">
-                          {{ farm.farmInfo.reward.symbol }}
-                          {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
-                        </div>
-                      </div>
-                      <div class="btncontainer">
-                        <Button
-                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                          size="large"
-                          ghost
-                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                        >
-                          Harvest & Unstake
-                        </Button>
-
-                        <Button
-                          v-else
-                          size="large"
-                          ghost
-                          :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
-                          :loading="harvesting"
-                          @click="harvest(farm.farmInfo)"
-                        >
-                          Harvest
-                        </Button>
-                      </div>
-                    </div>
+                  <div
+                    class="btn-container btn-container-outline"
+                    v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                  >
+                    <Button
+                      size="large"
+                      ghost
+                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                    >
+                      Withdraw
+                    </Button>
                   </div>
-                </Col>
+                </div>
+              </Col>
+            </Row>
 
-                <Col :span="isMobile ? 24 : 8">
-                  <div class="start">
-                    <div class="title">Start farming</div>
-                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="unstarted">
-                      <div class="token">
-                        {{ getCountdownFromPeriod(farm.farmInfo.poolInfo.start_timestamp - currentTimestamp) }}
-                      </div>
+            <!-- <Collapse v-model="showCollapse" expand-icon-position="right">
+              <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
+                <Row slot="header" class="farm-item" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
+                  <span class="details noDesktop">
+                    <div class="detailButton">
+                      <button></button>
                     </div>
-                    <div>
-                      <div v-if="!wallet.connected" @click="$accessor.wallet.openModal" class="btncontainer largebtn">
-                        <Button size="large" ghost> Connect Wallet </Button>
-                      </div>
-                      <div v-else class="fs-container">
-                        <div
-                          class="btncontainer"
-                          v-if="
-                            !farm.userInfo.depositBalance.isNullOrZero() &&
-                            farm.farmInfo.poolInfo.end_timestamp > currentTimestamp
-                          "
-                        >
-                          <Button
-                            class="unstake btn-bg-fill"
-                            size="large"
-                            ghost
-                            @click="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                          >
-                            <Icon type="minus" />
-                          </Button>
-                        </div>
+                  </span>
 
-                        <div
-                          class="btncontainer"
-                          v-if="
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                            farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
-                          "
-                        >
-                          <Button
-                            class="btn-bg-fill"
-                            size="large"
-                            ghost
-                            :disabled="
-                              !farm.farmInfo.poolInfo.is_allowed ||
-                              farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                            "
-                            @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
-                          >
-                            {{
-                              !farm.farmInfo.poolInfo.is_allowed
-                                ? 'Not Allowed'
-                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                                ? 'Ended'
-                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                                ? 'Unstarted'
-                                : 'Stake'
-                            }}
-                          </Button>
-                        </div>
-
-                        <div
-                          class="btncontainer"
-                          v-if="
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                            farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
-                            farm.farmInfo.currentLPtokens > 0.001
-                          "
-                        >
-                          <Button
-                            class="btn-bg-fill"
-                            size="large"
-                            ghost
-                            :disabled="
-                              !farm.farmInfo.poolInfo.is_allowed ||
-                              farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                            "
-                            @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
-                          >
-                            {{
-                              !farm.farmInfo.poolInfo.is_allowed
-                                ? 'Not Allowed'
-                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                                ? 'Ended'
-                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                                ? 'Unstarted'
-                                : 'Stake LP'
-                            }}
-                          </Button>
-                        </div>
-
-                        <div class="btncontainer">
-                          <a target="_blank" :href="farm.farmInfo.twitterShare">
-                            <Button size="large" ghost style="background-color: @color-bg !important"> Share </Button>
-                          </a>
-                        </div>
-
-                        <div
-                          class="btncontainer"
-                          v-if="
-                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            !farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                          "
-                        >
-                          <Button size="large" ghost @click="payFarmFee(farm)"> Pay Farm Fee </Button>
-                        </div>
+                  <Col class="lp-icons" :span="isMobile ? 12 : 6">
+                    <div class="lp-icons-group">
+                      <div class="icons">
+                        <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
+                        <span>{{ farm.farmInfo.lp.coin.symbol }} - </span>
+                        <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
+                        <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
                       </div>
                     </div>
 
+                    <div class="noDesktop farm-labels">
+                      <div v-if="farm.labelized" class="labelized">Labelized</div>
+                      <div v-else class="permissionless">Permissionless</div>
+                      <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">
+                        Ended
+                      </div>
+                      <div
+                        v-if="
+                          currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                        "
+                        class="soon"
+                      >
+                        Soon
+                      </div>
+                    </div>
+                  </Col>
+
+                  <Col class="state noMobile" :span="isMobile ? 6 : 3">
+                    <div v-if="farm.labelized" class="labelized">Labelized</div>
+                    <div v-else class="permissionless">Permissionless</div>
+                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                     <div
-                      class="owner"
                       v-if="
-                        farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                        farm.farmInfo.poolInfo.is_allowed &&
+                        currentTimestamp < farm.farmInfo.poolInfo.start_timestamp &&
                         currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
                       "
+                      class="label soon"
                     >
-                      <br />
-                      <hr />
-                      <br />
+                      Soon
+                    </div>
+                  </Col>
 
-                      <div class="title" style="text-align: left">
-                        <b>Remaining rewards : </b
-                        >{{
-                          Math.round(
-                            new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals).toEther() *
-                              1000
-                          ) / 1000
-                        }}
+                  <Col class="state reward-col noMobile" :span="isMobile ? 12 : 6">
+                    <Col span="24">
+                      <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                        <span class="labmobile">Pending Reward</span>-
                       </div>
-
-                      <div class="title" style="text-align: left">
-                        <b>End time : </b>{{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toISOString() }}
+                      <div v-else class="value">
+                        <span class="labmobile">Pending Reward</span
+                        >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
                       </div>
+                    </Col>
+                  </Col>
 
-                      <br />
+                  <Col v-if="!isMobile" class="state noMobile" :span="3">
+                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                      <span class="labmobile">Staked</span>-
+                    </div>
+                    <div v-else class="value">
+                      <span class="labmobile">Staked</span
+                      >{{
+                        !wallet.connected
+                          ? 0
+                          : farm.userInfo.depositBalanceUSD
+                          ? '$ ' + farm.userInfo.depositBalanceUSD
+                          : farm.userInfo.depositBalance.format()
+                      }}
+                    </div>
+                    <Tooltip
+                      placement="bottomLeft"
+                      v-if="
+                        !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) && farm.userInfo.depositFormat > 0
+                      "
+                    >
+                      <template slot="title">
+                        <div>
+                          <div class="tooltip-line">
+                            LP Tokens <span>{{ farm.userInfo.depositFormat }}</span>
+                          </div>
+                          <hr />
+                          <div class="tooltip-line">
+                            {{ farm.farmInfo.lp.coin.symbol }} <span> {{ farm.userInfo.depositCoin }} </span>
+                          </div>
+                          <hr />
+                          <div class="tooltip-line">
+                            {{ farm.farmInfo.lp.pc.symbol }} <span> {{ farm.userInfo.depositPc }} </span>
+                          </div>
+                        </div>
+                      </template>
+                      <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                    </Tooltip>
+                  </Col>
+
+                  <Col class="state noMobile" :span="isMobile ? 6 : 3">
+                    <div
+                      v-if="
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                      "
+                      class="value"
+                    >
+                      <span class="labmobile">Total apr</span> -
+                    </div>
+                    <div v-else class="value"><span class="labmobile">Total apr</span>{{ farm.farmInfo.apr }}%</div>
+
+                    <Tooltip
+                      placement="bottomLeft"
+                      v-if="
+                        !(
+                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                        )
+                      "
+                    >
+                      <template slot="title">
+                        <div>
+                          <div class="tooltip-line">
+                            Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
+                          </div>
+                          <hr />
+                          <div class="tooltip-line">
+                            Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
+                          </div>
+                        </div>
+                      </template>
+                      <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                    </Tooltip>
+                  </Col>
+
+                  <Col v-if="!isMobile && poolType" class="state noMobile" :span="3">
+                    <div
+                      v-if="
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                      "
+                      class="value"
+                    >
+                      <span class="labmobile">Liquidity</span> -
+                    </div>
+                    <div v-else class="value">
+                      <span class="labmobile">Liquidity</span> ${{
+                        Math.round(farm.farmInfo.liquidityUsdValue)
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                      }}
+                    </div>
+                  </Col>
+
+                  <Col class="state noDesktop reward-col" :span="isMobile ? 12 : 6">
+                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                      <span class="labmobile">Pending Reward</span>-
+                    </div>
+                    <div v-else class="value">
+                      <span class="labmobile">Pending Reward</span
+                      >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                    </div>
+                  </Col>
+
+                  <Col v-if="!isMobile" class="state noDesktop" :span="3">
+                    <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">
+                      <span class="labmobile">Staked</span>-
+                    </div>
+                    <div v-else class="value">
+                      <span class="labmobile">
+                        Staked
+                        <Tooltip
+                          placement="bottomLeft"
+                          v-if="
+                            !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) &&
+                            farm.userInfo.depositFormat > 0
+                          "
+                        >
+                          <template slot="title">
+                            <div>
+                              <div class="tooltip-line">
+                                LP Tokens <span>{{ farm.userInfo.depositFormat }}</span>
+                              </div>
+                              <hr />
+                              <div class="tooltip-line">
+                                {{ farm.farmInfo.lp.coin.symbol }} <span> {{ farm.userInfo.depositCoin }} </span>
+                              </div>
+                              <hr />
+                              <div class="tooltip-line">
+                                {{ farm.farmInfo.lp.pc.symbol }} <span> {{ farm.userInfo.depositPc }} </span>
+                              </div>
+                            </div>
+                          </template>
+                          <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                        </Tooltip>
+                      </span>
+                      {{
+                        !wallet.connected
+                          ? 0
+                          : farm.userInfo.depositBalanceUSD
+                          ? '$ ' + farm.userInfo.depositBalanceUSD
+                          : farm.userInfo.depositBalance.format()
+                      }}
+                    </div>
+                  </Col>
+
+                  <Col class="state noDesktop" :span="isMobile ? 6 : 3">
+                    <div
+                      v-if="
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                      "
+                      class="value"
+                    >
+                      <span class="labmobile">Total apr</span> -
+                    </div>
+                    <div v-else class="value">
+                      <span class="labmobile">
+                        Total apr
+                        <Tooltip
+                          placement="bottomLeft"
+                          v-if="
+                            !(
+                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                              currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                            )
+                          "
+                        >
+                          <template slot="title">
+                            <div>
+                              <div class="tooltip-line">
+                                Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
+                              </div>
+                              <hr />
+                              <div class="tooltip-line">
+                                Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
+                              </div>
+                            </div>
+                          </template>
+                          <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                        </Tooltip>
+                      </span>
+                      {{ farm.farmInfo.apr }}%
+                    </div>
+                  </Col>
+
+                  <Col v-if="!isMobile && poolType" class="state noDesktop" :span="3">
+                    <div
+                      v-if="
+                        farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                        currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                      "
+                      class="value"
+                    >
+                      <span class="labmobile">Liquidity</span> -
+                    </div>
+                    <div v-else class="value">
+                      <span class="labmobile">Liquidity</span> ${{
+                        Math.round(farm.farmInfo.liquidityUsdValue)
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                      }}
+                    </div>
+                  </Col>
+
+                  <Col v-if="!isMobile && !poolType" class="state noMobile" :span="3">
+                    <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
+                      Connect Wallet
+                    </Button>
+                    <div v-else class="fs-container">
+                      <Button
+                        :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                        size="large"
+                        ghost
+                        @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                      >
+                        Harvest & Unstake
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row bgl'" :gutter="48">
+                  <Col v-if="!isMobile && !poolType" class="state noDesktop" :span="3">
+                    <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
+                      Connect Wallet
+                    </Button>
+                    <div v-else class="fs-container">
+                      <Button
+                        :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                        size="large"
+                        ghost
+                        @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                      >
+                        Harvest & Unstake
+                      </Button>
+                    </div>
+                  </Col>
+
+                  <Col :span="isMobile ? 24 : 4"> </Col>
+
+                  <Col :span="isMobile ? 24 : 8">
+                    <div class="harvest">
+                      <div class="title">Pending Reward</div>
+                      <div class="pending">
+                        <div class="reward">
+                          <div class="token">
+                            {{ farm.farmInfo.reward.symbol }}
+                            {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                          </div>
+                        </div>
+                        <div class="btncontainer">
+                          <Button
+                            v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                            :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                            size="large"
+                            ghost
+                            @click.stop="
+                              openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)
+                            "
+                          >
+                            Harvest & Unstake
+                          </Button>
+
+                          <Button
+                            v-else
+                            size="large"
+                            ghost
+                            :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
+                            :loading="harvesting"
+                            @click="harvest(farm.farmInfo)"
+                          >
+                            Harvest
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </Col>
+
+                  <Col :span="isMobile ? 24 : 8">
+                    <div class="start">
+                      <div class="title">Start farming</div>
+                      <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="unstarted">
+                        <div class="token">
+                          {{ getCountdownFromPeriod(farm.farmInfo.poolInfo.start_timestamp - currentTimestamp) }}
+                        </div>
+                      </div>
+                      <div>
+                        <div v-if="!wallet.connected" @click="$accessor.wallet.openModal" class="btncontainer largebtn">
+                          <Button size="large" ghost> Connect Wallet </Button>
+                        </div>
+                        <div v-else class="fs-container">
+                          <div
+                            class="btncontainer"
+                            v-if="
+                              !farm.userInfo.depositBalance.isNullOrZero() &&
+                              farm.farmInfo.poolInfo.end_timestamp > currentTimestamp
+                            "
+                          >
+                            <Button
+                              class="unstake btn-bg-fill"
+                              size="large"
+                              ghost
+                              @click="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                            >
+                              <Icon type="minus" />
+                            </Button>
+                          </div>
+
+                          <div
+                            class="btncontainer"
+                            v-if="
+                              currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                              farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
+                            "
+                          >
+                            <Button
+                              class="btn-bg-fill"
+                              size="large"
+                              ghost
+                              :disabled="
+                                !farm.farmInfo.poolInfo.is_allowed ||
+                                farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                                farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                              "
+                              @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
+                            >
+                              {{
+                                !farm.farmInfo.poolInfo.is_allowed
+                                  ? 'Not Allowed'
+                                  : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                                  ? 'Ended'
+                                  : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                                  ? 'Unstarted'
+                                  : 'Stake'
+                              }}
+                            </Button>
+                          </div>
+
+                          <div
+                            class="btncontainer"
+                            v-if="
+                              currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                              farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
+                              farm.farmInfo.currentLPtokens > 0.001
+                            "
+                          >
+                            <Button
+                              class="btn-bg-fill"
+                              size="large"
+                              ghost
+                              :disabled="
+                                !farm.farmInfo.poolInfo.is_allowed ||
+                                farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                                farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                              "
+                              @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
+                            >
+                              {{
+                                !farm.farmInfo.poolInfo.is_allowed
+                                  ? 'Not Allowed'
+                                  : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                                  ? 'Ended'
+                                  : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                                  ? 'Unstarted'
+                                  : 'Stake LP'
+                              }}
+                            </Button>
+                          </div>
+
+                          <div class="btncontainer">
+                            <a target="_blank" :href="farm.farmInfo.twitterShare">
+                              <Button size="large" ghost style="background-color: @color-bg !important"> Share </Button>
+                            </a>
+                          </div>
+
+                          <div
+                            class="btncontainer"
+                            v-if="
+                              farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                              !farm.farmInfo.poolInfo.is_allowed &&
+                              currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                            "
+                          >
+                            <Button size="large" ghost @click="payFarmFee(farm)"> Pay Farm Fee </Button>
+                          </div>
+                        </div>
+                      </div>
 
                       <div
-                        class="btncontainer noMobile"
+                        class="owner"
                         v-if="
                           farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
                           farm.farmInfo.poolInfo.is_allowed &&
                           currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
                         "
                       >
-                        <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
+                        <br />
+                        <hr />
+                        <br />
+
+                        <div class="title" style="text-align: left">
+                          <b>Remaining rewards : </b
+                          >{{
+                            Math.round(
+                              new TokenAmount(
+                                farm.farmInfo.reward.balance.wei,
+                                farm.farmInfo.reward.decimals
+                              ).toEther() * 1000
+                            ) / 1000
+                          }}
+                        </div>
+
+                        <div class="title" style="text-align: left">
+                          <b>End time : </b>{{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toISOString() }}
+                        </div>
+
+                        <br />
+
+                        <div
+                          class="btncontainer noMobile"
+                          v-if="
+                            farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                            farm.farmInfo.poolInfo.is_allowed &&
+                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                          "
+                        >
+                          <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Col>
-              </Row>
-            </CollapsePanel>
-          </Collapse>
-          <div class="pagination-container">
-            <div class="pagination-body">
-              <Pagination
-                v-if="totalCount > pageSize"
-                :total="totalCount"
-                :pageSize="pageSize"
-                :defaultCurrent="1"
-                v-model="currentPage"
-              >
-              </Pagination>
+                  </Col>
+                </Row>
+              </CollapsePanel>
+            </Collapse> -->
+
+            <div class="pagination-container">
+              <div class="pagination-body">
+                <Pagination
+                  v-if="totalCount > pageSize"
+                  :total="totalCount"
+                  :pageSize="pageSize"
+                  :defaultCurrent="1"
+                  v-model="currentPage"
+                >
+                </Pagination>
+              </div>
             </div>
           </div>
         </div>
+
         <div v-else class="fc-container">
           <Spin :spinning="true">
             <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
@@ -752,7 +1013,7 @@ import { mapState } from 'vuex'
 import {
   Tooltip,
   // Progress,
-  Collapse,
+  // Collapse,
   Spin,
   Icon,
   Row,
@@ -786,7 +1047,7 @@ import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
 import BigNumber from 'bignumber.js'
-const CollapsePanel = Collapse.Panel
+// const CollapsePanel = Collapse.Panel
 
 export default Vue.extend({
   components: {
@@ -794,8 +1055,8 @@ export default Vue.extend({
     Toggle,
     Input,
     // Progress,
-    Collapse,
-    CollapsePanel,
+    // Collapse,
+    // CollapsePanel,
     Spin,
     Icon,
     Row,
@@ -852,6 +1113,7 @@ export default Vue.extend({
       labelizedPermission: false as any,
       sortMethod: 'liquidity' as string,
       sortAsc: false as boolean,
+      preList: ['CRP', 'USDC', 'SOL'] as any,
       userMigrations: [] as any[]
     }
   },
@@ -2073,8 +2335,8 @@ export default Vue.extend({
     },
     setSortOption(mode: string, asc: boolean) {
       this.sortMethod = mode
-      this.sortAsc = asc;
-      this.showSortOption = false;
+      this.sortAsc = asc
+      this.showSortOption = false
       this.updateFarms()
     }
   }
@@ -2082,10 +2344,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-.card-body {
-  padding: 0;
-  margin: 0;
-}
 
 .farm.container {
   max-width: 1350px;
@@ -2100,166 +2358,530 @@ export default Vue.extend({
     left: 0;
     top: 35%;
   }
-
+  
   .card {
-    .card {
-      margin-top: 70px;
+    .card-body {
+      padding: 0;
+      overflow-x: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
 
-      .card-body {
-        padding: 0;
-        overflow-x: scroll;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+      .page-head {
+        margin-top: 10px;
 
-        .ant-collapse {
-          border: 0;
-          .ant-collapse-item {
-            border-bottom: 0;
-          }
+        .title {
+          text-align: center;
+          position: relative;
+          float: left;
 
-          .ant-collapse-item:not(:last-child) {
-            border-bottom: 1px solid #ffffff20;
+          a {
+            position: absolute;
+            top: 5px;
+            right: -25px;
+
+            .create-plus-btn {
+              font-weight: 400;
+              width: 18px;
+              height: 18px;
+              border-radius: 8px;
+              background: @gradient-color-primary;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-size: 18px;
+            }
           }
         }
 
-        .start .btncontainer {
-          display: inline-block;
-        }
-      }
-    }
-  }
-
-  .harvest {
-    text-align: center;
-    max-width: 420px;
-    min-height: 186px;
-    display: grid;
-    align-items: center;
-
-    .reward {
-      .token {
-        font-weight: normal;
-        font-size: 40px;
-        line-height: 47px;
-        margin-bottom: 10px;
-      }
-
-      .value {
-        font-size: 12px;
-      }
-    }
-
-    button {
-      padding: 0 30px;
-    }
-  }
-
-  .start {
-    text-align: center;
-    max-width: 420px;
-    min-height: 186px;
-    display: grid;
-    align-items: center;
-
-    .unstarted {
-      width: 100%;
-
-      .token {
-        font-weight: normal;
-        font-size: 40px;
-        line-height: 47px;
-        margin-bottom: 10px;
-      }
-
-      .value {
-        font-size: 12px;
-      }
-    }
-
-    .unstake {
-      margin-right: 10px;
-    }
-
-    button {
-      width: 100%;
-    }
-  }
-
-  .harvest,
-  .start {
-    border: 4px solid #16164a;
-    box-sizing: border-box;
-    border-radius: 14px;
-    padding: 16px;
-
-    .title {
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 21px;
-      color: #fff;
-      opacity: 0.5;
-      margin-bottom: 8px;
-    }
-  }
-
-  .farm-head {
-    display: flex;
-    align-items: center;
-    min-width: 768px;
-
-    .lp-icons {
-      .lp-icons-group {
-        height: 51px;
-        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-        background-origin: border-box;
-        border-radius: 8px;
-        padding: 2px;
-        width: 240px;
-
-        .icons {
-          height: 47px;
-          background-color: @color-bg;
-          border-radius: 8px;
+        .information {
+          display: flex;
           align-items: center;
-          justify-content: center;
+          text-align: right;
 
-          @media @max-b-mobile {
-            justify-content: flex-start;
+          .my-info {
+            font-size: 15px;
+            line-height: 18px;
+          }
+
+          .reload-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            background: @gradient-color-primary;
+            background-origin: border-box;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            img {
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+      }
+
+      .page-content {
+        .tool-bar {
+          height: @toolbar-height;
+          border-radius: 14px;
+          border: 4px solid @color-outline;
+          width: 100%;
+
+          .tool-option {
+            height: 100%;
+            display: inline-block;
+            border-right: 4px solid @color-outline;
+            position: relative;
+
+            &:last-child {
+              border-right: none !important;
+            }
+
+            .input-search {
+              height: 100%;
+              position: absolute;
+              width: 100%;
+            }
+
+            .toggle {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+
+              .label {
+                font-size: 16px;
+                opacity: 0.5;
+
+                &.active-label {
+                  font-weight: 700;
+                  opacity: 1;
+                }
+              }
+
+              &.deposit-toggle {
+                .ant-switch-checked {
+                  background-color: @color-disable !important;
+                }
+              }
+            }
+
+            .sort-by {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-evenly;
+
+              .label {
+                font-size: 16px;
+                opacity: 0.5;
+
+                &.active-label {
+                  font-weight: 700;
+                  opacity: 1;
+                }
+
+                .sort-up,
+                .sort-down {
+                  margin-right: 5px;
+                  transition: 0.5s;
+                }
+
+                .sort-down {
+                  transform: rotate(180deg);
+                }
+              }
+
+              .collapse-down,
+              .collapse-up {
+                cursor: pointer;
+                transition: 0.5s;
+              }
+
+              .collapse-down {
+                transform: rotate(180deg);
+              }
+            }
+
+            .sort-options {
+              position: absolute;
+              width: 100%;
+              top: @toolbar-height;
+              padding: 18px;
+              background: @gradient-color-primary;
+              background-origin: border-box;
+              border: 2px solid #ffffff10;
+              box-shadow: 18px 11px 14px #00000025;
+              border-radius: 8px;
+              z-index: 999;
+
+              .option {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                border-bottom: 1px solid #c4c4c420;
+                font-size: 16px;
+                line-height: 19px;
+                cursor: pointer;
+
+                &:hover {
+                  background: @gradient-color-primary;
+                  border: 1px solid #ffffff10;
+                  border-radius: 6px;
+                }
+
+                &.active {
+                  background: @gradient-color-primary;
+                  border: 1px solid #ffffff10;
+                }
+
+                &:last-child {
+                  border-bottom: none;
+                }
+
+                img {
+                  margin-right: 20px;
+                }
+              }
+            }
           }
         }
 
-        .icons span {
-          margin-left: 12px;
-          margin-right: 12px;
-          font-weight: 400;
-          font-size: 18px;
-          line-height: 21px;
+        .farm-shortcut {
+          display: inline-flex;
+          padding: 10px;
+
+          .farm-prelist {
+            background: #ffffff30;
+            border: 1px solid #ffffff50;
+            border-radius: 6px;
+            padding: 6px 24px;
+            font-size: 14px;
+            line-height: 17px;
+            text-transform: uppercase;
+            margin-right: 5px;
+          }
+        }
+
+        .farm-table {
+          .farm-item {
+            display: flex;
+            padding: 24px 18px;
+            background: @gradient-color-labelized;
+            border-radius: 5px;
+            margin-top: 10px;
+
+            &:first-child {
+              margin-top: 0;
+            }
+
+            &.permissionless {
+              background: @gradient-color-permissionless;
+
+              &:hover {
+                background: @gradient-color-permissionless-brighter;
+              }
+            }
+
+            &.labelized {
+              background: @gradient-color-labelized;
+              &:hover {
+                background: @gradient-color-labelized-brighter;
+              }
+            }
+
+            .state {
+              .title {
+                font-size: 18px;
+                line-height: 15px;
+                font-weight: 400;
+                display: flex;
+              }
+
+              .value {
+                font-size: 20px;
+                line-height: 24px;
+                font-weight: 400;
+              }
+
+              .btn-container-harvest {
+                position: absolute;
+                bottom: 10px;
+              }
+            }
+
+            .lp-icons {
+              .lp-farm {
+                display: flex;
+                align-items: center;
+
+                .lp-icons-group {
+                  height: 51px;
+                  background: @gradient-color-outline;
+                  background-origin: border-box;
+                  border-radius: 8px;
+                  padding: 2px;
+                  width: 240px;
+
+                  .icons {
+                    height: 47px;
+                    background-color: @color-bg;
+                    border-radius: 8px;
+                    align-items: center;
+                    justify-content: center;
+
+                    @media @max-b-mobile {
+                      justify-content: flex-start;
+                    }
+
+                    span {
+                      margin-left: 12px;
+                      margin-right: 12px;
+                      font-weight: 400;
+                      font-size: 18px;
+                      line-height: 21px;
+                    }
+                  }
+                }
+
+                .social-icons-group {
+                  display: flex;
+                  margin-left: 15px;
+
+                  .social-icon {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: @gradient-color-icon;
+
+                    &:first-child {
+                      margin-right: 5px;
+                    }
+                  }
+                }
+              }
+
+              .farm-labels {
+                margin-top: 15px;
+                display: flex;
+
+                .label {
+                  border-radius: 6px;
+                  padding: 5px 9px;
+                  font-size: 14px;
+                  font-weight: 400;
+                  width: fit-content;
+                  margin-right: 10px;
+
+                  &:last-child {
+                    margin-right: 0;
+                  }
+
+                  &.labelized {
+                    background: @color-labelized;
+                  }
+
+                  &.permissionless {
+                    background: @color-permissionless;
+                  }
+
+                  &.ended {
+                    border: 2px solid @color-ended;
+                    font-size: 14px;
+                    line-height: 17px;
+                    color: @color-ended;
+                    text-transform: uppercase;
+                  }
+
+                  &.dual {
+                    border: 2px solid @color-dual;
+                    font-size: 14px;
+                    line-height: 17px;
+                    color: @color-dual;
+                    text-transform: uppercase;
+                  }
+
+                  &.new {
+                    border: 2px solid @color-new;
+                    font-size: 14px;
+                    line-height: 17px;
+                    color: @color-new;
+                    text-transform: uppercase;
+                  }
+                }
+              }
+
+              .farm-infos {
+                margin-top: 15px;
+
+                .farm-info-group {
+                  display: flex;
+                  align-items: center;
+
+                  .farm-info-img {
+                    width: 20px;
+                    display: flex;
+                  }
+                }
+              }
+            }
+
+            .details {
+              top: 50%;
+              transform: translate(0, -50%);
+              position: absolute;
+              right: 17px;
+              margin-top: unset;
+            }
+          }
+        }
+      }
+    }
+  }
+
+// mobile version
+
+  @media @max-b-mobile {
+    body .farm.container {
+      min-width: unset;
+      width: 100%;
+      max-width: 100%;
+      margin-top: 0;
+      padding: 20px 20px !important;
+
+      .details {
+        float: right;
+      }
+
+      .detailButton {
+        background: @gradient-color-icon;
+        background-origin: border-box;
+        display: inline-block;
+        padding: 1px;
+        border-radius: 63px;
+        width: 45px;
+        height: 45px;
+
+        button {
+          height: 100%;
+          width: 100%;
+          color: #fff;
+          font-size: 14px;
+          letter-spacing: -0.05em;
+          background: #00033c;
+          border-radius: 22px;
+          border: transparent;
         }
       }
 
-      .title {
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 21px;
-        color: #fff;
-        opacity: 0.5;
+      .openButton {
+        background: @gradient-color-icon;
+        background-origin: border-box;
+        display: inline-block;
+        padding: 2px;
+        border-radius: 23px;
+
+        button {
+          height: 42px;
+          padding: 11px 24px;
+          color: #fff;
+          font-size: 14px;
+          letter-spacing: -0.05em;
+          background: #00033c;
+          border-radius: 22px;
+          border: transparent;
+
+          img {
+            margin-left: 5px;
+            transform: rotate(0);
+            transition: transform 0.3s;
+          }
+        }
       }
-    }
 
-    .details {
-      top: 50%;
-      transform: translate(0, -50%);
-      position: absolute;
-      right: 17px;
-      margin-top: unset;
-    }
+      .openButton-active > button > img {
+        transform: rotate(180deg);
+      }
 
-    .state {
-      display: flex;
-      text-align: left;
-      flex-direction: row;
+      .bgl {
+        background: #16164a !important;
+        margin-top: -17px;
+        padding-bottom: 10px;
+        margin-bottom: -16px;
+      }
 
-      .title {
+      .buttonsd {
+        display: block;
+        background: #00033c;
+        margin-top: 10px;
+      }
+
+      .noMobile {
+        display: none;
+      }
+
+      .noDesktop {
+        display: inline-block;
+      }
+
+      .largeserach input {
+        height: 47px !important;
+      }
+
+      .page-head {
+        margin-bottom: 0;
+        margin-top: 0;
+
+        .buttonsd {
+          height: 87px;
+          padding: 20px 20px 84px;
+          border: 4px solid #16164a;
+          box-sizing: border-box;
+          border-radius: 14px;
+          text-align: center;
+
+          a {
+            display: inline-block;
+          }
+
+          > div {
+            margin-right: -66px;
+            display: inline-block;
+          }
+        }
+      }
+
+      .fs-container {
+        display: inline-block;
+      }
+
+      .ant-collapse,
+      .ant-collapse > .ant-collapse-item {
+        position: relative;
+      }
+
+      .ant-collapse::before,
+      .ant-collapse > .ant-collapse-item::before {
+        content: '';
+        height: 4px;
+        width: 100%;
+        top: 0;
+        background: #00033c;
+        position: absolute;
+      }
+
+      .labmobile {
+        float: left;
+        font-style: normal;
         font-weight: normal;
         font-size: 18px;
         line-height: 21px;
@@ -2267,42 +2889,180 @@ export default Vue.extend({
         display: flex;
       }
 
-      .value {
-        font-size: 18px;
-        line-height: 21.19px;
-        font-weight: 400;
-        text-align: center;
-      }
-
-      .table-apr,
-      .table-liquidity {
-        cursor: pointer;
-
-        i {
-          color: white;
-          margin-left: 10px;
-          display: flex;
+      .farm-item {
+        min-width: 100%;
+        padding-top: 25px !important;
+        padding-bottom: 25px !important;
+        display: block;
+        align-items: unset;
+        .lp-icons {
+          display: flex !important;
           align-items: center;
+          justify-content: space-between;
+          padding: 0 20% 0 10px;
+          width: 100%;
+          flex-direction: unset;
+          float: unset;
+          flex: unset;
+          img {
+            margin-top: -4px;
+          }
+          .lp-icons-group {
+            background: transparent;
+            .icons {
+              padding: 0;
+              background-color: transparent;
+            }
+          }
         }
 
-        .sort-icon-active {
-          color: #13ecab;
+        .state {
+          text-align: right;
+          display: none;
+          margin-top: 11px;
+          .ant-col-12 {
+            width: 100%;
+          }
+        }
+
+        .state.noDesktop {
+          padding: 0 20% 0 10px;
+          display: block !important;
+          width: 100%;
+          flex-direction: unset;
+          float: unset;
+          flex: unset;
+          text-align: right;
+          font-size: 18px;
+          margin-bottom: 6px;
+
+          .value {
+            text-align: unset !important;
+          }
+        }
+      }
+
+      .collapse-row .lp-icons,
+      .collapse-row .state {
+        padding: 0 10px;
+        display: block;
+        width: 100%;
+        flex-direction: unset;
+        float: unset;
+        flex: unset;
+        text-align: right;
+        font-size: 18px;
+        margin-bottom: 6px;
+        .lp-icons-group {
+          background: transparent;
+          .icons {
+            padding: 0;
+            background-color: transparent;
+          }
+        }
+      }
+
+      .ant-pagination {
+        margin-top: 40px;
+      }
+      .ant-collapse.ant-collapse-icon-position-right {
+        max-width: 100%;
+        background: #16164a;
+        border-radius: 14px;
+      }
+
+      .ant-collapse-content {
+        background: #16164a !important;
+      }
+
+      .ant-collapse-content-box {
+        background: #16164a !important;
+        .collapse-row {
+          display: block;
+          align-items: unset;
+          .ant-col.ant-col-4,
+          .ant-col.ant-col-8 {
+            width: 100%;
+            display: block;
+            flex-direction: unset;
+            float: unset;
+            flex: unset;
+          }
+        }
+      }
+
+      .start,
+      .harvest {
+        background: @color-bg;
+        border-radius: 14px;
+        margin: auto;
+        .reward .token {
+          font-size: 26px;
+          line-height: 31px;
+        }
+      }
+
+      .btncontainer {
+        display: inline-block !important;
+      }
+
+      .start .btncontainer:not(.largebtn) {
+        width: calc(50% - 20px);
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+      }
+
+      .start .btncontainer:not(.largebtn):last-of-type {
+        width: calc(100% - 30px);
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+
+      .tool-bar {
+        height: unset;
+        border: unset;
+
+        .tool-option {
+          background: #00033c;
+          width: 100%;
+          height: 54px;
+          display: block;
+          position: relative;
+          margin: 10px 0;
+          border: 4px solid #16164a;
+          box-sizing: border-box;
+          border-radius: 10px;
+
+          .input-search {
+            height: 47px !important;
+            .ant-input {
+              padding: 19px 60px;
+              border: none;
+              height: 47px !important;
+            }
+          }
+
+          .toggle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: left;
+            padding-left: 10%;
+
+            .ant-switch {
+              position: absolute;
+              right: 10%;
+            }
+          }
         }
       }
     }
   }
-
-  .farm-head.is-mobile {
-    padding: 24px 16px !important;
-  }
-
-  .is-mobile {
-    .harvest,
-    .start {
-      margin-top: 16px;
-    }
-  }
-
+  
+// global used styles
   p {
     margin-bottom: 0;
   }
@@ -2316,341 +3076,73 @@ export default Vue.extend({
       display: inline-block;
     }
   }
-}
-.radioButtonStyle {
-  width: 50%;
-  text-align: center;
-}
 
-.noDesktop {
-  display: none !important;
-
-  @media @max-b-mobile {
-    display: block !important;
-  }
-}
-
-@media @max-b-mobile {
-  body .farm.container {
-    min-width: unset;
+  .btn-container {
     width: 100%;
-    max-width: 100%;
-    margin-top: 0;
-    padding: 20px 20px !important;
+    max-width: 150px;
+    background: @gradient-color-fill;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 5px;
 
-    .details {
-      float: right;
-    }
-
-    .detailButton {
-      background: @gradient-color-icon;
-      background-origin: border-box;
-      display: inline-block;
-      padding: 1px;
-      border-radius: 63px;
-      width: 45px;
-      height: 45px;
-
-      button {
-        height: 100%;
-        width: 100%;
-        color: #fff;
-        font-size: 14px;
-        letter-spacing: -0.05em;
-        background: #00033c;
-        border-radius: 22px;
-        border: transparent;
-      }
-    }
-
-    .openButton {
-      background: @gradient-color-icon;
-      background-origin: border-box;
-      display: inline-block;
-      padding: 2px;
-      border-radius: 23px;
-
-      button {
-        height: 42px;
-        padding: 11px 24px;
-        color: #fff;
-        font-size: 14px;
-        letter-spacing: -0.05em;
-        background: #00033c;
-        border-radius: 22px;
-        border: transparent;
-
-        img {
-          margin-left: 5px;
-          transform: rotate(0);
-          transition: transform 0.3s;
-        }
-      }
-    }
-
-    .openButton-active > button > img {
-      transform: rotate(180deg);
-    }
-
-    .bgl {
-      background: #16164a !important;
-      margin-top: -17px;
-      padding-bottom: 10px;
-      margin-bottom: -16px;
-    }
-
-    .buttonsd {
-      display: block;
-      background: #00033c;
-      margin-top: 10px;
-    }
-
-    .noMobile {
-      display: none;
-    }
-
-    .noDesktop {
-      display: inline-block;
-    }
-
-    .labells {
-      display: inline-flex;
-    }
-
-    .largeserach input {
-      height: 47px !important;
-    }
-
-    .page-head {
+    &:last-child {
       margin-bottom: 0;
-      margin-top: 0;
-
-      .buttonsd {
-        height: 87px;
-        padding: 20px 20px 84px;
-        border: 4px solid #16164a;
-        box-sizing: border-box;
-        border-radius: 14px;
-        text-align: center;
-
-        a {
-          display: inline-block;
-        }
-
-        > div {
-          margin-right: -66px;
-          display: inline-block;
-        }
-      }
     }
 
-    .fs-container {
-      display: inline-block;
-    }
-
-    .ant-collapse,
-    .ant-collapse > .ant-collapse-item {
-      position: relative;
-    }
-
-    .ant-collapse::before,
-    .ant-collapse > .ant-collapse-item::before {
-      content: '';
-      height: 4px;
+    button {
+      height: 100%;
       width: 100%;
-      top: 0;
-      background: #00033c;
-      position: absolute;
+      border-radius: 8px;
+      border: none;
     }
 
-    .farm-head.table-head {
-      display: none;
-    }
+    &.btn-container-fill {
+      height: 52px;
 
-    .labmobile {
-      float: left;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 21px;
-      color: #ffffff50;
-      display: flex;
-    }
-
-    .farm-head {
-      min-width: 100%;
-      padding-top: 25px !important;
-      padding-bottom: 25px !important;
-      display: block;
-      align-items: unset;
-      .lp-icons {
-        display: flex !important;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20% 0 10px;
-        width: 100%;
-        flex-direction: unset;
-        float: unset;
-        flex: unset;
-        img {
-          margin-top: -4px;
-        }
-        .lp-icons-group {
-          background: transparent;
-          .icons {
-            padding: 0;
-            background-color: transparent;
-          }
-        }
-      }
-
-      .state {
-        text-align: right;
-        display: none;
-        margin-top: 11px;
-        .ant-col-12 {
-          width: 100%;
-        }
-      }
-
-      .state.noDesktop {
-        padding: 0 20% 0 10px;
-        display: block !important;
-        width: 100%;
-        flex-direction: unset;
-        float: unset;
-        flex: unset;
-        text-align: right;
-        font-size: 18px;
-        margin-bottom: 6px;
-
-        .value {
-          text-align: unset !important;
-        }
+      button {
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 600;
+        background: transparent !important;
       }
     }
 
-    .collapse-row .lp-icons,
-    .collapse-row .state {
-      padding: 0 10px;
-      display: block;
-      width: 100%;
-      flex-direction: unset;
-      float: unset;
-      flex: unset;
-      text-align: right;
-      font-size: 18px;
-      margin-bottom: 6px;
-      .lp-icons-group {
-        background: transparent;
-        .icons {
-          padding: 0;
-          background-color: transparent;
+    &.btn-container-outline {
+      height: 28px;
+      padding: 2px;
+
+      button {
+        font-size: 10px;
+        line-height: 24px;
+        font-weight: 400;
+        background: #0b2e6a !important;
+      }
+    }
+
+    &.btn-container-harvest {
+      height: 28px;
+      background: @gradient-color-outline;
+
+      button {
+        font-size: 12px;
+        line-height: 24px;
+        font-weight: 400;
+        background: transparent !important;
+        color: white;
+
+        &:disabled {
+          background: @gradient-color-disable !important;
         }
       }
     }
+  }
 
-    .ant-pagination {
-      margin-top: 40px;
+  .noDesktop {
+    display: none !important;
+
+    @media @max-b-mobile {
+      display: block !important;
     }
-    .ant-collapse.ant-collapse-icon-position-right {
-      max-width: 100%;
-      background: #16164a;
-      border-radius: 14px;
-    }
-
-    .reward-col {
-      margin-bottom: 30px;
-    }
-
-    .ant-collapse-content {
-      background: #16164a !important;
-    }
-
-    .ant-collapse-content-box {
-      background: #16164a !important;
-      .collapse-row {
-        display: block;
-        align-items: unset;
-        .ant-col.ant-col-4,
-        .ant-col.ant-col-8 {
-          width: 100%;
-          display: block;
-          flex-direction: unset;
-          float: unset;
-          flex: unset;
-        }
-      }
-    }
-
-    .start,
-    .harvest {
-      background: @color-bg;
-      border-radius: 14px;
-      margin: auto;
-      .reward .token {
-        font-size: 26px;
-        line-height: 31px;
-      }
-    }
-
-    .btncontainer {
-      display: inline-block !important;
-    }
-
-    .start .btncontainer:not(.largebtn) {
-      width: calc(50% - 20px);
-      margin-left: 5px;
-      margin-right: 5px;
-      margin-bottom: 10px;
-    }
-
-    .start .btncontainer:not(.largebtn):last-of-type {
-      width: calc(100% - 30px);
-      margin-left: 5px;
-      margin-right: 5px;
-    }
-
-    // .tool-bar {
-    //   height: unset;
-    //   border: unset;
-
-    //   .tool-option {
-    //     background: #00033c;
-    //     width: 100%;
-    //     height: 54px;
-    //     display: block;
-    //     position: relative;
-    //     margin: 10px 0;
-    //     border: 4px solid #16164a;
-    //     box-sizing: border-box;
-    //     border-radius: 10px;
-
-    //     .input-search {
-    //       height: 47px !important;
-    //       .ant-input {
-    //         padding: 19px 60px;
-    //         border: none;
-    //         height: 47px !important;
-    //       }
-    //     }
-
-    //     .toggle {
-    //       position: absolute;
-    //       width: 100%;
-    //       height: 100%;
-    //       display: inline-flex;
-    //       align-items: center;
-    //       justify-content: left;
-    //       padding-left: 10%;
-
-    //       .ant-switch {
-    //         position: absolute;
-    //         right: 10%;
-    //       }
-    //     }
-    //   }
-    // }
   }
 }
 </style>
@@ -2662,91 +3154,13 @@ export default Vue.extend({
   }
 }
 
-.ant-tooltip-arrow {
-  display: none;
-}
+// ant design customization
 
 .farm {
-  .page-head {
-    margin-top: 10px;
-
-    .title {
-      text-align: center;
-      position: relative;
-      float: left;
-
-      a {
-        position: absolute;
-        top: 5px;
-        right: -25px;
-
-        .create-plus-btn {
-          font-weight: 400;
-          width: 18px;
-          height: 18px;
-          border-radius: 8px;
-          background: @gradient-color-primary;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-size: 18px;
-        }
-      }
-    }
-
-    .information {
-      display: flex;
-      align-items: center;
-      text-align: right;
-
-      .my-info {
-        font-size: 15px;
-        line-height: 18px;
-      }
-
-      .reload-btn {
-        width: 30px;
-        height: 30px;
-        border-radius: 15px;
-        background: @gradient-color-primary;
-        background-origin: border-box;
-        margin-left: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-
-        img {
-          width: 18px;
-          height: 18px;
-        }
-      }
-    }
-  }
-
   .page-content {
     .tool-bar {
-      height: @toolbar-height;
-      border-radius: 14px;
-      border: 4px solid @color-outline;
-      width: 100%;
-
       .tool-option {
-        height: 100%;
-        display: inline-block;
-        border-right: 4px solid @color-outline;
-        position: relative;
-
-        &:last-child {
-          border-right: none !important;
-        }
-
         .input-search {
-          height: 100%;
-          position: absolute;
-          width: 100%;
-
           .ant-input-prefix {
             left: 10%;
             font-size: 20px;
@@ -2769,208 +3183,13 @@ export default Vue.extend({
             }
           }
         }
-
-        .toggle {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-around;
-
-          .label {
-            font-size: 16px;
-            opacity: 0.5;
-
-            &.active-label {
-              font-weight: 700;
-              opacity: 1;
-            }
-          }
-
-          &.deposit-toggle {
-            .ant-switch-checked {
-              background-color: @color-disable !important;
-            }
-          }
-        }
-
-        .sort-by {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-evenly;
-
-          .label {
-            font-size: 16px;
-            opacity: 0.5;
-
-            &.active-label {
-              font-weight: 700;
-              opacity: 1;
-            }
-
-            .sort-up, .sort-down {
-              margin-right: 5px;
-              transition: 0.5s;
-            }
-
-            .sort-down {
-              transform: rotate(180deg);
-            }
-          }
-
-          .collapse-down,
-          .collapse-up {
-            cursor: pointer;
-            transition: 0.5s;
-          }
-
-          .collapse-down {
-            transform: rotate(180deg);
-          }
-        }
-
-        .sort-options {
-          position: absolute;
-          width: 100%;
-          top: @toolbar-height;
-          padding: 18px;
-          background: @gradient-color-primary;
-          background-origin: border-box;
-          border: 2px solid @color-border;
-          box-shadow: 18px 11px 14px #00000025;
-          border-radius: 8px;
-          z-index: 999;
-
-          .option {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #C4C4C420;
-            font-size: 16px;
-            line-height: 19px;
-            cursor: pointer;
-
-            &:hover {
-              background: @gradient-color-primary;
-              border: 1px solid @color-border;
-              border-radius: 6px;
-            }
-
-            &.active {
-              background: @gradient-color-primary;
-              border: 1px solid @color-border;
-            }
-
-            &:last-child {
-              border-bottom: none;
-            }
-
-            img {
-              margin-right: 20px;
-            }
-          }
-        }
       }
     }
-  }
-
-  .farm-head {
-    padding: 30px 5px !important;
-  }
-
-  .ant-collapse-header {
-    padding: 0 !important;
-    border-top: 1px solid #ffffff20;
-
-    .farm-head {
-      padding: 5px 5px !important;
-    }
-
-    .ant-collapse-arrow {
-      z-index: 2;
-      margin-right: 16px;
-      margin-top: -1px;
-    }
-  }
-
-  .ant-collapse-content {
-    background-color: @color-bg;
-    border-top: none !important;
   }
 }
 
-.ant-collapse {
-  background-color: @color-bg;
-}
-
-.farm.container {
-  .create {
-    background: @gradient-color-icon;
-    background-origin: border-box;
-    border: 2px solid rgba(255, 255, 255, 0.14);
-    border-radius: 8px;
-
-    @media @max-b-mobile {
-      padding: 8px 18px;
-    }
-
-    button {
-      background: unset !important;
-      color: #fff;
-      border-color: transparent;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 42px;
-      letter-spacing: -0.05em;
-      height: 56px;
-      width: 163px;
-
-      @media @max-b-mobile {
-        font-size: 14px;
-        line-height: 24px;
-        padding: 0;
-        width: auto;
-        height: 40px;
-      }
-    }
-  }
-  .ant-collapse,
-  .ant-collapse > .ant-collapse-item {
-    border: unset !important;
-  }
-
-  .btncontainer {
-    background: @gradient-color-icon !important;
-    background-origin: border-box !important;
-    display: inline-block;
-    width: unset;
-    text-align: center;
-    position: relative;
-    max-width: 400px;
-    padding: 2px;
-    margin: 0;
-    border-radius: 8px !important;
-    max-height: 60px !important;
-
-    button {
-      background: transparent !important;
-      position: relative;
-      border-radius: 8px !important;
-      border-color: transparent !important;
-      height: 56px !important;
-    }
-  }
-
-  .fs-container {
-    .btncontainer {
-      .btn-bg-fill {
-        background-color: @color-bg !important;
-      }
-    }
-  }
+.ant-tooltip-arrow {
+  display: none;
 }
 
 .ant-alert-warning {
@@ -2984,62 +3203,10 @@ export default Vue.extend({
   }
 }
 
-.label.soon {
-  background: #48a469;
-  border-radius: 4px;
-  right: 110px;
-  font-size: 14px;
-  font-weight: 400;
-  padding: 5px;
-  width: 53px;
-}
-
-.labmobile {
-  display: none;
-}
-
-.label.ended {
-  background: #ef745d;
-  border-radius: 4px;
-  right: 110px;
-  font-size: 14px;
-  font-weight: 400;
-  padding: 5px;
-  width: 53px;
-}
-
-.labelized {
-  background: #724cee;
-  border-radius: 6px;
-  padding: 5px 9px;
-  font-size: 14px;
-  font-weight: 400;
-  width: fit-content;
-}
-
-.permissionless {
-  background: #ef745d;
-  border-radius: 6px;
-  padding: 5px 9px;
-  font-size: 14px;
-  font-weight: 400;
-  width: fit-content;
-  margin-right: 10px;
-}
-
-.reward-col {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.collapse-row {
-  display: flex;
-  align-items: center;
-}
+// global stylesheet
 
 .info-icon {
-  margin-left: 12px;
+  margin: -10px 0 0 10px;
   display: flex;
   align-items: center;
 
@@ -3059,28 +3226,5 @@ main {
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
-}
-
-.ant-table-thead > tr > th.ant-table-column-sort {
-  background: transparent;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  color: #fff;
-  background: #1c274f;
-  border: 1px solid #d9d9d9;
-  box-shadow: none;
-  border-left-width: 0;
-}
-.ant-radio-button-wrapper {
-  color: #aaa;
-  background: transparent;
-  // border: 1px solid #d9d9d9;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
-  border: 1px solid #d9d9d9;
-  box-shadow: none;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
-  border: 1px solid #d9d9d9;
 }
 </style>
