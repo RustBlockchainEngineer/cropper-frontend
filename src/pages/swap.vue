@@ -1228,8 +1228,6 @@ export default Vue.extend({
               this.toCoin!.mintAddress,
               this.fromCoinAmount,
             )
-            console.log(poolInfo)
-            console.log(poolInfo.coin.symbol, poolInfo.coin.balance.fixed(), poolInfo.pc.symbol, poolInfo.pc.balance.fixed());
             const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
               poolInfo,
               // @ts-ignore
