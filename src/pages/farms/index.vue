@@ -941,7 +941,7 @@ export default Vue.extend({
       
       try {
         const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json());
-        //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
+        //const migrations = {"2v6hXFDcekJ9x9PKaJKgzhHWoZJjPqFB9yaHoWUf5KUu":"EgZ3sGnwdiHNTeoqsDCRmKbibqBi4DfoenWwrNDnXo7U"}
 
         forIn(migrations, (newFarmId, oldFarmId, _object) => {
           
@@ -1264,10 +1264,12 @@ export default Vue.extend({
             .dividedBy(newFarmInfo.lp.balance.wei)
             .plus(getBigNumber(reward_per_share_net))
 
+          const JUMP_DEBT =new BigNumber(10000000000000000000);
+          const _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT);
           let pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
-            .minus(rewardDebt.wei)
+            .minus(_rewardDebt)
 
           if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
             pendingReward = newFarmInfo.reward.balance.wei;
