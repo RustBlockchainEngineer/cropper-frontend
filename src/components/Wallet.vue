@@ -842,8 +842,7 @@ export default class Wallet extends Vue {
   }
 
   @media @max-b-mobile {
-    display: inline-flex;
-    align-items: center;
+    display: none;
   }
 }
 

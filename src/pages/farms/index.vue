@@ -64,27 +64,6 @@
     <div class="card">
       <div class="card-body">
         <div class="page-head fs-container">
-          <span class="details noDesktop">
-            <div
-              class="openButton"
-              :class="displayfilters ? 'openButton-active' : ''"
-              @click="
-                () => {
-                  if (displayfilters == true) {
-                    displayfilters = false
-                  } else {
-                    displayfilters = true
-                  }
-                }
-              "
-            >
-              <button>
-                Search
-                <img src="@/assets/icons/arrow-down.svg" />
-              </button>
-            </div>
-          </span>
-
           <span class="title">
             Farms
             <NuxtLink to="/farms/create-farm/">
@@ -102,8 +81,8 @@
               class="reload-btn"
               @click="
                 () => {
-                  $accessor.farm.requestInfos()
-                  $accessor.wallet.getTokenAccounts()
+                  $accessor.farm.requestInfos();
+                  $accessor.wallet.getTokenAccounts();
                 }
               "
             >
@@ -115,44 +94,60 @@
         <div v-if="farm.initialized" class="page-content">
           <!-- Filter bar for desktop -->
           <Row class="tool-bar noMobile">
-            <Col :span="isMobile ? '24' : '5'" class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
+            <Col span="5" class="tool-option">
+              <Input
+                v-model="searchName"
+                size="large"
+                class="input-search"
+                placeholder="Search by name"
+              >
                 <Icon slot="prefix" type="search" />
               </Input>
             </Col>
-            <Col :span="isMobile ? '24' : '6'" class="tool-option">
+            <Col span="6" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  >Labelized</label
+                >
                 <Toggle v-model="searchCertifiedFarm" :disabled="!wallet.connected" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''"
+                  >Permissionless</label
+                >
               </div>
             </Col>
-            <Col :span="isMobile ? '24' : '5'" class="tool-option">
+            <Col span="5" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''">Open</label>
+                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''"
+                  >Open</label
+                >
                 <Toggle v-model="searchLifeFarm" :disabled="!wallet.connected" />
-                <label class="label" :class="searchLifeFarm ? 'active-label' : ''">Ended</label>
+                <label class="label" :class="searchLifeFarm ? 'active-label' : ''"
+                  >Ended</label
+                >
               </div>
             </Col>
-            <Col :span="isMobile ? '24' : '4'" class="tool-option">
+            <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
                 <label class="label">My deposit</label>
                 <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
               </div>
             </Col>
-            <Col :span="isMobile ? '24' : '4'" class="tool-option">
+            <Col span="4" class="tool-option">
               <div class="sort-by">
                 <label class="label">Sort by:</label>
                 <label class="label active-label">
-                  <img :class="sortAsc ? 'sort-up' : 'sort-down'" src="@/assets/icons/sort-up.svg" />
-                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR' }}
+                  <img
+                    :class="sortAsc ? 'sort-up' : 'sort-down'"
+                    src="@/assets/icons/sort-up.svg"
+                  />
+                  {{ this.sortMethod === "liquidity" ? "Liquidity" : "APR" }}
                 </label>
                 <img
                   :class="showSortOption ? 'collapse-down' : 'collapse-up'"
                   src="@/assets/icons/collapse-arrow.svg"
                   @click="
                     () => {
-                      this.showSortOption = !this.showSortOption
+                      this.showSortOption = !this.showSortOption;
                     }
                   "
                 />
@@ -180,27 +175,89 @@
 
           <!-- Filter bar for mobile -->
 
-          <!-- <div class="tool-bar noDesktop" v-if="displayfilters">
-            <div class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search largeserach" placeholder="Search by name">
+          <Row class="tool-bar noDesktop">
+            <Col span="12" class="tool-option">
+              <Input
+                v-model="searchName"
+                size="large"
+                class="input-search"
+                placeholder="Search by name"
+              >
                 <Icon slot="prefix" type="search" />
               </Input>
-            </div>
-            <div class="tool-option">
-              <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
-            </div>
-            <div class="tool-option">
-              <Select :options="lifeOptions" v-model="searchLifeFarm"> </Select>
-            </div>
-            <div class="tool-option">
-              <div class="toggle">
-                <label class="label">Staked Only</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected || searchLifeFarm === 1" />
+            </Col>
+            <Col span="12" class="tool-option">
+              <div class="toggle deposit-toggle">
+                <label class="label">Deposited</label>
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
               </div>
-            </div>
-          </div> -->
+            </Col>
+          </Row>
+          <!-- <Row class="tool-bar noDesktop">
+            <Col span="24" class="tool-option">
+              <div class="toggle">
+                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''">Open</label>
+                <Toggle v-model="searchLifeFarm" :disabled="!wallet.connected" />
+                <label class="label" :class="searchLifeFarm ? 'active-label' : ''">Ended</label>
+              </div>
+            </Col>
+          </Row> -->
+          <Row class="tool-bar noDesktop">
+            <Col span="24" class="tool-option">
+              <div class="toggle">
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  >Labelized</label
+                >
+                <Toggle v-model="searchCertifiedFarm" :disabled="!wallet.connected" />
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''"
+                  >Permissionless</label
+                >
+              </div>
+            </Col>
+          </Row>
+          <Row class="tool-bar noDesktop">
+            <Col span="24" class="tool-option">
+              <div class="sort-by">
+                <label class="label">Sort by:</label>
+                <label class="label active-label">
+                  <img
+                    :class="sortAsc ? 'sort-up' : 'sort-down'"
+                    src="@/assets/icons/sort-up.svg"
+                  />
+                  {{ this.sortMethod === "liquidity" ? "Liquidity" : "APR" }}
+                </label>
+                <img
+                  :class="showSortOption ? 'collapse-down' : 'collapse-up'"
+                  src="@/assets/icons/collapse-arrow.svg"
+                  @click="
+                    () => {
+                      this.showSortOption = !this.showSortOption;
+                    }
+                  "
+                />
+              </div>
+              <div v-if="showSortOption" class="sort-options">
+                <div class="option" @click="setSortOption('liquidity', true)">
+                  <img src="@/assets/icons/sort-up.svg" />
+                  Liquidity
+                </div>
+                <div class="option" @click="setSortOption('liquidity', false)">
+                  <img src="@/assets/icons/sort-down.svg" />
+                  Liquidity
+                </div>
+                <div class="option" @click="setSortOption('apr', true)">
+                  <img src="@/assets/icons/sort-up.svg" />
+                  APR
+                </div>
+                <div class="option" @click="setSortOption('apr', false)">
+                  <img src="@/assets/icons/sort-down.svg" />
+                  APR
+                </div>
+              </div>
+            </Col>
+          </Row>
 
-          <!-- Farm table for desktop -->
+          <!-- Pre list -->
 
           <div class="farm-shortcut">
             <div class="farm-prelist" v-for="list in preList" :key="list">
@@ -209,8 +266,9 @@
           </div>
 
           <div class="farm-table">
+            <!-- Farm table for desktop -->
             <Row
-              class="farm-item"
+              class="farm-item noMobile"
               :class="farm.labelized === 'labelized' ? 'labelized' : 'permissionless'"
               v-for="farm in showFarms"
               :key="farm.farmInfo.poolId"
@@ -239,8 +297,18 @@
                   <div v-if="farm.labelized" class="label labelized">Labelized</div>
                   <div v-else class="label permissionless">Permissionless</div>
 
-                  <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                  <div v-if="currentTimestamp < farm.farmInfo.poolInfo.end_timestamp" class="label new">New</div>
+                  <div
+                    v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp"
+                    class="label ended"
+                  >
+                    Ended
+                  </div>
+                  <div
+                    v-if="currentTimestamp < farm.farmInfo.poolInfo.end_timestamp"
+                    class="label new"
+                  >
+                    New
+                  </div>
                 </div>
 
                 <div class="farm-infos">
@@ -248,8 +316,18 @@
                     <div class="farm-info-img">
                       <img src="@/assets/icons/time-icon.svg" />
                     </div>
-                    from {{ new Date(farm.farmInfo.poolInfo.start_timestamp * 1e3).toLocaleDateString('en-US') }} to
-                    {{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toLocaleDateString('en-US') }}
+                    from
+                    {{
+                      new Date(
+                        farm.farmInfo.poolInfo.start_timestamp * 1e3
+                      ).toLocaleDateString("en-US")
+                    }}
+                    to
+                    {{
+                      new Date(
+                        farm.farmInfo.poolInfo.end_timestamp * 1e3
+                      ).toLocaleDateString("en-US")
+                    }}
                   </div>
                   <div>
                     <div class="farm-info-group">
@@ -259,8 +337,10 @@
                       Remaining rewards
                       {{
                         Math.round(
-                          new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals).toEther() *
-                            1000
+                          new TokenAmount(
+                            farm.farmInfo.reward.balance.wei,
+                            farm.farmInfo.reward.decimals
+                          ).toEther() * 1000
                         ) / 1000
                       }}
                       {{ farm.farmInfo.lp.coin.symbol }}
@@ -271,7 +351,6 @@
 
               <Col class="state" span="3">
                 <div class="title">Total Deposited</div>
-                <br />
                 <div
                   v-if="
                     farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
@@ -285,7 +364,7 @@
                   {{
                     Math.round(farm.farmInfo.liquidityUsdValue)
                       .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }}$
                 </div>
               </Col>
@@ -313,10 +392,11 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="16" height="16" />
+                    </div>
                   </Tooltip>
                 </div>
-                <br />
                 <div
                   v-if="
                     farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
@@ -328,15 +408,25 @@
                 </div>
                 <div v-else class="value">
                   {{ farm.farmInfo.apr }}%
-                  <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
-                  <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
+                  <img
+                    v-if="farm.farmInfo.apr > 300"
+                    src="@/assets/icons/fire-icon.svg"
+                  />
+                  <img
+                    v-if="farm.farmInfo.apr > 1000"
+                    src="@/assets/icons/fire-icon.svg"
+                  />
                 </div>
               </Col>
 
               <Col class="state" span="4">
                 <div class="title">Pending Rewards</div>
-                <br />
-                <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
+                <div
+                  v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                  class="value"
+                >
+                  -
+                </div>
                 <div v-else class="value">
                   {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
                 </div>
@@ -344,10 +434,18 @@
                 <div class="btn-container btn-container-harvest">
                   <Button
                     v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                    :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                    :disabled="
+                      !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
+                    "
                     size="large"
                     ghost
-                    @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                    @click.stop="
+                      openUnstakeModal(
+                        farm.farmInfo,
+                        farm.farmInfo.lp,
+                        farm.userInfo.depositBalance
+                      )
+                    "
                   >
                     Harvest & Withdraw
                   </Button>
@@ -356,7 +454,11 @@
                     v-else
                     size="large"
                     ghost
-                    :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
+                    :disabled="
+                      !wallet.connected ||
+                      harvesting ||
+                      farm.userInfo.pendingReward.isNullOrZero()
+                    "
                     :loading="harvesting"
                     @click="harvest(farm.farmInfo)"
                   >
@@ -371,7 +473,8 @@
                   <Tooltip
                     placement="bottomLeft"
                     v-if="
-                      !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) && farm.userInfo.depositFormat > 0
+                      !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) &&
+                      farm.userInfo.depositFormat > 0
                     "
                   >
                     <template slot="title">
@@ -381,25 +484,33 @@
                         </div>
                         <hr />
                         <div class="tooltip-line">
-                          {{ farm.farmInfo.lp.coin.symbol }} <span> {{ farm.userInfo.depositCoin }} </span>
+                          {{ farm.farmInfo.lp.coin.symbol }}
+                          <span> {{ farm.userInfo.depositCoin }} </span>
                         </div>
                         <hr />
                         <div class="tooltip-line">
-                          {{ farm.farmInfo.lp.pc.symbol }} <span> {{ farm.userInfo.depositPc }} </span>
+                          {{ farm.farmInfo.lp.pc.symbol }}
+                          <span> {{ farm.userInfo.depositPc }} </span>
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon"><img src="@/assets/icons/info-icon.svg" width="16" height="16" /></div>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="16" height="16" />
+                    </div>
                   </Tooltip>
                 </div>
-                <br />
-                <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
+                <div
+                  v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                  class="value"
+                >
+                  -
+                </div>
                 <div v-else class="value">
                   {{
                     !wallet.connected
                       ? 0
                       : farm.userInfo.depositBalanceUSD
-                      ? '$ ' + farm.userInfo.depositBalanceUSD
+                      ? "$ " + farm.userInfo.depositBalanceUSD
                       : farm.userInfo.depositBalance.format()
                   }}
                 </div>
@@ -421,16 +532,18 @@
                         farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                         farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
                       "
-                      @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
+                      @click="
+                        openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)
+                      "
                     >
                       {{
                         !farm.farmInfo.poolInfo.is_allowed
-                          ? 'Not Allowed'
+                          ? "Not Allowed"
                           : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                          ? 'Ended'
+                          ? "Ended"
                           : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                          ? 'Unstarted'
-                          : 'Deposit'
+                          ? "Unstarted"
+                          : "Deposit"
                       }}
                     </Button>
                   </div>
@@ -455,12 +568,12 @@
                     >
                       {{
                         !farm.farmInfo.poolInfo.is_allowed
-                          ? 'Not Allowed'
+                          ? "Not Allowed"
                           : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                          ? 'Ended'
+                          ? "Ended"
                           : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                          ? 'Unstarted'
-                          : 'Deposit LP'
+                          ? "Unstarted"
+                          : "Deposit LP"
                       }}
                     </Button>
                   </div>
@@ -472,8 +585,16 @@
                     <Button
                       size="large"
                       ghost
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                      :disabled="
+                        !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
+                      "
+                      @click.stop="
+                        openUnstakeModal(
+                          farm.farmInfo,
+                          farm.farmInfo.lp,
+                          farm.userInfo.depositBalance
+                        )
+                      "
                     >
                       Withdraw
                     </Button>
@@ -481,6 +602,313 @@
                 </div>
               </Col>
             </Row>
+
+            <!-- Farm table for mobile -->
+
+            <Collapse v-model="showCollapse" class="noDesktop">
+              <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="false">
+                <Row
+                  slot="header"
+                  class="farm-item noDesktop"
+                >
+                  <Col class="lp-icons farm-mobile-section" span="24">
+                    <div class="lp-farm">
+                      <div class="lp-icons-group">
+                        <div class="icons">
+                          <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
+                          <span>{{ farm.farmInfo.lp.coin.symbol }} - </span>
+                          <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
+                          <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
+                        </div>
+                      </div>
+                      <div class="farm-labels">
+                        <div v-if="farm.labelized" class="label labelized">Labelized</div>
+                        <div v-else class="label permissionless">Permissionless</div>
+
+                        <div
+                          v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp"
+                          class="label ended"
+                        >
+                          Ended
+                        </div>
+                        <div
+                          v-if="currentTimestamp < farm.farmInfo.poolInfo.end_timestamp"
+                          class="label new"
+                        >
+                          New
+                        </div>
+                      </div>
+                    </div>
+                  </Col>
+
+                  <Col class="farm-mobile-section" span="24">
+                    <Col class="state" span="7">
+                      <div class="title">Liquidity</div>
+                      <div
+                        v-if="
+                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                        "
+                        class="value"
+                      >
+                        -
+                      </div>
+                      <div v-else class="value">
+                        {{
+                          Math.round(farm.farmInfo.liquidityUsdValue)
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }}$
+                      </div>
+                    </Col>
+
+                    <Col class="state" span="10">
+                      <div class="title">
+                        Total APR
+                      </div>
+                      <div
+                        v-if="
+                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                          currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                        "
+                        class="value"
+                      >
+                        -
+                      </div>
+                      <div v-else class="value">
+                        {{ farm.farmInfo.apr }}%
+                        <img
+                          v-if="farm.farmInfo.apr > 300"
+                          src="@/assets/icons/fire-icon.svg"
+                        />
+                        <img
+                          v-if="farm.farmInfo.apr > 1000"
+                          src="@/assets/icons/fire-icon.svg"
+                        />
+                      </div>
+                    </Col>
+
+                    <Col class="state" span="7">
+                      <div class="title">Pending Reward</div>
+                      <div
+                        v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                        class="value"
+                      >
+                        -
+                      </div>
+                      <div v-else class="value">
+                        {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                      </div>
+                    </Col>
+                  </Col>
+
+                  <Col v-if="showCollapse.length === 0" class="farm-mobile-section btn-collapse" span="24">
+                    <img src="@/assets/icons/collapse-arrow-mobile.svg" />
+                  </Col>
+                </Row>
+
+                <Row class="farm-item noDesktop">
+                  <Col class="farm-mobile-section" span="24">
+                    <Col class="state" span="6">
+                      <div class="title">
+                        Staked
+                      </div>
+                      <div
+                        v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                        class="value"
+                      >
+                        -
+                      </div>
+                      <div v-else class="value">
+                        {{
+                          !wallet.connected
+                            ? 0
+                            : farm.userInfo.depositBalanceUSD
+                            ? "$ " + farm.userInfo.depositBalanceUSD
+                            : farm.userInfo.depositBalance.format()
+                        }}
+                      </div>
+                    </Col>
+                    <Col class="state" span="18">
+                      <div class="farm-infos">
+                        <div class="farm-info-group">
+                          <div class="farm-info-img">
+                            <img src="@/assets/icons/time-icon.svg" />
+                          </div>
+                          from
+                          {{
+                            new Date(
+                              farm.farmInfo.poolInfo.start_timestamp * 1e3
+                            ).toLocaleDateString("en-US")
+                          }}
+                          to
+                          {{
+                            new Date(
+                              farm.farmInfo.poolInfo.end_timestamp * 1e3
+                            ).toLocaleDateString("en-US")
+                          }}
+                        </div>
+                        <div>
+                          <div class="farm-info-group">
+                            <div class="farm-info-img">
+                              <img src="@/assets/icons/reward-icon.svg" />
+                            </div>
+                            Remaining rewards
+                            {{
+                              Math.round(
+                                new TokenAmount(
+                                  farm.farmInfo.reward.balance.wei,
+                                  farm.farmInfo.reward.decimals
+                                ).toEther() * 1000
+                              ) / 1000
+                            }}
+                            {{ farm.farmInfo.lp.coin.symbol }}
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+                  </Col>
+
+                  <Col class="farm-mobile-section" span="24">
+                    <Col class="state" span="12">
+                      <div
+                        class="btn-container btn-container-outline"
+                        v-if="
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                          farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
+                          farm.farmInfo.currentLPtokens > 0.001
+                        "
+                      >
+                        <Button
+                          size="large"
+                          ghost
+                          :disabled="
+                            !farm.farmInfo.poolInfo.is_allowed ||
+                            farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                            farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                          "
+                          @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
+                        >
+                          {{
+                            !farm.farmInfo.poolInfo.is_allowed
+                              ? "Not Allowed"
+                              : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                              ? "Ended"
+                              : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                              ? "Unstarted"
+                              : "Deposit LP"
+                          }}
+                        </Button>
+                      </div>
+
+                      <div
+                        class="btn-container btn-container-outline"
+                        v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                      >
+                        <Button
+                          size="large"
+                          ghost
+                          :disabled="
+                            !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
+                          "
+                          @click.stop="
+                            openUnstakeModal(
+                              farm.farmInfo,
+                              farm.farmInfo.lp,
+                              farm.userInfo.depositBalance
+                            )
+                          "
+                        >
+                          Withdraw
+                        </Button>
+                      </div>
+
+                      <div class="social-icons-group">
+                        <a href="#" class="social-icon">
+                          <img src="@/assets/icons/upload-icon.svg" />
+                        </a>
+                        <a href="#" class="social-icon">
+                          <img src="@/assets/icons/twitter-icon.svg" />
+                        </a>
+                      </div>
+                    </Col>
+
+                    <Col class="state" span="12">
+                      <div class="action-btn-group">
+                        <div
+                          class="btn-container btn-container-fill"
+                          v-if="
+                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                            farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
+                          "
+                        >
+                          <Button
+                            size="large"
+                            :disabled="
+                              !farm.farmInfo.poolInfo.is_allowed ||
+                              farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                            "
+                            @click="
+                              openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)
+                            "
+                          >
+                            {{
+                              !farm.farmInfo.poolInfo.is_allowed
+                                ? "Not Allowed"
+                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                                ? "Ended"
+                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                                ? "Unstarted"
+                                : "Deposit"
+                            }}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div class="btn-container btn-container-harvest">
+                        <Button
+                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          :disabled="
+                            !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
+                          "
+                          size="large"
+                          ghost
+                          @click.stop="
+                            openUnstakeModal(
+                              farm.farmInfo,
+                              farm.farmInfo.lp,
+                              farm.userInfo.depositBalance
+                            )
+                          "
+                        >
+                          Harvest & Withdraw
+                        </Button>
+
+                        <Button
+                          v-else
+                          size="large"
+                          ghost
+                          :disabled="
+                            !wallet.connected ||
+                            harvesting ||
+                            farm.userInfo.pendingReward.isNullOrZero()
+                          "
+                          :loading="harvesting"
+                          @click="harvest(farm.farmInfo)"
+                        >
+                          Harvest
+                        </Button>
+                      </div>
+                    </Col>
+
+                    <Col span="24" class="btn-collapse">
+                      <img class="btn-hide-collapse" src="@/assets/icons/collapse-arrow-mobile.svg" @click="hideCollapse"/>
+                    </Col>
+                  </Col>
+                </Row>
+              </CollapsePanel>
+            </Collapse>
 
             <!-- <Collapse v-model="showCollapse" expand-icon-position="right">
               <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="poolType">
@@ -1013,7 +1441,7 @@ import { mapState } from 'vuex'
 import {
   Tooltip,
   // Progress,
-  // Collapse,
+  Collapse,
   Spin,
   Icon,
   Row,
@@ -1047,7 +1475,7 @@ import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
 import BigNumber from 'bignumber.js'
-// const CollapsePanel = Collapse.Panel
+const CollapsePanel = Collapse.Panel
 
 export default Vue.extend({
   components: {
@@ -1055,8 +1483,8 @@ export default Vue.extend({
     Toggle,
     Input,
     // Progress,
-    // Collapse,
-    // CollapsePanel,
+    Collapse,
+    CollapsePanel,
     Spin,
     Icon,
     Row,
@@ -1150,6 +1578,8 @@ export default Vue.extend({
     },
     showCollapse: {
       handler() {
+        console.log(this.showCollapse)
+        console.log(this.showCollapse.length)
         if (!this.poolType && this.showCollapse.length > 0) {
           this.showCollapse.splice(0, this.showCollapse.length)
         }
@@ -1278,7 +1708,13 @@ export default Vue.extend({
             description: (h: any) =>
               h('div', [
                 'Confirmation is in progress.  Check your transaction on ',
-                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
               ])
           })
 
@@ -1764,7 +2200,16 @@ export default Vue.extend({
               description: (h: any) =>
                 h('div', [
                   'Confirmation is in progress.  Check your transaction on ',
-                  h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+                  h(
+                    'a',
+                    {
+                      attrs: {
+                        href: `${this.url.explorer}/tx/${txid}`,
+                        target: '_blank'
+                      }
+                    },
+                    'here'
+                  )
                 ])
             })
 
@@ -1843,7 +2288,16 @@ export default Vue.extend({
               description: (h: any) =>
                 h('div', [
                   'Confirmation is in progress.  Check your transaction on ',
-                  h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+                  h(
+                    'a',
+                    {
+                      attrs: {
+                        href: `${this.url.explorer}/tx/${txid}`,
+                        target: '_blank'
+                      }
+                    },
+                    'here'
+                  )
                 ])
             })
 
@@ -1940,7 +2394,13 @@ export default Vue.extend({
             description: (h: any) =>
               h('div', [
                 'Confirmation is in progress.  Check your transaction on ',
-                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
               ])
           })
 
@@ -2026,7 +2486,13 @@ export default Vue.extend({
             description: (h: any) =>
               h('div', [
                 'Confirmation is in progress.  Check your transaction on ',
-                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
               ])
           })
 
@@ -2166,7 +2632,13 @@ export default Vue.extend({
             description: (h: any) =>
               h('div', [
                 'Confirmation is in progress.  Check your transaction on ',
-                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
               ])
           })
 
@@ -2226,7 +2698,13 @@ export default Vue.extend({
             description: (h: any) =>
               h('div', [
                 'Confirmation is in progress.  Check your transaction on ',
-                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
               ])
           })
 
@@ -2297,7 +2775,13 @@ export default Vue.extend({
             description: (h: any) =>
               h('div', [
                 'Confirmation is in progress.  Check your transaction on ',
-                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
               ])
           })
 
@@ -2338,6 +2822,11 @@ export default Vue.extend({
       this.sortAsc = asc
       this.showSortOption = false
       this.updateFarms()
+    },
+    hideCollapse() {
+      console.log(this.showCollapse)
+      console.log(this.showCollapse.length)
+      this.showCollapse.splice(0, this.showCollapse.length)
     }
   }
 })
@@ -2352,10 +2841,18 @@ export default Vue.extend({
   margin-bottom: 20px;
   padding: 15px;
 
+  @media @max-b-mobile {
+    margin-top: 0;
+  }
+
   .planet-left {
     position: absolute;
     left: 0;
     top: 35%;
+
+    @media @max-b-mobile {
+      display: none;
+    }
   }
 
   .card {
@@ -2364,6 +2861,10 @@ export default Vue.extend({
       overflow-x: scroll;
       scrollbar-width: none;
       -ms-overflow-style: none;
+
+      @media @max-b-mobile {
+        overflow-x: unset;
+      }
 
       .page-head {
         margin-top: 10px;
@@ -2425,10 +2926,19 @@ export default Vue.extend({
 
       .page-content {
         .tool-bar {
-          height: @toolbar-height;
+          height: 64px;
           border-radius: 14px;
           border: 4px solid @color-outline;
           width: 100%;
+
+          @media @max-b-mobile {
+            margin-bottom: 5px;
+            height: 54px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
 
           .tool-option {
             height: 100%;
@@ -2511,7 +3021,7 @@ export default Vue.extend({
             .sort-options {
               position: absolute;
               width: 100%;
-              top: @toolbar-height;
+              top: 64px;
               padding: 18px;
               background: @gradient-color-primary;
               background-origin: border-box;
@@ -2556,6 +3066,10 @@ export default Vue.extend({
           display: inline-flex;
           padding: 10px;
 
+          @media @max-b-mobile {
+            display: none;
+          }
+
           .farm-prelist {
             background: #ffffff30;
             border: 1px solid #ffffff50;
@@ -2575,6 +3089,13 @@ export default Vue.extend({
             background: @gradient-color-labelized;
             border-radius: 5px;
             margin-top: 10px;
+
+            @media @max-b-mobile {
+              display: block;
+              padding: 0;
+              background: @color-bg-mobile !important;
+              border-radius: 0;
+            }
 
             &:first-child {
               margin-top: 0;
@@ -2601,17 +3122,35 @@ export default Vue.extend({
                 line-height: 15px;
                 font-weight: 400;
                 display: flex;
+
+                @media @max-b-mobile {
+                  font-size: 12px;
+                  color: #ffffff50;
+                }
               }
 
               .value {
+                margin-top: 10px;
                 font-size: 20px;
                 line-height: 24px;
                 font-weight: 400;
+
+                @media @max-b-mobile {
+                  margin-top: 5px;
+                  font-size: 14px;
+                  line-height: 17px;
+                }
               }
 
               .btn-container-harvest {
                 position: absolute;
                 bottom: 10px;
+
+                @media @max-b-mobile {
+                  position: relative;
+                  margin-top: 10px;
+                  bottom: unset;
+                }
               }
             }
 
@@ -2620,23 +3159,35 @@ export default Vue.extend({
                 display: flex;
                 align-items: center;
 
+                @media @max-b-mobile {
+                  justify-content: space-between;
+                }
+
                 .lp-icons-group {
-                  height: 51px;
+                  height: 44px;
                   background: @gradient-color-outline;
                   background-origin: border-box;
                   border-radius: 8px;
                   padding: 2px;
                   width: 240px;
 
+                  @media @max-b-mobile {
+                    height: 30px;
+                    width: 140px;
+                  }
+
                   .icons {
-                    height: 47px;
+                    height: 100%;
                     background-color: @color-bg;
                     border-radius: 8px;
                     align-items: center;
                     justify-content: center;
 
-                    @media @max-b-mobile {
-                      justify-content: flex-start;
+                    img {
+                      @media @max-b-mobile {
+                        width: 12px;
+                        height: 12px;
+                      }
                     }
 
                     span {
@@ -2645,25 +3196,16 @@ export default Vue.extend({
                       font-weight: 400;
                       font-size: 18px;
                       line-height: 21px;
-                    }
-                  }
-                }
 
-                .social-icons-group {
-                  display: flex;
-                  margin-left: 15px;
+                      @media @max-b-mobile {
+                        margin: 0 4px;
+                        font-size: 15px;
+                        line-height: 18px;
 
-                  .social-icon {
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: @gradient-color-icon;
-
-                    &:first-child {
-                      margin-right: 5px;
+                        &:last-child {
+                          margin-right: 0;
+                        }
+                      }
                     }
                   }
                 }
@@ -2673,6 +3215,10 @@ export default Vue.extend({
                 margin-top: 15px;
                 display: flex;
 
+                @media @max-b-mobile {
+                  margin-top: 0;
+                }
+
                 .label {
                   border-radius: 6px;
                   padding: 5px 9px;
@@ -2680,6 +3226,12 @@ export default Vue.extend({
                   font-weight: 400;
                   width: fit-content;
                   margin-right: 10px;
+
+                  @media @max-b-mobile {
+                    font-weight: 600 !important;
+                    font-size: 10px !important;
+                    padding: 4px;
+                  }
 
                   &:last-child {
                     margin-right: 0;
@@ -2718,20 +3270,57 @@ export default Vue.extend({
                   }
                 }
               }
+            }
 
-              .farm-infos {
-                margin-top: 15px;
+            .farm-mobile-section {
+              padding: 10px 10px 12px 10px;
+              border-bottom: 1px solid #ffffff20;
+            }
 
-                .farm-info-group {
-                  display: flex;
-                  align-items: center;
+            .social-icons-group {
+              display: flex;
+              margin-left: 15px;
 
-                  .farm-info-img {
-                    width: 20px;
-                    display: flex;
-                  }
+              .social-icon {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: @gradient-color-icon;
+
+                &:first-child {
+                  margin-right: 5px;
                 }
               }
+            }
+
+            .farm-infos {
+              margin-top: 15px;
+
+              @media @max-b-mobile {
+                margin-top: 0;
+              }
+
+              .farm-info-group {
+                display: flex;
+                align-items: center;
+
+                .farm-info-img {
+                  width: 20px;
+                  display: flex;
+                }
+              }
+            }
+
+            .btn-collapse {
+              text-align: center;
+            }
+
+            .btn-hide-collapse {
+              margin-top: 10px;
+              transform: rotate(180deg);
             }
 
             .details {
@@ -2740,320 +3329,6 @@ export default Vue.extend({
               position: absolute;
               right: 17px;
               margin-top: unset;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // mobile version
-
-  @media @max-b-mobile {
-    body .farm.container {
-      min-width: unset;
-      width: 100%;
-      max-width: 100%;
-      margin-top: 0;
-      padding: 20px 20px !important;
-
-      .details {
-        float: right;
-      }
-
-      .detailButton {
-        background: @gradient-color-icon;
-        background-origin: border-box;
-        display: inline-block;
-        padding: 1px;
-        border-radius: 63px;
-        width: 45px;
-        height: 45px;
-
-        button {
-          height: 100%;
-          width: 100%;
-          color: #fff;
-          font-size: 14px;
-          letter-spacing: -0.05em;
-          background: #00033c;
-          border-radius: 22px;
-          border: transparent;
-        }
-      }
-
-      .openButton {
-        background: @gradient-color-icon;
-        background-origin: border-box;
-        display: inline-block;
-        padding: 2px;
-        border-radius: 23px;
-
-        button {
-          height: 42px;
-          padding: 11px 24px;
-          color: #fff;
-          font-size: 14px;
-          letter-spacing: -0.05em;
-          background: #00033c;
-          border-radius: 22px;
-          border: transparent;
-
-          img {
-            margin-left: 5px;
-            transform: rotate(0);
-            transition: transform 0.3s;
-          }
-        }
-      }
-
-      .openButton-active > button > img {
-        transform: rotate(180deg);
-      }
-
-      .bgl {
-        background: #16164a !important;
-        margin-top: -17px;
-        padding-bottom: 10px;
-        margin-bottom: -16px;
-      }
-
-      .buttonsd {
-        display: block;
-        background: #00033c;
-        margin-top: 10px;
-      }
-
-      .noMobile {
-        display: none;
-      }
-
-      .noDesktop {
-        display: inline-block;
-      }
-
-      .largeserach input {
-        height: 47px !important;
-      }
-
-      .page-head {
-        margin-bottom: 0;
-        margin-top: 0;
-
-        .buttonsd {
-          height: 87px;
-          padding: 20px 20px 84px;
-          border: 4px solid #16164a;
-          box-sizing: border-box;
-          border-radius: 14px;
-          text-align: center;
-
-          a {
-            display: inline-block;
-          }
-
-          > div {
-            margin-right: -66px;
-            display: inline-block;
-          }
-        }
-      }
-
-      .fs-container {
-        display: inline-block;
-      }
-
-      .ant-collapse,
-      .ant-collapse > .ant-collapse-item {
-        position: relative;
-      }
-
-      .ant-collapse::before,
-      .ant-collapse > .ant-collapse-item::before {
-        content: '';
-        height: 4px;
-        width: 100%;
-        top: 0;
-        background: #00033c;
-        position: absolute;
-      }
-
-      .labmobile {
-        float: left;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 21px;
-        color: #ffffff50;
-        display: flex;
-      }
-
-      .farm-item {
-        min-width: 100%;
-        padding-top: 25px !important;
-        padding-bottom: 25px !important;
-        display: block;
-        align-items: unset;
-        .lp-icons {
-          display: flex !important;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 20% 0 10px;
-          width: 100%;
-          flex-direction: unset;
-          float: unset;
-          flex: unset;
-          img {
-            margin-top: -4px;
-          }
-          .lp-icons-group {
-            background: transparent;
-            .icons {
-              padding: 0;
-              background-color: transparent;
-            }
-          }
-        }
-
-        .state {
-          text-align: right;
-          display: none;
-          margin-top: 11px;
-          .ant-col-12 {
-            width: 100%;
-          }
-        }
-
-        .state.noDesktop {
-          padding: 0 20% 0 10px;
-          display: block !important;
-          width: 100%;
-          flex-direction: unset;
-          float: unset;
-          flex: unset;
-          text-align: right;
-          font-size: 18px;
-          margin-bottom: 6px;
-
-          .value {
-            text-align: unset !important;
-          }
-        }
-      }
-
-      .collapse-row .lp-icons,
-      .collapse-row .state {
-        padding: 0 10px;
-        display: block;
-        width: 100%;
-        flex-direction: unset;
-        float: unset;
-        flex: unset;
-        text-align: right;
-        font-size: 18px;
-        margin-bottom: 6px;
-        .lp-icons-group {
-          background: transparent;
-          .icons {
-            padding: 0;
-            background-color: transparent;
-          }
-        }
-      }
-
-      .ant-pagination {
-        margin-top: 40px;
-      }
-      .ant-collapse.ant-collapse-icon-position-right {
-        max-width: 100%;
-        background: #16164a;
-        border-radius: 14px;
-      }
-
-      .ant-collapse-content {
-        background: #16164a !important;
-      }
-
-      .ant-collapse-content-box {
-        background: #16164a !important;
-        .collapse-row {
-          display: block;
-          align-items: unset;
-          .ant-col.ant-col-4,
-          .ant-col.ant-col-8 {
-            width: 100%;
-            display: block;
-            flex-direction: unset;
-            float: unset;
-            flex: unset;
-          }
-        }
-      }
-
-      .start,
-      .harvest {
-        background: @color-bg;
-        border-radius: 14px;
-        margin: auto;
-        .reward .token {
-          font-size: 26px;
-          line-height: 31px;
-        }
-      }
-
-      .btncontainer {
-        display: inline-block !important;
-      }
-
-      .start .btncontainer:not(.largebtn) {
-        width: calc(50% - 20px);
-        margin-left: 5px;
-        margin-right: 5px;
-        margin-bottom: 10px;
-      }
-
-      .start .btncontainer:not(.largebtn):last-of-type {
-        width: calc(100% - 30px);
-        margin-left: 5px;
-        margin-right: 5px;
-      }
-
-      .tool-bar {
-        height: unset;
-        border: unset;
-
-        .tool-option {
-          background: #00033c;
-          width: 100%;
-          height: 54px;
-          display: block;
-          position: relative;
-          margin: 10px 0;
-          border: 4px solid #16164a;
-          box-sizing: border-box;
-          border-radius: 10px;
-
-          .input-search {
-            height: 47px !important;
-            .ant-input {
-              padding: 19px 60px;
-              border: none;
-              height: 47px !important;
-            }
-          }
-
-          .toggle {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: left;
-            padding-left: 10%;
-
-            .ant-switch {
-              position: absolute;
-              right: 10%;
             }
           }
         }
@@ -3137,10 +3412,16 @@ export default Vue.extend({
   }
 
   .noDesktop {
-    display: none !important;
+    display: none;
 
     @media @max-b-mobile {
-      display: block !important;
+      display: block;
+    }
+  }
+
+  .noMobile {
+    @media @max-b-mobile {
+      display: none !important;
     }
   }
 }
@@ -3172,6 +3453,11 @@ export default Vue.extend({
             border: none;
             border-radius: 14px;
 
+            @media @max-b-mobile {
+              font-size: 14px;
+              line-height: 17px;
+            }
+
             &::placeholder {
               color: white;
               opacity: 0.5;
@@ -3181,6 +3467,36 @@ export default Vue.extend({
               box-shadow: none;
             }
           }
+        }
+      }
+    }
+  }
+}
+
+.ant-collapse {
+  border: none;
+
+  .ant-collapse-item {
+    border: none !important;
+    margin-bottom: 12px;
+    border-radius: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .ant-collapse-header {
+      padding: 0 !important;
+    }
+
+    .ant-collapse-content {
+      border: none !important;
+
+      .ant-collapse-content-box {
+        padding: 0;
+
+        .farm-item .farm-mobile-section:first-child{
+          border-top: 1px solid #ffffff20;
         }
       }
     }
