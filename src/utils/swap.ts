@@ -580,16 +580,22 @@ export async function swap(
       swapInstruction_v5(
         new PublicKey(poolInfo.ammId),
         new PublicKey(poolInfo.ammAuthority),
+        
         owner,
         stateId,
+        
         wrappedSolAccount ?? newFromTokenAccount,
         new PublicKey(poolFromAccount),
         new PublicKey(poolToAccount),
         wrappedSolAccount2 ?? newToTokenAccount,
+        
         new PublicKey(poolInfo.lp.mintAddress),
+        
         new PublicKey(feeTokenAccount),
+        
         new PublicKey(poolInfo.programId),
         TOKEN_PROGRAM_ID,
+        
         Math.floor(getBigNumber(amountIn.toWei())),
         Math.floor(getBigNumber(amountOut.toWei())),
         undefined
