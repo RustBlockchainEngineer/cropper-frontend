@@ -2344,7 +2344,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-
 .farm.container {
   max-width: 1350px;
   width: 100%;
@@ -2358,7 +2357,7 @@ export default Vue.extend({
     left: 0;
     top: 35%;
   }
-  
+
   .card {
     .card-body {
       padding: 0;
@@ -2748,7 +2747,7 @@ export default Vue.extend({
     }
   }
 
-// mobile version
+  // mobile version
 
   @media @max-b-mobile {
     body .farm.container {
@@ -3061,8 +3060,8 @@ export default Vue.extend({
       }
     }
   }
-  
-// global used styles
+
+  // global used styles
   p {
     margin-bottom: 0;
   }

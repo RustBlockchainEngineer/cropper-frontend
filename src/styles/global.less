@@ -7,17 +7,19 @@
 @font-face {
   font-family: "Gilroy";
   src: local("Gilroy"),
-   url(../assets/fonts/Gilroy/Gilroy-Regular.ttf) format("truetype");
+    url(../assets/fonts/Gilroy/Gilroy-Regular.ttf) format("truetype");
 }
 
 @font-face {
   font-family: "Gilroy";
   font-weight: bold;
   src: local("Gilroy"),
-   url(../assets/fonts/Gilroy/Gilroy-Bold.ttf) format("truetype");
+    url(../assets/fonts/Gilroy/Gilroy-Bold.ttf) format("truetype");
 }
 
-.ant-progress-circle-path { stroke: #13ECAB !important }
+.ant-progress-circle-path {
+  stroke: #13ECAB !important
+}
 
 ::-webkit-scrollbar-thumb {
   background: #f1f1f2;
@@ -32,21 +34,21 @@ body {
   font-family: Gilroy, sans-serif !important;
 }
 
-.text-center{
-  text-align:center
+.text-center {
+  text-align: center
 }
 
-.stdEmptyGradientButton{
+.stdEmptyGradientButton {
   background: @gradient-color-icon;
   background-origin: border-box;
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
-  display:inline-block;
+  display: inline-block;
   width: auto;
   margin: 0 auto;
 
-  button{
-    background:@color-bg !important;    
+  button {
+    background: @color-bg !important;
     padding: 9px 30px;
     display: block;
     height: 51px;
@@ -66,12 +68,12 @@ body {
   background-origin: border-box;
   border: 2px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
-  display:inline-block;
+  display: inline-block;
   width: auto;
   margin: 0 auto;
 
-  button{
-    background:unset !important;
+  button {
+    background: unset !important;
     padding: 9px 30px;
     display: block;
     height: 51px;
@@ -96,46 +98,55 @@ body {
   font-weight: normal;
 }
 
-.ant-progress{
-  background:@color-bg !important;
+.ant-progress {
+  background: @color-bg !important;
 }
 
-.ant-modal-content{
-  border-radius:15px !important;
+.ant-modal-content {
+  border-radius: 15px !important;
 }
 
-.ant-modal-header{
-  border-bottom:unset !important;
+.ant-modal-header {
+  border-bottom: unset !important;
 }
-.ant-modal-body{
-  padding-top:0 !important;
+
+.ant-modal-body {
+  padding-top: 0 !important;
 }
 
 .flex {
   display: flex;
 }
 
-.farm .btncontainer{
-  position:relative
+.farm .btncontainer {
+  position: relative
 }
 
-@media (max-width: 500px){
- 
+@media (max-width: 500px) {
 
-.farm .btncontainer{
-  display:none !important
-} 
+
+  .farm .btncontainer {
+    display: none !important
+  }
 }
 
-a{
-    color: #13ECAB;
+a {
+  color: #13ECAB;
 }
 
-.ant-menu-horizontal > .ant-menu-item:hover, .ant-menu-horizontal > .ant-menu-submenu:hover, .ant-menu-horizontal > .ant-menu-item-active, .ant-menu-horizontal > .ant-menu-submenu-active, .ant-menu-horizontal > .ant-menu-item-open, .ant-menu-horizontal > .ant-menu-submenu-open, .ant-menu-horizontal > .ant-menu-item-selected, .ant-menu-horizontal > .ant-menu-submenu-selected{
-    color: white !important;
+.ant-menu-horizontal>.ant-menu-item:hover,
+.ant-menu-horizontal>.ant-menu-submenu:hover,
+.ant-menu-horizontal>.ant-menu-item-active,
+.ant-menu-horizontal>.ant-menu-submenu-active,
+.ant-menu-horizontal>.ant-menu-item-open,
+.ant-menu-horizontal>.ant-menu-submenu-open,
+.ant-menu-horizontal>.ant-menu-item-selected,
+.ant-menu-horizontal>.ant-menu-submenu-selected {
+  color: white !important;
 }
 
-.ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected{
+.ant-menu.ant-menu-dark .ant-menu-item-selected,
+.ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
   background-color: #13ECAB !important;
 }
 
@@ -153,13 +164,13 @@ a{
 }
 
 .page-head {
-  position:relative;
+  position: relative;
 
   .title {
     font-size: 35px;
     font-weight: 700;
   }
-  
+
   @media screen and (max-width: 1024px) {
     .title {
       font-weight: 700;
@@ -174,7 +185,7 @@ a{
       line-height: 60px;
     }
   }
-  
+
   .buttons {
     display: flex;
     vertical-align: middle;
@@ -206,14 +217,15 @@ a{
         background: @color-bg;
       }
     }
+
     a {
       color: @text-color;
     }
   }
 }
 
-.ant-modal-body .card-body{
-    background-color: unset !important;
+.ant-modal-body .card-body {
+  background-color: unset !important;
 }
 
 .card {
@@ -227,23 +239,23 @@ a{
     border-radius: 0;
     margin: 0 auto !important;
 
-    > .fs-container{
+    >.fs-container {
       display: flex;
       align-items: center;
       justify-content: space-between;
       text-align: left;
     }
 
-    .buttons{
+    .buttons {
       display: inline-block;
       line-height: 32px;
 
-      i{
-        font-size:20px;
-        margin-right:14px;
-        position:relative;
-        top:4px;
-        color:#13ECAB
+      i {
+        font-size: 20px;
+        margin-right: 14px;
+        position: relative;
+        top: 4px;
+        color: #13ECAB
       }
     }
 
@@ -275,16 +287,16 @@ a{
 
 .ant-menu-horizontal,
 .ant-layout-header,
-.ant-layout-footer{
-  background:@color-bg !important;
+.ant-layout-footer {
+  background: @color-bg !important;
 }
 
-.nofooter .ant-modal-footer{
-  display:none !important
+.nofooter .ant-modal-footer {
+  display: none !important
 }
 
-.ant-menu-horizontal > .ant-menu-item > a:hover{
-  color:#13ECAB !important
+.ant-menu-horizontal>.ant-menu-item>a:hover {
+  color: #13ECAB !important
 }
 
 .ant-tooltip-inner {
@@ -311,7 +323,7 @@ a{
   hr {
     border: 1px solid #FFFFFF20;
   }
-  
+
   .tooltip-line {
     display: flex;
     align-items: center;
@@ -382,35 +394,35 @@ a{
   background: transparent !important;
 }
 
-.coin-input{
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    margin: 9px;
-    padding: 0.75rem 0.75rem 0.75rem 1rem;
+.coin-input {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  margin: 9px;
+  padding: 0.75rem 0.75rem 0.75rem 1rem;
 }
 
-.ant-btn:hover, .ant-btn:focus,
-.coin-select .coin-input .input-button{
-    color: #13ECAB !important;
+.ant-btn:hover,
+.ant-btn:focus,
+.coin-select .coin-input .input-button {
+  color: #13ECAB !important;
 }
 
-  .ant-modal-body .stdGradientButton{
-    height: unset;
-    margin:0 auto;
-  }
+.ant-modal-body .stdGradientButton {
+  height: unset;
+  margin: 0 auto;
+}
 
-@media @max-b-mobile{
-  .card .card-body{
+@media @max-b-mobile {
+  .card .card-body {
     padding: unset;
   }
 
-  .coin-select .label{
+  .coin-select .label {
     font-size: 14px !important;
   }
 
-  .ant-modal-body .stdGradientButton{
+  .ant-modal-body .stdGradientButton {
     height: unset;
-    margin:0 auto;
+    margin: 0 auto;
   }
 }
-
