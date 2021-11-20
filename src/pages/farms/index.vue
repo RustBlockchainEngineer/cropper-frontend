@@ -597,7 +597,7 @@
             <!-- Farm table for mobile -->
 
             <Collapse v-model="showCollapse" class="noDesktop farm-table-mobile">
-              <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="false">
+              <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId">
                 <Row
                   slot="header"
                   class="farm-item noDesktop"
@@ -693,7 +693,7 @@
                     </Col>
                   </Col>
 
-                  <Col v-if="showCollapse" class="farm-mobile-section btn-show-collapse" span="24">
+                  <Col v-if="!searchEnabledItem(farm.farmInfo.poolId)" class="farm-mobile-section btn-show-collapse" span="24">
                     <img src="@/assets/icons/collapse-arrow-mobile.svg" />
                   </Col>
                 </Row>
@@ -760,7 +760,7 @@
                     </Col>
                   </Col>
 
-                  <Col class="farm-mobile-section btn-hide-collapse" span="24" @click="hideCollapse">
+                  <Col class="farm-mobile-section btn-hide-collapse" span="24" @click="hideCollapse(farm.farmInfo.poolId)">
                     <Col class="state" span="12">
                       <div
                         class="btn-container btn-container-outline"
@@ -1440,7 +1440,7 @@ import {
   Switch as Toggle,
   Pagination
 } from 'ant-design-vue'
-import { get, cloneDeep, forIn } from 'lodash-es'
+import { get, cloneDeep, forIn, indexOf } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { FarmInfo } from '@/utils/farms'
 import { deposit, withdraw } from '@/utils/stake'
@@ -1512,6 +1512,8 @@ export default Vue.extend({
       poolType: true,
       endedFarmsPoolId: [] as string[],
       showCollapse: [] as any[],
+      currentCollapseItem: '' as string,
+      enabledCollapse: [] as any[],
       currentTimestamp: 0,
       tempInfo: null as any,
       stakeLPError: false,
@@ -1565,8 +1567,9 @@ export default Vue.extend({
     },
     showCollapse: {
       handler() {
-        console.log(this.showCollapse)
-        console.log(this.showCollapse.length)
+        let target = this.showCollapse[this.showCollapse.length - 1]
+        this.enabledCollapse.push(target)
+        
         if (!this.poolType && this.showCollapse.length > 0) {
           this.showCollapse.splice(0, this.showCollapse.length)
         }
@@ -2810,8 +2813,16 @@ export default Vue.extend({
       this.showSortOption = false
       this.updateFarms()
     },
-    hideCollapse() {
-      this.showCollapse.splice(0, this.showCollapse.length)
+    hideCollapse(id: any) {
+      let showTarget = this.showCollapse.indexOf(id)
+      this.showCollapse.splice(showTarget, 1)
+      let enabledTarget = this.enabledCollapse.indexOf(id)
+      this.enabledCollapse.splice(enabledTarget, 1)
+    },
+    searchEnabledItem(id: any) {
+      let target = this.enabledCollapse.indexOf(id)
+      if (target > -1) return true
+      else return false
     }
   }
 })
