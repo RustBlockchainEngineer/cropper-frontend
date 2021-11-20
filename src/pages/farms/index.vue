@@ -163,11 +163,11 @@
                 </div>
                 <div class="option" @click="setSortOption('apr', true)">
                   <img src="@/assets/icons/sort-up.svg" />
-                  APR
+                  APR %
                 </div>
                 <div class="option" @click="setSortOption('apr', false)">
                   <img src="@/assets/icons/sort-down.svg" />
-                  APR
+                  APR %
                 </div>
               </div>
             </Col>
@@ -190,15 +190,6 @@
               <div class="toggle deposit-toggle">
                 <label class="label">Deposited</label>
                 <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-              </div>
-            </Col>
-          </Row>
-          <Row class="tool-bar noDesktop">
-            <Col span="24" class="tool-option">
-              <div class="toggle">
-                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''">Open</label>
-                <Toggle v-model="searchLifeFarm" :disabled="!wallet.connected" />
-                <label class="label" :class="searchLifeFarm ? 'active-label' : ''">Ended</label>
               </div>
             </Col>
           </Row>
@@ -247,11 +238,11 @@
                 </div>
                 <div class="option" @click="setSortOption('apr', true)">
                   <img src="@/assets/icons/sort-up.svg" />
-                  APR
+                  APR %
                 </div>
                 <div class="option" @click="setSortOption('apr', false)">
                   <img src="@/assets/icons/sort-down.svg" />
-                  APR
+                  APR %
                 </div>
               </div>
             </Col>
@@ -605,7 +596,7 @@
 
             <!-- Farm table for mobile -->
 
-            <Collapse v-model="showCollapse" class="noDesktop">
+            <Collapse v-model="showCollapse" class="noDesktop farm-table-mobile">
               <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :show-arrow="false">
                 <Row
                   slot="header"
@@ -3074,6 +3065,10 @@ export default Vue.extend({
         }
 
         .farm-table {
+          .farm-table-mobile {
+            margin-top: 15px;
+          }
+          
           .farm-item {
             display: flex;
             padding: 24px 18px;
