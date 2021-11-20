@@ -1070,7 +1070,7 @@ section {
       .header-column {
         font-size: 18px;
         line-height: 21px;
-        color: #ffffff50;
+        color: rgba(255,255,255,0.5);
         text-align: center;
         padding: 16px 0;
 
@@ -1435,7 +1435,7 @@ section {
         font-weight: normal;
         font-size: 14px;
         line-height: 17px;
-        color: #ffffff50;
+        color: rgba(255,255,255,0.5);
         margin-bottom: 15px;
       }
 

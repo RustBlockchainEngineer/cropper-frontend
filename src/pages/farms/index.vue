@@ -275,8 +275,8 @@
                     </div>
                   </div>
                   <div class="social-icons-group">
-                    <a href="#" class="social-icon">
-                      <img src="@/assets/icons/upload-icon.svg" />
+                    <a :href="farm.farmInfo.twitterShare" target="_blank" class="social-icon">
+                      <img src="@/assets/icons/share-icon.svg" />
                     </a>
                     <a href="#" class="social-icon">
                       <img src="@/assets/icons/twitter-icon.svg" />
@@ -693,7 +693,7 @@
                     </Col>
                   </Col>
 
-                  <Col v-if="showCollapse.length === 0" class="farm-mobile-section btn-collapse" span="24">
+                  <Col v-if="showCollapse" class="farm-mobile-section btn-show-collapse" span="24">
                     <img src="@/assets/icons/collapse-arrow-mobile.svg" />
                   </Col>
                 </Row>
@@ -760,7 +760,7 @@
                     </Col>
                   </Col>
 
-                  <Col class="farm-mobile-section" span="24">
+                  <Col class="farm-mobile-section btn-hide-collapse" span="24" @click="hideCollapse">
                     <Col class="state" span="12">
                       <div
                         class="btn-container btn-container-outline"
@@ -815,8 +815,8 @@
                       </div>
 
                       <div class="social-icons-group">
-                        <a href="#" class="social-icon">
-                          <img src="@/assets/icons/upload-icon.svg" />
+                        <a :href="farm.farmInfo.twitterShare" target="_blank" class="social-icon">
+                          <img src="@/assets/icons/share-icon.svg" />
                         </a>
                         <a href="#" class="social-icon">
                           <img src="@/assets/icons/twitter-icon.svg" />
@@ -891,9 +891,7 @@
                       </div>
                     </Col>
 
-                    <Col span="24" class="btn-collapse">
-                      <img class="btn-hide-collapse" src="@/assets/icons/collapse-arrow-mobile.svg" @click="hideCollapse"/>
-                    </Col>
+                    <img class="btn-hide-collapse-icon" src="@/assets/icons/collapse-arrow-mobile.svg"/>
                   </Col>
                 </Row>
               </CollapsePanel>
@@ -2813,8 +2811,6 @@ export default Vue.extend({
       this.updateFarms()
     },
     hideCollapse() {
-      console.log(this.showCollapse)
-      console.log(this.showCollapse.length)
       this.showCollapse.splice(0, this.showCollapse.length)
     }
   }
@@ -3007,8 +3003,8 @@ export default Vue.extend({
               padding: 18px;
               background: @gradient-color-primary;
               background-origin: border-box;
-              border: 2px solid #ffffff10;
-              box-shadow: 18px 11px 14px #00000025;
+              border: 2px solid rgba(255,255,255,0.1);
+              box-shadow: 18px 11px 14px rgba(0,0,0,0.25);
               border-radius: 8px;
               z-index: 999;
 
@@ -3023,13 +3019,13 @@ export default Vue.extend({
 
                 &:hover {
                   background: @gradient-color-primary;
-                  border: 1px solid #ffffff10;
+                  border: 1px solid rgba(255,255,255,0.1);
                   border-radius: 6px;
                 }
 
                 &.active {
                   background: @gradient-color-primary;
-                  border: 1px solid #ffffff10;
+                  border: 1px solid rgba(255,255,255,0.1);
                 }
 
                 &:last-child {
@@ -3053,8 +3049,8 @@ export default Vue.extend({
           }
 
           .farm-prelist {
-            background: #ffffff30;
-            border: 1px solid #ffffff50;
+            background: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.5);
             border-radius: 6px;
             padding: 6px 24px;
             font-size: 14px;
@@ -3111,7 +3107,7 @@ export default Vue.extend({
 
                 @media @max-b-mobile {
                   font-size: 12px;
-                  color: #ffffff50;
+                  color: rgba(255,255,255,0.5);
                 }
               }
 
@@ -3211,12 +3207,6 @@ export default Vue.extend({
                   width: fit-content;
                   margin-right: 10px;
 
-                  @media @max-b-mobile {
-                    font-weight: 600 !important;
-                    font-size: 10px !important;
-                    padding: 4px;
-                  }
-
                   &:last-child {
                     margin-right: 0;
                   }
@@ -3252,13 +3242,44 @@ export default Vue.extend({
                     color: @color-new;
                     text-transform: uppercase;
                   }
+
+                  @media @max-b-mobile {
+                    font-weight: 600 !important;
+                    font-size: 10px !important;
+                    padding: 0 4px;
+
+                    &.ended, &.dual, &.new {
+                      text-transform: unset;
+                    }
+                  }
                 }
               }
             }
 
             .farm-mobile-section {
-              padding: 10px 10px 12px 10px;
-              border-bottom: 1px solid #ffffff20;
+              padding: 10px;
+              border-bottom: 1px solid rgba(255,255,255,0.2);
+
+              &.btn-show-collapse {
+                text-align: center;
+                cursor: pointer;
+                border-bottom: none;
+
+                @media @max-b-mobile {
+                  padding: 5px;
+                }
+              }
+
+              &.btn-hide-collapse {
+                text-align: center;
+                cursor: pointer;
+                border-bottom: none;
+
+                .btn-hide-collapse-icon{
+                  margin-top: 5px;
+                  transform: rotate(180deg);
+                }
+              }
             }
 
             .social-icons-group {
@@ -3312,16 +3333,6 @@ export default Vue.extend({
                   opacity: 0.5;
                 }
               }
-            }
-
-            .btn-collapse {
-              text-align: center;
-              cursor: pointer;
-            }
-
-            .btn-hide-collapse {
-              margin-top: 10px;
-              transform: rotate(180deg);
             }
 
             .details {
@@ -3397,6 +3408,10 @@ export default Vue.extend({
       height: 28px;
       padding: 2px;
 
+      @media @max-b-mobile {
+        height: 35px;
+      }
+
       button {
         font-size: 10px;
         line-height: 24px;
@@ -3408,6 +3423,10 @@ export default Vue.extend({
     &.btn-container-harvest {
       height: 28px;
       background: @gradient-color-outline;
+
+      @media @max-b-mobile {
+        height: 35px;
+      }
 
       button {
         font-size: 12px;
@@ -3492,6 +3511,7 @@ export default Vue.extend({
     border: none !important;
     margin-bottom: 12px;
     border-radius: 8px;
+    overflow: hidden;
 
     &:last-child {
       margin-bottom: 0;
@@ -3506,10 +3526,6 @@ export default Vue.extend({
 
       .ant-collapse-content-box {
         padding: 0;
-
-        .farm-item .farm-mobile-section:first-child{
-          border-top: 1px solid #ffffff20;
-        }
       }
     }
   }

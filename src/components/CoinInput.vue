@@ -152,7 +152,7 @@ export default Vue.extend({
   .label {
     font-size: 18px;
     line-height: 14px;
-    color: #ffffff50;
+    color: rgba(255,255,255,0.5);
     padding-left: 10px;
 
     @media @max-b-mobile {

@@ -2052,7 +2052,7 @@ main {
   }
   .coin-budge {
     align-items: center;
-    border: solid 1px #ffffff50;
+    border: solid 1px rgba(255,255,255,0.5);
     border-radius: 6px;
     display: flex;
     padding: 4px 8px;
@@ -2192,7 +2192,7 @@ main {
   border-radius: 8px;
   display: inline-block;
   width: auto;
-  color: #ffffff50 !important;
+  color: rgba(255,255,255,0.5) !important;
 
   .swap-info {
     .tooltip-input {
@@ -2385,7 +2385,7 @@ main {
     height: 0;
     .ant-notification-notice {
       // background: #222262 !important;
-      background: #FFFFFF10;
+      background: rgba(255,255,255,0.1);
       border-radius: 14px;
     }
   }

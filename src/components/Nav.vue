@@ -160,8 +160,8 @@ export default class Nav extends Vue {
 
   @media @max-b-mobile {
     display: flex;
-    border-top: 1px solid #ffffff30;
-    border-bottom: 1px solid #ffffff30;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.3);
     margin-top: 10px;
     justify-content: space-between;
   }

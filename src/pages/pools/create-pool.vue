@@ -1234,11 +1234,11 @@ main {
   }
 
   .bordered-left {
-    border-left: 3px solid #ffffff30;
+    border-left: 3px solid rgba(255,255,255,0.3);
   }
 
   .bordered-right {
-    border-right: 3px solid #ffffff30;
+    border-right: 3px solid rgba(255,255,255,0.3);
   }
 
   .bordered-left,
@@ -1356,7 +1356,7 @@ main {
           label {
             font-size: 16px;
             line-height: 19px;
-            color: #ffffff50;
+            color: rgba(255,255,255,0.5);
           }
 
           .market-info {
@@ -1432,7 +1432,7 @@ main {
 
           input {
             border: 4px solid #16164a;
-            background: #ffffff10;
+            background: rgba(255,255,255,0.1);
             border-radius: 14px;
             padding: 20px 25px;
             font-size: 16px;
@@ -1474,7 +1474,7 @@ main {
 
           .market-input-form {
             input {
-              background: #ffffff10;
+              background: rgba(255,255,255,0.1);
               border-radius: 14px;
               padding: 18px;
               font-size: 18px;
@@ -1489,7 +1489,7 @@ main {
           margin-top: 20px;
           
           .mint-address {
-            background: #ffffff10;
+            background: rgba(255,255,255,0.1);
             border-radius: 14px;
             padding: 15px;
             font-size: 16px;

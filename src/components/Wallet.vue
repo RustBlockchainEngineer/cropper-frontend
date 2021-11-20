@@ -697,7 +697,7 @@ export default class Wallet extends Vue {
   line-height: 80px;
   letter-spacing: -0.05em;
   color: #fff;
-  border-bottom: 1px solid #ffffff20;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 
   @media @max-b-mobile {
     font-size: 30px;
@@ -746,7 +746,7 @@ export default class Wallet extends Vue {
     button {
       border: none;
       background: rgba(255, 255, 255, 0.1) !important;
-      box-shadow: 0 4px 4px 0 #00000040;
+      box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
       border-radius: 14px;
       display: flex;
       align-items: center;

@@ -1421,7 +1421,7 @@ export default class CreateFarm extends Vue {
 }
 
 .ant-calendar-picker-input.ant-input[disabled] {
-  color: #ffffff50;
+  color: rgba(255,255,255,0.5);
 }
 
 .ant-calendar-picker-container {
@@ -1764,11 +1764,11 @@ main {
   }
 
   .bordered-left {
-    border-left: 3px solid #ffffff30;
+    border-left: 3px solid rgba(255,255,255,0.3);
   }
 
   .bordered-right {
-    border-right: 3px solid #ffffff30;
+    border-right: 3px solid rgba(255,255,255,0.3);
   }
 
   .bordered-left,

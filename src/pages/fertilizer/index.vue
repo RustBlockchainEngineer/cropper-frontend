@@ -814,7 +814,7 @@ export default Vue.extend({
   }
 
   .table-head {
-    border-bottom: 1px solid #ffffff20;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
   }
 
   .farm-head {

@@ -76,7 +76,7 @@ export default Vue.extend({
   padding: 0 12px;
   font-size: 18px;
   line-height: 21px;
-  color: #FFFFFF50;
+  color: rgba(255,255,255,0.5);
 
   @media @max-b-mobile {
     font-size: 14px;
@@ -91,7 +91,7 @@ export default Vue.extend({
   .price-base {
     font-size: 18px;
     line-height: 21px;
-    color: #FFFFFF50;
+    color: rgba(255,255,255,0.5);
 
     @media @max-b-mobile {
       font-size: 12px;

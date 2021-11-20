@@ -801,7 +801,7 @@ span.inputContent {
       .twitter-tweet {
         background-color: white;
         padding: 10px;
-        border: 1px solid #00000050;
+        border: 1px solid rgba(0, 0, 0, 0.5);
         border-radius: 10px;
         margin: 10px 0 10px 0;
         font-size: 18px;
