@@ -75,7 +75,7 @@ export default {
   pwa: {
     meta: {
       title: 'CropperFinance',
-      author: 'Lionel',
+      author: 'Cropper',
     },
     manifest: {
       short_name: "CropperFinance",
