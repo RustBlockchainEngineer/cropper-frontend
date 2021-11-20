@@ -193,7 +193,7 @@
               </div>
             </Col>
           </Row>
-          <!-- <Row class="tool-bar noDesktop">
+          <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
               <div class="toggle">
                 <label class="label" :class="!searchLifeFarm ? 'active-label' : ''">Open</label>
@@ -201,7 +201,7 @@
                 <label class="label" :class="searchLifeFarm ? 'active-label' : ''">Ended</label>
               </div>
             </Col>
-          </Row> -->
+          </Row>
           <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
               <div class="toggle">
@@ -269,7 +269,7 @@
             <!-- Farm table for desktop -->
             <Row
               class="farm-item noMobile"
-              :class="farm.labelized === 'labelized' ? 'labelized' : 'permissionless'"
+              :class="farm.labelized ? 'labelized' : 'permissionless'"
               v-for="farm in showFarms"
               :key="farm.farmInfo.poolId"
             >
@@ -834,36 +834,34 @@
                     </Col>
 
                     <Col class="state" span="12">
-                      <div class="action-btn-group">
-                        <div
-                          class="btn-container btn-container-fill"
-                          v-if="
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                            farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
+                      <div
+                        class="btn-container btn-container-fill"
+                        v-if="
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                          farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
+                        "
+                      >
+                        <Button
+                          size="large"
+                          :disabled="
+                            !farm.farmInfo.poolInfo.is_allowed ||
+                            farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                            farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                          "
+                          @click="
+                            openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)
                           "
                         >
-                          <Button
-                            size="large"
-                            :disabled="
-                              !farm.farmInfo.poolInfo.is_allowed ||
-                              farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                            "
-                            @click="
-                              openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)
-                            "
-                          >
-                            {{
-                              !farm.farmInfo.poolInfo.is_allowed
-                                ? "Not Allowed"
-                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                                ? "Ended"
-                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                                ? "Unstarted"
-                                : "Deposit"
-                            }}
-                          </Button>
-                        </div>
+                          {{
+                            !farm.farmInfo.poolInfo.is_allowed
+                              ? "Not Allowed"
+                              : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                              ? "Ended"
+                              : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                              ? "Unstarted"
+                              : "Deposit"
+                          }}
+                        </Button>
                       </div>
 
                       <div class="btn-container btn-container-harvest">
@@ -2858,13 +2856,6 @@ export default Vue.extend({
   .card {
     .card-body {
       padding: 0;
-      overflow-x: scroll;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-
-      @media @max-b-mobile {
-        overflow-x: unset;
-      }
 
       .page-head {
         margin-top: 10px;
@@ -3148,7 +3139,6 @@ export default Vue.extend({
 
                 @media @max-b-mobile {
                   position: relative;
-                  margin-top: 10px;
                   bottom: unset;
                 }
               }
@@ -3191,20 +3181,19 @@ export default Vue.extend({
                     }
 
                     span {
-                      margin-left: 12px;
-                      margin-right: 12px;
+                      margin-left: 5px;
+                      margin-right: 5px;
                       font-weight: 400;
                       font-size: 18px;
                       line-height: 21px;
 
+                      &:last-child {
+                        margin-right: 0;
+                      }
+
                       @media @max-b-mobile {
-                        margin: 0 4px;
                         font-size: 15px;
                         line-height: 18px;
-
-                        &:last-child {
-                          margin-right: 0;
-                        }
                       }
                     }
                   }
@@ -3281,6 +3270,10 @@ export default Vue.extend({
               display: flex;
               margin-left: 15px;
 
+              @media @max-b-mobile {
+                margin-left: 0;
+              }
+
               .social-icon {
                 width: 30px;
                 height: 30px;
@@ -3289,6 +3282,12 @@ export default Vue.extend({
                 align-items: center;
                 justify-content: center;
                 background: @gradient-color-icon;
+
+                @media @max-b-mobile {
+                  width: 24px;
+                  height: 24px;
+                  background: @gradient-color-social;
+                }
 
                 &:first-child {
                   margin-right: 5px;
@@ -3307,15 +3306,22 @@ export default Vue.extend({
                 display: flex;
                 align-items: center;
 
+                @media @max-b-mobile {
+                  font-size: 12px;
+                  line-height: 15px;
+                }
+
                 .farm-info-img {
                   width: 20px;
                   display: flex;
+                  opacity: 0.5;
                 }
               }
             }
 
             .btn-collapse {
               text-align: center;
+              cursor: pointer;
             }
 
             .btn-hide-collapse {
@@ -3344,6 +3350,7 @@ export default Vue.extend({
   .pagination-container {
     text-align: center;
     width: 100%;
+    margin-top: 30px;
 
     .pagination-body {
       width: 80%;
@@ -3368,10 +3375,20 @@ export default Vue.extend({
       width: 100%;
       border-radius: 8px;
       border: none;
+
+      @media @max-b-mobile {
+        font-size: 12px !important;
+        line-height: 14px !important;
+        font-weight: 600 !important;
+      }
     }
 
     &.btn-container-fill {
       height: 52px;
+      
+      @media @max-b-mobile {
+        margin-bottom: 10px;
+      }
 
       button {
         font-size: 14px;

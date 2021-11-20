@@ -121,9 +121,7 @@ body {
   position: relative
 }
 
-@media (max-width: 500px) {
-
-
+@media @max-b-mobile {
   .farm .btncontainer {
     display: none !important
   }
@@ -131,6 +129,18 @@ body {
 
 a {
   color: #13ECAB;
+}
+
+.ant-menu-horizontal>.ant-menu-submenu {
+  @media @max-b-mobile {
+    display: none !important;
+  }
+}
+
+.ant-menu-horizontal>.ant-menu-item {
+  @media @max-b-mobile {
+    display: block !important
+  }
 }
 
 .ant-menu-horizontal>.ant-menu-item:hover,
@@ -246,9 +256,6 @@ a {
         color: #13ECAB
       }
     }
-
-
-
   }
 }
 
