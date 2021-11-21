@@ -20,13 +20,11 @@
       <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
         <div class="btncontainer sonar connected" ghost>
           <Button>
-            <Tooltip placement="bottom">
-              <template slot="title">
-                My Dashboard
-              </template>
-              <img src="@/assets/icons/sonar-watch.svg"/>
-            </Tooltip>
+            <img src="@/assets/icons/sonar-watch.svg"/>
           </Button>
+        </div>
+        <div class="sonar-dashboard">
+          My dashboard
         </div>
       </a>
 
@@ -819,6 +817,21 @@ export default class Wallet extends Vue {
 }
 
 .sonar-container {
+  .sonar-dashboard {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid #fff;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 400;
+    color: #fff;
+    position: absolute;
+    right: 65px;
+    margin-top: 10px;
+    display: none;
+  }
+
   .btncontainer.sonar {
     margin-left:20px !important;
     width: 50px;
@@ -828,6 +841,10 @@ export default class Wallet extends Vue {
       margin-left: 10px !important;
       width: 46px;
       height: 46px;
+    }
+
+    &:hover ~ .sonar-dashboard {
+      display: block;
     }
 
     button {

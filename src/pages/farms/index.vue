@@ -109,7 +109,7 @@
                 <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''"
                   >Labelized</label
                 >
-                <Toggle v-model="searchCertifiedFarm" :disabled="!wallet.connected" />
+                <Toggle v-model="searchCertifiedFarm" />
                 <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''"
                   >Permissionless</label
                 >
@@ -120,7 +120,7 @@
                 <label class="label" :class="!searchLifeFarm ? 'active-label' : ''"
                   >Open</label
                 >
-                <Toggle v-model="searchLifeFarm" :disabled="!wallet.connected" />
+                <Toggle v-model="searchLifeFarm" />
                 <label class="label" :class="searchLifeFarm ? 'active-label' : ''"
                   >Ended</label
                 >
@@ -199,7 +199,7 @@
                 <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''"
                   >Labelized</label
                 >
-                <Toggle v-model="searchCertifiedFarm" :disabled="!wallet.connected" />
+                <Toggle v-model="searchCertifiedFarm" />
                 <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''"
                   >Permissionless</label
                 >
@@ -410,7 +410,7 @@
                 </div>
               </Col>
 
-              <Col class="state" span="4">
+              <Col class="state" span="3">
                 <div class="title">Pending Rewards</div>
                 <div
                   v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
@@ -458,7 +458,7 @@
                 </div>
               </Col>
 
-              <Col class="state" span="3">
+              <Col class="state" span="4">
                 <div class="title">
                   Value Deposited
                   <Tooltip
@@ -2015,15 +2015,15 @@ export default Vue.extend({
 
       if (this.sortAsc) {
         if (this.sortMethod == 'apr') {
-          this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
-        } else if (this.sortMethod == 'liquidity') {
-          this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
-        }
-      } else {
-        if (this.sortMethod == 'apr') {
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
         } else if (this.sortMethod == 'liquidity') {
           this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+        }
+      } else {
+        if (this.sortMethod == 'apr') {
+          this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
+        } else if (this.sortMethod == 'liquidity') {
+          this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
         }
       }
 
