@@ -77,6 +77,7 @@
               <p>Your deposit: <b>28,009 $</b></p>
             </div>
 
+            <!-- {{ farm.autoRefreshTime - farm.countdown }} -->
             <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
               <img src="@/assets/icons/loading.svg" />
             </div>

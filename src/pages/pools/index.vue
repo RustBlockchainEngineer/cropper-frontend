@@ -41,6 +41,7 @@
               <p>Your deposit: <b>28,009 $</b></p>
             </div>
 
+            <!-- {{ autoRefreshTime - countdown }} -->
             <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
               <img src="@/assets/icons/loading.svg" />
             </div>
@@ -93,44 +94,6 @@
                 <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
                 <Toggle v-model="searchCertifiedFarm" />
                 <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
-              </div>
-            </Col>
-          </Row>
-          <Row class="tool-bar noDesktop">
-            <Col span="24" class="tool-option">
-              <div class="sort-by">
-                <label class="label">Sort by:</label>
-                <label class="label active-label">
-                  <img :class="sortAsc ? 'sort-up' : 'sort-down'" src="@/assets/icons/sort-up.svg" />
-                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR' }}
-                </label>
-                <img
-                  :class="showSortOption ? 'collapse-down' : 'collapse-up'"
-                  src="@/assets/icons/collapse-arrow.svg"
-                  @click="
-                    () => {
-                      this.showSortOption = !this.showSortOption
-                    }
-                  "
-                />
-              </div>
-              <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', true)">
-                  <img src="@/assets/icons/sort-up.svg" />
-                  Liquidity
-                </div>
-                <div class="option" @click="setSortOption('liquidity', false)">
-                  <img src="@/assets/icons/sort-down.svg" />
-                  Liquidity
-                </div>
-                <div class="option" @click="setSortOption('apr', true)">
-                  <img src="@/assets/icons/sort-up.svg" />
-                  APR %
-                </div>
-                <div class="option" @click="setSortOption('apr', false)">
-                  <img src="@/assets/icons/sort-down.svg" />
-                  APR %
-                </div>
               </div>
             </Col>
           </Row>
@@ -1072,7 +1035,7 @@ export default class Pools extends Vue {
     setTimeout(() => {
       this.activeSpinning = false
     }, 1000)
-    this.$accessor.farm.requestInfos()
+    this.flush()
     this.$accessor.wallet.getTokenAccounts()
   }
 }
