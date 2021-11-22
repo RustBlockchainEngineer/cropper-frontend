@@ -1342,10 +1342,6 @@ export default Vue.extend({
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
 
-          if(userInfo.pendingReward.isNaN()){
-            userInfo.pendingReward = new TokenAmount(0, newFarmInfo.reward.decimals);
-          }
-
         } else {
           userInfo = {
             // @ts-ignore
