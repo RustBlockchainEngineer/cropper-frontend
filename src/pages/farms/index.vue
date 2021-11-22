@@ -1103,6 +1103,22 @@ export default Vue.extend({
         let userInfo = get(this.farm.stakeAccounts, poolId)
         let isPFO = false
 
+
+     //   console.log(farmInfo);
+
+        if(
+          farmInfo.lp.coin.symbol == 'HIMA' || 
+          farmInfo.lp.coin.symbol == 'WIPE' || 
+          farmInfo.lp.coin.symbol == 'LIQ' || 
+          farmInfo.poolId == "AobDGwtrCGXqgm7bg1VN8eiNPovvDg1biBwj8HxF2rGv" || 
+          farmInfo.poolId == "AFzgsAGHt9mS5nVR5n3EvTjJodFNJ4SUS8Cjz5fUK31B" || 
+          farmInfo.poolId == "HrSCGDCsZx3yMAx9mMdx9m3B2pkUyKhGt1EmhZ3mPiM1" || 
+          farmInfo.poolId == "DSLGFUkJR35sXLtoTefLCVqT7QZVz3U3jKYs383HRbG6" || 
+          farmInfo.poolId == "AFzgsAGHt9mS5nVR5n3EvTjJodFNJ4SUS8Cjz5fUK31B"){
+        continue;
+        }
+
+
         // @ts-ignore
         const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } = farmInfo.poolInfo
 
