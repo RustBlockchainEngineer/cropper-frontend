@@ -598,7 +598,7 @@
             <!-- Farm table for mobile -->
 
             <Collapse v-model="showCollapse" class="noDesktop farm-table-mobile">
-              <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId">
+              <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId" :disabled="farm.farmInfo.poolId === currentCollapseItem || currentCollapseItem === '' ? false : true">
                 <Row
                   slot="header"
                   class="farm-item noDesktop"
@@ -694,7 +694,7 @@
                     </Col>
                   </Col>
 
-                  <Col v-if="!searchEnabledItem(farm.farmInfo.poolId)" class="farm-mobile-section btn-show-collapse" span="24">
+                  <Col v-if="farm.farmInfo.poolId != currentCollapseItem" class="farm-mobile-section btn-show-collapse" span="24">
                     <img src="@/assets/icons/collapse-arrow-mobile.svg" />
                   </Col>
                 </Row>
@@ -1517,7 +1517,7 @@ export default Vue.extend({
       endedFarmsPoolId: [] as string[],
       showCollapse: [] as any[],
       currentCollapseItem: '' as string,
-      enabledCollapse: [] as any[],
+      hideCollapseItem: false as boolean,
       currentTimestamp: 0,
       tempInfo: null as any,
       stakeLPError: false,
@@ -1571,9 +1571,12 @@ export default Vue.extend({
     },
     showCollapse: {
       handler() {
-        let target = this.showCollapse[this.showCollapse.length - 1]
-        this.enabledCollapse.push(target)
-        
+        if (this.currentCollapseItem === '') {
+          if (this.hideCollapseItem) this.currentCollapseItem = ''
+          else this.currentCollapseItem = this.showCollapse[this.showCollapse.length - 1]
+          this.hideCollapseItem = false
+        }
+
         if (!this.poolType && this.showCollapse.length > 0) {
           this.showCollapse.splice(0, this.showCollapse.length)
         }
@@ -2820,13 +2823,8 @@ export default Vue.extend({
     hideCollapse(id: any) {
       let showTarget = this.showCollapse.indexOf(id)
       this.showCollapse.splice(showTarget, 1)
-      let enabledTarget = this.enabledCollapse.indexOf(id)
-      this.enabledCollapse.splice(enabledTarget, 1)
-    },
-    searchEnabledItem(id: any) {
-      let target = this.enabledCollapse.indexOf(id)
-      if (target > -1) return true
-      else return false
+      this.currentCollapseItem = ''
+      this.hideCollapseItem = true
     }
   }
 })
@@ -3078,6 +3076,7 @@ export default Vue.extend({
         .farm-table {
           .farm-table-mobile {
             margin-top: 15px;
+            background: transparent;
           }
           
           .farm-item {
@@ -3170,7 +3169,7 @@ export default Vue.extend({
 
                   @media @max-b-mobile {
                     height: 30px;
-                    width: 140px;
+                    width: 160px;
                   }
 
                   .icons {
@@ -3263,6 +3262,7 @@ export default Vue.extend({
                     font-weight: 600 !important;
                     font-size: 10px !important;
                     padding: 0 4px;
+                    margin-right: 5px;
 
                     &.ended, &.dual, &.new {
                       text-transform: unset;
@@ -3544,6 +3544,10 @@ export default Vue.extend({
         padding: 0;
       }
     }
+  }
+
+  .ant-collapse-item-disabled > .ant-collapse-header {
+    color: unset;
   }
 }
 
