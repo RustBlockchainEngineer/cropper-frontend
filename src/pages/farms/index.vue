@@ -1220,13 +1220,6 @@ export default Vue.extend({
             //endedFarmsPoolId.push(poolId)
           }
 
-          if(newCoin){
-            delete this.price.prices[liquidityItem?.coin.symbol as string];
-          }
-
-          if(newPc){
-            delete this.price.prices[liquidityItem?.pc.symbol as string];
-          }
         }
         if (userInfo && lp && FARM_VERSION === 1) {
           userInfo = cloneDeep(userInfo)
