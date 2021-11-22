@@ -23,93 +23,150 @@
     <div class="card">
       <div class="card-body">
         <div class="page-head fs-container">
-          <span class="details noDesktop">
+          <span class="title noMobile">
+            Liquidity Pools
+            <NuxtLink to="/pools/create-pool/">
+              <div class="create-plus-btn">+</div>
+            </NuxtLink>
+          </span>
+          <span class="title noDesktop">
+            Pools
+            <NuxtLink to="/pools/create-pool/">
+              <div class="create-plus-btn">+</div>
+            </NuxtLink>
+          </span>
+          <span class="information">
+            <div class="my-info">
+              <p>TVL : <b>5,456,009 $</b></p>
+              <p>Your deposit: <b>28,009 $</b></p>
+            </div>
+
             <div
-              class="openButton"
-              :class="displayfilters ? 'openButton-active' : ''"
+              class="reload-btn"
               @click="
                 () => {
-                  if (displayfilters == true) {
-                    displayfilters = false
-                  } else {
-                    displayfilters = true
-                  }
+                  $accessor.farm.requestInfos();
+                  $accessor.wallet.getTokenAccounts();
                 }
               "
             >
-              <button>
-                Search
-                <img src="@/assets/icons/arrow-down.svg" />
-              </button>
+              <img src="@/assets/icons/loading.svg" />
             </div>
           </span>
+        </div>
 
-          <span class="title noMobile">Liquidity Pools</span>
-          <span class="title noDesktop">Pools</span>
-
-          <span class="buttonsd">
-            <NuxtLink to="/pools/create-pool/">
-              <div class="create">
-                <Button size="large" ghost>+ Create a pool </Button>
+        <div class="page-content">
+          <!-- Filter bar for desktop -->
+          <Row class="tool-bar noMobile">
+            <Col span="5" class="tool-option">
+              <Input
+                v-model="searchName"
+                size="large"
+                class="input-search"
+                placeholder="Search by name"
+              >
+                <Icon slot="prefix" type="search" />
+              </Input>
+            </Col>
+            <Col span="6" class="tool-option">
+              <div class="toggle">
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  >Labelized</label
+                >
+                <Toggle v-model="searchCertifiedFarm" />
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''"
+                  >Permissionless</label
+                >
               </div>
-            </NuxtLink>
+            </Col>
+            <Col span="5" class="tool-option">
+              
+            </Col>
+            <Col span="4" class="tool-option">
+              
+            </Col>
+            <Col span="4" class="tool-option">
+              <div class="toggle deposit-toggle">
+                <label class="label">My deposit</label>
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+              </div>
+            </Col>
+          </Row>
 
-            <div class="pool-btn-group">
-              <div class="count-down-group">
-                <div class="count-down">
-                  <span v-if="autoRefreshTime - countdown < 10">0</span>
-                  {{ autoRefreshTime - countdown }}
-                  <div
-                    class="reload-btn"
-                    @click="
-                      () => {
-                        flush()
-                        $accessor.wallet.getTokenAccounts()
-                      }
-                    "
-                  >
-                    <img src="@/assets/icons/loading.svg" />
-                  </div>
+          <!-- Filter bar for mobile -->
+
+          <Row class="tool-bar noDesktop">
+            <Col span="12" class="tool-option">
+              <Input
+                v-model="searchName"
+                size="large"
+                class="input-search"
+                placeholder="Search by name"
+              >
+                <Icon slot="prefix" type="search" />
+              </Input>
+            </Col>
+            <Col span="12" class="tool-option">
+              <div class="toggle deposit-toggle">
+                <label class="label">Deposited</label>
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+              </div>
+            </Col>
+          </Row>
+          <Row class="tool-bar noDesktop">
+            <Col span="24" class="tool-option">
+              <div class="toggle">
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  >Labelized</label
+                >
+                <Toggle v-model="searchCertifiedFarm" />
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''"
+                  >Permissionless</label
+                >
+              </div>
+            </Col>
+          </Row>
+          <Row class="tool-bar noDesktop">
+            <Col span="24" class="tool-option">
+              <div class="sort-by">
+                <label class="label">Sort by:</label>
+                <label class="label active-label">
+                  <img
+                    :class="sortAsc ? 'sort-up' : 'sort-down'"
+                    src="@/assets/icons/sort-up.svg"
+                  />
+                  {{ this.sortMethod === "liquidity" ? "Liquidity" : "APR" }}
+                </label>
+                <img
+                  :class="showSortOption ? 'collapse-down' : 'collapse-up'"
+                  src="@/assets/icons/collapse-arrow.svg"
+                  @click="
+                    () => {
+                      this.showSortOption = !this.showSortOption;
+                    }
+                  "
+                />
+              </div>
+              <div v-if="showSortOption" class="sort-options">
+                <div class="option" @click="setSortOption('liquidity', true)">
+                  <img src="@/assets/icons/sort-up.svg" />
+                  Liquidity
+                </div>
+                <div class="option" @click="setSortOption('liquidity', false)">
+                  <img src="@/assets/icons/sort-down.svg" />
+                  Liquidity
+                </div>
+                <div class="option" @click="setSortOption('apr', true)">
+                  <img src="@/assets/icons/sort-up.svg" />
+                  APR %
+                </div>
+                <div class="option" @click="setSortOption('apr', false)">
+                  <img src="@/assets/icons/sort-down.svg" />
+                  APR %
                 </div>
               </div>
-            </div>
-          </span>
-        </div>
-
-        <div class="tool-bar noMobile">
-          <div class="tool-option">
-            <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
-              <Icon slot="prefix" type="search" />
-            </Input>
-          </div>
-          <div class="tool-option">
-            <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
-          </div>
-          <div class="tool-option"></div>
-
-          <div class="tool-option last-option">
-            <div class="toggle">
-              <label class="label">Staked only</label>
-              <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-            </div>
-          </div>
-        </div>
-
-        <div class="tool-bar noDesktop" v-if="displayfilters">
-          <div class="tool-option">
-            <Input v-model="searchName" size="large" class="input-search largeserach" placeholder="Search by name">
-              <Icon slot="prefix" type="search" />
-            </Input>
-          </div>
-          <div class="tool-option">
-            <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
-          </div>
-          <div class="tool-option last-option">
-            <div class="toggle">
-              <label class="label">Staked only</label>
-              <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-            </div>
-          </div>
+            </Col>
+          </Row>
         </div>
 
         <div v-if="poolLoaded" class="noMobile pools-table">
@@ -463,12 +520,7 @@ export default class Pools extends Vue {
   totalCount = 110
   pageSize = 50
   currentPage = 1
-  certifiedOptions = [
-    { value: 0, label: 'Labelized' },
-    { value: 1, label: 'Permissionless' },
-    { value: 2, label: 'All' }
-  ]
-  searchCertifiedFarm = 0
+  searchCertifiedFarm: boolean = false
   sortMethod: string = 'liquidity'
   sortLiquidityAsc: boolean = true
   sortVolHAsc: boolean = false
@@ -511,12 +563,12 @@ export default class Pools extends Vue {
     this.showPool(newSearchName, this.stakedOnly)
   }
   @Watch('searchCertifiedFarm', { immediate: true, deep: true })
-  selectHandler(newSearchCertifiedFarm: number = 0) {
+  selectHandler(newSearchCertifiedFarm: boolean = false) {
     this.pools = this.poolsFormated()
-    if (newSearchCertifiedFarm == 0) {
+    if (!newSearchCertifiedFarm) {
       //labelized
       this.pools = this.pools.filter((pool: any) => pool.labelized)
-    } else if (newSearchCertifiedFarm == 1) {
+    } else if (newSearchCertifiedFarm) {
       //permissionless
       this.pools = this.pools.filter((pool: any) => !pool.labelized)
     }
@@ -570,10 +622,10 @@ export default class Pools extends Vue {
 
     this.pools = this.poolsFormated()
 
-    if (this.searchCertifiedFarm == 0) {
+    if (!this.searchCertifiedFarm) {
       //labelized
       this.pools = this.pools.filter((pool: any) => pool.labelized)
-    } else if (this.searchCertifiedFarm == 1) {
+    } else if (this.searchCertifiedFarm) {
       //permissionless
       this.pools = this.pools.filter((pool: any) => !pool.labelized)
     }
@@ -1065,6 +1117,179 @@ section {
   margin-bottom: 20px;
   padding: 15px;
 
+  @media @max-b-mobile {
+    margin-top: 0;
+  }
+
+  .planet-left {
+    position: absolute;
+    left: 0;
+    top: 35%;
+
+    @media @max-b-mobile {
+      display: none;
+    }
+  }
+
+  .card {
+    .card-body {
+      .page-head {
+        margin-top: 10px;
+
+        .title {
+          text-align: center;
+          position: relative;
+          float: left;
+
+          a {
+            position: absolute;
+            top: 5px;
+            right: -25px;
+
+            .create-plus-btn {
+              font-weight: 400;
+              width: 18px;
+              height: 18px;
+              border-radius: 8px;
+              background: @gradient-color-primary;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-size: 18px;
+            }
+          }
+        }
+
+        .information {
+          display: flex;
+          align-items: center;
+          text-align: right;
+
+          .my-info {
+            font-size: 15px;
+            line-height: 18px;
+          }
+
+          .reload-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            background: @gradient-color-primary;
+            background-origin: border-box;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            img {
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+      }
+
+      .page-content {
+        .tool-bar {
+          height: 64px;
+          border-radius: 14px;
+          border: 4px solid @color-outline;
+          width: 100%;
+
+          @media @max-b-mobile {
+            margin-bottom: 5px;
+            height: 54px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          .tool-option {
+            height: 100%;
+            display: inline-block;
+            border-right: 4px solid @color-outline;
+            position: relative;
+
+            &:last-child {
+              border-right: none !important;
+            }
+
+            .input-search {
+              height: 100%;
+              position: absolute;
+              width: 100%;
+            }
+
+            .toggle {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+
+              .label {
+                font-size: 16px;
+                opacity: 0.5;
+
+                &.active-label {
+                  font-weight: 700;
+                  opacity: 1;
+                }
+              }
+
+              &.deposit-toggle {
+                .ant-switch-checked {
+                  background-color: @color-disable !important;
+                }
+              }
+            }
+
+            .sort-by {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-evenly;
+
+              .label {
+                font-size: 16px;
+                opacity: 0.5;
+
+                &.active-label {
+                  font-weight: 700;
+                  opacity: 1;
+                }
+
+                .sort-up,
+                .sort-down {
+                  margin-right: 5px;
+                  transition: 0.5s;
+                }
+
+                .sort-down {
+                  transform: rotate(180deg);
+                }
+              }
+
+              .collapse-down,
+              .collapse-up {
+                cursor: pointer;
+                transition: 0.5s;
+              }
+
+              .collapse-down {
+                transform: rotate(180deg);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   .pools-table {
     .pools-table-header {
       .header-column {
@@ -1145,35 +1370,6 @@ section {
     }
   }
 
-  .planet-left {
-    position: absolute;
-    left: 0;
-    top: 35%;
-  }
-
-  .page-head {
-    margin-top: 10px;
-  }
-
-  .page-head a {
-    z-index: 2;
-    background: @color-bg;
-    float: right;
-    margin-left: 20px;
-
-    .btncontainer {
-      display: inline-block;
-    }
-  }
-
-  .page-head .buttons {
-    float: right;
-  }
-
-  .page-head .pool-btn-group {
-    float: right;
-  }
-
   h6 {
     margin-bottom: 0;
   }
@@ -1188,9 +1384,6 @@ section {
   width: 50%;
   text-align: center;
 }
-.card-body {
-  padding: 0;
-}
 
 .noDesktop {
   display: none;
@@ -1198,12 +1391,6 @@ section {
 
 @media @max-b-mobile {
   body .pool.container {
-    min-width: unset;
-    width: 100%;
-    max-width: 100%;
-    margin-top: 0;
-    padding: 20px 20px !important;
-
     .card-body {
       overflow-x: unset !important;
     }
@@ -1294,38 +1481,6 @@ section {
 
     .largeserach input {
       height: 47px !important;
-    }
-
-    .page-head {
-      margin-bottom: 0;
-      margin-top: 0;
-      .title {
-        font-size: 40px;
-        position: relative;
-        line-height: 50px;
-      }
-      .buttonsd {
-        height: 87px;
-        padding: 20px 20px 84px;
-        border: 4px solid #16164a;
-        box-sizing: border-box;
-        border-radius: 14px;
-        text-align: center;
-        margin-top: 20px;
-
-        a {
-          display: inline-block;
-        }
-
-        > div {
-          margin-right: -66px;
-          display: inline-block;
-        }
-      }
-    }
-
-    .fs-container {
-      display: inline-block;
     }
 
     .ant-collapse,
@@ -1510,47 +1665,12 @@ section {
       margin-left: 5px;
       margin-right: 5px;
     }
-
-    .tool-bar {
-      height: unset;
-      border: unset;
-
-      .tool-option {
-        background: #00033c;
-        width: 100%;
-        height: 54px;
-        display: block;
-        position: relative;
-        margin: 10px 0;
-        border: 4px solid #16164a;
-        box-sizing: border-box;
-        border-radius: 10px;
-        .input-search {
-          height: 47px !important;
-          .ant-input {
-            padding: 19px 60px;
-            border: none;
-            height: 47px !important;
-          }
-        }
-
-        .toggle {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          display: inline-flex;
-          align-items: center;
-          justify-content: left;
-          padding-left: 10%;
-
-          .ant-switch {
-            position: absolute;
-            right: 10%;
-          }
-        }
-      }
-    }
   }
+}
+
+// global used styles
+p {
+  margin-bottom: 0;
 }
 </style>
 
@@ -1574,114 +1694,6 @@ section {
 }
 
 .pool.container {
-  .tool-bar {
-    height: 100px;
-    border-radius: 14px;
-    border: 4px solid #16164a;
-    width: 100%;
-
-    .tool-option {
-      width: 24%;
-      height: 100%;
-      display: inline-block;
-      border-right: 3px solid #16164a;
-      position: relative;
-
-      .input-search {
-        height: 100%;
-        position: absolute;
-        width: 100%;
-
-        .ant-input-prefix {
-          left: 10%;
-          font-size: 20px;
-          color: white;
-        }
-
-        .ant-input {
-          padding: 0 10% 0 20%;
-          height: 100% !important;
-          border: none;
-        }
-
-        .ant-input::placeholder {
-          color: white;
-          opacity: 0.5;
-        }
-      }
-
-      .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
-        opacity: 1 !important;
-      }
-
-      .ant-select {
-        border: none;
-        height: 100%;
-        position: absolute;
-        width: 100%;
-
-        .ant-select-selection {
-          height: 100%;
-          width: 100%;
-          display: inline-flex;
-          align-items: center;
-          padding-left: 10%;
-          border: none;
-
-          .ant-select-selection__rendered {
-            margin-left: 0 !important;
-            font-size: 16px;
-            opacity: 0.5;
-          }
-
-          .ant-select-arrow {
-            right: 10%;
-            font-size: 13px;
-          }
-        }
-      }
-
-      .toggle {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-
-        .label {
-          font-size: 16px;
-          opacity: 0.5;
-        }
-
-        .ant-switch {
-          margin-left: 14px;
-          background-color: white;
-          height: 11px;
-          border-radius: 30px;
-        }
-
-        .ant-switch::after {
-          width: 28px;
-          height: 28px;
-          background: @gradient-color-icon;
-          background-origin: border-box;
-          top: -10px;
-          left: -2px;
-        }
-
-        .ant-switch-checked::after {
-          margin-left: 2px;
-          left: 100%;
-        }
-      }
-    }
-
-    .last-option {
-      border-right: none !important;
-    }
-  }
-
   .ant-collapse-header {
     @media @max-b-mobile {
       padding-right: 16px !important;
@@ -1934,5 +1946,43 @@ section {
   border-top: unset !important;
   border-bottom: unset !important;
   color: rgba(255, 255, 255, 0.1);
+}
+
+// ant customization
+.pool {
+  .page-content {
+    .tool-bar {
+      .tool-option {
+        .input-search {
+          .ant-input-prefix {
+            left: 10%;
+            font-size: 20px;
+            color: white;
+          }
+
+          .ant-input {
+            padding: 0 10% 0 25%;
+            height: 100% !important;
+            border: none;
+            border-radius: 14px;
+
+            @media @max-b-mobile {
+              font-size: 14px;
+              line-height: 17px;
+            }
+
+            &::placeholder {
+              color: white;
+              opacity: 0.5;
+            }
+
+            &:focus {
+              box-shadow: none;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 </style>

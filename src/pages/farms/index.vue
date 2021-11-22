@@ -793,9 +793,12 @@
                         </Button>
                       </div>
 
-                      <div
+                      <!-- <div
                         class="btn-container btn-container-outline"
                         v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                      > -->
+                      <div
+                        class="btn-container btn-container-outline"
                       >
                         <Button
                           size="large"
@@ -3129,7 +3132,7 @@ export default Vue.extend({
                 line-height: 24px;
                 font-weight: 400;
                 word-break: break-all;
-                
+
                 @media @max-b-mobile {
                   margin-top: 5px;
                   font-size: 14px;
