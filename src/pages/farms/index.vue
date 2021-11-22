@@ -89,7 +89,7 @@ import { mapState } from 'vuex'
 import {
   Tooltip,
   // Progress,
-  //Collapse,
+  Collapse,
   //Spin,
   Icon,
   Row,
