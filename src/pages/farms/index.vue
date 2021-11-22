@@ -63,6 +63,28 @@
 
     <div class="card">
       <div class="card-body">
+        <div v-if="!wallet.connected" class="update-note">
+          <div class="update-title">
+            <img src="@/assets/icons/info-icon.svg" />
+            The Farms Are Being Improved
+          </div>
+          <div class="update-description">
+            Smart Contracts V2 Update
+          </div>
+          <hr />
+          <div class="update-content">
+            We’re now updating from V1 to V2 of our smart contracts. Farms will be reopened as soon as the update is complete. We expect the update to be completed within 60 minutes. 
+            <br /> We appreciate your patience.
+          </div>
+        </div>
+
+        <div v-else class="update-note-pending">
+          <div class="update-title">
+            <img src="@/assets/icons/info-icon.svg" />
+            We’ve updated Farms to V2 of our smart contracts. Harvest all pending rewards to launch the V2 display.
+          </div>
+        </div>
+
         <div class="page-head fs-container">
           <span class="details noDesktop">
             <div
@@ -2168,6 +2190,85 @@ export default Vue.extend({
 .card-body {
   padding: 0;
   margin: 0;
+
+  .update-note {
+    background: #272C61;
+    border: 4px solid #273D94;
+    border-radius: 14px;
+    text-align: center;
+    padding: 30px 15%;
+
+    @media (max-width: @mobile-b-width) {
+      padding: 20px 5%;
+    }
+
+    .update-title {
+      font-weight: bold;
+      font-size: 25px;
+      letter-spacing: -0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        margin-right: 10px;
+      }
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 20px;
+
+        img {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .update-description {
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.05em;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 15px;
+      }
+    }
+
+    .update-content {
+      font-size: 20px;
+      letter-spacing: 0.025em;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 15px;
+      }
+    }
+
+    hr {
+      width: 150px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .update-note-pending {
+    background: #272C61;
+    border: 4px solid #273D94;
+    border-radius: 14px;
+    text-align: center;
+    padding: 10px 10%;
+
+    @media (max-width: @mobile-b-width) {
+      padding: 10px 5%;
+    }
+
+    .update-title {
+      font-weight: normal;
+      font-size: 17px;
+      letter-spacing: 0.025em;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 12px;
+      }
+    }
+  }
 }
 
 .farm-button-group {
