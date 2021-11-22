@@ -41,15 +41,7 @@
               <p>Your deposit: <b>28,009 $</b></p>
             </div>
 
-            <div
-              class="reload-btn"
-              @click="
-                () => {
-                  $accessor.farm.requestInfos();
-                  $accessor.wallet.getTokenAccounts();
-                }
-              "
-            >
+            <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
               <img src="@/assets/icons/loading.svg" />
             </div>
           </span>
@@ -59,32 +51,19 @@
           <!-- Filter bar for desktop -->
           <Row class="tool-bar noMobile">
             <Col span="5" class="tool-option">
-              <Input
-                v-model="searchName"
-                size="large"
-                class="input-search"
-                placeholder="Search by name"
-              >
+              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
               </Input>
             </Col>
             <Col span="6" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  >Labelized</label
-                >
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
                 <Toggle v-model="searchCertifiedFarm" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''"
-                  >Permissionless</label
-                >
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
               </div>
             </Col>
-            <Col span="5" class="tool-option">
-              
-            </Col>
-            <Col span="4" class="tool-option">
-              
-            </Col>
+            <Col span="5" class="tool-option"> </Col>
+            <Col span="4" class="tool-option"> </Col>
             <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
                 <label class="label">My deposit</label>
@@ -97,12 +76,7 @@
 
           <Row class="tool-bar noDesktop">
             <Col span="12" class="tool-option">
-              <Input
-                v-model="searchName"
-                size="large"
-                class="input-search"
-                placeholder="Search by name"
-              >
+              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
                 <Icon slot="prefix" type="search" />
               </Input>
             </Col>
@@ -116,13 +90,9 @@
           <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  >Labelized</label
-                >
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
                 <Toggle v-model="searchCertifiedFarm" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''"
-                  >Permissionless</label
-                >
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
               </div>
             </Col>
           </Row>
@@ -131,18 +101,15 @@
               <div class="sort-by">
                 <label class="label">Sort by:</label>
                 <label class="label active-label">
-                  <img
-                    :class="sortAsc ? 'sort-up' : 'sort-down'"
-                    src="@/assets/icons/sort-up.svg"
-                  />
-                  {{ this.sortMethod === "liquidity" ? "Liquidity" : "APR" }}
+                  <img :class="sortAsc ? 'sort-up' : 'sort-down'" src="@/assets/icons/sort-up.svg" />
+                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR' }}
                 </label>
                 <img
                   :class="showSortOption ? 'collapse-down' : 'collapse-up'"
                   src="@/assets/icons/collapse-arrow.svg"
                   @click="
                     () => {
-                      this.showSortOption = !this.showSortOption;
+                      this.showSortOption = !this.showSortOption
                     }
                   "
                 />
@@ -528,6 +495,7 @@ export default class Pools extends Vue {
   sortFeesAsc: boolean = false
   sortAPYAsc: boolean = false
   sortCurrentAsc: boolean = false
+  activeSpinning: boolean = false
 
   get liquidity() {
     this.$accessor.wallet.getTokenAccounts()
@@ -1087,6 +1055,7 @@ export default class Pools extends Vue {
       }
     }, 1000)
   }
+
   async flush() {
     this.loading = true
     this.pools = this.poolsFormated()
@@ -1094,8 +1063,18 @@ export default class Pools extends Vue {
     this.loading = false
     this.countdown = 0
   }
+
   getPoolByLpMintAddress = getPoolByLpMintAddress
   TokenAmount = TokenAmount
+
+  reloadTimer() {
+    this.activeSpinning = true
+    setTimeout(() => {
+      this.activeSpinning = false
+    }, 1000)
+    this.$accessor.farm.requestInfos()
+    this.$accessor.wallet.getTokenAccounts()
+  }
 }
 </script>
 
@@ -1186,6 +1165,11 @@ section {
             img {
               width: 18px;
               height: 18px;
+            }
+
+            &.active img {
+              transform: rotate(360deg);
+              transition: all 1s ease-in-out;
             }
           }
         }
@@ -1287,73 +1271,73 @@ section {
           }
         }
       }
-    }
-  }
 
-  .pools-table {
-    .pools-table-header {
-      .header-column {
-        font-size: 18px;
-        line-height: 21px;
-        color: rgba(255,255,255,0.5);
-        text-align: center;
-        padding: 16px 0;
-
-        .header-column-title {
-          cursor: pointer;
-          display: flex;
-
-          i {
-            color: white;
-            margin-left: 10px;
-            display: flex;
-            align-items: center;
-          }
-
-          .sort-icon-active {
-            color: #13ecab;
-          }
-        }
-      }
-    }
-
-    .pools-table-body {
-      .pools-table-item {
-        padding: 16px 0;
-        border-top: 1px solid hsla(0, 0%, 100%, 0.2);
-        display: flex;
-        align-items: center;
-
-        .lp-iconscontainer {
-          background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-          background-origin: border-box;
-          padding: 2px;
-          border-radius: 8px;
-          width: 100%;
-
-          .icons {
-            display: block !important;
-            border-radius: 8px;
-            font-weight: normal;
-            padding: 14px 20px;
+      .pools-table {
+        .pools-table-header {
+          .header-column {
             font-size: 18px;
-            line-height: 20px;
-            white-space: nowrap;
-            position: relative;
-            background: @color-bg;
+            line-height: 21px;
+            color: rgba(255, 255, 255, 0.5);
             text-align: center;
-            width: 100%;
+            padding: 16px 0;
 
-            img {
-              border-radius: 50%;
-              width: 24px;
-              height: 24px;
+            .header-column-title {
+              cursor: pointer;
+              display: flex;
+
+              i {
+                color: white;
+                margin-left: 10px;
+                display: flex;
+                align-items: center;
+              }
+
+              .sort-icon-active {
+                color: #13ecab;
+              }
             }
           }
         }
 
-        .state {
-          text-align: center;
+        .pools-table-body {
+          .pools-table-item {
+            padding: 16px 0;
+            border-top: 1px solid hsla(0, 0%, 100%, 0.2);
+            display: flex;
+            align-items: center;
+
+            .lp-iconscontainer {
+              background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+              background-origin: border-box;
+              padding: 2px;
+              border-radius: 8px;
+              width: 100%;
+
+              .icons {
+                display: block !important;
+                border-radius: 8px;
+                font-weight: normal;
+                padding: 14px 20px;
+                font-size: 18px;
+                line-height: 20px;
+                white-space: nowrap;
+                position: relative;
+                background: @color-bg;
+                text-align: center;
+                width: 100%;
+
+                img {
+                  border-radius: 50%;
+                  width: 24px;
+                  height: 24px;
+                }
+              }
+            }
+
+            .state {
+              text-align: center;
+            }
+          }
         }
       }
     }
@@ -1590,7 +1574,7 @@ section {
         font-weight: normal;
         font-size: 14px;
         line-height: 17px;
-        color: rgba(255,255,255,0.5);
+        color: rgba(255, 255, 255, 0.5);
         margin-bottom: 15px;
       }
 
