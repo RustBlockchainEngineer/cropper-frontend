@@ -769,7 +769,7 @@ import { TokenAmount } from '@/utils/safe-math'
 import { FarmInfo } from '@/utils/farms'
 import { deposit, withdraw } from '@/utils/stake'
 import { getUnixTs } from '@/utils'
-import { getBigNumber } from '@/utils/layouts'
+import { getBigNumber, toBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
 import {
@@ -1106,19 +1106,6 @@ export default Vue.extend({
 
      //   console.log(farmInfo);
 
-        if(
-          farmInfo.lp.coin.symbol == 'HIMA' || 
-          farmInfo.lp.coin.symbol == 'WIPE' || 
-          farmInfo.lp.coin.symbol == 'LIQ' || 
-          farmInfo.poolId == "AobDGwtrCGXqgm7bg1VN8eiNPovvDg1biBwj8HxF2rGv" || 
-          farmInfo.poolId == "AFzgsAGHt9mS5nVR5n3EvTjJodFNJ4SUS8Cjz5fUK31B" || 
-          farmInfo.poolId == "HrSCGDCsZx3yMAx9mMdx9m3B2pkUyKhGt1EmhZ3mPiM1" || 
-          farmInfo.poolId == "DSLGFUkJR35sXLtoTefLCVqT7QZVz3U3jKYs383HRbG6" || 
-          farmInfo.poolId == "AFzgsAGHt9mS5nVR5n3EvTjJodFNJ4SUS8Cjz5fUK31B"){
-        continue;
-        }
-
-
         // @ts-ignore
         const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } = farmInfo.poolInfo
 
@@ -1136,7 +1123,7 @@ export default Vue.extend({
         let partPc = 0;
 
         if (reward && lp) {
-          const rewardPerTimestamp = reward_per_timestamp_or_remained_reward_amount.toNumber() / (end_timestamp.toNumber() - last_timestamp.toNumber())
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp)));
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           
@@ -1253,10 +1240,10 @@ export default Vue.extend({
 
           const duration = currentTimestamp - last_timestamp.toNumber()
 
-          const rewardPerTimestamp = reward_per_timestamp_or_remained_reward_amount.toNumber()
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount);
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           const lpTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).wei;
-          const rewardPerShareCalc = new BigNumber(rewardPerTimestamp)
+          const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(lpTotalSupply)
@@ -1311,9 +1298,9 @@ export default Vue.extend({
 
           const duration = currentTimestamp - last_timestamp.toNumber()
 
-          const rewardPerTimestamp = reward_per_timestamp_or_remained_reward_amount.toNumber() / (end_timestamp.toNumber() - last_timestamp.toNumber())
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp)));
           
-          const rewardPerShareCalc = new BigNumber(rewardPerTimestamp)
+          const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(newFarmInfo.lp.balance.wei)

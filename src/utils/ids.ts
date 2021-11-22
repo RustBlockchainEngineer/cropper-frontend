@@ -28,7 +28,7 @@ export const LIQUIDITY_POOL_PROGRAM_ID_V4 = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24
 export const CRP_LP_PROGRAM_ID_V1 = DEVNET_MODE? '7ZZJNL4xD8db6yrT46SeMFZXcVr9MLepGpEtnKW2k6sW': 'CTMAxxk34HjKWxQ3QLZK1HpaLXmBveao3ESePXbiyfzh'//@zhaohui
 
 
-export let FARM_VERSION = 1;//@Hongbo
+export let FARM_VERSION = 2;//@Hongbo
 
 export const FARM_PROGRAM_ID_VS = DEVNET_MODE ? [
     'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR',
