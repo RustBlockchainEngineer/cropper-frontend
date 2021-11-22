@@ -1479,7 +1479,7 @@ export default Vue.extend({
       }
 
       if (stakedOnly) {
-        this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0)
+        this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0 || farm.userInfo.needRefresh)
       }
 
       if (this.sortLiquidityAsc) {
