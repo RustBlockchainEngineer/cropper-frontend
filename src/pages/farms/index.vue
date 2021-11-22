@@ -269,7 +269,7 @@
                     </div>
                     <div v-else class="value">
                       <span class="labmobile">Pending Reward</span
-                      >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                      >{{ !wallet.connected ? 0 : farm.userInfo.needRefresh ? '?' :farm.userInfo.pendingReward.format() }}
                     </div>
                   </Col>
                 </Col>
@@ -369,7 +369,7 @@
                   </div>
                   <div v-else class="value">
                     <span class="labmobile">Pending Reward</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                    >{{ !wallet.connected ? 0 : farm.userInfo.needRefresh ? '?' : farm.userInfo.pendingReward.format() }}
                   </div>
                 </Col>
 
@@ -507,11 +507,11 @@
                 <Col :span="isMobile ? 24 : 8">
                   <div class="harvest">
                     <div class="title">Pending Reward</div>
-                    <div class="pending">
+                    <div class="pending" v-if="!farm.userInfo.needRefresh">
                       <div class="reward">
                         <div class="token">
                           {{ farm.farmInfo.reward.symbol }}
-                          {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                          {{ !wallet.connected ? 0 : farm.userInfo.needRefresh ? '?' :farm.userInfo.pendingReward.format() }}
                         </div>
                       </div>
                       <div class="btncontainer">
@@ -534,6 +534,33 @@
                           @click="harvest(farm.farmInfo)"
                         >
                           Harvest
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div class="pending" v-else>
+                      <div class="reward">
+                      </div>
+                      <div class="btncontainer">
+                        <Button
+                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                          size="large"
+                          ghost
+                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                        >
+                          Refresh & Harvest
+                        </Button>
+
+                        <Button
+                          v-else
+                          size="large"
+                          ghost
+                          :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
+                          :loading="harvesting"
+                          @click="harvest(farm.farmInfo)"
+                        >
+                          Refresh & Harvest
                         </Button>
                       </div>
                     </div>
@@ -1143,7 +1170,7 @@ export default Vue.extend({
             liquidityUsdValue = 0
           }
 
-          if( (rewardPerTimestampAmountTotalValue * 86400 * 7) < 1 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
+          if(this.currentTimestamp < newFarmInfo.poolInfo.end_timestamp && (rewardPerTimestampAmountTotalValue * 86400 * 7) < 1 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
 
           // @ts-ignore
           newFarmInfo.apr = apr
@@ -1216,8 +1243,11 @@ export default Vue.extend({
             .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
 
+          userInfo.needRefresh = false;
+
           if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
             pendingReward = newFarmInfo.reward.balance.wei;
+            userInfo.needRefresh = true;
           }
 
           userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
@@ -1271,9 +1301,12 @@ export default Vue.extend({
             .dividedBy(REWARD_MULTIPLER)
             .minus(_rewardDebt)
 
+          userInfo.needRefresh = false;
+
           if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
             pendingReward = newFarmInfo.reward.balance.wei;
-          }
+            userInfo.needRefresh = true;
+          } 
 
           userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
             )
@@ -1298,6 +1331,10 @@ export default Vue.extend({
           }
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
+
+          if(userInfo.pendingReward.isNaN()){
+            userInfo.pendingReward = new TokenAmount(0, newFarmInfo.reward.decimals);
+          }
 
         } else {
           userInfo = {
