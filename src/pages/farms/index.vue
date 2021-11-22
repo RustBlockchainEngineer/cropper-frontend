@@ -63,7 +63,7 @@
 
     <div class="card">
       <div class="card-body">
-        <div v-if="!wallet.connected" class="update-note">
+        <div class="update-note">
           <div class="update-title">
             <img src="@/assets/icons/info-icon.svg" />
             The Farms Are Being Improved
@@ -78,7 +78,7 @@
           </div>
         </div>
 
-        <div v-else class="update-note-pending">
+        <div v-if="displaynoticeupdate" class="update-note-pending">
           <div class="update-title">
             <img src="@/assets/icons/info-icon.svg" />
             We’ve updated Farms to V2 of our smart contracts. Harvest all pending rewards to launch the V2 display.
@@ -829,7 +829,7 @@ export default Vue.extend({
 
       farmProgramCreated: true,
       superOwnerAddress: FARM_INITIAL_SUPER_OWNER,
-
+      displaynoticeupdate: false,
       farms: [] as any[],
       showFarms: [] as any[],
       searchName: '',
@@ -1270,6 +1270,7 @@ export default Vue.extend({
           if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
             pendingReward = newFarmInfo.reward.balance.wei;
             userInfo.needRefresh = true;
+            this.displaynoticeupdate = true;
           }
 
           userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
@@ -1328,6 +1329,7 @@ export default Vue.extend({
           if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
             pendingReward = newFarmInfo.reward.balance.wei;
             userInfo.needRefresh = true;
+            this.displaynoticeupdate = true;
           } 
 
           userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
