@@ -1316,7 +1316,7 @@ export default Vue.extend({
             pendingReward = newFarmInfo.reward.balance.wei;
             userInfo.needRefresh = true;
             this.displaynoticeupdate = true;
-          } 
+          }
 
           userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
             )
@@ -1342,9 +1342,6 @@ export default Vue.extend({
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
 
-          if(userInfo.pendingReward.isNaN() && userInfo.pendingReward != '?' && !(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber())){
-            userInfo.pendingReward = new TokenAmount(0, newFarmInfo.reward.decimals);
-          }
 
         } else {
           userInfo = {
