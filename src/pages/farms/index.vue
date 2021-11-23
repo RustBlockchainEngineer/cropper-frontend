@@ -525,8 +525,19 @@
                         </div>
                       </div>
                       <div class="btncontainer">
+
                         <Button
-                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          v-if="userMigrations[farm.farmInfo.poolId]"
+                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                          size="large"
+                          ghost
+                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                        >
+                          Harvest & Migrate
+                        </Button>
+
+                        <Button
+                          v-else-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                           :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                           size="large"
                           ghost
@@ -566,17 +577,6 @@
 
                         <Button
                           v-else-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                          size="large"
-                          ghost
-                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                        >
-                          Refresh & Harvest
-                        </Button>
-
-
-                        <Button
-                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                           :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                           size="large"
                           ghost
