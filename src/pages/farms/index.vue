@@ -2962,12 +2962,14 @@ export default Vue.extend({
             padding: 24px 18px;
             background: @gradient-color-labelized;
             border-radius: 5px;
+            margin-top: 10px;
 
             @media @max-b-mobile {
               display: block;
               padding: 0;
               background: @color-bg-mobile !important;
               border-radius: 0;
+              margin-top: 0;
             }
 
             &:first-child {
