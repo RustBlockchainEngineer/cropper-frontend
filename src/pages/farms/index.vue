@@ -69,7 +69,7 @@
           </div>
 
           <div class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
-            <button @click="migrateFarm(migrationFarm)"> Harvest & Migrate</button>
+            <button @click="migrateFarm(migrationFarm)" style="cursor:pointer"> Harvest & Migrate</button>
           </div>
 
         </div>
@@ -537,7 +537,7 @@
                         </span>
 
                         <Button
-                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          v-else-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                           :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                           size="large"
                           ghost
