@@ -52,14 +52,7 @@
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
-
-    <!-- <FarmMigration
-      v-if="userMigrations.length > 0"
-      title="Farm Migration"
-      :migrationFarms="userMigrations"
-      @onMigrate="migrateFarm"
-      @onCancel="cancelStake"
-    /> -->
+    
 
     <div class="card">
       <div class="card-body">
@@ -74,9 +67,11 @@
             <img src="@/assets/icons/watch-icon.svg" />
             The CRP-USDC farm is ended, you must migrate your LP tokens to continue farming.
           </div>
-          <div class="update-btn">
-            <button @click="migrateFarm">Migrate LP Tokens</button>
+
+          <div class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
+            <button @click="migrateFarm(migrationFarm)"> Migrate LP Tokens</button>
           </div>
+
         </div>
         <div class="page-head fs-container">
           <span class="details noDesktop">
@@ -989,9 +984,6 @@ export default Vue.extend({
           
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
           let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
-          console.log("userInfoNew",userInfoNew)
-          console.log("userInfoOld",userInfoOld)
-          console.log("userInfoOld.depositBalance",userInfoOld.depositBalance.wei.toNumber())
           if(userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0){
             this.userMigrations.push({oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)});
           }
