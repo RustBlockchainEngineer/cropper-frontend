@@ -69,7 +69,7 @@
           </div>
 
           <div class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
-            <button @click="migrateFarm(migrationFarm)"> Migrate LP Tokens</button>
+            <button @click="migrateFarm(migrationFarm)"> Harvest & Migrate</button>
           </div>
 
         </div>
@@ -552,6 +552,29 @@
                       <div class="reward">
                       </div>
                       <div class="btncontainer">
+
+                        <Button
+                          v-if="userMigrations[farm.farmInfo.poolId]"
+                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                          size="large"
+                          ghost
+                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                        >
+                          Harvest & Migrate
+                        </Button>
+
+
+                        <Button
+                          v-else-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                          size="large"
+                          ghost
+                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                        >
+                          Refresh & Harvest
+                        </Button>
+
+
                         <Button
                           v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                           :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
