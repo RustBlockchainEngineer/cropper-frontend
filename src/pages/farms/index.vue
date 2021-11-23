@@ -526,18 +526,18 @@
                       </div>
                       <div class="btncontainer">
 
-                        <Button
-                          v-if="userMigrations[farm.farmInfo.poolId]"
-                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                          size="large"
-                          ghost
-                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                        >
-                          Harvest & Migrate
-                        </Button>
+                        <span
+                          v-if="farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1">
+
+                          <span class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
+                            <Button
+                                          size="large"
+                                          ghost @click="migrateFarm(migrationFarm)"> Harvest & Migrate</Button>
+                          </span>
+                        </span>
 
                         <Button
-                          v-else-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                           :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                           size="large"
                           ghost
@@ -564,16 +564,15 @@
                       </div>
                       <div class="btncontainer">
 
-                        <Button
-                          v-if="userMigrations[farm.farmInfo.poolId]"
-                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                          size="large"
-                          ghost
-                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                        >
-                          Harvest & Migrate
-                        </Button>
+                        <span
+                          v-if="farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1">
 
+                          <span class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
+                            <Button
+                                          size="large"
+                                          ghost @click="migrateFarm(migrationFarm)"> Harvest & Migrate</Button>
+                          </span>
+                        </span>
 
                         <Button
                           v-else-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
@@ -887,7 +886,7 @@ export default Vue.extend({
       sortAPRAsc: false as boolean,
       sortLiquidityAsc: true as boolean,
       sortMethod: 'liquidity' as string,
-
+      userMigrate: 0,
       userMigrations: [] as any[],
     }
   },
@@ -1008,7 +1007,8 @@ export default Vue.extend({
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
           let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
           if(userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0){
-            this.userMigrations[oldFarmId as any] = {oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)};
+            this.userMigrations.push({oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)});
+            this.userMigrate = 1;
           }
         });
         
