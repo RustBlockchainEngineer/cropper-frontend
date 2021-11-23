@@ -94,22 +94,22 @@
             </Col>
             <Col span="6" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''" @click="activeSearch('labelized')">Labelized</label>
                 <Toggle v-model="searchCertifiedFarm" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''" @click="activeSearch('permissionless')">Permissionless</label>
               </div>
             </Col>
             <Col span="5" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''">Open</label>
+                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''" @click="activeSearch('open')">Open</label>
                 <Toggle v-model="searchLifeFarm" />
-                <label class="label" :class="searchLifeFarm ? 'active-label' : ''">Ended</label>
+                <label class="label" :class="searchLifeFarm ? 'active-label' : ''" @click="activeSearch('ended')">Ended</label>
               </div>
             </Col>
             <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label">My deposit</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+                <label class="label" @click="activeSearch('deposit')">My deposit</label>
+                <Toggle v-model="stakedOnly" />
               </div>
             </Col>
             <Col span="4" class="tool-option">
@@ -160,17 +160,17 @@
             </Col>
             <Col span="12" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label">Deposited</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+                <label class="label" @click="activeSearch('deposit')">Deposited</label>
+                <Toggle v-model="stakedOnly" />
               </div>
             </Col>
           </Row>
           <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
+                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''" @click="activeSearch('labelized')">Labelized</label>
                 <Toggle v-model="searchCertifiedFarm" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
+                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''" @click="activeSearch('permissionless')">Permissionless</label>
               </div>
             </Col>
           </Row>
@@ -2677,6 +2677,13 @@ export default Vue.extend({
       this.showSortOption = false
       this.updateFarms()
     },
+    activeSearch(mode: string) {
+      if (mode === 'labelized') this.searchCertifiedFarm = false
+      else if (mode === 'permissionless') this.searchCertifiedFarm = true
+      else if (mode === 'open') this.searchLifeFarm = false
+      else if (mode === 'ended') this.searchLifeFarm = true
+      else if (mode === 'deposit') this.stakedOnly = !this.stakedOnly
+    },
     hideCollapse(id: any) {
       let showTarget = this.showCollapse.indexOf(id)
       this.showCollapse.splice(showTarget, 1)
@@ -2828,6 +2835,7 @@ export default Vue.extend({
               .label {
                 font-size: 16px;
                 opacity: 0.5;
+                cursor: pointer;
 
                 &.active-label {
                   font-weight: 700;
@@ -2954,7 +2962,6 @@ export default Vue.extend({
             padding: 24px 18px;
             background: @gradient-color-labelized;
             border-radius: 5px;
-            margin-top: 10px;
 
             @media @max-b-mobile {
               display: block;
