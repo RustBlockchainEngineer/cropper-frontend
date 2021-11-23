@@ -985,7 +985,7 @@ export default Vue.extend({
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
           let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
           if(userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0){
-            this.userMigrations.push({oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)});
+            this.userMigrations[oldFarmId as any] = {oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)};
           }
         });
         
@@ -997,6 +997,7 @@ export default Vue.extend({
       }
     },
     migrateFarm(migrationFarm:any){
+    console.log(migrationFarm);
       const amount = migrationFarm.depositBalance;
 
       const oldFarm = get(this.farm.infos, migrationFarm.oldFarmId);
