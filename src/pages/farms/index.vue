@@ -53,24 +53,31 @@
       @onCancel="cancelStakeLP"
     />
 
-    <FarmMigration
+    <!-- <FarmMigration
       v-if="userMigrations.length > 0"
       title="Farm Migration"
       :migrationFarms="userMigrations"
       @onMigrate="migrateFarm"
       @onCancel="cancelStake"
-    />
+    /> -->
 
     <div class="card">
       <div class="card-body">
-
         <div v-if="displaynoticeupdate" class="update-note-pending">
           <div class="update-title">
             <img src="@/assets/icons/info-icon.svg" />
             We’ve updated Farms to V2 of our smart contracts. Harvest all pending rewards to launch the V2 display.
           </div>
         </div>
-
+        <div v-if="userMigrations.length > 0" class="update-note-migration">
+          <div class="update-title">
+            <img src="@/assets/icons/watch-icon.svg" />
+            The CRP-USDC farm is ended, you must migrate your LP tokens to continue farming.
+          </div>
+          <div class="update-btn">
+            <button @click="migrateFarm">Migrate LP Tokens</button>
+          </div>
+        </div>
         <div class="page-head fs-container">
           <span class="details noDesktop">
             <div
@@ -2174,7 +2181,7 @@ export default Vue.extend({
 
   .update-note {
     background: #272C61;
-    border: 4px solid #273D94;
+    border: 4px solid #3238EA;
     border-radius: 14px;
     text-align: center;
     padding: 30px 15%;
@@ -2231,7 +2238,7 @@ export default Vue.extend({
 
   .update-note-pending {
     background: #272C61;
-    border: 4px solid #273D94;
+    border: 4px solid #3238EA;
     border-radius: 14px;
     text-align: center;
     padding: 10px 10%;
@@ -2247,6 +2254,69 @@ export default Vue.extend({
 
       @media (max-width: @mobile-b-width) {
         font-size: 12px;
+      }
+    }
+  }
+
+  .update-note-migration {
+    background: #272C61;
+    border: 4px solid #3238EA;
+    border-radius: 14px;
+    text-align: center;
+    padding: 10px 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: @mobile-b-width) {
+      display: inline-block;
+      padding: 10px 5%;
+      text-align: left;
+    }
+
+    .update-title {
+      font-weight: normal;
+      font-size: 17px;
+      letter-spacing: 0.025em;
+      display: flex;
+      align-items: center;
+
+      img {
+        margin-right: 10px;
+
+        @media (max-width: @mobile-b-width) {
+          margin-right: 5px;
+        }
+      }
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 12px;
+      }
+    }
+
+    .update-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      @media (max-width: @mobile-b-width) {
+        margin-top: 10px;
+      }
+
+      button {
+        height: 42px;
+        width: 200px;
+        background: linear-gradient(98.9deg, #2E76C0 0%, #2CC1D3 98.75%);
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 14px;
+        border: none;
+
+        @media (max-width: @mobile-b-width) {
+          font-size: 12px;
+        }
       }
     }
   }
