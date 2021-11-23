@@ -75,7 +75,7 @@
             The CRP-USDC farm is ended, you must migrate your LP tokens to continue farming.
           </div>
           <div class="update-btn">
-            <button @click="migrateFarm">Migrate LP Tokens</button>
+            <button @click="migrateFarm(userMigrations)">Migrate LP Tokens</button>
           </div>
         </div>
         <div class="page-head fs-container">
