@@ -1,4 +1,5 @@
 import { bool, publicKey, struct, u32, u64, u8 } from '@project-serum/borsh'
+import BigNumber from 'bignumber.js'
 
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/client/token.js#L210
 export const ACCOUNT_LAYOUT = struct([
@@ -27,4 +28,8 @@ export const MINT_LAYOUT = struct([
 
 export function getBigNumber(num: any) {
   return parseFloat(num.toString())
+}
+
+export function toBigNumber(num: any) {
+  return new BigNumber(parseFloat(num.toString()))
 }
