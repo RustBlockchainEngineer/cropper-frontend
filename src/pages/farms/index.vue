@@ -1162,11 +1162,9 @@ export default Vue.extend({
     },
     async updateLabelizedAmms() {
 
-
-
       this.labelizedAmms = {}
       this.labelizedAmmsExtended = {}
-      let responseData = 0
+      let responseData = []
       try {
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
@@ -2673,7 +2671,7 @@ export default Vue.extend({
             @media @max-b-mobile {
               display: block;
               padding: 0;
-              background: @color-bg-mobile !important;
+              background: @color-bg-dark !important;
               border-radius: 0;
               margin-top: 0;
             }
