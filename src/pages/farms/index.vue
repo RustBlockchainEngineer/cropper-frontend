@@ -78,7 +78,7 @@
           <span class="information">
             <div class="my-info">
               <p>TVL : <b>5,456,009 $</b></p>
-              <p>Your deposit: <b>28,009 $</b></p>
+              <!-- <p>Your deposit: <b>28,009 $</b></p> -->
             </div>
 
             <!-- {{ farm.autoRefreshTime - farm.countdown }} -->
@@ -291,7 +291,7 @@
                   <div v-else class="label permissionless">Permissionless</div>
 
                   <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                  <div v-if="currentTimestamp < farm.farmInfo.poolInfo.end_timestamp" class="label new">New</div>
+                  <div v-if="currentTimestamp < farm.farmInfo.poolInfo.start_timestamp * 1 + (86400 * 7)" class="label new">New</div>
                 </div>
 
                 <div class="farm-infos">
@@ -304,6 +304,7 @@
                     to
                     {{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toLocaleDateString('en-US') }}
                   </div>
+                  <!--
                   <div>
                     <div class="farm-info-group">
                       <div class="farm-info-img">
@@ -319,6 +320,7 @@
                       {{ farm.farmInfo.lp.coin.symbol }}
                     </div>
                   </div>
+                  -->
                 </div>
               </Col>
 
@@ -560,7 +562,7 @@
                         <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">
                           Ended
                         </div>
-                        <div v-if="currentTimestamp < farm.farmInfo.poolInfo.end_timestamp" class="label new">New</div>
+                        <div v-if="currentTimestamp < farm.farmInfo.poolInfo.start_timestamp * 1 + (86400 * 7)" class="label new">New</div>
                       </div>
                     </div>
                   </Col>
@@ -648,6 +650,7 @@
                           to
                           {{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toLocaleDateString('en-US') }}
                         </div>
+                        <!--
                         <div>
                           <div class="farm-info-group">
                             <div class="farm-info-img">
@@ -665,6 +668,7 @@
                             {{ farm.farmInfo.lp.coin.symbol }}
                           </div>
                         </div>
+                        -->
                       </div>
                     </Col>
                   </Col>
