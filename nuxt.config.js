@@ -177,6 +177,12 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+
+    extend(config, ctx) {
+        config.node = {
+            fs: "empty"
+        }
+      },
     transpile: [/^ant-design-vue/],
 
     loaders: {
@@ -199,9 +205,14 @@ export default {
         ]
       ]
     },
+  build: {
+    extend(config, ctx) {
+        config.node = {
+            fs: "empty"
+        },
 
-    extend(config) {
       config.resolve.alias['@ant-design/icons/lib/dist$'] = path.resolve(__dirname, './src/utils/antd-icons.ts')
     }
+},
   }
 }

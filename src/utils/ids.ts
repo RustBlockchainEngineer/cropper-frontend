@@ -9,7 +9,7 @@ export const CRP_LP_VERSION_V2 = 1002
 export const LP_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
 export const TOKEN_UPDATE_INTERVAL = 24 * 60 * 60 * 1000
 export const MARKET_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
-export const DEVNET_MODE = false; // please let it devnet so requesters can test in devnet env
+export const DEVNET_MODE = true; // please let it devnet so requesters can test in devnet env
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
@@ -45,6 +45,8 @@ export const FARM_INITIAL_ALLOWED_CREATOR = FARM_INITIAL_SUPER_OWNER;//@Hongbo
 export const STAKE_PROGRAM_ID = 'EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q'
 export const STAKE_PROGRAM_ID_V4 = 'CBuCnLe26faBpcBP2fktp4rp8abpcAnTWft6ZrP5Q4T'
 export const STAKE_PROGRAM_ID_V5 = '9KEPoZmtHUrBbhWN1v1KWLMkkvwY6WLtAVUCPRtRjP4z'
+
+export const STAKE_TIERS_PROGRAM_ID = "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw"
 
 export const IDO_PROGRAM_ID = '6FJon3QE27qgPVggARueB22hLvoh22VzJpXv4rBEoSLF'
 export const IDO_PROGRAM_ID_V2 = 'CC12se5To1CdEuw7fDS27B7Geo5jJyL7t5UK2B44NgiH'
