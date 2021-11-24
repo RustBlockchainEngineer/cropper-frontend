@@ -66,7 +66,11 @@
         <div class="page-head fs-container">
           <span class="title">
             Farms
-            <NuxtLink to="/farms/create-farm/">
+            <NuxtLink to="/farms/create-farm/" class="create-btn-desktop">
+              <div class="create-plus-btn">+ Create farm</div>
+            </NuxtLink>
+
+            <NuxtLink to="/farms/create-farm/" class="create-btn-mobile">
               <div class="create-plus-btn">+</div>
             </NuxtLink>
           </span>
@@ -129,14 +133,15 @@
             <Col span="4" class="tool-option">
               <div class="sort-by">
                 <label class="label">Sort by:</label>
-                <label class="label active-label"
+                <label
+                  class="label active-label"
                   @click="
                     () => {
                       this.showSortOption = !this.showSortOption
                     }
-                  ">
-                  <img :class="sortAsc ? 'sort-up' : 'sort-down'" src="@/assets/icons/sort-up.svg" />
-                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR' }}
+                  "
+                >
+                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }} ({{ !this.sortAsc ? 'asc' : 'dsc' }})
                 </label>
                 <img
                   :class="showSortOption ? 'collapse-down' : 'collapse-up'"
@@ -149,21 +154,17 @@
                 />
               </div>
               <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', true)">
-                  <img src="@/assets/icons/sort-up.svg" />
-                  Liquidity
-                </div>
                 <div class="option" @click="setSortOption('liquidity', false)">
-                  <img src="@/assets/icons/sort-down.svg" />
-                  Liquidity
+                  Liquidity (asc)
                 </div>
-                <div class="option" @click="setSortOption('apr', true)">
-                  <img src="@/assets/icons/sort-up.svg" />
-                  APR %
+                <div class="option" @click="setSortOption('liquidity', true)">
+                  Liquidity (dsc)
                 </div>
                 <div class="option" @click="setSortOption('apr', false)">
-                  <img src="@/assets/icons/sort-down.svg" />
-                  APR %
+                  APR % (asc)
+                </div>
+                <div class="option" @click="setSortOption('apr', true)">
+                  APR % (dsc)
                 </div>
               </div>
             </Col>
@@ -208,8 +209,7 @@
               <div class="sort-by">
                 <label class="label">Sort by:</label>
                 <label class="label active-label">
-                  <img :class="sortAsc ? 'sort-up' : 'sort-down'" src="@/assets/icons/sort-up.svg" />
-                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR' }}
+                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }} ({{ !this.sortAsc ? 'asc' : 'dsc' }})
                 </label>
                 <img
                   :class="showSortOption ? 'collapse-down' : 'collapse-up'"
@@ -222,21 +222,17 @@
                 />
               </div>
               <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', true)">
-                  <img src="@/assets/icons/sort-up.svg" />
-                  Liquidity
-                </div>
                 <div class="option" @click="setSortOption('liquidity', false)">
-                  <img src="@/assets/icons/sort-down.svg" />
-                  Liquidity
+                  Liquidity (asc)
                 </div>
-                <div class="option" @click="setSortOption('apr', true)">
-                  <img src="@/assets/icons/sort-up.svg" />
-                  APR %
+                <div class="option" @click="setSortOption('liquidity', true)">
+                  Liquidity (dsc)
                 </div>
                 <div class="option" @click="setSortOption('apr', false)">
-                  <img src="@/assets/icons/sort-down.svg" />
-                  APR %
+                  APR % (asc)
+                </div>
+                <div class="option" @click="setSortOption('apr', true)">
+                  APR % (dsc)
                 </div>
               </div>
             </Col>
@@ -245,7 +241,12 @@
           <!-- Pre list -->
 
           <div class="farm-shortcut">
-            <button class="farm-prelist" v-for="list in preList" :key="list.symbol" @click="searchByShortcut(list.symbol)">
+            <button
+              class="farm-prelist"
+              v-for="list in preList"
+              :key="list.symbol"
+              @click="searchByShortcut(list.symbol)"
+            >
               <CoinIcon v-if="list.mintAddress != ''" :mint-address="list.mintAddress" />
               {{ list.symbol }}
             </button>
@@ -534,11 +535,7 @@
             <!-- Farm table for mobile -->
 
             <Collapse v-model="showCollapse" class="noDesktop farm-table-mobile" accordion>
-              <CollapsePanel
-                v-for="farm in showFarms"
-                v-show="true"
-                :key="farm.farmInfo.poolId"
-              >
+              <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId">
                 <Row slot="header" class="farm-item noDesktop">
                   <Col class="lp-icons farm-mobile-section" span="24">
                     <div class="lp-farm">
@@ -666,11 +663,7 @@
                     </Col>
                   </Col>
 
-                  <Col
-                    class="farm-mobile-section btn-hide-collapse"
-                    span="24"
-                    @click="hideCollapse"
-                  >
+                  <Col class="farm-mobile-section btn-hide-collapse" span="24" @click="hideCollapse">
                     <Col class="state" span="12">
                       <div
                         class="btn-container btn-container-outline"
@@ -785,7 +778,7 @@
                 </Row>
               </CollapsePanel>
             </Collapse>
-            
+
             <div class="pagination-container">
               <div class="pagination-body">
                 <Pagination
@@ -2310,20 +2303,50 @@ export default Vue.extend({
 
           a {
             position: absolute;
-            top: 5px;
-            right: -25px;
 
-            .create-plus-btn {
-              font-weight: 400;
-              width: 18px;
-              height: 18px;
-              border-radius: 8px;
-              background: @gradient-color-primary;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: white;
-              font-size: 18px;
+            &.create-btn-desktop {
+              top: 20px;
+              right: -90px;
+              .create-plus-btn {
+                font-weight: 400;
+                background: @color-outline;
+                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                color: white;
+                padding: 3px 7px;
+                border-radius: 4px;
+                font-size: 10px;
+                line-height: 12px;
+
+                @media @max-b-mobile {
+                  display: none;
+                }
+              }
+            }
+
+            &.create-btn-mobile {
+              top: 5px;
+              right: -25px;
+
+              .create-plus-btn {
+                font-weight: 400;
+                background: @color-outline;
+                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 18px;
+                border-radius: 8px;
+                width: 18px;
+                height: 18px;
+                display: none;
+
+                 @media @max-b-mobile {
+                  display: flex;
+                }
+              }
             }
           }
         }
@@ -2431,7 +2454,7 @@ export default Vue.extend({
                 font-size: 16px;
                 opacity: 0.5;
                 cursor: pointer;
-                
+
                 &.active-label {
                   font-weight: 700;
                   opacity: 1;
