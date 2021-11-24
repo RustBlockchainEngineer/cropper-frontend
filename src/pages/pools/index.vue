@@ -25,13 +25,13 @@
         <div class="page-head fs-container">
           <span class="title noMobile">
             Liquidity Pools
-            <NuxtLink to="/pools/create-pool/">
-              <div class="create-plus-btn">+</div>
+            <NuxtLink to="/pools/create-pool/" class="create-btn-desktop">
+              <div class="create-plus-btn">+ Create pool</div>
             </NuxtLink>
           </span>
           <span class="title noDesktop">
             Pools
-            <NuxtLink to="/pools/create-pool/">
+            <NuxtLink to="/pools/create-pool/" class="create-btn-mobile">
               <div class="create-plus-btn">+</div>
             </NuxtLink>
           </span>
@@ -58,17 +58,27 @@
             </Col>
             <Col span="6" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
+                <label
+                  class="label"
+                  :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('labelized')"
+                  >Labelized</label
+                >
                 <Toggle v-model="searchCertifiedFarm" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
+                <label
+                  class="label"
+                  :class="searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('permissionless')"
+                  >Permissionless</label
+                >
               </div>
             </Col>
             <Col span="5" class="tool-option"> </Col>
             <Col span="4" class="tool-option"> </Col>
             <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label">My deposit</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+                <label class="label" @click="activeSearch('deposit')">My deposit</label>
+                <Toggle v-model="stakedOnly" />
               </div>
             </Col>
           </Row>
@@ -83,17 +93,27 @@
             </Col>
             <Col span="12" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label">Deposited</label>
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+                <label class="label" @click="activeSearch('deposit')">Deposited</label>
+                <Toggle v-model="stakedOnly" />
               </div>
             </Col>
           </Row>
           <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''">Labelized</label>
+                <label
+                  class="label"
+                  :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('labelized')"
+                  >Labelized</label
+                >
                 <Toggle v-model="searchCertifiedFarm" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''">Permissionless</label>
+                <label
+                  class="label"
+                  :class="searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('permissionless')"
+                  >Permissionless</label
+                >
               </div>
             </Col>
           </Row>
@@ -1038,6 +1058,12 @@ export default class Pools extends Vue {
     this.flush()
     this.$accessor.wallet.getTokenAccounts()
   }
+
+  activeSearch(mode: string) {
+    if (mode === 'labelized') this.searchCertifiedFarm = false
+    else if (mode === 'permissionless') this.searchCertifiedFarm = true
+    else if (mode === 'deposit') this.stakedOnly = !this.stakedOnly
+  }
 }
 </script>
 
@@ -1085,20 +1111,49 @@ section {
 
           a {
             position: absolute;
-            top: 5px;
-            right: -25px;
+            &.create-btn-desktop {
+              top: 20px;
+              right: -90px;
+              .create-plus-btn {
+                font-weight: 400;
+                background: @color-outline;
+                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                color: white;
+                padding: 3px 7px;
+                border-radius: 4px;
+                font-size: 10px;
+                line-height: 12px;
 
-            .create-plus-btn {
-              font-weight: 400;
-              width: 18px;
-              height: 18px;
-              border-radius: 8px;
-              background: @gradient-color-primary;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: white;
-              font-size: 18px;
+                @media @max-b-mobile {
+                  display: none;
+                }
+              }
+            }
+
+            &.create-btn-mobile {
+              top: 5px;
+              right: -25px;
+
+              .create-plus-btn {
+                font-weight: 400;
+                background: @color-outline;
+                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 18px;
+                border-radius: 8px;
+                width: 18px;
+                height: 18px;
+                display: none;
+
+                @media @max-b-mobile {
+                  display: flex;
+                }
+              }
             }
           }
         }
@@ -1181,6 +1236,7 @@ section {
               .label {
                 font-size: 16px;
                 opacity: 0.5;
+                cursor: pointer;
 
                 &.active-label {
                   font-weight: 700;
