@@ -1152,9 +1152,8 @@ export default Vue.extend({
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
         // dummy data
-        responseData = []
       } finally {
-        responseData.forEach((element: any) => {
+        (responseData as any).forEach((element: any) => {
           this.labelizedAmms[element.ammID] = element.labelized
           this.labelizedAmmsExtended[element.ammID] = element
         })
@@ -1173,7 +1172,7 @@ export default Vue.extend({
     async updateFarms() {
 
 
-      let responseData = []
+      let responseData:any = []
       let tvl = 0;
       try {
         responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
