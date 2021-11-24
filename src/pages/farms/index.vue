@@ -155,11 +155,11 @@
                 />
               </div>
               <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', false)">
-                  Liquidity (asc)
-                </div>
                 <div class="option" @click="setSortOption('liquidity', true)">
                   Liquidity (dsc)
+                </div>
+                <div class="option" @click="setSortOption('liquidity', false)">
+                  Liquidity (asc)
                 </div>
                 <div class="option" @click="setSortOption('apr', false)">
                   APR % (asc)
@@ -229,11 +229,11 @@
                 />
               </div>
               <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', false)">
-                  Liquidity (asc)
-                </div>
                 <div class="option" @click="setSortOption('liquidity', true)">
                   Liquidity (dsc)
+                </div>
+                <div class="option" @click="setSortOption('liquidity', false)">
+                  Liquidity (asc)
                 </div>
                 <div class="option" @click="setSortOption('apr', false)">
                   APR % (asc)
@@ -922,7 +922,7 @@ export default Vue.extend({
       currentPage: 1,
       labelizedPermission: false as any,
       sortMethod: 'liquidity' as string,
-      sortAsc: false as boolean,
+      sortAsc: true as boolean,
       preList: [
         {
           symbol: 'All',
@@ -1047,24 +1047,6 @@ export default Vue.extend({
     async checkFarmMigration() {
       this.userMigrations = []
 
-      let responseData = []
-      try {
-        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-
-      } catch {
-        // dummy data
-        responseData = []
-      } finally {
-
-        console.log(responseData);
-        // nothing to do ..
-        let TVL = 0;
-        responseData.forEach((element: any) => {
-          this.TVL = TVL * 1 + element.tvl;
-        })
-
-
-      }
 
       try {
         const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
@@ -1086,7 +1068,6 @@ export default Vue.extend({
         // dummy data
         this.userMigrations = []
       } finally {
-        console.log('this.userMigrations', this.userMigrations)
       }
     },
     migrateFarm(migrationFarm: any) {
@@ -1190,6 +1171,25 @@ export default Vue.extend({
     },
 
     async updateFarms() {
+
+
+      let responseData = []
+      let tvl = 0;
+      try {
+        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+        
+        Object.keys(responseData).forEach(function(key) {
+          tvl = (tvl * 1) + (responseData[key].tvl * 1);
+        });
+      } catch {
+        // dummy data
+        responseData = []
+      } finally {
+
+      }
+
+      this.TVL = Math.round(tvl);
+
       console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
