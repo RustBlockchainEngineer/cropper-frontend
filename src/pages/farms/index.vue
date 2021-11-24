@@ -208,7 +208,13 @@
             <Col span="24" class="tool-option">
               <div class="sort-by">
                 <label class="label">Sort by:</label>
-                <label class="label active-label">
+                <label class="label active-label"
+                  @click="
+                    () => {
+                      this.showSortOption = !this.showSortOption
+                    }
+                  "
+                >
                   {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }} ({{ !this.sortAsc ? 'asc' : 'dsc' }})
                 </label>
                 <img
@@ -2367,6 +2373,7 @@ export default Vue.extend({
             width: 15px;
             height: 15px;
             margin-right: 5px;
+            border-radius: 50%;
           }
         }
       }
