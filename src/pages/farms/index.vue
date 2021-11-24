@@ -94,16 +94,30 @@
             </Col>
             <Col span="6" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''" @click="activeSearch('labelized')">Labelized</label>
+                <label
+                  class="label"
+                  :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('labelized')"
+                  >Labelized</label
+                >
                 <Toggle v-model="searchCertifiedFarm" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''" @click="activeSearch('permissionless')">Permissionless</label>
+                <label
+                  class="label"
+                  :class="searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('permissionless')"
+                  >Permissionless</label
+                >
               </div>
             </Col>
             <Col span="5" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''" @click="activeSearch('open')">Open</label>
+                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''" @click="activeSearch('open')"
+                  >Open</label
+                >
                 <Toggle v-model="searchLifeFarm" />
-                <label class="label" :class="searchLifeFarm ? 'active-label' : ''" @click="activeSearch('ended')">Ended</label>
+                <label class="label" :class="searchLifeFarm ? 'active-label' : ''" @click="activeSearch('ended')"
+                  >Ended</label
+                >
               </div>
             </Col>
             <Col span="4" class="tool-option">
@@ -168,9 +182,19 @@
           <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
               <div class="toggle">
-                <label class="label" :class="!searchCertifiedFarm ? 'active-label' : ''" @click="activeSearch('labelized')">Labelized</label>
+                <label
+                  class="label"
+                  :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('labelized')"
+                  >Labelized</label
+                >
                 <Toggle v-model="searchCertifiedFarm" />
-                <label class="label" :class="searchCertifiedFarm ? 'active-label' : ''" @click="activeSearch('permissionless')">Permissionless</label>
+                <label
+                  class="label"
+                  :class="searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('permissionless')"
+                  >Permissionless</label
+                >
               </div>
             </Col>
           </Row>
@@ -216,9 +240,10 @@
           <!-- Pre list -->
 
           <div class="farm-shortcut">
-            <div class="farm-prelist" v-for="list in preList" :key="list">
-              {{ list }}
-            </div>
+            <button class="farm-prelist" v-for="list in preList" :key="list" @click="searchByShortcut(list.symbol)">
+              <CoinIcon v-if="list.mintAddress != ''" :mint-address="list.mintAddress" />
+              {{ list.symbol }}
+            </button>
           </div>
 
           <div class="farm-table">
@@ -1390,7 +1415,24 @@ export default Vue.extend({
       labelizedPermission: false as any,
       sortMethod: 'liquidity' as string,
       sortAsc: false as boolean,
-      preList: ['CRP', 'USDC', 'SOL'] as any,
+      preList: [
+        {
+          symbol: 'All',
+          mintAddress: ''
+        },
+        {
+          symbol: 'CRP',
+          mintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz'
+        },
+        {
+          symbol: 'USDC',
+          mintAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+        },
+        {
+          symbol: 'SOL',
+          mintAddress: '11111111111111111111111111111111'
+        }
+      ],
       activeSpinning: false as boolean,
       userMigrations: [] as any[]
     }
@@ -2671,6 +2713,11 @@ export default Vue.extend({
 
       return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
     },
+    searchByShortcut(option: string) {
+      option = option.toLowerCase()
+      if (option == 'all') option = ''
+      this.searchName = option
+    },
     setSortOption(mode: string, asc: boolean) {
       this.sortMethod = mode
       this.sortAsc = asc
@@ -2728,6 +2775,37 @@ export default Vue.extend({
   .card {
     .card-body {
       padding: 0;
+
+      .farm-shortcut {
+        display: inline-flex;
+        padding: 10px;
+
+        @media @max-b-mobile {
+          display: none;
+        }
+
+        .farm-prelist {
+          background: rgba(255, 255, 255, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          border-radius: 6px;
+          padding: 6px 24px;
+          font-size: 14px;
+          line-height: 17px;
+          text-transform: uppercase;
+          margin-right: 5px;
+          width: 75px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          
+          img {
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+          }
+        }
+      }
 
       .page-head {
         margin-top: 10px;
@@ -2928,26 +3006,6 @@ export default Vue.extend({
                 }
               }
             }
-          }
-        }
-
-        .farm-shortcut {
-          display: inline-flex;
-          padding: 10px;
-
-          @media @max-b-mobile {
-            display: none;
-          }
-
-          .farm-prelist {
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 6px;
-            padding: 6px 24px;
-            font-size: 14px;
-            line-height: 17px;
-            text-transform: uppercase;
-            margin-right: 5px;
           }
         }
 
