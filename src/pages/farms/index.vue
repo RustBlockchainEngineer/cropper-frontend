@@ -129,7 +129,12 @@
             <Col span="4" class="tool-option">
               <div class="sort-by">
                 <label class="label">Sort by:</label>
-                <label class="label active-label">
+                <label class="label active-label"
+                  @click="
+                    () => {
+                      this.showSortOption = !this.showSortOption
+                    }
+                  ">
                   <img :class="sortAsc ? 'sort-up' : 'sort-down'" src="@/assets/icons/sort-up.svg" />
                   {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR' }}
                 </label>
@@ -2425,7 +2430,8 @@ export default Vue.extend({
               .label {
                 font-size: 16px;
                 opacity: 0.5;
-
+                cursor: pointer;
+                
                 &.active-label {
                   font-weight: 700;
                   opacity: 1;
