@@ -77,7 +77,8 @@
 
           <span class="information">
             <div class="my-info">
-              <p>TVL : <b>5,456,009 $</b></p>
+              <p>TVL : <b>{{TVL.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} $</b></p>
               <!-- <p>Your deposit: <b>28,009 $</b></p> -->
             </div>
 
@@ -280,7 +281,7 @@
                     <a :href="farm.farmInfo.twitterShare" target="_blank" class="social-icon">
                       <img src="@/assets/icons/share-icon.svg" />
                     </a>
-                    <a href="#" class="social-icon">
+                    <a v-if="farm.farmInfo.twitterLink != ''" :href="farm.farmInfo.twitterLink" target="_blank" class="social-icon">
                       <img src="@/assets/icons/twitter-icon.svg" />
                     </a>
                   </div>
@@ -899,6 +900,7 @@ export default Vue.extend({
       staking: false,
       adding: false,
       paying: false,
+      TVL: 0,
       unstakeModalOpening: false,
       unstaking: false,
       poolType: true,
@@ -1045,6 +1047,25 @@ export default Vue.extend({
     async checkFarmMigration() {
       this.userMigrations = []
 
+      let responseData = []
+      try {
+        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+
+      } catch {
+        // dummy data
+        responseData = []
+      } finally {
+
+        console.log(responseData);
+        // nothing to do ..
+        let TVL = 0;
+        responseData.forEach((element: any) => {
+          this.TVL = TVL * 1 + element.tvl;
+        })
+
+
+      }
+
       try {
         const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
         //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
@@ -1052,9 +1073,6 @@ export default Vue.extend({
         forIn(migrations, (newFarmId, oldFarmId, _object) => {
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
           let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
-          console.log('userInfoNew', userInfoNew)
-          console.log('userInfoOld', userInfoOld)
-          console.log('userInfoOld.depositBalance', userInfoOld.depositBalance.wei.toNumber())
           if (userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0) {
             this.userMigrations.push({
               oldFarmId,
@@ -1143,9 +1161,12 @@ export default Vue.extend({
       }
     },
     async updateLabelizedAmms() {
+
+
+
       this.labelizedAmms = {}
       this.labelizedAmmsExtended = {}
-      let responseData
+      let responseData = 0
       try {
         responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
       } catch {
@@ -1165,6 +1186,7 @@ export default Vue.extend({
       } finally {
         // nothing to do ..
       }
+
     },
 
     async updateFarms() {
@@ -1478,6 +1500,11 @@ export default Vue.extend({
             }
           }
 
+          if(TOKENS[newFarmInfo.lp.coin.mintAddress] && TOKENS[newFarmInfo.lp.coin.mintAddress].twitter){
+            (newFarmInfo as any).twitterLink = TOKENS[newFarmInfo.lp.coin.mintAddress].twitter;
+          }
+
+
           ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
             (newFarmInfo as any).lp.coin.symbol
           }-${(newFarmInfo as any).lp.pc.symbol} on @CropperFinance with ${
@@ -1544,6 +1571,21 @@ export default Vue.extend({
       ) {
         this.showFarms = this.farms.filter(
           (farm: any) => (farm.farmInfo.poolId as string).toLowerCase() == (searchName as string).toLowerCase()
+        )
+      } else if (
+        searchName != '' &&
+        this.farms.filter(
+          (farm: any) => (
+            (farm.farmInfo.lp.pc.symbol as string).toLowerCase() == (searchName as string).toLowerCase() ||
+            (farm.farmInfo.lp.coin.symbol as string).toLowerCase() == (searchName as string).toLowerCase()
+          )
+        ).length > 0
+      ) {
+        this.showFarms = this.farms.filter(
+          (farm: any) => (
+            (farm.farmInfo.lp.pc.symbol as string).toLowerCase() == (searchName as string).toLowerCase() ||
+            (farm.farmInfo.lp.coin.symbol as string).toLowerCase() == (searchName as string).toLowerCase()
+          )
         )
       } else if (searchName != '') {
         this.showFarms = this.farms.filter((farm: any) =>
