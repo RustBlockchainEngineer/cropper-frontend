@@ -967,13 +967,6 @@ export default class Pools extends Vue {
         polo.push(value)
       }
 
-      if (newCoin) {
-        delete price.prices[liquidityItem?.coin.symbol as string]
-      }
-
-      if (newPc) {
-        delete price.prices[liquidityItem?.pc.symbol as string]
-      }
     })
     return polo
   }

@@ -31,8 +31,8 @@ export const CRP_LP_PROGRAM_ID_V1 = DEVNET_MODE? '7ZZJNL4xD8db6yrT46SeMFZXcVr9ML
 export let FARM_VERSION = 2;//@Hongbo
 
 export const FARM_PROGRAM_ID_VS = DEVNET_MODE ? [
-    '3Gcn7bBknVsVyNW4Jcz1zgLS5xr5492Rtx4guhFXD68o',
-    'ETuXFrnZXQ1N5ELbTLXMvCBcJ7GnrbQbvpLQ9st1Fzfb'
+    'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR',
+    'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR'
 ] : [
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J',
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J'

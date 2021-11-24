@@ -52,17 +52,27 @@
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
-
-    <FarmMigration
-      v-if="userMigrations.length > 0"
-      title="Farm Migration"
-      :migrationFarms="userMigrations"
-      @onMigrate="migrateFarm"
-      @onCancel="cancelStake"
-    />
+    
 
     <div class="card">
       <div class="card-body">
+        <div v-if="displaynoticeupdate" class="update-note-pending">
+          <div class="update-title">
+            <img src="@/assets/icons/info-icon.svg" />
+            We’ve updated Farms to V2 of our smart contracts. Harvest all pending rewards to launch the V2 display.
+          </div>
+        </div>
+        <div v-if="userMigrations.length > 0" class="update-note-migration">
+          <div class="update-title">
+            <img src="@/assets/icons/watch-icon.svg" />
+            The CRP-USDC farm is ended, you must migrate your LP tokens to continue farming.
+          </div>
+
+          <div class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
+            <button @click="migrateFarm(migrationFarm)" style="cursor:pointer"> Harvest & Migrate</button>
+          </div>
+
+        </div>
         <div class="page-head fs-container">
           <span class="details noDesktop">
             <div
@@ -269,7 +279,7 @@
                     </div>
                     <div v-else class="value">
                       <span class="labmobile">Pending Reward</span
-                      >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                      >{{ !wallet.connected ? 0 : farm.userInfo.needRefresh ? '?' :farm.userInfo.pendingReward.format() }}
                     </div>
                   </Col>
                 </Col>
@@ -369,7 +379,7 @@
                   </div>
                   <div v-else class="value">
                     <span class="labmobile">Pending Reward</span
-                    >{{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                    >{{ !wallet.connected ? 0 : farm.userInfo.needRefresh ? '?' : farm.userInfo.pendingReward.format() }}
                   </div>
                 </Col>
 
@@ -507,16 +517,27 @@
                 <Col :span="isMobile ? 24 : 8">
                   <div class="harvest">
                     <div class="title">Pending Reward</div>
-                    <div class="pending">
+                    <div class="pending" v-if="!farm.userInfo.needRefresh">
                       <div class="reward">
                         <div class="token">
                           {{ farm.farmInfo.reward.symbol }}
-                          {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                          {{ !wallet.connected ? 0 : farm.userInfo.needRefresh ? '?' :farm.userInfo.pendingReward.format() }}
                         </div>
                       </div>
                       <div class="btncontainer">
+
+                        <span
+                          v-if="farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1">
+
+                          <span class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
+                            <Button
+                                          size="large"
+                                          ghost @click="migrateFarm(migrationFarm)"> Harvest & Migrate</Button>
+                          </span>
+                        </span>
+
                         <Button
-                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          v-else-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                           :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                           size="large"
                           ghost
@@ -534,6 +555,44 @@
                           @click="harvest(farm.farmInfo)"
                         >
                           Harvest
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div class="pending" v-else>
+                      <div class="reward">
+                      </div>
+                      <div class="btncontainer">
+
+                        <span
+                          v-if="farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1">
+
+                          <span class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
+                            <Button
+                                          size="large"
+                                          ghost @click="migrateFarm(migrationFarm)"> Harvest & Migrate</Button>
+                          </span>
+                        </span>
+
+                        <Button
+                          v-else-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                          size="large"
+                          ghost
+                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                        >
+                          Refresh & Harvest
+                        </Button>
+
+                        <Button
+                          v-else
+                          size="large"
+                          ghost
+                          :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
+                          :loading="harvesting"
+                          @click="harvest(farm.farmInfo)"
+                        >
+                          Refresh & Harvest
                         </Button>
                       </div>
                     </div>
@@ -564,6 +623,7 @@
                             class="unstake btn-bg-fill"
                             size="large"
                             ghost
+                            :disabled="(farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1)"
                             @click="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
                           >
                             <Icon type="minus" />
@@ -581,7 +641,7 @@
                             class="btn-bg-fill"
                             size="large"
                             ghost
-                            :disabled="
+                            :disabled="(farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1) || 
                               !farm.farmInfo.poolInfo.is_allowed ||
                               farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                               farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
@@ -613,6 +673,7 @@
                             size="large"
                             ghost
                             :disabled="
+                            (farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1) || 
                               !farm.farmInfo.poolInfo.is_allowed ||
                               farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                               farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
@@ -734,7 +795,7 @@ import { TokenAmount } from '@/utils/safe-math'
 import { FarmInfo } from '@/utils/farms'
 import { deposit, withdraw } from '@/utils/stake'
 import { getUnixTs } from '@/utils'
-import { getBigNumber } from '@/utils/layouts'
+import { getBigNumber, toBigNumber } from '@/utils/layouts'
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
 import moment from 'moment'
 import {
@@ -780,7 +841,7 @@ export default Vue.extend({
 
       farmProgramCreated: true,
       superOwnerAddress: FARM_INITIAL_SUPER_OWNER,
-
+      displaynoticeupdate: false,
       farms: [] as any[],
       showFarms: [] as any[],
       searchName: '',
@@ -827,7 +888,7 @@ export default Vue.extend({
       sortAPRAsc: false as boolean,
       sortLiquidityAsc: true as boolean,
       sortMethod: 'liquidity' as string,
-
+      userMigrate: 0,
       userMigrations: [] as any[],
     }
   },
@@ -941,17 +1002,15 @@ export default Vue.extend({
       
       try {
         const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json());
-        //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
+        //const migrations = {"2v6hXFDcekJ9x9PKaJKgzhHWoZJjPqFB9yaHoWUf5KUu":"EgZ3sGnwdiHNTeoqsDCRmKbibqBi4DfoenWwrNDnXo7U"}
 
         forIn(migrations, (newFarmId, oldFarmId, _object) => {
           
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
           let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
-          console.log("userInfoNew",userInfoNew)
-          console.log("userInfoOld",userInfoOld)
-          console.log("userInfoOld.depositBalance",userInfoOld.depositBalance.wei.toNumber())
           if(userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0){
             this.userMigrations.push({oldFarmId, newFarmId ,depositBalance:userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)});
+            this.userMigrate = 1;
           }
         });
         
@@ -963,6 +1022,7 @@ export default Vue.extend({
       }
     },
     migrateFarm(migrationFarm:any){
+    console.log(migrationFarm);
       const amount = migrationFarm.depositBalance;
 
       const oldFarm = get(this.farm.infos, migrationFarm.oldFarmId);
@@ -1068,6 +1128,9 @@ export default Vue.extend({
         let userInfo = get(this.farm.stakeAccounts, poolId)
         let isPFO = false
 
+
+     //   console.log(farmInfo);
+
         // @ts-ignore
         const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } = farmInfo.poolInfo
 
@@ -1085,7 +1148,7 @@ export default Vue.extend({
         let partPc = 0;
 
         if (reward && lp) {
-          const rewardPerTimestamp = reward_per_timestamp_or_remained_reward_amount.toNumber() / (end_timestamp.toNumber() - last_timestamp.toNumber())
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp)));
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           
@@ -1143,7 +1206,7 @@ export default Vue.extend({
             liquidityUsdValue = 0
           }
 
-          if( (rewardPerTimestampAmountTotalValue * 86400 * 7) < 1 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
+   //       if(this.currentTimestamp < newFarmInfo.poolInfo.end_timestamp && (rewardPerTimestampAmountTotalValue * 86400 * 7) < 1 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
 
           // @ts-ignore
           newFarmInfo.apr = apr
@@ -1182,13 +1245,6 @@ export default Vue.extend({
             //endedFarmsPoolId.push(poolId)
           }
 
-          if(newCoin){
-            delete this.price.prices[liquidityItem?.coin.symbol as string];
-          }
-
-          if(newPc){
-            delete this.price.prices[liquidityItem?.pc.symbol as string];
-          }
         }
         if (userInfo && lp && FARM_VERSION === 1) {
           userInfo = cloneDeep(userInfo)
@@ -1202,10 +1258,10 @@ export default Vue.extend({
 
           const duration = currentTimestamp - last_timestamp.toNumber()
 
-          const rewardPerTimestamp = reward_per_timestamp_or_remained_reward_amount.toNumber()
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount);
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           const lpTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).wei;
-          const rewardPerShareCalc = new BigNumber(rewardPerTimestamp)
+          const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(lpTotalSupply)
@@ -1216,8 +1272,12 @@ export default Vue.extend({
             .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
 
+          userInfo.needRefresh = false;
+
           if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
             pendingReward = newFarmInfo.reward.balance.wei;
+            userInfo.needRefresh = true;
+            this.displaynoticeupdate = true;
           }
 
           userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
@@ -1256,21 +1316,27 @@ export default Vue.extend({
 
           const duration = currentTimestamp - last_timestamp.toNumber()
 
-          const rewardPerTimestamp = reward_per_timestamp_or_remained_reward_amount.toNumber() / (end_timestamp.toNumber() - last_timestamp.toNumber())
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp)));
           
-          const rewardPerShareCalc = new BigNumber(rewardPerTimestamp)
+          const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(newFarmInfo.lp.balance.wei)
             .plus(getBigNumber(reward_per_share_net))
 
+          const JUMP_DEBT =new BigNumber(10000000000000000000);
+          const _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT);
           let pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
-            .minus(rewardDebt.wei)
+            .minus(_rewardDebt)
+
+          userInfo.needRefresh = false;
 
           if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
             pendingReward = newFarmInfo.reward.balance.wei;
+            userInfo.needRefresh = true;
+            this.displaynoticeupdate = true;
           }
 
           userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
@@ -1296,6 +1362,7 @@ export default Vue.extend({
           }
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
+
 
         } else {
           userInfo = {
@@ -1430,7 +1497,7 @@ export default Vue.extend({
       }
 
       if (stakedOnly) {
-        this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0)
+        this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0 || farm.userInfo.needRefresh)
       }
 
       if (this.sortLiquidityAsc) {
@@ -2129,6 +2196,148 @@ export default Vue.extend({
 .card-body {
   padding: 0;
   margin: 0;
+
+  .update-note {
+    background: #272C61;
+    border: 4px solid #3238EA;
+    border-radius: 14px;
+    text-align: center;
+    padding: 30px 15%;
+
+    @media (max-width: @mobile-b-width) {
+      padding: 20px 5%;
+    }
+
+    .update-title {
+      font-weight: bold;
+      font-size: 25px;
+      letter-spacing: -0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        margin-right: 10px;
+      }
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 20px;
+
+        img {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .update-description {
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.05em;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 15px;
+      }
+    }
+
+    .update-content {
+      font-size: 20px;
+      letter-spacing: 0.025em;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 15px;
+      }
+    }
+
+    hr {
+      width: 150px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .update-note-pending {
+    background: #272C61;
+    border: 4px solid #3238EA;
+    border-radius: 14px;
+    text-align: center;
+    padding: 10px 10%;
+
+    @media (max-width: @mobile-b-width) {
+      padding: 10px 5%;
+    }
+
+    .update-title {
+      font-weight: normal;
+      font-size: 17px;
+      letter-spacing: 0.025em;
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .update-note-migration {
+    background: #272C61;
+    border: 4px solid #3238EA;
+    border-radius: 14px;
+    text-align: center;
+    padding: 10px 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: @mobile-b-width) {
+      display: inline-block;
+      padding: 10px 5%;
+      text-align: left;
+    }
+
+    .update-title {
+      font-weight: normal;
+      font-size: 17px;
+      letter-spacing: 0.025em;
+      display: flex;
+      align-items: center;
+
+      img {
+        margin-right: 10px;
+
+        @media (max-width: @mobile-b-width) {
+          margin-right: 5px;
+        }
+      }
+
+      @media (max-width: @mobile-b-width) {
+        font-size: 12px;
+      }
+    }
+
+    .update-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      @media (max-width: @mobile-b-width) {
+        margin-top: 10px;
+      }
+
+      button {
+        height: 42px;
+        width: 200px;
+        background: linear-gradient(98.9deg, #2E76C0 0%, #2CC1D3 98.75%);
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 14px;
+        border: none;
+
+        @media (max-width: @mobile-b-width) {
+          font-size: 12px;
+        }
+      }
+    }
+  }
 }
 
 .farm-button-group {

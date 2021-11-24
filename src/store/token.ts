@@ -95,6 +95,10 @@ export const actions:any = actionTree(
                 itemToken.decimals = 9;
               }
 
+              if(itemToken.symbol == 'FLOOF'){
+             //   itemToken.decimals = 1;
+              }
+
             const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
             if (!token) {// + itemToken.address + 'solana'
               let key = POP_TOKENS[itemToken.address] ?? itemToken.address
@@ -106,6 +110,11 @@ export const actions:any = actionTree(
                 picUrl: itemToken.logoURI,
                 tags: ['solana']
               }
+
+              if(itemToken.extensions){
+                TOKENS[key].twitter = itemToken.extensions.twitter
+              }
+
             } else {
               token.picUrl = itemToken.logoURI
 
@@ -116,7 +125,14 @@ export const actions:any = actionTree(
                 token.decimals = itemToken.decimals
                 token.tags.push('solana')
               }
+
+              if(itemToken.extensions){
+                token.twitter = itemToken.extensions.twitter
+              }
+
             }
+
+
           })
           TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
           window.localStorage.token_last_updated = new Date().getTime()

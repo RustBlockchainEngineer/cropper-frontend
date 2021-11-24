@@ -74,13 +74,13 @@ export default {
   ],
   pwa: {
     meta: {
-      title: 'CropperFinance',
-      author: 'Lionel',
+      title: 'Cropper',
+      author: 'CropperFinance',
     },
     manifest: {
-      short_name: "CropperFinance",
-      name: "CropperFinance",
-      description: "The ultimate permissionless yield farming protocol",
+      short_name: "Cropper",
+      name: "Cropper",
+      description: "The Ultimate Yield Farming Protocol on Solana",
       start_url: ".",
       display: "standalone",
       icons: [
@@ -110,8 +110,6 @@ export default {
           sizes: "512x512"
         }
       ],
-      name: 'CropperFinance',
-      short_name: 'CropperFinance',
       lang: 'en',
       display: 'standalone'
     },
