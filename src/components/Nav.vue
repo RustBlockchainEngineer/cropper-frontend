@@ -41,7 +41,7 @@ export default class Nav extends Vue {
     farms: false,
     fertilizer:false,
     // fusion: false,
-    // staking: false,
+    staking: false,
     // migrate: false
     // info: false
   }
@@ -148,6 +148,13 @@ export default class Nav extends Vue {
   &.ant-menu-item-selected .fertilizer {
     background: #3990F5;
   }
+  .staking {
+    border: 2px solid #480469;
+  }
+  &.ant-menu-item-selected .staking {
+    background: #480469;
+  }
+
 }
 
 .ant-menu {

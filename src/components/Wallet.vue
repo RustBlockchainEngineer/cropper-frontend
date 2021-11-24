@@ -208,6 +208,7 @@ export default class Wallet extends Vue {
     Slope: {
       website: 'https://slope.finance',
       chromeUrl: 'https://chrome.google.com/webstore/detail/slope-finance-wallet/pocmplpaccanhmnllbbkpgfliimjljgo',
+      // @ts-ignore
       getAdapter() {
         return new SlopeWalletAdapter()
       }

@@ -654,6 +654,7 @@
                             class="unstake btn-bg-fill"
                             size="large"
                             ghost
+                            :disabled="(farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1)"
                             @click="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
                           >
                             <Icon type="minus" />
@@ -671,7 +672,7 @@
                             class="btn-bg-fill"
                             size="large"
                             ghost
-                            :disabled="
+                            :disabled="(farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1) || 
                               !farm.farmInfo.poolInfo.is_allowed ||
                               farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                               farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
@@ -703,6 +704,7 @@
                             size="large"
                             ghost
                             :disabled="
+                            (farm.farmInfo.poolId == '2s25PCRc7iYGWGCQbRcEi8b7a9J53GM8huBW3688dLmg' && userMigrate == 1) || 
                               !farm.farmInfo.poolInfo.is_allowed ||
                               farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                               farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
