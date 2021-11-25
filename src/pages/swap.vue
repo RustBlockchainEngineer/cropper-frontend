@@ -868,7 +868,7 @@ export default Vue.extend({
             this.toCoin = toCoin
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         this.$notify.warning({
           message: error.message,
           description: ''

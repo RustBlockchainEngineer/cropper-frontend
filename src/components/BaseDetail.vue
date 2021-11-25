@@ -1,22 +1,22 @@
 <template>
   <Modal title="Base detail" :visible="show" :footer="null" :mask-closable="false" @cancel="$emit('onClose')">
-    <div class="lock-container">
-      <div class="lock-title">
+    <div class="base-container">
+      <div class="base-title">
         <label class="label">Base APY</label>
         <label class="value">11.1%</label>
       </div>
 
-      <div class="lock-table">
-        <Row class="lock-table-header">
+      <div class="base-table">
+        <div class="base-table-header">
           <Col span="8"> Lock time </Col>
           <Col span="8"> Boost </Col>
           <Col span="8"> Estimated APY </Col>
-        </Row>
-        <Row class="lock-table-body" v-for="data in lockData" :key="data.tier">
-          <Col span="8"> {{ data.time > 12 ? data.time / 12 + 'year' : data.time + 'month'}} (Tier {{data.tier }}) </Col>
+        </div>
+        <div class="base-table-body" v-for="data in lockData" :key="data.tier" @click="$emit('onSelect', data.time, data.apy)">
+          <Col span="8"> {{ data.time >= 12 ? data.time / 12 + ' year' : data.time + ' month'}} (Tier {{data.tier }}) </Col>
           <Col span="8"> {{ data.boost }} x </Col>
           <Col span="8"> {{ data.apy }} % </Col>
-        </Row>
+        </div>
       </div>
     </div>
   </Modal>
@@ -31,7 +31,6 @@ Vue.use(Modal)
 export default Vue.extend({
   components: {
     Modal,
-    Row,
     Col
   },
   data() {
@@ -73,47 +72,47 @@ export default Vue.extend({
 })
 </script>
 <style lang="less">
-.ant-modal {
-  width: 365px !important;
-  top: 240px;
+// .ant-modal {
+//   width: 365px !important;
+//   top: 240px;
   
-  @media @max-b-mobile {
-    width: calc(100% - 40px) !important;
-  }
+//   @media @max-b-mobile {
+//     width: calc(100% - 40px) !important;
+//   }
 
-  .ant-modal-content {
-    background: @color-modal-dark;
-    border-radius: 5px !important;
-    padding: 15px;
-    border: none;
+//   .ant-modal-content {
+//     background: @color-modal-dark;
+//     border-radius: 5px !important;
+//     padding: 15px;
+//     border: none;
 
-    .ant-modal-header {
-      background: @color-modal-dark;
-      padding: 0;
-      margin-bottom: 30px;
+//     .ant-modal-header {
+//       background: @color-modal-dark;
+//       padding: 0;
+//       margin-bottom: 30px;
 
-      .ant-modal-title {
-        background: @color-modal-dark;
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 22px;
-        text-align: left;
-        border-bottom: none;
-      }
-    }
+//       .ant-modal-title {
+//         background: @color-modal-dark;
+//         font-weight: bold;
+//         font-size: 18px;
+//         line-height: 22px;
+//         text-align: left;
+//         border-bottom: none;
+//       }
+//     }
 
-    .ant-modal-body {
-      padding: 0;
-    }
+//     .ant-modal-body {
+//       padding: 0;
+//     }
 
-    .ant-modal-close .ant-modal-close-x .anticon-close {
-      font-size: 20px;
-    }
-  }
-}
+//     .ant-modal-close .ant-modal-close-x .anticon-close {
+//       font-size: 20px;
+//     }
+//   }
+// }
 
-.lock-container {
-  .lock-title {
+.base-container {
+  .base-title {
     display: flex;
     justify-content: space-between;
     font-weight: normal;
@@ -121,27 +120,33 @@ export default Vue.extend({
     line-height: 19px;
   }
 
-  .lock-table {
+  .base-table {
     margin-top: 20px;
     padding: 12px;
     border: 2px solid #32476C;
     box-sizing: border-box;
     border-radius: 8px;
 
-    .lock-table-header {
+    .base-table-header {
       font-weight: bold;
       font-size: 12px;
       line-height: 15px;
       margin-bottom: 12px;
+      display: flex;
     }
 
-    .lock-table-body {
+    .base-table-body {
+      display: flex;
       font-size: 12px;
       line-height: 14px;
       color: @color-gray;
       padding: 5px 0;
       border-bottom: 1px solid #384D71;
       cursor: pointer;
+
+      &:last-child {
+        border-bottom: none;
+      }
     }
   }
 }

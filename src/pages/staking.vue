@@ -1,11 +1,11 @@
 <template>
   <div class="staking container">
-
-    <LockDuration
-      :show="lockDurationShow"
-      @onClose="() => ((lockDurationShow = false))"
+    <BaseDetail 
+      :show="baseDetailShow" 
+      @onClose="() => (baseDetailShow = false)"
+      @onSelect="onBaseDetailSelect"
     />
-    
+
     <div class="staking-body">
       <h1>$CRP Staking</h1>
       <Row class="staking-infos-group">
@@ -15,8 +15,16 @@
             <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
           </div>
           <div class="value">
-            11.1%
-            <img src="@/assets/icons/calculator.svg" />
+            {{ estimatedAPY }} %
+            <img
+              class="clickable-icon"
+              src="@/assets/icons/calculator.svg"
+              @click="
+                () => {
+                  this.baseDetailShow = true
+                }
+              "
+            />
           </div>
         </Col>
         <Col span="24" class="staking-info">
@@ -42,13 +50,25 @@
             <label class="value">0</label>
           </div>
           <div class="btn-container">
-            <Button class="btn-harvest" :disabled="!wallet.connected">Harvest</Button>
+            <Button class="btn-fill" :disabled="!wallet.connected">Harvest</Button>
           </div>
         </Col>
-        <Col span="24" class="crp-staked">
-          <label class="box-title">CRP Staked</label>
+        <Col span="24" class="crp-staked" :class="!wallet.connected ? 'crp-staked-block' : 'crp-staked-flex'">
+          <div class="staked-value">
+            <label class="box-title">CRP Staked</label>
+            <label v-if="wallet.connected" class="value">10,000.00</label>
+          </div>
+          <div v-if="wallet.connected" class="stake-btn-group">
+            <div class="btn-container">
+              <Button class="btn-fill">Stake</Button>
+            </div>
+            <div class="btn-container">
+              <Button class="btn-outline">Unstake</Button>
+            </div>
+          </div>
+          
           <div v-if="!wallet.connected" class="connect-wallet">
-            <Button class="btn-fill">Connect Wallet</Button>
+            <Button class="btn-primary" @click="$accessor.wallet.openModal">Connect Wallet</Button>
           </div>
         </Col>
       </Row>
@@ -56,12 +76,12 @@
       <Row class="staking-footer">
         <Col span="24" class="lock-tokens">
           <label class="label">Lock tokens for</label>
-          <label class="value">0 day(s)</label>
+          <label class="value">{{ lockDuration * 30 }} day(s)</label>
         </Col>
 
         <Col span="24" class="get-crp">
           <label class="label">Get CRP</label>
-          <img src="@/assets/icons/union.svg" @click="() => { this.lockDurationShow = true } "/>
+          <img class="clickable-icon" src="@/assets/icons/union.svg" />
         </Col>
       </Row>
     </div>
@@ -81,11 +101,20 @@ export default Vue.extend({
   },
   data() {
     return {
-      lockDurationShow: false as boolean
+      baseDetailShow: false as boolean,
+      estimatedAPY: 0 as number,
+      lockDuration: 0 as number
     }
   },
   computed: {
     ...mapState(['wallet'])
+  },
+  methods: {
+    onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
+      this.baseDetailShow = false
+      this.estimatedAPY = estimated_apy
+      this.lockDuration = lock_duration
+    }
   }
 })
 </script>
@@ -94,6 +123,72 @@ export default Vue.extend({
 .staking.container {
   margin-top: 30px;
 
+  // global styles
+
+  h1 {
+    font-weight: bold;
+    font-size: 25px;
+    line-height: 31px;
+  }
+
+  .btn-container {
+    background: @gradient-color-primary;
+    padding: 2px;
+    border-radius: 8px;
+
+    .btn-fill {
+      height: 100%;
+      width: 100%;
+      border: none;
+      background: @gradient-color-harvest;
+      color: #fff;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 14px;
+      border-radius: 8px;
+
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+
+    .btn-outline {
+      height: 100%;
+      width: 100%;
+      border: none;
+      background: @color-bg-dark;
+      color: #fff;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 14px;
+      border-radius: 8px;
+    }
+  }
+
+  .btn-primary {
+    background: @gradient-color-social;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    border: none;
+    height: 42px;
+  }
+
+  .tooltip-icon {
+    width: 10px;
+    position: absolute;
+    margin-left: 5px;
+    top: 3px;
+  }
+
+  .clickable-icon {
+    cursor: pointer;
+  }
+
+  // class styles
+
   .staking-body {
     max-width: 450px;
     min-height: 465px;
@@ -101,45 +196,6 @@ export default Vue.extend({
     background: @color-bg-dark;
     padding: 15px;
     border-radius: 5px;
-
-    h1 {
-      font-weight: bold;
-      font-size: 25px;
-      line-height: 31px;
-    }
-
-    .btn-container {
-      background: @gradient-color-primary;
-      padding: 2px;
-      border-radius: 8px;
-
-      .btn-harvest {
-        height: 100%;
-        width: 100%;
-        border: none;
-        background: @gradient-color-harvest;
-        color: #fff;
-        font-weight: 600;
-        font-size: 12px;
-        line-height: 14px;
-        border-radius: 8px;
-
-        &:disabled {
-          opacity: 0.5;
-        }
-      }
-    }
-
-    .btn-fill {
-      background: @gradient-color-social;
-      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 14px;
-      border: none;
-      height: 42px;
-    }
 
     .staking-footer {
       .lock-tokens {
@@ -164,7 +220,6 @@ export default Vue.extend({
 
         img {
           margin-left: 5px;
-          cursor: pointer;
         }
       }
     }
@@ -217,17 +272,15 @@ export default Vue.extend({
 
       .reward-pending {
         display: flex;
-        align-items: center;
         justify-content: space-between;
 
         .reward-value {
-          display: inline-grid;
-
           .value {
             font-weight: bold;
             font-size: 20px;
             line-height: 25px;
             color: #fff;
+            display: block;
           }
         }
 
@@ -239,24 +292,50 @@ export default Vue.extend({
 
       .crp-staked {
         margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+
+        .staked-value {
+          .value {
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 25px;
+            color: #fff;
+            display: block;
+          }
+        }
+        
+        .stake-btn-group {
+          .btn-container {
+            height: 42px;
+            width: 140px;
+            margin-bottom: 10px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
 
         .connect-wallet {
           width: 100%;
           display: flex;
           justify-content: center;
+          margin-top: 10px;
 
-          .btn-fill {
+          .btn-primary {
             width: 50%;
           }
         }
-      }
-    }
 
-    .tooltip-icon {
-      width: 10px;
-      position: absolute;
-      margin-left: 5px;
-      top: 3px;
+        &.crp-staked-block {
+          display: block;
+        }
+
+        &.crp-staked-flex {
+          display: flex;
+        }
+      }
     }
   }
 }
