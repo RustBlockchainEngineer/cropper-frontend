@@ -94,7 +94,7 @@ export const actions:any = actionTree(
               }
 
               if(itemToken.symbol == 'FLOOF'){
-             //   itemToken.decimals = 1;
+                itemToken.decimals = 1;
               }
 
             const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
