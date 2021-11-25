@@ -654,7 +654,7 @@ export default class Wallet extends Vue {
 }
 
 .ant-modal {
-  width: 800px !important;
+  width: 800px;
 
   @media @max-b-mobile {
     width: calc(100% - 40px) !important;

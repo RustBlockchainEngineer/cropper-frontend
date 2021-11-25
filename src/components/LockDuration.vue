@@ -1,0 +1,148 @@
+<template>
+  <Modal title="Base detail" :visible="show" :footer="null" :mask-closable="false" @cancel="$emit('onClose')">
+    <div class="lock-container">
+      <div class="lock-title">
+        <label class="label">Base APY</label>
+        <label class="value">11.1%</label>
+      </div>
+
+      <div class="lock-table">
+        <Row class="lock-table-header">
+          <Col span="8"> Lock time </Col>
+          <Col span="8"> Boost </Col>
+          <Col span="8"> Estimated APY </Col>
+        </Row>
+        <Row class="lock-table-body" v-for="data in lockData" :key="data.tier">
+          <Col span="8"> {{ data.time > 12 ? data.time / 12 + 'year' : data.time + 'month'}} (Tier {{data.tier }}) </Col>
+          <Col span="8"> {{ data.boost }} x </Col>
+          <Col span="8"> {{ data.apy }} % </Col>
+        </Row>
+      </div>
+    </div>
+  </Modal>
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+import { Modal, Row, Col } from 'ant-design-vue'
+
+Vue.use(Modal)
+
+export default Vue.extend({
+  components: {
+    Modal,
+    Row,
+    Col
+  },
+  data() {
+    return {
+      lockData: [
+        {
+          tier: 1,
+          time: 1,
+          boost: 1,
+          apy: 11.1
+        },
+        {
+          tier: 2,
+          time: 3,
+          boost: 1.1,
+          apy: 12.21
+        },
+        {
+          tier: 3,
+          time: 6,
+          boost: 1.3,
+          apy: 14.43
+        },
+        {
+          tier: 4,
+          time: 12,
+          boost: 2,
+          apy: 22.19
+        }
+      ]
+    }
+  },
+  props: {
+    show: {
+      type: Boolean,
+      default: false
+    }
+  }
+})
+</script>
+<style lang="less">
+.ant-modal {
+  width: 365px !important;
+  top: 240px;
+  
+  @media @max-b-mobile {
+    width: calc(100% - 40px) !important;
+  }
+
+  .ant-modal-content {
+    background: @color-modal-dark;
+    border-radius: 5px !important;
+    padding: 15px;
+    border: none;
+
+    .ant-modal-header {
+      background: @color-modal-dark;
+      padding: 0;
+      margin-bottom: 30px;
+
+      .ant-modal-title {
+        background: @color-modal-dark;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 22px;
+        text-align: left;
+        border-bottom: none;
+      }
+    }
+
+    .ant-modal-body {
+      padding: 0;
+    }
+
+    .ant-modal-close .ant-modal-close-x .anticon-close {
+      font-size: 20px;
+    }
+  }
+}
+
+.lock-container {
+  .lock-title {
+    display: flex;
+    justify-content: space-between;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+  }
+
+  .lock-table {
+    margin-top: 20px;
+    padding: 12px;
+    border: 2px solid #32476C;
+    box-sizing: border-box;
+    border-radius: 8px;
+
+    .lock-table-header {
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 15px;
+      margin-bottom: 12px;
+    }
+
+    .lock-table-body {
+      font-size: 12px;
+      line-height: 14px;
+      color: @color-gray;
+      padding: 5px 0;
+      border-bottom: 1px solid #384D71;
+      cursor: pointer;
+    }
+  }
+}
+</style>

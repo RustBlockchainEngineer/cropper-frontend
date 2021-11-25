@@ -1,12 +1,18 @@
 <template>
   <div class="staking container">
+
+    <LockDuration
+      :show="lockDurationShow"
+      @onClose="() => ((lockDurationShow = false))"
+    />
+    
     <div class="staking-body">
       <h1>$CRP Staking</h1>
       <Row class="staking-infos-group">
         <Col span="24" class="staking-info">
           <div class="label">
             Estimated APY
-            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" width="10px" />
+            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
           </div>
           <div class="value">
             11.1%
@@ -16,14 +22,14 @@
         <Col span="24" class="staking-info">
           <div class="label">
             Total Staked
-            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" width="10px" />
+            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
           </div>
           <div class="value">2,841,752</div>
         </Col>
         <Col span="24" class="staking-info">
           <div class="label">
             Total Value
-            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" width="10px" />
+            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
           </div>
           <div class="value">$3,790,576.436</div>
         </Col>
@@ -55,7 +61,7 @@
 
         <Col span="24" class="get-crp">
           <label class="label">Get CRP</label>
-          <img src="@/assets/icons/union.svg" />
+          <img src="@/assets/icons/union.svg" @click="() => { this.lockDurationShow = true } "/>
         </Col>
       </Row>
     </div>
@@ -73,8 +79,13 @@ export default Vue.extend({
     Col,
     Button
   },
+  data() {
+    return {
+      lockDurationShow: false as boolean
+    }
+  },
   computed: {
-    ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
+    ...mapState(['wallet'])
   }
 })
 </script>
