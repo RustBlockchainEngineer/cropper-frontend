@@ -5,9 +5,11 @@
       <h1>Staking Tier demo</h1>
     </div>
     <div class="container">
+      <br>Master action
       <div>
         <Button ghost @click = "createStakingProgramState">Create global state</Button>
         <Button ghost @click = "getStakingProgramState" >Get global state</Button>
+        <Button ghost @click = "supplyRewards" >Fund to program</Button>
       </div>
       <div>
         <Button ghost @click = "creteExtraRewardsAccount" >Create extra rewards</Button>
@@ -15,14 +17,20 @@
         <Button ghost @click = "getExtraRewardsAccount" >Get extra rewards</Button>
 
       </div>
+      <br>Owner action
       <div>
         <Button ghost @click = "createStakingPool" >Create Staking Pool</Button>
         <Button ghost @click = "getPools" >Get Staking Pools</Button>
-        <Button ghost @click = "changeMultiplier" >Change Multiplier</Button>
-        <Button ghost @click = "supplyRewards" >Fund to program</Button>
       </div>
-
+      <br>
       <div>
+        <Button ghost @click = "changeMultiplier" >Change Amount Multiplier</Button>
+        <Button ghost @click = "changeStakingPoolPoint" >Change Pool Point</Button>
+        <Button ghost @click = "changeTokenPS" >Change Token Per Second</Button>
+      </div>
+      <br> User action
+      <div>
+        <Button ghost @click = "createUserAccount" >Create User</Button>
         <Button ghost @click = "stakeToken" >Stake</Button>
         <Button ghost @click = "unstakeToken" >Unstake</Button>
         <Button ghost @click = "harvestReward" >Harvest</Button>
@@ -60,12 +68,14 @@ import {
   createPool,
   changePoolAmountMultipler,
   changeTokenPerSecond,
+  changePoolPoint,
 
   getFarmState,
   getExtraRewardConfigs,
   getAllPools,
   getPoolUserAccount,
 
+  createUser,
   stake,
   unstake,
   harvest,
@@ -160,18 +170,40 @@ export default Vue.extend({
         await changePoolAmountMultipler(this.$web3, this.$wallet, p.publicKey.toString())
       })
     },
+    async changeStakingPoolPoint(){
+      const pools = await getAllPools()
+      pools.forEach(async (p: any) =>{
+        await changePoolPoint(this.$web3, this.$wallet, p.publicKey.toString())
+      })
+    },
+    async changeTokenPS(){
+      const pools = await getAllPools()
+      console.log(pools)
+      await changeTokenPerSecond(this.$web3, this.$wallet, pools)
+    },
+    async createUserAccount(){
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const poolSigner = current_pool.publicKey.toString()
+      await createUser(this.$web3, this.$wallet, poolSigner)
+    },    
+
     async stakeToken(){
       const pools = await getAllPools()
       const current_pool = pools[0]
-      console.log(current_pool.publicKey.toString())
-      console.log(current_pool.account.vault.toString())
+      const poolSigner = current_pool.publicKey.toString()
+      const rewardMint = current_pool.account.mint.toString()
+      const rewardPoolVault = current_pool.account.vault.toString()
+      
       stake(
         this.$web3, 
         this.$wallet,
-        TOKENS['CRP'].mintAddress,
-        current_pool.account.vault.toString(),
 
-        get(this.wallet.tokenAccounts, `${TOKENS['CRP'].mintAddress}.tokenAccountAddress`),
+        poolSigner,
+        rewardMint,
+        rewardPoolVault,
+
+        get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
         
         10 * 1000000,
         )
@@ -180,14 +212,18 @@ export default Vue.extend({
     async unstakeToken(){
       const pools = await getAllPools()
       const current_pool = pools[0]
-
+      const poolSigner = current_pool.publicKey.toString()
+      const rewardMint = current_pool.account.mint.toString()
+      const rewardPoolVault = current_pool.account.vault.toString()
+      
       unstake(
         this.$web3, 
         this.$wallet,
-        TOKENS['CRP'].mintAddress,
-        current_pool.account.vault.toString(),
+        poolSigner,
+        rewardMint,
+        rewardPoolVault,
 
-        get(this.wallet.tokenAccounts, `${TOKENS['CRP'].mintAddress}.tokenAccountAddress`),
+        get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
 
         3 * 1000000,
         )
@@ -200,16 +236,21 @@ export default Vue.extend({
     },
     async harvestReward(){
       const programState = await getFarmState()
-      console.log(programState)
+      
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const poolSigner = current_pool.publicKey.toString()
+      const rewardMint = current_pool.account.mint.toString()
+      const rewardPoolVault = current_pool.account.vault.toString()
+      
       harvest(
         this.$web3, 
         this.$wallet,
-        TOKENS['CRP'].mintAddress,
-
+        
+        poolSigner,
+        rewardMint,
+        get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
         programState.rewardVault,
-
-        get(this.wallet.tokenAccounts, `${TOKENS['CRP'].mintAddress}.tokenAccountAddress`),
-
       )
       }
     }
