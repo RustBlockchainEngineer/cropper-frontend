@@ -1134,6 +1134,8 @@ section {
 
   .card {
     .card-body {
+      padding: 0;
+      
       .page-head {
         margin-top: 10px;
 

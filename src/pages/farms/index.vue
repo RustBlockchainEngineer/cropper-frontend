@@ -77,8 +77,9 @@
 
           <span class="information">
             <div class="my-info">
-              <p>TVL : <b>{{TVL.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} $</b></p>
+              <p>
+                TVL : <b>{{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} $</b>
+              </p>
               <!-- <p>Your deposit: <b>28,009 $</b></p> -->
             </div>
 
@@ -89,7 +90,7 @@
           </span>
         </div>
 
-        <div v-if="farm.initialized" class="page-content">
+        <div class="page-content">
           <!-- Filter bar for desktop -->
           <Row class="tool-bar noMobile">
             <Col span="5" class="tool-option">
@@ -128,7 +129,9 @@
             <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
                 <Toggle v-model="stakedOnly" />
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">My deposit</label>
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')"
+                  >My deposit</label
+                >
               </div>
             </Col>
             <Col span="4" class="tool-option">
@@ -155,18 +158,10 @@
                 />
               </div>
               <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', true)">
-                  Liquidity (dsc)
-                </div>
-                <div class="option" @click="setSortOption('liquidity', false)">
-                  Liquidity (asc)
-                </div>
-                <div class="option" @click="setSortOption('apr', false)">
-                  APR % (asc)
-                </div>
-                <div class="option" @click="setSortOption('apr', true)">
-                  APR % (dsc)
-                </div>
+                <div class="option" @click="setSortOption('liquidity', true)">Liquidity (dsc)</div>
+                <div class="option" @click="setSortOption('liquidity', false)">Liquidity (asc)</div>
+                <div class="option" @click="setSortOption('apr', false)">APR % (asc)</div>
+                <div class="option" @click="setSortOption('apr', true)">APR % (dsc)</div>
               </div>
             </Col>
           </Row>
@@ -209,7 +204,8 @@
             <Col span="24" class="tool-option">
               <div class="sort-by">
                 <label class="label">Sort by:</label>
-                <label class="label active-label"
+                <label
+                  class="label active-label"
                   @click="
                     () => {
                       this.showSortOption = !this.showSortOption
@@ -229,18 +225,10 @@
                 />
               </div>
               <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', true)">
-                  Liquidity (dsc)
-                </div>
-                <div class="option" @click="setSortOption('liquidity', false)">
-                  Liquidity (asc)
-                </div>
-                <div class="option" @click="setSortOption('apr', false)">
-                  APR % (asc)
-                </div>
-                <div class="option" @click="setSortOption('apr', true)">
-                  APR % (dsc)
-                </div>
+                <div class="option" @click="setSortOption('liquidity', true)">Liquidity (dsc)</div>
+                <div class="option" @click="setSortOption('liquidity', false)">Liquidity (asc)</div>
+                <div class="option" @click="setSortOption('apr', false)">APR % (asc)</div>
+                <div class="option" @click="setSortOption('apr', true)">APR % (dsc)</div>
               </div>
             </Col>
           </Row>
@@ -258,7 +246,8 @@
               {{ list.symbol }}
             </button>
           </div>
-
+        </div>
+        <div v-if="farm.initialized" class="page-content">
           <div class="farm-table">
             <!-- Farm table for desktop -->
             <Row
@@ -281,7 +270,12 @@
                     <a :href="farm.farmInfo.twitterShare" target="_blank" class="social-icon">
                       <img src="@/assets/icons/share-icon.svg" />
                     </a>
-                    <a v-if="farm.farmInfo.twitterLink != ''" :href="farm.farmInfo.twitterLink" target="_blank" class="social-icon">
+                    <a
+                      v-if="farm.farmInfo.twitterLink != ''"
+                      :href="farm.farmInfo.twitterLink"
+                      target="_blank"
+                      class="social-icon"
+                    >
                       <img src="@/assets/icons/twitter-icon.svg" />
                     </a>
                   </div>
@@ -292,7 +286,12 @@
                   <div v-else class="label permissionless">Permissionless</div>
 
                   <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
-                  <div v-if="currentTimestamp < farm.farmInfo.poolInfo.start_timestamp * 1 + (86400 * 7)" class="label new">New</div>
+                  <div
+                    v-if="currentTimestamp < farm.farmInfo.poolInfo.start_timestamp * 1 + 86400 * 7"
+                    class="label new"
+                  >
+                    New
+                  </div>
                 </div>
 
                 <div class="farm-infos">
@@ -475,6 +474,7 @@
                     <Button
                       size="large"
                       :disabled="
+                        !wallet.connected ||
                         !farm.farmInfo.poolInfo.is_allowed ||
                         farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                         farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
@@ -505,6 +505,7 @@
                       size="large"
                       ghost
                       :disabled="
+                        !wallet.connected ||
                         !farm.farmInfo.poolInfo.is_allowed ||
                         farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                         farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
@@ -563,7 +564,12 @@
                         <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">
                           Ended
                         </div>
-                        <div v-if="currentTimestamp < farm.farmInfo.poolInfo.start_timestamp * 1 + (86400 * 7)" class="label new">New</div>
+                        <div
+                          v-if="currentTimestamp < farm.farmInfo.poolInfo.start_timestamp * 1 + 86400 * 7"
+                          class="label new"
+                        >
+                          New
+                        </div>
                       </div>
                     </div>
                   </Col>
@@ -742,6 +748,7 @@
                         <Button
                           size="large"
                           :disabled="
+                            !wallet.connected ||
                             !farm.farmInfo.poolInfo.is_allowed ||
                             farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                             farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
@@ -918,7 +925,7 @@ export default Vue.extend({
       showSortOption: false as boolean,
       totalCount: 110,
       pageSize: 50,
-      displaynoticeupdate : false,
+      displaynoticeupdate: false,
       currentPage: 1,
       labelizedPermission: false as any,
       sortMethod: 'liquidity' as string,
@@ -1048,7 +1055,6 @@ export default Vue.extend({
     async checkFarmMigration() {
       this.userMigrations = []
 
-
       try {
         const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
         //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
@@ -1143,7 +1149,6 @@ export default Vue.extend({
       }
     },
     async updateLabelizedAmms() {
-
       this.labelizedAmms = {}
       this.labelizedAmmsExtended = {}
       let responseData = []
@@ -1152,7 +1157,7 @@ export default Vue.extend({
       } catch {
         // dummy data
       } finally {
-        (responseData as any).forEach((element: any) => {
+        ;(responseData as any).forEach((element: any) => {
           this.labelizedAmms[element.ammID] = element.labelized
           this.labelizedAmmsExtended[element.ammID] = element
         })
@@ -1165,44 +1170,38 @@ export default Vue.extend({
       } finally {
         // nothing to do ..
       }
-
     },
 
-    async getTvl(){
-
-
-        let cur_date = new Date().getTime()
-        if(window.localStorage.TVL_last_updated){
-          const last_updated = parseInt(window.localStorage.TVL_last_updated)
-          if(cur_date - last_updated <= 600000){
-            this.TVL = window.localStorage.TVL
-            return
-          }
+    async getTvl() {
+      let cur_date = new Date().getTime()
+      if (window.localStorage.TVL_last_updated) {
+        const last_updated = parseInt(window.localStorage.TVL_last_updated)
+        if (cur_date - last_updated <= 600000) {
+          this.TVL = window.localStorage.TVL
+          return
         }
+      }
 
+      let responseData: any = []
+      let tvl = 0
+      try {
+        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
 
-        let responseData:any = []
-        let tvl = 0;
-        try {
-          responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-          
-          Object.keys(responseData).forEach(function(key) {
-            tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
-          });
-        } catch {
-          // dummy data
-        } finally {
+        Object.keys(responseData).forEach(function (key) {
+          tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
+        })
+      } catch {
+        // dummy data
+      } finally {
+      }
 
-        }
+      this.TVL = Math.round(tvl)
 
-        this.TVL = Math.round(tvl);
-
-        window.localStorage.TVL_last_updated = new Date().getTime()
-        window.localStorage.TVL = this.TVL
+      window.localStorage.TVL_last_updated = new Date().getTime()
+      window.localStorage.TVL = this.TVL
     },
 
     async updateFarms() {
-
       console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
@@ -1218,7 +1217,8 @@ export default Vue.extend({
         let isPFO = false
 
         // @ts-ignore
-        const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } = farmInfo.poolInfo
+        const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } =
+          farmInfo.poolInfo
 
         // @ts-ignore
         const { reward, lp } = farmInfo
@@ -1372,9 +1372,9 @@ export default Vue.extend({
 
           const duration = currentTimestamp - last_timestamp.toNumber()
 
-          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount);
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-          const lpTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).wei;
+          const lpTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).wei
           const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
@@ -1386,27 +1386,19 @@ export default Vue.extend({
             .dividedBy(REWARD_MULTIPLER)
             .minus(rewardDebt.wei)
 
-          userInfo.needRefresh = false;
+          userInfo.needRefresh = false
 
-          if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
-            pendingReward = newFarmInfo.reward.balance.wei;
-            userInfo.needRefresh = true;
-            this.displaynoticeupdate = true;
+          if (pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()) {
+            pendingReward = newFarmInfo.reward.balance.wei
+            userInfo.needRefresh = true
+            this.displaynoticeupdate = true
           }
 
-          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
-            )
-              .toString()
+          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
 
-          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000
-            )
-              .toString()
+          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
 
-          userInfo.depositPc =  (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000
-            )
-              .toString()
-
-
+          userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
@@ -1417,8 +1409,7 @@ export default Vue.extend({
           }
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
-        }
-        else if (userInfo && lp && FARM_VERSION > 1) {
+        } else if (userInfo && lp && FARM_VERSION > 1) {
           userInfo = cloneDeep(userInfo)
 
           const { rewardDebt, depositBalance } = userInfo
@@ -1430,42 +1421,36 @@ export default Vue.extend({
 
           const duration = currentTimestamp - last_timestamp.toNumber()
 
-          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp)));
-          
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(
+            toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp))
+          )
+
           const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(newFarmInfo.lp.balance.wei)
             .plus(getBigNumber(reward_per_share_net))
 
-          const JUMP_DEBT =new BigNumber(10000000000000000000);
-          const _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT);
+          const JUMP_DEBT = new BigNumber(10000000000000000000)
+          const _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT)
           let pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
             .minus(_rewardDebt)
 
-          userInfo.needRefresh = false;
+          userInfo.needRefresh = false
 
-          if(pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()){
-            pendingReward = newFarmInfo.reward.balance.wei;
-            userInfo.needRefresh = true;
-            this.displaynoticeupdate = true;
+          if (pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()) {
+            pendingReward = newFarmInfo.reward.balance.wei
+            userInfo.needRefresh = true
+            this.displaynoticeupdate = true
           }
 
-          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000
-            )
-              .toString()
+          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
 
-          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000
-            )
-              .toString()
+          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
 
-          userInfo.depositPc =  (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000
-            )
-              .toString()
-
-
+          userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
@@ -1476,8 +1461,6 @@ export default Vue.extend({
           }
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
-
-
         } else {
           userInfo = {
             // @ts-ignore
@@ -1513,10 +1496,9 @@ export default Vue.extend({
             }
           }
 
-          if(TOKENS[newFarmInfo.lp.coin.mintAddress] && TOKENS[newFarmInfo.lp.coin.mintAddress].twitter){
-            (newFarmInfo as any).twitterLink = TOKENS[newFarmInfo.lp.coin.mintAddress].twitter;
+          if (TOKENS[newFarmInfo.lp.coin.mintAddress] && TOKENS[newFarmInfo.lp.coin.mintAddress].twitter) {
+            ;(newFarmInfo as any).twitterLink = TOKENS[newFarmInfo.lp.coin.mintAddress].twitter
           }
-
 
           ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
             (newFarmInfo as any).lp.coin.symbol
@@ -1588,17 +1570,15 @@ export default Vue.extend({
       } else if (
         searchName != '' &&
         this.farms.filter(
-          (farm: any) => (
+          (farm: any) =>
             (farm.farmInfo.lp.pc.symbol as string).toLowerCase() == (searchName as string).toLowerCase() ||
             (farm.farmInfo.lp.coin.symbol as string).toLowerCase() == (searchName as string).toLowerCase()
-          )
         ).length > 0
       ) {
         this.showFarms = this.farms.filter(
-          (farm: any) => (
+          (farm: any) =>
             (farm.farmInfo.lp.pc.symbol as string).toLowerCase() == (searchName as string).toLowerCase() ||
             (farm.farmInfo.lp.coin.symbol as string).toLowerCase() == (searchName as string).toLowerCase()
-          )
         )
       } else if (searchName != '') {
         this.showFarms = this.farms.filter((farm: any) =>
@@ -2487,7 +2467,7 @@ export default Vue.extend({
                 height: 18px;
                 display: none;
 
-                 @media @max-b-mobile {
+                @media @max-b-mobile {
                   display: flex;
                 }
               }
@@ -2997,26 +2977,12 @@ export default Vue.extend({
       width: 100%;
       border-radius: 8px;
       border: none;
+      color: #fff;
 
       @media @max-b-mobile {
         font-size: 12px !important;
         line-height: 14px !important;
         font-weight: 600 !important;
-      }
-    }
-
-    &.btn-container-fill {
-      height: 52px;
-
-      @media @max-b-mobile {
-        margin-bottom: 10px;
-      }
-
-      button {
-        font-size: 14px;
-        line-height: 24px;
-        font-weight: 600;
-        background: transparent !important;
       }
     }
 
@@ -3036,6 +3002,21 @@ export default Vue.extend({
       }
     }
 
+    &.btn-container-fill {
+      height: 52px;
+
+      @media @max-b-mobile {
+        margin-bottom: 10px;
+      }
+
+      button {
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 600;
+        background: transparent !important;
+      }
+    }
+
     &.btn-container-harvest {
       height: 28px;
       background: @gradient-color-outline;
@@ -3049,12 +3030,14 @@ export default Vue.extend({
         line-height: 24px;
         font-weight: 400;
         background: transparent !important;
-        color: white;
-
-        &:disabled {
-          background: @gradient-color-disable !important;
-        }
       }
+    }
+
+    &.btn-container-harvest button:disabled,
+    &.btn-container-outline button:disabled,
+    &.btn-container-fill button:disabled {
+      background: @gradient-color-disable !important;
+      color: #fff;
     }
   }
 
