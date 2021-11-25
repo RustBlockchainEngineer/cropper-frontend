@@ -1095,7 +1095,7 @@ export default class Pools extends Vue {
   activeSearch(mode: string) {
     if (mode === 'labelized') this.searchCertifiedFarm = false
     else if (mode === 'permissionless') this.searchCertifiedFarm = true
-    else if (mode === 'deposit') this.stakedOnly = !this.stakedOnly
+    else if (mode === 'deposit' && this.wallet.connected) this.stakedOnly = !this.stakedOnly
   }
 }
 </script>
