@@ -37,8 +37,9 @@
           </span>
           <span class="information">
             <div class="my-info">
-              <p>TVL : <b>5,456,009 $</b></p>
-              <p>Your deposit: <b>28,009 $</b></p>
+              <p>TVL : <b>{{TVL.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} $</b></p>
+              <!-- <p>Your deposit: <b>28,009 $</b></p> -->
             </div>
 
             <!-- {{ autoRefreshTime - countdown }} -->
@@ -77,8 +78,8 @@
             <Col span="4" class="tool-option"> </Col>
             <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label" @click="activeSearch('deposit')">My deposit</label>
                 <Toggle v-model="stakedOnly" />
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">My deposit</label>
               </div>
             </Col>
           </Row>
@@ -397,6 +398,7 @@ declare const window: any
       poolAdd: false,
       totalCount: 110,
       pageSize: 50,
+      TVL : 0,
       currentPage: 1
     }
   },
@@ -419,6 +421,9 @@ declare const window: any
     Pagination
   },
   async asyncData({ $api }) {
+
+
+
     window.poolsDatas = {} as any
 
     try {
@@ -448,6 +453,7 @@ export default class Pools extends Vue {
   fromCoin: any = false
   staking: any = false
   lp: any = false
+  TVL: any = 0
   unstaking: any = false
   wallet: any = this.$accessor.wallet
   lpMintAddress: any = false
@@ -903,14 +909,6 @@ export default class Pools extends Vue {
             price.prices[liquidityItem?.pc.symbol as string]
         }
 
-        console.log(
-          value.ammId,
-          liquidityItem?.coin.symbol,
-          liquidityItem?.pc.mintAddress,
-          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress],
-          liquidityItem?.coin.mintAddress,
-          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]
-        )
       } else {
         value.volume_24h = 0
       }
@@ -1003,6 +1001,7 @@ export default class Pools extends Vue {
   }
 
   mounted() {
+    this.getTvl();
     this.$accessor.token.loadTokens()
     this.timer_init = setInterval(async () => {
       if (!this.poolLoaded) {
@@ -1027,6 +1026,8 @@ export default class Pools extends Vue {
   }
 
   setTimer() {
+
+
     this.timer = setInterval(async () => {
       if (!this.loading) {
         if (this.countdown < this.autoRefreshTime) {
@@ -1037,6 +1038,38 @@ export default class Pools extends Vue {
         }
       }
     }, 1000)
+  }
+
+  async getTvl(){
+
+
+      let cur_date = new Date().getTime()
+      if(window.localStorage.TVL_last_updated){
+        const last_updated = parseInt(window.localStorage.TVL_last_updated)
+        if(cur_date - last_updated <= 600000){
+          this.TVL = window.localStorage.TVL
+          return
+        }
+      }
+
+      let responseData:any = []
+      let tvl = 0;
+      try {
+        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+        
+        Object.keys(responseData).forEach(function(key) {
+          tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+        });
+      } catch {
+        // dummy data
+      } finally {
+
+      }
+
+      this.TVL = Math.round(tvl);
+
+      window.localStorage.TVL_last_updated = new Date().getTime()
+      window.localStorage.TVL = this.TVL
   }
 
   async flush() {

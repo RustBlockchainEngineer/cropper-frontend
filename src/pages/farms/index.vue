@@ -127,8 +127,8 @@
             </Col>
             <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label" @click="activeSearch('deposit')">My deposit</label>
                 <Toggle v-model="stakedOnly" />
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">My deposit</label>
               </div>
             </Col>
             <Col span="4" class="tool-option">
@@ -1017,6 +1017,7 @@ export default Vue.extend({
   },
 
   mounted() {
+    this.getTvl()
     this.$accessor.token.loadTokens()
 
     this.updateFarms()
@@ -1167,24 +1168,40 @@ export default Vue.extend({
 
     },
 
+    async getTvl(){
+
+
+        let cur_date = new Date().getTime()
+        if(window.localStorage.TVL_last_updated){
+          const last_updated = parseInt(window.localStorage.TVL_last_updated)
+          if(cur_date - last_updated <= 600000){
+            this.TVL = window.localStorage.TVL
+            return
+          }
+        }
+
+
+        let responseData:any = []
+        let tvl = 0;
+        try {
+          responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+          
+          Object.keys(responseData).forEach(function(key) {
+            tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+          });
+        } catch {
+          // dummy data
+        } finally {
+
+        }
+
+        this.TVL = Math.round(tvl);
+
+        window.localStorage.TVL_last_updated = new Date().getTime()
+        window.localStorage.TVL = this.TVL
+    },
+
     async updateFarms() {
-
-
-      let responseData:any = []
-      let tvl = 0;
-      try {
-        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-        
-        Object.keys(responseData).forEach(function(key) {
-          tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
-        });
-      } catch {
-        // dummy data
-      } finally {
-
-      }
-
-      this.TVL = Math.round(tvl);
 
       console.log('updating farms ...')
       await this.updateLabelizedAmms()
