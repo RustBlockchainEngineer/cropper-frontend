@@ -74,12 +74,10 @@ export const actions:any = actionTree(
             if (itemToken.tags && 
               ( 
                 itemToken.tags.includes('lp-token') || 
-                itemToken.tags.includes('wormhole') ||
                 itemToken.tags.includes('lending') ||
                 itemToken.tags.includes('stake-pool') || 
                 !allowed[itemToken.address] ||
-                itemToken.name.includes("(Allbridge") || 
-                itemToken.name.includes("((Wormhole")
+                itemToken.name.includes("(Allbridge")
               )
               && itemToken.symbol != 'wUSDT'
               && itemToken.symbol != 'wSOL'
