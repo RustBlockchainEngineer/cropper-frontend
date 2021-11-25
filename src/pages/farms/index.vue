@@ -128,10 +128,10 @@
             </Col>
             <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
-                <Toggle v-model="stakedOnly" />
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')"
-                  >My deposit</label
-                >
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">
+                  My deposit
+                </label>
               </div>
             </Col>
             <Col span="4" class="tool-option">
@@ -176,8 +176,8 @@
             </Col>
             <Col span="12" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label" @click="activeSearch('deposit')">Deposited</label>
-                <Toggle v-model="stakedOnly" />
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected"/>
               </div>
             </Col>
           </Row>
@@ -2340,7 +2340,7 @@ export default Vue.extend({
       else if (mode === 'permissionless') this.searchCertifiedFarm = true
       else if (mode === 'open') this.searchLifeFarm = false
       else if (mode === 'ended') this.searchLifeFarm = true
-      else if (mode === 'deposit') this.stakedOnly = !this.stakedOnly
+      else if (mode === 'deposit' && this.wallet.connected) this.stakedOnly = !this.stakedOnly
     },
     hideCollapse() {
       this.showCollapse = []
@@ -3032,9 +3032,7 @@ export default Vue.extend({
       }
     }
 
-    &.btn-container-harvest button:disabled,
-    &.btn-container-outline button:disabled,
-    &.btn-container-fill button:disabled {
+    &.btn-container-harvest button:disabled {
       background: @gradient-color-disable !important;
       color: #fff;
     }

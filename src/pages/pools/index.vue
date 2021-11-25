@@ -78,7 +78,7 @@
             <Col span="4" class="tool-option"> </Col>
             <Col span="4" class="tool-option">
               <div class="toggle deposit-toggle">
-                <Toggle v-model="stakedOnly" />
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
                 <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">My deposit</label>
               </div>
             </Col>
@@ -94,8 +94,8 @@
             </Col>
             <Col span="12" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label" @click="activeSearch('deposit')">Deposited</label>
-                <Toggle v-model="stakedOnly" />
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected"/>
               </div>
             </Col>
           </Row>
