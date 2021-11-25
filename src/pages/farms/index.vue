@@ -1217,8 +1217,7 @@ export default Vue.extend({
         let isPFO = false
 
         // @ts-ignore
-        const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } =
-          farmInfo.poolInfo
+        const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } = farmInfo.poolInfo
 
         // @ts-ignore
         const { reward, lp } = farmInfo
