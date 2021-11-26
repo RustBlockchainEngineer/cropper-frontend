@@ -48,7 +48,7 @@
             Swap Slippage
           </button>
         </Tooltip>
-        <Tooltip placement="bottomLeft">
+        <Tooltip placement="bottomRight">
           <template slot="title">
             <div class="swap-info">
               <div v-if="fromCoin" class="info">
@@ -2204,13 +2204,19 @@ main {
       font-size: 16px;
       padding: 10px 13px;
       line-height: 20px;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
     }
 
     .info {
       border-radius: 6px;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.14);
-      padding: 8px;
+      padding: 8px !important;
       margin-top: 10px;
       
       .symbol {
