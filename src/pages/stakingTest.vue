@@ -142,8 +142,8 @@ export default Vue.extend({
     async setExtraRewardsAccount(){
       setExtraReward(this.$web3, this.$wallet, [
         { duration: new BN(0), extraPercentage: new BN(0) },
-        { duration: new BN(1), extraPercentage: new BN(50) },
-        { duration: new BN(2), extraPercentage: new BN(100) },
+        { duration: new BN(10), extraPercentage: new BN(50) },
+        { duration: new BN(60), extraPercentage: new BN(100) },
       ])
     },
     async getExtraRewardsAccount(){
@@ -194,7 +194,7 @@ export default Vue.extend({
       const poolSigner = current_pool.publicKey.toString()
       const rewardMint = current_pool.account.mint.toString()
       const rewardPoolVault = current_pool.account.vault.toString()
-      
+      const lock_duration = 60
       stake(
         this.$web3, 
         this.$wallet,
@@ -206,6 +206,7 @@ export default Vue.extend({
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
         
         10 * 1000000,
+        lock_duration
         )
     },
 
