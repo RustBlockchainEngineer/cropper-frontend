@@ -1180,8 +1180,8 @@ export default Vue.extend({
           continue
         }
 
-        let partCoin = 0
-        let partPc = 0
+        let partCoin = new BigNumber(0);
+        let partPc = new BigNumber(0);
 
         if (reward && lp) {
           const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(
@@ -1216,38 +1216,35 @@ export default Vue.extend({
           }
 
           const rewardPerTimestampAmountTotalValue =
-            getBigNumber(rewardPerTimestampAmount.toEther()) *
-            60 *
-            60 *
-            24 *
-            365 *
-            this.price.prices[reward.symbol as string]
+            rewardPerTimestampAmount.toEther().multipliedBy(new BigNumber(60 * 60 * 24 * 365 * this.price.prices[reward.symbol as string]))
 
           const liquidityCoinValue =
-            getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
-            this.price.prices[liquidityItem?.coin.symbol as string]
+            (liquidityItem?.coin.balance as TokenAmount).toEther()
+            .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.coin.symbol as string]))
+            
           const liquidityPcValue =
-            getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
-            this.price.prices[liquidityItem?.pc.symbol as string]
-          const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
+            (liquidityItem?.pc.balance as TokenAmount).toEther()
+            .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.pc.symbol as string]))
+            
+          const liquidityTotalValue = liquidityPcValue.plus(liquidityCoinValue);
 
-          const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
+          const liquidityTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
 
-          partCoin = getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / liquidityTotalSupply
-          partPc = getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / liquidityTotalSupply
+          partCoin = (liquidityItem?.coin.balance as TokenAmount).toEther().dividedBy(liquidityTotalSupply)
+          partPc = (liquidityItem?.pc.balance as TokenAmount).toEther().dividedBy(liquidityTotalSupply)
 
-          const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
-          let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
+          const liquidityItemValue = liquidityTotalValue.dividedBy(liquidityTotalSupply)
+          let liquidityUsdValue = lp.balance.toEther().multipliedBy(liquidityItemValue)
           newFarmInfo.lpUSDvalue = liquidityItemValue
 
-          let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
+          let farmUsdValue = newFarmInfo.lp.balance.toEther().multipliedBy(liquidityItemValue)
 
-          let baseCalculation = farmUsdValue
+          let baseCalculation = getBigNumber(farmUsdValue)
           if (baseCalculation < 0.01) {
             baseCalculation = 1
           }
 
-          let apr = ((rewardPerTimestampAmountTotalValue / baseCalculation) * 100).toFixed(2)
+          let apr = ((getBigNumber(rewardPerTimestampAmountTotalValue) / baseCalculation) * 100).toFixed(2)
 
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
@@ -1270,9 +1267,9 @@ export default Vue.extend({
           if (
             this.poolsDatas[liquidityItem.ammId] &&
             this.poolsDatas[liquidityItem.ammId]['fees'] &&
-            liquidityTotalValue > 0
+            getBigNumber(liquidityTotalValue) > 0
           ) {
-            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / liquidityTotalValue
+            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / getBigNumber(liquidityTotalValue)
             newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
             newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
           }
@@ -1330,11 +1327,12 @@ export default Vue.extend({
             this.displaynoticeupdate = true
           }
 
-          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
-
-          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
-
-          userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          // userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
+          // userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          // userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          userInfo.depositFormat = depositBalance.wei.toString()
+          userInfo.depositCoin = depositBalance.wei.multipliedBy(partCoin).toString()
+          userInfo.depositPc = depositBalance.wei.multipliedBy(partPc).toString()
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
@@ -1382,11 +1380,13 @@ export default Vue.extend({
             this.displaynoticeupdate = true
           }
 
-          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
+          // userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
+          // userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          // userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
 
-          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
-
-          userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          userInfo.depositFormat = depositBalance.wei.toString()
+          userInfo.depositCoin = depositBalance.wei.multipliedBy(partCoin).toString()
+          userInfo.depositPc = depositBalance.wei.multipliedBy(partPc).toString()
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
