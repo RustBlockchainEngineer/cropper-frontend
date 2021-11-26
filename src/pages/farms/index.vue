@@ -1327,12 +1327,12 @@ export default Vue.extend({
             this.displaynoticeupdate = true
           }
 
-          userInfo.depositFormat = (depositBalance as TokenAmount).toEther().toString()
-          userInfo.depositCoin = depositBalance.toEther().multipliedBy(partCoin).toString()
-          userInfo.depositPc = depositBalance.toEther().multipliedBy(partPc).toString()
-          
+          userInfo.depositFormat = (depositBalance as TokenAmount).toEther().toFixed(2)
+          userInfo.depositCoin = depositBalance.toEther().multipliedBy(partCoin).toFixed(2)
+          userInfo.depositPc = depositBalance.toEther().multipliedBy(partPc).toFixed(2)
+
           if (newFarmInfo.lpUSDvalue) {
-            userInfo.depositBalanceUSD = (depositBalance as TokenAmount).toEther().multipliedBy(newFarmInfo.lpUSDvalue).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            userInfo.depositBalanceUSD = (depositBalance as TokenAmount).toEther().multipliedBy(newFarmInfo.lpUSDvalue).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
@@ -1375,12 +1375,12 @@ export default Vue.extend({
             this.displaynoticeupdate = true
           }
 
-          userInfo.depositFormat = (depositBalance as TokenAmount).toEther().toString()
-          userInfo.depositCoin = depositBalance.toEther().multipliedBy(partCoin).toString()
-          userInfo.depositPc = depositBalance.toEther().multipliedBy(partPc).toString()
+          userInfo.depositFormat = (depositBalance as TokenAmount).toEther().toFixed(2)
+          userInfo.depositCoin = depositBalance.toEther().multipliedBy(partCoin).toFixed(2)
+          userInfo.depositPc = depositBalance.toEther().multipliedBy(partPc).toFixed(2)
 
           if (newFarmInfo.lpUSDvalue) {
-            userInfo.depositBalanceUSD = (depositBalance as TokenAmount).toEther().multipliedBy(newFarmInfo.lpUSDvalue).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            userInfo.depositBalanceUSD = (depositBalance as TokenAmount).toEther().multipliedBy(newFarmInfo.lpUSDvalue).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
           
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
