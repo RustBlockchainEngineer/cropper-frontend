@@ -1327,19 +1327,12 @@ export default Vue.extend({
             this.displaynoticeupdate = true
           }
 
-          // userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
-          // userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
-          // userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
-          userInfo.depositFormat = depositBalance.wei.toString()
-          userInfo.depositCoin = depositBalance.wei.multipliedBy(partCoin).toString()
-          userInfo.depositPc = depositBalance.wei.multipliedBy(partPc).toString()
-
+          userInfo.depositFormat = (depositBalance as TokenAmount).toEther().toString()
+          userInfo.depositCoin = depositBalance.toEther().multipliedBy(partCoin).toString()
+          userInfo.depositPc = depositBalance.toEther().multipliedBy(partPc).toString()
+          
           if (newFarmInfo.lpUSDvalue) {
-            userInfo.depositBalanceUSD = (
-              Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100
-            )
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            userInfo.depositBalanceUSD = (depositBalance as TokenAmount).toEther().multipliedBy(newFarmInfo.lpUSDvalue).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
@@ -1355,18 +1348,20 @@ export default Vue.extend({
 
           const duration = currentTimestamp - last_timestamp.toNumber()
 
-          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(
+          let rewardPerTimestamp = end_timestamp <= last_timestamp ? new BigNumber(0) : 
+          toBigNumber(reward_per_timestamp_or_remained_reward_amount)
+          .dividedBy(
             toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp))
           )
-
-          const rewardPerShareCalc = rewardPerTimestamp
+          const rewardPerShareCalc = newFarmInfo.lp.balance.wei.toNumber() == 0 ? new BigNumber(0):  rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(newFarmInfo.lp.balance.wei)
-            .plus(getBigNumber(reward_per_share_net))
+            .plus(toBigNumber(reward_per_share_net))
 
           const JUMP_DEBT = new BigNumber(10000000000000000000)
           const _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT)
+          
           let pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
@@ -1380,22 +1375,14 @@ export default Vue.extend({
             this.displaynoticeupdate = true
           }
 
-          // userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
-          // userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
-          // userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
-
-          userInfo.depositFormat = depositBalance.wei.toString()
-          userInfo.depositCoin = depositBalance.wei.multipliedBy(partCoin).toString()
-          userInfo.depositPc = depositBalance.wei.multipliedBy(partPc).toString()
+          userInfo.depositFormat = (depositBalance as TokenAmount).toEther().toString()
+          userInfo.depositCoin = depositBalance.toEther().multipliedBy(partCoin).toString()
+          userInfo.depositPc = depositBalance.toEther().multipliedBy(partPc).toString()
 
           if (newFarmInfo.lpUSDvalue) {
-            userInfo.depositBalanceUSD = (
-              Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100
-            )
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            userInfo.depositBalanceUSD = (depositBalance as TokenAmount).toEther().multipliedBy(newFarmInfo.lpUSDvalue).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
-
+          
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
         } else {
           userInfo = {
