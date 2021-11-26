@@ -41,7 +41,7 @@ export default class Nav extends Vue {
     farms: false,
     fertilizer:false,
     // fusion: false,
-    //stakingTest: false,
+    stakingTest: false,
     // migrate: false
     // info: false
   }
