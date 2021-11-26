@@ -1,13 +1,28 @@
 <template>
-  <Modal title="Stake $CRP TOKEN" :visible="show" :footer="null" :mask-closable="false" @cancel="$emit('onClose')" centered>
+  <Modal
+    title="Stake $CRP TOKEN"
+    :visible="show"
+    :footer="null"
+    :mask-closable="false"
+    @cancel="$emit('onClose')"
+    centered
+  >
     <div class="stake-container">
       <Row class="balance-form">
-        <input type="number" />
+        <div class="value-balance">Balance 8.471.13</div>
+        <div class="input-form">
+          <input type="number" placeholder="Input amount"/>
+          <Button class="btn-primary">MAX</Button>
+          <span class="symbol">CRP</span>
+        </div>
+        <div class="value-total">Total: <span>10,000.0</span></div>
       </Row>
       <Row>
         <Col class="tier-group" span="6" v-for="data in lockData" :key="data.tier">
           Tier {{ data.tier }}
-          <span>{{ data.time >= 12 ? data.time / 12 + 'Y' : data.time + 'M'}}</span>
+          <span :class="data.tier === 4 ? 'tier-active' : 'tier-inactive'">{{
+            data.time >= 12 ? data.time / 12 + 'Y' : data.time + 'M'
+          }}</span>
           {{ data.boost }}x
         </Col>
       </Row>
@@ -39,9 +54,7 @@
           <div class="btn-container">
             <Button class="btn-outline">Cancel</Button>
           </div>
-          <div class="btn-container">
-            <Button class="btn-fill">Confirm</Button>
-          </div>
+          <Button class="btn-primary">Confirm</Button>
         </div>
       </Row>
     </div>
@@ -99,10 +112,98 @@ export default Vue.extend({
 })
 </script>
 <style lang="less">
+// global styles
+
+.btn-container {
+  background: @gradient-color-primary;
+  padding: 2px;
+  border-radius: 8px;
+
+  .btn-outline {
+    height: 100%;
+    width: 100%;
+    border: none;
+    background: @color-bg-dark;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+}
+
+.btn-primary {
+  background: @gradient-color-social;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+// class styles
+
 .stake-container {
   .balance-form {
-    color: #000;
     margin-bottom: 30px;
+
+    .value-balance {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 7px;
+      color: rgba(255, 255, 255, 0.8);
+      width: 100%;
+      text-align: right;
+    }
+
+    .input-form {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border: 2px solid @color-light-blue;
+      border-radius: 8px;
+      margin: 5px 0;
+
+      input {
+        color: #fff;
+        background: transparent;
+        border: none;
+        outline: none;
+        width: 100%;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
+      
+      .btn-primary {
+        padding: 4px;
+        font-weight: 800;
+        font-size: 8px;
+        line-height: 7px;
+      }
+
+      .symbol {
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 22px;
+        color: #fff;
+        margin-left: 12px;
+      }
+    }
+
+    .value-total {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 7px;
+      color: rgba(255, 255, 255, 0.8);
+      width: 100%;
+      text-align: left;
+      
+      span {
+        font-weight: 800;
+        color: @color-light-blue;
+      }
+    }
   }
 
   .tier-group {
@@ -112,17 +213,23 @@ export default Vue.extend({
     line-height: 14px;
     color: @color-gray;
 
-    span {
+    .tier-inactive,
+    .tier-active {
       padding: 10px 0;
       width: 80%;
-      background: #32476C;
+      background: #32476c;
       border-radius: 20px;
       margin: 10px auto;
       font-weight: bold;
       font-size: 18px;
       line-height: 22px;
       letter-spacing: 0.1em;
-      color: #6D7583;
+      color: #6d7583;
+    }
+
+    .tier-active {
+      background: @color-light-blue;
+      color: #fff;
     }
   }
 
@@ -143,7 +250,7 @@ export default Vue.extend({
 
       &:nth-child(even) {
         padding-bottom: 15px;
-        border-bottom: 1px solid #384D71;
+        border-bottom: 1px solid #384d71;
       }
 
       .label {
@@ -178,48 +285,23 @@ export default Vue.extend({
     }
 
     .cc-btn-group {
-      margin-top: 30px auto 0 auto;
+      margin-top: 30px;
       display: flex;
+      justify-content: center;
 
-      // .btn-container {
-      //   width: 120px;
-      //   height: 42px;
-      // }
+      .btn-container,
+      .btn-primary {
+        width: 120px;
+        height: 42px;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 14px;
+      }
+
+      .btn-container {
+        margin-right: 15px;
+      }
     }
-  }
-}
-
-.btn-container {
-  background: @gradient-color-primary;
-  padding: 2px;
-  border-radius: 8px;
-
-  .btn-fill {
-    height: 100%;
-    width: 100%;
-    border: none;
-    background: @gradient-color-harvest;
-    color: #fff;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 14px;
-    border-radius: 8px;
-
-    &:disabled {
-      opacity: 0.5;
-    }
-  }
-
-  .btn-outline {
-    height: 100%;
-    width: 100%;
-    border: none;
-    background: @color-bg-dark;
-    color: #fff;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 14px;
-    border-radius: 8px;
   }
 }
 </style>

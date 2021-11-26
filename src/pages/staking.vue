@@ -173,7 +173,7 @@ export default Vue.extend({
       font-weight: 600;
       font-size: 12px;
       line-height: 14px;
-      border-radius: 8px;
+      border-radius: 6px;
 
       &:disabled {
         opacity: 0.5;
@@ -189,7 +189,7 @@ export default Vue.extend({
       font-weight: 600;
       font-size: 12px;
       line-height: 14px;
-      border-radius: 8px;
+      border-radius: 6px;
     }
   }
 
