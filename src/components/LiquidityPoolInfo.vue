@@ -74,13 +74,13 @@ export default Vue.extend({
   grid-auto-rows: auto;
   row-gap: 8px;
   padding: 0 12px;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 21px;
   color: rgba(255,255,255,0.5);
 
   @media @max-b-mobile {
     font-size: 14px;
-    line-height: 18px;
+    line-height: 15px;
   }
 
   .info {
@@ -89,7 +89,7 @@ export default Vue.extend({
   }
 
   .price-base {
-    font-size: 18px;
+    font-size: 15px;
     line-height: 21px;
     color: rgba(255,255,255,0.5);
 
