@@ -117,13 +117,49 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Row, Col, Button, Tooltip } from 'ant-design-vue'
+import { Icon, Tooltip, Button, Col, Row, Progress, Spin, Select, InputNumber } from 'ant-design-vue'
+import { cloneDeep, get } from 'lodash-es'
+import { getTokenBySymbol, TokenInfo, NATIVE_SOL, TOKENS } from '@/utils/tokens'
+import { getMultipleAccounts, commitment } from '@/utils/web3'
+import { PublicKey } from '@solana/web3.js'
+import BigNumber from 'bignumber.js'
+import { TokenAmount, gt } from '@/utils/safe-math'
+import * as anchor from '@project-serum/anchor';
+const { BN } = anchor
+
+
+import {
+  setAnchorProvider,
+  
+  createFarmState, 
+  fundToProgram,
+
+  setExtraReward,
+  createExtraReward,
+  
+  createPool,
+  changePoolAmountMultipler,
+  changeTokenPerSecond,
+  changePoolPoint,
+
+  getFarmState,
+  getExtraRewardConfigs,
+  getAllPools,
+  getPoolUserAccount,
+
+  createUser,
+  stake,
+  unstake,
+  harvest,
+} from '@/utils/crp-stake'
+
+
 
 export default Vue.extend({
   components: {
+    Button,
     Row,
     Col,
-    Button,
     Tooltip
   },
   data() {
@@ -134,16 +170,178 @@ export default Vue.extend({
       lockDuration: 0 as number
     }
   },
+  head: {
+    title: 'CropperFinance Swap'
+  },
   computed: {
-    ...mapState(['wallet'])
+    ...mapState(['wallet', 'swap', 'liquidity', 'url', 'setting', 'token'])
+  },
+  watch: {
+    'wallet.tokenAccounts': {
+      handler(newTokenAccounts: any) {
+        setAnchorProvider(this.$web3, this.$wallet)
+      },
+      deep: true
+    },
+  },
+  mounted() {
+    if(this.$wallet)
+    {
+      setAnchorProvider(this.$web3, this.$wallet)
+    }
   },
   methods: {
+    async createStakingProgramState(){
+        createFarmState(
+        this.$web3,
+        this.$wallet,
+        10,
+        TOKENS['CRP'].mintAddress,
+      )
+    },
+    async getStakingProgramState(){
+      console.log(await getFarmState())
+    },
+
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
       this.baseModalShow = false
       this.estimatedAPY = estimated_apy
       this.lockDuration = lock_duration
+    },
+
+    async supplyRewards(){
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      console.log(current_pool)
+      fundToProgram(
+        this.$web3, 
+        this.$wallet,
+        current_pool.publicKey.toString(),
+        get(this.wallet.tokenAccounts, `${TOKENS['CRP'].mintAddress}.tokenAccountAddress`),
+        
+        100 * 1000000,
+        )
+    },
+    async creteExtraRewardsAccount(){
+      createExtraReward(this.$web3, this.$wallet)
+    },
+    async setExtraRewardsAccount(){
+      setExtraReward(this.$web3, this.$wallet, [
+        { duration: new BN(0 * 60), extraPercentage: new BN(0) },
+        { duration: new BN(10 * 60), extraPercentage: new BN(30) },
+        { duration: new BN(30 * 60), extraPercentage: new BN(50) },
+        { duration: new BN(60 * 60), extraPercentage: new BN(100) },
+      ])
+    },
+    async getExtraRewardsAccount(){
+      console.log(await getExtraRewardConfigs());
+    },
+    async createStakingPool(){
+      const pools = await getAllPools()
+
+      createPool(
+        this.$web3, 
+        this.$wallet,
+        TOKENS['CRP'].mintAddress,
+        pools
+      )
+    },
+    async getPools(){
+      const pools = await getAllPools()
+      console.log(pools)
+    },
+
+    async changeMultiplier(){
+      const pools = await getAllPools()
+      pools.forEach(async (p: any) =>{
+        await changePoolAmountMultipler(this.$web3, this.$wallet, p.publicKey.toString())
+      })
+    },
+    async changeStakingPoolPoint(){
+      const pools = await getAllPools()
+      pools.forEach(async (p: any) =>{
+        await changePoolPoint(this.$web3, this.$wallet, p.publicKey.toString())
+      })
+    },
+    async changeTokenPS(){
+      const pools = await getAllPools()
+      console.log(pools)
+      await changeTokenPerSecond(this.$web3, this.$wallet, pools)
+    },
+    async createUserAccount(){
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const poolSigner = current_pool.publicKey.toString()
+      await createUser(this.$web3, this.$wallet, poolSigner)
+    },    
+
+    async stakeToken(){
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const poolSigner = current_pool.publicKey.toString()
+      const rewardMint = current_pool.account.mint.toString()
+      const rewardPoolVault = current_pool.account.vault.toString()
+      const lock_duration = 10 * 60
+      stake(
+        this.$web3, 
+        this.$wallet,
+
+        poolSigner,
+        rewardMint,
+        rewardPoolVault,
+
+        get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
+        
+        10 * 1000000,
+        lock_duration
+        )
+    },
+
+    async unstakeToken(){
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const poolSigner = current_pool.publicKey.toString()
+      const rewardMint = current_pool.account.mint.toString()
+      const rewardPoolVault = current_pool.account.vault.toString()
+      
+      unstake(
+        this.$web3, 
+        this.$wallet,
+        poolSigner,
+        rewardMint,
+        rewardPoolVault,
+
+        get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
+
+        3 * 1000000,
+        )
+    },
+    async getUserAccount(){
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
+      console.log(userAccount)
+    },
+    async harvestReward(){
+      const programState = await getFarmState()
+      
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const poolSigner = current_pool.publicKey.toString()
+      const rewardMint = current_pool.account.mint.toString()
+      const rewardPoolVault = current_pool.account.vault.toString()
+      
+      harvest(
+        this.$web3, 
+        this.$wallet,
+        
+        poolSigner,
+        rewardMint,
+        get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
+        programState.rewardVault,
+      )
+      }
     }
-  }
 })
 </script>
 

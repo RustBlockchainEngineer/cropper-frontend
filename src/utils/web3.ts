@@ -205,6 +205,41 @@ export async function createAtaSolIfNotExistAndWrap(
   }
 }
 
+export async function createAssociatedTokenAccountIfNotExist2(
+  account: string | undefined | null,
+  owner: PublicKey,
+  payer: PublicKey,
+  mintAddress: string,
+
+  transaction: Transaction,
+  atas: string[] = []
+) {
+  let publicKey
+  if (account) {
+    publicKey = new PublicKey(account)
+  }
+
+  const mint = new PublicKey(mintAddress)
+  // @ts-ignore without ts ignore, yarn build will failed
+  const ata = await Token.getAssociatedTokenAddress(ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, mint, owner, true)
+
+  if ((!publicKey || !ata.equals(publicKey)) && !atas.includes(ata.toBase58())) {
+    transaction.add(
+      Token.createAssociatedTokenAccountInstruction(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        mint,
+        ata,
+        owner,
+        payer
+      )
+    )
+    atas.push(ata.toBase58())
+  }
+
+  return ata
+}
+
 export async function createProgramAccountIfNotExist(
   connection: Connection,
   account: string | undefined | null,
@@ -513,17 +548,22 @@ export async function getFilteredTokenAccountsByOwner(
 export async function getOneFilteredTokenAccountsByOwner(  connection: Connection,
   owner: PublicKey,
   mint: PublicKey
-): Promise<string> {
-  let tokenAccountList_t = await getFilteredTokenAccountsByOwner(connection, owner, mint)
-  
-  const tokenAccountList: any = tokenAccountList_t.value.map((item: any) => {
-      return item.pubkey
-  })
-  let tokenAccount
-  for (const item of tokenAccountList) {
-    if (item !== null) {
-      tokenAccount = item
+): Promise<string|null> {
+  try{
+    const tokenAccountList1 = await getFilteredTokenAccountsByOwner(connection, owner, mint)
+    const tokenAccountList: any = tokenAccountList1.value.map((item: any) => {
+        return item.pubkey
+    })
+    let tokenAccount
+    for (const item of tokenAccountList) {
+      if (item !== null) {
+        tokenAccount = item
+      }
     }
+    return tokenAccount
   }
-  return tokenAccount
+  catch{
+    return null
+  }
+
 }
