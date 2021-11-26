@@ -1,10 +1,7 @@
 <template>
   <div class="staking container">
-    <BaseDetail 
-      :show="baseDetailShow" 
-      @onClose="() => (baseDetailShow = false)"
-      @onSelect="onBaseDetailSelect"
-    />
+    <BaseDetailModal :show="baseModalShow" @onClose="() => (baseModalShow = false)" @onSelect="onBaseDetailSelect" />
+    <StakeModal :show="stakeModalShow" @onClose="() => (stakeModalShow = false)" />
 
     <div class="staking-body">
       <h1>$CRP Staking</h1>
@@ -12,7 +9,14 @@
         <Col span="24" class="staking-info">
           <div class="label">
             Estimated APY
-            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
+            <Tooltip placement="bottomLeft">
+              <template slot="title">
+                <div>Potential Annual Percentage Yield</div>
+              </template>
+              <div class="info-icon">
+                <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
+              </div>
+            </Tooltip>
           </div>
           <div class="value">
             {{ estimatedAPY }} %
@@ -21,7 +25,7 @@
               src="@/assets/icons/calculator.svg"
               @click="
                 () => {
-                  this.baseDetailShow = true
+                  this.baseModalShow = true
                 }
               "
             />
@@ -30,14 +34,28 @@
         <Col span="24" class="staking-info">
           <div class="label">
             Total Staked
-            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
+            <Tooltip placement="bottomLeft">
+              <template slot="title">
+                <div>Total staked CRP token amount</div>
+              </template>
+              <div class="info-icon">
+                <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
+              </div>
+            </Tooltip>
           </div>
           <div class="value">2,841,752</div>
         </Col>
         <Col span="24" class="staking-info">
           <div class="label">
             Total Value
-            <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
+            <Tooltip placement="bottomLeft">
+              <template slot="title">
+                <div>Total Value staked (USD)</div>
+              </template>
+              <div class="info-icon">
+                <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
+              </div>
+            </Tooltip>
           </div>
           <div class="value">$3,790,576.436</div>
         </Col>
@@ -60,13 +78,21 @@
           </div>
           <div v-if="wallet.connected" class="stake-btn-group">
             <div class="btn-container">
-              <Button class="btn-fill">Stake</Button>
+              <Button
+                class="btn-fill"
+                @click="
+                  () => {
+                    this.stakeModalShow = true
+                  }
+                "
+                >Stake</Button
+              >
             </div>
             <div class="btn-container">
               <Button class="btn-outline">Unstake</Button>
             </div>
           </div>
-          
+
           <div v-if="!wallet.connected" class="connect-wallet">
             <Button class="btn-primary" @click="$accessor.wallet.openModal">Connect Wallet</Button>
           </div>
@@ -91,17 +117,19 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Row, Col, Button } from 'ant-design-vue'
+import { Row, Col, Button, Tooltip } from 'ant-design-vue'
 
 export default Vue.extend({
   components: {
     Row,
     Col,
-    Button
+    Button,
+    Tooltip
   },
   data() {
     return {
-      baseDetailShow: false as boolean,
+      baseModalShow: false as boolean,
+      stakeModalShow: false as boolean,
       estimatedAPY: 0 as number,
       lockDuration: 0 as number
     }
@@ -111,7 +139,7 @@ export default Vue.extend({
   },
   methods: {
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
-      this.baseDetailShow = false
+      this.baseModalShow = false
       this.estimatedAPY = estimated_apy
       this.lockDuration = lock_duration
     }
@@ -179,8 +207,9 @@ export default Vue.extend({
   .tooltip-icon {
     width: 10px;
     position: absolute;
-    margin-left: 5px;
     top: 3px;
+    right: -15px;
+    cursor: pointer;
   }
 
   .clickable-icon {
@@ -236,6 +265,7 @@ export default Vue.extend({
           font-size: 16px;
           line-height: 20px;
           color: @color-gray;
+          position: relative;
         }
 
         .value {
@@ -304,7 +334,7 @@ export default Vue.extend({
             display: block;
           }
         }
-        
+
         .stake-btn-group {
           .btn-container {
             height: 42px;
@@ -336,6 +366,25 @@ export default Vue.extend({
           display: flex;
         }
       }
+    }
+  }
+}
+</style>
+<style lang="less">
+// ant customization
+.ant-tooltip {
+  .ant-tooltip-content {
+    .ant-tooltip-arrow {
+      display: none;
+    }
+
+    .ant-tooltip-inner {
+      background: @gradient-color-primary !important;
+      background-origin: border-box !important;
+      border: 2px solid rgba(255, 255, 255, 0.14) !important;
+      box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25) !important;
+      border-radius: 8px !important;
+      padding: 10px !important;
     }
   }
 }

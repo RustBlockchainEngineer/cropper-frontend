@@ -35,7 +35,7 @@ body {
 }
 
 .text-center {
-  text-align: center
+  text-align: center;
 }
 
 .stdEmptyGradientButton {
@@ -60,7 +60,6 @@ body {
     font-size: 16px;
     letter-spacing: -0.05em;
   }
-
 }
 
 .stdGradientButton {
@@ -85,7 +84,6 @@ body {
     font-size: 16px;
     letter-spacing: -0.05em;
   }
-
 }
 
 .container {
@@ -99,18 +97,6 @@ body {
 
 .ant-progress {
   background: @color-bg !important;
-}
-
-.ant-modal-content {
-  border-radius: 15px !important;
-}
-
-.ant-modal-header {
-  border-bottom: unset !important;
-}
-
-.ant-modal-body {
-  padding-top: 0 !important;
 }
 
 .flex {
@@ -294,96 +280,6 @@ a {
   color: #13ECAB !important
 }
 
-.ant-tooltip-inner {
-  display: inline-block;
-  background: @gradient-color-primary !important;
-  background-origin: border-box !important;
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25) !important;
-  border-radius: 8px !important;
-  padding: 25px !important;
-  font-size: 14px;
-  line-height: 16px;
-  color: rgba(255,255,255,0.5) !important;
-  min-width: 187px !important;
-
-  @media @max-b-mobile {
-    max-width: 300px !important;
-  }
-
-  span {
-    font-weight: 600;
-  }
-
-  hr {
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-
-  .tooltip-line {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 16px;
-    line-height: 20px;
-  }
-
-  .tooltip-text {
-    font-size: 15px;
-    line-height: 18px;
-    color: #fff;
-  }
-
-  p {
-    margin-bottom: 0;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 20px;
-    color: @text-color;
-  }
-
-  .swap-info {
-    font-size: 12px;
-    line-height: 20px;
-    color: @text-color;
-
-    .info {
-      display: grid;
-      justify-content: space-between;
-      align-items: center;
-      padding: 4px 0;
-      gap: 10px;
-      grid-template-columns: minmax(auto, 1fr) auto auto;
-
-      .symbol {
-        opacity: 0.75;
-      }
-
-      .address {
-        padding: 2px 4px;
-        background: @bg-color;
-        border-radius: 4px;
-        opacity: 0.75;
-      }
-
-      .action {
-        font-size: 16px;
-
-        i {
-          cursor: pointer;
-
-          &:hover {
-            color: #13ECAB !important;
-          }
-        }
-
-        a {
-          color: @text-color;
-        }
-      }
-    }
-  }
-}
-
 .ant-pagination-item,
 .ant-pagination-item-link {
   background: transparent !important;
@@ -419,5 +315,139 @@ a {
   .ant-modal-body .stdGradientButton {
     height: unset;
     margin: 0 auto;
+  }
+}
+
+// ant-modal
+.ant-modal {
+  width: 800px;
+
+  @media @max-b-mobile {
+    width: calc(100% - 40px) !important;
+  }
+  
+  .ant-modal-content {
+    background-color: @color-modal-dark;
+    padding: 15px;
+    border-radius: 5px;
+
+    .ant-modal-close .ant-modal-close-x .anticon{
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .ant-modal-header {
+      background-color: @color-modal-dark;
+      display: flex;
+      justify-content: space-between;
+      padding: 0;
+      border-bottom: 0;
+
+      .ant-modal-title {
+        width: 100%;
+        background-color: @color-modal-dark;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 22px;
+        color: #fff;
+      }
+    }
+
+    .ant-modal-body {
+      padding: 30px 0 0 0;
+    }
+  }
+}
+
+// ant-tooltip
+.ant-tooltip {
+  .ant-tooltip-inner {
+    display: inline-block;
+    background: @gradient-color-primary !important;
+    background-origin: border-box !important;
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 8px !important;
+    padding: 25px !important;
+    font-size: 14px;
+    line-height: 16px;
+    color: #fff;
+    min-width: 187px !important;
+  
+    @media @max-b-mobile {
+      max-width: 300px !important;
+    }
+  
+    span {
+      font-weight: 600;
+    }
+  
+    hr {
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+  
+    .tooltip-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 16px;
+      line-height: 20px;
+    }
+  
+    .tooltip-text {
+      font-size: 15px;
+      line-height: 18px;
+      color: #fff;
+    }
+  
+    p {
+      margin-bottom: 0;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 20px;
+      color: @text-color;
+    }
+  
+    .swap-info {
+      font-size: 12px;
+      line-height: 20px;
+      color: @text-color;
+  
+      .info {
+        display: grid;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        gap: 10px;
+        grid-template-columns: minmax(auto, 1fr) auto auto;
+  
+        .symbol {
+          opacity: 0.75;
+        }
+  
+        .address {
+          padding: 2px 4px;
+          background: @bg-color;
+          border-radius: 4px;
+          opacity: 0.75;
+        }
+  
+        .action {
+          font-size: 16px;
+  
+          i {
+            cursor: pointer;
+  
+            &:hover {
+              color: #13ECAB !important;
+            }
+          }
+  
+          a {
+            color: @text-color;
+          }
+        }
+      }
+    }
   }
 }

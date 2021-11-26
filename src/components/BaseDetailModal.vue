@@ -1,5 +1,5 @@
 <template>
-  <Modal title="Base detail" :visible="show" :footer="null" :mask-closable="false" @cancel="$emit('onClose')">
+  <Modal title="Base detail" :visible="show" :footer="null" :mask-closable="false" @cancel="$emit('onClose')" centered>
     <div class="base-container">
       <div class="base-title">
         <label class="label">Base APY</label>
@@ -72,44 +72,6 @@ export default Vue.extend({
 })
 </script>
 <style lang="less">
-// .ant-modal {
-//   width: 365px !important;
-//   top: 240px;
-  
-//   @media @max-b-mobile {
-//     width: calc(100% - 40px) !important;
-//   }
-
-//   .ant-modal-content {
-//     background: @color-modal-dark;
-//     border-radius: 5px !important;
-//     padding: 15px;
-//     border: none;
-
-//     .ant-modal-header {
-//       background: @color-modal-dark;
-//       padding: 0;
-//       margin-bottom: 30px;
-
-//       .ant-modal-title {
-//         background: @color-modal-dark;
-//         font-weight: bold;
-//         font-size: 18px;
-//         line-height: 22px;
-//         text-align: left;
-//         border-bottom: none;
-//       }
-//     }
-
-//     .ant-modal-body {
-//       padding: 0;
-//     }
-
-//     .ant-modal-close .ant-modal-close-x .anticon-close {
-//       font-size: 20px;
-//     }
-//   }
-// }
 
 .base-container {
   .base-title {

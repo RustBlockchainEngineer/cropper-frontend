@@ -80,7 +80,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { Button, Modal, Icon, Tooltip } from 'ant-design-vue'
+import { Button, Modal, Icon } from 'ant-design-vue'
 import {
   AccountInfo,
   Context
@@ -127,8 +127,7 @@ interface WalletInfo {
   components: {
     Button,
     Modal,
-    Icon,
-    Tooltip
+    Icon
   }
 })
 
@@ -650,55 +649,6 @@ export default class Wallet extends Vue {
         border-radius: 50%;
       }
     }
-  }
-}
-
-.ant-modal {
-  width: 800px;
-
-  @media @max-b-mobile {
-    width: calc(100% - 40px) !important;
-  }
-}
-
-.ant-modal-content {
-  background-color: #1a1d6b;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 4px;
-
-  .ant-modal-close {
-    color: @text-color;
-  }
-}
-
-
-.ant-tooltip {
-  padding-top: 18px;
-
-  .ant-tooltip-inner {
-    color: white !important;
-  }
-}
-
-.ant-modal-header {
-  background-color: #1a1d6b;
-  display: flex;
-  justify-content: space-between;
-}
-
-.ant-modal-title {
-  width: 100%;
-  background-color: #1a1d6b;
-  text-align: center;
-  font-weight: bold;
-  font-size: 40px;
-  line-height: 80px;
-  letter-spacing: -0.05em;
-  color: #fff;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-
-  @media @max-b-mobile {
-    font-size: 30px;
   }
 }
 
