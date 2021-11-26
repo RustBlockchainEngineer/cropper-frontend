@@ -1,5 +1,5 @@
 <template>
-  <Modal title="Base detail" :visible="show" :footer="null" :mask-closable="false" @cancel="$emit('onClose')" centered>
+  <Modal title="Base detail" :visible="show" :footer="null" :mask-closable="true" @cancel="$emit('onCancel')" centered>
     <div class="base-container">
       <div class="base-title">
         <label class="label">Base APY</label>

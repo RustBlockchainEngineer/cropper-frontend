@@ -2,7 +2,7 @@
   <div class="pool container">
     <img class="planet-left" src="@/assets/Green Planet 1.png" />
 
-    <coinModalMulti
+    <CoinModalMulti
       v-if="stakeModalOpening"
       title="Add Liquidity"
       :loading="staking"

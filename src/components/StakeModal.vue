@@ -3,8 +3,8 @@
     title="Stake $CRP TOKEN"
     :visible="show"
     :footer="null"
-    :mask-closable="false"
-    @cancel="$emit('onClose')"
+    :mask-closable="true"
+    @cancel="$emit('onCancel')"
     centered
   >
     <div class="stake-container">
@@ -12,7 +12,7 @@
         <div class="value-balance">Balance 8.471.13</div>
         <div class="input-form">
           <input type="number" placeholder="Input amount"/>
-          <Button class="btn-primary">MAX</Button>
+          <Button class="btn-max">MAX</Button>
           <span class="symbol">CRP</span>
         </div>
         <div class="value-total">Total: <span>10,000.0</span></div>
@@ -52,7 +52,7 @@
         <p>Your total staked tokens will be locked until 10/11/2022</p>
         <div class="cc-btn-group">
           <div class="btn-container">
-            <Button class="btn-outline">Cancel</Button>
+            <Button class="btn-outline" @click="() => {$emit('onCancel')}">Cancel</Button>
           </div>
           <Button class="btn-primary">Confirm</Button>
         </div>
@@ -159,7 +159,7 @@ export default Vue.extend({
       padding: 12px;
       border: 2px solid @color-light-blue;
       border-radius: 8px;
-      margin: 5px 0;
+      margin: 10px 0;
 
       input {
         color: #fff;
@@ -167,6 +167,9 @@ export default Vue.extend({
         border: none;
         outline: none;
         width: 100%;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 22px;
 
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
@@ -175,11 +178,15 @@ export default Vue.extend({
         }
       }
       
-      .btn-primary {
-        padding: 4px;
+      .btn-max {
+        background: @color-light-blue;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
         font-weight: 800;
         font-size: 8px;
         line-height: 7px;
+        padding: 4px;
       }
 
       .symbol {
