@@ -68,6 +68,7 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import { Modal, Row, Col } from 'ant-design-vue'
 import { cloneDeep, get } from 'lodash-es'
+import { getUnixTs } from '@/utils'
 
 import moment from 'moment'
 
@@ -153,7 +154,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    ...mapState(['wallet'])
+    ...mapState(['wallet', 'url'])
   },
 
   mounted() {
@@ -196,6 +197,19 @@ export default Vue.extend({
         const rewardMint = current_pool.account.mint.toString()
         const rewardPoolVault = current_pool.account.vault.toString()
         const lock_duration = this.minutesLock * 60
+
+
+
+        const key = getUnixTs().toString()
+        this.$notify.info({
+          key,
+          message: 'Making transaction...',
+          description: '',
+          duration: 0
+        })
+
+
+
         stake(
           this.$web3, 
           this.$wallet,
@@ -208,7 +222,41 @@ export default Vue.extend({
           
           this.toStake * 1000000,
           lock_duration
-          )
+          ).then((txid) => {
+
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
+             
+        const description = `Staking ${this.toStake} CRP`
+
+        this.$accessor.transaction.sub({ txid, description })
+      })
+      .catch((error) => {
+        this.$notify.error({
+          key,
+          message: 'Staking failed',
+          description: error.message
+        })
+      })
+      .finally(() => {
+        this.$accessor.wallet.getTokenAccounts()
+      });
+
+
+
       }
 
   },
@@ -249,6 +297,10 @@ export default Vue.extend({
   border-radius: 8px;
   border: none;
   cursor: pointer;
+
+  &:disabled {
+        opacity: 0.5;
+  }
 }
 
 // class styles

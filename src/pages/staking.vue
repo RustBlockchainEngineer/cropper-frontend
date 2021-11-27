@@ -68,7 +68,7 @@
             <label class="value">{{pendingReward}}</label>
           </div>
           <div class="btn-container">
-            <Button class="btn-fill" :disabled="!wallet.connected" @click = "harvestReward">Harvest</Button>
+            <Button class="btn-fill" :disabled="!wallet.connected || pendingReward == 0" @click = "harvestReward">Harvest</Button>
           </div>
         </Col>
         <Col span="24" class="crp-staked" :class="!wallet.connected ? 'crp-staked-block' : 'crp-staked-flex'">
@@ -364,7 +364,16 @@ export default Vue.extend({
       const poolSigner = current_pool.publicKey.toString()
       const rewardMint = current_pool.account.mint.toString()
       const rewardPoolVault = current_pool.account.vault.toString()
-      
+         
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
       unstake(
         this.$web3, 
         this.$wallet,
@@ -375,7 +384,41 @@ export default Vue.extend({
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
 
           this.userStaked * 1000000,
-        )
+        ).then((txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
+
+        const description = 'Unstaking CRP'
+
+        this.$accessor.transaction.sub({ txid, description })
+      })
+      .catch((error) => {
+        this.$notify.error({
+          key,
+          message: 'Unstaking failed',
+          description: error.message
+        })
+      })
+      .finally(() => {
+        this.$accessor.wallet.getTokenAccounts()
+      });
+
+
+
+
     },
     async getUserAccount(){
       const pools = await getAllPools()
@@ -392,7 +435,7 @@ export default Vue.extend({
       const rewardMint = current_pool.account.mint.toString()
       const rewardPoolVault = current_pool.account.vault.toString()
         
-      /*
+      
       const key = getUnixTs().toString()
       this.$notify.info({
         key,
@@ -400,7 +443,7 @@ export default Vue.extend({
         description: '',
         duration: 0
       })
-      */
+      
 
       harvest(
         this.$web3, 
@@ -409,11 +452,41 @@ export default Vue.extend({
         poolSigner,
         rewardMint,
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
-        programState.rewardVault,
-      )
+        programState.rewardVault
+      ).then((txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
 
-      }
+        const description = 'Harvesting CRP'
+
+        this.$accessor.transaction.sub({ txid, description })
+      })
+      .catch((error) => {
+        this.$notify.error({
+          key,
+          message: 'Harvest failed',
+          description: error.message
+        })
+      })
+      .finally(() => {
+        this.$accessor.wallet.getTokenAccounts()
+      });
+
     }
+  }
 })
 </script>
 
