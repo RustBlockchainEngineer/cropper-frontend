@@ -1,7 +1,7 @@
 <template>
   <div class="staking container">
-    <BaseDetailModal :show="baseModalShow" @onCancel="() => (baseModalShow = false)" @onSelect="onBaseDetailSelect" />
-    <StakeModal :show="stakeModalShow" :crpbalance="crpbalance" @onCancel="() => (stakeModalShow = false)" />
+    <BaseDetailModal :show="baseModalShow" :estimatedapy="estimatedAPY" @onCancel="() => (baseModalShow = false)" @onSelect="onBaseDetailSelect" />
+    <StakeModal :show="stakeModalShow" :crpbalance="crpbalance" :userStaked="userStaked" :estimatedapy="estimatedAPY" @onCancel="() => (stakeModalShow = false)" />
 
     <div class="staking-body">
       <h1>$CRP Staking</h1>

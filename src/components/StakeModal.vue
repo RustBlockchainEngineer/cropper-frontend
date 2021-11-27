@@ -17,7 +17,7 @@
           @click="setMax">MAX</Button>
           <span class="symbol">CRP</span>
         </div>
-        <div class="value-total">Total: <span>0</span></div>
+        <div class="value-total">Total: <span>{{ this.userStaked }}</span></div>
       </Row>
       <Row>
         <Col class="tier-group" span="6" v-for="data in lockData" :key="data.tier" @click="displayTiers(data.tier)">
@@ -31,15 +31,15 @@
       <Row class="calc-box">
         <Col span="24" class="calc-info">
           <label class="label">Total lock (CRP)</label>
-          <label class="value">10,000.00</label>
+          <label class="value">{{ this.userStaked * 1 + toStake * 1 }}</label>
         </Col>
         <Col span="24" class="calc-info">
           <label class="label">Base APY (%)</label>
-          <label class="value">{{ baseAPY }}</label>
+          <label class="value">{{ this.estimatedapy }}</label>
         </Col>
         <Col span="24" class="calc-info">
           <label class="label">Estimated reward (CRP)</label>
-          <label class="value">10,000.00</label>
+          <label class="value">{{ Math.round(100000 * (this.userStaked * 1 + toStake * 1) * this.estimatedapy / 100) / 100000  }}</label>
         </Col>
         <Col span="24" class="calc-info">
           <label class="label">{{ boostText }}</label>
@@ -47,7 +47,7 @@
         </Col>
         <Col span="24" class="calc-info">
           <label class="label">Total estimate reward</label>
-          <label class="reward-value">2,623.95 CRP</label>
+          <label class="reward-value">{{ Math.round(100000 * (this.userStaked * 1 + toStake * 1) * this.estimatedapy * boostAPY / 100) / 100000  }}CRP</label>
         </Col>
       </Row>
       <Row class="calc-footer">
@@ -112,7 +112,6 @@ export default Vue.extend({
     return {
       toStake : null as any,
       tierActive : 4,
-      baseAPY : '???',
       boostAPY : 1,
       unstakeDate : '',
       minutesLock :  null as any,
@@ -266,6 +265,14 @@ export default Vue.extend({
       default: false
     },
     crpbalance: {
+      type: Number,
+      default: 0
+    },
+    estimatedapy: {
+      type: Number,
+      default: 0
+    },
+    userStaked: {
       type: Number,
       default: 0
     }
