@@ -1,7 +1,7 @@
 <template>
   <div class="staking container">
     <BaseDetailModal :show="baseModalShow" @onCancel="() => (baseModalShow = false)" @onSelect="onBaseDetailSelect" />
-    <StakeModal :show="stakeModalShow" @onCancel="() => (stakeModalShow = false)" />
+    <StakeModal :show="stakeModalShow" :crpbalance="crpbalance" @onCancel="() => (stakeModalShow = false)" />
 
     <div class="staking-body">
       <h1>$CRP Staking</h1>
@@ -122,7 +122,9 @@ import { cloneDeep, get } from 'lodash-es'
 import { getTokenBySymbol, TokenInfo, NATIVE_SOL, TOKENS } from '@/utils/tokens'
 import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
+import { getUnixTs } from '@/utils'
 import BigNumber from 'bignumber.js'
+import { DEVNET_MODE } from '../utils/ids'
 import { TokenAmount, gt } from '@/utils/safe-math'
 import * as anchor from '@project-serum/anchor';
 const { BN } = anchor
@@ -169,6 +171,7 @@ export default Vue.extend({
       stakeModalShow: false as boolean,
       estimatedAPY: 0 as number,
       lockDuration: 0 as number,
+      crpbalance: 0 as any,
 
       totalStaked: '0' as string,
       userStaked: '0' as string,
@@ -225,13 +228,14 @@ export default Vue.extend({
       const pools = await getAllPools()
       const current_pool = pools[0]
 
+
       const farm_state = await getFarmState();
 
       const stakedAmount = new TokenAmount(current_pool.account.amount, 6)
 
       this.totalStakedPrice = '$' + parseFloat(stakedAmount.fixed())
 
-      this.totalStaked = '$' + stakedAmount.fixed()
+      this.totalStaked = 'CRP ' + (Math.round( parseFloat(stakedAmount.fixed()) * 1000) / 1000)
       this.estimatedAPY = Math.ceil(farm_state.tokenPerSecond * 365 * 24 * 3600 / current_pool.account.amount * 100) / 100;
     }, 
 
@@ -251,6 +255,13 @@ export default Vue.extend({
       )
 
       this.pendingReward = '$' + (new TokenAmount(rewardAmount, 6)).fixed()
+
+
+      let crpbalanceDatas = this.wallet.tokenAccounts[DEVNET_MODE ? 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG' : 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz']
+
+      if(crpbalanceDatas){
+        this.crpbalance = crpbalanceDatas.balance.fixed() * 1;
+      }
     },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
       this.baseModalShow = false
@@ -379,7 +390,17 @@ export default Vue.extend({
       const poolSigner = current_pool.publicKey.toString()
       const rewardMint = current_pool.account.mint.toString()
       const rewardPoolVault = current_pool.account.vault.toString()
-      
+        
+      /*
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+      */
+
       harvest(
         this.$web3, 
         this.$wallet,
@@ -389,6 +410,7 @@ export default Vue.extend({
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
         programState.rewardVault,
       )
+
       }
     }
 })

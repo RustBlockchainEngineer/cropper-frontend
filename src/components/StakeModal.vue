@@ -9,18 +9,20 @@
   >
     <div class="stake-container">
       <Row class="balance-form">
-        <div class="value-balance">Balance 8.471.13</div>
+        <div class="value-balance">Balance {{ this.crpbalance }}</div>
         <div class="input-form">
-          <input type="number" placeholder="Input amount"/>
-          <Button class="btn-max">MAX</Button>
+          <input type="number" 
+          v-model="toStake" placeholder="Input amount"/>
+          <Button class="btn-max" 
+          @click="setMax">MAX</Button>
           <span class="symbol">CRP</span>
         </div>
-        <div class="value-total">Total: <span>10,000.0</span></div>
+        <div class="value-total">Total: <span>0</span></div>
       </Row>
       <Row>
-        <Col class="tier-group" span="6" v-for="data in lockData" :key="data.tier">
+        <Col class="tier-group" span="6" v-for="data in lockData" :key="data.tier" @click="displayTiers(data.tier)">
           Tier {{ data.tier }}
-          <span :class="data.tier === 4 ? 'tier-active' : 'tier-inactive'">{{
+          <span :class="(data.tier === tierActive) ? 'tier-active' : 'tier-inactive'">{{
             data.time >= 12 ? data.time / 12 + 'Y' : data.time + 'M'
           }}</span>
           {{ data.boost }}x
@@ -33,15 +35,15 @@
         </Col>
         <Col span="24" class="calc-info">
           <label class="label">Base APY (%)</label>
-          <label class="value">13.12</label>
+          <label class="value">{{ baseAPY }}</label>
         </Col>
         <Col span="24" class="calc-info">
           <label class="label">Estimated reward (CRP)</label>
           <label class="value">10,000.00</label>
         </Col>
         <Col span="24" class="calc-info">
-          <label class="label">Boost for 1 year locked</label>
-          <label class="value">13.12</label>
+          <label class="label">{{ boostText }}</label>
+          <label class="value">x {{ boostAPY }}</label>
         </Col>
         <Col span="24" class="calc-info">
           <label class="label">Total estimate reward</label>
@@ -75,38 +77,73 @@ export default Vue.extend({
   },
   data() {
     return {
+      toStake : null as any,
+      tierActive : 4,
+      baseAPY : '???',
+      boostAPY : 1,
+      boostText : '',
       lockData: [
         {
           tier: 1,
           time: 1,
           boost: 1,
-          apy: 11.1
+          apy: 11.1,
+          text: 'Boost for 1 month locked'
         },
         {
           tier: 2,
           time: 3,
           boost: 1.1,
-          apy: 12.21
+          apy: 12.21,
+          text: 'Boost for 3 months locked'
         },
         {
           tier: 3,
           time: 6,
           boost: 1.3,
-          apy: 14.43
+          apy: 14.43,
+          text: 'Boost for 6 months locked'
         },
         {
           tier: 4,
           time: 12,
           boost: 2,
-          apy: 22.19
+          apy: 22.19,
+          text: 'Boost for 1 year locked'
         }
       ]
+    }
+  },
+
+  mounted() {
+    this.displayTiers(this.tierActive)
+  },
+
+  methods: {
+    displayTiers(tier: any) {
+      this.tierActive = tier;
+      let currentTier = this.lockData.filter(
+          (tierSearch: any) => (tierSearch.tier as string) == (tier as string)
+        )
+
+      console.log(currentTier);  
+      this.boostAPY = currentTier[0].boost;
+      this.boostText = currentTier[0].text;
+    },
+    setMax() 
+    {
+      this.toStake  = this.crpbalance 
+      
     }
   },
   props: {
     show: {
       type: Boolean,
       default: false
+    },
+    crpbalance: {
+      type: Number,
+      default: 0
     }
   }
 })
@@ -219,6 +256,7 @@ export default Vue.extend({
     font-size: 12px;
     line-height: 14px;
     color: @color-gray;
+    cursor: pointer;
 
     .tier-inactive,
     .tier-active {
