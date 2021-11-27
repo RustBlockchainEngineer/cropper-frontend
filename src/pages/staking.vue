@@ -254,7 +254,7 @@ export default Vue.extend({
           userAccount
       )
 
-      this.pendingReward =  (new TokenAmount(rewardAmount, 6)).fixed()
+      this.pendingReward = (new TokenAmount(rewardAmount, 6)).fixed()
 
 
       let crpbalanceDatas = this.wallet.tokenAccounts[DEVNET_MODE ? 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG' : 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz']
