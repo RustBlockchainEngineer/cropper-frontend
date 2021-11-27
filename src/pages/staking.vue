@@ -245,7 +245,7 @@ export default Vue.extend({
       const pools = await getAllPools()
       const current_pool = pools[0]
       const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
-      this.userStaked = '$' + (new TokenAmount(userAccount.amount, 6)).fixed()
+      this.userStaked = (new TokenAmount(userAccount.amount, 6)).fixed()
 
       const rewardAmount = estimateRewards(
           farm_state,
@@ -254,7 +254,7 @@ export default Vue.extend({
           userAccount
       )
 
-      this.pendingReward = '$' + (new TokenAmount(rewardAmount, 6)).fixed()
+      this.pendingReward =  (new TokenAmount(rewardAmount, 6)).fixed()
 
 
       let crpbalanceDatas = this.wallet.tokenAccounts[DEVNET_MODE ? 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG' : 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz']
@@ -373,7 +373,7 @@ export default Vue.extend({
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
 
-        58 * 1000000,
+        this.userStaked * 1000000,
         )
     },
     async getUserAccount(){

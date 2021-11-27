@@ -51,12 +51,12 @@
         </Col>
       </Row>
       <Row class="calc-footer">
-        <p>Your total staked tokens will be locked until 10/11/2022</p>
+        <p>Your total staked tokens will be locked until {{ unstakeDate }}</p>
         <div class="cc-btn-group">
           <div class="btn-container">
             <Button class="btn-outline" @click="() => {$emit('onCancel')}">Cancel</Button>
           </div>
-          <Button class="btn-primary" @click="stakeToken">Confirm</Button>
+          <Button class="btn-primary" :disabled="this.crpbalance < toStake || toStake * 1 == 0" @click="stakeToken">Confirm</Button>
         </div>
       </Row>
     </div>
@@ -68,6 +68,8 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import { Modal, Row, Col } from 'ant-design-vue'
 import { cloneDeep, get } from 'lodash-es'
+
+import moment from 'moment'
 
 import {
   setAnchorProvider,
@@ -111,6 +113,7 @@ export default Vue.extend({
       tierActive : 4,
       baseAPY : '???',
       boostAPY : 1,
+      unstakeDate : '',
       minutesLock :  null as any,
       boostText : '',
       lockData: [
@@ -168,6 +171,13 @@ export default Vue.extend({
       this.boostAPY = currentTier[0].boost;
       this.boostText = currentTier[0].text;
       this.minutesLock = currentTier[0].minutesLock;
+
+      var currentDate = moment();
+      var futureMonth = moment(currentDate).add(currentTier[0].time, 'M');
+
+      this.unstakeDate = futureMonth.format('DD/MM/YYYY')
+
+
     },
     setMax() 
     {
