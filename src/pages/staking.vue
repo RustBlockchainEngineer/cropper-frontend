@@ -43,7 +43,7 @@
               </div>
             </Tooltip>
           </div>
-          <div class="value">2,841,752</div>
+          <div class="value">{{totalStaked}}</div>
         </Col>
         <Col span="24" class="staking-info">
           <div class="label">
@@ -57,7 +57,7 @@
               </div>
             </Tooltip>
           </div>
-          <div class="value">$3,790,576.436</div>
+          <div class="value">{{totalStakedPrice}}</div>
         </Col>
       </Row>
 
@@ -65,16 +65,16 @@
         <Col span="24" class="reward-pending">
           <div class="reward-value">
             <label class="box-title">Reward Pending</label>
-            <label class="value">0</label>
+            <label class="value">{{pendingReward}}</label>
           </div>
           <div class="btn-container">
-            <Button class="btn-fill" :disabled="!wallet.connected">Harvest</Button>
+            <Button class="btn-fill" :disabled="!wallet.connected" @click = "harvestReward">Harvest</Button>
           </div>
         </Col>
         <Col span="24" class="crp-staked" :class="!wallet.connected ? 'crp-staked-block' : 'crp-staked-flex'">
           <div class="staked-value">
             <label class="box-title">CRP Staked</label>
-            <label v-if="wallet.connected" class="value">10,000.00</label>
+            <label v-if="wallet.connected" class="value">{{userStaked}}</label>
           </div>
           <div v-if="wallet.connected" class="stake-btn-group">
             <div class="btn-container">
@@ -89,7 +89,7 @@
               >
             </div>
             <div class="btn-container">
-              <Button class="btn-outline">Unstake</Button>
+              <Button class="btn-outline" @click = "unstakeToken">Unstake</Button>
             </div>
           </div>
 
@@ -130,7 +130,7 @@ const { BN } = anchor
 
 import {
   setAnchorProvider,
-  
+
   createFarmState, 
   fundToProgram,
 
@@ -146,6 +146,7 @@ import {
   getExtraRewardConfigs,
   getAllPools,
   getPoolUserAccount,
+  estimateRewards,
 
   createUser,
   stake,
@@ -167,8 +168,13 @@ export default Vue.extend({
       baseModalShow: false as boolean,
       stakeModalShow: false as boolean,
       estimatedAPY: 0 as number,
-      lockDuration: 0 as number
-    }
+      lockDuration: 0 as number,
+
+      totalStaked: '0' as string,
+      userStaked: '0' as string,
+      pendingReward: '0' as string,
+      totalStakedPrice: '0' as string
+     }
   },
   head: {
     title: 'CropperFinance Swap'
@@ -179,15 +185,28 @@ export default Vue.extend({
   watch: {
     'wallet.tokenAccounts': {
       handler(newTokenAccounts: any) {
-        setAnchorProvider(this.$web3, this.$wallet)
+        if(this.$wallet?.connected){
+            this.getUserState();
+        }
       },
       deep: true
     },
+    'wallet.connected':{
+      handler(connected: any) {
+
+        if(connected){
+            this.getUserState();
+        }
+      },
+      deep: true
+    },
+
   },
   mounted() {
-    if(this.$wallet)
-    {
-      setAnchorProvider(this.$web3, this.$wallet)
+    setAnchorProvider(this.$web3, this.$wallet)
+    this.getGlobalState();
+    if(this.$wallet?.connected){
+      this.getUserState();
     }
   },
   methods: {
@@ -202,7 +221,37 @@ export default Vue.extend({
     async getStakingProgramState(){
       console.log(await getFarmState())
     },
+    async getGlobalState(){
+      const pools = await getAllPools()
+      const current_pool = pools[0]
 
+      const farm_state = await getFarmState();
+
+      const stakedAmount = new TokenAmount(current_pool.account.amount, 6)
+
+      this.totalStakedPrice = '$' + parseFloat(stakedAmount.fixed())
+
+      this.totalStaked = '$' + stakedAmount.fixed()
+      this.estimatedAPY = Math.ceil(farm_state.tokenPerSecond * 365 * 24 * 3600 / current_pool.account.amount * 100) / 100;
+    }, 
+
+    async getUserState(){
+      const farm_state = await getFarmState();
+      const extraRewardConfigs = await getExtraRewardConfigs()
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
+      this.userStaked = '$' + (new TokenAmount(userAccount.amount, 6)).fixed()
+
+      const rewardAmount = estimateRewards(
+          farm_state,
+          extraRewardConfigs,
+          current_pool.account,
+          userAccount
+      )
+
+      this.pendingReward = '$' + (new TokenAmount(rewardAmount, 6)).fixed()
+    },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
       this.baseModalShow = false
       this.estimatedAPY = estimated_apy
@@ -281,7 +330,7 @@ export default Vue.extend({
       const poolSigner = current_pool.publicKey.toString()
       const rewardMint = current_pool.account.mint.toString()
       const rewardPoolVault = current_pool.account.vault.toString()
-      const lock_duration = 10 * 60
+      const lock_duration = 0 * 60
       stake(
         this.$web3, 
         this.$wallet,
@@ -313,7 +362,7 @@ export default Vue.extend({
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
 
-        3 * 1000000,
+        58 * 1000000,
         )
     },
     async getUserAccount(){

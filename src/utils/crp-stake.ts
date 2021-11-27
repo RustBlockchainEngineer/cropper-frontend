@@ -24,17 +24,14 @@ import { Account, Connection } from '@solana/web3.js';
 import { createSplAccount } from './crp-swap';
 import { createAssociatedTokenAccountIfNotExist2, sendTransaction } from './web3';
 import { STAKE_TIERS_PROGRAM_ID } from './ids';
+import moment from 'moment';
 let WaggleFarm:any = null
-// import ido_idl from '@/utils/waggle_ido_sol.json'
-// const idoProgramId = new anchor.web3.PublicKey("2epB32Fz3TFgibUqPFFN61U1MFXmU5f3CyHyvBZCoh4b");
-// let idoCRP = new anchor.Program(ido_idl, idoProgramId);
 
 
 export function setAnchorProvider(
   connection: Connection,
   wallet: any,
 ) {
-  if (!wallet.publicKey) return null;
 
   const provider = new anchor.Provider(
     connection,
@@ -45,9 +42,7 @@ export function setAnchorProvider(
   const program = new (anchor as any).Program(waggle_farm_idl, new PublicKey(STAKE_TIERS_PROGRAM_ID), provider);
   WaggleFarm = program
 
-  return program;
 }
-
 
 export interface ExtraRewardConfigs{
   duration: any
@@ -76,6 +71,36 @@ async function getPoolAddressFromMint(mint:string){
     WaggleFarm.programId
   );
   return stateSigner
+}
+const ACC_PRECISION = 100 * 1000 * 1000 * 1000;
+const FULL_100 = 100 * 1000 * 1000 * 1000;
+export function estimateRewards(
+  stateData:any,
+  extraConfigData:any,
+  poolData:any,
+  userData:any,
+){
+  const currentTimeStamp = Math.ceil(new Date().getTime() / 1000);
+  const duration = Math.max(currentTimeStamp - poolData.lastRewardTime, 0)
+
+  const reward_per_share = stateData.tokenPerSecond * duration * ACC_PRECISION / poolData.amount;
+  
+  const acc_reward_per_share = poolData.accRewardPerShare.toNumber()  + reward_per_share;
+
+  let extraPercentage = 0
+  extraConfigData.configs.forEach((item:any)=>{
+    if(item.duration == userData.duration)
+    {
+      extraPercentage = item.extraPercentage
+      return;
+    }
+  })
+
+  const pending_amount = userData.amount * acc_reward_per_share / ACC_PRECISION - userData.rewardDebt
+  const extra_amount = userData.extraReward + pending_amount * extraPercentage / FULL_100 ;
+  const total_reward = userData.rewardAmount + pending_amount + extra_amount
+
+  return total_reward
 }
 
 
@@ -149,7 +174,7 @@ export async function createExtraReward(
   );
   console.log(extraRewardSigner.toString(), extraRewardBump)
 
-  await WaggleFarm.rpc.createExtraRewardConfigs(extraRewardBump,
+  const tx = await WaggleFarm.instruction.createExtraRewardConfigs(extraRewardBump,
     [{ duration: new BN(0), extraPercentage: new BN(0) }],
     {
       accounts: {
@@ -158,6 +183,8 @@ export async function createExtraReward(
         ...defaultAccounts
       },
     })
+  transaction.add(tx)
+  return await sendTransaction(connection, wallet, transaction, signers)
 }
 
 export async function setExtraReward(
