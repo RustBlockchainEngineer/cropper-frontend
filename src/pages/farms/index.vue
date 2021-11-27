@@ -1023,6 +1023,10 @@ export default Vue.extend({
     }
   },
 
+  computed: {
+    ...mapState(['wallet'])
+  },
+
   mounted() {
     this.getTvl()
     this.$accessor.token.loadTokens()

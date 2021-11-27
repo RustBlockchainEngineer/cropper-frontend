@@ -56,7 +56,7 @@
           <div class="btn-container">
             <Button class="btn-outline" @click="() => {$emit('onCancel')}">Cancel</Button>
           </div>
-          <Button class="btn-primary">Confirm</Button>
+          <Button class="btn-primary" @click="stakeToken">Confirm</Button>
         </div>
       </Row>
     </div>
@@ -65,7 +65,37 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { mapState } from 'vuex'
 import { Modal, Row, Col } from 'ant-design-vue'
+import { cloneDeep, get } from 'lodash-es'
+
+import {
+  setAnchorProvider,
+
+  createFarmState, 
+  fundToProgram,
+
+  setExtraReward,
+  createExtraReward,
+  
+  createPool,
+  changePoolAmountMultipler,
+  changeTokenPerSecond,
+  changePoolPoint,
+
+  getFarmState,
+  getExtraRewardConfigs,
+  getAllPools,
+  getPoolUserAccount,
+  estimateRewards,
+
+  createUser,
+  stake,
+  unstake,
+  harvest,
+} from '@/utils/crp-stake'
+
+
 
 Vue.use(Modal)
 
@@ -81,38 +111,46 @@ export default Vue.extend({
       tierActive : 4,
       baseAPY : '???',
       boostAPY : 1,
+      minutesLock :  null as any,
       boostText : '',
       lockData: [
         {
           tier: 1,
           time: 1,
+          minutesLock: 0,
           boost: 1,
           apy: 11.1,
-          text: 'Boost for 1 month locked'
+          text: 'Boost for 1 month locked (0 sec)'
         },
         {
           tier: 2,
           time: 3,
+          minutesLock: 10,
           boost: 1.1,
           apy: 12.21,
-          text: 'Boost for 3 months locked'
+          text: 'Boost for 3 months locked (10 min)'
         },
         {
           tier: 3,
           time: 6,
+          minutesLock: 30,
           boost: 1.3,
           apy: 14.43,
-          text: 'Boost for 6 months locked'
+          text: 'Boost for 6 months locked (30 min)'
         },
         {
           tier: 4,
           time: 12,
+          minutesLock: 60,
           boost: 2,
           apy: 22.19,
-          text: 'Boost for 1 year locked'
+          text: 'Boost for 1 year locked (60 min)'
         }
       ]
     }
+  },
+  computed: {
+    ...mapState(['wallet'])
   },
 
   mounted() {
@@ -129,12 +167,40 @@ export default Vue.extend({
       console.log(currentTier);  
       this.boostAPY = currentTier[0].boost;
       this.boostText = currentTier[0].text;
+      this.minutesLock = currentTier[0].minutesLock;
     },
     setMax() 
     {
       this.toStake  = this.crpbalance 
       
-    }
+    },
+
+      async stakeToken(){
+        const pools = await getAllPools()
+        console.log('Wallet',this.wallet)
+
+        console.log(pools);
+
+        const current_pool = pools[0]
+        const poolSigner = current_pool.publicKey.toString()
+        const rewardMint = current_pool.account.mint.toString()
+        const rewardPoolVault = current_pool.account.vault.toString()
+        const lock_duration = this.minutesLock * 60
+        stake(
+          this.$web3, 
+          this.$wallet,
+
+          poolSigner,
+          rewardMint,
+          rewardPoolVault,
+
+          get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
+          
+          this.toStake * 1000000,
+          lock_duration
+          )
+      }
+
   },
   props: {
     show: {
