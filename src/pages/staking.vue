@@ -183,7 +183,7 @@ export default Vue.extend({
     title: 'CropperFinance Swap'
   },
   computed: {
-    ...mapState(['wallet', 'swap', 'liquidity', 'url', 'setting', 'token'])
+    ...mapState(['wallet', 'swap', 'liquidity', 'url', 'setting', 'price', 'token'])
   },
   watch: {
     'wallet.tokenAccounts': {
@@ -233,18 +233,35 @@ export default Vue.extend({
 
       const stakedAmount = new TokenAmount(current_pool.account.amount, 6)
 
-      this.totalStakedPrice = '$' + parseFloat(stakedAmount.fixed())
+      if(this.price.prices['CRP']){
+        this.totalStakedPrice = '$' + (Math.round(parseFloat(stakedAmount.fixed()) * this.price.prices['CRP'] * 1000) / 1000).toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      } else {
+        this.totalStakedPrice = '$ ' + parseFloat(stakedAmount.fixed())
+      }
 
-      this.totalStaked = 'CRP ' + (Math.round( parseFloat(stakedAmount.fixed()) * 1000) / 1000)
+      this.totalStaked = 'CRP ' + (Math.round( parseFloat(stakedAmount.fixed()) * 1000) / 1000).toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       this.estimatedAPY = Math.ceil(farm_state.tokenPerSecond * 365 * 24 * 3600 / current_pool.account.amount * 100) / 100;
     }, 
 
     async getUserState(){
+
+      let crpbalanceDatas = this.wallet.tokenAccounts[DEVNET_MODE ? 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG' : 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz']
+
+      console.log(crpbalanceDatas);
+
+      if(crpbalanceDatas){
+        this.crpbalance = crpbalanceDatas.balance.fixed() * 1;
+      }
+
       const farm_state = await getFarmState();
       const extraRewardConfigs = await getExtraRewardConfigs()
       const pools = await getAllPools()
       const current_pool = pools[0]
       const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
+
+
       //@ts-ignore
       this.userStaked = (new TokenAmount(userAccount.amount, 6)).fixed() as number
 
@@ -258,11 +275,6 @@ export default Vue.extend({
       this.pendingReward = (new TokenAmount(rewardAmount, 6)).fixed()
 
 
-      let crpbalanceDatas = this.wallet.tokenAccounts[DEVNET_MODE ? 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG' : 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz']
-
-      if(crpbalanceDatas){
-        this.crpbalance = crpbalanceDatas.balance.fixed() * 1;
-      }
     },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
       this.baseModalShow = false
