@@ -92,7 +92,6 @@ import {
   getPoolUserAccount,
   estimateRewards,
 
-  createUser,
   stake,
   unstake,
   harvest,
@@ -185,78 +184,77 @@ export default Vue.extend({
       
     },
 
-      async stakeToken(){
-        const pools = await getAllPools()
-        console.log('Wallet',this.wallet)
+    async stakeToken(){
+      const pools = await getAllPools()
 
-        console.log(pools);
+      console.log(this.minutesLock);
 
-        const current_pool = pools[0]
-        const poolSigner = current_pool.publicKey.toString()
-        const rewardMint = current_pool.account.mint.toString()
-        const rewardPoolVault = current_pool.account.vault.toString()
-        const lock_duration = this.minutesLock * 60
-
+      const current_pool = pools[0]
+      const poolSigner = current_pool.publicKey.toString()
+      const rewardMint = current_pool.account.mint.toString()
+      const rewardPoolVault = current_pool.account.vault.toString()
+      const lock_duration = this.minutesLock * 60
 
 
-        const key = getUnixTs().toString()
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+
+
+      stake(
+        this.$web3, 
+        this.$wallet,
+
+        poolSigner,
+        rewardMint,
+        rewardPoolVault,
+
+        get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
+        
+        this.toStake * 1000000,
+        lock_duration
+        ).then((txid) => {
+
         this.$notify.info({
           key,
-          message: 'Making transaction...',
-          description: '',
-          duration: 0
+          message: 'Transaction has been sent',
+          description: (h: any) =>
+            h('div', [
+              'Confirmation is in progress.  Check your transaction on ',
+              h(
+                'a',
+                {
+                  attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                },
+                'here'
+              )
+            ])
         })
+            
+      const description = `Staking ${this.toStake} CRP`
 
-
-
-        stake(
-          this.$web3, 
-          this.$wallet,
-
-          poolSigner,
-          rewardMint,
-          rewardPoolVault,
-
-          get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
-          
-          this.toStake * 1000000,
-          lock_duration
-          ).then((txid) => {
-
-          this.$notify.info({
-            key,
-            message: 'Transaction has been sent',
-            description: (h: any) =>
-              h('div', [
-                'Confirmation is in progress.  Check your transaction on ',
-                h(
-                  'a',
-                  {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
-                  },
-                  'here'
-                )
-              ])
-          })
-             
-        const description = `Staking ${this.toStake} CRP`
-
-        this.$accessor.transaction.sub({ txid, description })
+      this.$accessor.transaction.sub({ txid, description })
+    })
+    .catch((error) => {
+      this.$notify.error({
+        key,
+        message: 'Staking failed',
+        description: error.message
       })
-      .catch((error) => {
-        this.$notify.error({
-          key,
-          message: 'Staking failed',
-          description: error.message
-        })
-      })
-      .finally(() => {
-        this.$accessor.wallet.getTokenAccounts()
-      });
+    })
+    .finally(() => {
+      this.$accessor.wallet.getTokenAccounts()
+    });
 
 
 
-      }
+    }
 
   },
   props: {

@@ -150,7 +150,6 @@ import {
   getPoolUserAccount,
   estimateRewards,
 
-  createUser,
   stake,
   unstake,
   harvest,
@@ -319,11 +318,6 @@ export default Vue.extend({
         pools
       )
     },
-    async getPools(){
-      const pools = await getAllPools()
-      console.log(pools)
-    },
-
     async changeMultiplier(){
       const pools = await getAllPools()
       pools.forEach(async (p: any) =>{
@@ -340,34 +334,6 @@ export default Vue.extend({
       const pools = await getAllPools()
       console.log(pools)
       await changeTokenPerSecond(this.$web3, this.$wallet, pools)
-    },
-    async createUserAccount(){
-      const pools = await getAllPools()
-      const current_pool = pools[0]
-      const poolSigner = current_pool.publicKey.toString()
-      await createUser(this.$web3, this.$wallet, poolSigner)
-    },    
-
-    async stakeToken(){
-      const pools = await getAllPools()
-      const current_pool = pools[0]
-      const poolSigner = current_pool.publicKey.toString()
-      const rewardMint = current_pool.account.mint.toString()
-      const rewardPoolVault = current_pool.account.vault.toString()
-      const lock_duration = 0 * 60
-      stake(
-        this.$web3, 
-        this.$wallet,
-
-        poolSigner,
-        rewardMint,
-        rewardPoolVault,
-
-        get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
-        
-        10 * 1000000,
-        lock_duration
-        )
     },
 
     async unstakeToken(){
