@@ -61,62 +61,64 @@
                   </div>
                 </Tooltip>
               </div>
-          <div class="value">{{totalStakedPrice}}</div>
-        </Col>
-      </Row>
+              <div class="value">{{totalStakedPrice}}</div>
+            </Col>
+          </Row>
 
-      <Row class="staking-actions-group">
-        <Col span="24" class="reward-pending">
-          <div class="reward-value">
-            <label class="box-title">Reward Pending</label>
-            <label class="value">{{pendingReward}}</label>
-          </div>
-          <div class="btn-container">
-            <Button class="btn-fill" :disabled="!wallet.connected || pendingReward == 0" @click = "harvestReward">Harvest</Button>
-          </div>
-        </Col>
-        <Col span="24" class="crp-staked" :class="!wallet.connected ? 'crp-staked-block' : 'crp-staked-flex'">
-          <div class="staked-value">
-            <label class="box-title">CRP Staked</label>
-            <label v-if="wallet.connected" class="value">{{userStaked}}</label>
-          </div>
-          <div v-if="wallet.connected" class="stake-btn-group">
-            <div class="btn-container">
-              <Button
-                class="btn-fill"
-                @click="
-                  () => {
-                    this.stakeModalShow = true
-                  }
-                "
-                >Stake</Button
-              >
-            </div>
-            <div class="btn-container">
-              <Button class="btn-outline" @click = "unstakeToken">Unstake</Button>
-            </div>
-          </div>
+          <Row class="staking-actions-group">
+            <Col span="24" class="reward-pending">
+              <div class="reward-value">
+                <label class="box-title">Reward Pending</label>
+                <label class="value">{{pendingReward}}</label>
+              </div>
+              <div class="btn-container">
+                <Button class="btn-fill" :disabled="!wallet.connected || pendingReward == 0" @click = "harvestReward">Harvest</Button>
+              </div>
+            </Col>
+            <Col span="24" class="crp-staked" :class="!wallet.connected ? 'crp-staked-block' : 'crp-staked-flex'">
+              <div class="staked-value">
+                <label class="box-title">CRP Staked</label>
+                <label v-if="wallet.connected" class="value">{{userStaked}}</label>
+              </div>
+              <div v-if="wallet.connected" class="stake-btn-group">
+                <div class="btn-container">
+                  <Button
+                    class="btn-fill"
+                    @click="
+                      () => {
+                        this.stakeModalShow = true
+                      }
+                    "
+                    >Stake</Button
+                  >
+                </div>
+                <div class="btn-container">
+                  <Button class="btn-outline" @click = "unstakeToken">Unstake</Button>
+                </div>
+              </div>
 
-          <div v-if="!wallet.connected" class="connect-wallet">
-            <Button class="btn-primary" @click="$accessor.wallet.openModal">Connect Wallet</Button>
-          </div>
-        </Col>
-      </Row>
+              <div v-if="!wallet.connected" class="connect-wallet">
+                <Button class="btn-primary" @click="$accessor.wallet.openModal">Connect Wallet</Button>
+              </div>
+            </Col>
+          </Row>
 
-      <Row class="staking-footer">
-        <Col span="24" class="lock-tokens">
-          <label class="label">Lock tokens for</label>
-          <label class="value">{{ lockDuration * 30 }} day(s)</label>
-        </Col>
-        <Col span="24" class="lock-tokens">
-          <label class="label">End of Lock</label>
-          <label class="value">{{ endOfLock }}</label>
-        </Col>
-        <Col span="24" class="get-crp">
-          <label class="label">Get CRP</label>
-          <img class="clickable-icon" src="@/assets/icons/union.svg" />
-        </Col>
-      </Row>
+          <Row class="staking-footer">
+            <Col span="24" class="lock-tokens">
+              <label class="label">Lock tokens for</label>
+              <label class="value">{{ lockDuration * 30 }} day(s)</label>
+            </Col>
+            <Col span="24" class="lock-tokens">
+              <label class="label">End of Lock</label>
+              <label class="value">{{ endOfLock }}</label>
+            </Col>
+            <Col span="24" class="get-crp">
+              <label class="label">Get CRP</label>
+              <img class="clickable-icon" src="@/assets/icons/union.svg" />
+            </Col>
+          </Row>
+        </div>
+      </div>
     </div>
   </div>
 </template>
