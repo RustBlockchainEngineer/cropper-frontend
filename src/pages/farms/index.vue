@@ -100,19 +100,37 @@
             </Col>
             <Col span="6" class="tool-option">
               <div class="toggle">
-                <label
-                  class="label"
-                  :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('labelized')"
-                  >Labelized</label
-                >
+                <Tooltip placement="bottom">
+                  <template slot="title">
+                    <div>
+                      <div class="tooltip-text">
+                        <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                      </div>
+                    </div>
+                  </template>
+                  <label
+                    class="label"
+                    :class="!searchCertifiedFarm ? 'active-label' : ''"
+                    @click="activeSearch('labelized')">
+                    Labelized
+                  </label>
+                </Tooltip>
                 <Toggle v-model="searchCertifiedFarm" />
-                <label
-                  class="label"
-                  :class="searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('permissionless')"
-                  >Permissionless</label
-                >
+                <Tooltip placement="bottom">
+                  <template slot="title">
+                    <div>
+                      <div class="tooltip-text">
+                        <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                      </div>
+                    </div>
+                  </template>
+                  <label
+                    class="label"
+                    :class="searchCertifiedFarm ? 'active-label' : ''"
+                    @click="activeSearch('permissionless')"
+                    >Permissionless
+                  </label>
+                </Tooltip>
               </div>
             </Col>
             <Col span="5" class="tool-option">
@@ -184,19 +202,37 @@
           <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
               <div class="toggle">
-                <label
-                  class="label"
-                  :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('labelized')"
-                  >Labelized</label
-                >
+                <Tooltip placement="bottom">
+                  <template slot="title">
+                    <div>
+                      <div class="tooltip-text">
+                        <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                      </div>
+                    </div>
+                  </template>
+                  <label
+                    class="label"
+                    :class="!searchCertifiedFarm ? 'active-label' : ''"
+                    @click="activeSearch('labelized')">
+                    Labelized
+                  </label>
+                </Tooltip>
                 <Toggle v-model="searchCertifiedFarm" />
-                <label
-                  class="label"
-                  :class="searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('permissionless')"
-                  >Permissionless</label
-                >
+                <Tooltip placement="bottom">
+                  <template slot="title">
+                    <div>
+                      <div class="tooltip-text">
+                        <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                      </div>
+                    </div>
+                  </template>
+                  <label
+                    class="label"
+                    :class="searchCertifiedFarm ? 'active-label' : ''"
+                    @click="activeSearch('permissionless')"
+                    >Permissionless
+                  </label>
+                </Tooltip>
               </div>
             </Col>
           </Row>
