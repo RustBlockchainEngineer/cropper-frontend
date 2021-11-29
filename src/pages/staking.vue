@@ -301,7 +301,7 @@ export default Vue.extend({
       this.totalStaked = 'CRP ' + (Math.round( parseFloat(stakedAmount.fixed()) * 1000) / 1000).toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       this.estimatedAPY = farm_state.tokenPerSecond * 365 * 24 * 3600 / current_pool.account.amount;
-      this.estimatedAPY = Number((((1 + this.estimatedAPY / 365 ) ** 365) - 1).toFixed(365));
+      this.estimatedAPY = Number((((1 + (this.estimatedAPY / 100)/ 365)) ** 365 - 1) * 100);
     }, 
 
     async getUserState(){
