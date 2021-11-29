@@ -61,75 +61,62 @@
                   </div>
                 </Tooltip>
               </div>
-              <div class="value">{{totalStaked}}</div>
-            </Col>
-            <Col span="24" class="staking-info">
-              <div class="label">
-                Total Value
-                <Tooltip placement="bottomLeft">
-                  <template slot="title">
-                    <div>Total Value staked (USD)</div>
-                  </template>
-                  <div class="info-icon">
-                    <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
-                  </div>
-                </Tooltip>
-              </div>
-              <div class="value">{{totalStakedPrice}}</div>
-            </Col>
-          </Row>
+          <div class="value">{{totalStakedPrice}}</div>
+        </Col>
+      </Row>
 
-          <Row class="staking-actions-group">
-            <Col span="24" class="reward-pending">
-              <div class="reward-value">
-                <label class="box-title">Reward Pending</label>
-                <label class="value">{{pendingReward}}</label>
-              </div>
-              <div class="btn-container">
-                <Button class="btn-fill" :disabled="!wallet.connected || pendingReward == 0" @click = "harvestReward">Harvest</Button>
-              </div>
-            </Col>
-            <Col span="24" class="crp-staked" :class="!wallet.connected ? 'crp-staked-block' : 'crp-staked-flex'">
-              <div class="staked-value">
-                <label class="box-title">CRP Staked</label>
-                <label v-if="wallet.connected" class="value">{{userStaked}}</label>
-              </div>
-              <div v-if="wallet.connected" class="stake-btn-group">
-                <div class="btn-container">
-                  <Button
-                    class="btn-fill"
-                    @click="
-                      () => {
-                        this.stakeModalShow = true
-                      }
-                    "
-                    >Stake</Button
-                  >
-                </div>
-                <div class="btn-container">
-                  <Button class="btn-outline" @click = "unstakeToken">Unstake</Button>
-                </div>
-              </div>
+      <Row class="staking-actions-group">
+        <Col span="24" class="reward-pending">
+          <div class="reward-value">
+            <label class="box-title">Reward Pending</label>
+            <label class="value">{{pendingReward}}</label>
+          </div>
+          <div class="btn-container">
+            <Button class="btn-fill" :disabled="!wallet.connected || pendingReward == 0" @click = "harvestReward">Harvest</Button>
+          </div>
+        </Col>
+        <Col span="24" class="crp-staked" :class="!wallet.connected ? 'crp-staked-block' : 'crp-staked-flex'">
+          <div class="staked-value">
+            <label class="box-title">CRP Staked</label>
+            <label v-if="wallet.connected" class="value">{{userStaked}}</label>
+          </div>
+          <div v-if="wallet.connected" class="stake-btn-group">
+            <div class="btn-container">
+              <Button
+                class="btn-fill"
+                @click="
+                  () => {
+                    this.stakeModalShow = true
+                  }
+                "
+                >Stake</Button
+              >
+            </div>
+            <div class="btn-container">
+              <Button class="btn-outline" @click = "unstakeToken">Unstake</Button>
+            </div>
+          </div>
 
-              <div v-if="!wallet.connected" class="connect-wallet">
-                <Button class="btn-primary" @click="$accessor.wallet.openModal">Connect Wallet</Button>
-              </div>
-            </Col>
-          </Row>
+          <div v-if="!wallet.connected" class="connect-wallet">
+            <Button class="btn-primary" @click="$accessor.wallet.openModal">Connect Wallet</Button>
+          </div>
+        </Col>
+      </Row>
 
-          <Row class="staking-footer">
-            <Col span="24" class="lock-tokens">
-              <label class="label">Lock tokens for</label>
-              <label class="value">{{ lockDuration * 30 }} day(s)</label>
-            </Col>
-
-            <Col span="24" class="get-crp">
-              <label class="label">Get CRP</label>
-              <img class="clickable-icon" src="@/assets/icons/union.svg" />
-            </Col>
-          </Row>
-        </div>
-      </div>
+      <Row class="staking-footer">
+        <Col span="24" class="lock-tokens">
+          <label class="label">Lock tokens for</label>
+          <label class="value">{{ lockDuration * 30 }} day(s)</label>
+        </Col>
+        <Col span="24" class="lock-tokens">
+          <label class="label">End of Lock</label>
+          <label class="value">{{ endOfLock }}</label>
+        </Col>
+        <Col span="24" class="get-crp">
+          <label class="label">Get CRP</label>
+          <img class="clickable-icon" src="@/assets/icons/union.svg" />
+        </Col>
+      </Row>
     </div>
   </div>
 </template>
@@ -148,7 +135,10 @@ import { DEVNET_MODE } from '../utils/ids'
 import { TokenAmount, gt } from '@/utils/safe-math'
 import * as anchor from '@project-serum/anchor';
 const { BN } = anchor
+import moment from 'moment'
+Vue.prototype.moment = moment
 
+const CRP_MINT = DEVNET_MODE ? 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG' : 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz'
 
 import {
   setAnchorProvider,
@@ -200,7 +190,8 @@ export default Vue.extend({
       timer: null as any,
       autoRefreshTime: 60 as number,
       countdown: 0 as number,
-      activeSpinning: false as boolean
+      activeSpinning: false as boolean,
+      endOfLock: '' as string
      }
   },
   head: {
@@ -302,7 +293,7 @@ export default Vue.extend({
 
     async getUserState(){
 
-      let crpbalanceDatas = this.wallet.tokenAccounts[DEVNET_MODE ? 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG' : 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz']
+      let crpbalanceDatas = this.wallet.tokenAccounts[CRP_MINT]
 
       console.log(crpbalanceDatas);
 
@@ -316,6 +307,9 @@ export default Vue.extend({
       const current_pool = pools[0]
       const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
 
+      const endDateOfLock = userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber();
+      const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:MM:SS')
+      this.endOfLock = unlockDateString
 
       //@ts-ignore
       this.userStaked = (new TokenAmount(userAccount.amount, 6)).fixed() as number
@@ -345,7 +339,7 @@ export default Vue.extend({
         this.$web3, 
         this.$wallet,
         current_pool.publicKey.toString(),
-        get(this.wallet.tokenAccounts, `${TOKENS['CRP'].mintAddress}.tokenAccountAddress`),
+        get(this.wallet.tokenAccounts, `${CRP_MINT}.tokenAccountAddress`),
         
         100 * 1000000,
         )
