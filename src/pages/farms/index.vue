@@ -1336,6 +1336,10 @@ export default Vue.extend({
           }
 
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
+
+
+
+
         } else if (userInfo && lp && FARM_VERSION > 1) {
           userInfo = cloneDeep(userInfo)
 
@@ -1360,7 +1364,11 @@ export default Vue.extend({
             .plus(toBigNumber(reward_per_share_net))
 
           const JUMP_DEBT = new BigNumber(10000000000000000000)
-          const _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT)
+          let _rewardDebt = rewardDebt.wei;
+          if(_rewardDebt.toNumber() < JUMP_DEBT.toNumber()){
+            _rewardDebt = JUMP_DEBT;
+          }
+          _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT)
           
           let pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
