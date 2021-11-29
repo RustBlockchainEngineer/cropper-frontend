@@ -1,56 +1,45 @@
 <template>
   <main class="landing">
-    <div class="vecteur-1">
-      <img src="../assets/landing/Planet3.png" />
-    </div>
-    <div class="header">
-      <div class="space-btwn">
-        <div class="header-left">
-          <div class="logo">
-            <img src="../assets/Component2.png" />
-          </div>
-          <h2>CropperFinance</h2>
+    <div class="landing-header">
+      <img src="@/assets/icons/cropper-logo.svg" />
+      <div class="lunch-btn-group">
+        <div class="btn-container">
+          <Button class="btn-outline">Documentation</Button>
         </div>
-      </div>
-      <div class="lunch-app">
         <NuxtLink to="/swap/">
-          <button class="lunch-app-button">Launch App</button>
+          <Button class="btn-fill">Launch App</Button>
         </NuxtLink>
       </div>
     </div>
-    <section id="section-1">
-      <div class="container">
-        <div class="poweredBy">Powered by Solana</div>
-        <p>The Ultimate Permissionless Yield <br />Farming Protocol.</p>
-        <div class="main-btns">
-          <div class="stdGradientButton">
-            <NuxtLink to="/swap/">
-              <button id="LaunchApp">Launch App</button>
-            </NuxtLink>
+    <div class="landing-content">
+      <Row :gutter="16">
+        <Col :span="22" :offset="1">
+          <div class="balance-infos">
+            <label class="tlv-value">TLV 30.000.000€</label>
+            <div class="token-infos">
+              <img src="@/assets/icons/cropper.svg" />
+              <label><u>CRP Token</u></label>
+              <label>Price: 0,50€</label>
+              <label>Market Cap: 0,50€</label>
+            </div>
           </div>
-          <div class="stdEmptyGradientButton">
-            <a href="https://cropper-finance.gitbook.io/cropperfinance/" target="_blank">
-                <button id="ReadMore">
-                   <img src="@/assets/icons/caret-right.svg" />
-                    Read More
-                </button>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-    <img src="@/assets/landing/Header_Cropper_mobile.png" class="background-mobile" />
+        </Col>
+      </Row> 
+    </div>
   </main>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { Icon, Popover } from 'ant-design-vue'
+import { Icon, Popover, Button, Row, Col } from 'ant-design-vue'
 
 @Component({
   components: {
     Icon,
-    Popover
+    Popover,
+    Button,
+    Row,
+    Col
   },
   layout: 'home',
   async asyncData({ $accessor, $api }) {}
@@ -111,118 +100,92 @@ export default class Landing extends Vue {
   }
 }
 </script>
-
-<style lang="less">
-@import '../assets/landing.css';
-
-.home-container-background {
-  background-image: url('../assets/landing/Header_Cropper.png') !important;
-  background-position: bottom center !important;
-  background-size: contain !important;
-  background-repeat: no-repeat;
+<style lang="less" scoped>
+// global stylesheet
+.btn-container {
+  background: @gradient-color-outline;
+  padding: 2px;
+  border-radius: 48px;
+  height: 54px;
+  width: fit-content;
 }
 
-.ant-layout-footer {
-  background: transparent !important;
-  background-image: unset !important;
+.btn-fill {
+  background: linear-gradient(300.64deg, #22B5B6 -11.12%, #280C86 96.46%);
+  padding: 18px 30px;
+  display: flex;
+  align-items: center;
+  border-radius: 48px;
+  border: none;
+  height: 54px;
 }
 
-.landing a {
-  color: #fff;
+.btn-outline {
+  padding: 18px 30px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 48px;
+  background: #01033C;
+  border: none;
 }
 
-.poweredBy {
-  font-family: Gilroy, sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 26px;
-  line-height: 32px;
-  text-align: center;
-  margin-bottom: 20px;
-  opacity: 0.7;
-}
+// class stylesheet
+.landing {
+  padding: 30px 62px;
 
-.landing .container {
-  top: 80px;
-}
+  .landing-header {
+    display: flex;
+    justify-content: space-between;
 
-.stdGradientButton {
-  margin-right: 10px;
-  height: 72px;
-}
+    .lunch-btn-group {
+      display: flex;
+      justify-content: space-between;
 
-main.landing {
-  min-height: calc(100vh - 196px);
-  background: none !important;
-}
+      .btn-outline,
+      .btn-fill {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 14px;
+      }
 
-.background-mobile {
-  display: none;
-}
-
-@media @max-b-mobile {
-  .home-container-background {
-    background-image: unset !important;
-  }
-  .landing .container {
-    position: initial;
-    display: initial;
-  }
-  .main-btns {
-    margin-bottom: 57px;
-    padding: 0 20px;
-    flex-direction: unset;
-    max-width: 100%;
-    display: block;
+      .btn-fill {
+        margin-left: 18px;
+      }
+    }
   }
 
-  .main-btns > div {
-    width: 335px;
-    margin: 0 0 20px;
-  }
+  .landing-content {
+    .balance-infos {
+      .tlv-value {
+        background: -webkit-linear-gradient(333.93deg, #22B5B6 6.07%, #280C86 134.97%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+        font-size: 34px;
+        line-height: 40px;
+      }
 
-  .poweredBy {
-    font-family: Gilroy, sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 32px;
-    letter-spacing: -0.05em;
-    text-align: center;
-    margin-bottom: 20px;
-    opacity: 0.7;
-    margin-top: 20px;
-  }
+      .token-infos {
+        display: flex;
+        align-items: center;
+        color: #D4D5F2;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 19px;
 
-  .header-left h2 {
-    font-size: 16px;
-  }
+        img {
+          margin-right: 10px;
+        }
 
-  #section-1 .container {
-    padding: 30px;
-    text-align: center;
-  }
-
-  .lunch-app {
-    margin-right: 20px;
-  }
-
-  #section-1 .container p {
-    font-size: 26px;
-    line-height: 34px;
-    letter-spacing: -0.05em;
-  }
-
-  main.landing {
-    min-height: unset;
-    background-position: bottom center !important;
-    background-size: contain !important;
-    background-repeat: no-repeat;
-  }
-
-  .background-mobile {
-    display: block;
-    width: 100%;
+        label {
+          margin-right: 25px;
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
   }
 }
 </style>

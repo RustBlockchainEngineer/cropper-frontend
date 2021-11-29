@@ -279,7 +279,7 @@ export default Vue.extend({
   }
 })
 </script>
-<style lang="less">
+<style lang="less" scoped>
 // global styles
 
 .btn-container {
