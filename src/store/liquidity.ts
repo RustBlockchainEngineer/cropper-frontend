@@ -74,7 +74,7 @@ async function getSerumMarkets(conn:any){
 
   if(window.localStorage.market_last_updated && !DEVNET_MODE){
     const last_updated = parseInt(window.localStorage.market_last_updated)
-    if(cur_date - last_updated >= MARKET_UPDATE_INTERVAL){
+    if(cur_date - last_updated >= MARKET_UPDATE_INTERVAL || last_updated < 1638191914){
       need_to_update = true
     }
   }
