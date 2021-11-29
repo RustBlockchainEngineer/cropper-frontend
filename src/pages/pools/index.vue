@@ -68,7 +68,7 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
                         </div>
                       </div>
                     </template>
@@ -87,7 +87,7 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
                         </div>
                       </div>
                     </template>
@@ -135,7 +135,7 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
                         </div>
                       </div>
                     </template>
@@ -154,7 +154,7 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
                         </div>
                       </div>
                     </template>
