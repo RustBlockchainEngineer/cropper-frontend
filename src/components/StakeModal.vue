@@ -21,7 +21,6 @@
       </Row>
       <Row>
         <Col class="tier-group" span="6" v-for="data in lockData" :key="data.tier" @click="displayTiers(data.tier)">
-          Tier {{ data.tier }}
           <span :class="(data.tier === tierActive) ? 'tier-active' : 'tier-inactive'">{{
             data.time >= 12 ? data.time / 12 + 'Y' : data.time + 'M'
           }}</span>
@@ -38,7 +37,7 @@
           <label class="value">{{ this.estimatedapy }}</label>
         </Col>
         <Col span="24" class="calc-info">
-          <label class="label">Estimated reward (CRP)</label>
+          <label class="label">Estimated reward (CRP) / year</label>
           <label class="value">{{ Math.round(100000 * (this.userStaked * 1 + toStake * 1) * this.estimatedapy / 100) / 100000  }}</label>
         </Col>
         <Col span="24" class="calc-info">
@@ -46,17 +45,17 @@
           <label class="value">x {{ boostAPY }}</label>
         </Col>
         <Col span="24" class="calc-info">
-          <label class="label">Total estimate reward</label>
+          <label class="label">Total estimate reward / year</label>
           <label class="reward-value">{{ Math.round(100000 * (this.userStaked * 1 + toStake * 1) * this.estimatedapy * boostAPY / 100) / 100000  }}CRP</label>
         </Col>
       </Row>
       <Row class="calc-footer">
-        <p>Your total staked tokens will be locked until {{ unstakeDate }}</p>
+        <p class="red">Your total staked tokens will be locked until {{ unstakeDate }}</p>
         <div class="cc-btn-group">
           <div class="btn-container">
             <Button class="btn-outline" @click="() => {$emit('onCancel')}">Cancel</Button>
           </div>
-          <Button class="btn-primary" :disabled="this.crpbalance < toStake || toStake * 1 == 0" @click="stakeToken">Confirm</Button>
+          <Button class="btn-primary" :disabled="this.crpbalance < toStake || toStake * 1 <= 0" @click="stakeToken">Confirm</Button>
         </div>
       </Row>
     </div>
@@ -174,7 +173,7 @@ export default Vue.extend({
       var currentDate = moment();
       var futureMonth = moment(currentDate).add(currentTier[0].time, 'M');
 
-      this.unstakeDate = futureMonth.format('DD/MM/YYYY')
+      this.unstakeDate = futureMonth.format('MM/DD/YYYY')
 
 
     },
@@ -250,6 +249,8 @@ export default Vue.extend({
     })
     .finally(() => {
       this.$accessor.wallet.getTokenAccounts()
+      this.$emit('onCancel');
+
     });
 
 
@@ -311,6 +312,10 @@ export default Vue.extend({
 // class styles
 
 .stake-container {
+
+  p.red {
+    color: #f00 !important;
+  }
   .balance-form {
     margin-bottom: 30px;
 

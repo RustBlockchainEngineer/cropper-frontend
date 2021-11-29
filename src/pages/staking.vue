@@ -49,6 +49,7 @@
                 />
               </div>
             </Col>
+
             <Col span="24" class="staking-info">
               <div class="label">
                 Total Staked
@@ -60,7 +61,23 @@
                     <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
                   </div>
                 </Tooltip>
+
               </div>
+              <div class="value">{{totalStaked}}</div>
+            </Col>
+            <Col span="24" class="staking-info">
+              <div class="label">
+                Total Value
+                <Tooltip placement="bottomLeft">
+                  <template slot="title">
+                    <div>Total Value staked (USD)</div>
+                  </template>
+                  <div class="info-icon">
+                    <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
+                  </div>
+                </Tooltip>
+              </div>
+
               <div class="value">{{totalStakedPrice}}</div>
             </Col>
           </Row>
@@ -93,7 +110,7 @@
                   >
                 </div>
                 <div class="btn-container">
-                  <Button class="btn-outline" @click = "unstakeToken">Unstake</Button>
+                  <Button class="btn-outline" :disabled="!wallet.connected || userStaked == 0 || canUnstake == false" @click = "unstakeToken">Unstake</Button>
                 </div>
               </div>
 
@@ -105,16 +122,8 @@
 
           <Row class="staking-footer">
             <Col span="24" class="lock-tokens">
-              <label class="label">Lock tokens for</label>
-              <label class="value">{{ lockDuration * 30 }} day(s)</label>
-            </Col>
-            <Col span="24" class="lock-tokens">
               <label class="label">End of Lock</label>
               <label class="value">{{ endOfLock }}</label>
-            </Col>
-            <Col span="24" class="get-crp">
-              <label class="label">Get CRP</label>
-              <img class="clickable-icon" src="@/assets/icons/union.svg" />
             </Col>
           </Row>
         </div>
@@ -193,7 +202,8 @@ export default Vue.extend({
       autoRefreshTime: 60 as number,
       countdown: 0 as number,
       activeSpinning: false as boolean,
-      endOfLock: '' as string
+      endOfLock: '' as string,
+      canUnstake: false as boolean
      }
   },
   head: {
@@ -291,13 +301,12 @@ export default Vue.extend({
       this.totalStaked = 'CRP ' + (Math.round( parseFloat(stakedAmount.fixed()) * 1000) / 1000).toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       this.estimatedAPY = Math.ceil(farm_state.tokenPerSecond * 365 * 24 * 3600 / current_pool.account.amount * 100) / 100;
+      
     }, 
 
     async getUserState(){
 
       let crpbalanceDatas = this.wallet.tokenAccounts[CRP_MINT]
-
-      console.log(crpbalanceDatas);
 
       if(crpbalanceDatas){
         this.crpbalance = crpbalanceDatas.balance.fixed() * 1;
@@ -312,6 +321,7 @@ export default Vue.extend({
       const endDateOfLock = userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber();
       const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:MM:SS')
       this.endOfLock = unlockDateString
+      this.canUnstake = ! ((userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 > new Date().getTime())
 
       //@ts-ignore
       this.userStaked = (new TokenAmount(userAccount.amount, 6)).fixed() as number
@@ -579,6 +589,7 @@ export default Vue.extend({
 
       &:disabled {
         opacity: 0.5;
+        cursor: not-allowed;
       }
     }
 
@@ -592,6 +603,10 @@ export default Vue.extend({
       font-size: 12px;
       line-height: 14px;
       border-radius: 6px;
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 
