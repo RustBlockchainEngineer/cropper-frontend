@@ -33,8 +33,8 @@ export const actions:any = actionTree(
       let need_to_update = false
       let cur_date = new Date().getTime()
 
-      if(window.localStorage.token_last_updated){
-        const last_updated = parseInt(window.localStorage.token_last_updated)
+      if(window.localStorage.token_last_updated_){
+        const last_updated = parseInt(window.localStorage.token_last_updated_)
         if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1638191914){
           need_to_update = true
         }
@@ -133,7 +133,7 @@ export const actions:any = actionTree(
 
           })
           TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
-          window.localStorage.token_last_updated = new Date().getTime()
+          window.localStorage.token_last_updated_ = new Date().getTime()
           window.localStorage.tokens = JSON.stringify(TOKENS)
         }
 
