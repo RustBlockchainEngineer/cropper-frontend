@@ -37,7 +37,7 @@
                 </Tooltip>
               </div>
               <div class="value">
-                {{ estimatedAPY }} %
+                {{ Math.round(estimatedAPY * 100) / 100 }} %
                 <img
                   class="clickable-icon"
                   src="@/assets/icons/calculator.svg"
@@ -300,8 +300,8 @@ export default Vue.extend({
 
       this.totalStaked = 'CRP ' + (Math.round( parseFloat(stakedAmount.fixed()) * 1000) / 1000).toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      this.estimatedAPY = Math.ceil(farm_state.tokenPerSecond * 365 * 24 * 3600 / current_pool.account.amount * 100) / 100;
-      
+      this.estimatedAPY = farm_state.tokenPerSecond * 365 * 24 * 3600 / current_pool.account.amount;
+      this.estimatedAPY = (((1 + this.estimatedAPY / 365 ) ** 365) - 1).toFixed(365);
     }, 
 
     async getUserState(){
