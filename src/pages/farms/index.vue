@@ -100,37 +100,43 @@
             </Col>
             <Col span="6" class="tool-option">
               <div class="toggle">
-                <Tooltip placement="bottom">
-                  <template slot="title">
-                    <div>
-                      <div class="tooltip-text">
-                        <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                <label
+                  class="label"
+                  :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('labelized')">
+                  Labelized
+                  <Tooltip placement="bottom">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-text">
+                          <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                        </div>
                       </div>
+                    </template>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
-                  </template>
-                  <label
-                    class="label"
-                    :class="!searchCertifiedFarm ? 'active-label' : ''"
-                    @click="activeSearch('labelized')">
-                    Labelized
-                  </label>
-                </Tooltip>
+                  </Tooltip>
+                </label>
                 <Toggle v-model="searchCertifiedFarm" />
-                <Tooltip placement="bottom">
-                  <template slot="title">
-                    <div>
-                      <div class="tooltip-text">
-                        <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                <label
+                  class="label"
+                  :class="searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('permissionless')"
+                  >Permissionless
+                  <Tooltip placement="bottom">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-text">
+                          <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                        </div>
                       </div>
+                    </template>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
-                  </template>
-                  <label
-                    class="label"
-                    :class="searchCertifiedFarm ? 'active-label' : ''"
-                    @click="activeSearch('permissionless')"
-                    >Permissionless
-                  </label>
-                </Tooltip>
+                  </Tooltip>
+                </label>
               </div>
             </Col>
             <Col span="5" class="tool-option">
@@ -202,37 +208,43 @@
           <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
               <div class="toggle">
-                <Tooltip placement="bottom">
-                  <template slot="title">
-                    <div>
-                      <div class="tooltip-text">
-                        <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                <label
+                  class="label"
+                  :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('labelized')">
+                  Labelized
+                  <Tooltip placement="bottom">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-text">
+                          <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                        </div>
                       </div>
+                    </template>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
-                  </template>
-                  <label
-                    class="label"
-                    :class="!searchCertifiedFarm ? 'active-label' : ''"
-                    @click="activeSearch('labelized')">
-                    Labelized
-                  </label>
-                </Tooltip>
+                  </Tooltip>
+                </label>
                 <Toggle v-model="searchCertifiedFarm" />
-                <Tooltip placement="bottom">
-                  <template slot="title">
-                    <div>
-                      <div class="tooltip-text">
-                        <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                <label
+                  class="label"
+                  :class="searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('permissionless')"
+                  >Permissionless
+                  <Tooltip placement="bottom">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-text">
+                          <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                        </div>
                       </div>
+                    </template>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
-                  </template>
-                  <label
-                    class="label"
-                    :class="searchCertifiedFarm ? 'active-label' : ''"
-                    @click="activeSearch('permissionless')"
-                    >Permissionless
-                  </label>
-                </Tooltip>
+                  </Tooltip>
+                </label>
               </div>
             </Col>
           </Row>
@@ -2583,16 +2595,24 @@ export default Vue.extend({
               height: 100%;
               display: flex;
               align-items: center;
-              justify-content: space-around;
+              justify-content: space-evenly;
 
               .label {
                 font-size: 16px;
-                opacity: 0.5;
+                color: rgba(255, 255, 255, 0.5);
                 cursor: pointer;
+                position: relative;
+
+                .info-icon {
+                  margin: 0;
+                  position: absolute;
+                  top: 0;
+                  right: -20px;
+                }
 
                 &.active-label {
                   font-weight: 700;
-                  opacity: 1;
+                  color: #fff;
                 }
               }
 
