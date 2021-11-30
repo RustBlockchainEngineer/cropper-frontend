@@ -319,7 +319,7 @@ export default Vue.extend({
       const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
 
       const endDateOfLock = userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber();
-      const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:MM:SS')
+      const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:mm:SS')
       this.endOfLock = unlockDateString
       this.canUnstake = ! ((userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 > new Date().getTime())
 
