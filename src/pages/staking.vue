@@ -29,7 +29,7 @@
                 Estimated APY
                 <Tooltip placement="bottomLeft">
                   <template slot="title">
-                    <div>Potential Annual Percentage Yield</div>
+                    <div>Potential Annual Percentage Yield based on a daily compounding</div>
                   </template>
                   <div class="info-icon">
                     <img class="tooltip-icon" src="@/assets/icons/info-icon.svg" />
@@ -121,7 +121,7 @@
           </Row>
 
           <Row class="staking-footer">
-            <Col span="24" class="lock-tokens">
+            <Col span="24" class="lock-tokens" v-if="userStaked > 0">
               <label class="label">End of Lock</label>
               <label class="value">{{ endOfLock }}</label>
             </Col>
