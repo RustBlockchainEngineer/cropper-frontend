@@ -23,6 +23,17 @@
               <label>Market Cap: 0,50€</label>
             </div>
           </div>
+          <div class="cropper-content">
+            <h1>The Ultimate <br /> Permissionless <br /> Yield Farming</h1>
+            <p class="powered-by">Powered by Solana</p>
+          </div>
+          <div class="social-links">
+            <a href="#"><img src="@/assets/social/landing-medium.svg" /></a>
+            <a href="#"><img src="@/assets/social/landing-discord.svg" /></a>
+            <a href="#"><img src="@/assets/social/landing-twitter.svg" /></a>
+            <a href="#"><img src="@/assets/social/landing-telegram.svg" /></a>
+          </div>
+          <img class="move-next-section" src="@/assets/icons/transparent-arrow.svg" />
         </Col>
       </Row> 
     </div>
@@ -133,6 +144,9 @@ export default class Landing extends Vue {
 // class stylesheet
 .landing {
   padding: 30px 62px;
+  background-image: url('@/assets/landing/landing_header.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
 
   .landing-header {
     display: flex;
@@ -156,6 +170,8 @@ export default class Landing extends Vue {
   }
 
   .landing-content {
+    margin-top: 160px;
+
     .balance-infos {
       .tlv-value {
         background: -webkit-linear-gradient(333.93deg, #22B5B6 6.07%, #280C86 134.97%);
@@ -167,6 +183,7 @@ export default class Landing extends Vue {
       }
 
       .token-infos {
+        margin-top: 10px;
         display: flex;
         align-items: center;
         color: #D4D5F2;
@@ -185,6 +202,41 @@ export default class Landing extends Vue {
           }
         }
       }
+    }
+
+    .cropper-content {
+      margin-top: 70px;
+      h1 {
+        font-weight: bold;
+        font-size: 74px;
+        line-height: 87px;
+      }
+
+      .powered-by {
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 21px;
+        letter-spacing: -0.005em;
+        color: #D4D5F2;
+      }
+    }
+
+    .social-links {
+      margin-top: 58px;
+      margin-bottom: 12px;
+
+      a {
+        margin-right: 38px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .move-next-section {
+      display: flex;
+      margin: 0 auto 78px auto;
     }
   }
 }

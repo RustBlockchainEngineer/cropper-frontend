@@ -1832,12 +1832,6 @@ export default Vue.extend({
 .swap-btn.error-style {
   font-weight: normal;
 }
-main {
-  background-image: unset;
-  background-color: @color-bg;
-  background-size: cover;
-  background-position: center bottom;
-}
 .planetMiddle {
   position: absolute;
   left: -150px;
