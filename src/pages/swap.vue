@@ -18,11 +18,18 @@
       </span>
     </div>
     <div class="container">
-      <Row class="tool-bar noMobile">
+      <Row class="tool-bar">
         <Col span="12" class="tool-option">
           <div class="sort-by">
-            <label class="label">
-              <img src="@/assets/icons/wow.svg" />
+            <label
+              class="label"
+              @click="
+                () => {
+                  this.showInformations = !this.showInformations
+                }
+              "
+            >
+              <img class="info-icon" src="@/assets/icons/wow.svg" />
               Informations
             </label>
             <img
@@ -35,7 +42,7 @@
               "
             />
           </div>
-          <div v-if="showInformations" class="sort-options">
+          <div v-if="showInformations" class="sort-options left">
             <div class="swap-info">
               <div v-if="fromCoin" class="info">
                 <div class="action">
@@ -132,8 +139,15 @@
         </Col>
         <Col span="12" class="tool-option">
           <div class="sort-by">
-            <label class="label">
-              <img src="@/assets/icons/setting.svg" />
+            <label
+              class="label"
+              @click="
+                () => {
+                  this.showSlippage = !this.showSlippage
+                }
+              "
+            >
+              <img class="setting-icon" src="@/assets/icons/setting.svg" />
               Swap Slippage
             </label>
             <img
@@ -146,7 +160,7 @@
               "
             />
           </div>
-          <div v-if="showSlippage" class="sort-options">
+          <div v-if="showSlippage" class="sort-options right">
             <div class="swap-info tooltipOne">
               <input
                 class="tooltip-input"
@@ -2113,7 +2127,17 @@ export default Vue.extend({
           .label {
             font-size: 16px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
 
+            .info-icon, .setting-icon {
+              margin-right: 10px;
+
+              @media @max-b-mobile {
+                margin-right: 5px;
+              }
+            }
+            
             .sort-up,
             .sort-down {
               margin-right: 5px;
@@ -2148,11 +2172,20 @@ export default Vue.extend({
           border-radius: 8px;
           z-index: 999;
 
+          @media @max-b-mobile {
+            width: 200%;
+           
+            &.right {
+              left: -100%;
+            }
+          }
+
           .swap-info {
             .tooltip-input {
               background: rgba(255, 255, 255, 0.06);
               border: 1px solid rgba(255, 255, 255, 0.14);
-              width: 240px;
+              min-width: 240px;
+              width: 100%;
               outline: none;
               border-radius: 6px;
               font-size: 16px;
