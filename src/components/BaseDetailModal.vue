@@ -13,7 +13,7 @@
           <Col span="8"> Estimated APY </Col>
         </div>
         <div class="base-table-body" v-for="data in lockData" :key="data.tier" @click="$emit('onSelect', data.time, data.apy)">
-          <Col span="8"> {{ data.time >= 12 ? data.time / 12 + ' year' : data.time + ' month'}} (Tier {{data.tier }}) </Col>
+          <Col span="8"> {{ data.time >= 12 ? data.time / 12 + ' year' : data.time + ' month'}} </Col>
           <Col span="8"> {{ data.boost }} x </Col>
           <Col span="8"> {{ Math.round(100 * (Math.round(estimatedapy * 100) / 100) * data.boost) / 100 }} % </Col>
         </div>
