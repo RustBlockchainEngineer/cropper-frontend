@@ -1368,7 +1368,7 @@ export default Vue.extend({
           if(_rewardDebt.toNumber() < JUMP_DEBT.toNumber()){
             _rewardDebt = JUMP_DEBT;
           }
-          _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT)
+          _rewardDebt = _rewardDebt.wei.minus(JUMP_DEBT)
           
           let pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
