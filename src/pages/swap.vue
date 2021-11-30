@@ -1,62 +1,48 @@
 <template>
   <div class="swapWrapper">
     <img src="@/assets/icons/greenPlanet2.svg" class="planetMiddle" />
-    <div class="swapHead">
-      <h1>Swap</h1>
-      <div class="buttonGroup">
-        <div class="count-down-group">
-          <div class="count-down">
-            <span v-if="autoRefreshTime - countdown < 10">0</span>
-            {{ autoRefreshTime - countdown }}
-            <div
-              class="reload-btn"
+    <div class="page-head fs-container">
+      <span class="title"> Swap </span>
+      <span class="information">
+        <div class="my-info">
+          <label>
+            TVL : <b>{{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} $</b>
+          </label>
+        </div>
+
+        <!-- {{ autoRefreshTime - countdown }} -->
+
+        <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
+          <img class="load-icon" src="@/assets/icons/loading.svg" />
+        </div>
+      </span>
+    </div>
+    <div class="container">
+      <Row class="tool-bar noMobile">
+        <Col span="12" class="tool-option">
+          <div class="sort-by">
+            <label class="label">
+              <img src="@/assets/icons/wow.svg" />
+              Informations
+            </label>
+            <img
+              :class="showInformations ? 'collapse-down' : 'collapse-up'"
+              src="@/assets/icons/collapse-arrow.svg"
               @click="
                 () => {
-                  getOrderBooks()
-                  flush()
-                  $accessor.wallet.getTokenAccounts()
+                  this.showInformations = !this.showInformations
                 }
               "
-            >
-              <img src="@/assets/icons/loading.svg" />
-            </div>
+            />
           </div>
-        </div>
-        <Tooltip placement="bottomLeft">
-          <template slot="title">
-            <div class="swap-info tooltipOne">
-              <!-- <InputNumber
-                type="number"
-                style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); width: 200px"
-                v-model="setting.slippage"
-                @keypress="validateNumber"
-              /> -->
-              <input
-                class="tooltip-input"
-                id="number"
-                type="number"
-                min="1"
-                max="100"
-                v-model="setting.slippage"
-                @keypress="validateNumber"
-              />
-            </div>
-          </template>
-          <button class="btn-grad">
-            <!-- @click="$accessor.setting.open" -->
-            <img src="@/assets/icons/setting.svg" />
-            Swap Slippage
-          </button>
-        </Tooltip>
-        <Tooltip placement="bottomRight">
-          <template slot="title">
+          <div v-if="showInformations" class="sort-options">
             <div class="swap-info">
               <div v-if="fromCoin" class="info">
                 <div class="action">
                   <a :href="`${url.explorer}/token/${fromCoin.mintAddress}`" target="_blank">
                     <img src="@/assets/icons/link_grey.svg" />
                   </a>
-                   <img src="@/assets/icons/copy.png" @click="$accessor.copy(fromCoin.mintAddress)" />
+                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(fromCoin.mintAddress)" />
                 </div>
                 <div class="symbol">{{ fromCoin.symbol }}</div>
                 <div class="address">
@@ -101,7 +87,7 @@
                   <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
                     <img src="@/assets/icons/link_grey.svg" />
                   </a>
-                   <img src="@/assets/icons/copy.png" @click="$accessor.copy(mainAmmId)" />
+                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(mainAmmId)" />
                 </div>
                 <div class="symbol">AMM ID</div>
                 <div class="address">
@@ -142,15 +128,40 @@
                 </div>
               </div>
             </div>
-          </template>
-          <button class="btn-grad">
-            <img src="@/assets/icons/wow.svg" />
-            Details
-          </button>
-        </Tooltip>
-      </div>
-    </div>
-    <div class="container">
+          </div>
+        </Col>
+        <Col span="12" class="tool-option">
+          <div class="sort-by">
+            <label class="label">
+              <img src="@/assets/icons/setting.svg" />
+              Swap Slippage
+            </label>
+            <img
+              :class="showSlippage ? 'collapse-down' : 'collapse-up'"
+              src="@/assets/icons/collapse-arrow.svg"
+              @click="
+                () => {
+                  this.showSlippage = !this.showSlippage
+                }
+              "
+            />
+          </div>
+          <div v-if="showSlippage" class="sort-options">
+            <div class="swap-info tooltipOne">
+              <input
+                class="tooltip-input"
+                id="number"
+                type="number"
+                min="1"
+                max="100"
+                v-model="setting.slippage"
+                @keypress="validateNumber"
+              />
+            </div>
+          </div>
+        </Col>
+      </Row>
+
       <CoinSelect v-if="coinSelectShow" @onClose="() => (coinSelectShow = false)" @onSelect="onCoinSelect" />
       <AmmIdSelect
         :show="ammIdSelectShow"
@@ -237,7 +248,11 @@
                 1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} ≈
                 {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
                 {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-                <img src="@/assets/icons/swap-icon.svg" @click="() => (hasPriceSwapped = !hasPriceSwapped)" class="swap-icon" />
+                <img
+                  src="@/assets/icons/swap-icon.svg"
+                  @click="() => (hasPriceSwapped = !hasPriceSwapped)"
+                  class="swap-icon"
+                />
               </span>
             </div>
             <div
@@ -248,7 +263,11 @@
                 1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} ≈
                 {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
                 {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-                <img src="@/assets/icons/swap-icon.svg" @click="() => (hasPriceSwapped = !hasPriceSwapped)" class="swap-icon" />
+                <img
+                  src="@/assets/icons/swap-icon.svg"
+                  @click="() => (hasPriceSwapped = !hasPriceSwapped)"
+                  class="swap-icon"
+                />
               </span>
             </div>
 
@@ -267,12 +286,12 @@
                   <CoinIcon :mint-address="fromCoin.mintAddress" />
                   <span>{{ fromCoin.symbol }}</span>
                 </div>
-                <Icon class="fst" type="arrow-up"/>
+                <Icon class="fst" type="arrow-up" />
                 <div class="coin-budge" v-if="midTokenSymbol">
                   <CoinIcon :mint-address="midTokenMint" />
                   <span>{{ midTokenSymbol }}</span>
                 </div>
-                <Icon v-if="midTokenSymbol" class="fst" type="arrow-up"/>
+                <Icon v-if="midTokenSymbol" class="fst" type="arrow-up" />
                 <div class="coin-budge">
                   <CoinIcon :mint-address="toCoin.mintAddress" />
                   <span>{{ toCoin.symbol }}</span>
@@ -353,13 +372,20 @@
 
             <div v-if="priceImpact" class="fs-container flexDiv minimum">
               <span class="name">
-                <label :class="`price-impact-${priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'}`">Price Impact</label>
+                <label :class="`price-impact-${priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'}`"
+                  >Price Impact</label
+                >
                 <Tooltip placement="bottomLeft">
-                  <template slot="title"> The difference between the market price and estimated price due to trade size </template>
+                  <template slot="title">
+                    The difference between the market price and estimated price due to trade size
+                  </template>
                   <img src="@/assets/icons/wow.svg" class="tooltipIcon" />
                 </Tooltip>
               </span>
-              <span class="name" :class="`price-impact-${priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'}`">
+              <span
+                class="name"
+                :class="`price-impact-${priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'}`"
+              >
                 <label> {{ priceImpact.toFixed(2) }}% </label>
               </span>
             </div>
@@ -443,7 +469,7 @@
               </template>
               <template v-else-if="!fromCoinAmount"> Enter an amount </template>
               <template v-else-if="loading"> Updating price information </template>
-              <template v-else-if="checkFromCoinAmount()" > Insufficient {{ fromCoin.symbol }} balance </template>
+              <template v-else-if="checkFromCoinAmount()"> Insufficient {{ fromCoin.symbol }} balance </template>
               <template
                 v-else-if="
                   get(liquidity.infos, `${lpMintAddress}.status`) &&
@@ -458,7 +484,9 @@
               <template v-else-if="toCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, toCoinAmount)">
                 xCOPE amount must greater than 5
               </template>
-              <template v-else-if="best_dex_type === 'multi' && ( needWrapSol() || needCreateTokens())">Prepare two-step swap</template>
+              <template v-else-if="best_dex_type === 'multi' && (needWrapSol() || needCreateTokens())"
+                >Prepare two-step swap</template
+              >
               <template v-else>{{ isWrap ? 'Unwrap' : priceImpact > 5 ? 'Swap' : 'Swap' }}</template>
             </Button>
           </div>
@@ -526,7 +554,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Icon, Tooltip, Button, Progress, Spin, Select, InputNumber } from 'ant-design-vue'
+import { Icon, Tooltip, Button, Progress, Spin, Select, InputNumber, Row, Col } from 'ant-design-vue'
 import { cloneDeep, get } from 'lodash-es'
 import { Market, Orderbook } from '@project-serum/serum/lib/market.js'
 import { getTokenBySymbol, TokenInfo, NATIVE_SOL, TOKENS } from '@/utils/tokens'
@@ -562,7 +590,6 @@ import {
   LiquidityPoolInfo
 } from '@/utils/pools'
 
-
 const ENDPOINT_MULTI_CRP = 'Two-Step Swap with CRP'
 const ENDPOINT_MULTI_USDC = 'Two-Step Swap with USDC'
 const ENDPOINT_MULTI_CRP_MIXED = 'Mixed two-Step Swap with CRP '
@@ -573,7 +600,9 @@ export default Vue.extend({
     Icon,
     Tooltip,
     Button,
-    Spin
+    Spin,
+    Row,
+    Col
   },
   data() {
     return {
@@ -648,6 +677,10 @@ export default Vue.extend({
 
       endpoint_multi_crp: 'Two-Step Swap with CRP',
       endpoint_multi_usdc: 'Two-Step Swap with USDC',
+      TVL: 0 as number,
+      activeSpinning: false as boolean,
+      showInformations: false as boolean,
+      showSlippage: false as boolean
     }
   },
   head: {
@@ -677,7 +710,7 @@ export default Vue.extend({
           this.fetchUnsettledByMarket()
         }
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
-      this.flush()
+        this.flush()
       },
       deep: true
     },
@@ -733,7 +766,7 @@ export default Vue.extend({
     'liquidity.infos': {
       handler(_newInfos: any) {
         this.updateAmounts()
-        const { from, to, ammId} = this.$route.query
+        const { from, to, ammId } = this.$route.query
         // @ts-ignore
         this.setCoinFromMint(ammId, from, to)
         this.findMarket()
@@ -743,13 +776,13 @@ export default Vue.extend({
     'token.initialized': {
       handler(newState: boolean) {
         this.fromCoin = getTokenBySymbol('CRP')
-        const { from, to, ammId} = this.$route.query
+        const { from, to, ammId } = this.$route.query
         // @ts-ignore
         this.setCoinFromMint(ammId, from, to)
       },
       deep: true
     },
-    
+
     'swap.markets': {
       handler(_newInfos: any) {
         this.findMarket()
@@ -764,6 +797,7 @@ export default Vue.extend({
     }
   },
   mounted() {
+    this.getTvl()
     this.$accessor.token.loadTokens()
     this.updateCoinInfo(this.wallet.tokenAccounts)
     this.setMarketTimer()
@@ -786,11 +820,38 @@ export default Vue.extend({
         this.coinSelectShow = true
       }, 1)
     },
+    async getTvl() {
+      let cur_date = new Date().getTime()
+      if (window.localStorage.TVL_last_updated) {
+        const last_updated = parseInt(window.localStorage.TVL_last_updated)
+        if (cur_date - last_updated <= 600000) {
+          this.TVL = window.localStorage.TVL
+          return
+        }
+      }
 
+      let responseData: any = []
+      let tvl = 0
+      try {
+        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+
+        Object.keys(responseData).forEach(function (key) {
+          tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
+        })
+      } catch {
+        // dummy data
+      } finally {
+      }
+
+      this.TVL = Math.round(tvl)
+
+      window.localStorage.TVL_last_updated = new Date().getTime()
+      window.localStorage.TVL = this.TVL
+    },
     async flush() {
       clearInterval(this.marketTimer)
       this.countdown = 0
-      this.setMarketTimer();
+      this.setMarketTimer()
       this.$accessor.token.loadTokens()
       this.updateCoinInfo(this.wallet.tokenAccounts)
     },
@@ -856,8 +917,10 @@ export default Vue.extend({
         //   }
         // }
 
-        fromCoin = from == NATIVE_SOL.mintAddress ? NATIVE_SOL : Object.values(TOKENS).find((item) => item.mintAddress === from)
-        toCoin = to == NATIVE_SOL.mintAddress ? NATIVE_SOL : Object.values(TOKENS).find((item) => item.mintAddress === to)
+        fromCoin =
+          from == NATIVE_SOL.mintAddress ? NATIVE_SOL : Object.values(TOKENS).find((item) => item.mintAddress === from)
+        toCoin =
+          to == NATIVE_SOL.mintAddress ? NATIVE_SOL : Object.values(TOKENS).find((item) => item.mintAddress === to)
         if (fromCoin || toCoin) {
           if (fromCoin) {
             fromCoin.balance = get(this.wallet.tokenAccounts, `${fromCoin.mintAddress}.balance`)
@@ -962,22 +1025,25 @@ export default Vue.extend({
         }
       }
     },
-    checkFromCoinAmount(){
-      return parseFloat(this.fromCoinAmount) >
-              parseFloat(this.fromCoin && this.fromCoin.balance
-                ? this.fromCoin.symbol === 'SOL'
-                  ? this.fromCoin.balance
-                      .toEther()
-                      .minus(0.05)
-                      .plus(
-                        get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.balance`)
-                          ? get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.balance`).toEther()
-                          : 0
-                      )
-                      .toFixed(this.fromCoin.balance.decimals)
-                  : this.fromCoin.balance.fixed()
-                : '0')
-
+    checkFromCoinAmount() {
+      return (
+        parseFloat(this.fromCoinAmount) >
+        parseFloat(
+          this.fromCoin && this.fromCoin.balance
+            ? this.fromCoin.symbol === 'SOL'
+              ? this.fromCoin.balance
+                  .toEther()
+                  .minus(0.05)
+                  .plus(
+                    get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.balance`)
+                      ? get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.balance`).toEther()
+                      : 0
+                  )
+                  .toFixed(this.fromCoin.balance.decimals)
+              : this.fromCoin.balance.fixed()
+            : '0'
+        )
+      )
     },
     findMarket() {
       this.available_dex = []
@@ -998,22 +1064,24 @@ export default Vue.extend({
         }
 
         if (this.fromCoin.mintAddress && this.toCoin.mintAddress) {
-
-          do{
+          do {
             // mono-step swap
             const crpLPList = getCropperPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
+                ? NATIVE_SOL.mintAddress
+                : this.fromCoin.mintAddress,
               this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
               typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
             )
             if (crpLPList.length > 0) {
               this.available_dex.push(ENDPOINT_CRP)
-
             }
 
             //two-step swap with CRP
             const lpList_crp_1 = getCropperPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
+                ? NATIVE_SOL.mintAddress
+                : this.fromCoin.mintAddress,
               TOKENS.CRP.mintAddress,
               undefined
             )
@@ -1028,7 +1096,9 @@ export default Vue.extend({
 
             //two-step swap with USDC
             const lpList_usdc_1 = getCropperPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
+                ? NATIVE_SOL.mintAddress
+                : this.fromCoin.mintAddress,
               TOKENS.USDC.mintAddress,
               undefined
             )
@@ -1042,21 +1112,22 @@ export default Vue.extend({
               this.available_dex.push(ENDPOINT_MULTI_USDC)
             }
 
-            if(this.available_dex.length > 0)
-            {
-              break;
+            if (this.available_dex.length > 0) {
+              break
             }
 
             // mono-step swap using raydium
             const rayLPList = getRaydiumPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
+                ? NATIVE_SOL.mintAddress
+                : this.fromCoin.mintAddress,
               this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
               typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
             )
 
             if (rayLPList.length > 0) {
               this.available_dex.push(ENDPOINT_RAY)
-              break;
+              break
             }
 
             // mono-step swap using serum market
@@ -1081,20 +1152,24 @@ export default Vue.extend({
                 }
               }
             }
-            
+
             if (marketAddress && this.marketAddress !== marketAddress) {
               this.isWrap = false
               this.marketAddress = marketAddress
-              Market.load(this.$web3, new PublicKey(marketAddress), {}, new PublicKey(SERUM_PROGRAM_ID_V3)).then((market)=>{
-                this.market = market
-                this.getOrderBooks()
-                this.available_dex.push(ENDPOINT_SRM)
-              })
+              Market.load(this.$web3, new PublicKey(marketAddress), {}, new PublicKey(SERUM_PROGRAM_ID_V3)).then(
+                (market) => {
+                  this.market = market
+                  this.getOrderBooks()
+                  this.available_dex.push(ENDPOINT_SRM)
+                }
+              )
             }
 
             //two-step swap with CRP
             const lpList_crp_11 = getPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
+                ? NATIVE_SOL.mintAddress
+                : this.fromCoin.mintAddress,
               TOKENS.CRP.mintAddress,
               undefined
             )
@@ -1105,12 +1180,14 @@ export default Vue.extend({
             )
             if (lpList_crp_11.length > 0 && lpList_crp_12.length > 0) {
               this.available_dex.push(ENDPOINT_MULTI_CRP_MIXED)
-              break;
+              break
             }
 
             //two-step swap with USDC
             const lpList_usdc_11 = getPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.fromCoin.mintAddress,
+              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
+                ? NATIVE_SOL.mintAddress
+                : this.fromCoin.mintAddress,
               TOKENS.USDC.mintAddress,
               undefined
             )
@@ -1121,11 +1198,9 @@ export default Vue.extend({
             )
             if (lpList_usdc_11.length > 0 && lpList_usdc_12.length > 0) {
               this.available_dex.push(ENDPOINT_MULTI_USDC_MIXED)
-              break;
+              break
             }
-
-          }while(false);
-
+          } while (false)
         }
         this.updateUrl()
         this.updateAmounts()
@@ -1226,7 +1301,7 @@ export default Vue.extend({
               this.$accessor.liquidity.infos,
               this.fromCoin!.mintAddress,
               this.toCoin!.mintAddress,
-              this.fromCoinAmount,
+              this.fromCoinAmount
             )
 
             const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
@@ -1238,9 +1313,8 @@ export default Vue.extend({
               this.fromCoinAmount,
               this.setting.slippage
             )
-            if (!amountOut.isNullOrZero()){
-
-              if(max_coinAmount < parseFloat(amountOut.fixed())) {
+            if (!amountOut.isNullOrZero()) {
+              if (max_coinAmount < parseFloat(amountOut.fixed())) {
                 max_coinAmount = parseFloat(amountOut.fixed())
 
                 this.toCoinAmount = amountOut.fixed()
@@ -1258,83 +1332,81 @@ export default Vue.extend({
                 this.mainAmmId = poolInfo.ammId
               }
             }
-
           } else if (dex_type == ENDPOINT_MULTI_CRP || dex_type == ENDPOINT_MULTI_CRP_MIXED) {
-              let midTokenMint = TOKENS.CRP.mintAddress
-              this.midTokenMint = midTokenMint
+            let midTokenMint = TOKENS.CRP.mintAddress
+            this.midTokenMint = midTokenMint
 
+            // @ts-ignore
+            const fromPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
+              this.$accessor.liquidity.infos,
+              this.fromCoin!.mintAddress,
+              midTokenMint,
+              this.fromCoinAmount
+            )
+
+            let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
+              fromPoolInfo,
               // @ts-ignore
-              const fromPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
-                this.$accessor.liquidity.infos,
-                this.fromCoin!.mintAddress,
-                midTokenMint,
-                this.fromCoinAmount
-              )
+              this.fromCoin!.mintAddress,
+              midTokenMint,
+              this.fromCoinAmount,
+              this.setting.slippage
+            )
 
-              let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
-                fromPoolInfo,
-                // @ts-ignore
-                this.fromCoin!.mintAddress,
-                midTokenMint,
-                this.fromCoinAmount,
-                this.setting.slippage
-              )
+            // @ts-ignore
+            const toPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
+              this.$accessor.liquidity.infos,
+              midTokenMint,
+              this.toCoin!.mintAddress,
+              amountOut.fixed()
+            )
 
+            let final = getSwapOutAmount(
+              toPoolInfo,
+              midTokenMint,
               // @ts-ignore
-              const toPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
-                this.$accessor.liquidity.infos,
-                midTokenMint,
-                this.toCoin!.mintAddress,
-                amountOut.fixed()
-              )
+              this.toCoin.mintAddress,
+              amountOut.fixed(),
+              this.setting.slippage
+            )
 
-              let final = getSwapOutAmount(
-                toPoolInfo,
-                midTokenMint,
-                // @ts-ignore
-                this.toCoin.mintAddress,
-                amountOut.fixed(),
-                this.setting.slippage
-              )
+            if (!final.amountOut.isNullOrZero()) {
+              if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
+                max_coinAmount = parseFloat(final.amountOut.fixed())
+                this.toCoinAmount = final.amountOut.fixed()
+                this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
+                this.midAmountWithSlippage = amountOutWithSlippage.fixed()
+                this.midAmount = amountOut.fixed()
+                this.outToPirceValue = +new TokenAmount(
+                  parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
+                  // @ts-ignore
+                  this.toCoin.decimals,
+                  false
+                ).fixed()
 
-              if (!final.amountOut.isNullOrZero()) {
-                if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
-                  max_coinAmount = parseFloat(final.amountOut.fixed())
-                  this.toCoinAmount = final.amountOut.fixed()
-                  this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
-                  this.midAmountWithSlippage = amountOutWithSlippage.fixed()
-                  this.midAmount = amountOut.fixed()
-                  this.outToPirceValue = +new TokenAmount(
-                    parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
-                    // @ts-ignore
-                    this.toCoin.decimals,
-                    false
-                  ).fixed()
+                this.priceImpact = final.priceImpact
+                this.endpoint = ENDPOINT_MULTI_CRP
 
-                  this.priceImpact = final.priceImpact
-                  this.endpoint = ENDPOINT_MULTI_CRP
-                  
-                  this.best_dex_type = 'multi'
-                  this.midTokenSymbol = 'CRP'
+                this.best_dex_type = 'multi'
+                this.midTokenSymbol = 'CRP'
 
-                  this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
-                  this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
-                  this.mainAmmId = fromPoolInfo.ammId
-                  this.extAmmId = toPoolInfo.ammId
-                  
-                }
+                this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
+                this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
+                this.mainAmmId = fromPoolInfo.ammId
+                this.extAmmId = toPoolInfo.ammId
               }
+            }
           } else if (dex_type == ENDPOINT_MULTI_USDC || dex_type == ENDPOINT_MULTI_USDC_MIXED) {
             let midTokenMint = TOKENS.USDC.mintAddress
             this.midTokenMint = midTokenMint
-            
+
             // @ts-ignore
             const fromPoolInfo = (dex_type == ENDPOINT_MULTI_USDC ? findBestCropperLP : findBestLP)(
-                this.$accessor.liquidity.infos,
-                this.fromCoin!.mintAddress,
-                midTokenMint,
-                this.fromCoinAmount
-              )
+              this.$accessor.liquidity.infos,
+              this.fromCoin!.mintAddress,
+              midTokenMint,
+              this.fromCoinAmount
+            )
 
             let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
               fromPoolInfo,
@@ -1376,7 +1448,7 @@ export default Vue.extend({
                 ).fixed()
                 this.priceImpact = final.priceImpact
                 this.endpoint = ENDPOINT_MULTI_USDC
-                
+
                 this.best_dex_type = 'multi'
                 this.midTokenSymbol = 'USDC'
 
@@ -1390,7 +1462,7 @@ export default Vue.extend({
           }
         })
       }
-      if (max_coinAmount === 0)  {
+      if (max_coinAmount === 0) {
         this.toCoinAmount = ''
         this.toCoinWithSlippage = ''
         this.outToPirceValue = 0
@@ -1411,10 +1483,10 @@ export default Vue.extend({
             }
           }
         }
-      }, 1000) 
+      }, 1000)
     },
     needCreateTokens() {
-      if ( this.fromCoin !== null && this.toCoin !== null) {
+      if (this.fromCoin !== null && this.toCoin !== null) {
         let fromMint = this.fromCoin.mintAddress
         let midMint = this.midTokenMint
         let toMint = this.toCoin.mintAddress
@@ -1431,7 +1503,7 @@ export default Vue.extend({
     },
 
     needWrapSol() {
-      if ( this.fromCoin !== null ) {
+      if (this.fromCoin !== null) {
         if ([NATIVE_SOL.mintAddress, TOKENS.WSOL.mintAddress].includes(this.fromCoin.mintAddress)) {
           let amount = get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.balance`)
           amount = Math.ceil((amount ? Number(amount.fixed()) : 0) * 10 ** 9)
@@ -1582,10 +1654,10 @@ export default Vue.extend({
               this.swaping = false
               this.flush()
             })
-          }
-        else
-        {
-          const fromPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.mainAmmId)
+        } else {
+          const fromPoolInfo = Object.values(this.$accessor.liquidity.infos).find(
+            (p: any) => p.ammId === this.mainAmmId
+          )
           const toPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.extAmmId)
           const midTokenSymbol = this.endpoint === ENDPOINT_MULTI_CRP ? TOKENS.CRP.symbol : TOKENS.USDC.symbol
 
@@ -1617,8 +1689,7 @@ export default Vue.extend({
             get(this.wallet.tokenAccounts, `${toMint}.tokenAccountAddress`),
             this.fromCoinAmount,
             this.midAmountWithSlippage,
-            get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.tokenAccountAddress`),
-
+            get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.tokenAccountAddress`)
           )
             .then((txid) => {
               this.$notify.info({
@@ -1632,8 +1703,7 @@ export default Vue.extend({
               })
               const description = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
               this.$accessor.transaction.sub({ txid, description })
-              this.flush();
-
+              this.flush()
             })
             .catch((error) => {
               this.$notify.error({
@@ -1678,7 +1748,7 @@ export default Vue.extend({
             })
             const description = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
             this.$accessor.transaction.sub({ txid, description })
-            this.flush();
+            this.flush()
           })
           .catch((error) => {
             this.$notify.error({
@@ -1748,7 +1818,7 @@ export default Vue.extend({
         this.quoteSymbol = info.quoteSymbol ?? ''
         this.quoteUnsettledAmount = info.quoteUnsettledAmount
         this.unsettledOpenOrders = info.openOrders // have to establish an extra state, to store this value
-        this.flush();
+        this.flush()
       } catch (e) {
       } finally {
         this.isFetchingUnsettled = false
@@ -1800,7 +1870,7 @@ export default Vue.extend({
         })
         .then(() => {
           this.fetchUnsettledByMarket()
-          this.flush();
+          this.flush()
         })
         .catch((error) => {
           this.$notify.error({
@@ -1811,13 +1881,504 @@ export default Vue.extend({
           this.isSettlingQuote = false
           this.isSettlingBase = false
         })
+    },
+    reloadTimer() {
+      this.activeSpinning = true
+      setTimeout(() => {
+        this.activeSpinning = false
+      }, 1000)
+      this.getOrderBooks()
+      this.flush()
+      this.$accessor.wallet.getTokenAccounts()
     }
   }
 })
 </script>
 
-<style lang="less" sxcoped>
-//sxcoped
+<style lang="less" scoped>
+.swapWrapper {
+  max-width: 1350px;
+  width: 100%;
+  background: @color-bg;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .ant-layout {
+    background: #000 !important;
+  }
+
+  button.ant-btn-background-ghost[disabled] {
+    background: #80819d !important;
+    border: 2px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .ant-menu-horizontal > .ant-menu-item:hover,
+  .ant-menu-horizontal > .ant-menu-submenu:hover,
+  .ant-menu-horizontal > .ant-menu-item-active,
+  .ant-menu-horizontal > .ant-menu-submenu-active,
+  .ant-menu-horizontal > .ant-menu-item-open,
+  .ant-menu-horizontal > .ant-menu-submenu-open,
+  .ant-menu-horizontal > .ant-menu-item-selected,
+  .ant-menu-horizontal > .ant-menu-submenu-selected {
+    border-bottom: none !important;
+  }
+
+  .page-head {
+    margin-top: 10px;
+
+    .title {
+      text-align: center;
+      position: relative;
+      float: left;
+
+      a {
+        position: absolute;
+        &.create-btn-desktop {
+          top: 20px;
+          right: -90px;
+          .create-plus-btn {
+            font-weight: 400;
+            background: @color-outline;
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            color: white;
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-size: 10px;
+            line-height: 12px;
+
+            @media @max-b-mobile {
+              display: none;
+            }
+          }
+        }
+
+        &.create-btn-mobile {
+          top: 5px;
+          right: -25px;
+
+          .create-plus-btn {
+            font-weight: 400;
+            background: @color-outline;
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            border-radius: 8px;
+            width: 18px;
+            height: 18px;
+            display: none;
+
+            @media @max-b-mobile {
+              display: flex;
+            }
+          }
+        }
+      }
+    }
+
+    .information {
+      display: flex;
+      align-items: center;
+      text-align: right;
+
+      .my-info {
+        font-size: 15px;
+        line-height: 18px;
+      }
+
+      .reload-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+        background: @gradient-color-primary;
+        background-origin: border-box;
+        margin-left: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        .load-icon {
+          width: 18px;
+          height: 18px;
+        }
+
+        &.active .load-icon {
+          transform: rotate(360deg);
+          transition: all 1s ease-in-out;
+        }
+      }
+    }
+  }
+
+  .container {
+    max-width: 662px; //550
+
+    .coin-budge {
+      align-items: center;
+      border: solid 1px rgba(255, 255, 255, 0.5);
+      border-radius: 6px;
+      display: flex;
+      padding: 4px 8px;
+      img {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+      }
+      span {
+        font-size: 14px;
+        margin-left: 5px;
+      }
+    }
+
+    .tool-bar {
+      height: 64px;
+      border-radius: 14px;
+      border: 4px solid @color-outline;
+      width: 100%;
+      margin-bottom: 30px;
+
+      @media @max-b-mobile {
+        margin-bottom: 5px;
+        height: 54px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .tool-option {
+        height: 100%;
+        display: inline-block;
+        border-right: 4px solid @color-outline;
+        position: relative;
+
+        &:last-child {
+          border-right: none !important;
+        }
+
+        .input-search {
+          height: 100%;
+          position: absolute;
+          width: 100%;
+        }
+
+        .toggle {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+
+          .label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            position: relative;
+
+            .info-icon {
+              margin: 0;
+              position: absolute;
+              top: 0;
+              right: -20px;
+            }
+
+            &.active-label {
+              font-weight: 700;
+              color: #fff;
+            }
+          }
+
+          &.deposit-toggle {
+            .ant-switch-checked {
+              background-color: @color-disable !important;
+            }
+          }
+        }
+
+        .sort-by {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+
+          .label {
+            font-size: 16px;
+            cursor: pointer;
+
+            .sort-up,
+            .sort-down {
+              margin-right: 5px;
+              transition: 0.5s;
+            }
+
+            .sort-down {
+              transform: rotate(180deg);
+            }
+          }
+
+          .collapse-down,
+          .collapse-up {
+            cursor: pointer;
+            transition: 0.5s;
+          }
+
+          .collapse-down {
+            transform: rotate(180deg);
+          }
+        }
+
+        .sort-options {
+          position: absolute;
+          width: 100%;
+          top: 64px;
+          padding: 18px;
+          background: @gradient-color-primary;
+          background-origin: border-box;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+          border-radius: 8px;
+          z-index: 999;
+
+          .swap-info {
+            .tooltip-input {
+              background: rgba(255, 255, 255, 0.06);
+              border: 1px solid rgba(255, 255, 255, 0.14);
+              width: 240px;
+              outline: none;
+              border-radius: 6px;
+              font-size: 16px;
+              padding: 10px 13px;
+              line-height: 20px;
+
+              &::-webkit-outer-spin-button,
+              &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+              }
+            }
+
+            .info {
+              border-radius: 6px;
+              background: rgba(255, 255, 255, 0.06);
+              border: 1px solid rgba(255, 255, 255, 0.14);
+              padding: 8px !important;
+              margin-top: 10px;
+
+              .symbol {
+                font-size: 13px;
+                line-height: 16px;
+                font-weight: 700;
+                opacity: 1;
+                color: white;
+              }
+
+              .address {
+                font-size: 13px;
+                background: transparent;
+                opacity: 1;
+                color: white;
+              }
+
+              .action img {
+                width: 15px;
+                height: 15px;
+                cursor: pointer;
+              }
+            }
+
+            .info:nth-child(1) {
+              margin-top: 0 !important;
+            }
+          }
+        }
+      }
+    }
+
+    .card {
+      border: 1px solid #4d4d4d;
+      background: rgba(236, 228, 228, 0.05);
+      border-radius: 15px;
+
+      .card-body {
+        row-gap: 5px;
+        width: 600px !important;
+        background: none;
+
+        .price-info {
+          display: grid;
+          grid-auto-rows: auto;
+          grid-row-gap: 8px;
+          row-gap: 8px;
+          padding: 0 12px;
+          font-size: 12px;
+          line-height: 20px;
+          margin-bottom: 6px;
+          .swap-icon {
+            margin-left: 10px;
+            cursor: pointer;
+          }
+          .price-base {
+            font-size: 12px;
+            line-height: 15px;
+            opacity: 0.5;
+          }
+          .fs-container {
+            margin-top: 20px;
+            .name {
+              color: #fff;
+              font-size: 18px;
+              display: flex;
+              align-items: center;
+              label {
+                opacity: 0.5;
+              }
+              .tooltipIcon {
+                margin-left: 5px;
+                width: 15px;
+              }
+            }
+            .price-impact-orange {
+              color: #ffb900 !important;
+              label {
+                opacity: 1 !important;
+              }
+            }
+            .price-impact-red {
+              color: #f00 !important;
+              font-weight: bold !important;
+              label {
+                opacity: 1 !important;
+              }
+            }
+            .swapThrough {
+              text-transform: capitalize;
+              border-radius: 5px;
+              padding: 4px 8px;
+              margin-left: 5px;
+            }
+            .green {
+              background: #0caf7f;
+              border: solid 2px #0caf7f;
+            }
+            .purple {
+              background: #69039c;
+              border: solid 2px #69039c;
+            }
+            .cyan {
+              background: #4db1c4;
+              border: solid 2px #4db1c4;
+            }
+          }
+        }
+      }
+    }
+
+    .btncontainer {
+      background: none;
+      display: inline;
+      width: unset;
+      text-align: center;
+      position: relative;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 2px;
+      max-height: 50px;
+      border-radius: 8px;
+
+      button {
+        background: @gradient-color-icon !important;
+        background-origin: border-box !important;
+        border: 2px solid rgba(255, 255, 255, 0.14);
+        position: relative;
+        border-radius: 8px;
+        border-color: transparent;
+        color: white;
+      }
+    }
+    .not-enough-sol-alert {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .change-side {
+      div {
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+    .fst {
+      transform: rotate(90deg);
+      margin: 10px;
+    }
+
+    .fetching-unsettled {
+      margin: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #ffffffad;
+      span {
+        margin-top: 16px;
+        text-align: center;
+      }
+    }
+    .settle.card-body {
+      padding: 16px 24px;
+    }
+    .extra {
+      margin-top: 32px;
+      margin-bottom: 32px;
+      .settel-panel {
+        .align-right {
+          text-align: right;
+        }
+        th {
+          font-weight: normal;
+        }
+        td {
+          padding-bottom: 4px;
+          width: 25%;
+        }
+        thead {
+          font-size: 14px;
+          tr:first-child {
+            margin-top: 8px;
+          }
+        }
+        tbody {
+          tr:first-child {
+            td {
+              padding-top: 6px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ant-menu-horizontal,
+  .ant-layout-header,
+  .ant-layout-footer {
+    background: @color-bg !important;
+  }
+  .ant-layout-content {
+    background: @color-bg !important;
+  }
+}
+
 .warning-style {
   font-weight: bold;
   color: #f0b90b;
@@ -1832,358 +2393,14 @@ export default Vue.extend({
 .swap-btn.error-style {
   font-weight: normal;
 }
-main {
-  background-image: unset;
-  background-color: @color-bg;
-  background-size: cover;
-  background-position: center bottom;
-}
+
 .planetMiddle {
   position: absolute;
   left: -150px;
   top: 446px;
   transform: rotate(90deg);
 }
-.btn-grad {
-  background: @gradient-color-icon;
-  background-origin: border-box;
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  border-radius: 8px;
-  height: 62px;
-  margin-left: 20px;
-  width: 170px;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 42px;
-  letter-spacing: -0.05em;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
-  img {
-    margin: 10px 5px;
-  }
-}
-.swapHead {
-  align-items: center;
-  display: flex;
-  margin-top: 10px;
-  justify-content: space-between;
-
-  @media @max-b-mobile {
-    justify-content: center;
-  }
-
-  h1 {
-    font-size: 64px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 80px;
-    letter-spacing: -0.05em;
-    text-align: left;
-    margin-bottom: 0;
-  }
-
-  .buttonGroup {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-
-    @media @max-b-mobile {
-      top: -25px;
-    }
-  }
-}
-.count-down-group {
-  background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-  background-origin: border-box;
-  height: 62px;
-  border-radius: 63px;
-  position: relative;
-  padding: 2px;
-}
-.count-down {
-  background-color: @color-bg;
-  border-radius: 63px;
-  height: 100%;
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 3px 3px 20px;
-  font-size: 26px;
-  font-weight: 400;
-  line-height: 42px;
-  position: relative;
-
-  .ant-progress {
-    margin-left: 15px;
-  }
-  
-  .reload-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    background: @gradient-color-icon;
-    background-origin: border-box;
-    margin-left: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    .anticon {
-      font-size: 16px !important;
-      color: white !important;
-    }
-  }
-}
-.container {
-  max-width: 662px; //550
-  .card {
-    background: rgba(236, 228, 228, 0.05);
-    border-radius: 15px;
-  }
-  .price-info {
-    display: grid;
-    grid-auto-rows: auto;
-    grid-row-gap: 8px;
-    row-gap: 8px;
-    padding: 0 12px;
-    font-size: 12px;
-    line-height: 20px;
-    margin-bottom: 6px;
-    .swap-icon {
-      margin-left: 10px;
-      cursor: pointer;
-    }
-    .price-base {
-      font-size: 12px;
-      line-height: 15px;
-      opacity: 0.5;
-    }
-    .fs-container {
-      margin-top: 20px;
-      .name {
-        color: #fff;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        label {
-          opacity: 0.5;
-        }
-        .tooltipIcon {
-          margin-left: 5px;
-          width: 15px;
-        }
-      }
-      .price-impact-orange {
-        color: #ffb900 !important;
-        label {
-          opacity: 1 !important;
-        }
-      }
-      .price-impact-red {
-        color: #f00 !important;
-        font-weight: bold !important;
-        label {
-          opacity: 1 !important;
-        }
-      }
-      .swapThrough {
-        text-transform: capitalize;
-        border-radius: 5px;
-        padding: 4px 8px;
-        margin-left: 5px;
-      }
-      .green {
-        background: #0caf7f;
-        border: solid 2px #0caf7f;
-      }
-      .purple {
-        background: #69039c;
-        border: solid 2px #69039c;
-      }
-      .cyan {
-        background: #4db1c4;
-        border: solid 2px #4db1c4;
-      }
-    }
-  }
-  .btncontainer {
-    background: none;
-    display: inline;
-    width: unset;
-    text-align: center;
-    position: relative;
-    max-width: 400px;
-    margin: 10px auto;
-    padding: 2px;
-    max-height: 50px;
-    border-radius: 8px;
-
-    button {
-      background: @gradient-color-icon !important;
-      background-origin: border-box !important;
-      border: 2px solid rgba(255, 255, 255, 0.14);
-      position: relative;
-      border-radius: 8px;
-      border-color: transparent;
-      color: white;
-    }
-  }
-  .not-enough-sol-alert {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 4px;
-  }
-  .change-side {
-    div {
-      height: 32px;
-      width: 32px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-  }
-  .fst {
-    transform: rotate(90deg);
-    margin: 10px;
-  }
-  .coin-budge {
-    align-items: center;
-    border: solid 1px rgba(255,255,255,0.5);
-    border-radius: 6px;
-    display: flex;
-    padding: 4px 8px;
-    img {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-    }
-    span {
-      font-size: 14px;
-      margin-left: 5px;
-    }
-  }
-  .fetching-unsettled {
-    margin: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: #ffffffad;
-    span {
-      margin-top: 16px;
-      text-align: center;
-    }
-  }
-  .settle.card-body {
-    padding: 16px 24px;
-  }
-  .extra {
-    margin-top: 32px;
-    margin-bottom: 32px;
-    .settel-panel {
-      .align-right {
-        text-align: right;
-      }
-      th {
-        font-weight: normal;
-      }
-      td {
-        padding-bottom: 4px;
-        width: 25%;
-      }
-      thead {
-        font-size: 14px;
-        tr:first-child {
-          margin-top: 8px;
-        }
-      }
-      tbody {
-        tr:first-child {
-          td {
-            padding-top: 6px;
-          }
-        }
-      }
-    }
-  }
-}
-.swapWrapper {
-  max-width: 1350px;
-  width: 100%;
-  background: @color-bg;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 15px;
-  margin-left: auto;
-  margin-right: auto;
-
-  .ant-layout {
-    background: #000 !important;
-  }
-  button.ant-btn-background-ghost[disabled] {
-    background: #80819D !important;
-    border: 2px solid rgba(255, 255, 255, 0.14);
-  }
-  .ant-menu-horizontal > .ant-menu-item:hover,
-  .ant-menu-horizontal > .ant-menu-submenu:hover,
-  .ant-menu-horizontal > .ant-menu-item-active,
-  .ant-menu-horizontal > .ant-menu-submenu-active,
-  .ant-menu-horizontal > .ant-menu-item-open,
-  .ant-menu-horizontal > .ant-menu-submenu-open,
-  .ant-menu-horizontal > .ant-menu-item-selected,
-  .ant-menu-horizontal > .ant-menu-submenu-selected {
-    border-bottom: none !important;
-  }
-  .page-head {
-    .title {
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 32px;
-      text-align: center;
-      display: inline-block;
-      vertical-align: middle;
-      padding-right: 10px;
-      z-index: 2;
-      padding-left: 15px;
-      position: relative;
-    }
-    .buttons {
-      &:hover {
-        background: #1b2028;
-      }
-    }
-  }
-  .card {
-    border: 1px solid #4d4d4d;
-    .card-body {
-      row-gap: 5px;
-      width: 600px !important;
-      background: none;
-      > .fs-container {
-        text-align: center;
-      }
-    }
-  }
-  .lp-icons {
-    .icons {
-      img {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
-  .ant-menu-horizontal,
-  .ant-layout-header,
-  .ant-layout-footer {
-    background: @color-bg !important;
-  }
-  .ant-layout-content {
-    background: @color-bg !important;
-  }
-}
 .ant-tooltip-inner {
   background: @gradient-color-icon !important;
   background-origin: border-box !important;
@@ -2192,74 +2409,13 @@ main {
   border-radius: 8px;
   display: inline-block;
   width: auto;
-  color: rgba(255,255,255,0.5) !important;
-
-  .swap-info {
-    .tooltip-input {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      width: 240px;
-      outline: none;
-      border-radius: 6px;
-      font-size: 16px;
-      padding: 10px 13px;
-      line-height: 20px;
-
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-    }
-
-    .info {
-      border-radius: 6px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.14);
-      padding: 8px !important;
-      margin-top: 10px;
-      
-      .symbol {
-        font-size: 13px;
-        line-height: 16px;
-        font-weight: 700;
-        opacity: 1;
-        color: white;
-      }
-
-      .address {
-        font-size: 13px;
-        background: transparent;
-        opacity: 1;
-        color: white;
-      }
-
-      .action img {
-        width: 15px;
-        height: 15px;
-        cursor: pointer;
-      }
-    }
-
-    .info:nth-child(1) {
-      margin-top: 0 !important
-    }
-  }
+  color: rgba(255, 255, 255, 0.5) !important;
 }
+
 .ant-tooltip-arrow {
   display: none;
-  // top: -8px !important;
-  // width: 20px;
-  // height: 20px;
 }
-// .ant-tooltip-arrow::before {
-//   background-color: #271789 !important;
-//   border-top: 2px solid rgba(255, 255, 255, 0.14);
-//   border-left: 2px solid rgba(255, 255, 255, 0.14);
-//   width: 10px;
-//   height: 10px;
-// }
-// ******* Mobile *******
+
 @media @max-b-mobile {
   .swapWrapper {
     margin: auto;
@@ -2267,40 +2423,6 @@ main {
     width: 375px;
     .planetMiddle {
       display: none;
-    }
-    .swapHead {
-      margin: 40px 22px -25px 22px;
-      h1 {
-        display: none;
-      }
-      .buttonGroup {
-        .count-down-group {
-          height: 40px;
-
-          .count-down {
-            font-size: 18px;
-            line-height: 28px;
-
-            .reload-btn {
-              height: 30px;
-              width: 30px;
-            }
-          }
-        }
-        .btn-grad {
-          height: 40px;
-          margin-left: 5px;
-          width: 120px;
-          font-size: 11px;
-          display: flex;
-          justify-content: space-evenly;
-          align-items: center;
-          img {
-            margin: auto 0;
-            width: 15px;
-          }
-        }
-      }
     }
     .container {
       min-width: auto;
@@ -2391,7 +2513,7 @@ main {
     height: 0;
     .ant-notification-notice {
       // background: #222262 !important;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 14px;
     }
   }
@@ -2418,10 +2540,4 @@ main {
     background: rgba(255, 255, 255, 0.1) !important;
   }
 }
-// @media (max-width: 920px) {
-//   .swapWrapper {
-//     padding: 50px;
-//     margin: 0 auto;
-//   }
-// }
 </style>
