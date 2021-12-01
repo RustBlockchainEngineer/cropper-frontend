@@ -119,6 +119,7 @@ export default Vue.extend({
           tier: 1,
           time: 1,
           minutesLock: 43200,
+          days: 30,
           boost: 1,
           apy: 11.1,
           text: 'Boost for 1 month locked'
@@ -127,6 +128,7 @@ export default Vue.extend({
           tier: 2,
           time: 3,
           minutesLock: 129600,
+          days: 90,
           boost: 1.1,
           apy: 12.21,
           text: 'Boost for 3 months locked'
@@ -135,6 +137,7 @@ export default Vue.extend({
           tier: 3,
           time: 6,
           minutesLock: 259200,
+          days: 180,
           boost: 1.3,
           apy: 14.43,
           text: 'Boost for 6 months locked'
@@ -143,6 +146,7 @@ export default Vue.extend({
           tier: 4,
           time: 12,
           minutesLock: 525600,
+          days: 365,
           boost: 2,
           apy: 22.19,
           text: 'Boost for 1 year locked'
@@ -165,13 +169,13 @@ export default Vue.extend({
           (tierSearch: any) => (tierSearch.tier as string) == (tier as string)
         )
 
-      console.log(currentTier);  
+      alert( (currentTier[0].minutesLock * 60) / 86400  );  
       this.boostAPY = currentTier[0].boost;
       this.boostText = currentTier[0].text;
       this.minutesLock = currentTier[0].minutesLock;
 
       var currentDate = moment();
-      var futureMonth = moment(currentDate).add(currentTier[0].time, 'M');
+      var futureMonth = moment(currentDate).add('days',currentTier[0].days);
 
       this.unstakeDate = futureMonth.format('MM/DD/YYYY')
 
@@ -195,6 +199,7 @@ export default Vue.extend({
       const lock_duration = this.minutesLock * 60
 
 
+      alert(this.toStake * 1000000,  (lock_duration) / 86400  );  
 
       const key = getUnixTs().toString()
       this.$notify.info({
