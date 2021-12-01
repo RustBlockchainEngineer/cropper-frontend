@@ -361,10 +361,10 @@ export default Vue.extend({
     },
     async setExtraRewardsAccount(){
       setExtraReward(this.$web3, this.$wallet, [
-        { duration: new BN(0 * 60), extraPercentage: new BN(0) },
-        { duration: new BN(10 * 60), extraPercentage: new BN(30) },
-        { duration: new BN(30 * 60), extraPercentage: new BN(50) },
-        { duration: new BN(60 * 60), extraPercentage: new BN(100) },
+        { duration: new BN(30 * 24  * 3600), extraPercentage: new BN(0) },
+        { duration: new BN(90 * 24  * 3600), extraPercentage: new BN(10) },
+        { duration: new BN(180 * 24  * 3600), extraPercentage: new BN(30) },
+        { duration: new BN(365 * 24  * 3600), extraPercentage: new BN(100) },
       ])
     },
     async getExtraRewardsAccount(){
