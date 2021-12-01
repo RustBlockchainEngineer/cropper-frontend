@@ -30,6 +30,7 @@ export const CRP_LP_PROGRAM_ID_V1 = DEVNET_MODE? '7ZZJNL4xD8db6yrT46SeMFZXcVr9ML
 //export const LIQUIDITY_POOL_PROGRAM_ID_V5 ="";
 
 
+export const STAKE_TIERS_PROGRAM_ID = DEVNET_MODE ? "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw" : "FBHjXGXUa65hSCzyfMhkcLzu2U3HByNqcWMuDUUHURLa"
 
 
 export let FARM_VERSION = 2;//@Hongbo
@@ -42,9 +43,6 @@ export const FARM_PROGRAM_ID_VS = DEVNET_MODE ? [
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J'
 ]//@Hongbo
 export const FARM_PROGRAM_ID = FARM_PROGRAM_ID_VS[FARM_VERSION-2];//@Hongbo
-
-
-export const STAKE_TIERS_PROGRAM_ID = "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw";
 
 
 
@@ -61,7 +59,6 @@ export const STAKE_PROGRAM_ID = 'EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q'
 export const STAKE_PROGRAM_ID_V4 = 'CBuCnLe26faBpcBP2fktp4rp8abpcAnTWft6ZrP5Q4T'
 export const STAKE_PROGRAM_ID_V5 = '9KEPoZmtHUrBbhWN1v1KWLMkkvwY6WLtAVUCPRtRjP4z'
 
-export const STAKE_TIERS_PROGRAM_ID = "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw"
 
 export const IDO_PROGRAM_ID = '6FJon3QE27qgPVggARueB22hLvoh22VzJpXv4rBEoSLF'
 export const IDO_PROGRAM_ID_V2 = 'CC12se5To1CdEuw7fDS27B7Geo5jJyL7t5UK2B44NgiH'
