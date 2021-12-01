@@ -34,10 +34,10 @@
               <p class="powered-by bodyL weightB">Powered by Solana</p>
             </div>
             <div class="social-links">
-              <a href="#"><img src="@/assets/social/landing-medium.svg" /></a>
-              <a href="#"><img src="@/assets/social/landing-discord.svg" /></a>
-              <a href="#"><img src="@/assets/social/landing-twitter.svg" /></a>
-              <a href="#"><img src="@/assets/social/landing-telegram.svg" /></a>
+              <a href="#"><img src="@/assets/social/medium-blue.svg" /></a>
+              <a href="#"><img src="@/assets/social/discord-blue.svg" /></a>
+              <a href="#"><img src="@/assets/social/twitter-blue.svg" /></a>
+              <a href="#"><img src="@/assets/social/telegram-blue.svg" /></a>
             </div>
             <img class="move-next-section" src="@/assets/icons/transparent-arrow.svg" />
           </Col>
