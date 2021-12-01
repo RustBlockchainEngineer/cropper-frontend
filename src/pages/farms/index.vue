@@ -430,7 +430,7 @@
                   -
                 </div>
                 <div v-else class="value">
-                  {{ farm.farmInfo.apr }}%
+                  {{ Math.round(farm.farmInfo.apr * 100 ) / 100 }}%
                   <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
                   <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
                 </div>
@@ -655,7 +655,7 @@
                         -
                       </div>
                       <div v-else class="value">
-                        {{ farm.farmInfo.apr }}%
+                        {{ Math.round(farm.farmInfo.apr * 100 ) / 100 }}%
                         <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
                         <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
                       </div>
