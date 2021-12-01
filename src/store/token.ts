@@ -33,9 +33,9 @@ export const actions:any = actionTree(
       let need_to_update = false
       let cur_date = new Date().getTime()
 
-      if(window.localStorage.token_last_updated){
-        const last_updated = parseInt(window.localStorage.token_last_updated)
-        if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1635525130){
+      if(window.localStorage.token_last_updated_){
+        const last_updated = parseInt(window.localStorage.token_last_updated_)
+        if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1638191914){
           need_to_update = true
         }
       }
@@ -74,12 +74,10 @@ export const actions:any = actionTree(
             if (itemToken.tags && 
               ( 
                 itemToken.tags.includes('lp-token') || 
-                itemToken.tags.includes('wormhole') ||
                 itemToken.tags.includes('lending') ||
                 itemToken.tags.includes('stake-pool') || 
                 !allowed[itemToken.address] ||
-                itemToken.name.includes("(Allbridge") || 
-                itemToken.name.includes("((Wormhole")
+                itemToken.name.includes("(Allbridge")
               )
               && itemToken.symbol != 'wUSDT'
               && itemToken.symbol != 'wSOL'
@@ -90,6 +88,14 @@ export const actions:any = actionTree(
 
 
             if(itemToken.address == 'FCqfQSujuPxy6V42UvafBhsysWtEq1vhjfMN1PUbgaxA') { return ; }
+
+              if(itemToken.symbol == 'PANDA'){
+                itemToken.decimals = 9;
+              }
+
+              if(itemToken.symbol == 'FLOOF'){
+                itemToken.decimals = 1;
+              }
 
             const token = Object.values(TOKENS).find((item) => item.mintAddress === itemToken.address)
             if (!token) {// + itemToken.address + 'solana'
@@ -108,8 +114,14 @@ export const actions:any = actionTree(
                 picUrl: itemToken.logoURI,
                 tags: ['solana']
               }
+
+              if(itemToken.extensions){
+                TOKENS[key].twitter = itemToken.extensions.twitter
+              }
+
             } else {
               token.picUrl = itemToken.logoURI
+
               if (token.symbol !== itemToken.symbol && !token.tags.includes('cropper')) {
                 let wt = '';
                 if(itemToken.extensions && itemToken.extensions.twitter){
@@ -122,11 +134,17 @@ export const actions:any = actionTree(
                 token.twitter = wt
                 token.tags.push('solana')
               }
+
+              if(itemToken.extensions){
+                token.twitter = itemToken.extensions.twitter
+              }
+
             }
 
+            
           })
           TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
-          window.localStorage.token_last_updated = new Date().getTime()
+          window.localStorage.token_last_updated_ = new Date().getTime()
           window.localStorage.tokens = JSON.stringify(TOKENS)
         }
 

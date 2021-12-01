@@ -58,12 +58,8 @@ const TOKENBASE_DEVNET: Tokens = {
   CRP: {
     symbol: 'CRP',
     name: 'CRP',
-    // mintAddress : '67P8nMeC7dbqBVeJNRMfAj1Js8XZEPUhch9F7gVNH1nX',
     mintAddress: 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG',
-    // decimals: 6,
     decimals: 6,
-    // referrer : '67P8nMeC7dbqBVeJNRMfAj1Js8XZEPUhch9F7gVNH1nX',
-    // referrer: 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG',
     tags:['cropper']
   },
   
@@ -72,7 +68,6 @@ const TOKENBASE_DEVNET: Tokens = {
     name: 'USDT',
     mintAddress: '6La9ryWrDPByZViuQCizmo6aW98cK8DSL7angqmTFf9i',
     decimals: 9,
-    // referrer: '6La9ryWrDPByZViuQCizmo6aW98cK8DSL7angqmTFf9i',
     tags:['cropper']
   },
 
@@ -81,7 +76,6 @@ const TOKENBASE_DEVNET: Tokens = {
     name: 'USDC',
     mintAddress: '6MBRfPbzejwVpADXq3LCotZetje3N16m5Yn7LCs2ffU4',
     decimals: 9,
-    // referrer: '6MBRfPbzejwVpADXq3LCotZetje3N16m5Yn7LCs2ffU4',
     tags:['cropper']
   },
   B2B: {
@@ -89,7 +83,6 @@ const TOKENBASE_DEVNET: Tokens = {
     name: 'B2B',
     mintAddress: 'ECe1Hak68wLS44NEwBVNtZDMxap1bX3jPCoAnDLFWDHz',
     decimals: 9,
-    // referrer: 'ECe1Hak68wLS44NEwBVNtZDMxap1bX3jPCoAnDLFWDHz',
     tags:['cropper']
   },
   ETH: {
@@ -97,7 +90,6 @@ const TOKENBASE_DEVNET: Tokens = {
     name: 'ETH',
     mintAddress: 'G4UK7D15rHE85Q8HLKQ9BBafd2n2sUCkCRWwvWtBfuPe',
     decimals: 9,
-    // referrer: 'G4UK7D15rHE85Q8HLKQ9BBafd2n2sUCkCRWwvWtBfuPe',
     tags:['cropper']
   },
   WSOL: {
@@ -105,7 +97,6 @@ const TOKENBASE_DEVNET: Tokens = {
     name: 'Wrapped Solana',
     mintAddress: 'So11111111111111111111111111111111111111112',
     decimals: 9,
-    // referrer: 'HTcarLHe7WRxBQCWvhVB8AP56pnEtJUV2jDGvcpY3xo5',
     tags:['cropper']
   },
   WUSDT: {
@@ -113,7 +104,6 @@ const TOKENBASE_DEVNET: Tokens = {
     name: 'Wrapped USDT',
     mintAddress: 'BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4',
     decimals: 6,
-    // referrer: 'CA98hYunCLKgBuD6N8MJSgq1GbW9CXdksLf5mw736tS3',
     tags:['cropper']
   },
   WUSDC: {
@@ -128,7 +118,6 @@ const TOKENBASE_DEVNET: Tokens = {
     name: 'xCOPE',
     mintAddress: '3K6rftdAaQYMPunrtNRHgnK2UAtjm2JwyT2oCiTDouYE',
     decimals: 0,
-    // referrer: '8DTehuES4tfnd2SrqcjN52XofxWXGjiLZRgM12U9pB6f',
     tags:['cropper']
   },
 }

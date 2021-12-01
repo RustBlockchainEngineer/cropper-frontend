@@ -16,7 +16,6 @@ import {
   getMultipleAccounts,
   createAssociatedTokenAccountIfNotExist,
   getFilteredTokenAccountsByOwner,
-  getOneFilteredTokenAccountsByOwner,
   getAMMGlobalStateAddress
 } from '@/utils/web3'
 // @ts-ignore

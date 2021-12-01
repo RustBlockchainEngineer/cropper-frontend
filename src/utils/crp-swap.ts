@@ -258,10 +258,8 @@ export const swapInstruction_v5 = (
   userDestination: PublicKey,
   poolMint: PublicKey,
   feeTokenAccount: PublicKey,
-  feeWalletAccount: PublicKey,
   swapProgramId: PublicKey,
   tokenProgramId: PublicKey,
-  systemProgramId:PublicKey,
   amountIn: number | nu64,
   minimumAmountOut: number | nu64,
   programOwner?: PublicKey
@@ -273,18 +271,21 @@ export const swapInstruction_v5 = (
   ]);
   const keys = [
     { pubkey: tokenSwap, isSigner: false, isWritable: false },
+
     { pubkey: authority, isSigner: false, isWritable: false },
     { pubkey: userTransferAuthority, isSigner: true, isWritable: false },
     { pubkey: stateId, isSigner: false, isWritable: false },
+    
     { pubkey: userSource, isSigner: false, isWritable: true },
     { pubkey: poolSource, isSigner: false, isWritable: true },
     { pubkey: poolDestination, isSigner: false, isWritable: true },
     { pubkey: userDestination, isSigner: false, isWritable: true },
+    
     { pubkey: poolMint, isSigner: false, isWritable: true },
+    
     { pubkey: feeTokenAccount, isSigner: false, isWritable: true },
-    { pubkey: feeWalletAccount, isSigner: false, isWritable: true },
+
     { pubkey: tokenProgramId, isSigner: false, isWritable: false },
-    { pubkey: systemProgramId, isSigner: false, isWritable: false },
   ];
 
   // optional depending on the build of token-swap program

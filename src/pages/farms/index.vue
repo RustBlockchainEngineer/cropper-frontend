@@ -53,16 +53,24 @@
       @onCancel="cancelStakeLP"
     />
 
-    <FarmMigration
-      v-if="userMigrations.length > 0"
-      title="Farm Migration"
-      :migrationFarms="userMigrations"
-      @onMigrate="migrateFarm"
-      @onCancel="cancelStake"
-    />
-
     <div class="card">
       <div class="card-body">
+        <div v-if="displaynoticeupdate" class="update-note-pending">
+          <div class="update-title">
+            <img src="@/assets/icons/info-icon.svg" />
+            We’ve updated Farms to V2 of our smart contracts. Harvest all pending rewards to launch the V2 display.
+          </div>
+        </div>
+        <div v-if="userMigrations.length > 0" class="update-note-migration">
+          <div class="update-title">
+            <img src="@/assets/icons/watch-icon.svg" />
+            The CRP-USDC farm is ended, you must migrate your LP tokens to continue farming.
+          </div>
+
+          <div class="update-btn" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
+            <button @click="migrateFarm(migrationFarm)">Harvest & Migrate</button>
+          </div>
+        </div>
         <div class="page-head fs-container">
           <span class="title">
             Farms
@@ -549,6 +557,7 @@
                       farm.farmInfo.currentLPtokens > 0.001
                     "
                   >
+
                     <Button
                       size="large"
                       ghost
@@ -712,6 +721,7 @@
                               <img src="@/assets/icons/reward-icon.svg" />
                             </div>
                             Remaining rewards
+
                             {{
                               Math.round(
                                 new TokenAmount(
@@ -940,7 +950,7 @@ export default Vue.extend({
 
       farmProgramCreated: true,
       superOwnerAddress: FARM_INITIAL_SUPER_OWNER,
-
+      displaynoticeupdate: false,
       farms: [] as any[],
       showFarms: [] as any[],
       searchName: '',
@@ -1105,7 +1115,6 @@ export default Vue.extend({
 
       try {
         const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
-        //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
 
         forIn(migrations, (newFarmId, oldFarmId, _object) => {
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
@@ -1117,6 +1126,7 @@ export default Vue.extend({
               depositBalance:
                 userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)
             })
+            this.userMigrate = 1
           }
         })
       } catch {
@@ -1126,6 +1136,7 @@ export default Vue.extend({
       }
     },
     migrateFarm(migrationFarm: any) {
+    
       const amount = migrationFarm.depositBalance
 
       const oldFarm = get(this.farm.infos, migrationFarm.oldFarmId)
@@ -1264,6 +1275,8 @@ export default Vue.extend({
         let userInfo = get(this.farm.stakeAccounts, poolId)
         let isPFO = false
 
+        //   console.log(farmInfo);
+
         // @ts-ignore
         const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } = farmInfo.poolInfo
 
@@ -1280,8 +1293,8 @@ export default Vue.extend({
         let partPc = 0
 
         if (reward && lp) {
-          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(
-            end_timestamp.toNumber() - last_timestamp.toNumber()
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(
+            toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp))
           )
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
@@ -1312,38 +1325,37 @@ export default Vue.extend({
           }
 
           const rewardPerTimestampAmountTotalValue =
-            getBigNumber(rewardPerTimestampAmount.toEther()) *
-            60 *
-            60 *
-            24 *
-            365 *
-            this.price.prices[reward.symbol as string]
+            rewardPerTimestampAmount.toEther().multipliedBy(new BigNumber(60 * 60 * 24 * 365 * this.price.prices[reward.symbol as string]))
 
           const liquidityCoinValue =
-            getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
-            this.price.prices[liquidityItem?.coin.symbol as string]
+            (liquidityItem?.coin.balance as TokenAmount).toEther()
+            .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.coin.symbol as string]))
+            
           const liquidityPcValue =
-            getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
-            this.price.prices[liquidityItem?.pc.symbol as string]
-          const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
+            (liquidityItem?.pc.balance as TokenAmount).toEther()
+            .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.pc.symbol as string]))
+            
+          const liquidityTotalValue = liquidityPcValue.plus(liquidityCoinValue);
 
-          const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
+          const liquidityTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
 
           partCoin = getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / liquidityTotalSupply
           partPc = getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / liquidityTotalSupply
 
-          const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
-          let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
+          const liquidityItemValue = liquidityTotalValue.dividedBy(liquidityTotalSupply)
+          let liquidityUsdValue = lp.balance.toEther().multipliedBy(liquidityItemValue)
           newFarmInfo.lpUSDvalue = liquidityItemValue
 
-          let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
+          let farmUsdValue = newFarmInfo.lp.balance.toEther().multipliedBy(liquidityItemValue)
 
-          let baseCalculation = farmUsdValue
+          let baseCalculation = getBigNumber(farmUsdValue)
+          
           if (baseCalculation < 0.01) {
             baseCalculation = 1
           }
 
-          let apr = ((rewardPerTimestampAmountTotalValue / baseCalculation) * 100).toFixed(10)
+          let apr = ((getBigNumber(rewardPerTimestampAmountTotalValue) / baseCalculation) * 100).toFixed(2)
+
 
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
@@ -1358,7 +1370,7 @@ export default Vue.extend({
             liquidityUsdValue < 2 &&
             !window.localStorage['owner_' + newFarmInfo.poolId]
           ) {
-            continue
+           // continue
           }
 
           // @ts-ignore
@@ -1372,9 +1384,9 @@ export default Vue.extend({
           if (
             this.poolsDatas[liquidityItem.ammId] &&
             this.poolsDatas[liquidityItem.ammId]['fees'] &&
-            liquidityTotalValue > 0
+            getBigNumber(liquidityTotalValue) > 0
           ) {
-            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / liquidityTotalValue
+            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / getBigNumber(liquidityTotalValue)
             newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
             newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
           }
@@ -1397,6 +1409,27 @@ export default Vue.extend({
           if (rewardPerTimestampAmount.toEther().toString() === '0') {
             //endedFarmsPoolId.push(poolId)
           }
+        }
+        if (userInfo && lp && FARM_VERSION === 1) {
+          userInfo = cloneDeep(userInfo)
+
+          const { rewardDebt, depositBalance } = userInfo
+          let currentTimestamp = this.currentTimestamp
+
+          if (currentTimestamp > end_timestamp.toNumber()) {
+            currentTimestamp = end_timestamp.toNumber()
+          }
+
+          const duration = currentTimestamp - last_timestamp.toNumber()
+
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount)
+          const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
+          const lpTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).wei
+          const rewardPerShareCalc = rewardPerTimestamp
+            .multipliedBy(duration)
+            .multipliedBy(REWARD_MULTIPLER)
+            .dividedBy(lpTotalSupply)
+            .plus(getBigNumber(reward_per_share_net))
 
           if (newCoin) {
             delete this.price.prices[liquidityItem?.coin.symbol as string]
@@ -1505,8 +1538,9 @@ export default Vue.extend({
             )
               .toFixed(2)
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              
           }
-
+          
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
         } else {
           userInfo = {
@@ -1523,7 +1557,7 @@ export default Vue.extend({
         ) {
           let labelized = false
           if (lp) {
-            const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
+            //const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               if (this.labelizedAmmsExtended[newFarmInfo.poolId].farmhidden == true) {
@@ -1655,7 +1689,9 @@ export default Vue.extend({
       }
 
       if (stakedOnly) {
-        this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0)
+        this.showFarms = this.showFarms.filter(
+          (farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0 || farm.userInfo.needRefresh
+        )
       }
 
       this.totalCount = this.showFarms.length
@@ -2406,6 +2442,7 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
+
 .farm.container {
   max-width: 1350px;
   width: 100%;

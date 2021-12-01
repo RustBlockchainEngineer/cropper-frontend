@@ -2063,12 +2063,9 @@
   integrity sha512-QWdSk0PBXDaXxkj+/Hq9Og51cpOE+WkNG0acO0SeYMxobd8Ls092OFWXwipy7VPrrToJI2sBBVNFtoLr0kEc/g==
 
 "@solana/wallet-adapter-slope@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-slope/-/wallet-adapter-slope-0.1.1.tgz#b2846ed0015eaf0179ae1b5bb979077004b1f9e1"
-  integrity sha512-GdiIKSJs8DxgDz8oLvyR/j/tKApw4TxPGsA9fAoHggzUU5eCOyoueo7dYIAXWjkO7teo/Ta/qjMjxLUiS1mCrw==
-  dependencies:
-    "@types/bs58" "^4.0.1"
-    bs58 "^4.0.1"
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-slope/-/wallet-adapter-slope-0.1.3.tgz#1ac1bdd90066987f60eac9c7a8b45d49a9eef8a4"
+  integrity sha512-t0q4piJ11KT7XNT+L+dPb/SbQjTH7v8CBbVBwrVtgDht9PRH4+Aq2xHvt1N48dlGpkY60t+8EW2Rw+GgSRf7TA==
 
 "@solana/wallet-adapter-solflare@^0.2.2":
   version "0.2.2"
@@ -2123,6 +2120,7 @@
   version "1.31.0"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.31.0.tgz#7a313d4c1a90b77f27ddbfe845a10d6883e06452"
   integrity sha512-7nHHx1JNFnrt15e9y8m38I/EJCbaB+bFC3KZVM1+QhybCikFxGMtGA5r7PDC3GEL1R2RZA8yKoLkDKo3vzzqnw==
+
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@ethersproject/sha2" "^5.5.0"
