@@ -199,7 +199,8 @@ export default Vue.extend({
       const lock_duration = this.minutesLock * 60
 
 
-      alert(this.toStake * 1000000,  (lock_duration) / 86400  );  
+      alert(this.toStake * 1000000);
+      alert(  (lock_duration) / 86400  );  
 
       const key = getUnixTs().toString()
       this.$notify.info({
