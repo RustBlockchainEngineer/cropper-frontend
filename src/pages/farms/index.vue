@@ -479,17 +479,17 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-line">
-                          LP Tokens <span>{{ farm.userInfo.depositFormat }}</span>
+                          LP Tokens <span>{{ farm.userInfo.depositFormat.replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</span>
                         </div>
                         <hr />
                         <div class="tooltip-line">
                           {{ farm.farmInfo.lp.coin.symbol }}
-                          <span> {{ farm.userInfo.depositCoin }} </span>
+                          <span> {{ farm.userInfo.depositCoin.replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} </span>
                         </div>
                         <hr />
                         <div class="tooltip-line">
                           {{ farm.farmInfo.lp.pc.symbol }}
-                          <span> {{ farm.userInfo.depositPc }} </span>
+                          <span> {{ farm.userInfo.depositPc.replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} </span>
                         </div>
                       </div>
                     </template>
@@ -1343,7 +1343,7 @@ export default Vue.extend({
             baseCalculation = 1
           }
 
-          let apr = ((rewardPerTimestampAmountTotalValue / baseCalculation) * 100).toFixed(2)
+          let apr = ((rewardPerTimestampAmountTotalValue / baseCalculation) * 100).toFixed(10)
 
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
@@ -1441,17 +1441,17 @@ export default Vue.extend({
             this.displaynoticeupdate = true
           }
 
-          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
+          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toFixed(2)
 
-          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toFixed(2)
 
-          userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toFixed(2)
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
               Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100
             )
-              .toString()
+              .toFixed(2)
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
 
@@ -1493,17 +1493,17 @@ export default Vue.extend({
             this.displaynoticeupdate = true
           }
 
-          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toString()
+          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format().replace(/,/g, '') * 100000) / 100000).toFixed(2)
 
-          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format().replace(/,/g, '') * 10000) / 10000).toFixed(2)
 
-          userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toString()
+          userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format().replace(/,/g, '') * 10000) / 10000).toFixed(2)
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
-              Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100
+              Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format().replace(/,/g, '') * 100) / 100
             )
-              .toString()
+              .toFixed(2)
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
 
