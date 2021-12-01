@@ -324,7 +324,7 @@ export default Vue.extend({
       this.canUnstake = ! ((userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 > new Date().getTime())
 
       //@ts-ignore
-      this.userStaked = (new TokenAmount(userAccount.amount, 6)).fixed() as number
+      this.userStaked = (new TokenAmount(userAccount.amount, 9)).fixed() as number
 
       const rewardAmount = estimateRewards(
           farm_state,
@@ -333,7 +333,7 @@ export default Vue.extend({
           userAccount
       )
 
-      this.pendingReward = (new TokenAmount(rewardAmount, 6)).fixed()
+      this.pendingReward = (new TokenAmount(rewardAmount, 9)).fixed()
 
 
     },
