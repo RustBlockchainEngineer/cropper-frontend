@@ -130,25 +130,25 @@
             <img class="stars-third-bg" src="@/assets/landing_v2/stars-third-bg.svg" />
             <div class="feature-box">
               <img src="@/assets/landing_v2/feature-swap.svg" />
-              <h4 class="title">Swap</h4>
+              <h4 class="title weightB">Swap</h4>
               <p class="bodyM content">Designed to give you the best price on Solana</p>
               <a class="bodyM now-btn weightS">Swap Now</a>
             </div>
             <div class="feature-box">
               <img src="@/assets/landing_v2/feature-farming.svg" />
-              <h4 class="title">Farming</h4>
+              <h4 class="title weightB">Farming</h4>
               <p class="bodyM content">Enjoy a wide variety of Permissionless and Labelized farms</p>
               <a class="bodyM now-btn weightS">Farm Now</a>
             </div>
             <div class="feature-box">
               <img src="@/assets/landing_v2/feature-staking.svg" />
-              <h4 class="title">Staking</h4>
+              <h4 class="title weightB">Staking</h4>
               <p class="bodyM content">Stake CRP through 4 tiers and get advantages on the plateform</p>
               <a class="bodyM now-btn weightS">Stake Now</a>
             </div>
             <div class="feature-box">
               <img src="@/assets/landing_v2/feature-fertilizer.svg" />
-              <h4 class="title">Fertilizer</h4>
+              <h4 class="title weightB">Fertilizer</h4>
               <p class="bodyM content">The Fertilizer launcher is curently being imrpoved.</p>
               <a class="bodyM now-btn weightS">Soon!</a>
             </div>
@@ -157,16 +157,127 @@
       </Row>
     </section>
 
+    <section class="how-works">
+      <h2 class="weightB text-center">How it works</h2>
+      <div class="tutorial-container">
+        <img class="landing-third-bg" src="@/assets/landing_v2/landing-third-bg.svg" />
+        <div class="tutorial-group">
+          <Tabs defaultActiveKey="1" onChange="{callback}">
+            <TabPane tab="For Farmers" key="1">
+              <Row :gutter="20">
+                <Col :span="8">
+                  <p class="bodyL weightB">Prepare to harvest</p>
+                  <div class="play-list">
+                    <Button
+                      class="play-list-btn bodyM weightS"
+                      @click="selectVideo(1)"
+                      :class="currentPlay === 1 ? 'active' : ''"
+                      >1. Buy the token you want to</Button
+                    >
+                    <Button
+                      class="play-list-btn bodyM weightS"
+                      @click="selectVideo(2)"
+                      :class="currentPlay === 2 ? 'active' : ''"
+                      >2. Stack liquidity</Button
+                    >
+                    <Button
+                      class="play-list-btn bodyM weightS"
+                      @click="selectVideo(3)"
+                      :class="currentPlay === 3 ? 'active' : ''"
+                      >3. Harvest rewards</Button
+                    >
+                    <Button
+                      class="play-list-btn bodyM weightS"
+                      @click="selectVideo(4)"
+                      :class="currentPlay === 4 ? 'active' : ''"
+                      >4. Unstack liquidity</Button
+                    >
+                  </div>
+                </Col>
+                <Col :span="16">
+                  <div class="video-player"></div>
+                </Col>
+              </Row>
+            </TabPane>
+            <TabPane tab="For SPL Builders" key="2">
+              <Row :gutter="20">
+               <Col :span="8">
+                  <p class="bodyL weightB">Prepare to harvest</p>
+                  <div class="play-list">
+                    <Button
+                      class="play-list-btn bodyM weightS"
+                      @click="selectVideo(1)"
+                      :class="currentPlay === 1 ? 'active' : ''"
+                      >1. Buy the token you want to</Button
+                    >
+                    <Button
+                      class="play-list-btn bodyM weightS"
+                      @click="selectVideo(2)"
+                      :class="currentPlay === 2 ? 'active' : ''"
+                      >2. Stack liquidity</Button
+                    >
+                    <Button
+                      class="play-list-btn bodyM weightS"
+                      @click="selectVideo(3)"
+                      :class="currentPlay === 3 ? 'active' : ''"
+                      >3. Harvest rewards</Button
+                    >
+                    <Button
+                      class="play-list-btn bodyM weightS"
+                      @click="selectVideo(4)"
+                      :class="currentPlay === 4 ? 'active' : ''"
+                      >4. Unstack liquidity</Button
+                    >
+                  </div>
+                </Col>
+                <Col :span="16">
+                  <div class="video-player"></div>
+                </Col>
+              </Row>
+            </TabPane>
+          </Tabs>
+        </div>
+      </div>
+    </section>
+
+    <section class="cropper-blog">
+      <h2 class="weightB text-center">@cropper.finance</h2>
+    </section>
+
     <section class="surrounded-by">
       <h2 class="weightB text-center">
         Surrounded by the Best <br />
         in the Industry
       </h2>
       <div class="category-group text-center">
-        <Button class="category-btn bodyL weightS" :class="currentCategory === 'advisors' ? 'active' : '' " @click="selectCategory('advisors')"> Advisors </Button>
-        <Button class="category-btn bodyL weightS" :class="currentCategory === 'backedBy' ? 'active' : '' " @click="selectCategory('backedBy')"> Backed by </Button>
-        <Button class="category-btn bodyL weightS" :class="currentCategory === 'partners' ? 'active' : '' " @click="selectCategory('partners')"> Partners </Button>
-        <Button class="category-btn bodyL weightS" :class="currentCategory === 'poweredBy' ? 'active' : '' " @click="selectCategory('poweredBy')"> Powered by </Button>
+        <Button
+          class="category-btn bodyL weightS"
+          :class="currentCategory === 'advisors' ? 'active' : ''"
+          @click="selectCategory('advisors')"
+        >
+          Advisors
+        </Button>
+        <Button
+          class="category-btn bodyL weightS"
+          :class="currentCategory === 'backedBy' ? 'active' : ''"
+          @click="selectCategory('backedBy')"
+        >
+          Backed by
+        </Button>
+        <Button
+          class="category-btn bodyL weightS"
+          :class="currentCategory === 'partners' ? 'active' : ''"
+          @click="selectCategory('partners')"
+        >
+          Partners
+        </Button>
+        <Button
+          class="category-btn bodyL weightS"
+          :class="currentCategory === 'poweredBy' ? 'active' : ''"
+          @click="selectCategory('poweredBy')"
+        >
+          Powered by
+        </Button>
       </div>
       <div class="industry-container">
         <div class="industry-group">
@@ -187,7 +298,8 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { Icon, Popover, Button, Row, Col } from 'ant-design-vue'
+import { Icon, Popover, Button, Row, Col, Tabs } from 'ant-design-vue'
+const { TabPane } = Tabs
 
 @Component({
   components: {
@@ -195,7 +307,9 @@ import { Icon, Popover, Button, Row, Col } from 'ant-design-vue'
     Popover,
     Button,
     Row,
-    Col
+    Col,
+    Tabs,
+    TabPane
   },
   layout: 'home',
   async asyncData({ $accessor, $api }) {}
@@ -212,6 +326,7 @@ export default class Landing extends Vue {
   isPowered: boolean = false
   isDirect: boolean = false
   currentCategory: string = 'advisors'
+  currentPlay: number = 1
   surroundedList = {
     advisors: [
       {
@@ -366,13 +481,17 @@ export default class Landing extends Vue {
   changeToDirect() {
     this.isDirect = !this.isDirect
   }
-  
+
   selectCategory(category: string) {
-    this.currentCategory = category;
+    this.currentCategory = category
     if (category === 'advisors') this.currentIndustry = this.surroundedList.advisors
     else if (category === 'backedBy') this.currentIndustry = this.surroundedList.backedBy
     else if (category === 'partners') this.currentIndustry = this.surroundedList.partners
     else if (category === 'poweredBy') this.currentIndustry = this.surroundedList.poweredBy
+  }
+
+  selectVideo(id: number) {
+    this.currentPlay = id
   }
 }
 </script>
@@ -409,7 +528,7 @@ export default class Landing extends Vue {
 // class stylesheet
 .landing {
   .landing-header {
-    padding: 30px 62px 89px 62px;
+    padding: 38px 64px 89px 64px;
     background-image: url('@/assets/landing_v2/landing-first-bg.svg');
     background-repeat: no-repeat;
     background-size: cover;
@@ -494,7 +613,7 @@ export default class Landing extends Vue {
   }
 
   .why-cropper {
-    padding: 98px 62px 0 62px;
+    padding: 98px 64px 0 64px;
 
     .intro-box-group {
       position: relative;
@@ -529,16 +648,17 @@ export default class Landing extends Vue {
 
   .why-cropper-audit {
     position: relative;
-    height: 900px;
 
     .landing-second-img {
-      position: absolute;
-      top: 0;
       width: 100%;
     }
 
     .audit-group {
-      padding: 37px 62px 0 62px;
+      position: absolute;
+      top: 37px;
+      left: 64px;
+      padding-right: 64px;
+      width: 100%;
 
       .audit-box-group {
         display: flex;
@@ -573,7 +693,7 @@ export default class Landing extends Vue {
   }
 
   .features-headline {
-    padding: 0 62px 98px 62px;
+    padding: 0 64px 98px 64px;
 
     .feature-box-group {
       display: flex;
@@ -618,6 +738,26 @@ export default class Landing extends Vue {
     }
   }
 
+  .how-works {
+    .tutorial-container {
+      position: relative;
+
+      .landing-third-bg {
+        width: 100%;
+      }
+
+      .tutorial-group {
+        position: absolute;
+        top: 58px;
+        width: 100%;
+      }
+    }
+  }
+
+  .cropper-blog {
+    padding: 98px 0;
+  }
+
   .surrounded-by {
     .category-group {
       margin-top: 48px;
@@ -626,9 +766,9 @@ export default class Landing extends Vue {
       border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 
       .category-btn {
-        padding: 19px 32px;
+        padding: 17px 30px;
         background: transparent;
-        border: none;
+        border: 2px solid transparent;
         height: auto;
         color: #fff;
         margin-right: 38px;
@@ -650,7 +790,7 @@ export default class Landing extends Vue {
     .industry-container {
       max-width: 952px;
       margin: auto;
-      
+
       .industry-group {
         padding: 90px 0;
 
@@ -671,6 +811,82 @@ export default class Landing extends Vue {
           }
         }
       }
+    }
+  }
+}
+</style>
+<style lang="less">
+// ant customization
+.ant-tabs {
+  .ant-tabs-bar {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 0 calc(64px + 4.166666666666667%);
+    margin: 0 0 48px 0;
+    .ant-tabs-nav {
+      .ant-tabs-tab {
+        font-weight: bold;
+        font-size: 25px;
+        line-height: 37px;
+        letter-spacing: 0.25px;
+        padding-bottom: 20px;
+        margin-right: 65px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        &:active,
+        &:hover {
+          color: #23adb4;
+        }
+      }
+
+      .ant-tabs-tab-active {
+        color: #23adb4;
+      }
+
+      .ant-tabs-ink-bar {
+        background: #23adb4;
+      }
+    }
+  }
+
+  .ant-tabs-top-content > .ant-tabs-tabpane {
+    padding: 0 calc(64px + 4.166666666666667%);
+
+    .play-list {
+      padding-top: 28px;
+
+      .play-list-btn {
+        margin-bottom: 18px;
+        padding: 15px 0 15px 19px;
+        background: #01033c;
+        border-radius: 8px;
+        border: 3px solid #01033c;
+        color: #fff;
+        height: auto;
+        width: 100%;
+        max-width: 292px;
+        text-align: unset;
+
+        &.active {
+          background: linear-gradient(278.99deg, #22b5b6 0%, #280c86 100%);
+          border: 3px solid #82d4dc;
+          box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    .video-player {
+      border: 3px solid #7a88b6;
+      box-sizing: border-box;
+      filter: drop-shadow(0 44px 64px rgba(0, 0, 0, 0.35));
+      height: 524px;
+      border-radius: 42px;
+      background: #010536;
     }
   }
 }
