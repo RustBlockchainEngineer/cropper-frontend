@@ -118,34 +118,34 @@ export default Vue.extend({
         {
           tier: 1,
           time: 1,
-          minutesLock: 0,
+          minutesLock: 43200,
           boost: 1,
           apy: 11.1,
-          text: 'Boost for 1 month locked (0 sec)'
+          text: 'Boost for 1 month locked'
         },
         {
           tier: 2,
           time: 3,
-          minutesLock: 10,
+          minutesLock: 129600,
           boost: 1.1,
           apy: 12.21,
-          text: 'Boost for 3 months locked (10 min)'
+          text: 'Boost for 3 months locked'
         },
         {
           tier: 3,
           time: 6,
-          minutesLock: 30,
+          minutesLock: 259200,
           boost: 1.3,
           apy: 14.43,
-          text: 'Boost for 6 months locked (30 min)'
+          text: 'Boost for 6 months locked'
         },
         {
           tier: 4,
           time: 12,
-          minutesLock: 60,
+          minutesLock: 525600,
           boost: 2,
           apy: 22.19,
-          text: 'Boost for 1 year locked (60 min)'
+          text: 'Boost for 1 year locked'
         }
       ]
     }
