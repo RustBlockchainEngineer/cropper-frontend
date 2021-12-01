@@ -5,10 +5,10 @@
         <img src="@/assets/icons/cropper-logo.svg" />
         <div class="lunch-btn-group">
           <div class="btn-container">
-            <Button class="btn-outline">Documentation</Button>
+            <Button class="btn-outline weightS">Documentation</Button>
           </div>
           <NuxtLink to="/swap/">
-            <Button class="btn-fill">Launch App</Button>
+            <Button class="btn-fill weightS">Launch App</Button>
           </NuxtLink>
         </div>
       </div>
@@ -123,7 +123,9 @@
       <Row>
         <Col :span="22" :offset="1">
           <h2 class="weightB text-center">Features headline</h2>
-          <p class="bodyL text-center" style="margin-top: 20px;">Reprehenderit esse labore id veniam ut veniam non ex adipisicing</p>
+          <p class="bodyL text-center" style="margin-top: 20px">
+            Reprehenderit esse labore id veniam ut veniam non ex adipisicing
+          </p>
           <div class="feature-box-group">
             <img class="stars-third-bg" src="@/assets/landing_v2/stars-third-bg.svg" />
             <div class="feature-box">
@@ -135,7 +137,7 @@
             <div class="feature-box">
               <img src="@/assets/landing_v2/feature-farming.svg" />
               <h4 class="title">Farming</h4>
-              <p class="bodyM content">Enjoy a wide variety of Permissionless and Labelized farms </p>
+              <p class="bodyM content">Enjoy a wide variety of Permissionless and Labelized farms</p>
               <a class="bodyM now-btn weightS">Farm Now</a>
             </div>
             <div class="feature-box">
@@ -153,6 +155,32 @@
           </div>
         </Col>
       </Row>
+    </section>
+
+    <section class="surrounded-by">
+      <h2 class="weightB text-center">
+        Surrounded by the Best <br />
+        in the Industry
+      </h2>
+      <div class="category-group text-center">
+        <Button class="category-btn bodyL weightS" :class="currentCategory === 'advisors' ? 'active' : '' " @click="selectCategory('advisors')"> Advisors </Button>
+        <Button class="category-btn bodyL weightS" :class="currentCategory === 'backedBy' ? 'active' : '' " @click="selectCategory('backedBy')"> Backed by </Button>
+        <Button class="category-btn bodyL weightS" :class="currentCategory === 'partners' ? 'active' : '' " @click="selectCategory('partners')"> Partners </Button>
+        <Button class="category-btn bodyL weightS" :class="currentCategory === 'poweredBy' ? 'active' : '' " @click="selectCategory('poweredBy')"> Powered by </Button>
+      </div>
+      <div class="industry-container">
+        <div class="industry-group">
+          <Row :gutter="[20, 20]">
+            <Col v-for="card in currentIndustry" :key="card.title" :span="currentIndustry.length >= 4 ? '6' : '8'">
+              <div class="industry-card">
+                <div class="industry-card-body">
+                  <img :src="card.img" />
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </div>
     </section>
   </main>
 </template>
@@ -183,6 +211,118 @@ export default class Landing extends Vue {
   isPartners: boolean = false
   isPowered: boolean = false
   isDirect: boolean = false
+  currentCategory: string = 'advisors'
+  surroundedList = {
+    advisors: [
+      {
+        title: 'Dexlab',
+        img: '/_nuxt/src/assets/industry/dexlab.svg'
+      },
+      {
+        title: 'Solanium',
+        img: '/_nuxt/src/assets/industry/solanium.svg'
+      },
+      {
+        title: 'Halborn',
+        img: '/_nuxt/src/assets/industry/halborn.svg'
+      }
+    ],
+    backedBy: [
+      {
+        title: 'SKYVision Capital',
+        img: '/_nuxt/src/assets/industry/svc.svg'
+      },
+      {
+        title: 'MEXC Global',
+        img: '/_nuxt/src/assets/industry/mexc.svg'
+      },
+      {
+        title: 'Gate.io',
+        img: '/_nuxt/src/assets/industry/gateio.svg'
+      },
+      {
+        title: 'Negocia Capital',
+        img: '/_nuxt/src/assets/industry/negocia.svg'
+      },
+      {
+        title: 'Solanium Ventures',
+        img: '/_nuxt/src/assets/industry/solaniumV.svg'
+      },
+      {
+        title: 'Newave Capital',
+        img: '/_nuxt/src/assets/industry/newave.svg'
+      },
+      {
+        title: 'DeltaHub Capital',
+        img: '/_nuxt/src/assets/industry/deltahub.svg'
+      },
+      {
+        title: 'AngelONE',
+        img: '/_nuxt/src/assets/industry/angelone.svg'
+      },
+      {
+        title: 'Cropperbros',
+        img: '/_nuxt/src/assets/industry/cropperbros.svg'
+      },
+      {
+        title: 'Basics Capital',
+        img: '/_nuxt/src/assets/industry/basics.svg'
+      },
+      {
+        title: 'AVA Capital',
+        img: '/_nuxt/src/assets/industry/ava.svg'
+      },
+      {
+        title: 'M6',
+        img: '/_nuxt/src/assets/industry/m6.svg'
+      },
+      {
+        title: 'OIG',
+        img: '/_nuxt/src/assets/industry/oig.svg'
+      },
+      {
+        title: 'EX Capital',
+        img: '/_nuxt/src/assets/industry/ex.svg'
+      },
+      {
+        title: 'CryptoJ',
+        img: '/_nuxt/src/assets/industry/cryptoj.svg'
+      }
+    ],
+    partners: [
+      {
+        title: 'FTX',
+        img: '/_nuxt/src/assets/industry/ftx.svg'
+      },
+      {
+        title: 'MEXC Global',
+        img: '/_nuxt/src/assets/industry/mexc.svg'
+      },
+      {
+        title: 'Gate.io',
+        img: '/_nuxt/src/assets/industry/gateio.svg'
+      },
+      {
+        title: 'Dexlab',
+        img: '/_nuxt/src/assets/industry/dexlab.svg'
+      }
+    ],
+    poweredBy: [
+      {
+        title: 'Solana',
+        img: '/_nuxt/src/assets/industry/solana.svg'
+      },
+      {
+        title: 'Serum',
+        img: '/_nuxt/src/assets/industry/serum.svg'
+      },
+      {
+        title: 'Bonafide',
+        img: '/_nuxt/src/assets/industry/bonafide.svg'
+      }
+    ]
+  }
+  currentIndustry: any = this.surroundedList.advisors
 
   mounted() {}
 
@@ -225,6 +365,14 @@ export default class Landing extends Vue {
 
   changeToDirect() {
     this.isDirect = !this.isDirect
+  }
+  
+  selectCategory(category: string) {
+    this.currentCategory = category;
+    if (category === 'advisors') this.currentIndustry = this.surroundedList.advisors
+    else if (category === 'backedBy') this.currentIndustry = this.surroundedList.backedBy
+    else if (category === 'partners') this.currentIndustry = this.surroundedList.partners
+    else if (category === 'poweredBy') this.currentIndustry = this.surroundedList.poweredBy
   }
 }
 </script>
@@ -276,7 +424,6 @@ export default class Landing extends Vue {
 
         .btn-outline,
         .btn-fill {
-          font-weight: 600;
           font-size: 18px;
           line-height: 14px;
         }
@@ -354,7 +501,7 @@ export default class Landing extends Vue {
       margin-top: 48px;
       margin-bottom: 61px;
       display: flex;
-      
+
       .stars-second-bg {
         position: absolute;
         top: calc(50% - 170px);
@@ -387,6 +534,7 @@ export default class Landing extends Vue {
     .landing-second-img {
       position: absolute;
       top: 0;
+      width: 100%;
     }
 
     .audit-group {
@@ -425,8 +573,8 @@ export default class Landing extends Vue {
   }
 
   .features-headline {
-    padding-bottom: 98px;
-    
+    padding: 0 62px 98px 62px;
+
     .feature-box-group {
       display: flex;
       margin-top: 68px;
@@ -462,9 +610,65 @@ export default class Landing extends Vue {
         }
 
         .now-btn {
-          color: #22B5B6;
+          color: #22b5b6;
           position: absolute;
           bottom: 55px;
+        }
+      }
+    }
+  }
+
+  .surrounded-by {
+    .category-group {
+      margin-top: 48px;
+      padding: 32px 0;
+      border-top: 2px solid rgba(255, 255, 255, 0.2);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+
+      .category-btn {
+        padding: 19px 32px;
+        background: transparent;
+        border: none;
+        height: auto;
+        color: #fff;
+        margin-right: 38px;
+
+        &.active {
+          background: @gradient-color-icon;
+          background-origin: border-box;
+          border: 2px solid rgba(255, 255, 255, 0.14);
+          box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
+          border-radius: 8px;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .industry-container {
+      max-width: 952px;
+      margin: auto;
+      
+      .industry-group {
+        padding: 90px 0;
+
+        .industry-card {
+          background: @gradient-color-outline;
+          height: 130px;
+          padding: 2px;
+          border-radius: 8px;
+
+          .industry-card-body {
+            width: 100%;
+            height: 100%;
+            background: #000539;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
         }
       }
     }
