@@ -1,41 +1,41 @@
 @import './variables.less';
 
-.coin-select .coin-input .select-button img{border-radius:50% !important}
+.coin-select .coin-input .select-button img {
+  border-radius: 50% !important
+}
 
-.ant-layout{
-  background:#000539 !important;
+.ant-layout {
+  background: @color-bg !important;
 }
 
 .ant-switch::after {
-    box-shadow: unset !important;
-    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
-    background-origin: border-box;
-    width: 28px !important;
-    height: 28px !important;
-    border-radius: 14px;
-    top: 50% !important;
-    transform: translate(-10%,-50%) !important;
+  box-shadow: unset !important;
+  background: @gradient-color-icon;
+  background-origin: border-box;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 10px !important;
+  top: 50% !important;
+  left: 0 !important;
+  transform: translate(-10%, -50%) !important;
 }
 
 .ant-switch-checked::after {
-    left: 100% !important;
-    margin-left: -1px !important;
-    transform: translate(-70%, -50%) !important;
+  left: calc(100% - 4px) !important;
+  margin-left: 0 !important;
+  transform: translate(-70%, -50%) !important;
 }
 
-
 .ant-switch {
-    background-color: rgba(255,255,255, .5) !important;
-    height: 9px !important;
-    width: 46px !important;
-    margin-left: 14px !important;
+  background-color: #fff !important;
+  height: 11px !important;
+  min-width: 35px !important;
 }
 
 .ant-switch-checked {
-    background-color: #fff !important;
-    height: 9px;
-    width: 46px;
-    margin-left: 14px;
+  background-color: #fff !important;
+  height: 11px !important;
+  min-width: 35px !important;
 }
 
 .ant-notification-notice {
@@ -94,7 +94,7 @@ button.ant-btn-background-ghost[disabled] {
 .ant-calendar,
 .ant-input,
 .ant-select-selection {
-  background: #000539 !important;
+  background: @color-bg !important;
 }
 
 .ant-select-dropdown {
@@ -109,7 +109,7 @@ button.ant-btn-background-ghost[disabled] {
 .ant-select-dropdown-menu-item {
   font-size: 16px !important;
   padding: 10px !important;
-  border-top: 1px solid #FFFFFF20;
+  border-top: 1px solid rgba(255,255,255,0.2);
 }
 
 .ant-select-dropdown-menu-item:first-child {
@@ -117,7 +117,7 @@ button.ant-btn-background-ghost[disabled] {
 }
 
 .ant-select-dropdown-menu-item-selected,
-.ant-select-dropdown-menu-item:hover:not(.ant-select-dropdown-menu-item-disabled){
+.ant-select-dropdown-menu-item:hover:not(.ant-select-dropdown-menu-item-disabled) {
   background: rgba(255, 255, 255, 0.06) !important;
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 6px;
@@ -126,8 +126,9 @@ button.ant-btn-background-ghost[disabled] {
 .ant-select-arrow {
   color: rgb(255 255 255) !important;
 }
-.ant-calendar-input{
-  color:#fff
+
+.ant-calendar-input {
+  color: #fff
 }
 
 .ant-input-group-addon {
@@ -135,22 +136,23 @@ button.ant-btn-background-ghost[disabled] {
   border: 1px solid #d9d9d9 !important;
 }
 
-.ant-pagination-disabled a{
-  color:rgba(255, 255, 255, 0.25) !important;
+.ant-pagination-disabled a {
+  color: rgba(255, 255, 255, 0.25) !important;
 }
 
-.ant-pagination-prev .ant-pagination-item-link, .ant-pagination-next .ant-pagination-item-link{
-  border:none !important;
-    font-size: 17px;
-    line-height: 38px;
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link {
+  border: none !important;
+  font-size: 17px;
+  line-height: 38px;
 }
 
-.ant-pagination-item{
+.ant-pagination-item {
   width: 48px !important;
   height: 48px !important;
-    border: 2px solid transparent !important;
+  border: 2px solid transparent !important;
 
-  & > a{
+  &>a {
     color: #FFF;
     font-style: normal;
     font-weight: normal;
@@ -159,14 +161,14 @@ button.ant-btn-background-ghost[disabled] {
     letter-spacing: -0.05em;
   }
 
-  &.ant-pagination-item-active{
-    background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+  &.ant-pagination-item-active {
+    background: @gradient-color-icon !important;
     background-origin: border-box !important;
     border: 2px solid rgba(255, 255, 255, 0.14) !important;
     border-radius: 8px;
 
-    a{
-      color:#fff !important
+    a {
+      color: #fff !important
     }
   }
 

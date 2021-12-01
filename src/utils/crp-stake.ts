@@ -24,17 +24,14 @@ import { Account, Connection } from '@solana/web3.js';
 import { createSplAccount } from './crp-swap';
 import { createAssociatedTokenAccountIfNotExist2, sendTransaction } from './web3';
 import { STAKE_TIERS_PROGRAM_ID } from './ids';
+import moment from 'moment';
 let WaggleFarm:any = null
-// import ido_idl from '@/utils/waggle_ido_sol.json'
-// const idoProgramId = new anchor.web3.PublicKey("2epB32Fz3TFgibUqPFFN61U1MFXmU5f3CyHyvBZCoh4b");
-// let idoCRP = new anchor.Program(ido_idl, idoProgramId);
 
 
 export function setAnchorProvider(
   connection: Connection,
   wallet: any,
 ) {
-  if (!wallet.publicKey) return null;
 
   const provider = new anchor.Provider(
     connection,
@@ -45,9 +42,7 @@ export function setAnchorProvider(
   const program = new (anchor as any).Program(waggle_farm_idl, new PublicKey(STAKE_TIERS_PROGRAM_ID), provider);
   WaggleFarm = program
 
-  return program;
 }
-
 
 export interface ExtraRewardConfigs{
   duration: any
@@ -77,7 +72,35 @@ async function getPoolAddressFromMint(mint:string){
   );
   return stateSigner
 }
+const ACC_PRECISION = 100 * 1000 * 1000 * 1000;
+const FULL_100 = 100 * 1000 * 1000 * 1000;
+export function estimateRewards(
+  stateData:any,
+  extraConfigData:any,
+  poolData:any,
+  userData:any,
+){
+  const currentTimeStamp = Math.ceil(new Date().getTime() / 1000);
+  const duration = Math.max(currentTimeStamp - poolData.lastRewardTime, 0)
 
+  const reward_per_share = stateData.tokenPerSecond.toNumber() * duration * ACC_PRECISION / poolData.amount.toNumber();
+  const acc_reward_per_share = poolData.accRewardPerShare.toNumber()  + reward_per_share;
+
+  let extraPercentage = 0
+  extraConfigData.configs.forEach((item:any)=>{
+    if(item.duration == userData.duration)
+    {
+      extraPercentage = item.extraPercentage
+      return;
+    }
+  })
+
+  const pending_amount = userData.amount.toNumber() * acc_reward_per_share / ACC_PRECISION - userData.rewardDebt.toNumber();
+  const extra_amount = userData.extraReward.toNumber() + pending_amount * extraPercentage / FULL_100 ;
+  const total_reward = userData.rewardAmount.toNumber() + pending_amount + extra_amount
+
+  return total_reward
+}
 
 export async function createFarmState(
   connection:Connection,
@@ -149,7 +172,7 @@ export async function createExtraReward(
   );
   console.log(extraRewardSigner.toString(), extraRewardBump)
 
-  await WaggleFarm.rpc.createExtraRewardConfigs(extraRewardBump,
+  const tx = await WaggleFarm.instruction.createExtraRewardConfigs(extraRewardBump,
     [{ duration: new BN(0), extraPercentage: new BN(0) }],
     {
       accounts: {
@@ -158,6 +181,8 @@ export async function createExtraReward(
         ...defaultAccounts
       },
     })
+  transaction.add(tx)
+  return await sendTransaction(connection, wallet, transaction, signers)
 }
 
 export async function setExtraReward(
@@ -390,34 +415,6 @@ export async function getPoolUserAccount(
   return await WaggleFarm.account.farmPoolUserAccount.fetch(poolUserAccount)
 }
 
-export async function createUser(
-  connection:Connection,
-  wallet: any,
-  poolSigner:string,
-){
-  const stateSigner = await getFarmStateAddress()
-
-  const [userAccount, bump1] = await PublicKey.findProgramAddress([
-    new PublicKey(poolSigner).toBuffer(), wallet.publicKey.toBuffer()
-  ], WaggleFarm.programId)
-  
-  const transaction = new Transaction()
-  const signers: Account[] = []
-  
-  const tx = WaggleFarm.instruction.createUser(bump1, {
-    accounts: {
-      user: userAccount,
-      state: stateSigner,
-      pool: poolSigner,
-      authority: wallet.publicKey,
-      ...defaultAccounts
-    }
-  })
-
-  transaction.add(tx)
-  return await sendTransaction(connection, wallet, transaction, signers)
-}
-
 export async function stake (
   connection:Connection,
   wallet: any,
@@ -440,25 +437,40 @@ export async function stake (
   const extraRewardSigner = await getExtraRewardAddress()
   // const poolSigner = await getPoolAddressFromMint(rewardMint)
 
-  const [poolUserAccount, bump1] = await PublicKey.findProgramAddress([
+  const [userAccount, bump1] = await PublicKey.findProgramAddress([
     new PublicKey(poolSigner).toBuffer(), wallet.publicKey.toBuffer()
   ], WaggleFarm.programId)
+  try{
+    const account = await WaggleFarm.account.farmPoolUserAccount.fetch(userAccount)
+    console.log(account)
+  }
+  catch
+  {
+    transaction.add( WaggleFarm.instruction.createUser(bump1, {
+      accounts: {
+        user: userAccount,
+        state: stateSigner,
+        pool: poolSigner,
+        authority: wallet.publicKey,
+        ...defaultAccounts
+      }
+    }));
+  }
 
-
-  const tx = WaggleFarm.instruction.stake(new BN(amount), new BN(lock), {
+  transaction.add(WaggleFarm.instruction.stake(new BN(amount), new BN(lock), {
     accounts: {
       mint: rewardMint,
       extraRewardAccount: extraRewardSigner,
       poolVault: poolVault,
       userVault: rewardUserVault,
-      user: poolUserAccount,
+      user: userAccount,
       state: stateSigner,
       pool: poolSigner,
       authority: wallet.publicKey,
       ...defaultAccounts
     }
-  });
-  transaction.add(tx)
+  }));
+
   return await sendTransaction(connection, wallet, transaction, signers)
 }
 
@@ -477,6 +489,8 @@ export async function unstake (
   const signers: Account[] = []
   
   const stateSigner = await getFarmStateAddress()
+  const programState = await getFarmState()
+  
   const extraRewardSigner = await getExtraRewardAddress()
   // const poolSigner = await getPoolAddressFromMint(rewardMint)
 
@@ -485,7 +499,7 @@ export async function unstake (
   ], WaggleFarm.programId)
 
 
-  const ix = WaggleFarm.instruction.unstake(new BN(amount), {
+  transaction.add(WaggleFarm.instruction.unstake(new BN(amount), {
     accounts: {
       mint: rewardMint,
       extraRewardAccount: extraRewardSigner,
@@ -497,10 +511,22 @@ export async function unstake (
       authority: wallet.publicKey,
       ...defaultAccounts
     }
-  });
-  transaction.add(ix)
-  // const hash = await u.provider.send(tx, [], { commitment: 'confirmed' });
-  // return await cccc.getTransaction(hash)
+  }))
+  
+  transaction.add(WaggleFarm.instruction.harvest({
+    accounts: {
+      mint: rewardMint,
+      extraRewardAccount: extraRewardSigner,
+      rewardVault: programState.rewardVault,
+      userVault: rewardUserVault,
+      user: poolUserAccount,
+      state: stateSigner,
+      pool: poolSigner,
+      authority: wallet.publicKey,
+      ...defaultAccounts
+    }
+  }))
+  
   return await sendTransaction(connection, wallet, transaction, signers)
 
 }

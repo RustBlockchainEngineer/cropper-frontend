@@ -152,10 +152,10 @@ export default Vue.extend({
   .label {
     font-size: 18px;
     line-height: 14px;
-    color: #ffffff50;
+    color: rgba(255,255,255,0.5);
     padding-left: 10px;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       font-size: 12px !important;
       line-height: 15px;
     }
@@ -175,7 +175,7 @@ export default Vue.extend({
     overflow: hidden;
     text-overflow: ellipsis;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       font-size: 15px;
       line-height: 18px;
     }
@@ -255,7 +255,7 @@ export default Vue.extend({
       padding: 0.5rem;
       line-height: 24px;
       margin-left: 2px;
-      background: #000539;
+      background: @color-bg;
       border-radius: 8px;
       width: 140px;
       position: relative;

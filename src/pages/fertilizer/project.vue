@@ -2018,7 +2018,7 @@ export default Vue.extend({
 }
 
 
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   .noDesktop {
     display: inline-block !important;
   }
@@ -2043,7 +2043,7 @@ export default Vue.extend({
 
       .icons {
         height: 47px;
-        background-color: #000539;
+        background-color: @color-bg;
         border-radius: 8px;
         align-items: center;
         padding: 0 20px;
@@ -2262,7 +2262,7 @@ export default Vue.extend({
       border-radius: 14px;
       padding: 32px 50px;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         margin-left: 20px;
         margin-right: 20px;
         padding: 10px;
@@ -2272,7 +2272,7 @@ export default Vue.extend({
         height: 100% !important;
 
         .header-left-col {
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             width: 100%;
           }
         }
@@ -2283,7 +2283,7 @@ export default Vue.extend({
           display: flex;
           align-items: center;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             display: none;
           }
         }
@@ -2325,7 +2325,7 @@ export default Vue.extend({
         letter-spacing: 0;
         text-align: left;
 
-        @media (max-width: @mobile-b-width) {
+        @media @max-b-mobile {
           font-size: 16px;
           line-height: 20px;
           font-weight: 700;
@@ -2333,7 +2333,7 @@ export default Vue.extend({
       }
 
       .btncontainer {
-        background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+        background: @gradient-color-icon;
         background-origin: border-box;
         border: 2px solid rgba(255, 255, 255, 0.14);
         border-radius: 8px;
@@ -2385,7 +2385,7 @@ export default Vue.extend({
       border-radius: 14px;
       padding: 20px 25px;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         margin-left: 20px;
         margin-right: 20px;
         padding: 10px;
@@ -2393,7 +2393,7 @@ export default Vue.extend({
 
       .devider {
         margin: 30px -24px;
-        border-bottom: 1px solid #ffffff20;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
         height: 1px;
       }
 
@@ -2402,7 +2402,7 @@ export default Vue.extend({
         justify-content: center;
 
         .largepdding .btncontainer {
-          background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+          background: @gradient-color-icon;
           background-origin: border-box;
           border: 2px solid rgba(255, 255, 255, 0.14);
           border-radius: 8px;
@@ -2412,7 +2412,7 @@ export default Vue.extend({
           line-height: 60px;
           display: flex;
 
-          @media (max-width: @mobile-b-width) {
+          @media @max-b-mobile {
             height: 44px;
             min-width: 105px;
           }
@@ -2433,7 +2433,7 @@ export default Vue.extend({
             align-items: center;
             justify-content: center;
 
-            @media (max-width: @mobile-b-width) {
+            @media @max-b-mobile {
               height: 40px;
               font-size: 14px;
             }
@@ -2537,7 +2537,7 @@ export default Vue.extend({
         display: none;
         padding: 0 10px;
 
-        @media (max-width: @mobile-b-width) {
+        @media @max-b-mobile {
           display: block;
         }
 
@@ -2564,7 +2564,7 @@ export default Vue.extend({
       }
 
       .pc-list {
-        @media (max-width: @mobile-b-width) {
+        @media @max-b-mobile {
           display: none;
         }
       }
@@ -2572,7 +2572,7 @@ export default Vue.extend({
       .copy-link-mobile {
         display: none;
 
-        @media (max-width: @mobile-b-width) {
+        @media @max-b-mobile {
           display: block;
           margin: 20px 20px 0 20px;
           text-align: center;
@@ -2587,7 +2587,7 @@ export default Vue.extend({
   }
 }
 
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   .farm-head {
     min-width: unset;
   }
@@ -2598,14 +2598,14 @@ export default Vue.extend({
   display: none !important;
 }
 
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   body .fertilizeruniq.cont {
     .details {
       float: right;
     }
 
     .detailButton {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       display: inline-block;
       padding: 2px;
@@ -2624,7 +2624,7 @@ export default Vue.extend({
     }
 
     .openButton {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       display: inline-block;
       padding: 2px;
@@ -2853,7 +2853,7 @@ export default Vue.extend({
 
     .start,
     .harvest {
-      background: #000539;
+      background: @color-bg;
       border-radius: 14px;
       margin: auto;
       .reward .token {
@@ -2956,7 +2956,7 @@ export default Vue.extend({
       border: none;
       padding: 9px 10px;
       border-radius: 5px 0 0 5px;
-      background: #000539;
+      background: @color-bg;
       width: 293px;
     }
 
@@ -2989,7 +2989,7 @@ export default Vue.extend({
     letter-spacing: -0.05em;
     margin-bottom: 20px;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       display: none;
     }
   }
@@ -3099,7 +3099,7 @@ export default Vue.extend({
     line-height: 37px;
     color: #fff;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       font-size: 16px;
       line-height: 20px;
     }
@@ -3125,7 +3125,7 @@ export default Vue.extend({
     display: flex;
     align-items: center;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       height: 85px;
       padding: 10px;
       font-size: 14px;
@@ -3146,7 +3146,7 @@ export default Vue.extend({
       }
     }
 
-    @media (max-width: @mobile-m-width) {
+    @media @max-m-mobile {
       height: 120px;
     }
 
@@ -3158,7 +3158,7 @@ export default Vue.extend({
       width: 40px;
       transform: translate(0, -50%);
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         height: 35px;
         width: 35px;
       }
@@ -3177,13 +3177,13 @@ export default Vue.extend({
         position: absolute;
         top: -18px;
 
-        @media (max-width: @mobile-b-width) {
+        @media @max-b-mobile {
           height: 68px;
           top: -68px;
           left: 16px;
         }
 
-        @media (max-width: @mobile-m-width) {
+        @media @max-m-mobile {
           height: 103px;
           top: -103px;
           left: 16px;
@@ -3206,7 +3206,7 @@ export default Vue.extend({
       align-items: center;
       justify-content: center;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         height: 35px;
         width: 35px;
       }
@@ -3220,13 +3220,13 @@ export default Vue.extend({
         position: absolute;
         top: -18px;
 
-        @media (max-width: @mobile-b-width) {
+        @media @max-b-mobile {
           height: 68px;
           top: -68px;
           left: 16px;
         }
 
-        @media (max-width: @mobile-m-width) {
+        @media @max-m-mobile {
           height: 103px;
           top: -103px;
           left: 16px;
@@ -3257,7 +3257,7 @@ export default Vue.extend({
     position: absolute;
     right: calc(12.5% - 45px);
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       position: absolute;
       top: 10px;
       right: 10px;
@@ -3267,7 +3267,7 @@ export default Vue.extend({
       padding: 5px;
     }
 
-    @media (max-width: @mobile-m-width) {
+    @media @max-m-mobile {
       position: relative;
       top: 0;
       right: 0;
@@ -3290,7 +3290,7 @@ export default Vue.extend({
       position: absolute;
       right: calc(12.5% - 45px);
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         position: absolute;
         top: 10px;
         right: 10px;
@@ -3300,7 +3300,7 @@ export default Vue.extend({
         padding: 5px;
       }
 
-      @media (max-width: @mobile-m-width) {
+      @media @max-m-mobile {
         position: relative;
         top: 0;
         right: 0;
@@ -3396,7 +3396,7 @@ export default Vue.extend({
   max-height: 65px;
 
   button {
-    background: #000539 !important;
+    background: @color-bg !important;
     position: relative;
     border-radius: 30px;
     border-color: transparent;
@@ -3409,7 +3409,7 @@ export default Vue.extend({
 }
 
 main {
-  background-color: #000539;
+  background-color: @color-bg;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -3444,7 +3444,7 @@ main {
   text-align: right;
 }
 .pf-record {
-  background-color: #000539;
+  background-color: @color-bg;
   border-bottom: 1px solid #d9d9d9;
 
   .pf-record-content {
@@ -3468,14 +3468,14 @@ main {
 
 .farm.container {
   max-width: 1200px;
-  background: #000539;
+  background: @color-bg;
   margin-top: 20px;
   margin-bottom: 20px;
 
   .card {
     .card-body {
       padding: 0;
-      background: #000539;
+      background: @color-bg;
       overflow-x: scroll;
       scrollbar-width: none;
       -ms-overflow-style: none;

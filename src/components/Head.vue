@@ -1,8 +1,7 @@
 <template>
   <Header class="header fs-container" :class="isMobile ? 'mobile' : ''">
     <NuxtLink to="/">
-      <img class="logo" v-if="!isMobile" src="@/assets/icons/logo-desktop.svg" />
-      <img class="logo" v-else src="@/assets/icons/logo-mobile.svg" />
+      <img class="logo" src="@/assets/icons/cropper-logo.svg" />
     </NuxtLink>
 
     <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
@@ -49,6 +48,10 @@ export default Vue.extend({
   
   .logo {
     height: 55px;
+
+    @media @max-b-mobile {
+      height: 30px;
+    }
   }
 
   .mobile-nav {
@@ -124,7 +127,7 @@ export default Vue.extend({
   }
 }
 
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   .header.mobile {
     margin: 10px 20px 80px 20px;
     padding: 0 !important;

@@ -160,7 +160,7 @@ main.landing {
   display: none;
 }
 
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   .home-container-background {
     background-image: unset !important;
   }

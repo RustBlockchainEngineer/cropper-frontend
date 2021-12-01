@@ -2,7 +2,7 @@
   <Footer>
     <div :class="isMobile ? 'mobile' : 'pc'">
       <div class="logo">
-        <a href="/"><img src="@/assets/icons/logo-desktop.svg"  width="224.76" height="45.38" /></a>
+        <a href="/"><img src="@/assets/icons/cropper-logo.svg" /></a>
       </div>
       <div class="icon_list" v-if="!isMobile">
         <label>Our Social</label>
@@ -164,7 +164,7 @@ export default class Foot extends Vue {
 .telegram {
   height: 30px;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     height: 230px;
   }
 
@@ -172,7 +172,7 @@ export default class Foot extends Vue {
     display: flex;
     justify-content: space-between;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       display: block;
     }
 
@@ -183,7 +183,7 @@ export default class Foot extends Vue {
       letter-spacing: -0.05em;
       color: #fff;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         display: block;
         width: 50%;
         float: left;
@@ -264,7 +264,7 @@ export default class Foot extends Vue {
   transition: transform 0.3s;
 }
 // ******* Mobile *******
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   .ant-layout-footer {
     width: 375px;
     margin: auto;

@@ -226,7 +226,7 @@ export default Vue.extend({
     display:inline-block !important;
     
     button{
-      background: linear-gradient(315deg, #21BDB8 0%, #280684 100%) !important;
+      background: @gradient-color-icon !important;
       background-origin: border-box;
       border: 2px solid rgba(255, 255, 255, 0.14) !important;
       border-radius: 8px;

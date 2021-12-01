@@ -2,7 +2,7 @@
   <div class="pool container">
     <img class="planet-left" src="@/assets/Green Planet 1.png" />
 
-    <coinModalMulti
+    <CoinModalMulti
       v-if="stakeModalOpening"
       title="Add Liquidity"
       :loading="staking"
@@ -23,95 +23,150 @@
     <div class="card">
       <div class="card-body">
         <div class="page-head fs-container">
-          <span class="details noDesktop">
-            <div
-              class="openButton"
-              :class="displayfilters ? 'openButton-active' : ''"
-              @click="
-                () => {
-                  if (displayfilters == true) {
-                    displayfilters = false
-                  } else {
-                    displayfilters = true
-                  }
-                }
-              "
-            >
-              <button>
-                Search
-                <img src="@/assets/icons/arrow-down.svg" />
-              </button>
-            </div>
-          </span>
-
-          <span class="title noMobile">Liquidity Pools</span>
-          <span class="title noDesktop">Pools</span>
-
-          <span class="buttonsd">
-            <NuxtLink to="/pools/create-pool/">
-              <div class="create">
-                <Button size="large" ghost>+ Create a pool </Button>
-              </div>
+          <span class="title noMobile">
+            Liquidity Pools
+            <NuxtLink to="/pools/create-pool/" class="create-btn-desktop">
+              <div class="create-plus-btn">+ Create pool</div>
             </NuxtLink>
+          </span>
+          <span class="title noDesktop">
+            Pools
+            <NuxtLink to="/pools/create-pool/" class="create-btn-mobile">
+              <div class="create-plus-btn">+</div>
+            </NuxtLink>
+          </span>
+          <span class="information">
+            <div class="my-info">
+              <p>TVL : <b>{{TVL.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} $</b></p>
+              <!-- <p>Your deposit: <b>28,009 $</b></p> -->
+            </div>
 
-            <div class="farm-button-group">
-              <div class="count-down-group">
-                <div class="count-down">
-                  <span v-if="autoRefreshTime - countdown < 10">0</span>
-                  {{ autoRefreshTime - countdown }}
-                  <div
-                    class="reload-btn"
-                    @click="
-                      () => {
-                        flush()
-                        $accessor.wallet.getTokenAccounts()
-                      }
-                    "
-                  >
-                    <img src="@/assets/icons/loading.svg" />
-                  </div>
-                </div>
-              </div>
+            <!-- {{ autoRefreshTime - countdown }} -->
+            <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
+              <img src="@/assets/icons/loading.svg" />
             </div>
           </span>
         </div>
 
-        <div class="tool-bar noMobile">
-          <div class="tool-option">
-            <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
-              <Icon slot="prefix" type="search" />
-            </Input>
-          </div>
-          <div class="tool-option">
-            <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
-          </div>
-          <div class="tool-option"></div>
+        <div class="page-content">
+          <!-- Filter bar for desktop -->
+          <Row class="tool-bar noMobile">
+            <Col span="5" class="tool-option">
+              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
+                <Icon slot="prefix" type="search" />
+              </Input>
+            </Col>
+            <Col span="6" class="tool-option">
+              <div class="toggle">
+                <label
+                  class="label"
+                  :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('labelized')">
+                  Labelized
+                  <Tooltip placement="bottom">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-text">
+                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
+                        </div>
+                      </div>
+                    </template>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
+                    </div>
+                  </Tooltip>
+                </label>
+                <Toggle v-model="searchCertifiedFarm" />
+                <label
+                  class="label"
+                  :class="searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('permissionless')"
+                  >Permissionless
+                  <Tooltip placement="bottom">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-text">
+                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
+                        </div>
+                      </div>
+                    </template>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
+                    </div>
+                  </Tooltip>
+                </label>
+              </div>
+            </Col>
+            <Col span="5" class="tool-option"> </Col>
+            <Col span="4" class="tool-option"> </Col>
+            <Col span="4" class="tool-option">
+              <div class="toggle deposit-toggle">
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">My deposit</label>
+              </div>
+            </Col>
+          </Row>
 
-          <div class="tool-option last-option">
-            <div class="toggle">
-              <label class="label">Staked only</label>
-              <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-            </div>
-          </div>
+          <!-- Filter bar for mobile -->
+
+          <Row class="tool-bar noDesktop">
+            <Col span="12" class="tool-option">
+              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
+                <Icon slot="prefix" type="search" />
+              </Input>
+            </Col>
+            <Col span="12" class="tool-option">
+              <div class="toggle deposit-toggle">
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
+                <Toggle v-model="stakedOnly" :disabled="!wallet.connected"/>
+              </div>
+            </Col>
+          </Row>
+          <Row class="tool-bar noDesktop">
+            <Col span="24" class="tool-option">
+              <div class="toggle">
+                <label
+                  class="label"
+                  :class="!searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('labelized')">
+                  Labelized
+                  <Tooltip placement="bottom">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-text">
+                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
+                        </div>
+                      </div>
+                    </template>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
+                    </div>
+                  </Tooltip>
+                </label>
+                <Toggle v-model="searchCertifiedFarm" />
+                <label
+                  class="label"
+                  :class="searchCertifiedFarm ? 'active-label' : ''"
+                  @click="activeSearch('permissionless')"
+                  >Permissionless
+                  <Tooltip placement="bottom">
+                    <template slot="title">
+                      <div>
+                        <div class="tooltip-text">
+                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
+                        </div>
+                      </div>
+                    </template>
+                    <div class="info-icon">
+                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
+                    </div>
+                  </Tooltip>
+                </label>
+              </div>
+            </Col>
+          </Row>
         </div>
-
-        <div class="tool-bar noDesktop" v-if="displayfilters">
-          <div class="tool-option">
-            <Input v-model="searchName" size="large" class="input-search largeserach" placeholder="Search by name">
-              <Icon slot="prefix" type="search" />
-            </Input>
-          </div>
-          <div class="tool-option">
-            <Select :options="certifiedOptions" v-model="searchCertifiedFarm"> </Select>
-          </div>
-          <div class="tool-option last-option">
-            <div class="toggle">
-              <label class="label">Staked only</label>
-              <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-            </div>
-          </div>
-        </div>
-
         <div v-if="poolLoaded" class="noMobile pools-table">
           <Row class="pools-table-header">
             <Col class="header-column" span="5"> Name </Col>
@@ -235,7 +290,7 @@
         <div v-if="poolLoaded" class="noDesktop">
           <Collapse v-model="showCollapse" expand-icon-position="right" class="pools-table-mobile">
             <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
-              <Row slot="header" class="farm-head">
+              <Row slot="header" class="pool-head">
                 <Col class="lp-icons" :span="24">
                   <div class="icons">
                     <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
@@ -390,6 +445,7 @@ declare const window: any
       poolAdd: false,
       totalCount: 110,
       pageSize: 50,
+      TVL : 0,
       currentPage: 1
     }
   },
@@ -412,6 +468,9 @@ declare const window: any
     Pagination
   },
   async asyncData({ $api }) {
+
+
+
     window.poolsDatas = {} as any
 
     try {
@@ -441,6 +500,7 @@ export default class Pools extends Vue {
   fromCoin: any = false
   staking: any = false
   lp: any = false
+  TVL: any = 0
   unstaking: any = false
   wallet: any = this.$accessor.wallet
   lpMintAddress: any = false
@@ -463,12 +523,7 @@ export default class Pools extends Vue {
   totalCount = 110
   pageSize = 50
   currentPage = 1
-  certifiedOptions = [
-    { value: 0, label: 'Labelized' },
-    { value: 1, label: 'Permissionless' },
-    { value: 2, label: 'All' }
-  ]
-  searchCertifiedFarm = 0
+  searchCertifiedFarm: boolean = false
   sortMethod: string = 'liquidity'
   sortLiquidityAsc: boolean = true
   sortVolHAsc: boolean = false
@@ -476,6 +531,7 @@ export default class Pools extends Vue {
   sortFeesAsc: boolean = false
   sortAPYAsc: boolean = false
   sortCurrentAsc: boolean = false
+  activeSpinning: boolean = false
 
   get liquidity() {
     this.$accessor.wallet.getTokenAccounts()
@@ -511,12 +567,12 @@ export default class Pools extends Vue {
     this.showPool(newSearchName, this.stakedOnly)
   }
   @Watch('searchCertifiedFarm', { immediate: true, deep: true })
-  selectHandler(newSearchCertifiedFarm: number = 0) {
+  selectHandler(newSearchCertifiedFarm: boolean = false) {
     this.pools = this.poolsFormated()
-    if (newSearchCertifiedFarm == 0) {
+    if (!newSearchCertifiedFarm) {
       //labelized
       this.pools = this.pools.filter((pool: any) => pool.labelized)
-    } else if (newSearchCertifiedFarm == 1) {
+    } else if (newSearchCertifiedFarm) {
       //permissionless
       this.pools = this.pools.filter((pool: any) => !pool.labelized)
     }
@@ -570,10 +626,10 @@ export default class Pools extends Vue {
 
     this.pools = this.poolsFormated()
 
-    if (this.searchCertifiedFarm == 0) {
+    if (!this.searchCertifiedFarm) {
       //labelized
       this.pools = this.pools.filter((pool: any) => pool.labelized)
-    } else if (this.searchCertifiedFarm == 1) {
+    } else if (this.searchCertifiedFarm) {
       //permissionless
       this.pools = this.pools.filter((pool: any) => !pool.labelized)
     }
@@ -900,14 +956,6 @@ export default class Pools extends Vue {
             price.prices[liquidityItem?.pc.symbol as string]
         }
 
-        console.log(
-          value.ammId,
-          liquidityItem?.coin.symbol,
-          liquidityItem?.pc.mintAddress,
-          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress],
-          liquidityItem?.coin.mintAddress,
-          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]
-        )
       } else {
         value.volume_24h = 0
       }
@@ -993,6 +1041,7 @@ export default class Pools extends Vue {
   }
 
   mounted() {
+    this.getTvl();
     this.$accessor.token.loadTokens()
     this.timer_init = setInterval(async () => {
       if (!this.poolLoaded) {
@@ -1017,6 +1066,8 @@ export default class Pools extends Vue {
   }
 
   setTimer() {
+
+
     this.timer = setInterval(async () => {
       if (!this.loading) {
         if (this.countdown < this.autoRefreshTime) {
@@ -1028,6 +1079,39 @@ export default class Pools extends Vue {
       }
     }, 1000)
   }
+
+  async getTvl(){
+
+
+      let cur_date = new Date().getTime()
+      if(window.localStorage.TVL_last_updated){
+        const last_updated = parseInt(window.localStorage.TVL_last_updated)
+        if(cur_date - last_updated <= 600000){
+          this.TVL = window.localStorage.TVL
+          return
+        }
+      }
+
+      let responseData:any = []
+      let tvl = 0;
+      try {
+        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+        
+        Object.keys(responseData).forEach(function(key) {
+          tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+        });
+      } catch {
+        // dummy data
+      } finally {
+
+      }
+
+      this.TVL = Math.round(tvl);
+
+      window.localStorage.TVL_last_updated = new Date().getTime()
+      window.localStorage.TVL = this.TVL
+  }
+
   async flush() {
     this.loading = true
     this.pools = this.poolsFormated()
@@ -1035,93 +1119,327 @@ export default class Pools extends Vue {
     this.loading = false
     this.countdown = 0
   }
+
   getPoolByLpMintAddress = getPoolByLpMintAddress
   TokenAmount = TokenAmount
+
+  reloadTimer() {
+    this.activeSpinning = true
+    setTimeout(() => {
+      this.activeSpinning = false
+    }, 1000)
+    this.flush()
+    this.$accessor.wallet.getTokenAccounts()
+  }
+
+  activeSearch(mode: string) {
+    if (mode === 'labelized') this.searchCertifiedFarm = false
+    else if (mode === 'permissionless') this.searchCertifiedFarm = true
+    else if (mode === 'deposit' && this.wallet.connected) this.stakedOnly = !this.stakedOnly
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .ant-layout,
 .ant-layout-content {
-  background: #000539 !important;
+  background: @color-bg !important;
 }
 
 section {
-  background: #000539 !important;
+  background: @color-bg !important;
 }
 
 .pool.container {
   max-width: 1350px;
   width: 100%;
-  background: #000539;
+  background: @color-bg;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
 
-  .pools-table {
-    .pools-table-header {
-      .header-column {
-        font-size: 18px;
-        line-height: 21px;
-        color: #ffffff50;
-        text-align: center;
-        padding: 16px 0;
+  @media @max-b-mobile {
+    margin-top: 0;
+  }
 
-        .header-column-title {
-          cursor: pointer;
-          display: flex;
+  .planet-left {
+    position: absolute;
+    left: 0;
+    top: 35%;
 
-          i {
-            color: white;
-            margin-left: 10px;
-            display: flex;
-            align-items: center;
-          }
-
-          .sort-icon-active {
-            color: #13ecab;
-          }
-        }
-      }
+    @media @max-b-mobile {
+      display: none;
     }
+  }
 
-    .pools-table-body {
-      .pools-table-item {
-        padding: 16px 0;
-        border-top: 1px solid hsla(0, 0%, 100%, 0.2);
-        display: flex;
-        align-items: center;
+  .card {
+    .card-body {
+      padding: 0;
+      
+      .page-head {
+        margin-top: 10px;
 
-        .lp-iconscontainer {
-          background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-          background-origin: border-box;
-          padding: 2px;
-          border-radius: 8px;
-          width: 100%;
+        .title {
+          text-align: center;
+          position: relative;
+          float: left;
 
-          .icons {
-            display: block !important;
-            border-radius: 8px;
-            font-weight: normal;
-            padding: 14px 20px;
-            font-size: 18px;
-            line-height: 20px;
-            white-space: nowrap;
-            position: relative;
-            background: #000539;
-            text-align: center;
-            width: 100%;
+          a {
+            position: absolute;
+            &.create-btn-desktop {
+              top: 20px;
+              right: -90px;
+              .create-plus-btn {
+                font-weight: 400;
+                background: @color-outline;
+                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                color: white;
+                padding: 3px 7px;
+                border-radius: 4px;
+                font-size: 10px;
+                line-height: 12px;
 
-            img {
-              border-radius: 50%;
-              width: 24px;
-              height: 24px;
+                @media @max-b-mobile {
+                  display: none;
+                }
+              }
+            }
+
+            &.create-btn-mobile {
+              top: 5px;
+              right: -25px;
+
+              .create-plus-btn {
+                font-weight: 400;
+                background: @color-outline;
+                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 18px;
+                border-radius: 8px;
+                width: 18px;
+                height: 18px;
+                display: none;
+
+                @media @max-b-mobile {
+                  display: flex;
+                }
+              }
             }
           }
         }
 
-        .state {
-          text-align: center;
+        .information {
+          display: flex;
+          align-items: center;
+          text-align: right;
+
+          .my-info {
+            font-size: 15px;
+            line-height: 18px;
+          }
+
+          .reload-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            background: @gradient-color-primary;
+            background-origin: border-box;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            img {
+              width: 18px;
+              height: 18px;
+            }
+
+            &.active img {
+              transform: rotate(360deg);
+              transition: all 1s ease-in-out;
+            }
+          }
+        }
+      }
+
+      .page-content {
+        .tool-bar {
+          height: 64px;
+          border-radius: 14px;
+          border: 4px solid @color-outline;
+          width: 100%;
+
+          @media @max-b-mobile {
+            margin-bottom: 5px;
+            height: 54px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          .tool-option {
+            height: 100%;
+            display: inline-block;
+            border-right: 4px solid @color-outline;
+            position: relative;
+
+            &:last-child {
+              border-right: none !important;
+            }
+
+            .input-search {
+              height: 100%;
+              position: absolute;
+              width: 100%;
+            }
+
+            .toggle {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-evenly;
+
+              .label {
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.5);
+                cursor: pointer;
+                position: relative;
+
+                .info-icon {
+                  margin: 0;
+                  position: absolute;
+                  top: -5px;
+                  right: -20px;
+                }
+
+                &.active-label {
+                  font-weight: 700;
+                  color: #fff;
+                }
+              }
+
+              &.deposit-toggle {
+                .ant-switch-checked {
+                  background-color: @color-disable !important;
+                }
+              }
+            }
+
+            .sort-by {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-evenly;
+
+              .label {
+                font-size: 16px;
+                opacity: 0.5;
+
+                &.active-label {
+                  font-weight: 700;
+                  opacity: 1;
+                }
+
+                .sort-up,
+                .sort-down {
+                  margin-right: 5px;
+                  transition: 0.5s;
+                }
+
+                .sort-down {
+                  transform: rotate(180deg);
+                }
+              }
+
+              .collapse-down,
+              .collapse-up {
+                cursor: pointer;
+                transition: 0.5s;
+              }
+
+              .collapse-down {
+                transform: rotate(180deg);
+              }
+            }
+          }
+        }
+      }
+
+      .pools-table {
+        .pools-table-header {
+          .header-column {
+            font-size: 18px;
+            line-height: 21px;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            padding: 16px 0;
+
+            .header-column-title {
+              cursor: pointer;
+              display: flex;
+
+              i {
+                color: white;
+                margin-left: 10px;
+                display: flex;
+                align-items: center;
+              }
+
+              .sort-icon-active {
+                color: #13ecab;
+              }
+            }
+          }
+        }
+
+        .pools-table-body {
+          .pools-table-item {
+            padding: 16px 0;
+            border-top: 1px solid hsla(0, 0%, 100%, 0.2);
+            display: flex;
+            align-items: center;
+
+            .lp-iconscontainer {
+              background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+              background-origin: border-box;
+              padding: 2px;
+              border-radius: 8px;
+              width: 100%;
+
+              .icons {
+                display: block !important;
+                border-radius: 8px;
+                font-weight: normal;
+                padding: 14px 20px;
+                font-size: 18px;
+                line-height: 20px;
+                white-space: nowrap;
+                position: relative;
+                background: @color-bg;
+                text-align: center;
+                width: 100%;
+
+                img {
+                  border-radius: 50%;
+                  width: 24px;
+                  height: 24px;
+                }
+              }
+            }
+
+            .state {
+              text-align: center;
+            }
+          }
         }
       }
     }
@@ -1138,41 +1456,6 @@ section {
     }
   }
 
-  .planet-left {
-    position: absolute;
-    left: 0;
-    top: 35%;
-  }
-
-  .page-head {
-    margin-top: 10px;
-  }
-
-  .page-head .title {
-    position: absolute;
-    left: 0 !important;
-    transform: translate(0, 0) !important;
-  }
-
-  .page-head a {
-    z-index: 2;
-    background: #000539;
-    float: right;
-    margin-left: 20px;
-
-    .btncontainer {
-      display: inline-block;
-    }
-  }
-
-  .page-head .buttons {
-    float: right;
-  }
-
-  .page-head .farm-button-group {
-    float: right;
-  }
-
   h6 {
     margin-bottom: 0;
   }
@@ -1187,28 +1470,19 @@ section {
   width: 50%;
   text-align: center;
 }
-.card-body {
-  padding: 0;
-}
 
 .noDesktop {
   display: none;
 }
 
-@media (max-width: @mobile-b-width) {
+@media @max-b-mobile {
   body .pool.container {
-    min-width: unset;
-    width: 100%;
-    max-width: 100%;
-    margin-top: 0;
-    padding: 20px 20px !important;
-
     .card-body {
       overflow-x: unset !important;
     }
 
     .ant-collapse-content {
-      background-color: #000539;
+      background-color: @color-bg;
       border-top: none !important;
     }
 
@@ -1221,7 +1495,7 @@ section {
     }
 
     .openButton {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       display: inline-block;
       padding: 2px;
@@ -1233,7 +1507,7 @@ section {
         color: #fff;
         font-size: 14px;
         letter-spacing: -0.05em;
-        background: #000539;
+        background: @color-bg;
         border-radius: 22px;
         border: transparent;
         cursor: pointer;
@@ -1295,47 +1569,13 @@ section {
       height: 47px !important;
     }
 
-    .page-head {
-      margin-bottom: 0;
-      margin-top: 0;
-      .title {
-        font-size: 40px;
-        position: relative;
-        line-height: 50px;
-      }
-      .buttonsd {
-        height: 87px;
-        padding: 20px 20px 84px;
-        border: 4px solid #16164a;
-        box-sizing: border-box;
-        border-radius: 14px;
-        text-align: center;
-        margin-top: 20px;
-
-        a {
-          float: right;
-          display: inline-block;
-        }
-
-        > div {
-          float: left;
-          margin-right: -66px;
-          display: inline-block;
-        }
-      }
-    }
-
-    .fs-container {
-      display: inline-block;
-    }
-
     .ant-collapse,
     .ant-collapse > .ant-collapse-item {
       position: relative;
-      border-bottom: 1px solid #000539;
+      border-bottom: 1px solid @color-bg;
     }
 
-    .farm-head.table-head {
+    .pool-head.table-head {
       display: none;
     }
 
@@ -1350,7 +1590,7 @@ section {
       display: block;
     }
 
-    .farm-head {
+    .pool-head {
       min-width: 100%;
       padding-top: 25px !important;
       padding-bottom: 25px !important;
@@ -1428,7 +1668,7 @@ section {
       text-align: center;
       font-size: 18px;
       margin-bottom: 6px;
-      background: #000539;
+      background: @color-bg;
       border-radius: 14px;
       padding: 18px 0;
 
@@ -1436,7 +1676,7 @@ section {
         font-weight: normal;
         font-size: 14px;
         line-height: 17px;
-        color: #ffffff50;
+        color: rgba(255, 255, 255, 0.5);
         margin-bottom: 15px;
       }
 
@@ -1448,8 +1688,7 @@ section {
       }
     }
 
-    .anticon.anticon-right,
-    .info-icon {
+    .anticon.anticon-right {
       display: none !important;
     }
 
@@ -1487,7 +1726,7 @@ section {
 
     .start,
     .harvest {
-      background: #000539;
+      background: @color-bg;
       border-radius: 14px;
       .reward .token {
         font-size: 26px;
@@ -1511,53 +1750,18 @@ section {
       margin-left: 5px;
       margin-right: 5px;
     }
-
-    .tool-bar {
-      height: unset;
-      border: unset;
-
-      .tool-option {
-        background: #00033c;
-        width: 100%;
-        height: 54px;
-        display: block;
-        position: relative;
-        margin: 10px 0;
-        border: 4px solid #16164a;
-        box-sizing: border-box;
-        border-radius: 10px;
-        .input-search {
-          height: 47px !important;
-          .ant-input {
-            padding: 19px 60px;
-            border: none;
-            height: 47px !important;
-          }
-        }
-
-        .toggle {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          display: inline-flex;
-          align-items: center;
-          justify-content: left;
-          padding-left: 10%;
-
-          .ant-switch {
-            position: absolute;
-            right: 10%;
-          }
-        }
-      }
-    }
   }
+}
+
+// global used styles
+p {
+  margin-bottom: 0;
 }
 </style>
 
 <style lang="less">
 ::-webkit-scrollbar {
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     display: none; /* Chrome Safari */
   }
 }
@@ -1567,135 +1771,27 @@ section {
   display: inline-block !important;
 
   button {
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+    background: @gradient-color-icon !important;
     background-origin: border-box !important;
     border: 2px solid rgba(255, 255, 255, 0.14) !important;
     border-radius: 8px;
   }
 }
 
-.tool-bar {
-  height: 100px;
-  border-radius: 14px;
-  border: 4px solid #16164a;
-  width: 100%;
-
-  .tool-option {
-    width: 24%;
-    height: 100%;
-    display: inline-block;
-    border-right: 3px solid #16164a;
-    position: relative;
-
-    .input-search {
-      height: 100%;
-      position: absolute;
-      width: 100%;
-
-      .ant-input-prefix {
-        left: 10%;
-        font-size: 20px;
-        color: white;
-      }
-
-      .ant-input {
-        padding: 0 10% 0 20%;
-        height: 100% !important;
-        border: none;
-      }
-
-      .ant-input::placeholder {
-        color: white;
-        opacity: 0.5;
-      }
-    }
-
-    .ant-select-focused > .ant-select-selection > .ant-select-selection__rendered {
-      opacity: 1 !important;
-    }
-
-    .ant-select {
-      border: none;
-      height: 100%;
-      position: absolute;
-      width: 100%;
-
-      .ant-select-selection {
-        height: 100%;
-        width: 100%;
-        display: inline-flex;
-        align-items: center;
-        padding-left: 10%;
-        border: none;
-
-        .ant-select-selection__rendered {
-          margin-left: 0 !important;
-          font-size: 16px;
-          opacity: 0.5;
-        }
-
-        .ant-select-arrow {
-          right: 10%;
-          font-size: 13px;
-        }
-      }
-    }
-
-    .toggle {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      .label {
-        font-size: 16px;
-        opacity: 0.5;
-      }
-
-      .ant-switch {
-        margin-left: 14px;
-        background-color: white;
-        height: 11px;
-        border-radius: 30px;
-      }
-
-      .ant-switch::after {
-        width: 28px;
-        height: 28px;
-        background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
-        background-origin: border-box;
-        top: -10px;
-        left: -2px;
-      }
-
-      .ant-switch-checked::after {
-        margin-left: 2px;
-        left: 100%;
-      }
-    }
-  }
-
-  .last-option {
-    border-right: none !important;
-  }
-}
-
 .pool.container {
   .ant-collapse-header {
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       padding-right: 16px !important;
     }
     .ant-collapse-arrow {
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         right: 30px !important;
         z-index: 2;
       }
     }
   }
   .ant-collapse-content {
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       background-color: #16164a;
       border-top: none !important;
     }
@@ -1716,7 +1812,7 @@ section {
   }
 
   td {
-    background: #000539 !important;
+    background: @color-bg !important;
     border-bottom: unset !important;
     border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
     padding: 5px 16px;
@@ -1738,7 +1834,7 @@ section {
       line-height: 20px;
       white-space: nowrap;
       position: relative;
-      background: #000539;
+      background: @color-bg;
       text-align: center;
       width: 100%;
 
@@ -1755,7 +1851,7 @@ section {
 
   .create {
     padding: 8px 18px;
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
@@ -1770,7 +1866,7 @@ section {
       line-height: 42px;
       letter-spacing: -0.05em;
 
-      @media (max-width: @mobile-b-width) {
+      @media @max-b-mobile {
         font-size: 14px;
         line-height: 24px;
         padding: 0;
@@ -1801,7 +1897,7 @@ section {
   }
 
   .count-down {
-    background-color: #000539;
+    background-color: @color-bg;
     border-radius: 63px;
     height: 100%;
     display: inline-flex;
@@ -1820,7 +1916,7 @@ section {
       width: 50px;
       height: 50px;
       border-radius: 25px;
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+      background: @gradient-color-icon;
       background-origin: border-box;
       margin-left: 15px;
       display: flex;
@@ -1836,14 +1932,14 @@ section {
   }
 
   .btncontainer {
-    background: #000539 !important;
+    background: @color-bg !important;
     padding: 0 !important;
     border-radius: 5px !important;
     display: inline-block;
     width: unset;
 
     &.small {
-      background: linear-gradient(315deg, #21bdb8 0%, #280684 100%) !important;
+      background: @gradient-color-icon !important;
       background-origin: border-box !important;
       border: 2px solid rgba(255, 255, 255, 0.14) !important;
       border-radius: 8px;
@@ -1877,7 +1973,7 @@ section {
 
         button[disabled] {
           border-radius: 8px;
-          background: #000539 !important;
+          background: @color-bg !important;
         }
       }
     }
@@ -1900,7 +1996,6 @@ section {
     font-size: 16px;
     line-height: 19px;
     color: #fff;
-    opacity: 0.5;
   }
 }
 .ant-table-thead > tr > th.ant-table-column-sort {
@@ -1935,5 +2030,43 @@ section {
   border-top: unset !important;
   border-bottom: unset !important;
   color: rgba(255, 255, 255, 0.1);
+}
+
+// ant customization
+.pool {
+  .page-content {
+    .tool-bar {
+      .tool-option {
+        .input-search {
+          .ant-input-prefix {
+            left: 10%;
+            font-size: 20px;
+            color: white;
+          }
+
+          .ant-input {
+            padding: 0 10% 0 25%;
+            height: 100% !important;
+            border: none;
+            border-radius: 14px;
+
+            @media @max-b-mobile {
+              font-size: 14px;
+              line-height: 17px;
+            }
+
+            &::placeholder {
+              color: white;
+              opacity: 0.5;
+            }
+
+            &:focus {
+              box-shadow: none;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 </style>

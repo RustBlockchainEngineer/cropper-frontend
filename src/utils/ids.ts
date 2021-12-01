@@ -1,15 +1,16 @@
 import { PublicKey } from '@solana/web3.js'
 
+export const CRP_LP_VERSION_V1 = 1001
+export const CRP_LP_VERSION_V2 = 1002
+export const LP_UPDATE_INTERVAL = 600000 // 10 min
+export const TOKEN_UPDATE_INTERVAL = 600000 // 10 min
+export const MARKET_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
+
 export const ENDPOINT_SRM = 'Serum Dex'
 export const ENDPOINT_CRP = 'CropperFinance Pool'
 export const ENDPOINT_RAY = 'Raydium Pool'
 
-export const CRP_LP_VERSION_V1 = 1001
-export const CRP_LP_VERSION_V2 = 1002
-export const LP_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
-export const TOKEN_UPDATE_INTERVAL = 24 * 60 * 60 * 1000
-export const MARKET_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
-export const DEVNET_MODE = true; // please let it devnet so requesters can test in devnet env
+export const DEVNET_MODE = true;
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
@@ -26,6 +27,9 @@ export const LIQUIDITY_POOL_PROGRAM_ID_V3 = '27haf8L6oxUeXrHrgEgsexjSY5hbVUWEmvv
 export const LIQUIDITY_POOL_PROGRAM_ID_V4 = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 
 export const CRP_LP_PROGRAM_ID_V1 = DEVNET_MODE? '7ZZJNL4xD8db6yrT46SeMFZXcVr9MLepGpEtnKW2k6sW': 'CTMAxxk34HjKWxQ3QLZK1HpaLXmBveao3ESePXbiyfzh'//@zhaohui
+//export const LIQUIDITY_POOL_PROGRAM_ID_V5 ="";
+
+
 
 
 export let FARM_VERSION = 2;//@Hongbo
@@ -37,10 +41,21 @@ export const FARM_PROGRAM_ID_VS = DEVNET_MODE ? [
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J',
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J'
 ]//@Hongbo
-export const FARM_PROGRAM_ID = FARM_PROGRAM_ID_VS[FARM_VERSION-1];//@Hongbo
+export const FARM_PROGRAM_ID = FARM_PROGRAM_ID_VS[FARM_VERSION-2];//@Hongbo
+
+
+export const STAKE_TIERS_PROGRAM_ID = "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw";
+
+
+
+
 export const FARM_INITIAL_SUPER_OWNER = DEVNET_MODE ? "4GJ3z4skEHJADz3MVeNYBg4YV8H27rBQey2YYdiPC8PA":"AwtDEd9GThBNWNahvLZUok1BiRULNQ86VruXkYAckCtV";//@Hongbo
 export const FARM_INITIAL_FEE_OWNER = DEVNET_MODE ? "4GJ3z4skEHJADz3MVeNYBg4YV8H27rBQey2YYdiPC8PA":"DyDdJM9KVsvosfXbcHDp4pRpmbMHkRq3pcarBykPy4ir";//@Hongbo
 export const FARM_INITIAL_ALLOWED_CREATOR = FARM_INITIAL_SUPER_OWNER;//@Hongbo
+
+
+
+
 
 export const STAKE_PROGRAM_ID = 'EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q'
 export const STAKE_PROGRAM_ID_V4 = 'CBuCnLe26faBpcBP2fktp4rp8abpcAnTWft6ZrP5Q4T'

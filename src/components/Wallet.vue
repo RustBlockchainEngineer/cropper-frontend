@@ -20,13 +20,11 @@
       <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
         <div class="btncontainer sonar connected" ghost>
           <Button>
-            <Tooltip placement="bottom">
-              <template slot="title">
-                My Dashboard
-              </template>
-              <img src="@/assets/icons/sonar-watch.svg"/>
-            </Tooltip>
+            <img src="@/assets/icons/sonar-watch.svg"/>
           </Button>
+        </div>
+        <div class="sonar-dashboard">
+          My dashboard
         </div>
       </a>
 
@@ -82,7 +80,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { Button, Modal, Icon, Tooltip } from 'ant-design-vue'
+import { Button, Modal, Icon } from 'ant-design-vue'
 import {
   AccountInfo,
   Context
@@ -129,8 +127,7 @@ interface WalletInfo {
   components: {
     Button,
     Modal,
-    Icon,
-    Tooltip
+    Icon
   }
 })
 
@@ -208,7 +205,8 @@ export default class Wallet extends Vue {
     Slope: {
       website: 'https://slope.finance',
       chromeUrl: 'https://chrome.google.com/webstore/detail/slope-finance-wallet/pocmplpaccanhmnllbbkpgfliimjljgo',
-      // @ts-ignore
+
+      //@ts-ignore
       getAdapter() {
         return new SlopeWalletAdapter()
       }
@@ -604,7 +602,7 @@ export default class Wallet extends Vue {
 @import '../styles/variables';
 
 .btncontainer {
-  background: linear-gradient(190.83deg, #23A7B2 -119.02%, #273A93 86.38%);
+  background: @gradient-color-primary;
   background-origin: border-box;
   display: flex;
   align-items: center;
@@ -626,7 +624,7 @@ export default class Wallet extends Vue {
     color: white !important;
   }
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     height: 46px;
     top: 5px;
   }
@@ -656,55 +654,6 @@ export default class Wallet extends Vue {
   }
 }
 
-.ant-modal {
-  width: 800px !important;
-
-  @media (max-width: @mobile-b-width) {
-    width: calc(100% - 40px) !important;
-  }
-}
-
-.ant-modal-content {
-  background-color: #1a1d6b;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 4px;
-
-  .ant-modal-close {
-    color: @text-color;
-  }
-}
-
-
-.ant-tooltip {
-  padding-top: 18px;
-
-  .ant-tooltip-inner {
-    color: white !important;
-  }
-}
-
-.ant-modal-header {
-  background-color: #1a1d6b;
-  display: flex;
-  justify-content: space-between;
-}
-
-.ant-modal-title {
-  width: 100%;
-  background-color: #1a1d6b;
-  text-align: center;
-  font-weight: bold;
-  font-size: 40px;
-  line-height: 80px;
-  letter-spacing: -0.05em;
-  color: #fff;
-  border-bottom: 1px solid #ffffff20;
-
-  @media (max-width: @mobile-b-width) {
-    font-size: 30px;
-  }
-}
-
 .wallet-btn {
   display: inline-flex;
   align-items: center;
@@ -727,11 +676,11 @@ export default class Wallet extends Vue {
   right: 100px;
   margin-top: 10px;
   z-index: 999;
-  background: linear-gradient(175.44deg, #3238EA 3.7%, #3137E7 6.44%, #171B7D 116.76%);
+  background: @gradient-color-wallet;
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     right: 20px;
   }
   
@@ -740,14 +689,14 @@ export default class Wallet extends Vue {
     overflow-y: scroll;
     padding: 0 24px;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       max-height: 230px;
     }
 
     button {
       border: none;
       background: rgba(255, 255, 255, 0.1) !important;
-      box-shadow: 0 4px 4px 0 #00000040;
+      box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
       border-radius: 14px;
       display: flex;
       align-items: center;
@@ -791,12 +740,12 @@ export default class Wallet extends Vue {
 }
 
 .btncontainer.unconnected button{
-  background: #000539;
+  background: @color-bg;
 }
 
 .btncontainer.connected button{
   &:hover, &:focus {
-    background: #000539;
+    background: @color-bg;
   }
 }
 .btncontainer.unconnected button:hover,
@@ -820,15 +769,34 @@ export default class Wallet extends Vue {
 }
 
 .sonar-container {
+  .sonar-dashboard {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid #fff;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 400;
+    color: #fff;
+    position: absolute;
+    right: 65px;
+    margin-top: 10px;
+    display: none;
+  }
+
   .btncontainer.sonar {
     margin-left:20px !important;
     width: 50px;
     height: 50px;
 
-    @media (max-width: @mobile-b-width) {
+    @media @max-b-mobile {
       margin-left: 10px !important;
       width: 46px;
       height: 46px;
+    }
+
+    &:hover ~ .sonar-dashboard {
+      display: block;
     }
 
     button {
@@ -842,9 +810,8 @@ export default class Wallet extends Vue {
     }
   }
 
-  @media (max-width: @mobile-b-width) {
-    display: inline-flex;
-    align-items: center;
+  @media @max-b-mobile {
+    display: none;
   }
 }
 

@@ -39,7 +39,8 @@ export default class Nav extends Vue {
     //liquidity: false,
     pools: false,
     farms: false,
-    fertilizer:false,
+    staking: false,
+    fertilizer: false,
     // fusion: false,
     //stakingTest: false,
     // migrate: false
@@ -118,35 +119,43 @@ export default class Nav extends Vue {
 
 .ant-menu-item{
   .pools {
-    border: 2px solid #724CEE;
+    border: 2px solid @color-pools;
   }
 
   &.ant-menu-item-selected .pools {
-    background: #724CEE;
+    background: @color-pools;
   }
 
   .farms {
-    border: 2px solid #EF745D;
+    border: 2px solid @color-farms;
   }
 
   &.ant-menu-item-selected .farms {
-    background: #EF745D;
+    background: @color-farms;
   }
 
   .swap {
-    border: 2px solid #48A469;
+    border: 2px solid @color-swap;
   }
 
   &.ant-menu-item-selected .swap {
-    background: #48A469;
+    background: @color-swap;
   }
 
   .fertilizer {
-    border: 2px solid #3990F5;
+    border: 2px solid @color-fertilizer;
   }
 
   &.ant-menu-item-selected .fertilizer {
-    background: #3990F5;
+    background: @color-fertilizer;
+  }
+
+  .staking {
+    border: 2px solid @color-staking;
+  }
+
+  &.ant-menu-item-selected .staking {
+    background: @color-staking;
   }
   .stakingTest {
     border: 2px solid #480469;
@@ -165,10 +174,10 @@ export default class Nav extends Vue {
   line-height: 62px;
   border-bottom: none;
 
-  @media (max-width: @mobile-b-width) {
+  @media @max-b-mobile {
     display: flex;
-    border-top: 1px solid #ffffff30;
-    border-bottom: 1px solid #ffffff30;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.3);
     margin-top: 10px;
     justify-content: space-between;
   }
@@ -179,7 +188,7 @@ export default class Nav extends Vue {
     font-weight: 400;
     height: 60px;
 
-    @media (max-width: @mobile-m-width) {
+    @media @max-m-mobile {
       font-size: 12px;
     }
   }

@@ -112,7 +112,7 @@ export default class CreateFarm extends Vue {
 </script>
 <style lang="less" scoped>
 main {
-  background-color: #000539;
+  background-color: @color-bg;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -134,13 +134,13 @@ main {
   max-width: 90%;
 
   .ant-calendar-date:hover {
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
   }
 
   .create {
     padding: 8px 18px;
-    background: linear-gradient(315deg, #21bdb8 0%, #280684 100%);
+    background: @gradient-color-icon;
     background-origin: border-box;
     border: 2px solid rgba(255, 255, 255, 0.14);
     border-radius: 8px;
@@ -193,7 +193,7 @@ div {
   padding-left: 10px;
 }
 .ant-layout {
-  background: #000539 !important;
+  background: @color-bg !important;
 }
 
 .ant-col {

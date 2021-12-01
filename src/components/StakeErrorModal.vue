@@ -3,16 +3,10 @@
     <div class="card">
       <div class="card-body">
         <div>
-          An error occurred during the staking process.<br><br>
-
-Currently, your liquidity is in the liquidity pool and you will receive fees on swaps but no reward from the farm.<br />
-
-If you wish to unstake your LP, please go to pool tab.
-
-
-
+          An error occurred during the staking process.<br /><br />
+          Currently, your liquidity is in the liquidity pool and you will receive fees on swaps but no reward from the farm.<br />
+          If you wish to unstake your LP, please go to pool tab.
         </div>
-        
       </div>
     </div>
     <!-- <Row :gutter="32" class="actions">
