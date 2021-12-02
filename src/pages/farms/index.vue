@@ -1723,13 +1723,13 @@ export default Vue.extend({
     },
 
     openStakeModal(labelized: any, poolInfo: FarmInfo, lp: any) {
-      /*
+      
       const coin = cloneDeep(lp)
       const lpBalance = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`)
       coin.balance = lpBalance
 
       this.lp = coin
-      */
+      
       this.labelizedPermission = labelized
       this.farmInfo = cloneDeep(poolInfo)
       const coinBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.coin.mintAddress}.balance`)
@@ -2039,7 +2039,7 @@ export default Vue.extend({
             this.stakeModalOpening = false
             this.staking = false
             this.stakeModalOpeningLP = true;
-            
+
         })
     },
     async stakeLP(
