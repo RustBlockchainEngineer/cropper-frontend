@@ -2026,10 +2026,6 @@ export default Vue.extend({
           await this.delay(delayForUpdate)
 
 
-            this.stakeModalOpening = false
-            this.stakeModalOpeningLP = true;
-
-            
         })
         .catch((error) => {
           this.$notify.error({
@@ -2038,7 +2034,13 @@ export default Vue.extend({
             description: error.message
           })
         })
-        .finally(async () => {})
+        .finally(async () => {
+
+            this.stakeModalOpening = false
+            this.staking = false
+            this.stakeModalOpeningLP = true;
+            
+        })
     },
     async stakeLP(
       conn: any,
