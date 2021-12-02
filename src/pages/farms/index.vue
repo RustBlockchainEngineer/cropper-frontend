@@ -586,6 +586,48 @@
                       Withdraw
                     </Button>
                   </div>
+
+
+
+                    <div
+                      class="owner"
+                      v-if="
+                        farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                        farm.farmInfo.poolInfo.is_allowed &&
+                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                      "
+                    >
+                      <br />
+                      <hr />
+                      <br />
+
+                      <div class="title" style="text-align: left">
+                        <div><b>Remaining rewards : </b
+                        ></div><br />{{
+                          Math.round(
+                            new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals).toEther() *
+                              1000
+                          ) / 1000
+                        }}
+                      </div>
+
+                      <div class="title" style="text-align: left">
+                        <div><b>End time : </b></div>{{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toISOString() }}
+                      </div>
+
+                      
+
+                      <div
+                        class="btncontainer noMobile"
+                        v-if="
+                          farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                          farm.farmInfo.poolInfo.is_allowed &&
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                        "
+                      >
+                        <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
+                      </div>
+                    </div>
                 </div>
               </Col>
             </Row>
@@ -758,6 +800,8 @@
                               : 'Deposit LP'
                           }}
                         </Button>
+
+
                       </div>
 
                       <!-- <div
