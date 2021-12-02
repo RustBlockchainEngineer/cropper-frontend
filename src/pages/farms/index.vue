@@ -200,8 +200,8 @@
             </Col>
             <Col span="12" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
                 <Toggle v-model="stakedOnly" :disabled="!wallet.connected"/>
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
               </div>
             </Col>
           </Row>
