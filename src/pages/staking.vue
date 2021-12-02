@@ -142,14 +142,13 @@ import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
 import { getUnixTs } from '@/utils'
 import BigNumber from 'bignumber.js'
-import { DEVNET_MODE } from '../utils/ids'
 import { TokenAmount, gt } from '@/utils/safe-math'
 import * as anchor from '@project-serum/anchor';
 const { BN } = anchor
 import moment from 'moment'
 Vue.prototype.moment = moment
 
-const CRP_MINT = DEVNET_MODE ? 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG' : 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz'
+
 
 import {
   setAnchorProvider,
@@ -271,17 +270,7 @@ export default Vue.extend({
       window.localStorage.TVL_last_updated = new Date().getTime()
       window.localStorage.TVL = this.TVL
     },
-    async createStakingProgramState(){
-        createFarmState(
-        this.$web3,
-        this.$wallet,
-        10,
-        TOKENS['CRP'].mintAddress,
-      )
-    },
-    async getStakingProgramState(){
-      console.log(await getFarmState())
-    },
+
     async getGlobalState(){
       const pools = await getAllPools()
       const current_pool = pools[0]
@@ -306,7 +295,7 @@ export default Vue.extend({
 
     async getUserState(){
 
-      let crpbalanceDatas = this.wallet.tokenAccounts[CRP_MINT]
+      let crpbalanceDatas = this.wallet.tokenAccounts[TOKENS['CRP'].mintAddress]
 
       if(crpbalanceDatas){
         this.crpbalance = crpbalanceDatas.balance.fixed() * 1;
@@ -324,7 +313,7 @@ export default Vue.extend({
       this.canUnstake = ! ((userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 > new Date().getTime())
 
       //@ts-ignore
-      this.userStaked = (new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals)).fixed() as number
+      this.userStaked = Math.ceil(parseFloat((new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals)).fixed()) * 1000) / 1000
 
       const rewardAmount = estimateRewards(
           farm_state,
@@ -341,61 +330,6 @@ export default Vue.extend({
       this.baseModalShow = false
       this.estimatedAPY = estimated_apy
       this.lockDuration = lock_duration
-    },
-
-    async supplyRewards(){
-      const pools = await getAllPools()
-      const current_pool = pools[0]
-      console.log(current_pool)
-      fundToProgram(
-        this.$web3, 
-        this.$wallet,
-        current_pool.publicKey.toString(),
-        get(this.wallet.tokenAccounts, `${CRP_MINT}.tokenAccountAddress`),
-        
-        100 * 1000000,
-        )
-    },
-    async creteExtraRewardsAccount(){
-      createExtraReward(this.$web3, this.$wallet)
-    },
-    async setExtraRewardsAccount(){
-      setExtraReward(this.$web3, this.$wallet, [
-        { duration: new BN(30 * 24  * 3600), extraPercentage: new BN(0) },
-        { duration: new BN(90 * 24  * 3600), extraPercentage: new BN(10) },
-        { duration: new BN(180 * 24  * 3600), extraPercentage: new BN(30) },
-        { duration: new BN(365 * 24  * 3600), extraPercentage: new BN(100) },
-      ])
-    },
-    async getExtraRewardsAccount(){
-      console.log(await getExtraRewardConfigs());
-    },
-    async createStakingPool(){
-      const pools = await getAllPools()
-
-      createPool(
-        this.$web3, 
-        this.$wallet,
-        TOKENS['CRP'].mintAddress,
-        pools
-      )
-    },
-    async changeMultiplier(){
-      const pools = await getAllPools()
-      pools.forEach(async (p: any) =>{
-        await changePoolAmountMultipler(this.$web3, this.$wallet, p.publicKey.toString())
-      })
-    },
-    async changeStakingPoolPoint(){
-      const pools = await getAllPools()
-      pools.forEach(async (p: any) =>{
-        await changePoolPoint(this.$web3, this.$wallet, p.publicKey.toString())
-      })
-    },
-    async changeTokenPS(){
-      const pools = await getAllPools()
-      console.log(pools)
-      await changeTokenPerSecond(this.$web3, this.$wallet, pools)
     },
 
     async unstakeToken(){
@@ -423,7 +357,7 @@ export default Vue.extend({
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
 
-          this.userStaked * 1000000000,
+          this.userStaked * Math.pow(10, TOKENS['CRP'].decimals),
         ).then((txid) => {
           this.$notify.info({
             key,

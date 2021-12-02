@@ -72,8 +72,8 @@ async function getPoolAddressFromMint(mint:string){
   );
   return stateSigner
 }
-const ACC_PRECISION = 100 * 1000 * 1000 * 1000;
-const FULL_100 = 100 * 1000 * 1000 * 1000;
+const ACC_PRECISION = new BN(100 * 1000 * 1000 * 1000);
+const FULL_100 = new BN (100 * 1000 * 1000 * 1000);
 export function estimateRewards(
   stateData:any,
   extraConfigData:any,
@@ -81,12 +81,13 @@ export function estimateRewards(
   userData:any,
 ){
   const currentTimeStamp = Math.ceil(new Date().getTime() / 1000);
-  const duration = Math.max(currentTimeStamp - poolData.lastRewardTime, 0)
 
-  const reward_per_share = stateData.tokenPerSecond.toNumber() * duration * ACC_PRECISION / poolData.amount.toNumber();
-  const acc_reward_per_share = poolData.accRewardPerShare.toNumber()  + reward_per_share;
+  const duration = new BN(Math.max(currentTimeStamp - poolData.lastRewardTime, 0))
 
-  let extraPercentage = 0
+  const reward_per_share = stateData.tokenPerSecond.mul(duration).mul(ACC_PRECISION).div(poolData.amount);
+  const acc_reward_per_share = poolData.accRewardPerShare.add(reward_per_share);
+
+  let extraPercentage = new BN(0)
   extraConfigData.configs.forEach((item:any)=>{
     if(item.duration == userData.duration)
     {
@@ -95,11 +96,11 @@ export function estimateRewards(
     }
   })
 
-  const pending_amount = userData.amount.toNumber() * acc_reward_per_share / ACC_PRECISION - userData.rewardDebt.toNumber();
-  const extra_amount = userData.extraReward.toNumber() + pending_amount * extraPercentage / FULL_100 ;
-  const total_reward = userData.rewardAmount.toNumber() + pending_amount + extra_amount
+  const pending_amount = userData.amount.mul( acc_reward_per_share).div(ACC_PRECISION).sub(userData.rewardDebt);
+  const extra_amount = userData.extraReward.add(pending_amount.mul(extraPercentage).div(FULL_100));
+  const total_reward = userData.rewardAmount.add(pending_amount).add(extra_amount)
 
-  return total_reward
+  return total_reward.toString()
 }
 
 export async function createFarmState(
