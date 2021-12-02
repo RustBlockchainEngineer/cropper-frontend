@@ -1987,75 +1987,6 @@ export default Vue.extend({
         fixedCoin
       )
         .then(async (txid) => {
-          this.$notify.info({
-            key,
-            message: 'Transaction has been sent',
-            description: (h: any) =>
-              h('div', [
-                'Confirmation is in progress.  Check your transaction on ',
-                h(
-                  'a',
-                  {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
-                  },
-                  'here'
-                )
-              ])
-          })
-
-          const description = `Add liquidity for ${fromCoinAmount} ${this.farmInfo.lp.coin?.symbol} and ${toCoinAmount} ${this.farmInfo.lp.pc?.symbol}`
-          this.$accessor.transaction.sub({ txid, description })
-
-          txStatus = this.$accessor.transaction.history[txid].status
-          let totalDelayTime = 0
-          while (txStatus === 'Pending' && totalDelayTime < 10000) {
-            let delayTime = 500
-            await this.delay(delayTime)
-            totalDelayTime += delayTime
-            txStatus = this.$accessor.transaction.history[txid].status
-            await this.delay(delayTime)
-            totalDelayTime += delayTime
-          }
-          if (txStatus === 'Fail') {
-            console.log('add lp failed')
-            return
-          }
-          //update wallet token account infos
-          this.$accessor.wallet.getTokenAccounts()
-          let delayForUpdate = 500
-          await this.delay(delayForUpdate)
-
-          let amount = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.mintAddress}.balance`)
-          if (amount) {
-            amount = amount.wei.toNumber() / Math.pow(10, amount.decimals)
-          } else {
-            amount = 0
-          }
-
-          totalDelayTime = 0
-          while (amount <= 0 && totalDelayTime < 10000) {
-            let dealyTime = 200
-            await this.delay(dealyTime)
-            totalDelayTime += dealyTime
-            amount = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.mintAddress}.balance`)
-            if (amount) {
-              amount = amount.wei.toNumber() / Math.pow(10, amount.decimals)
-            } else {
-              amount = 0
-            }
-          }
-
-          if (amount <= 0) {
-            this.$notify.error({
-              key,
-              message: 'Add liquidity failed',
-              description: 'Added LP token amount is 0'
-            })
-            console.log('added lp amount is 0')
-            return
-          }
-
-          this.stakeLP(conn, wallet, this.farmInfo, lpAccount, rewardAccount, infoAccount, amount)
         })
         .catch((error) => {
           this.$notify.error({
@@ -2064,7 +1995,11 @@ export default Vue.extend({
             description: error.message
           })
         })
-        .finally(async () => {})
+        .finally(async () => {
+        
+            this.stakeModalOpening = false
+            this.stakeModalOpeningLP = true;
+        })
     },
     async stakeLP(
       conn: any,
