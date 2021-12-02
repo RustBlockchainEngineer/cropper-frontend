@@ -14,6 +14,7 @@ import { NATIVE_SOL, TOKENS, TokenInfo } from './tokens'
 import SERUM_MARKETS from '@project-serum/serum/lib/markets.json'
 import { cloneDeep } from 'lodash-es'
 import { getSwapOutAmount} from '@/utils/swap'
+const PRICE_IMPACT_LIMIT = 10//percentage
 export interface LiquidityPoolInfo {
   name: string
   coin: TokenInfo
@@ -220,7 +221,7 @@ export function getAddressForWhat(address: string) {
   return {}
 }
 
-export function findBestCropperLP(pools:any, baseMint:string, quoteMint:string, amountIn:string)
+export function findBestCropperLP(pools:any, baseMint:string, quoteMint:string, amountIn:string, slippage: number)
 {
   const lpList = getCropperPoolListByTokenMintAddresses(
     baseMint === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : baseMint,
@@ -229,7 +230,7 @@ export function findBestCropperLP(pools:any, baseMint:string, quoteMint:string, 
   )
   
   let bestLP:any = null
-  let maxAmount = 0
+  let maxAmount = 0, minPriceImpact = Number.POSITIVE_INFINITY;
   lpList.forEach(lpInfo => {
     let poolInfo = pools[lpInfo.lp.mintAddress]
     if(poolInfo.fees)
@@ -239,18 +240,24 @@ export function findBestCropperLP(pools:any, baseMint:string, quoteMint:string, 
         baseMint,
         quoteMint,
         amountIn,
-        1
+        slippage
       )
-      if(!bestLP || maxAmount < amountOut.wei.toNumber()){
+      if(
+        priceImpact < PRICE_IMPACT_LIMIT && minPriceImpact < PRICE_IMPACT_LIMIT && maxAmount < amountOut.wei.toNumber() ||
+        priceImpact < PRICE_IMPACT_LIMIT && PRICE_IMPACT_LIMIT < minPriceImpact ||
+        PRICE_IMPACT_LIMIT  < priceImpact && priceImpact < minPriceImpact
+      )
+      {
         maxAmount = amountOut.wei.toNumber()
         bestLP = poolInfo
+        minPriceImpact = priceImpact
       }
     }
   });
   return bestLP
 }
 
-export function findBestLP(pools:any, baseMint:string, quoteMint:string, amountIn:string)
+export function findBestLP(pools:any, baseMint:string, quoteMint:string, amountIn:string, slippage:number)
 {
   const lpList = getPoolListByTokenMintAddresses(
     baseMint === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : baseMint,
@@ -269,8 +276,14 @@ export function findBestLP(pools:any, baseMint:string, quoteMint:string, amountI
         baseMint,
         quoteMint,
         amountIn,
-        1
+        slippage
       )
+
+      console.log("Impact check", priceImpact)
+
+      if(priceImpact > PRICE_IMPACT_LIMIT){
+        return;
+      }
       if(!bestLP || maxAmount < amountOut.wei.toNumber()){
         maxAmount = amountOut.wei.toNumber()
         bestLP = poolInfo

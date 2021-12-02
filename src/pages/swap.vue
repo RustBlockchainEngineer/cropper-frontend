@@ -1254,220 +1254,241 @@ export default Vue.extend({
     },
     updateAmounts() {
       let max_coinAmount = 0
+      
+      try{
 
-      if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
-        if (this.isWrap) {
-          // wrap & unwrap
-          this.toCoinAmount = this.fromCoinAmount
-          return
-        }
-        this.available_dex.forEach((dex_type) => {
-          if (dex_type == ENDPOINT_SRM) {
-            if (this.marketAddress && this.market && this.asks && this.bids && !this.asksAndBidsLoading) {
-              // serum
-              const { amountOut, amountOutWithSlippage, priceImpact } = getOutAmount(
-                this.market,
-                this.asks,
-                this.bids,
+        if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
+          if (this.isWrap) {
+            // wrap & unwrap
+            this.toCoinAmount = this.fromCoinAmount
+            return
+          }
+          this.available_dex.forEach((dex_type) => {
+            if (dex_type == ENDPOINT_SRM) {
+              if (this.marketAddress && this.market && this.asks && this.bids && !this.asksAndBidsLoading) {
+                // serum
+                const { amountOut, amountOutWithSlippage, priceImpact } = getOutAmount(
+                  this.market,
+                  this.asks,
+                  this.bids,
+                  // @ts-ignore
+                  this.fromCoin.mintAddress,
+                  // @ts-ignore
+                  this.toCoin.mintAddress,
+                  this.fromCoinAmount,
+                  this.setting.slippage
+                )
+
                 // @ts-ignore
-                this.fromCoin.mintAddress,
+                const out = new TokenAmount(amountOut, this.toCoin.decimals, false)
                 // @ts-ignore
-                this.toCoin.mintAddress,
+                const outWithSlippage = new TokenAmount(amountOutWithSlippage, this.toCoin.decimals, false)
+
+                if (!out.isNullOrZero()) {
+                  // @ts-ignore
+                  if (!toCoinWithSlippage || toCoinWithSlippage.wei.isLessThan(outWithSlippage.wei)) {
+                    if (max_coinAmount < parseFloat(out.fixed())) {
+                      max_coinAmount = parseFloat(out.fixed())
+                      this.toCoinAmount = out.fixed()
+                      this.toCoinWithSlippage = outWithSlippage.fixed()
+                      this.outToPirceValue = +new TokenAmount(
+                        parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
+                        // @ts-ignore
+                        this.toCoin.decimals,
+                        false
+                      ).fixed()
+                      this.priceImpact = priceImpact
+                      this.endpoint = ENDPOINT_SRM
+                      this.best_dex_type = 'dex'
+                    }
+                  }
+                }
+              }
+            } else if (dex_type == ENDPOINT_CRP || dex_type == ENDPOINT_RAY) {
+              // @ts-ignore
+              const poolInfo = (dex_type == ENDPOINT_CRP ? findBestCropperLP : findBestLP)(
+                this.$accessor.liquidity.infos,
+                this.fromCoin!.mintAddress,
+                this.toCoin!.mintAddress,
+                this.fromCoinAmount,
+                this.setting.slippage
+              )
+              
+              if(!poolInfo) return;
+              
+              const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
+                poolInfo,
+                // @ts-ignore
+                this.fromCoin!.mintAddress,
+                // @ts-ignore
+                this.toCoin!.mintAddress,
+                this.fromCoinAmount,
+                this.setting.slippage
+              )
+              if (!amountOut.isNullOrZero()) {
+                if (max_coinAmount < parseFloat(amountOut.fixed())) {
+                  max_coinAmount = parseFloat(amountOut.fixed())
+
+                  this.toCoinAmount = amountOut.fixed()
+                  this.toCoinWithSlippage = amountOutWithSlippage.fixed()
+                  this.outToPirceValue = +new TokenAmount(
+                    parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
+                    // @ts-ignore
+                    this.toCoin.decimals,
+                    false
+                  ).fixed()
+                  this.priceImpact = priceImpact
+                  this.endpoint = dex_type
+
+                  this.best_dex_type = 'single'
+                  this.mainAmmId = poolInfo.ammId
+                }
+              }
+            } else if (dex_type == ENDPOINT_MULTI_CRP || dex_type == ENDPOINT_MULTI_CRP_MIXED) {
+              let midTokenMint = TOKENS.CRP.mintAddress
+              this.midTokenMint = midTokenMint
+              // @ts-ignore
+              const fromPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
+                this.$accessor.liquidity.infos,
+                this.fromCoin!.mintAddress,
+                midTokenMint,
+                this.fromCoinAmount,
+                this.setting.slippage
+              )
+              
+              if(!fromPoolInfo) return;
+
+              let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
+                fromPoolInfo,
+                // @ts-ignore
+                this.fromCoin!.mintAddress,
+                midTokenMint,
                 this.fromCoinAmount,
                 this.setting.slippage
               )
 
               // @ts-ignore
-              const out = new TokenAmount(amountOut, this.toCoin.decimals, false)
-              // @ts-ignore
-              const outWithSlippage = new TokenAmount(amountOutWithSlippage, this.toCoin.decimals, false)
+              const toPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
+                this.$accessor.liquidity.infos,
+                midTokenMint,
+                this.toCoin!.mintAddress,
+                amountOut.fixed(),
+                this.setting.slippage
+              )
+              
+              if(!toPoolInfo) return;
 
-              if (!out.isNullOrZero()) {
+              let final = getSwapOutAmount(
+                toPoolInfo,
+                midTokenMint,
                 // @ts-ignore
-                if (!toCoinWithSlippage || toCoinWithSlippage.wei.isLessThan(outWithSlippage.wei)) {
-                  if (max_coinAmount < parseFloat(out.fixed())) {
-                    max_coinAmount = parseFloat(out.fixed())
-                    this.toCoinAmount = out.fixed()
-                    this.toCoinWithSlippage = outWithSlippage.fixed()
-                    this.outToPirceValue = +new TokenAmount(
-                      parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
-                      // @ts-ignore
-                      this.toCoin.decimals,
-                      false
-                    ).fixed()
-                    this.priceImpact = priceImpact
-                    this.endpoint = ENDPOINT_SRM
-                    this.best_dex_type = 'dex'
-                  }
+                this.toCoin.mintAddress,
+                amountOut.fixed(),
+                this.setting.slippage
+              )
+
+              if (!final.amountOut.isNullOrZero()) {
+                if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
+                  max_coinAmount = parseFloat(final.amountOut.fixed())
+                  this.toCoinAmount = final.amountOut.fixed()
+                  this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
+                  this.midAmountWithSlippage = amountOutWithSlippage.fixed()
+                  this.midAmount = amountOut.fixed()
+                  this.outToPirceValue = +new TokenAmount(
+                    parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
+                    // @ts-ignore
+                    this.toCoin.decimals,
+                    false
+                  ).fixed()
+
+                  this.priceImpact = final.priceImpact
+                  this.endpoint = ENDPOINT_MULTI_CRP
+
+                  this.best_dex_type = 'multi'
+                  this.midTokenSymbol = 'CRP'
+
+                  this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
+                  this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
+                  this.mainAmmId = fromPoolInfo.ammId
+                  this.extAmmId = toPoolInfo.ammId
+                }
+              }
+            } else if (dex_type == ENDPOINT_MULTI_USDC || dex_type == ENDPOINT_MULTI_USDC_MIXED) {
+              let midTokenMint = TOKENS.USDC.mintAddress
+              this.midTokenMint = midTokenMint
+
+              // @ts-ignore
+              const fromPoolInfo = (dex_type == ENDPOINT_MULTI_USDC ? findBestCropperLP : findBestLP)(
+                this.$accessor.liquidity.infos,
+                this.fromCoin!.mintAddress,
+                midTokenMint,
+                this.fromCoinAmount,
+                this.setting.slippage
+              )
+              
+              if(!fromPoolInfo) return;
+              
+              let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
+                fromPoolInfo,
+                // @ts-ignore
+                this.fromCoin.mintAddress,
+                midTokenMint,
+                this.fromCoinAmount,
+                this.setting.slippage
+              )
+
+              // @ts-ignore
+              const toPoolInfo = (dex_type == ENDPOINT_MULTI_USDC ? findBestCropperLP : findBestLP)(
+                this.$accessor.liquidity.infos,
+                midTokenMint,
+                this.toCoin!.mintAddress,
+                amountOut.fixed(),
+                this.setting.slippage
+              )
+
+              if(!toPoolInfo) return;
+
+              let final = getSwapOutAmount(
+                toPoolInfo,
+                midTokenMint,
+                // @ts-ignore
+                this.toCoin.mintAddress,
+                amountOut.fixed(),
+                this.setting.slippage
+              )
+
+              if (!final.amountOut.isNullOrZero()) {
+                if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
+                  max_coinAmount = parseFloat(final.amountOut.fixed())
+                  this.toCoinAmount = final.amountOut.fixed()
+                  this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
+                  this.midAmountWithSlippage = amountOutWithSlippage.fixed()
+                  this.outToPirceValue = +new TokenAmount(
+                    parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
+                    // @ts-ignore
+                    this.toCoin.decimals,
+                    false
+                  ).fixed()
+                  this.priceImpact = final.priceImpact
+                  this.endpoint = ENDPOINT_MULTI_USDC
+
+                  this.best_dex_type = 'multi'
+                  this.midTokenSymbol = 'USDC'
+
+                  this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
+                  this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
+
+                  this.mainAmmId = fromPoolInfo.ammId
+                  this.extAmmId = toPoolInfo.ammId
                 }
               }
             }
-          } else if (dex_type == ENDPOINT_CRP || dex_type == ENDPOINT_RAY) {
-            // @ts-ignore
-            const poolInfo = (dex_type == ENDPOINT_CRP ? findBestCropperLP : findBestLP)(
-              this.$accessor.liquidity.infos,
-              this.fromCoin!.mintAddress,
-              this.toCoin!.mintAddress,
-              this.fromCoinAmount
-            )
-            const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
-              poolInfo,
-              // @ts-ignore
-              this.fromCoin!.mintAddress,
-              // @ts-ignore
-              this.toCoin!.mintAddress,
-              this.fromCoinAmount,
-              this.setting.slippage
-            )
-            if (!amountOut.isNullOrZero()) {
-              if (max_coinAmount < parseFloat(amountOut.fixed())) {
-                max_coinAmount = parseFloat(amountOut.fixed())
+          })
+        }
+      }catch{
 
-                this.toCoinAmount = amountOut.fixed()
-                this.toCoinWithSlippage = amountOutWithSlippage.fixed()
-                this.outToPirceValue = +new TokenAmount(
-                  parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
-                  // @ts-ignore
-                  this.toCoin.decimals,
-                  false
-                ).fixed()
-                this.priceImpact = priceImpact
-                this.endpoint = dex_type
-
-                this.best_dex_type = 'single'
-                this.mainAmmId = poolInfo.ammId
-              }
-            }
-          } else if (dex_type == ENDPOINT_MULTI_CRP || dex_type == ENDPOINT_MULTI_CRP_MIXED) {
-            let midTokenMint = TOKENS.CRP.mintAddress
-            this.midTokenMint = midTokenMint
-
-            // @ts-ignore
-            const fromPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
-              this.$accessor.liquidity.infos,
-              this.fromCoin!.mintAddress,
-              midTokenMint,
-              this.fromCoinAmount
-            )
-
-            let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
-              fromPoolInfo,
-              // @ts-ignore
-              this.fromCoin!.mintAddress,
-              midTokenMint,
-              this.fromCoinAmount,
-              this.setting.slippage
-            )
-
-            // @ts-ignore
-            const toPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
-              this.$accessor.liquidity.infos,
-              midTokenMint,
-              this.toCoin!.mintAddress,
-              amountOut.fixed()
-            )
-
-            let final = getSwapOutAmount(
-              toPoolInfo,
-              midTokenMint,
-              // @ts-ignore
-              this.toCoin.mintAddress,
-              amountOut.fixed(),
-              this.setting.slippage
-            )
-
-            if (!final.amountOut.isNullOrZero()) {
-              if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
-                max_coinAmount = parseFloat(final.amountOut.fixed())
-                this.toCoinAmount = final.amountOut.fixed()
-                this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
-                this.midAmountWithSlippage = amountOutWithSlippage.fixed()
-                this.midAmount = amountOut.fixed()
-                this.outToPirceValue = +new TokenAmount(
-                  parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
-                  // @ts-ignore
-                  this.toCoin.decimals,
-                  false
-                ).fixed()
-
-                this.priceImpact = final.priceImpact
-                this.endpoint = ENDPOINT_MULTI_CRP
-
-                this.best_dex_type = 'multi'
-                this.midTokenSymbol = 'CRP'
-
-                this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
-                this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
-                this.mainAmmId = fromPoolInfo.ammId
-                this.extAmmId = toPoolInfo.ammId
-              }
-            }
-          } else if (dex_type == ENDPOINT_MULTI_USDC || dex_type == ENDPOINT_MULTI_USDC_MIXED) {
-            let midTokenMint = TOKENS.USDC.mintAddress
-            this.midTokenMint = midTokenMint
-
-            // @ts-ignore
-            const fromPoolInfo = (dex_type == ENDPOINT_MULTI_USDC ? findBestCropperLP : findBestLP)(
-              this.$accessor.liquidity.infos,
-              this.fromCoin!.mintAddress,
-              midTokenMint,
-              this.fromCoinAmount
-            )
-
-            let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
-              fromPoolInfo,
-              // @ts-ignore
-              this.fromCoin.mintAddress,
-              midTokenMint,
-              this.fromCoinAmount,
-              this.setting.slippage
-            )
-
-            // @ts-ignore
-            const toPoolInfo = (dex_type == ENDPOINT_MULTI_USDC ? findBestCropperLP : findBestLP)(
-              this.$accessor.liquidity.infos,
-              midTokenMint,
-              this.toCoin!.mintAddress,
-              amountOut.fixed()
-            )
-
-            let final = getSwapOutAmount(
-              toPoolInfo,
-              midTokenMint,
-              // @ts-ignore
-              this.toCoin.mintAddress,
-              amountOut.fixed(),
-              this.setting.slippage
-            )
-
-            if (!final.amountOut.isNullOrZero()) {
-              if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
-                max_coinAmount = parseFloat(final.amountOut.fixed())
-                this.toCoinAmount = final.amountOut.fixed()
-                this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
-                this.midAmountWithSlippage = amountOutWithSlippage.fixed()
-                this.outToPirceValue = +new TokenAmount(
-                  parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
-                  // @ts-ignore
-                  this.toCoin.decimals,
-                  false
-                ).fixed()
-                this.priceImpact = final.priceImpact
-                this.endpoint = ENDPOINT_MULTI_USDC
-
-                this.best_dex_type = 'multi'
-                this.midTokenSymbol = 'USDC'
-
-                this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
-                this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
-
-                this.mainAmmId = fromPoolInfo.ammId
-                this.extAmmId = toPoolInfo.ammId
-              }
-            }
-          }
-        })
       }
+
       if (max_coinAmount === 0) {
         this.toCoinAmount = ''
         this.toCoinWithSlippage = ''
