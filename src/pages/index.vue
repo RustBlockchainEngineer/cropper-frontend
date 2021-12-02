@@ -2,9 +2,9 @@
   <main class="landing">
     <section class="landing-header">
       <div class="landing-top">
-        <img src="@/assets/icons/cropper-logo.svg" />
+        <img class="cropper-logo" src="@/assets/icons/cropper-logo.svg" />
         <div class="lunch-btn-group">
-          <div class="btn-container">
+          <div class="btn-container doc-btn">
             <Button class="btn-outline weightS">Documentation</Button>
           </div>
           <NuxtLink to="/swap/">
@@ -503,6 +503,10 @@ export default class Landing extends Vue {
   border-radius: 48px;
   height: 54px;
   width: fit-content;
+
+  @media @max-b-mobile {
+    height: 44px;
+  }
 }
 
 .btn-fill {
@@ -513,6 +517,11 @@ export default class Landing extends Vue {
   border-radius: 48px;
   border: none;
   height: 54px;
+
+  @media @max-b-mobile {
+    padding: 13px 22.5px;
+    height: 44px;
+  }
 }
 
 .btn-outline {
@@ -521,7 +530,7 @@ export default class Landing extends Vue {
   display: flex;
   align-items: center;
   border-radius: 48px;
-  background: #01033c;
+  background: @color-bg;
   border: none;
 }
 
@@ -533,13 +542,32 @@ export default class Landing extends Vue {
     background-repeat: no-repeat;
     background-size: cover;
 
+    @media @max-b-mobile {
+      padding: 20px 20px 0 20px;
+      background-image: unset;
+    }
+
     .landing-top {
       display: flex;
+      align-items: center;
       justify-content: space-between;
+
+      .cropper-logo {
+        @media @max-b-mobile {
+          width: 92.86px;
+          height: 30.86px;
+        }
+      }
 
       .lunch-btn-group {
         display: flex;
         justify-content: space-between;
+
+        .doc-btn {
+          @media @max-b-mobile {
+            display: none;
+          }
+        }
 
         .btn-outline,
         .btn-fill {
@@ -556,6 +584,11 @@ export default class Landing extends Vue {
     .landing-content {
       margin-top: 160px;
 
+      @media @max-b-mobile {
+        margin-top: 50px;
+        text-align: center;
+      }
+
       .balance-infos {
         .tlv-value {
           background: -webkit-linear-gradient(333.93deg, #22b5b6 6.07%, #280c86 134.97%);
@@ -568,6 +601,10 @@ export default class Landing extends Vue {
           display: flex;
           align-items: center;
           color: #d4d5f2;
+
+          @media @max-b-mobile {
+            justify-content: center;
+          }
 
           img {
             margin-right: 10px;
@@ -615,16 +652,31 @@ export default class Landing extends Vue {
   .why-cropper {
     padding: 98px 64px 0 64px;
 
+    @media @max-b-mobile {
+      padding: 30px 20px 0 20px;
+    }
+    
     .intro-box-group {
       position: relative;
       margin-top: 48px;
       margin-bottom: 61px;
       display: flex;
+      width: 100%;
+
+      @media @max-b-mobile {
+        margin-top: 30px;
+        margin-bottom: 48px;
+        display: inline-block;
+      }
 
       .stars-second-bg {
         position: absolute;
         top: calc(50% - 170px);
         left: calc(50% - 170px);
+
+        @media @max-b-mobile {
+          display: none;
+        }
       }
 
       .intro-box {
@@ -635,12 +687,31 @@ export default class Landing extends Vue {
         width: calc((100% - 40px) / 3);
         margin-right: 20px;
 
+        @media @max-b-mobile {
+          padding: 18px 24px;
+          height: auto;
+          border-radius: 22px;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          margin-bottom: 20px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
         &:last-child {
           margin-right: 0;
         }
 
         .card-img {
           margin: auto;
+
+          @media @max-b-mobile {
+            margin: unset;
+            margin-right: 18px;
+          }
         }
       }
     }
@@ -651,6 +722,10 @@ export default class Landing extends Vue {
 
     .landing-second-img {
       width: 100%;
+
+      @media @max-b-mobile {
+        display: none;
+      }
     }
 
     .audit-group {
@@ -660,8 +735,20 @@ export default class Landing extends Vue {
       padding-right: 64px;
       width: 100%;
 
+      @media @max-b-mobile {
+        position: relative;
+        top: 0;
+        left: 0;
+        padding: 0 20px;
+      }
+
       .audit-box-group {
         display: flex;
+
+        @media @max-b-mobile {
+          display: inline-block;
+          width: 100%;
+        }
 
         .audit-box {
           padding-top: 52px;
@@ -672,6 +759,12 @@ export default class Landing extends Vue {
           border-radius: 42px;
           width: calc((100% - 20px) / 2);
           margin-right: 20px;
+
+          @media @max-b-mobile {
+            width: 100%;
+            background: linear-gradient(136.82deg, rgba(34, 181, 182, 0.5) 10.14%, rgba(40, 12, 134, 0.15) 85.36%);
+            border-radius: 22px;
+          }
 
           &:last-child {
             margin-right: 0;
@@ -695,6 +788,11 @@ export default class Landing extends Vue {
   .features-headline {
     padding: 0 64px 98px 64px;
 
+    @media @max-b-mobile {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
     .feature-box-group {
       display: flex;
       margin-top: 68px;
@@ -704,6 +802,10 @@ export default class Landing extends Vue {
         position: absolute;
         left: calc(50% - 350px);
         top: calc(50% - 350px);
+
+        @media @max-b-mobile {
+          display: none;
+        }
       }
 
       .feature-box {
@@ -744,6 +846,10 @@ export default class Landing extends Vue {
 
       .landing-third-bg {
         width: 100%;
+
+        @media @max-b-mobile {
+          display: none;
+        }
       }
 
       .tutorial-group {
@@ -817,6 +923,16 @@ export default class Landing extends Vue {
 </style>
 <style lang="less">
 // ant customization
+.ant-row {
+  @media @max-b-mobile {
+    .ant-col-22 {
+      width: 100%;
+    }
+    .ant-col-offset-1 {
+      margin-left: 0;
+    }
+  }
+}
 .ant-tabs {
   .ant-tabs-bar {
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
@@ -860,9 +976,9 @@ export default class Landing extends Vue {
       .play-list-btn {
         margin-bottom: 18px;
         padding: 15px 0 15px 19px;
-        background: #01033c;
+        background: @color-bg;
         border-radius: 8px;
-        border: 3px solid #01033c;
+        border: 3px solid @color-bg;
         color: #fff;
         height: auto;
         width: 100%;
@@ -886,7 +1002,7 @@ export default class Landing extends Vue {
       filter: drop-shadow(0 44px 64px rgba(0, 0, 0, 0.35));
       height: 524px;
       border-radius: 42px;
-      background: #010536;
+      background: @color-bg;
     }
   }
 }

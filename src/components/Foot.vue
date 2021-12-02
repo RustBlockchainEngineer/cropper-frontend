@@ -42,18 +42,18 @@
     </div>
     <div class="telegram noDesktop" v-if="displayfilters" :class="displayfilters ? 'visible' : ''">
       <div class="telegram-group">
-        <a :href="linkUrl.telegram_en" target="_blank" class="bodyM weightS"> Telegram(EN) </a>
-        <a :href="linkUrl.telegram_cn" target="_blank" class="bodyM weightS"> Telegram(CN) </a>
-        <a :href="linkUrl.telegram_kr" target="_blank" class="bodyM weightS"> Telegram(KR) </a>
-        <a :href="linkUrl.telegram_jp" target="_blank" class="bodyM weightS"> Telegram(JP) </a>
-        <a :href="linkUrl.telegram_es" target="_blank" class="bodyM weightS"> Telegram(ES) </a>
-        <a :href="linkUrl.telegram_tr" target="_blank" class="bodyM weightS"> Telegram(TR) </a>
-        <a :href="linkUrl.telegram_vn" target="_blank" class="bodyM weightS"> Telegram(VN) </a>
-        <a :href="linkUrl.telegram_ru" target="_blank" class="bodyM weightS"> Telegram(RU) </a>
-        <a :href="linkUrl.telegram_fr" target="_blank" class="bodyM weightS"> Telegram(FR) </a>
-        <a :href="linkUrl.telegram_br" target="_blank" class="bodyM weightS"> Telegram(BR) </a>
-        <a :href="linkUrl.telegram_in" target="_blank" class="bodyM weightS"> Telegram(IN) </a>
-        <a :href="linkUrl.telegram_it" target="_blank" class="bodyM weightS"> Telegram(IT) </a>
+        <a :href="linkUrl.telegram_en" target="_blank" class="bodyM"> Telegram(EN) </a>
+        <a :href="linkUrl.telegram_cn" target="_blank" class="bodyM"> Telegram(CN) </a>
+        <a :href="linkUrl.telegram_kr" target="_blank" class="bodyM"> Telegram(KR) </a>
+        <a :href="linkUrl.telegram_jp" target="_blank" class="bodyM"> Telegram(JP) </a>
+        <a :href="linkUrl.telegram_es" target="_blank" class="bodyM"> Telegram(ES) </a>
+        <a :href="linkUrl.telegram_tr" target="_blank" class="bodyM"> Telegram(TR) </a>
+        <a :href="linkUrl.telegram_vn" target="_blank" class="bodyM"> Telegram(VN) </a>
+        <a :href="linkUrl.telegram_ru" target="_blank" class="bodyM"> Telegram(RU) </a>
+        <a :href="linkUrl.telegram_fr" target="_blank" class="bodyM"> Telegram(FR) </a>
+        <a :href="linkUrl.telegram_br" target="_blank" class="bodyM"> Telegram(BR) </a>
+        <a :href="linkUrl.telegram_in" target="_blank" class="bodyM"> Telegram(IN) </a>
+        <a :href="linkUrl.telegram_it" target="_blank" class="bodyM"> Telegram(IT) </a>
       </div>
     </div>
     <div class="footer-line"></div>
