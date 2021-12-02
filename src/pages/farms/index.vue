@@ -247,6 +247,22 @@
                 </label>
               </div>
             </Col>
+
+          </Row>
+          <Row class="tool-bar noDesktop">
+
+            <Col span="24" class="tool-option">
+              <div class="toggle">
+                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''" @click="activeSearch('open')"
+                  >Open</label
+                >
+                <Toggle v-model="searchLifeFarm" />
+                <label class="label" :class="searchLifeFarm ? 'active-label' : ''" @click="activeSearch('ended')"
+                  >Ended</label
+                >
+              </div>
+            </Col>
+
           </Row>
           <Row class="tool-bar noDesktop">
             <Col span="24" class="tool-option">
@@ -319,7 +335,7 @@
                       <img src="@/assets/icons/share-icon.svg" />
                     </a>
                     <a
-                      v-if="farm.farmInfo.twitterLink != ''"
+                      v-if="farm.farmInfo.twitterLink"
                       :href="farm.farmInfo.twitterLink"
                       target="_blank"
                       class="social-icon"
@@ -440,7 +456,7 @@
                 <div class="title">Pending Rewards</div>
                 <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
                 <div v-else class="value">
-                  {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                  {{ !wallet.connected ? 0 : (Math.round(farm.userInfo.pendingReward.format() * 100000) / 100000) }}
                 </div>
 
                 <div class="btn-container btn-container-harvest">
@@ -707,7 +723,7 @@
                       <div class="title">Pending Reward</div>
                       <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
                       <div v-else class="value">
-                        {{ !wallet.connected ? 0 : farm.userInfo.pendingReward.format() }}
+                        {{ !wallet.connected ? 0 : (Math.round(farm.userInfo.pendingReward.format() * 100000) / 100000) }}
                       </div>
                     </Col>
                   </Col>
@@ -823,7 +839,9 @@
                         <a :href="farm.farmInfo.twitterShare" target="_blank" class="social-icon">
                           <img src="@/assets/icons/share-icon.svg" />
                         </a>
-                        <a href="#" class="social-icon">
+                        <a 
+                      v-if="farm.farmInfo.twitterLink"
+                      :href="farm.farmInfo.twitterLink" class="social-icon">
                           <img src="@/assets/icons/twitter-icon.svg" />
                         </a>
                       </div>
