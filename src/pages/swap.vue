@@ -1,9 +1,162 @@
 <template>
-  <div class="swapWrapper">
+  <div class="swap container">
     <img src="@/assets/icons/greenPlanet2.svg" class="planetMiddle" />
     <div class="page-head fs-container">
       <span class="title"> Swap </span>
       <span class="information">
+        <div class="setting-btn-group">
+          <div
+            class="setting-btn-container"
+            :class="this.showInformations ? 'active' : ''"
+            @click="
+              () => {
+                this.showInformations = !this.showInformations
+              }
+            "
+          >
+            <div class="sort-by">
+              <label class="label">
+                <img class="info-icon" src="@/assets/icons/wow.svg" />
+              </label>
+            </div>
+            <div v-if="showInformations" class="sort-options left">
+              <div class="swap-info">
+                Informations
+                <div v-if="fromCoin" class="info">
+                  <div class="action">
+                    <a :href="`${url.explorer}/token/${fromCoin.mintAddress}`" target="_blank">
+                      <img class="action-icon" src="@/assets/icons/link-icon.svg" />
+                    </a>
+                    <img
+                      class="action-icon"
+                      src="@/assets/icons/copy-icon.svg"
+                      @click="$accessor.copy(fromCoin.mintAddress)"
+                    />
+                  </div>
+                  <div class="symbol">{{ fromCoin.symbol }}</div>
+                  <div class="address">
+                    {{ fromCoin.mintAddress.substr(0, 14) }}
+                    ...
+                    <!-- {{ fromCoin.mintAddress.substr(fromCoin.mintAddress.length - 14, 14) }} -->
+                  </div>
+                </div>
+                <div v-if="toCoin" class="info">
+                  <div class="action">
+                    <a :href="`${url.explorer}/token/${toCoin.mintAddress}`" target="_blank">
+                      <img class="action-icon" src="@/assets/icons/link-icon.svg" />
+                    </a>
+                    <img
+                      class="action-icon"
+                      src="@/assets/icons/copy-icon.svg"
+                      @click="$accessor.copy(toCoin.mintAddress)"
+                    />
+                  </div>
+                  <div class="symbol">{{ toCoin.symbol }}</div>
+                  <div class="address">
+                    {{ toCoin.mintAddress.substr(0, 14) }}
+                    ...
+                    <!-- {{ toCoin.mintAddress.substr(toCoin.mintAddress.length - 14, 14) }} -->
+                  </div>
+                </div>
+                <div v-if="marketAddress" class="info">
+                  <div class="action">
+                    <a v-if="!officialPool" :href="`${url.explorer}/account/${marketAddress}`" target="_blank">
+                      <img class="action-icon" src="@/assets/icons/link-icon.svg" />
+                    </a>
+                    <a v-else :href="`${url.trade}/${marketAddress}`" target="_blank">
+                      <img class="action-icon" src="@/assets/icons/link-icon.svg" />
+                    </a>
+                    <img
+                      class="action-icon"
+                      src="@/assets/icons/copy-icon.svg"
+                      @click="$accessor.copy(marketAddress)"
+                    />
+                  </div>
+                  <div class="symbol">Market</div>
+                  <div class="address">
+                    {{ marketAddress.substr(0, 14) }}
+                    ...
+                    <!-- {{ marketAddress.substr(marketAddress.length - 14, 14) }} -->
+                  </div>
+                </div>
+                <div v-if="mainAmmId && best_dex_type == 'single'" class="info">
+                  <div class="action">
+                    <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
+                      <img class="action-icon" src="@/assets/icons/link-icon.svg" />
+                    </a>
+                    <img class="action-icon" src="@/assets/icons/copy-icon.svg" @click="$accessor.copy(mainAmmId)" />
+                  </div>
+                  <div class="symbol">AMM ID</div>
+                  <div class="address">
+                    {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
+                    ...
+                    <!-- {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }} -->
+                  </div>
+                </div>
+                <div v-if="best_dex_type == 'multi'" class="info">
+                  <p>Swaping via multistep scenario</p>
+                </div>
+                <div v-if="best_dex_type == 'multi'" class="info">
+                  <div class="action">
+                    <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
+                      <img class="action-icon" src="@/assets/icons/link-icon.svg" />
+                    </a>
+                    <img class="action-icon" src="@/assets/icons/copy-icon.svg" @click="$accessor.copy(mainAmmId)" />
+                  </div>
+                  <div class="symbol">{{ fromCoin.symbol + ' - ' + midTokenSymbol }}</div>
+                  <div class="address">
+                    {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
+                    ...
+                    <!-- {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }} -->
+                  </div>
+                </div>
+                <div v-if="best_dex_type == 'multi'" class="info">
+                  <div class="action">
+                    <a :href="`${url.explorer}/account/${extAmmId}`" target="_blank">
+                      <img class="action-icon" src="@/assets/icons/link-icon.svg" />
+                    </a>
+                    <img class="action-icon" src="@/assets/icons/copy-icon.svg" @click="$accessor.copy(extAmmId)" />
+                  </div>
+                  <div class="symbol">{{ midTokenSymbol + ' - ' + toCoin.symbol }}</div>
+                  <div class="address">
+                    {{ extAmmId ? extAmmId.substr(0, 14) : '' }}
+                    ...
+                    <!-- {{ extAmmId ? extAmmId.substr(extAmmId.length - 14, 14) : '' }} -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="setting-btn-container"
+            :class="this.showSlippage ? 'active' : ''"
+            @click="
+              () => {
+                this.showSlippage = !this.showSlippage
+              }
+            "
+          >
+            <div class="sort-by">
+              <label class="label">
+                <img class="setting-icon" src="@/assets/icons/setting.svg" />
+              </label>
+            </div>
+            <div v-if="showSlippage" class="sort-options right">
+              Swap Slippage
+              <div class="swap-info tooltipOne">
+                <input
+                  class="tooltip-input"
+                  id="number"
+                  type="number"
+                  min="1"
+                  max="100"
+                  v-model="setting.slippage"
+                  @keypress="validateNumber"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="my-info">
           <label>
             TVL : <b>{{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} $</b>
@@ -17,165 +170,7 @@
         </div>
       </span>
     </div>
-    <div class="container">
-      <Row class="tool-bar">
-        <Col span="12" class="tool-option">
-          <div class="sort-by">
-            <label
-              class="label"
-              @click="
-                () => {
-                  this.showInformations = !this.showInformations
-                }
-              "
-            >
-              <img class="info-icon" src="@/assets/icons/wow.svg" />
-              Informations
-            </label>
-            <img
-              :class="showInformations ? 'collapse-down' : 'collapse-up'"
-              src="@/assets/icons/collapse-arrow.svg"
-              @click="
-                () => {
-                  this.showInformations = !this.showInformations
-                }
-              "
-            />
-          </div>
-          <div v-if="showInformations" class="sort-options left">
-            <div class="swap-info">
-              <div v-if="fromCoin" class="info">
-                <div class="action">
-                  <a :href="`${url.explorer}/token/${fromCoin.mintAddress}`" target="_blank">
-                    <img src="@/assets/icons/link_grey.svg" />
-                  </a>
-                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(fromCoin.mintAddress)" />
-                </div>
-                <div class="symbol">{{ fromCoin.symbol }}</div>
-                <div class="address">
-                  {{ fromCoin.mintAddress.substr(0, 14) }}
-                  ...
-                  {{ fromCoin.mintAddress.substr(fromCoin.mintAddress.length - 14, 14) }}
-                </div>
-              </div>
-              <div v-if="toCoin" class="info">
-                <div class="action">
-                  <a :href="`${url.explorer}/token/${toCoin.mintAddress}`" target="_blank">
-                    <img src="@/assets/icons/link_grey.svg" />
-                  </a>
-                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(toCoin.mintAddress)" />
-                </div>
-                <div class="symbol">{{ toCoin.symbol }}</div>
-                <div class="address">
-                  {{ toCoin.mintAddress.substr(0, 14) }}
-                  ...
-                  {{ toCoin.mintAddress.substr(toCoin.mintAddress.length - 14, 14) }}
-                </div>
-              </div>
-              <div v-if="marketAddress" class="info">
-                <div class="action">
-                  <a v-if="!officialPool" :href="`${url.explorer}/account/${marketAddress}`" target="_blank">
-                    <img src="@/assets/icons/link_grey.svg" />
-                  </a>
-                  <a v-else :href="`${url.trade}/${marketAddress}`" target="_blank">
-                    <img src="@/assets/icons/link_grey.svg" />
-                  </a>
-                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(marketAddress)" />
-                </div>
-                <div class="symbol">Market</div>
-                <div class="address">
-                  {{ marketAddress.substr(0, 14) }}
-                  ...
-                  {{ marketAddress.substr(marketAddress.length - 14, 14) }}
-                </div>
-              </div>
-              <div v-if="mainAmmId && best_dex_type == 'single'" class="info">
-                <div class="action">
-                  <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
-                    <img src="@/assets/icons/link_grey.svg" />
-                  </a>
-                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(mainAmmId)" />
-                </div>
-                <div class="symbol">AMM ID</div>
-                <div class="address">
-                  {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
-                  ...
-                  {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }}
-                </div>
-              </div>
-              <div v-if="best_dex_type == 'multi'" class="info">
-                <p>Swaping via multistep scenario</p>
-              </div>
-              <div v-if="best_dex_type == 'multi'" class="info">
-                <div class="action">
-                  <a :href="`${url.explorer}/account/${mainAmmId}`" target="_blank">
-                    <img src="@/assets/icons/link_grey.svg" />
-                  </a>
-                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(mainAmmId)" />
-                </div>
-                <div class="symbol">{{ fromCoin.symbol + ' - ' + midTokenSymbol }}</div>
-                <div class="address">
-                  {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
-                  ...
-                  {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }}
-                </div>
-              </div>
-              <div v-if="best_dex_type == 'multi'" class="info">
-                <div class="action">
-                  <a :href="`${url.explorer}/account/${extAmmId}`" target="_blank">
-                    <img src="@/assets/icons/link_grey.svg" />
-                  </a>
-                  <img src="@/assets/icons/copy.png" @click="$accessor.copy(extAmmId)" />
-                </div>
-                <div class="symbol">{{ midTokenSymbol + ' - ' + toCoin.symbol }}</div>
-                <div class="address">
-                  {{ extAmmId ? extAmmId.substr(0, 14) : '' }}
-                  ...
-                  {{ extAmmId ? extAmmId.substr(extAmmId.length - 14, 14) : '' }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Col>
-        <Col span="12" class="tool-option">
-          <div class="sort-by">
-            <label
-              class="label"
-              @click="
-                () => {
-                  this.showSlippage = !this.showSlippage
-                }
-              "
-            >
-              <img class="setting-icon" src="@/assets/icons/setting.svg" />
-              Swap Slippage
-            </label>
-            <img
-              :class="showSlippage ? 'collapse-down' : 'collapse-up'"
-              src="@/assets/icons/collapse-arrow.svg"
-              @click="
-                () => {
-                  this.showSlippage = !this.showSlippage
-                }
-              "
-            />
-          </div>
-          <div v-if="showSlippage" class="sort-options right">
-            <div class="swap-info tooltipOne">
-              <input
-                class="tooltip-input"
-                id="number"
-                type="number"
-                min="1"
-                max="100"
-                v-model="setting.slippage"
-                @keypress="validateNumber"
-              />
-            </div>
-          </div>
-        </Col>
-      </Row>
-
+    <div class="swap-content">
       <CoinSelect v-if="coinSelectShow" @onClose="() => (coinSelectShow = false)" @onSelect="onCoinSelect" />
       <AmmIdSelect
         :show="ammIdSelectShow"
@@ -568,7 +563,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Icon, Tooltip, Button, Progress, Spin, Select, InputNumber, Row, Col } from 'ant-design-vue'
+import { Icon, Tooltip, Button, Spin } from 'ant-design-vue'
 import { cloneDeep, get } from 'lodash-es'
 import { Market, Orderbook } from '@project-serum/serum/lib/market.js'
 import { getTokenBySymbol, TokenInfo, NATIVE_SOL, TOKENS } from '@/utils/tokens'
@@ -614,9 +609,7 @@ export default Vue.extend({
     Icon,
     Tooltip,
     Button,
-    Spin,
-    Row,
-    Col
+    Spin
   },
   data() {
     return {
@@ -1909,7 +1902,7 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-.swapWrapper {
+.swap.container {
   max-width: 1350px;
   width: 100%;
   background: @color-bg;
@@ -1926,17 +1919,6 @@ export default Vue.extend({
   button.ant-btn-background-ghost[disabled] {
     background: #80819d !important;
     border: 2px solid rgba(255, 255, 255, 0.14);
-  }
-
-  .ant-menu-horizontal > .ant-menu-item:hover,
-  .ant-menu-horizontal > .ant-menu-submenu:hover,
-  .ant-menu-horizontal > .ant-menu-item-active,
-  .ant-menu-horizontal > .ant-menu-submenu-active,
-  .ant-menu-horizontal > .ant-menu-item-open,
-  .ant-menu-horizontal > .ant-menu-submenu-open,
-  .ant-menu-horizontal > .ant-menu-item-selected,
-  .ant-menu-horizontal > .ant-menu-submenu-selected {
-    border-bottom: none !important;
   }
 
   .page-head {
@@ -2001,6 +1983,163 @@ export default Vue.extend({
       align-items: center;
       text-align: right;
 
+      .setting-btn-group {
+        display: flex;
+
+        .setting-btn-container {
+          position: relative;
+          border: 3px solid #273d94;
+          box-sizing: border-box;
+          border-radius: 14px;
+          width: 42px;
+          height: 42px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 5px;
+          cursor: pointer;
+          
+          &.active {
+            background: #172058;
+          }
+
+          &:last-child {
+            margin-right: 30px;
+          }
+
+          .input-search {
+            height: 100%;
+            position: absolute;
+            width: 100%;
+          }
+
+          .sort-by {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+
+            .label {
+              font-size: 16px;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+
+              .info-icon,
+              .setting-icon {
+                width: 16px;
+                height: 16px;
+              }
+
+              .sort-up,
+              .sort-down {
+                margin-right: 5px;
+                transition: 0.5s;
+              }
+
+              .sort-down {
+                transform: rotate(180deg);
+              }
+            }
+
+            .collapse-down,
+            .collapse-up {
+              cursor: pointer;
+              transition: 0.5s;
+            }
+
+            .collapse-down {
+              transform: rotate(180deg);
+            }
+          }
+
+          .sort-options {
+            position: absolute;
+            width: 180px;
+            top: 45px;
+            left: -10px;
+            padding: 6px 12px 12px 12px;
+            background: @gradient-color-primary;
+            background-origin: border-box;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            z-index: 999;
+            font-size: 9px;
+            text-align: left;
+
+            .swap-info {
+              .tooltip-input {
+                background: @gradient-color-primary;
+                background-origin: border-box;
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                width: 100%;
+                outline: none;
+                border-radius: 6px;
+                font-size: 12px;
+                line-height: 15px;
+                padding: 5px 12px;
+                margin-top: 5px;
+
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                  -webkit-appearance: none;
+                  margin: 0;
+                }
+              }
+
+              .info {
+                background: @gradient-color-primary;
+                background-origin: border-box;
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                width: 100%;
+                outline: none;
+                border-radius: 6px;
+                font-size: 12px;
+                line-height: 15px;
+                padding: 5px 8px;
+                margin-top: 5px;
+                display: flex;
+                align-items: center;
+
+                .symbol {
+                  font-weight: bold;
+                  font-size: 8px;
+                  line-height: 10px;
+                  margin-left: 10px;
+                  margin-right: 5px;
+                }
+
+                .address {
+                  font-size: 8px;
+                  line-height: 10px;
+                }
+
+                .action {
+                  display: flex;
+                  align-items: center;
+
+                  .action-icon {
+                    width: 11px;
+                    height: 11px;
+                    cursor: pointer;
+                    margin-left: 5px;
+
+                    &:first-child {
+                      margin-left: 0;
+                    }
+                  }
+                }
+              }
+
+              .info:nth-child(1) {
+                margin-top: 0 !important;
+              }
+            }
+          }
+        }
+      }
+
       .my-info {
         font-size: 15px;
         line-height: 18px;
@@ -2031,8 +2170,9 @@ export default Vue.extend({
     }
   }
 
-  .container {
+  .swap-content {
     max-width: 662px; //550
+    margin: auto;
 
     .coin-budge {
       align-items: center;
@@ -2051,193 +2191,9 @@ export default Vue.extend({
       }
     }
 
-    .tool-bar {
-      height: 64px;
-      border-radius: 14px;
-      border: 4px solid @color-outline;
-      width: 100%;
-      margin-bottom: 30px;
-
-      @media @max-b-mobile {
-        margin-bottom: 5px;
-        height: 54px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-
-      .tool-option {
-        height: 100%;
-        display: inline-block;
-        border-right: 4px solid @color-outline;
-        position: relative;
-
-        &:last-child {
-          border-right: none !important;
-        }
-
-        .input-search {
-          height: 100%;
-          position: absolute;
-          width: 100%;
-        }
-
-        .toggle {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-evenly;
-
-          .label {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            position: relative;
-
-            .info-icon {
-              margin: 0;
-              position: absolute;
-              top: 0;
-              right: -20px;
-            }
-
-            &.active-label {
-              font-weight: 700;
-              color: #fff;
-            }
-          }
-
-          &.deposit-toggle {
-            .ant-switch-checked {
-              background-color: @color-disable !important;
-            }
-          }
-        }
-
-        .sort-by {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-evenly;
-
-          .label {
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-
-            .info-icon, .setting-icon {
-              margin-right: 10px;
-
-              @media @max-b-mobile {
-                margin-right: 5px;
-              }
-            }
-            
-            .sort-up,
-            .sort-down {
-              margin-right: 5px;
-              transition: 0.5s;
-            }
-
-            .sort-down {
-              transform: rotate(180deg);
-            }
-          }
-
-          .collapse-down,
-          .collapse-up {
-            cursor: pointer;
-            transition: 0.5s;
-          }
-
-          .collapse-down {
-            transform: rotate(180deg);
-          }
-        }
-
-        .sort-options {
-          position: absolute;
-          width: 100%;
-          top: 64px;
-          padding: 18px;
-          background: @gradient-color-primary;
-          background-origin: border-box;
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
-          border-radius: 8px;
-          z-index: 999;
-
-          @media @max-b-mobile {
-            width: 200%;
-           
-            &.right {
-              left: -100%;
-            }
-          }
-
-          .swap-info {
-            .tooltip-input {
-              background: rgba(255, 255, 255, 0.06);
-              border: 1px solid rgba(255, 255, 255, 0.14);
-              min-width: 240px;
-              width: 100%;
-              outline: none;
-              border-radius: 6px;
-              font-size: 16px;
-              padding: 10px 13px;
-              line-height: 20px;
-
-              &::-webkit-outer-spin-button,
-              &::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-              }
-            }
-
-            .info {
-              border-radius: 6px;
-              background: rgba(255, 255, 255, 0.06);
-              border: 1px solid rgba(255, 255, 255, 0.14);
-              padding: 8px !important;
-              margin-top: 10px;
-
-              .symbol {
-                font-size: 13px;
-                line-height: 16px;
-                font-weight: 700;
-                opacity: 1;
-                color: white;
-              }
-
-              .address {
-                font-size: 13px;
-                background: transparent;
-                opacity: 1;
-                color: white;
-              }
-
-              .action img {
-                width: 15px;
-                height: 15px;
-                cursor: pointer;
-              }
-            }
-
-            .info:nth-child(1) {
-              margin-top: 0 !important;
-            }
-          }
-        }
-      }
-    }
-
     .card {
       border: 1px solid #4d4d4d;
-      background: rgba(236, 228, 228, 0.05);
+      background: rgba(255, 2255, 255, 0.05);
       border-radius: 15px;
 
       .card-body {
@@ -2449,16 +2405,16 @@ export default Vue.extend({
 }
 
 @media @max-b-mobile {
-  .swapWrapper {
+  .swap.container {
     margin: auto;
-    padding: 0;
-    width: 375px;
+    padding: 0 22px;
+    min-width: 375px;
+
     .planetMiddle {
       display: none;
     }
-    .container {
-      min-width: auto;
-      padding: 22px !important;
+
+    .swap-content {
       .card {
         border: 1px solid #4d4d4d;
         .card-body {
