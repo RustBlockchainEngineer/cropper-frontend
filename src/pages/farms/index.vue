@@ -537,6 +537,7 @@
                   >
                     <Button
                       size="large"
+                      v-if="wallet.connected"
                       :disabled="
                         !wallet.connected ||
                         !farm.farmInfo.poolInfo.is_allowed ||
@@ -555,6 +556,25 @@
                           : 'Deposit'
                       }}
                     </Button>
+
+
+                    <Button
+                      size="large"
+                      v-else
+                      @click="$accessor.wallet.openModal"
+                    >
+                      {{
+                        !farm.farmInfo.poolInfo.is_allowed
+                          ? 'Not Allowed'
+                          : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                          ? 'Ended'
+                          : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                          ? 'Unstarted'
+                          : 'Deposit'
+                      }}
+                    </Button>
+
+
                   </div>
 
                   <div
@@ -857,6 +877,7 @@
                       >
                         <Button
                           size="large"
+                          v-if="wallet.connected"
                           :disabled="
                             !wallet.connected ||
                             !farm.farmInfo.poolInfo.is_allowed ||
@@ -875,6 +896,23 @@
                               : 'Deposit'
                           }}
                         </Button>
+
+                        <Button
+                          size="large"
+                          v-else
+                         @click="$accessor.wallet.openModal"
+                        >
+                          {{
+                            !farm.farmInfo.poolInfo.is_allowed
+                              ? 'Not Allowed'
+                              : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                              ? 'Ended'
+                              : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                              ? 'Unstarted'
+                              : 'Deposit'
+                          }}
+                        </Button>
+
                       </div>
 
                       <div class="btn-container btn-container-harvest">
