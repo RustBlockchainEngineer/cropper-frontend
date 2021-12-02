@@ -1,5 +1,5 @@
 <template>
-  <div class="container create-pool">
+  <div class="container create-farm">
     <CoinSelect
       v-if="coinSelectShow && wallet.connected"
       :farmTokenASelect="selectTokenA"
@@ -1606,7 +1606,7 @@ main {
   background-position: center bottom;
 }
 
-.create-pool {
+.create-farm {
   max-width: 90%;
 
   @media @max-b-mobile {
@@ -1740,6 +1740,7 @@ main {
   }
 
   .design-farm {
+    margin-top: 20px;
     border: 4px solid #16164a;
     border-radius: 14px;
     padding: 40px 60px;

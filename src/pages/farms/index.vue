@@ -1069,7 +1069,7 @@ export default Vue.extend({
       poolsDatas: {} as any,
       searchCertifiedFarm: false as boolean,
       searchLifeFarm: false as boolean,
-      stakedOnly: false as boolean,
+      stakedOnly: true as boolean,
       showSortOption: false as boolean,
       totalCount: 110,
       pageSize: 50,

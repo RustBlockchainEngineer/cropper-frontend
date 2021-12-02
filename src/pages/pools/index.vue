@@ -517,7 +517,7 @@ export default class Pools extends Vue {
   timer: any = null
   timer_init: any = null
   loading: boolean = false
-  stakedOnly: boolean = false
+  stakedOnly: boolean = true
   searchButton = true
   searchName = ''
   totalCount = 110
