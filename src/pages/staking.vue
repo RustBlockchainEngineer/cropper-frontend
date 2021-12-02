@@ -484,7 +484,11 @@ export default Vue.extend({
       }, 1000)
     },
     async flush() {
-      this.countdown = 0
+      this.countdown = 0 
+      this.getGlobalState();
+        if(this.$wallet?.connected){
+          this.getUserState();
+        }
     },
     reloadTimer() {
       this.activeSpinning = true
