@@ -1987,6 +1987,49 @@ export default Vue.extend({
         fixedCoin
       )
         .then(async (txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
+
+          const description = `Add liquidity for ${fromCoinAmount} ${this.farmInfo.lp.coin?.symbol} and ${toCoinAmount} ${this.farmInfo.lp.pc?.symbol}`
+          this.$accessor.transaction.sub({ txid, description })
+
+          txStatus = this.$accessor.transaction.history[txid].status
+          let totalDelayTime = 0
+          while (txStatus === 'Pending' && totalDelayTime < 10000) {
+            let delayTime = 500
+            await this.delay(delayTime)
+            totalDelayTime += delayTime
+            txStatus = this.$accessor.transaction.history[txid].status
+            await this.delay(delayTime)
+            totalDelayTime += delayTime
+          }
+          if (txStatus === 'Fail') {
+            console.log('add lp failed')
+            return
+          }
+          //update wallet token account infos
+          this.$accessor.wallet.getTokenAccounts()
+          let delayForUpdate = 500
+          await this.delay(delayForUpdate)
+
+
+            this.stakeModalOpening = false
+            this.stakeModalOpeningLP = true;
+
+            
         })
         .catch((error) => {
           this.$notify.error({
@@ -1995,11 +2038,7 @@ export default Vue.extend({
             description: error.message
           })
         })
-        .finally(async () => {
-        
-            this.stakeModalOpening = false
-            this.stakeModalOpeningLP = true;
-        })
+        .finally(async () => {})
     },
     async stakeLP(
       conn: any,
