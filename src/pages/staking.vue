@@ -222,19 +222,14 @@ export default Vue.extend({
     },
     'wallet.connected':{
       handler(connected: any) {
-
-        if(connected){
-            this.getUserState();
-        }
+        this.getUserState();
       },
       deep: true
     },
     'token.initialized':{
       handler(newState: boolean) {
         this.getGlobalState();
-        if(this.$wallet?.connected){
-          this.getUserState();
-        }
+        this.getUserState();
       },
       deep: true
     },
@@ -244,13 +239,9 @@ export default Vue.extend({
     this.getTvl();
     setAnchorProvider(this.$web3, this.$wallet)
     
-    if(this.$accessor.token.initialized){
-        this.getGlobalState();
-        if(this.$wallet?.connected){
-          this.getUserState();
-        }
-    }
-    
+    this.getGlobalState();
+    this.getUserState();
+
     this.setTimer();
   },
   methods: {
@@ -285,6 +276,8 @@ export default Vue.extend({
     },
 
     async getGlobalState(){
+      if(!this.$accessor.token.initialized) return;
+
       const pools = await getAllPools()
       const current_pool = pools[0]
 
@@ -311,7 +304,10 @@ export default Vue.extend({
     }, 
 
     async getUserState(){
-
+      if(!this.$accessor.token.initialized || !this.$wallet?.connected )
+      {
+        return;
+      }
       let crpbalanceDatas = this.wallet.tokenAccounts[TOKENS['CRP'].mintAddress]
 
       if(crpbalanceDatas){

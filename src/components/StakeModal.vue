@@ -165,6 +165,9 @@ export default Vue.extend({
     getExtraRewardConfigs().then((res : any) =>
     {
       res.configs.forEach((item: any, index : number) =>{
+
+        // console.log(index + 1 + ` Tiers`, item.duration.toString());
+
         this.lockData[index].minutesLock = item.duration / 60
         this.lockData[index].boost = item.extraPercentage / 100 + 1
       })
