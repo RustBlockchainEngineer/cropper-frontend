@@ -55,22 +55,19 @@
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-apr.svg" />
               <h4 class="weightB">
-                Best Farms <br />
-                APR%
+                Best Farms APR%
               </h4>
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-community.svg" />
               <h4 class="weightB">
-                Community <br />
-                driven
+                Community driven
               </h4>
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-swap.svg" />
               <h4 class="weightB">
-                Best Price <br />
-                Swaps
+                Best Price Swaps
               </h4>
             </div>
           </div>
@@ -86,7 +83,7 @@
           <Col :span="22" :offset="1">
             <div class="audit-box-group">
               <div class="audit-box">
-                <h2 class="weightB">
+                <h2 class="weightS">
                   Farm Program <br />
                   Security Audit
                 </h2>
@@ -100,7 +97,7 @@
                 </a>
               </div>
               <div class="audit-box">
-                <h2 class="weightB">
+                <h2 class="weightS">
                   AMM Program <br />
                   Security Audit
                 </h2>
@@ -126,33 +123,41 @@
           <p class="bodyL text-center" style="margin-top: 20px">
             Reprehenderit esse labore id veniam ut veniam non ex adipisicing
           </p>
-          <div class="feature-box-group">
+          <Row :gutter="25" class="feature-box-group">
             <img class="stars-third-bg" src="@/assets/landing_v2/stars-third-bg.svg" />
-            <div class="feature-box">
-              <img src="@/assets/landing_v2/feature-swap.svg" />
-              <h4 class="title weightB">Swap</h4>
-              <p class="bodyM content">Designed to give you the best price on Solana</p>
-              <a class="bodyM now-btn weightS">Swap Now</a>
-            </div>
-            <div class="feature-box">
-              <img src="@/assets/landing_v2/feature-farming.svg" />
-              <h4 class="title weightB">Farming</h4>
-              <p class="bodyM content">Enjoy a wide variety of Permissionless and Labelized farms</p>
-              <a class="bodyM now-btn weightS">Farm Now</a>
-            </div>
-            <div class="feature-box">
-              <img src="@/assets/landing_v2/feature-staking.svg" />
-              <h4 class="title weightB">Staking</h4>
-              <p class="bodyM content">Stake CRP through 4 tiers and get advantages on the plateform</p>
-              <a class="bodyM now-btn weightS">Stake Now</a>
-            </div>
-            <div class="feature-box">
-              <img src="@/assets/landing_v2/feature-fertilizer.svg" />
-              <h4 class="title weightB">Fertilizer</h4>
-              <p class="bodyM content">The Fertilizer launcher is curently being imrpoved.</p>
-              <a class="bodyM now-btn weightS">Soon!</a>
-            </div>
-          </div>
+            <Col :xs="12" :sm="12" :md="6">
+              <div class="feature-box">
+                <img class="feature-img" src="@/assets/landing_v2/feature-swap.svg" />
+                <h4 class="title weightB">Swap</h4>
+                <p class="bodyM content">Designed to give you the best price on Solana</p>
+                <a class="bodyM now-btn weightS">Swap Now</a>
+              </div>
+            </Col>
+            <Col :xs="12" :sm="12" :md="6">
+              <div class="feature-box">
+                <img class="feature-img" src="@/assets/landing_v2/feature-farming.svg" />
+                <h4 class="title weightB">Farming</h4>
+                <p class="bodyM content">Enjoy a wide variety of Permissionless and Labelized farms</p>
+                <a class="bodyM now-btn weightS">Farm Now</a>
+              </div>
+            </Col>
+            <Col :xs="12" :sm="12" :md="6">
+              <div class="feature-box">
+                <img class="feature-img" src="@/assets/landing_v2/feature-staking.svg" />
+                <h4 class="title weightB">Staking</h4>
+                <p class="bodyM content">Stake CRP through 4 tiers and get advantages on the plateform</p>
+                <a class="bodyM now-btn weightS">Stake Now</a>
+              </div>
+            </Col>
+            <Col :xs="12" :sm="12" :md="6">
+              <div class="feature-box">
+                <img class="feature-img" src="@/assets/landing_v2/feature-fertilizer.svg" />
+                <h4 class="title weightB">Fertilizer</h4>
+                <p class="bodyM content">The Fertilizer launcher is curently being imrpoved.</p>
+                <a class="bodyM now-btn weightS">Soon!</a>
+              </div>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </section>
@@ -711,6 +716,7 @@ export default class Landing extends Vue {
           @media @max-b-mobile {
             margin: unset;
             margin-right: 18px;
+            width: 32px;
           }
         }
       }
@@ -751,9 +757,7 @@ export default class Landing extends Vue {
         }
 
         .audit-box {
-          padding-top: 52px;
-          padding-left: 65px;
-          padding-bottom: 78.45px;
+          padding: 52px 20px 78.45px 65px;
           background: linear-gradient(138.16deg, #22b5b6 -10.71%, rgba(40, 12, 134, 0.25) 111.29%);
           mix-blend-mode: lighten;
           border-radius: 42px;
@@ -761,9 +765,15 @@ export default class Landing extends Vue {
           margin-right: 20px;
 
           @media @max-b-mobile {
+            padding: 18px;
             width: 100%;
             background: linear-gradient(136.82deg, rgba(34, 181, 182, 0.5) 10.14%, rgba(40, 12, 134, 0.15) 85.36%);
             border-radius: 22px;
+            margin-bottom: 25px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
           }
 
           &:last-child {
@@ -789,12 +799,11 @@ export default class Landing extends Vue {
     padding: 0 64px 98px 64px;
 
     @media @max-b-mobile {
-      padding-left: 20px;
-      padding-right: 20px;
+      padding: 70px 20px 80px 20px;
     }
 
     .feature-box-group {
-      display: flex;
+      // display: flex;
       margin-top: 68px;
       position: relative;
 
@@ -810,31 +819,55 @@ export default class Landing extends Vue {
 
       .feature-box {
         position: relative;
-        background: linear-gradient(136.82deg, rgba(34, 181, 182, 0.5) 10.14%, rgba(40, 12, 134, 0.15) 85.36%);
+        background: linear-gradient(136.82deg, rgba(85, 136, 136, 0.5) 10.14%, rgba(40, 12, 134, 0.15) 85.36%);
         border-radius: 42px;
         padding-left: 36px;
         padding-right: 36px;
-        width: calc((100% - 75px) / 4);
         height: 472px;
-        margin-right: 25px;
+
+        @media @max-b-mobile {
+          padding: 18px 8px;
+          border-radius: 22px;
+          height: 285px;
+          margin-bottom: 34px !important;
+
+          &:nth-child(3), &:nth-child(4) {
+            margin-bottom: 0 !important ;
+          }
+        }
 
         &:last-child {
           margin-right: 0;
         }
 
+        .feature-img {
+          @media @max-b-mobile {
+            width: 100px;
+            height: 90px;
+          }
+        }
+
         .title {
-          margin-top: 20px;
+          margin-top: 18px;
         }
 
         .content {
           margin-top: 5px;
           margin-bottom: 60px !important;
+
+          @media @max-b-mobile {
+            margin-bottom: 18px !important;
+          }
         }
 
         .now-btn {
           color: #22b5b6;
           position: absolute;
           bottom: 55px;
+
+          @media @max-b-mobile {
+            bottom: 18px;
+          }
         }
       }
     }
@@ -856,6 +889,10 @@ export default class Landing extends Vue {
         position: absolute;
         top: 58px;
         width: 100%;
+
+        @media @max-b-mobile {
+          position: relative;
+        }
       }
     }
   }
@@ -870,6 +907,11 @@ export default class Landing extends Vue {
       padding: 32px 0;
       border-top: 2px solid rgba(255, 255, 255, 0.2);
       border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      
+      @media @max-b-mobile {
+        margin-top: 18px;
+        padding: 12px 0;
+      }
 
       .category-btn {
         padding: 17px 30px;
@@ -878,6 +920,13 @@ export default class Landing extends Vue {
         height: auto;
         color: #fff;
         margin-right: 38px;
+
+        @media @max-b-mobile {
+          padding: 8px 12px;
+          font-size: 13px !important;
+          line-height: 19.5px !important;
+          margin-right: 0;
+        }
 
         &.active {
           background: @gradient-color-icon;
@@ -900,6 +949,10 @@ export default class Landing extends Vue {
       .industry-group {
         padding: 90px 0;
 
+        @media @max-b-mobile {
+          padding: 24px 0;
+        }
+        
         .industry-card {
           background: @gradient-color-outline;
           height: 130px;
