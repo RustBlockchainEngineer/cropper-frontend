@@ -26,6 +26,11 @@
 import Vue from 'vue'
 import { Modal, Row, Col } from 'ant-design-vue'
 
+import {
+  setAnchorProvider,
+  getExtraRewardConfigs,
+} from '@/utils/crp-stake'
+
 Vue.use(Modal)
 
 export default Vue.extend({
@@ -59,29 +64,52 @@ export default Vue.extend({
         {
           tier: 1,
           time: 1,
+          minutesLock: 43200,
+          days: 30,
           boost: 1,
-          apy: 11.1
+          apy: 11.1,
+          text: 'Boost for 1 month locked'
         },
         {
           tier: 2,
           time: 3,
+          minutesLock: 129600,
+          days: 90,
           boost: 1.1,
-          apy: 12.21
+          apy: 12.21,
+          text: 'Boost for 3 months locked'
         },
         {
           tier: 3,
           time: 6,
+          minutesLock: 259200,
+          days: 180,
           boost: 1.3,
-          apy: 14.43
+          apy: 14.43,
+          text: 'Boost for 6 months locked'
         },
         {
           tier: 4,
           time: 12,
+          minutesLock: 525600,
+          days: 365,
           boost: 2,
-          apy: 22.19
+          apy: 22.19,
+          text: 'Boost for 1 year locked'
         }
       ]
     }
+  },
+
+  mounted(){
+    setAnchorProvider(this.$web3, this.$wallet)
+    getExtraRewardConfigs().then((res : any) =>
+    {
+      res.configs.forEach((item: any, index : number) =>{
+        this.lockData[index].minutesLock = item.duration / 60
+        this.lockData[index].boost = item.extraPercentage / 100 + 1
+      })
+    })
   }
 })
 </script>

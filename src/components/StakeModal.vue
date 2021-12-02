@@ -68,6 +68,7 @@ import { mapState } from 'vuex'
 import { Modal, Row, Col } from 'ant-design-vue'
 import { cloneDeep, get } from 'lodash-es'
 import { getUnixTs } from '@/utils'
+import { TOKENS } from '@/utils/tokens'
 
 import moment from 'moment'
 
@@ -159,7 +160,18 @@ export default Vue.extend({
   },
 
   mounted() {
+    setAnchorProvider(this.$web3, this.$wallet)
     this.displayTiers(this.tierActive)
+    getExtraRewardConfigs().then((res : any) =>
+    {
+      res.configs.forEach((item: any, index : number) =>{
+
+        // console.log(index + 1 + ` Tiers`, item.duration.toString());
+
+        this.lockData[index].minutesLock = item.duration / 60
+        this.lockData[index].boost = item.extraPercentage / 100 + 1
+      })
+    })
   },
 
   methods: {
@@ -189,7 +201,7 @@ export default Vue.extend({
     async stakeToken(){
       const pools = await getAllPools()
 
-      console.log(this.minutesLock);
+      console.log("Lock duration", this.minutesLock);
 
       const current_pool = pools[0]
       const poolSigner = current_pool.publicKey.toString()
@@ -217,9 +229,9 @@ export default Vue.extend({
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
         
-        this.toStake * 1000000000,
+        this.toStake *  Math.pow(10, TOKENS['CRP'].decimals),
         lock_duration
-        ).then((txid) => {
+      ).then((txid) => {
 
         this.$notify.info({
           key,
