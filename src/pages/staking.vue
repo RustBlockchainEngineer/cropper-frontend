@@ -289,7 +289,7 @@ export default Vue.extend({
 
       const farm_state = await getFarmState();
 
-      const stakedAmount = new TokenAmount(current_pool.account.amount, 6)
+      const stakedAmount = new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)
 
       if(this.price.prices['CRP']){
         this.totalStakedPrice = '$' + (Math.round(parseFloat(stakedAmount.fixed()) * this.price.prices['CRP'] * 1000) / 1000).toString()
@@ -300,7 +300,7 @@ export default Vue.extend({
 
       this.totalStaked = 'CRP ' + (Math.round( parseFloat(stakedAmount.fixed()) * 1000) / 1000).toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      this.estimatedAPY = farm_state.tokenPerSecond * 365 * 24 * 3600 / current_pool.account.amount;
+      this.estimatedAPY = Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()) * 365 * 24 * 3600 / Number((new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)).fixed());
       this.estimatedAPY = Number((((1 + (this.estimatedAPY / 100)/ 365)) ** 365 - 1) * 100);
     }, 
 
@@ -324,7 +324,7 @@ export default Vue.extend({
       this.canUnstake = ! ((userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 > new Date().getTime())
 
       //@ts-ignore
-      this.userStaked = (new TokenAmount(userAccount.amount, 6)).fixed() as number
+      this.userStaked = (new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals)).fixed() as number
 
       const rewardAmount = estimateRewards(
           farm_state,
@@ -333,7 +333,7 @@ export default Vue.extend({
           userAccount
       )
 
-      this.pendingReward = (new TokenAmount(rewardAmount, 9)).fixed()
+      this.pendingReward = (new TokenAmount(rewardAmount, TOKENS['CRP'].decimals)).fixed()
 
 
     },
@@ -423,7 +423,7 @@ export default Vue.extend({
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
 
-          this.userStaked * 1000000,
+          this.userStaked * 1000000000,
         ).then((txid) => {
           this.$notify.info({
             key,

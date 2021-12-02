@@ -169,7 +169,6 @@ export default Vue.extend({
           (tierSearch: any) => (tierSearch.tier as string) == (tier as string)
         )
 
-      alert( (currentTier[0].minutesLock * 60) / 86400  );  
       this.boostAPY = currentTier[0].boost;
       this.boostText = currentTier[0].text;
       this.minutesLock = currentTier[0].minutesLock;
@@ -198,10 +197,6 @@ export default Vue.extend({
       const rewardPoolVault = current_pool.account.vault.toString()
       const lock_duration = this.minutesLock * 60
 
-
-      alert(this.toStake * 1000000);
-      alert(  (lock_duration) / 86400  );  
-
       const key = getUnixTs().toString()
       this.$notify.info({
         key,
@@ -222,7 +217,7 @@ export default Vue.extend({
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
         
-        this.toStake * 1000000,
+        this.toStake * 1000000000,
         lock_duration
         ).then((txid) => {
 
