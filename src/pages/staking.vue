@@ -232,6 +232,9 @@ export default Vue.extend({
     'token.initialized':{
       handler(newState: boolean) {
         this.getGlobalState();
+        if(this.$wallet?.connected){
+          this.getUserState();
+        }
       },
       deep: true
     },
@@ -243,10 +246,9 @@ export default Vue.extend({
     
     if(this.$accessor.token.initialized){
         this.getGlobalState();
-    }
-    
-    if(this.$wallet?.connected){
-      this.getUserState();
+        if(this.$wallet?.connected){
+          this.getUserState();
+        }
     }
     
     this.setTimer();

@@ -441,12 +441,13 @@ export async function stake (
   const [userAccount, bump1] = await PublicKey.findProgramAddress([
     new PublicKey(poolSigner).toBuffer(), wallet.publicKey.toBuffer()
   ], WaggleFarm.programId)
+  
   try{
-    const account = await WaggleFarm.account.farmPoolUserAccount.fetch(userAccount)
-    console.log(account)
+    await WaggleFarm.account.farmPoolUserAccount.fetch(userAccount)
   }
   catch
   {
+    console.log("You are the new user to stake")
     transaction.add( WaggleFarm.instruction.createUser(bump1, {
       accounts: {
         user: userAccount,
