@@ -1,7 +1,7 @@
 <template>
   <div class="staking container">
-    <BaseDetailModal :show="baseModalShow" :estimatedapy="estimatedAPY" @onCancel="() => (baseModalShow = false)" @onSelect="onBaseDetailSelect" />
-    <StakeModal :show="stakeModalShow" :crpbalance="crpbalance" :userStaked="userStaked" :estimatedapy="estimatedAPY" @onCancel="() => (stakeModalShow = false)" />
+    <BaseDetailModal :show="baseModalShow"  :estimatedapy="estimatedAPY" @onCancel="() => (baseModalShow = false)" @onSelect="onBaseDetailSelect" />
+    <StakeModal :show="stakeModalShow" :enddatemin="endDateOfLock" :crpbalance="crpbalance" :userStaked="userStaked" :estimatedapy="estimatedAPY" @onCancel="() => (stakeModalShow = false)" />
     
     <div class="card">
       <div class="card-body">
@@ -37,7 +37,7 @@
                 </Tooltip>
               </div>
               <div class="value">
-                {{ Math.round(estimatedAPY * 100) / 100 }} %
+                {{ Math.round(estimatedAPY * 2 * 100) / 100 }} %
                 <img
                   class="clickable-icon"
                   src="@/assets/icons/calculator.svg"
@@ -191,6 +191,7 @@ export default Vue.extend({
       estimatedAPY: 0 as number,
       lockDuration: 0 as number,
       crpbalance: 0 as any,
+      endDateOfLock : 0 as any,
 
       totalStaked: '0' as string,
       userStaked: 0 as number,
@@ -322,6 +323,7 @@ export default Vue.extend({
 
       const endDateOfLock = userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber();
       const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:mm:SS')
+      this.endDateOfLock = endDateOfLock;
       this.endOfLock = unlockDateString
       this.canUnstake = ! ((userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 > new Date().getTime())
 

@@ -20,10 +20,16 @@
         <div class="value-total">Total: <span>{{ this.userStaked }}</span></div>
       </Row>
       <Row>
-        <Col class="tier-group" span="6" v-for="data in lockData" :key="data.tier" @click="displayTiers(data.tier)">
-          <span :class="(data.tier === tierActive) ? 'tier-active' : 'tier-inactive'">{{
+        <Col class="tier-group" span="6" v-for="data in lockData" :key="data.tier">
+
+          <span v-if="( data.min >= enddatemin )" :class="(data.tier === tierActive) ? 'tier-active' : 'tier-inactive'" @click="displayTiers(data.tier)">{{
             data.time >= 12 ? data.time / 12 + 'Y' : data.time + 'M'
           }}</span>
+
+          <span  v-else :class="(data.tier === tierActive) ? 'tier-active' : 'tier-inactive'" style="cursor:not-allowed;">{{
+            data.time >= 12 ? data.time / 12 + 'Y' : data.time + 'M'
+          }}</span>
+
           {{ data.boost }}x
         </Col>
       </Row>
@@ -120,6 +126,7 @@ export default Vue.extend({
           tier: 1,
           time: 1,
           minutesLock: 43200,
+          min: 0,
           days: 30,
           boost: 1,
           apy: 11.1,
@@ -129,6 +136,7 @@ export default Vue.extend({
           tier: 2,
           time: 3,
           minutesLock: 129600,
+          min: 0,
           days: 90,
           boost: 1.1,
           apy: 12.21,
@@ -138,6 +146,7 @@ export default Vue.extend({
           tier: 3,
           time: 6,
           minutesLock: 259200,
+          min: 0,
           days: 180,
           boost: 1.3,
           apy: 14.43,
@@ -147,6 +156,7 @@ export default Vue.extend({
           tier: 4,
           time: 12,
           minutesLock: 525600,
+          min: 0,
           days: 365,
           boost: 2,
           apy: 22.19,
@@ -170,6 +180,9 @@ export default Vue.extend({
 
         this.lockData[index].minutesLock = item.duration / 60
         this.lockData[index].boost = item.extraPercentage / 100 + 1
+
+        var currentDate = moment();
+        this.lockData[index].min = moment(currentDate).add('days',this.lockData[index].days).unix()
       })
     })
   },
@@ -285,6 +298,10 @@ export default Vue.extend({
       default: 0
     },
     userStaked: {
+      type: Number,
+      default: 0
+    },
+    enddatemin:{
       type: Number,
       default: 0
     }
