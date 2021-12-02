@@ -517,7 +517,7 @@ export default class Pools extends Vue {
   timer: any = null
   timer_init: any = null
   loading: boolean = false
-  stakedOnly: boolean = true
+  stakedOnly: boolean = false
   searchButton = true
   searchName = ''
   totalCount = 110
@@ -1328,8 +1328,11 @@ section {
               }
 
               &.deposit-toggle {
-                .ant-switch-checked {
+                .ant-switch {
                   background-color: @color-disable !important;
+                }
+                .ant-switch-checked {
+                  background-color: #fff !important;
                 }
               }
             }
