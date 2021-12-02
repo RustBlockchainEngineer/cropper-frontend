@@ -148,7 +148,7 @@ const { BN } = anchor
 import moment from 'moment'
 Vue.prototype.moment = moment
 
-
+const YEAR2SECOND = 365 * 24 * 3600
 
 import {
   setAnchorProvider,
@@ -229,15 +229,26 @@ export default Vue.extend({
       },
       deep: true
     },
-
+    'token.initialized':{
+      handler(newState: boolean) {
+        this.getGlobalState();
+      },
+      deep: true
+    },
+    
   },
   mounted() {
     this.getTvl();
     setAnchorProvider(this.$web3, this.$wallet)
-    this.getGlobalState();
+    
+    if(this.$accessor.token.initialized){
+        this.getGlobalState();
+    }
+    
     if(this.$wallet?.connected){
       this.getUserState();
     }
+    
     this.setTimer();
   },
   methods: {
@@ -277,7 +288,7 @@ export default Vue.extend({
 
 
       const farm_state = await getFarmState();
-
+      
       const stakedAmount = new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)
 
       if(this.price.prices['CRP']){
@@ -289,8 +300,12 @@ export default Vue.extend({
 
       this.totalStaked = 'CRP ' + (Math.round( parseFloat(stakedAmount.fixed()) * 1000) / 1000).toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      this.estimatedAPY = Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()) * 365 * 24 * 3600 / Number((new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)).fixed());
-      this.estimatedAPY = Number((((1 + (this.estimatedAPY / 100)/ 365)) ** 365 - 1) * 100);
+      
+      // const apr = Number(farm_state.tokenPerSecond.muln(YEAR2SECOND).div(current_pool.account.amount).toString());
+      // this.estimatedAPY = Number((((1 + (apr / 100)/ 365)) ** 365 - 1) * 100);
+
+      const apr = Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()) * 365 * 24 * 3600 / Number((new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)).fixed());
+      this.estimatedAPY = Number((((1 + (apr / 100)/ 365)) ** 365 - 1) * 100);
     }, 
 
     async getUserState(){
