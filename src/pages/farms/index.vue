@@ -49,6 +49,7 @@
       :coin="lp"
       :farmInfo="farmInfo"
       :loading="staking"
+      text="You now need to stake your LP token to start farming"
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
