@@ -779,8 +779,7 @@ export default class Landing extends Vue {
     .audit-group {
       position: absolute;
       top: 37px;
-      left: 64px;
-      padding-right: 64px;
+      padding: 0 64px;
       width: 100%;
 
       @media @max-b-mobile {
