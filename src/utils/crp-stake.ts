@@ -19,7 +19,7 @@ const defaultAccounts = {
   systemProgram: SystemProgram.programId,
 }
 
-import waggle_farm_idl from '@/utils/waggle_farm.json'
+import waggle_farm_idl from '@/utils/cropper_staking.json'
 import { Account, Connection } from '@solana/web3.js';
 import { createSplAccount } from './crp-swap';
 import { createAssociatedTokenAccountIfNotExist2, sendTransaction } from './web3';

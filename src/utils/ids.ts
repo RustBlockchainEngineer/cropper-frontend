@@ -30,7 +30,8 @@ export const CRP_LP_PROGRAM_ID_V1 = DEVNET_MODE? '7ZZJNL4xD8db6yrT46SeMFZXcVr9ML
 //export const LIQUIDITY_POOL_PROGRAM_ID_V5 ="";
 
 
-export const STAKE_TIERS_PROGRAM_ID = DEVNET_MODE ? "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw" : "FBHjXGXUa65hSCzyfMhkcLzu2U3HByNqcWMuDUUHURLa"
+export const STAKE_TIERS_PROGRAM_ID = DEVNET_MODE ? "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw" : "HYzrD877vEcBgd6ySKPpa3pcMbqYEmwEF1GFQmvuswcC"
+//"FBHjXGXUa65hSCzyfMhkcLzu2U3HByNqcWMuDUUHURLa"
 
 export let FARM_VERSION = 2;//@Hongbo
 

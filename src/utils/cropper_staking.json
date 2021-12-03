@@ -1,6 +1,6 @@
 {
   "version": "0.0.0",
-  "name": "waggle_farm",
+  "name": "cropper_staking",
   "instructions": [
     {
       "name": "createState",
@@ -757,15 +757,15 @@
           },
           {
             "name": "rewardAmount",
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "extraReward",
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "rewardDebt",
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "lastStakeTime",
@@ -774,6 +774,18 @@
           {
             "name": "lockDuration",
             "type": "i64"
+          },
+          {
+            "name": "reserved1",
+            "type": "u128"
+          },
+          {
+            "name": "reserved2",
+            "type": "u128"
+          },
+          {
+            "name": "reserved3",
+            "type": "u128"
           }
         ]
       }
@@ -1037,6 +1049,6 @@
     }
   ],
   "metadata": {
-    "address": "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw"
+    "address": "HYzrD877vEcBgd6ySKPpa3pcMbqYEmwEF1GFQmvuswcC"
   }
 }

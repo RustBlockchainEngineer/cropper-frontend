@@ -286,7 +286,7 @@ export default Vue.extend({
 
 
       const farm_state = await getFarmState();
-      
+      console.log(farm_state.rewardVault.toString())
       const stakedAmount = new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)
 
       if(this.price.prices['CRP']){
