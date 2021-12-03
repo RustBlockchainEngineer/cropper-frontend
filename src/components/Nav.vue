@@ -5,7 +5,7 @@
     :theme="'light'"
     @click="changeRoute"
   >
-    <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()" :class="name.toLowerCase() === 'fertilizer' ? 'disable' : ''">
+    <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()" :class="name === banURL ? 'disable' : ''">
       <a v-if="extra" :href="url[name]" target="_blank">
         {{ name.replace('-', ' ') }}
       </a>
@@ -15,7 +15,7 @@
           <span> {{ name.replace('-', ' ') }} </span>
         </div>
       </div>
-      <div v-if="name.toLowerCase() === 'fertilizer'" class="soon">
+      <div v-if="name === banURL" class="soon">
         Soon
       </div>
     </MenuItem>
@@ -50,6 +50,8 @@ export default class Nav extends Vue {
     // info: false
   }
 
+  banURL = 'fertilizer'
+
   get isMobile() {
     return this.$accessor.isMobile
   }
@@ -66,7 +68,7 @@ export default class Nav extends Vue {
 
   changeRoute({ key }: { key: string }): void {
     const { from, to, ammId } = this.$route.query
-    if(key != "farms-hongbo") {
+    if(key != this.banURL) {
       if (['swap', 'liquidity'].includes(key) && (ammId || (from && to))) {
         // if (ammId) {
         //   this.$router.push({
@@ -94,7 +96,7 @@ export default class Nav extends Vue {
       this.$emit('onSelect')
     }
     else {
-      console.log("farms will be come soon");
+      console.log(this.banURL + 'will be soon!');
     }
   }
 }
