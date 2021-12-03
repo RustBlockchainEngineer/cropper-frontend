@@ -49,7 +49,7 @@ export interface ExtraRewardConfigs{
   extraPercentage: any
 }
 
-async function getFarmStateAddress(){
+export async function getFarmStateAddress(){
   const [stateSigner, stateBump] = await anchor.web3.PublicKey.findProgramAddress(
     [utf8.encode('state')],
     WaggleFarm.programId

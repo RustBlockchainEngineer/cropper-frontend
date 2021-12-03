@@ -163,8 +163,10 @@ import {
   changePoolAmountMultipler,
   changeTokenPerSecond,
   changePoolPoint,
-
+  
+  getFarmStateAddress,
   getFarmState,
+  
   getExtraRewardConfigs,
   getAllPools,
   getPoolUserAccount,
@@ -282,8 +284,10 @@ export default Vue.extend({
       if(!this.$accessor.token.initialized) return;
 
       const pools = await getAllPools()
+      console.log(pools)
       const current_pool = pools[0]
 
+      console.log("state address", (await getFarmStateAddress()).toString())
 
       const farm_state = await getFarmState();
       console.log(farm_state.rewardVault.toString())
