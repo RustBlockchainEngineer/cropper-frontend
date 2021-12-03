@@ -48,6 +48,7 @@
     "@solana/wallet-adapter-sollet": "^0.5.2",
     "@solana/wallet-adapter-solong": "^0.5.2",
     "@solana/wallet-adapter-torus": "^0.6.2",
+    "@solana/wallet-adapter-wallets": "^0.11.3",
     "@solana/web3.js": "^1.25.0",
     "ant-design-vue": "^1.7.3",
     "bignumber.js": "^9.0.1",

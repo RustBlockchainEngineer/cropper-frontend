@@ -103,8 +103,19 @@ import { SlopeWalletAdapter } from '@solana/wallet-adapter-slope'
 import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal'
 import { BloctoWalletAdapter } from '@solana/wallet-adapter-blocto'
 import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie'
+import {
+    // getLedgerWallet,
+    // getPhantomWallet,
+    // getSlopeWallet,
+    // getSolflareWallet,
+    getSolletExtensionWallet,
+    // getSolletWallet,
+    // getTorusWallet,
+} from '@solana/wallet-adapter-wallets';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 // import { TorusWalletAdapter } from '@solana/wallet-adapter-torus'
 const Vco = require('v-click-outside')
+const network = WalletAdapterNetwork.Devnet;
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
@@ -157,10 +168,10 @@ export default class Wallet extends Vue {
       }
     },
     'Sollet Extension': {
-      website: 'https://www.sollet.io',
+      website: '',
       chromeUrl: 'https://chrome.google.com/webstore/detail/sollet/fhmfendgdocmcbmfikdcogofphimnkno',
       getAdapter() {
-        return new SolletWalletAdapter({ provider: (window as any).sollet })
+                return getSolletExtensionWallet().adapter();
       }
     },
     Ledger: {
