@@ -33,6 +33,11 @@
               >
               <p class="powered-by bodyL weightB">Powered by Solana</p>
             </div>
+            <div class="read-more">
+              <div class="btn-container">
+                <Button class="btn-outline">Read More</Button>
+              </div>
+            </div>
             <div class="social-links">
               <a href="#"><img src="@/assets/social/medium-blue.svg" /></a>
               <a href="#"><img src="@/assets/social/discord-blue.svg" /></a>
@@ -170,7 +175,7 @@
           <Tabs defaultActiveKey="1" onChange="{callback}">
             <TabPane tab="For Farmers" key="1">
               <Row :gutter="20">
-                <Col :span="8">
+                <Col :xs="24" :sm="24" :md="8">
                   <p class="bodyL weightB">Prepare to harvest</p>
                   <div class="play-list">
                     <Button
@@ -199,14 +204,14 @@
                     >
                   </div>
                 </Col>
-                <Col :span="16">
+                <Col :xs="24" :sm="24" :md="16">
                   <div class="video-player"></div>
                 </Col>
               </Row>
             </TabPane>
             <TabPane tab="For SPL Builders" key="2">
               <Row :gutter="20">
-               <Col :span="8">
+               <Col :xs="24" :sm="24" :md="8">
                   <p class="bodyL weightB">Prepare to harvest</p>
                   <div class="play-list">
                     <Button
@@ -235,7 +240,7 @@
                     >
                   </div>
                 </Col>
-                <Col :span="16">
+                <Col :xs="24" :sm="24" :md="16">
                   <div class="video-player"></div>
                 </Col>
               </Row>
@@ -287,7 +292,7 @@
       <div class="industry-container">
         <div class="industry-group">
           <Row :gutter="[20, 20]">
-            <Col v-for="card in currentIndustry" :key="card.title" :span="currentIndustry.length >= 4 ? '6' : '8'">
+            <Col v-for="card in currentIndustry" :key="card.title" :xs="24" :sm="24" :md="currentIndustry.length >= 4 ? 6 : 8">
               <div class="industry-card">
                 <div class="industry-card-body">
                   <img :src="card.img" />
@@ -578,6 +583,11 @@ export default class Landing extends Vue {
         .btn-fill {
           font-size: 18px;
           line-height: 14px;
+          
+          @media @max-b-mobile {
+            font-size: 16px;
+            line-height: 18px;
+          }
         }
 
         .btn-fill {
@@ -628,15 +638,43 @@ export default class Landing extends Vue {
       .cropper-content {
         margin-top: 68px;
 
+        @media @max-b-mobile {
+          margin-top: 28px;
+        }
+
         .powered-by {
           margin-top: 18px;
           color: #d4d5f2;
         }
       }
 
+      .read-more {
+        display: none;
+
+        @media @max-b-mobile {
+          display: block;
+        }
+        
+        .btn-container {
+          border-radius: 8px;
+          width: 100%;
+          margin-top: 28px;
+          
+          .btn-outline {
+            border-radius: 8px;
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      }
+
       .social-links {
         margin-top: 58px;
         margin-bottom: 12px;
+        
+        @media @max-b-mobile {
+          display: none;
+        }
 
         a {
           margin-right: 38px;
@@ -650,6 +688,10 @@ export default class Landing extends Vue {
       .move-next-section {
         display: flex;
         margin: auto;
+
+        @media @max-b-mobile {
+          display: none;
+        }
       }
     }
   }
@@ -819,7 +861,7 @@ export default class Landing extends Vue {
 
       .feature-box {
         position: relative;
-        background: linear-gradient(136.82deg, rgba(85, 136, 136, 0.5) 10.14%, rgba(40, 12, 134, 0.15) 85.36%);
+        background: linear-gradient(136.82deg, rgba(34, 181, 182, 0.5) 10.14%, rgba(40, 12, 134, 0.15) 85.36%);
         border-radius: 42px;
         padding-left: 36px;
         padding-right: 36px;
@@ -891,6 +933,7 @@ export default class Landing extends Vue {
         width: 100%;
 
         @media @max-b-mobile {
+          top: 40px;
           position: relative;
         }
       }
@@ -946,6 +989,10 @@ export default class Landing extends Vue {
       max-width: 952px;
       margin: auto;
 
+      @media @max-b-mobile {
+        padding: 0 20px;
+      }
+
       .industry-group {
         padding: 90px 0;
 
@@ -958,6 +1005,10 @@ export default class Landing extends Vue {
           height: 130px;
           padding: 2px;
           border-radius: 8px;
+
+          @media @max-b-mobile {
+            height: 80px;
+          }
 
           .industry-card-body {
             width: 100%;
@@ -991,14 +1042,25 @@ export default class Landing extends Vue {
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     padding: 0 calc(64px + 4.166666666666667%);
     margin: 0 0 48px 0;
+
+    @media @max-b-mobile {
+      padding: 0 20px;
+      margin-bottom: 20px;
+    }
+
     .ant-tabs-nav {
       .ant-tabs-tab {
-        font-weight: bold;
+        font-weight: 600;
         font-size: 25px;
         line-height: 37px;
         letter-spacing: 0.25px;
         padding-bottom: 20px;
         margin-right: 65px;
+
+        @media @max-b-mobile {
+          font-size: 20px;
+          line-height: 30px;
+        }
 
         &:last-child {
           margin-right: 0;
@@ -1022,6 +1084,10 @@ export default class Landing extends Vue {
 
   .ant-tabs-top-content > .ant-tabs-tabpane {
     padding: 0 calc(64px + 4.166666666666667%);
+
+    @media @max-b-mobile {
+      padding: 0 20px;
+    }
 
     .play-list {
       padding-top: 28px;
@@ -1056,6 +1122,11 @@ export default class Landing extends Vue {
       height: 524px;
       border-radius: 42px;
       background: @color-bg;
+
+      @media @max-b-mobile {
+        margin-top: 20px;
+        height: 200px;
+      }
     }
   }
 }
