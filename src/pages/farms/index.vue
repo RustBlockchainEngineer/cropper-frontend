@@ -2695,8 +2695,11 @@ export default Vue.extend({
               }
 
               &.deposit-toggle {
-                .ant-switch-checked {
+                .ant-switch {
                   background-color: @color-disable !important;
+                }
+                .ant-switch-checked {
+                  background-color: #fff !important;
                 }
               }
             }

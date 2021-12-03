@@ -35,7 +35,7 @@
             </a>
           </span>
         </div>
-        <div class="design-farm">
+        <div class="design-pool">
           <div class="page-head fs-container">
             <span class="title">Design your own pool</span>
           </div>
@@ -1209,7 +1209,8 @@ main {
     }
   }
 
-  .design-farm {
+  .design-pool {
+    margin-top: 20px;
     border: 4px solid #16164a;
     border-radius: 14px;
     padding: 40px 60px;
