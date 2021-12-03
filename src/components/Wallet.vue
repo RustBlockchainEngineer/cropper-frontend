@@ -94,15 +94,15 @@ import LocalStorage from '@/utils/local-storage'
 import type { WalletAdapter } from '@solana/wallet-adapter-base'
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom'
 import { SolongWalletAdapter } from '@solana/wallet-adapter-solong'
-import { MathWalletWalletAdapter } from '@solana/wallet-adapter-mathwallet'
+//import { MathWalletWalletAdapter } from '@solana/wallet-adapter-mathwallet'
 import { SolletWalletAdapter } from '@solana/wallet-adapter-sollet'
 import { LedgerWalletAdapter, getDerivationPath } from '@solana/wallet-adapter-ledger'
 import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare'
 import { Coin98WalletAdapter } from '@solana/wallet-adapter-coin98'
 import { SlopeWalletAdapter } from '@solana/wallet-adapter-slope'
 import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal'
-import { BloctoWalletAdapter } from '@solana/wallet-adapter-blocto'
-import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie'
+//import { BloctoWalletAdapter } from '@solana/wallet-adapter-blocto'
+//import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie'
 import {
     // getLedgerWallet,
     // getPhantomWallet,
@@ -180,13 +180,13 @@ export default class Wallet extends Vue {
         return new LedgerWalletAdapter({ derivationPath: getDerivationPath() })
       }
     },
-    MathWallet: {
+    /* MathWallet: {
       website: 'https://mathwallet.org',
       chromeUrl: 'https://chrome.google.com/webstore/detail/math-wallet/afbcbjpbpfadlkmhmclhkeeodmamcflc',
       getAdapter() {
         return new MathWalletWalletAdapter()
       }
-    },
+    }, */
     Solong: {
       website: 'https://solongwallet.com',
       chromeUrl: 'https://chrome.google.com/webstore/detail/solong/memijejgibaodndkimcclfapfladdchj',
@@ -201,12 +201,12 @@ export default class Wallet extends Vue {
         return new Coin98WalletAdapter()
       }
     },
-    Blocto: {
+    /* Blocto: {
       website: 'https://blocto.portto.io',
       getAdapter() {
         return new BloctoWalletAdapter()
       }
-    },
+    }, */
     Safepal: {
       website: 'https://safepal.io',
       getAdapter() {
@@ -222,12 +222,14 @@ export default class Wallet extends Vue {
         return new SlopeWalletAdapter()
       }
     },
+    /*
     Bitpie: {
       website: 'https://bitpie.com',
       getAdapter() {
         return new BitpieWalletAdapter()
       }
     },
+    */
     // Torus: {
     //   website: 'https://tor.us',
     //   getAdapter() {
