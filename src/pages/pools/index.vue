@@ -1241,6 +1241,11 @@ section {
           .my-info {
             font-size: 15px;
             line-height: 18px;
+
+            @media @max-b-mobile {
+              font-size: 12px;
+              line-height: 15px;
+            }
           }
 
           .reload-btn {
@@ -1254,6 +1259,10 @@ section {
             align-items: center;
             justify-content: center;
             cursor: pointer;
+
+            @media @max-b-mobile {
+              margin-left: 5px;
+            }
 
             img {
               width: 18px;

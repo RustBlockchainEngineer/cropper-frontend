@@ -2484,6 +2484,27 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
+
+// global stylesheet
+
+.info-icon {
+  margin: -10px 0 0 10px;
+  display: flex;
+  align-items: center;
+
+  @media @max-b-mobile {
+    margin-left: 5px;
+  }
+}
+
+.planet-img-left {
+  position: absolute;
+  left: 0;
+  top: 35%;
+}
+
+// class stylesheet
+
 .farm.container {
   max-width: 1350px;
   width: 100%;
@@ -2608,6 +2629,11 @@ export default Vue.extend({
           .my-info {
             font-size: 15px;
             line-height: 18px;
+
+            @media @max-b-mobile {
+              font-size: 12px;
+              line-height: 15px;
+            }
           }
 
           .reload-btn {
@@ -2621,6 +2647,10 @@ export default Vue.extend({
             align-items: center;
             justify-content: center;
             cursor: pointer;
+
+            @media @max-b-mobile {
+              margin-left: 5px;
+            }
 
             img {
               width: 18px;
@@ -3281,30 +3311,5 @@ export default Vue.extend({
   .anticon-close {
     color: #fff;
   }
-}
-
-// global stylesheet
-
-.info-icon {
-  margin: -10px 0 0 10px;
-  display: flex;
-  align-items: center;
-
-  @media @max-b-mobile {
-    margin-left: 5px;
-  }
-}
-
-.planet-img-left {
-  position: absolute;
-  left: 0;
-  top: 35%;
-}
-
-main {
-  background-color: @color-bg;
-  background-image: unset;
-  background-size: cover;
-  background-position: center bottom;
 }
 </style>
