@@ -262,7 +262,9 @@ export default Vue.extend({
         responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
         
         Object.keys(responseData).forEach(function(key) {
-          tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+          if(((responseData as any)[key as any].tvl * 1) < 2000000){
+            tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+          }
         });
       } catch {
         // dummy data
