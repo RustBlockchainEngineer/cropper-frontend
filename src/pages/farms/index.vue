@@ -114,7 +114,7 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon">
+                    <div class="info-icon labelized">
                       <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
                   </Tooltip>
@@ -222,7 +222,7 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon">
+                    <div class="info-icon labelized">
                       <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
                   </Tooltip>
@@ -2707,21 +2707,26 @@ export default Vue.extend({
               justify-content: space-evenly;
 
               .label {
+                opacity: 0.5;
                 font-size: 16px;
-                color: rgba(255, 255, 255, 0.5);
+                color: #fff;
                 cursor: pointer;
                 position: relative;
 
                 .info-icon {
                   margin: 0;
                   position: absolute;
-                  top: 0;
+                  top: -5px;
                   right: -20px;
+
+                  &.labelized {
+                    left: -20px;
+                  }
                 }
 
                 &.active-label {
                   font-weight: 700;
-                  color: #fff;
+                  opacity: 1;
                 }
               }
 
