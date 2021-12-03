@@ -63,8 +63,7 @@
         <div class="info-guide">
           <img src="@/assets/icons/info-icon.svg" />
           <em>
-            You will have to <b>validate 2 transactions.</b> <br/>
-            If the pop up for the second transaction does not appear, it may have popped up behind your browser. You can check this by minimizing your browser.
+            You will have to <b>validate a second transaction</b> to stake your LP in the farm.
           </em>
         </div>
 
@@ -144,6 +143,10 @@ export default Vue.extend({
     labelizedPermission: {
       type: Boolean,
       default: false
+    },
+    text: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -182,10 +185,7 @@ export default Vue.extend({
             })
         },
     },
-  
 
-  
-    
 
   methods: {
     gt,

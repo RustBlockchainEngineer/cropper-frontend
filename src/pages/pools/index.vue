@@ -72,7 +72,7 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon">
+                    <div class="info-icon labelized">
                       <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
                   </Tooltip>
@@ -139,7 +139,7 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon">
+                    <div class="info-icon labelized">
                       <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
                   </Tooltip>
@@ -1241,6 +1241,11 @@ section {
           .my-info {
             font-size: 15px;
             line-height: 18px;
+
+            @media @max-b-mobile {
+              font-size: 12px;
+              line-height: 15px;
+            }
           }
 
           .reload-btn {
@@ -1254,6 +1259,10 @@ section {
             align-items: center;
             justify-content: center;
             cursor: pointer;
+
+            @media @max-b-mobile {
+              margin-left: 5px;
+            }
 
             img {
               width: 18px;
@@ -1309,8 +1318,9 @@ section {
               justify-content: space-evenly;
 
               .label {
+                opacity: 0.5;
                 font-size: 16px;
-                color: rgba(255, 255, 255, 0.5);
+                color: #fff;
                 cursor: pointer;
                 position: relative;
 
@@ -1319,11 +1329,15 @@ section {
                   position: absolute;
                   top: -5px;
                   right: -20px;
+
+                  &.labelized {
+                    left: -20px;
+                  }
                 }
 
                 &.active-label {
                   font-weight: 700;
-                  color: #fff;
+                  opacity: 1;
                 }
               }
 

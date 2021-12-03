@@ -5,7 +5,7 @@
     :theme="'light'"
     @click="changeRoute"
   >
-    <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()">
+    <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()" :class="name === banURL ? 'disable' : ''">
       <a v-if="extra" :href="url[name]" target="_blank">
         {{ name.replace('-', ' ') }}
       </a>
@@ -14,6 +14,9 @@
           <div class="menu-icon" :class="name.replace('-', ' ')"></div>
           <span> {{ name.replace('-', ' ') }} </span>
         </div>
+      </div>
+      <div v-if="name === banURL" class="soon">
+        Soon
       </div>
     </MenuItem>
   </Menu>
@@ -47,6 +50,8 @@ export default class Nav extends Vue {
     // info: false
   }
 
+  banURL = 'fertilizer'
+
   get isMobile() {
     return this.$accessor.isMobile
   }
@@ -63,7 +68,7 @@ export default class Nav extends Vue {
 
   changeRoute({ key }: { key: string }): void {
     const { from, to, ammId } = this.$route.query
-    if(key != "farms-hongbo") {
+    if(key != this.banURL) {
       if (['swap', 'liquidity'].includes(key) && (ammId || (from && to))) {
         // if (ammId) {
         //   this.$router.push({
@@ -91,14 +96,13 @@ export default class Nav extends Vue {
       this.$emit('onSelect')
     }
     else {
-      console.log("farms will be come soon");
+      console.log(this.banURL + 'will be soon!');
     }
   }
 }
 </script>
 
 <style lang="less">
-@import '../styles/variables';
 
 .menu-icon-group {
   display: inline-flex;
@@ -117,7 +121,38 @@ export default class Nav extends Vue {
   margin-right: 10px;
 }
 
-.ant-menu-item{
+.ant-menu-item {
+  .soon {
+    display: none;
+    width: fit-content;
+    margin: auto;
+    padding: 5px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 17px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  &.disable {
+    &:hover, &:active {
+      color: unset !important;
+    }
+
+    &:hover .menu-icon-group{
+      opacity: 0.5;
+    }
+
+    &:hover .soon {
+      display: block;
+    }
+
+    @media @max-b-mobile {
+      display: none;
+    }
+  }
+
   .pools {
     border: 2px solid @color-pools;
   }
@@ -163,7 +198,6 @@ export default class Nav extends Vue {
   &.ant-menu-item-selected .stakingTest {
     background: #480469;
   }
-
 }
 
 .ant-menu {

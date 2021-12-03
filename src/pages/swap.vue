@@ -10,6 +10,7 @@
             :class="this.showInformations ? 'active' : ''"
             @click="
               () => {
+                if (this.showSlippage) this.showSlippage = false
                 this.showInformations = !this.showInformations
               }
             "
@@ -132,6 +133,7 @@
             :class="this.showSlippage ? 'active' : ''"
             @click="
               () => {
+                if (this.showInformations) this.showInformations = false
                 this.showSlippage = !this.showSlippage
               }
             "
@@ -2028,6 +2030,10 @@ export default Vue.extend({
 
           &:last-child {
             margin-right: 30px;
+
+            @media @max-b-mobile {
+              margin-right: 5px;
+            }
           }
 
           .input-search {
@@ -2166,6 +2172,11 @@ export default Vue.extend({
       .my-info {
         font-size: 15px;
         line-height: 18px;
+
+        @media @max-b-mobile {
+          font-size: 12px;
+          line-height: 15px;
+        }
       }
 
       .reload-btn {
@@ -2179,6 +2190,10 @@ export default Vue.extend({
         align-items: center;
         justify-content: center;
         cursor: pointer;
+
+        @media @max-b-mobile {
+          margin-left: 5px;
+        }
 
         .load-icon {
           width: 18px;

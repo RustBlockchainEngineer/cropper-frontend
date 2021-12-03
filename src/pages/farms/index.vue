@@ -49,6 +49,7 @@
       :coin="lp"
       :farmInfo="farmInfo"
       :loading="staking"
+      text="You now need to stake your LP token to start farming"
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
@@ -113,7 +114,7 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon">
+                    <div class="info-icon labelized">
                       <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
                   </Tooltip>
@@ -221,7 +222,7 @@
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon">
+                    <div class="info-icon labelized">
                       <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
                   </Tooltip>
@@ -489,7 +490,7 @@
                   <Tooltip
                     placement="bottomLeft"
                     v-if="
-                      !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) && farm.userInfo.depositFormat > 0
+                      !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) && farm.userInfo.depositBalance.format() > 0
                     "
                   >
                     <template slot="title">
@@ -2484,6 +2485,27 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
+
+// global stylesheet
+
+.info-icon {
+  margin: -10px 0 0 10px;
+  display: flex;
+  align-items: center;
+
+  @media @max-b-mobile {
+    margin-left: 5px;
+  }
+}
+
+.planet-img-left {
+  position: absolute;
+  left: 0;
+  top: 35%;
+}
+
+// class stylesheet
+
 .farm.container {
   max-width: 1350px;
   width: 100%;
@@ -2608,6 +2630,11 @@ export default Vue.extend({
           .my-info {
             font-size: 15px;
             line-height: 18px;
+
+            @media @max-b-mobile {
+              font-size: 12px;
+              line-height: 15px;
+            }
           }
 
           .reload-btn {
@@ -2621,6 +2648,10 @@ export default Vue.extend({
             align-items: center;
             justify-content: center;
             cursor: pointer;
+
+            @media @max-b-mobile {
+              margin-left: 5px;
+            }
 
             img {
               width: 18px;
@@ -2676,21 +2707,26 @@ export default Vue.extend({
               justify-content: space-evenly;
 
               .label {
+                opacity: 0.5;
                 font-size: 16px;
-                color: rgba(255, 255, 255, 0.5);
+                color: #fff;
                 cursor: pointer;
                 position: relative;
 
                 .info-icon {
                   margin: 0;
                   position: absolute;
-                  top: 0;
+                  top: -5px;
                   right: -20px;
+
+                  &.labelized {
+                    left: -20px;
+                  }
                 }
 
                 &.active-label {
                   font-weight: 700;
-                  color: #fff;
+                  opacity: 1;
                 }
               }
 
@@ -3281,30 +3317,5 @@ export default Vue.extend({
   .anticon-close {
     color: #fff;
   }
-}
-
-// global stylesheet
-
-.info-icon {
-  margin: -10px 0 0 10px;
-  display: flex;
-  align-items: center;
-
-  @media @max-b-mobile {
-    margin-left: 5px;
-  }
-}
-
-.planet-img-left {
-  position: absolute;
-  left: 0;
-  top: 35%;
-}
-
-main {
-  background-color: @color-bg;
-  background-image: unset;
-  background-size: cover;
-  background-position: center bottom;
 }
 </style>
