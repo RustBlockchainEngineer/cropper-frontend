@@ -250,8 +250,34 @@
       </div>
     </section>
 
-    <section class="cropper-blog">
+    <section class="cropper-feed">
       <h2 class="weightB text-center">@cropper.finance</h2>
+      <div class="feed-container">
+        <Row>
+          <Col :span="22" :offset="1">
+            <Col :span="8">
+              <div class="feed-twitter">
+                <div class="feed-logo">
+                  <img src="@/assets/social/twitter-white.svg" />
+                </div>
+                <div class="feed-title weightS bodyM">
+                  🖼 The wCAPS-USDC farm is now open!
+                </div>
+                <br />
+                <div class="feed-content bodyM">
+                  @Ternoa_
+                  's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
+                  <br /><br />
+                  May your harvests be bountiful and your APRs high Downwards arrow
+                  https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
+                </div>
+              </div>
+              <div class="feed-video">
+              </div>
+            </Col>
+          </Col>
+        </Row>
+      </div>
     </section>
 
     <section class="surrounded-by">
@@ -939,8 +965,37 @@ export default class Landing extends Vue {
     }
   }
 
-  .cropper-blog {
-    padding: 98px 0;
+  .cropper-feed {
+    padding: 98px 64px;
+
+    .feed-container {
+      margin-top: 50px;
+
+      .feed-twitter {
+        background: linear-gradient(115.9deg, #22B5B6 -40.58%, #280C86 95.48%);
+        border-radius: 22px;
+        padding: 22px;
+        height: 345px;
+
+        .feed-content {
+          word-break: break-all;
+        }
+      }
+
+      .feed-video {
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), linear-gradient(278.99deg, rgba(34, 181, 182, 0.6) 0%, rgba(40, 12, 134, 0.6) 100%);
+        border: 3px solid #7A88B6;
+        border-radius: 22px;
+        height: 380px;
+      }
+
+      .feed-medium {
+        background: linear-gradient(115.9deg, #22B5B6 -40.58%, #280C86 95.48%);
+        border-radius: 22px;
+        padding: 22px;
+        height: 180px;
+      }
+    }
   }
 
   .surrounded-by {
