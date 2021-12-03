@@ -218,7 +218,8 @@ export default Vue.extend({
     'wallet.tokenAccounts': {
       handler(newTokenAccounts: any) {
         if(this.$wallet?.connected){
-            this.getUserState();
+          this.getUserState();
+          this.getGlobalState();
         }
       },
       deep: true
@@ -284,13 +285,10 @@ export default Vue.extend({
       if(!this.$accessor.token.initialized) return;
 
       const pools = await getAllPools()
-      console.log(pools)
       const current_pool = pools[0]
 
-      console.log("state address", (await getFarmStateAddress()).toString())
-
       const farm_state = await getFarmState();
-      console.log(farm_state.rewardVault.toString())
+      
       const stakedAmount = new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)
 
       if(this.price.prices['CRP']){
@@ -331,6 +329,7 @@ export default Vue.extend({
       const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:mm:SS')
       this.endDateOfLock = endDateOfLock;
       this.endOfLock = unlockDateString
+      console.log(userAccount.lockDuration.toString())
       this.canUnstake = ! ((userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 > new Date().getTime())
 
       //@ts-ignore
