@@ -329,7 +329,6 @@ export default Vue.extend({
       const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:mm:SS')
       this.endDateOfLock = endDateOfLock;
       this.endOfLock = unlockDateString
-      console.log(userAccount.lockDuration.toString())
       this.canUnstake = ! ((userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 > new Date().getTime())
 
       //@ts-ignore
