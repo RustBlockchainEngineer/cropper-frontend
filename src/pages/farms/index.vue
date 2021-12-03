@@ -489,7 +489,7 @@
                   <Tooltip
                     placement="bottomLeft"
                     v-if="
-                      !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) && farm.userInfo.depositFormat > 0
+                      !(farm.farmInfo.poolInfo.start_timestamp > currentTimestamp) && farm.userInfo.depositBalance.format() > 0
                     "
                   >
                     <template slot="title">
