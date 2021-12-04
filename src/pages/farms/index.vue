@@ -2064,12 +2064,11 @@ export default Vue.extend({
           txStatus = this.$accessor.transaction.history[txid].status
           let totalDelayTime = 0
             console.log('h0');
-          while (txStatus === 'Pending' && totalDelayTime < 15000) {
-            let delayTime = 500
+          while (txStatus === 'Pending' && totalDelayTime < 45000) {
+            let delayTime = 200
             await this.delay(delayTime)
             totalDelayTime += delayTime
             txStatus = await this.$accessor.transaction.history[txid].status
-            totalDelayTime += delayTime
             console.log('h1', totalDelayTime);
           }
 
@@ -2089,7 +2088,8 @@ export default Vue.extend({
             console.log('h12');
           this.stakeModalOpening = false
             console.log('h13');
-         // this.staking = false
+          this.staking = false
+            await this.delay(200)
             console.log('h14');
 
 
