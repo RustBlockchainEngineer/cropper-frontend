@@ -90,7 +90,7 @@
               suppling
             "
             :loading="suppling"
-             @click="$emit('onOk',fromCoinAmount,toCoinAmount,fixedCoin)"
+             @click="$emit('onOk',fromCoinAmount,toCoinAmount,fixedCoin);"
           >
             <template v-if="!farmInfo.lp.coin || !farmInfo.lp.pc"> Select a token </template>
             <template v-else-if="!farmInfo.lp.mintAddress || !liquidity.initialized"> Invalid pair </template>
@@ -147,6 +147,10 @@ export default Vue.extend({
     text: {
       type: String,
       default: ''
+    },
+    suppling: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -158,7 +162,6 @@ export default Vue.extend({
         userCheckUnofficial: false,
         userCheckUnofficialMint: undefined as string | undefined,
         userCheckUnofficialShow: false,
-        suppling: false,
     }
   },
     computed: {

@@ -12,6 +12,7 @@
       title="Supply & Stake LP"
       :loading="staking"
       :farmInfo="farmInfo"
+      :suppling="suppling"
       :labelizedPermission="labelizedPermission"
       @onOk="supplyAndStake"
       @onCancel="cancelStake"
@@ -1060,6 +1061,7 @@ export default Vue.extend({
       adding: false,
       paying: false,
       TVL: 0,
+      suppling: false,
       unstakeModalOpening: false,
       unstaking: false,
       poolType: true,
@@ -2056,7 +2058,8 @@ export default Vue.extend({
                 )
               ])
           })
-            console.log('h00');
+
+          this.suppling = true;
 
           const description = `Add liquidity for ${fromCoinAmount} ${this.farmInfo.lp.coin?.symbol} and ${toCoinAmount} ${this.farmInfo.lp.pc?.symbol}`
           this.$accessor.transaction.sub({ txid, description })
@@ -2099,7 +2102,7 @@ export default Vue.extend({
           })
         })
         .finally(async () => {
-
+          this.suppling = false;
         })
     },
     async stakeLP(
