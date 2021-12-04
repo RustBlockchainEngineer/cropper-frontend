@@ -2064,14 +2064,13 @@ export default Vue.extend({
           txStatus = this.$accessor.transaction.history[txid].status
           let totalDelayTime = 0
             console.log('h0');
-          while (txStatus === 'Pending' && totalDelayTime < 10000) {
+          while (txStatus === 'Pending' && totalDelayTime < 15000) {
             let delayTime = 500
             await this.delay(delayTime)
             totalDelayTime += delayTime
-            txStatus = this.$accessor.transaction.history[txid].status
-            await this.delay(delayTime)
+            txStatus = await this.$accessor.transaction.history[txid].status
             totalDelayTime += delayTime
-            console.log('h1');
+            console.log('h1', totalDelayTime);
           }
 
             console.log('h9');
@@ -2083,10 +2082,10 @@ export default Vue.extend({
 
             console.log('h10');
           //update wallet token account infos
-          this.$accessor.wallet.getTokenAccounts()
+          
           let delayForUpdate = 500
             console.log('h11');
-          await this.delay(delayForUpdate)
+          await this.$accessor.wallet.getTokenAccounts()
             console.log('h12');
           this.stakeModalOpening = false
             console.log('h13');
