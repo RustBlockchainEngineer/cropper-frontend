@@ -59,21 +59,15 @@
 
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-apr.svg" />
-              <h4 class="weightB">
-                Best Farms APR%
-              </h4>
+              <h4 class="weightB">Best Farms APR%</h4>
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-community.svg" />
-              <h4 class="weightB">
-                Community driven
-              </h4>
+              <h4 class="weightB">Community driven</h4>
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-swap.svg" />
-              <h4 class="weightB">
-                Best Price Swaps
-              </h4>
+              <h4 class="weightB">Best Price Swaps</h4>
             </div>
           </div>
         </Col>
@@ -211,7 +205,7 @@
             </TabPane>
             <TabPane tab="For SPL Builders" key="2">
               <Row :gutter="20">
-               <Col :xs="24" :sm="24" :md="8">
+                <Col :xs="24" :sm="24" :md="8">
                   <p class="bodyL weightB">Prepare to harvest</p>
                   <div class="play-list">
                     <Button
@@ -252,29 +246,132 @@
 
     <section class="cropper-feed">
       <h2 class="weightB text-center">@cropper.finance</h2>
-      <div class="feed-container">
-        <Row>
+      <div class="feed-container desktop">
+        <Row :gutter="20">
           <Col :span="22" :offset="1">
             <Col :span="8">
               <div class="feed-twitter">
                 <div class="feed-logo">
                   <img src="@/assets/social/twitter-white.svg" />
                 </div>
-                <div class="feed-title weightS bodyM">
-                  🖼 The wCAPS-USDC farm is now open!
-                </div>
+                <div class="feed-title weightS bodyM">🖼 The wCAPS-USDC farm is now open!</div>
                 <br />
                 <div class="feed-content bodyM">
-                  @Ternoa_
-                  's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
+                  @Ternoa_ 's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
                   <br /><br />
                   May your harvests be bountiful and your APRs high Downwards arrow
                   https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
                 </div>
               </div>
-              <div class="feed-video">
+              <div class="feed-video" style="margin-top: 20px"></div>
+            </Col>
+            <Col :span="8">
+              <div class="feed-medium">
+                <div class="feed-logo">
+                  <img src="@/assets/social/medium-white.svg" />
+                </div>
+                <div class="feed-title">
+                  <h4 class="weightB">Weekly Update #5</h4>
+                </div>
+                <br />
+                <div class="feed-content bodyM">3 min read</div>
+              </div>
+
+              <div class="feed-medium" style="margin-top: 20px">
+                <div class="feed-logo">
+                  <img src="@/assets/social/medium-white.svg" />
+                </div>
+                <div class="feed-title">
+                  <h4 class="weightB">Weekly Update #5</h4>
+                </div>
+                <br />
+                <div class="feed-content bodyM">3 min read</div>
+              </div>
+
+              <div class="feed-twitter" style="margin-top: 20px">
+                <div class="feed-logo">
+                  <img src="@/assets/social/twitter-white.svg" />
+                </div>
+                <div class="feed-title weightS bodyM">🖼 The wCAPS-USDC farm is now open!</div>
+                <br />
+                <div class="feed-content bodyM">
+                  @Ternoa_ 's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
+                  <br /><br />
+                  May your harvests be bountiful and your APRs high Downwards arrow
+                  https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
+                </div>
               </div>
             </Col>
+            <Col :span="8">
+              <div class="feed-medium">
+                <div class="feed-logo">
+                  <img src="@/assets/social/medium-white.svg" />
+                </div>
+                <div class="feed-title">
+                  <h4 class="weightB">Weekly Update #5</h4>
+                </div>
+                <br />
+                <div class="feed-content bodyM">3 min read</div>
+              </div>
+
+              <div class="feed-medium" style="margin-top: 20px">
+                <div class="feed-logo">
+                  <img src="@/assets/social/medium-white.svg" />
+                </div>
+                <div class="feed-title">
+                  <h4 class="weightB">Weekly Update #5</h4>
+                </div>
+                <br />
+                <div class="feed-content bodyM">3 min read</div>
+              </div>
+
+              <div class="feed-twitter" style="margin-top: 20px">
+                <div class="feed-logo">
+                  <img src="@/assets/social/twitter-white.svg" />
+                </div>
+                <div class="feed-title weightS bodyM">🖼 The wCAPS-USDC farm is now open!</div>
+                <br />
+                <div class="feed-content bodyM">
+                  @Ternoa_ 's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
+                  <br /><br />
+                  May your harvests be bountiful and your APRs high Downwards arrow
+                  https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
+                </div>
+              </div>
+            </Col>
+          </Col>
+        </Row>
+      </div>
+
+      <div class="feed-container mobile">
+        <Row>
+          <Col :span="24">
+            <div class="feed-medium">
+              <div class="feed-logo">
+                <img src="@/assets/social/medium-white.svg" />
+              </div>
+              <div class="feed-title">
+                <h4 class="weightB">Weekly Update #5</h4>
+              </div>
+              <br />
+              <div class="feed-content bodyM">3 min read</div>
+            </div>
+
+            <div class="feed-video" style="margin-top: 20px"></div>
+
+            <div class="feed-twitter" style="margin-top: 20px">
+              <div class="feed-logo">
+                <img src="@/assets/social/twitter-white.svg" />
+              </div>
+              <div class="feed-title weightS bodyM">🖼 The wCAPS-USDC farm is now open!</div>
+              <br />
+              <div class="feed-content bodyM">
+                @Ternoa_ 's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
+                <br /><br />
+                May your harvests be bountiful and your APRs high Downwards arrow
+                https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
+              </div>
+            </div>
           </Col>
         </Row>
       </div>
@@ -318,7 +415,13 @@
       <div class="industry-container">
         <div class="industry-group">
           <Row :gutter="[20, 20]">
-            <Col v-for="card in currentIndustry" :key="card.title" :xs="24" :sm="24" :md="currentIndustry.length >= 4 ? 6 : 8">
+            <Col
+              v-for="card in currentIndustry"
+              :key="card.title"
+              :xs="24"
+              :sm="24"
+              :md="currentIndustry.length >= 4 ? 6 : 8"
+            >
               <div class="industry-card">
                 <div class="industry-card-body">
                   <img :src="card.img" />
@@ -609,7 +712,7 @@ export default class Landing extends Vue {
         .btn-fill {
           font-size: 18px;
           line-height: 14px;
-          
+
           @media @max-b-mobile {
             font-size: 16px;
             line-height: 18px;
@@ -680,12 +783,12 @@ export default class Landing extends Vue {
         @media @max-b-mobile {
           display: block;
         }
-        
+
         .btn-container {
           border-radius: 8px;
           width: 100%;
           margin-top: 28px;
-          
+
           .btn-outline {
             border-radius: 8px;
             width: 100%;
@@ -697,7 +800,7 @@ export default class Landing extends Vue {
       .social-links {
         margin-top: 58px;
         margin-bottom: 12px;
-        
+
         @media @max-b-mobile {
           display: none;
         }
@@ -728,7 +831,7 @@ export default class Landing extends Vue {
     @media @max-b-mobile {
       padding: 30px 20px 0 20px;
     }
-    
+
     .intro-box-group {
       position: relative;
       margin-top: 48px;
@@ -898,7 +1001,8 @@ export default class Landing extends Vue {
           height: 285px;
           margin-bottom: 34px !important;
 
-          &:nth-child(3), &:nth-child(4) {
+          &:nth-child(3),
+          &:nth-child(4) {
             margin-bottom: 0 !important ;
           }
         }
@@ -968,14 +1072,32 @@ export default class Landing extends Vue {
   .cropper-feed {
     padding: 98px 64px;
 
+    @media @max-b-mobile {
+      padding: 100px 32px 48px 32px;
+    }
+
     .feed-container {
       margin-top: 50px;
 
+      &.desktop {
+        @media @max-b-mobile {
+          display: none;
+        }
+      }
+
+      &.mobile {
+        display: none;
+        @media @max-b-mobile {
+          display: block;
+        }
+      }
+
       .feed-twitter {
-        background: linear-gradient(115.9deg, #22B5B6 -40.58%, #280C86 95.48%);
+        background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
         padding: 22px;
         height: 345px;
+        overflow: hidden;
 
         .feed-content {
           word-break: break-all;
@@ -983,17 +1105,26 @@ export default class Landing extends Vue {
       }
 
       .feed-video {
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), linear-gradient(278.99deg, rgba(34, 181, 182, 0.6) 0%, rgba(40, 12, 134, 0.6) 100%);
-        border: 3px solid #7A88B6;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          linear-gradient(278.99deg, rgba(34, 181, 182, 0.6) 0%, rgba(40, 12, 134, 0.6) 100%);
+        border: 3px solid #7a88b6;
         border-radius: 22px;
         height: 380px;
+
+        @media @max-b-mobile {
+          height: 208px;
+        }
       }
 
       .feed-medium {
-        background: linear-gradient(115.9deg, #22B5B6 -40.58%, #280C86 95.48%);
+        background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
         padding: 22px;
         height: 180px;
+
+        @media @max-b-mobile {
+          height: 124px;
+        }
       }
     }
   }
@@ -1004,7 +1135,7 @@ export default class Landing extends Vue {
       padding: 32px 0;
       border-top: 2px solid rgba(255, 255, 255, 0.2);
       border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-      
+
       @media @max-b-mobile {
         margin-top: 18px;
         padding: 12px 0;
@@ -1053,7 +1184,7 @@ export default class Landing extends Vue {
         @media @max-b-mobile {
           padding: 24px 0;
         }
-        
+
         .industry-card {
           background: @gradient-color-outline;
           height: 130px;
