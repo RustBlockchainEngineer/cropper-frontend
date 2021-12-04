@@ -1504,14 +1504,6 @@ export default Vue.extend({
           }
         }
 
-        let userInfo = {
-          // @ts-ignore
-          depositBalance: new TokenAmount(0, farmInfo.lp.decimals),
-          // @ts-ignore
-          pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
-        }
-
-        if(this.wallet.address != ''){
 
           let userInfo = get(this.farm.stakeAccounts, poolId)
           if (userInfo && lp && FARM_VERSION === 1) {
@@ -1623,7 +1615,7 @@ export default Vue.extend({
               pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
             }
           } 
-        }
+        
 
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
