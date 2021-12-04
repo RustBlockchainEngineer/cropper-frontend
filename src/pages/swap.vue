@@ -36,7 +36,7 @@
                   </div>
                   <div class="symbol">{{ fromCoin.symbol }}</div>
                   <div class="address">
-                    {{ fromCoin.mintAddress.substr(0, 14) }}
+                    {{ fromCoin.mintAddress.substr(0, 12) }}
                     ...
                     <!-- {{ fromCoin.mintAddress.substr(fromCoin.mintAddress.length - 14, 14) }} -->
                   </div>
@@ -54,7 +54,7 @@
                   </div>
                   <div class="symbol">{{ toCoin.symbol }}</div>
                   <div class="address">
-                    {{ toCoin.mintAddress.substr(0, 14) }}
+                    {{ toCoin.mintAddress.substr(0, 12) }}
                     ...
                     <!-- {{ toCoin.mintAddress.substr(toCoin.mintAddress.length - 14, 14) }} -->
                   </div>
@@ -75,7 +75,7 @@
                   </div>
                   <div class="symbol">Market</div>
                   <div class="address">
-                    {{ marketAddress.substr(0, 14) }}
+                    {{ marketAddress.substr(0, 12) }}
                     ...
                     <!-- {{ marketAddress.substr(marketAddress.length - 14, 14) }} -->
                   </div>
@@ -89,7 +89,7 @@
                   </div>
                   <div class="symbol">AMM ID</div>
                   <div class="address">
-                    {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
+                    {{ mainAmmId ? mainAmmId.substr(0, 12) : '' }}
                     ...
                     <!-- {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }} -->
                   </div>
@@ -106,7 +106,7 @@
                   </div>
                   <div class="symbol">{{ fromCoin.symbol + ' - ' + midTokenSymbol }}</div>
                   <div class="address">
-                    {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
+                    {{ mainAmmId ? mainAmmId.substr(0, 12) : '' }}
                     ...
                     <!-- {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }} -->
                   </div>
@@ -120,7 +120,7 @@
                   </div>
                   <div class="symbol">{{ midTokenSymbol + ' - ' + toCoin.symbol }}</div>
                   <div class="address">
-                    {{ extAmmId ? extAmmId.substr(0, 14) : '' }}
+                    {{ extAmmId ? extAmmId.substr(0, 12) : '' }}
                     ...
                     <!-- {{ extAmmId ? extAmmId.substr(extAmmId.length - 14, 14) : '' }} -->
                   </div>
@@ -423,7 +423,7 @@
             <div style="margin: 10px">
               <div>AMM ID:</div>
               <div>
-                {{ mainAmmId ? mainAmmId.substr(0, 14) : '' }}
+                {{ mainAmmId ? mainAmmId.substr(0, 12) : '' }}
                 ...
                 {{ mainAmmId ? mainAmmId.substr(mainAmmId.length - 14, 14) : '' }}
               </div>
@@ -2135,7 +2135,7 @@ export default Vue.extend({
                   font-weight: bold;
                   font-size: 8px;
                   line-height: 10px;
-                  margin-left: 10px;
+                  margin-left: 5px;
                   margin-right: 5px;
                 }
 
