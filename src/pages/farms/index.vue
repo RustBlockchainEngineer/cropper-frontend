@@ -1177,7 +1177,6 @@ export default Vue.extend({
 
   mounted() {
     this.getTvl()
-    this.$accessor.token.loadTokens()
 
     this.updateFarms()
 
@@ -1356,6 +1355,7 @@ export default Vue.extend({
     },
 
     async updateFarms() {
+    this.$accessor.token.loadTokens()
       console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
@@ -1511,7 +1511,7 @@ export default Vue.extend({
           pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
         }
 
-        if(this.wallet.connected){
+        if(this.wallet.address != ''){
 
           let userInfo = get(this.farm.stakeAccounts, poolId)
           if (userInfo && lp && FARM_VERSION === 1) {
