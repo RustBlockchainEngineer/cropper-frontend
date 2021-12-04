@@ -491,10 +491,16 @@ export default class CreateFarm extends Vue {
     let result = 0
     let initialAmount = Number.parseFloat(this.fromCoinAmount)
 
+
+    if ((this.startTime.unix() + (14 * 86400)) > this.endTime.unix()) {
+      this.endTime = new moment().set('second', (14 * 86400));
+    }
+
     let duration = 0
     if (this.startTime != null && this.endTime != null) {
       duration = this.endTime.unix() - this.startTime.unix()
     }
+
     if (duration > 0) {
       result = (initialAmount * 7 * 24 * 3600) / duration
     }
@@ -512,6 +518,8 @@ export default class CreateFarm extends Vue {
   onStartTimeChanged(val: any) {
     console.log('start time changed !')
   }
+
+
 
   @Watch('inputQuoteValue')
   oniIputQuoteValueChanged(val: string) {
@@ -679,18 +687,23 @@ export default class CreateFarm extends Vue {
       })
       return
     }
+
+    if ((startTimestamp + (14 * 86400)) > endTimestamp) {
+      this.$notify.error({
+        key: 'Period',
+        message: 'Checking period',
+        description: 'farm can\'t be shorter than 14 days'
+      })
+      return
+    }
     try {
 
-
       let fetchedFarm = await YieldFarm.loadFarm(connection, this.farmId, new PublicKey(FARM_PROGRAM_ID))
-
-
 
       if (fetchedFarm) {
         await fetchedFarm.addReward(wallet, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals))
         this.current += 1
       }
-
 
     } catch {
       this.activeSpin = false;
@@ -763,6 +776,16 @@ export default class CreateFarm extends Vue {
       })
       return
     }
+
+    if ((startTimestamp + (14 * 86400)) > endTimestamp) {
+      this.$notify.error({
+        key: 'Period',
+        message: 'Checking period',
+        description: 'farm can\'t be shorter than 14 days'
+      })
+      return
+    }
+
     try {
       let createdFarm = await YieldFarm.createFarmWithParams(
         connection,

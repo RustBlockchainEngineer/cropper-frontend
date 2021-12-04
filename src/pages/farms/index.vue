@@ -1386,9 +1386,10 @@ export default Vue.extend({
         let partPc = 0
 
         if (reward && lp) {
-          const rewardPerTimestamp = newFarmInfo.reward.balance.wei.dividedBy(
-            end_timestamp.toNumber() - last_timestamp.toNumber()
+          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(
+            toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp))
           )
+
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
 
@@ -1418,38 +1419,35 @@ export default Vue.extend({
           }
 
           const rewardPerTimestampAmountTotalValue =
-            getBigNumber(rewardPerTimestampAmount.toEther()) *
-            60 *
-            60 *
-            24 *
-            365 *
-            this.price.prices[reward.symbol as string]
+            rewardPerTimestampAmount.toEther().multipliedBy(new BigNumber(60 * 60 * 24 * 365 * this.price.prices[reward.symbol as string]))
 
           const liquidityCoinValue =
-            getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
-            this.price.prices[liquidityItem?.coin.symbol as string]
+            (liquidityItem?.coin.balance as TokenAmount).toEther()
+            .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.coin.symbol as string]))
+            
           const liquidityPcValue =
-            getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
-            this.price.prices[liquidityItem?.pc.symbol as string]
-          const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
+            (liquidityItem?.pc.balance as TokenAmount).toEther()
+            .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.pc.symbol as string]))
+            
+          const liquidityTotalValue = liquidityPcValue.plus(liquidityCoinValue);
 
-          const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
+          const liquidityTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
 
-          partCoin = getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) / liquidityTotalSupply
-          partPc = getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) / liquidityTotalSupply
+          partCoin = (liquidityItem?.coin.balance as TokenAmount).toEther().dividedBy(liquidityTotalSupply)
+          partPc = (liquidityItem?.pc.balance as TokenAmount).toEther().dividedBy(liquidityTotalSupply)
 
-          const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
-          let liquidityUsdValue = getBigNumber(lp.balance.toEther()) * liquidityItemValue
+          const liquidityItemValue = liquidityTotalValue.dividedBy(liquidityTotalSupply)
+          let liquidityUsdValue = lp.balance.toEther().multipliedBy(liquidityItemValue)
           newFarmInfo.lpUSDvalue = liquidityItemValue
 
-          let farmUsdValue = getBigNumber(newFarmInfo.lp.balance.toEther()) * liquidityItemValue
+          let farmUsdValue = newFarmInfo.lp.balance.toEther().multipliedBy(liquidityItemValue)
 
-          let baseCalculation = farmUsdValue
+          let baseCalculation = getBigNumber(farmUsdValue)
           if (baseCalculation < 0.01) {
             baseCalculation = 1
           }
 
-          let apr = ((rewardPerTimestampAmountTotalValue / baseCalculation) * 100).toFixed(10)
+          let apr = ((getBigNumber(rewardPerTimestampAmountTotalValue) / baseCalculation) * 100).toFixed(2)
 
           if (apr === 'NaN' || apr === 'Infinity') {
             apr = '0'
@@ -1459,13 +1457,7 @@ export default Vue.extend({
             liquidityUsdValue = 0
           }
 
-          if (
-            rewardPerTimestampAmountTotalValue * 86400 * 7 < 1 &&
-            liquidityUsdValue < 2 &&
-            !window.localStorage['owner_' + newFarmInfo.poolId]
-          ) {
-            continue
-          }
+          if(this.currentTimestamp < newFarmInfo.poolInfo.end_timestamp && (rewardPerTimestampAmountTotalValue * 86400 * 7) < 1 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
 
           // @ts-ignore
           newFarmInfo.apr = apr
