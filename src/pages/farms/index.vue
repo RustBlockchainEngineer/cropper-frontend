@@ -1178,7 +1178,8 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.getTvl()
+    this.getTvl();
+    this.$accessor.token.loadTokens()
 
     this.updateFarms()
 
@@ -1191,7 +1192,6 @@ export default Vue.extend({
       if (query.get('s')) this.searchName = query.get('s') as string
     }
 
-    this.checkIfFarmProgramExist()
   },
 
   methods: {
