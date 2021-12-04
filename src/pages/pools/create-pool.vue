@@ -986,8 +986,12 @@ export default class CreatePool extends Vue {
               this.marketMsg.address
             }---${this.marketMsg.baseMintAddress.toString()}---${this.marketMsg.quoteMintAddress.toString()}`
         )
+
+
         this.updateLocalData()
         this.createAmmFlag = true
+        window.localStorage.token_last_updated_ = undefined
+        window.localStorage.market_last_updated_ = undefined
         window.localStorage.pool_last_updated = undefined
         await this.$accessor.liquidity.requestInfos()
       })

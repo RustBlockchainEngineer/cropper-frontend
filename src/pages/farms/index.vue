@@ -2090,8 +2090,16 @@ export default Vue.extend({
             console.log('h12');
           this.stakeModalOpening = false
             console.log('h13');
-          this.staking = false
+         // this.staking = false
             console.log('h14');
+
+
+          console.log(this.lp)
+          console.log(this.farmInfo)
+          console.log(this.staking)
+
+
+
           this.stakeModalOpeningLP = true;
             console.log('h15');
 
