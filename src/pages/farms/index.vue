@@ -2069,38 +2069,26 @@ export default Vue.extend({
             await this.delay(delayTime)
             totalDelayTime += delayTime
             txStatus = await this.$accessor.transaction.history[txid].status
-            console.log('h1', totalDelayTime);
+            console.log('h1', totalDelayTime, txStatus);
           }
 
-            console.log('h9');
           if (txStatus === 'Fail') {
-            console.log('h2');
             console.log('add lp failed')
             return
           }
 
-            console.log('h10');
           //update wallet token account infos
           
           let delayForUpdate = 500
-            console.log('h11');
           await this.$accessor.wallet.getTokenAccounts()
-            console.log('h12');
           this.stakeModalOpening = false
-            console.log('h13');
           this.staking = false
             await this.delay(200)
-            console.log('h14');
 
-
-          console.log(this.lp)
-          console.log(this.farmInfo)
-          console.log(this.staking)
 
 
 
           this.stakeModalOpeningLP = true;
-            console.log('h15');
 
 
         })
