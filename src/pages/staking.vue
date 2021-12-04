@@ -304,8 +304,16 @@ export default Vue.extend({
       // const apr = Number(farm_state.tokenPerSecond.muln(YEAR2SECOND).div(current_pool.account.amount).toString());
       // this.estimatedAPY = Number((((1 + (apr / 100)/ 365)) ** 365 - 1) * 100);
 
+      console.log('tokenPerSecond', Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()))
+
       const apr = Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()) * 365 * 24 * 3600 / Number((new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)).fixed());
-      this.estimatedAPY = Number((((1 + (apr / 100)/ 365)) ** 365 - 1) * 100);
+
+      this.estimatedAPY = Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()) * 365 * 24 * 3600 / Number((new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)).fixed());
+
+      console.log('APR', this.estimatedAPY)
+      this.estimatedAPY = Number(((((1 + ((this.estimatedAPY )/ 365))) ** 365) - 1) * 100);
+
+      console.log('APY', this.estimatedAPY)
     }, 
 
     async getUserState(){

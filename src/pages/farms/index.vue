@@ -1641,6 +1641,10 @@ export default Vue.extend({
             ;(newFarmInfo as any).twitterLink = TOKENS[newFarmInfo.lp.coin.mintAddress].twitter
           }
 
+          if(newFarmInfo.lp.coin.symbol == 'CRP'){
+            (newFarmInfo as any).twitterLink = 'https://twitter.com/CropperFinance'
+          }
+
           ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
             (newFarmInfo as any).lp.coin.symbol
           }-${(newFarmInfo as any).lp.pc.symbol} on @CropperFinance with ${

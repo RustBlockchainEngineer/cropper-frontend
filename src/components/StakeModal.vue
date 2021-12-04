@@ -44,7 +44,7 @@
         </Col>
         <Col span="24" class="calc-info">
           <label class="label">Estimate reward / year</label>
-          <label class="reward-value">{{ Math.round(100000 * (this.userStaked * 1 + toStake * 1) * (Math.round(this.estimatedapy * 100) /100) * boostAPY / 100) / 100000  }}CRP</label>
+          <label class="reward-value">{{ Math.round(100000 * (this.userStaked * 1 + toStake * 1) * (Math.round(this.estimatedapy * 100) /100) * boostAPY / 100) / 100000  }} CRP</label>
         </Col>
       </Row>
       <Row class="calc-footer">
