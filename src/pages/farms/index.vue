@@ -1381,8 +1381,8 @@ export default Vue.extend({
           continue
         }
 
-        let partCoin = 0
-        let partPc = 0
+        let partCoin = toBigNumber(0)
+        let partPc = toBigNumber(0)
 
         if (reward && lp) {
           const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(
@@ -1456,7 +1456,7 @@ export default Vue.extend({
             liquidityUsdValue = 0
           }
 
-          if(this.currentTimestamp < newFarmInfo.poolInfo.end_timestamp && (rewardPerTimestampAmountTotalValue * 86400 * 7) < 1 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
+          if(this.currentTimestamp < newFarmInfo.poolInfo.end_timestamp && ((rewardPerTimestampAmountTotalValue as any) * 86400 * 7) < 1 && liquidityUsdValue < 2 && !window.localStorage['owner_'+newFarmInfo.poolId]) { continue; }
 
           // @ts-ignore
           newFarmInfo.apr = apr
@@ -1469,9 +1469,9 @@ export default Vue.extend({
           if (
             this.poolsDatas[liquidityItem.ammId] &&
             this.poolsDatas[liquidityItem.ammId]['fees'] &&
-            liquidityTotalValue > 0
+            (liquidityTotalValue as any) > 0
           ) {
-            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / liquidityTotalValue
+            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / (liquidityTotalValue as any)
             newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
             newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
           }
@@ -1550,9 +1550,9 @@ export default Vue.extend({
 
             userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toFixed(2)
 
-            userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format() * 10000) / 10000).toFixed(2)
+            userInfo.depositCoin = (Math.round((partCoin as any) * userInfo.depositBalance.format() * 10000) / 10000).toFixed(2)
 
-            userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format() * 10000) / 10000).toFixed(2)
+            userInfo.depositPc = (Math.round((partPc as any) * userInfo.depositBalance.format() * 10000) / 10000).toFixed(2)
 
             if (newFarmInfo.lpUSDvalue) {
               userInfo.depositBalanceUSD = (
@@ -1602,9 +1602,9 @@ export default Vue.extend({
 
             userInfo.depositFormat = (Math.round(userInfo.depositBalance.format().replace(/,/g, '') * 100000) / 100000).toFixed(2)
 
-            userInfo.depositCoin = (Math.round(partCoin * userInfo.depositBalance.format().replace(/,/g, '') * 10000) / 10000).toFixed(2)
+            userInfo.depositCoin = (Math.round((partCoin as any) * userInfo.depositBalance.format().replace(/,/g, '') * 10000) / 10000).toFixed(2)
 
-            userInfo.depositPc = (Math.round(partPc * userInfo.depositBalance.format().replace(/,/g, '') * 10000) / 10000).toFixed(2)
+            userInfo.depositPc = (Math.round((partPc as any) * userInfo.depositBalance.format().replace(/,/g, '') * 10000) / 10000).toFixed(2)
 
             if (newFarmInfo.lpUSDvalue) {
               userInfo.depositBalanceUSD = (

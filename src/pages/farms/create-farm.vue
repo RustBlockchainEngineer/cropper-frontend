@@ -493,7 +493,7 @@ export default class CreateFarm extends Vue {
 
 
     if ((this.startTime.unix() + (14 * 86400)) > this.endTime.unix()) {
-      this.endTime = new moment().set('second', (14 * 86400));
+      this.endTime = moment().set('second', (14 * 86400));
     }
 
     let duration = 0
