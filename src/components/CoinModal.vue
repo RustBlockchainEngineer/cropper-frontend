@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div>{{text}}</div>
+    <div v-html="text">{{text}}</div>
 
     <Row :gutter="32" class="actions">
       <Col :span="12" class="text-center">

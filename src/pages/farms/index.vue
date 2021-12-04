@@ -30,7 +30,7 @@
       :loading="unstaking"
       @onOk="unstakeAndRemove"
       @onCancel="cancelUnstake"
-      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.
+      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.<br />
       If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
     />
 
@@ -49,7 +49,7 @@
       :coin="lp"
       :farmInfo="farmInfo"
       :loading="staking"
-      text="You now need to stake your LP token to start farming"
+      text="<div style='text-align:center'>You now need to <b>stake your LP tokens</b> to start farming</div>"
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
@@ -457,7 +457,10 @@
                 <div class="title">Pending Rewards</div>
                 <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
                 <div v-else class="value">
-                  {{ !wallet.connected ? 0 : (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000) }}
+                  {{ ((
+                    !wallet.connected || 
+                    0 > farm.userInfo.pendingReward 
+                    ) ? 0 : (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000)) }}
                 </div>
 
                 <div class="btn-container btn-container-harvest">
@@ -744,7 +747,7 @@
                       <div class="title">Pending Reward</div>
                       <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
                       <div v-else class="value">
-                        {{ !wallet.connected ? 0 : (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000) }}
+                        {{ (!wallet.connected || 0 > farm.userInfo.pendingReward) ? 0 : (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000) }}
                       </div>
                     </Col>
                   </Col>
@@ -2061,12 +2064,14 @@ export default Vue.extend({
                 )
               ])
           })
+            console.log('h00');
 
           const description = `Add liquidity for ${fromCoinAmount} ${this.farmInfo.lp.coin?.symbol} and ${toCoinAmount} ${this.farmInfo.lp.pc?.symbol}`
           this.$accessor.transaction.sub({ txid, description })
 
           txStatus = this.$accessor.transaction.history[txid].status
           let totalDelayTime = 0
+            console.log('h0');
           while (txStatus === 'Pending' && totalDelayTime < 10000) {
             let delayTime = 500
             await this.delay(delayTime)
@@ -2074,15 +2079,29 @@ export default Vue.extend({
             txStatus = this.$accessor.transaction.history[txid].status
             await this.delay(delayTime)
             totalDelayTime += delayTime
+            console.log('h1');
           }
+
+            console.log('h9');
           if (txStatus === 'Fail') {
+            console.log('h2');
             console.log('add lp failed')
             return
           }
+
+            console.log('h10');
           //update wallet token account infos
           this.$accessor.wallet.getTokenAccounts()
           let delayForUpdate = 500
+            console.log('h11');
           await this.delay(delayForUpdate)
+            console.log('h12');
+          this.stakeModalOpening = false
+            console.log('h13');
+          this.staking = false
+            console.log('h14');
+          this.stakeModalOpeningLP = true;
+            console.log('h15');
 
 
         })
@@ -2094,10 +2113,6 @@ export default Vue.extend({
           })
         })
         .finally(async () => {
-
-            this.stakeModalOpening = false
-            this.staking = false
-            this.stakeModalOpeningLP = true;
 
         })
     },
