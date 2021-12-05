@@ -1433,7 +1433,7 @@ export default Vue.extend({
           let liquidityTotalValue = liquidityPcValue.plus(liquidityCoinValue);
 
           if(this.price.prices[liquidityItem?.pc.symbol as string] == 1){
-             liquidityTotalValue = liquidityPcValue * 2
+             liquidityTotalValue = liquidityPcValue.multipliedBy(2)
           }
 
           const liquidityTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
