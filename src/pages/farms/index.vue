@@ -1645,6 +1645,8 @@ export default Vue.extend({
 
           if(newFarmInfo.lp.coin.symbol == 'CRP'){
             (newFarmInfo as any).twitterLink = 'https://twitter.com/CropperFinance'
+          } else if(newFarmInfo.lp.coin.symbol == 'wCAPS'){
+            (newFarmInfo as any).twitterLink = 'https://twitter.com/Ternoa_'
           }
 
           ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
