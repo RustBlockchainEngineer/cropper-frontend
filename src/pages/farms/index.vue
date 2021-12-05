@@ -1430,7 +1430,11 @@ export default Vue.extend({
             (liquidityItem?.pc.balance as TokenAmount).toEther()
             .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.pc.symbol as string]))
             
-          const liquidityTotalValue = liquidityPcValue.plus(liquidityCoinValue);
+          let liquidityTotalValue = liquidityPcValue.plus(liquidityCoinValue);
+
+          if(this.price.prices[liquidityItem?.pc.symbol as string] == 1){
+             liquidityTotalValue = liquidityPcValue * 2
+          }
 
           const liquidityTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
 

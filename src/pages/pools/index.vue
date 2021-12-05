@@ -925,7 +925,12 @@ export default class Pools extends Vue {
       const liquidityPcValue =
         getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
         price.prices[liquidityItem?.pc.symbol as string]
-      const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
+
+      let liquidityTotalValue = liquidityPcValue + liquidityCoinValue;
+      if(price.prices[liquidityItem?.pc.symbol as string] == 1){
+         liquidityTotalValue = liquidityPcValue * 2
+      }
+
 
       const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
       const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
