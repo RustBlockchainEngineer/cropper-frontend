@@ -106,7 +106,7 @@ export const actions = actionTree(
         let liquidityPoolInfo:LiquidityPoolInfo = LIQUIDITY_POOLS.find((item) => item.lp.mintAddress === lpTokenMintAddress) as any;
 
         //check liquidity pool
-        if(liquidityPoolInfo == undefined){
+        if(liquidityPoolInfo == undefined || liquidityPoolInfo == null){
           console.log("find liquidity pool error");
           return;
         }
@@ -137,10 +137,11 @@ export const actions = actionTree(
         }
 
 
-        if(rewardToken === undefined){
+        if(rewardToken === undefined || rewardToken === null){
           console.log("find reward token info error");
           return;
         }
+
 
         const _farmInfo:FarmInfo = {
           name: '',
