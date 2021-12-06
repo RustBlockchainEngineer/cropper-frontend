@@ -148,7 +148,7 @@ export default class Nav extends Vue {
       display: block;
     }
 
-    @media @max-b-mobile {
+    @media @max-t-mobile {
       display: none;
     }
   }
@@ -208,7 +208,7 @@ export default class Nav extends Vue {
   line-height: 62px;
   border-bottom: none;
 
-  @media @max-b-mobile {
+  @media @max-t-mobile {
     display: flex;
     border-top: 1px solid rgba(255,255,255,0.3);
     border-bottom: 1px solid rgba(255,255,255,0.3);
@@ -243,7 +243,7 @@ export default class Nav extends Vue {
   border-bottom: none;
 }
 
-@media (max-width: 1020px) {
+@media @max-t-mobile {
   .ant-menu-item {
     padding: 0 12px;
   }

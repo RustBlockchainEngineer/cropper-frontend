@@ -1,5 +1,5 @@
 <template>
-  <Header class="header fs-container" :class="isMobile ? 'mobile' : ''">
+  <Header class="header fs-container">
     <NuxtLink to="/">
       <img class="logo" src="@/assets/icons/cropper-logo.svg" />
     </NuxtLink>
@@ -8,7 +8,7 @@
       <Nav @onSelect="() => (navOpened = false)" />
     <!-- </div> -->
 
-    <div class="fs-container wallet-container" :class="isMobile ? 'mobile' : ''">
+    <div class="fs-container wallet-container">
       <Wallet />
     </div>
   </Header>
@@ -49,7 +49,7 @@ export default Vue.extend({
   .logo {
     height: 55px;
 
-    @media @max-b-mobile {
+    @media @max-t-mobile {
       height: 30px;
     }
   }
@@ -127,8 +127,8 @@ export default Vue.extend({
   }
 }
 
-@media @max-b-mobile {
-  .header.mobile {
+@media @max-t-mobile {
+  .header {
     margin: 10px 20px 80px 20px;
     padding: 0 !important;
     display: block;
@@ -142,7 +142,7 @@ export default Vue.extend({
     }
   }
 
-  .wallet-container.mobile {
+  .wallet-container {
     float: right;
     margin-top: -140px;
   }
