@@ -410,7 +410,7 @@
                 </div>
               </Col>
 
-              <Col class="state" span="4">
+              <Col class="state" span="3">
                 <div class="title">
                   Total APR
                   <Tooltip
@@ -454,7 +454,7 @@
                 </div>
               </Col>
 
-              <Col class="state" span="3">
+              <Col class="state" span="4">
                 <div class="title">Pending Rewards</div>
                 <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
                 <div v-else class="value">
@@ -2885,14 +2885,11 @@ export default Vue.extend({
             }
 
             .state {
-              text-align: center;
-
               .title {
                 font-size: 18px;
                 line-height: 15px;
                 font-weight: 400;
                 display: flex;
-                justify-content: center;
 
                 @media @max-b-mobile {
                   font-size: 12px;
@@ -3118,7 +3115,6 @@ export default Vue.extend({
                 @media @max-b-mobile {
                   font-size: 12px;
                   line-height: 15px;
-                  justify-content: center;
                 }
 
                 .farm-info-img {
