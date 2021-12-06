@@ -2885,11 +2885,14 @@ export default Vue.extend({
             }
 
             .state {
+              text-align: center;
+
               .title {
                 font-size: 18px;
                 line-height: 15px;
                 font-weight: 400;
                 display: flex;
+                justify-content: center;
 
                 @media @max-b-mobile {
                   font-size: 12px;
@@ -2901,7 +2904,7 @@ export default Vue.extend({
                 margin-top: 10px;
                 font-size: 20px;
                 line-height: 24px;
-                font-weight: 400;
+                font-weight: 600;
                 word-break: break-all;
 
                 @media @max-b-mobile {
@@ -3115,6 +3118,7 @@ export default Vue.extend({
                 @media @max-b-mobile {
                   font-size: 12px;
                   line-height: 15px;
+                  justify-content: center;
                 }
 
                 .farm-info-img {
@@ -3257,6 +3261,43 @@ export default Vue.extend({
 }
 
 // ant design customization
+.ant-collapse {
+  border: none;
+
+  .ant-collapse-item {
+    border: none !important;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .ant-collapse-content {
+      border: none !important;
+    }
+  }
+
+  .ant-collapse-item-disabled > .ant-collapse-header {
+    color: unset;
+  }
+}
+
+.ant-tooltip-arrow {
+  display: none;
+}
+
+.ant-alert-warning {
+  width: 500px;
+  margin-top: 30px;
+  background-color: transparent;
+  border: 1px solid #85858d;
+
+  .anticon-close {
+    color: #fff;
+  }
+}
 
 .farm {
   .page-content {
@@ -3292,52 +3333,22 @@ export default Vue.extend({
         }
       }
     }
-  }
-}
 
-.ant-collapse {
-  border: none;
+    .farm-table {
+      .ant-collapse {
+        .ant-collapse-item {
+          .ant-collapse-header {
+            padding: 0 !important;
+          }
 
-  .ant-collapse-item {
-    border: none !important;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    overflow: hidden;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .ant-collapse-header {
-      padding: 0 !important;
-    }
-
-    .ant-collapse-content {
-      border: none !important;
-
-      .ant-collapse-content-box {
-        padding: 0;
+          .ant-collapse-content {
+            .ant-collapse-content-box {
+              padding: 0;
+            }
+          }
+        }
       }
     }
-  }
-
-  .ant-collapse-item-disabled > .ant-collapse-header {
-    color: unset;
-  }
-}
-
-.ant-tooltip-arrow {
-  display: none;
-}
-
-.ant-alert-warning {
-  width: 500px;
-  margin-top: 30px;
-  background-color: transparent;
-  border: 1px solid #85858d;
-
-  .anticon-close {
-    color: #fff;
   }
 }
 </style>
