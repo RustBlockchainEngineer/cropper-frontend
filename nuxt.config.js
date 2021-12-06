@@ -81,7 +81,7 @@ export default {
       short_name: "Cropper",
       name: "Cropper",
       description: "The Ultimate Yield Farming Protocol on Solana",
-      start_url: ".",
+      start_url: "../",
       display: "standalone",
       icons: [
         {
