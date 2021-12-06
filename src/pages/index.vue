@@ -455,7 +455,7 @@ const { TabPane } = Tabs
 })
 export default class Landing extends Vue {
   isPopupOpen = false
-  TVL = 0
+  TVL = 0 as any
   totalvolume = 0
   timer: number | undefined = undefined
   isFarmer: boolean = true
@@ -643,7 +643,7 @@ export default class Landing extends Vue {
           const last_updated = parseInt(window.localStorage.TVL_last_updated)
           if(cur_date - last_updated <= 600000){
             this.TVL = window.localStorage.TVL
-            this.TVL = this.TVL.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            this.TVL = this.TVL.toLocaleString("en-US")
             return
           }
         }
