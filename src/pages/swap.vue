@@ -784,7 +784,8 @@ export default Vue.extend({
     },
     'token.initialized': {
       handler(newState: boolean) {
-        this.fromCoin = getTokenBySymbol('CRP')
+        this.toCoin = getTokenBySymbol('CRP')
+        this.fromCoin = getTokenBySymbol('USDC')
         const { from, to, ammId } = this.$route.query
         // @ts-ignore
         this.setCoinFromMint(ammId, from, to)
@@ -813,6 +814,10 @@ export default Vue.extend({
     const { from, to, ammId } = this.$route.query
     // @ts-ignore
     this.setCoinFromMint(ammId, from, to)
+
+    this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP');
+    this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC');
+          
   },
   methods: {
     gt,

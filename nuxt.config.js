@@ -81,31 +81,31 @@ export default {
       short_name: "Cropper",
       name: "Cropper",
       description: "The Ultimate Yield Farming Protocol on Solana",
-      start_url: ".",
+      start_url: "../",
       display: "standalone",
       icons: [
         {
-          src: "favicon.ico",
+          src: "/favicon.ico",
           sizes: "64x64 32x32 24x24 16x16",
           type: "image/x-icon"
         },
         {
-          src: "apple-icon-72x72.png",
+          src: "/apple-icon-72x72.png",
           sizes: "72x72",
           type: "image/png"
         },
         {
-          src: "apple-icon-152x152.png",
+          src: "/apple-icon-152x152.png",
           sizes: "152x152",
           type: "image/png"
         },
         {
-          src: "logo192.png",
+          src: "/logo192.png",
           type: "image/png",
           sizes: "192x192"
         },
         {
-          src: "logo512.png",
+          src: "/logo512.png",
           type: "image/png",
           sizes: "512x512"
         }
