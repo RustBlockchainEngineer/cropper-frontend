@@ -1174,7 +1174,7 @@ section {
   margin-bottom: 20px;
   padding: 15px;
 
-  @media @max-b-mobile {
+  @media @max-t-mobile {
     margin-top: 0;
   }
 
@@ -1183,7 +1183,7 @@ section {
     left: 0;
     top: 35%;
 
-    @media @max-b-mobile {
+    @media @max-t-mobile {
       display: none;
     }
   }
@@ -1218,7 +1218,7 @@ section {
                 font-size: 10px;
                 line-height: 12px;
 
-                @media @max-b-mobile {
+                @media @max-t-mobile {
                   display: none;
                 }
               }
@@ -1241,7 +1241,7 @@ section {
                 height: 18px;
                 display: none;
 
-                @media @max-b-mobile {
+                @media @max-t-mobile {
                   display: flex;
                 }
               }
@@ -1258,7 +1258,7 @@ section {
             font-size: 15px;
             line-height: 18px;
 
-            @media @max-b-mobile {
+            @media @max-t-mobile {
               font-size: 12px;
               line-height: 15px;
             }
@@ -1276,7 +1276,7 @@ section {
             justify-content: center;
             cursor: pointer;
 
-            @media @max-b-mobile {
+            @media @max-t-mobile {
               margin-left: 5px;
             }
 
@@ -1300,7 +1300,7 @@ section {
           border: 4px solid @color-outline;
           width: 100%;
 
-          @media @max-b-mobile {
+          @media @max-t-mobile {
             margin-bottom: 5px;
             height: 54px;
 
@@ -1508,7 +1508,7 @@ section {
   display: none;
 }
 
-@media @max-b-mobile {
+@media @max-t-mobile {
   body .pool.container {
     .card-body {
       overflow-x: unset !important;
@@ -1794,7 +1794,7 @@ p {
 
 <style lang="less">
 ::-webkit-scrollbar {
-  @media @max-b-mobile {
+  @media @max-t-mobile {
     display: none; /* Chrome Safari */
   }
 }
@@ -1813,18 +1813,18 @@ p {
 
 .pool.container {
   .ant-collapse-header {
-    @media @max-b-mobile {
+    @media @max-t-mobile {
       padding-right: 16px !important;
     }
     .ant-collapse-arrow {
-      @media @max-b-mobile {
+      @media @max-t-mobile {
         right: 30px !important;
         z-index: 2;
       }
     }
   }
   .ant-collapse-content {
-    @media @max-b-mobile {
+    @media @max-t-mobile {
       background-color: #16164a;
       border-top: none !important;
     }
@@ -1899,7 +1899,7 @@ p {
       line-height: 42px;
       letter-spacing: -0.05em;
 
-      @media @max-b-mobile {
+      @media @max-t-mobile {
         font-size: 14px;
         line-height: 24px;
         padding: 0;
@@ -2083,7 +2083,7 @@ p {
             border: none;
             border-radius: 14px;
 
-            @media @max-b-mobile {
+            @media @max-t-mobile {
               font-size: 14px;
               line-height: 17px;
             }
