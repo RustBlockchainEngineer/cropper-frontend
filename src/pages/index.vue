@@ -17,7 +17,7 @@
         <Row :gutter="20">
           <Col :span="22" :offset="1">
             <div class="balance-infos">
-              <h2 class="weightS tlv-value">TLV 30.000.000€</h2>
+              <h2 class="weightS tlv-value">TLV {{ TVL }}€</h2>
               <div class="token-infos">
                 <img src="@/assets/icons/cropper.svg" />
                 <label class="bodyM weightS"><u>CRP Token</u></label>
@@ -455,7 +455,7 @@ const { TabPane } = Tabs
 })
 export default class Landing extends Vue {
   isPopupOpen = false
-  tvl = 0
+  TVL = 0
   totalvolume = 0
   timer: number | undefined = undefined
   isFarmer: boolean = true
@@ -578,7 +578,9 @@ export default class Landing extends Vue {
   }
   currentIndustry: any = this.surroundedList.advisors
 
-  mounted() {}
+  mounted() {
+    this.getTvl();
+  }
 
   beforeDestroy() {
     window.clearInterval(this.timer)
@@ -632,6 +634,54 @@ export default class Landing extends Vue {
   selectVideo(id: number) {
     this.currentPlay = id
   }
+
+    async getTvl() {
+
+
+        let cur_date = new Date().getTime()
+        if(window.localStorage.TVL_last_updated && false){
+          const last_updated = parseInt(window.localStorage.TVL_last_updated)
+          if(cur_date - last_updated <= 600000){
+            this.TVL = window.localStorage.TVL
+            this.TVL = this.TVL.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            return
+          }
+        }
+
+        let responseData:any = []
+        let tvl = 0;
+        try {
+          responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+          
+          Object.keys(responseData).forEach(function (key) {
+            if(((responseData as any)[key as any].tvl * 1) < 2000000){
+              tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+            }
+          })
+        } catch {
+          // dummy data
+        } finally {
+
+        }
+
+        try {
+          responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
+          tvl = (tvl * 1) + ((responseData as any).value * 1)
+        } catch {
+          // dummy data
+        } finally {
+
+        }
+
+        this.TVL = Math.round(tvl);
+
+        window.localStorage.TVL_last_updated = new Date().getTime()
+        window.localStorage.TVL = this.TVL
+
+        this.TVL = this.TVL.toLocaleString("en-US")
+    }
+
+  
 }
 </script>
 <style lang="less" scoped>
