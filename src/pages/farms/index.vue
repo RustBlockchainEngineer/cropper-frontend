@@ -319,7 +319,7 @@
             <Row
               class="farm-item noMobile"
               :class="farm.labelized ? 'labelized' : 'permissionless'"
-              v-for="farm in showFarms"
+              v-for="(farm, idx) in showFarms"
               :key="farm.farmInfo.poolId"
             >
               <Col class="lp-icons" span="7">
@@ -479,9 +479,9 @@
                     v-else
                     size="large"
                     ghost
-                    :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
-                    :loading="harvesting"
-                    @click="harvest(farm.farmInfo)"
+                    :disabled="!wallet.connected || harvesting[idx] || farm.userInfo.pendingReward.isNullOrZero()"
+                    :loading="harvesting[idx]"
+                    @click="harvest(farm.farmInfo, idx)"
                   >
                     Harvest
                   </Button>
@@ -935,9 +935,9 @@
                           v-else
                           size="large"
                           ghost
-                          :disabled="!wallet.connected || harvesting || farm.userInfo.pendingReward.isNullOrZero()"
-                          :loading="harvesting"
-                          @click="harvest(farm.farmInfo)"
+                          :disabled="!wallet.connected || harvesting[idx] || farm.userInfo.pendingReward.isNullOrZero()"
+                          :loading="harvesting[idx]"
+                          @click="harvest(farm.farmInfo, idx)"
                         >
                           Harvest
                         </Button>
@@ -1053,7 +1053,7 @@ export default Vue.extend({
       lp: null,
       rewardCoin: null,
       farmInfo: null as any,
-      harvesting: false,
+      harvesting: [] as boolean[],
       stakeModalOpening: false,
       stakeModalOpeningLP: false,
       addRewardModalOpening: false,
@@ -2405,8 +2405,8 @@ export default Vue.extend({
       return liquidityPoolInfo.ammId
     },
 
-    harvest(farmInfo: FarmInfo) {
-      this.harvesting = true
+    harvest(farmInfo: FarmInfo, idx: number) {
+      this.harvesting[idx] = true
 
       const conn = this.$web3
       const wallet = (this as any).$wallet
@@ -2456,7 +2456,7 @@ export default Vue.extend({
         })
         .finally(() => {
           this.$accessor.farm.requestInfos()
-          this.harvesting = false
+          this.harvesting[idx] = false
           this.$accessor.farm.requestInfos()
           this.$accessor.wallet.getTokenAccounts()
         })
