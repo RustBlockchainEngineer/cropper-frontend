@@ -830,20 +830,22 @@ export default Vue.extend({
       }, 1)
     },
     async getTvl() {
+
+
       let cur_date = new Date().getTime()
-      if (window.localStorage.TVL_last_updated) {
+      if(window.localStorage.TVL_last_updated){
         const last_updated = parseInt(window.localStorage.TVL_last_updated)
-        if (cur_date - last_updated <= 600000) {
+        if(cur_date - last_updated <= 600000){
           this.TVL = window.localStorage.TVL
           return
         }
       }
 
-      let responseData: any = []
-      let tvl = 0
+      let responseData:any = []
+      let tvl = 0;
       try {
         responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-
+        
         Object.keys(responseData).forEach(function (key) {
           if(((responseData as any)[key as any].tvl * 1) < 2000000){
             tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
@@ -852,13 +854,23 @@ export default Vue.extend({
       } catch {
         // dummy data
       } finally {
+
       }
 
-      this.TVL = Math.round(tvl)
+      try {
+        responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
+        tvl = (tvl * 1) + ((responseData as any).value * 1)
+      } catch {
+        // dummy data
+      } finally {
+
+      }
+
+      this.TVL = Math.round(tvl);
 
       window.localStorage.TVL_last_updated = new Date().getTime()
       window.localStorage.TVL = this.TVL
-    },
+  },
     async flush() {
       clearInterval(this.marketTimer)
       this.countdown = 0

@@ -250,6 +250,8 @@ export default Vue.extend({
   },
   methods: {
     async getTvl(){
+
+
       let cur_date = new Date().getTime()
       if(window.localStorage.TVL_last_updated){
         const last_updated = parseInt(window.localStorage.TVL_last_updated)
@@ -264,11 +266,20 @@ export default Vue.extend({
       try {
         responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
         
-        Object.keys(responseData).forEach(function(key) {
+        Object.keys(responseData).forEach(function (key) {
           if(((responseData as any)[key as any].tvl * 1) < 2000000){
             tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
           }
-        });
+        })
+      } catch {
+        // dummy data
+      } finally {
+
+      }
+
+      try {
+        responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
+        tvl = (tvl * 1) + ((responseData as any).value * 1)
       } catch {
         // dummy data
       } finally {
@@ -279,7 +290,7 @@ export default Vue.extend({
 
       window.localStorage.TVL_last_updated = new Date().getTime()
       window.localStorage.TVL = this.TVL
-    },
+  },
 
     async getGlobalState(){
       if(!this.$accessor.token.initialized) return;
@@ -288,7 +299,6 @@ export default Vue.extend({
       const current_pool = pools[0]
 
       const farm_state = await getFarmState();
-      
       const stakedAmount = new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)
 
       if(this.price.prices['CRP']){
@@ -304,16 +314,12 @@ export default Vue.extend({
       // const apr = Number(farm_state.tokenPerSecond.muln(YEAR2SECOND).div(current_pool.account.amount).toString());
       // this.estimatedAPY = Number((((1 + (apr / 100)/ 365)) ** 365 - 1) * 100);
 
-      console.log('tokenPerSecond', Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()))
-
       const apr = Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()) * 365 * 24 * 3600 / Number((new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)).fixed());
 
       this.estimatedAPY = Number((new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals)).fixed()) * 365 * 24 * 3600 / Number((new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)).fixed());
 
-      console.log('APR', this.estimatedAPY)
       this.estimatedAPY = Number(((((1 + ((this.estimatedAPY )/ 365))) ** 365) - 1) * 100);
 
-      console.log('APY', this.estimatedAPY)
     }, 
 
     async getUserState(){
