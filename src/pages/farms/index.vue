@@ -676,7 +676,7 @@
             <!-- Farm table for mobile -->
 
             <Collapse v-model="showCollapse" class="noDesktop farm-table-mobile" accordion>
-              <CollapsePanel v-for="farm in showFarms" v-show="true" :key="farm.farmInfo.poolId">
+              <CollapsePanel v-for="(farm, idx) in showFarms" v-show="true" :key="farm.farmInfo.poolId">
                 <Row slot="header" class="farm-item noDesktop">
                   <Col class="lp-icons farm-mobile-section" span="24">
                     <div class="lp-farm">
