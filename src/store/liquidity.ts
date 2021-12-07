@@ -411,6 +411,9 @@ export const actions = actionTree(
       let need_to_update = false
       let cur_date = new Date().getTime()
 
+      const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+
       if(window.localStorage.pool_last_updated_v2 && !DEVNET_MODE){
         const last_updated = parseInt(window.localStorage.pool_last_updated_v2)
 
@@ -447,8 +450,12 @@ export const actions = actionTree(
       if(need_to_update)
       {
         await getCropperPools(conn);
+
+        if(!isSafari)
+        { 
         await getRaydiumPools(conn);
-        if(!DEVNET_MODE)
+        }
+        if(!DEVNET_MODE &&  !isSafari)
         { 
           window.localStorage.pool_last_updated_v2 = new Date().getTime()
           window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
