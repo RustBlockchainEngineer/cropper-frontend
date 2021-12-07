@@ -257,16 +257,48 @@
       <div class="feed-container">
         <Row>
           <Col :span="22" :offset="1">
-            <Row :gutter="[20, 20]">
-              <Col :xs="24" :sm="24" :md="8" v-for="twitter in twitterFeeds" :key="twitter.id">
-                <div class="feed-twitter">
-                  <div class="feed-logo">
-                    <img src="@/assets/social/twitter-white.svg" />
-                  </div>
-                  <div class="feed-content bodyM">
-                    {{twitter.content}}
-                  </div>
-                </div>
+            <Row :gutter="20">
+              <Col :xs="24" :sm="24" :md="8">
+                <Row :gutter="[20, 20]">
+                  <Col :span="24" v-for="twitter in firstTwitter" :key="twitter.id">
+                    <div class="feed-twitter">
+                      <div class="feed-logo">
+                        <img src="@/assets/social/twitter-white.svg" />
+                      </div>
+                      <div class="feed-content bodyM">
+                        {{twitter.content}}
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+              <Col :xs="24" :sm="24" :md="8">
+                <Row :gutter="[20, 20]">
+                  <Col :span="24" v-for="twitter in secondTwitter" :key="twitter.id">
+                    <div class="feed-twitter">
+                      <div class="feed-logo">
+                        <img src="@/assets/social/twitter-white.svg" />
+                      </div>
+                      <div class="feed-content bodyM">
+                        {{twitter.content}}
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+              <Col :xs="24" :sm="24" :md="8">
+                <Row :gutter="[20, 20]">
+                  <Col :span="24" v-for="twitter in thirdTwitter" :key="twitter.id">
+                    <div class="feed-twitter">
+                      <div class="feed-logo">
+                        <img src="@/assets/social/twitter-white.svg" />
+                      </div>
+                      <div class="feed-content bodyM">
+                        {{twitter.content}}
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Col>
@@ -361,7 +393,10 @@ export default class Landing extends Vue {
   isPartners: boolean = false
   isPowered: boolean = false
   isDirect: boolean = false
-  twitterFeeds: string[] = []
+  twitterFeeds: any[] = []
+  firstTwitter: any[] = []
+  secondTwitter: any[] = []
+  thirdTwitter: any[] = []
   CRPPrice: any = 0
   marketCap: any = 0
   currentCategory: string = 'advisors'
@@ -498,7 +533,7 @@ export default class Landing extends Vue {
   changeToFarmer() {
     this.isFarmer = !this.isFarmer
   }
-
+  
   changeToIndustry(num: number) {
     switch (num) {
       case 1:
@@ -619,7 +654,9 @@ export default class Landing extends Vue {
       console.log(err)
     } finally {
       this.twitterFeeds = responseData
-      console.log(this.twitterFeeds)
+      this.firstTwitter = this.twitterFeeds.filter((val, idx) => idx as any % 3 === 0)
+      this.secondTwitter = this.twitterFeeds.filter((val, idx) => idx as any % 3 === 1)
+      this.thirdTwitter = this.twitterFeeds.filter((val, idx) => idx as any % 3 === 2)
     }
   }
 }
@@ -1074,7 +1111,6 @@ export default class Landing extends Vue {
         background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
         padding: 22px;
-        height: 345px;
         overflow: hidden;
 
         .feed-content {
@@ -1099,7 +1135,6 @@ export default class Landing extends Vue {
         background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
         padding: 22px;
-        height: 180px;
 
         @media @max-b-mobile {
           height: 124px;
