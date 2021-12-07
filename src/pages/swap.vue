@@ -781,7 +781,6 @@ export default Vue.extend({
     },
     'liquidity.infos': {
       handler(_newInfos: any) {
-        this.updateAmounts()
         const { from, to, ammId } = this.$route.query
         // @ts-ignore
         this.setCoinFromMint(ammId, from, to)
@@ -1282,9 +1281,11 @@ export default Vue.extend({
     },
     updateAmounts() {
       let max_coinAmount = 0
-      
-      try{
 
+      try{
+        if(this.fromCoinAmount == ''){
+          this.best_dex_type = 'Unknown'
+        }
         if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
           if (this.isWrap) {
             // wrap & unwrap
@@ -1534,6 +1535,10 @@ export default Vue.extend({
             if (this.countdown === this.autoRefreshTime) {
               this.getOrderBooks()
               this.$accessor.wallet.getTokenAccounts()
+              if(this.$accessor.liquidity.initialized && this.$accessor.liquidity.loading == false)
+              {
+                this.$accessor.liquidity.requestInfos()
+              }
               this.countdown = 0
             }
           }
