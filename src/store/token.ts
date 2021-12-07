@@ -46,11 +46,13 @@ export const actions:any = actionTree(
         const last_updated = parseInt(window.localStorage.token_last_updated_v2)
         if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1638191914){
           need_to_update = true
+          alert('UPDATE 0.0');
         }
       }
       else
       {
         need_to_update = true
+          alert('UPDATE 0.1');
       }
 
       if(!DEVNET_MODE )
@@ -63,9 +65,12 @@ export const actions:any = actionTree(
             TOKENS[key] = value
           }
 
+          alert('TOKEN LENGTH ' + TOKENS.length);
+
           if(Object.entries(TOKENS).length == 0)
           {
             need_to_update = true
+          alert('UPDATE 0.2');
           }
         }
 
