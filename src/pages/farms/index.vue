@@ -73,7 +73,9 @@
             </NuxtLink>
 
             <NuxtLink to="/farms/create-farm/" class="create-btn-mobile">
-              <div class="create-plus-btn">+</div>
+              <div class="create-plus-btn">
+                <img src="@/assets/icons/plus-icon-10.svg" />
+              </div>
             </NuxtLink>
           </span>
 
@@ -2600,6 +2602,7 @@ export default Vue.extend({
             &.create-btn-desktop {
               top: 20px;
               right: -90px;
+
               .create-plus-btn {
                 font-weight: 400;
                 background: @color-outline;
@@ -2740,7 +2743,8 @@ export default Vue.extend({
                   position: absolute;
                   top: -5px;
                   right: -20px;
-
+                  width: fit-content;
+                  
                   &.labelized {
                     left: -20px;
                   }
@@ -3255,6 +3259,7 @@ export default Vue.extend({
     display: none; /* Chrome Safari */
   }
 }
+
 
 // ant design customization
 .ant-collapse {
