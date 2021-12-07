@@ -405,6 +405,8 @@ export const actions = actionTree(
     async requestInfos({ commit }) {
       commit('setLoading', true)
 
+      logger('Liquidity pool infomations fetch')
+
       const conn = this.$web3
       let need_to_update = false
       let cur_date = new Date().getTime()
