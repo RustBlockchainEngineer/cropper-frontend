@@ -522,7 +522,6 @@ export default class Landing extends Vue {
   mounted() {
     this.getTvl()
     this.getCRPPrice()
-    this.getMarketCap()
     this.getTwitterFeeds()
   }
 
@@ -579,6 +578,18 @@ export default class Landing extends Vue {
     this.currentPlay = id
   }
 
+  async getMarketCap(price: any) {
+    let responseData: any = []
+    try {
+      responseData = await fetch('https://api.cropper.finance/supply/').then((res) => res.json())
+    } catch (err) {
+      console.log(err)
+    } finally {
+      this.marketCap = Math.round(responseData * price)
+      this.marketCap = this.marketCap.toLocaleString('en-US')
+    }
+  }
+
   async getCRPPrice() {
     let responseData: any = []
     try {
@@ -588,19 +599,8 @@ export default class Landing extends Vue {
     } finally {
       let result = responseData.find((element: any) => element.symbol === 'CRP')
       this.CRPPrice = result.price
+      this.getMarketCap(this.CRPPrice)
       this.CRPPrice = this.CRPPrice.toLocaleString('en-US')
-    }
-  }
-
-  async getMarketCap() {
-    let responseData: any = []
-    try {
-      responseData = await fetch('https://api.cropper.finance/supply/').then((res) => res.json())
-    } catch (err) {
-      console.log(err)
-    } finally {
-      this.marketCap = Math.round(responseData * this.CRPPrice)
-      this.marketCap = this.marketCap.toLocaleString('en-US')
     }
   }
 
