@@ -3,6 +3,10 @@
     <img src="@/assets/icons/greenPlanet2.svg" class="planetMiddle" />
     <div class="page-head fs-container">
       <span class="title"> Swap </span>
+      <div v-if="wsolBalance" >
+        You got {{ wsolBalance.balance.fixed() }} wrapped SOL
+       <Button ghost @click="unwrap">Unwrap</Button>
+      </div>
       <span class="information">
         <div class="setting-btn-group">
           <div
@@ -582,7 +586,8 @@ import {
   wrap,
   checkUnsettledInfo,
   settleFund,
-  prepareTwoStepSwap
+  prepareTwoStepSwap,
+  unwrapWsol
 } from '@/utils/swap'
 import BigNumber from 'bignumber.js'
 import { TokenAmount, gt } from '@/utils/safe-math'
@@ -618,6 +623,7 @@ export default Vue.extend({
       TOKENS,
       // should check if user have enough SOL to have a swap
       solBalance: null as TokenAmount | null,
+      wsolBalance: null as TokenAmount | null,
       autoRefreshTime: 60,
       countdown: 0,
       marketTimer: null as any,
@@ -719,6 +725,7 @@ export default Vue.extend({
           this.fetchUnsettledByMarket()
         }
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
+        this.wsolBalance = this.wallet.tokenAccounts[TOKENS.WSOL.mintAddress]
         this.flush()
       },
       deep: true
@@ -1561,6 +1568,45 @@ export default Vue.extend({
       }
       return 0
     },
+    
+    unwrap() {
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+      unwrapWsol(
+          this.$web3,
+          // @ts-ignore
+          this.$wallet,
+          get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.tokenAccountAddress`)
+      )
+        .then((txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+              ])
+          })
+
+          const description = `Unwrap WSOL`
+          this.$accessor.transaction.sub({ txid, description })
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Unwrap WSOL failed',
+            description: error.message
+          })
+        })
+    },
+
     placeOrder() {
       this.swaping = true
       const key = getUnixTs().toString()
