@@ -370,7 +370,6 @@
                     to
                     {{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toLocaleDateString('en-US') }}
                   </div>
-                  <!--
                   <div>
                     <div class="farm-info-group">
                       <div class="farm-info-img">
@@ -386,7 +385,6 @@
                       {{ farm.farmInfo.lp.coin.symbol }}
                     </div>
                   </div>
-                  -->
                 </div>
               </Col>
 
@@ -1661,8 +1659,10 @@ export default Vue.extend({
 
           if(newFarmInfo.lp.coin.symbol == 'CRP'){
             (newFarmInfo as any).twitterLink = 'https://twitter.com/CropperFinance'
-          } else if(newFarmInfo.lp.coin.symbol == 'wCAPS'){
+          } else if(newFarmInfo.lp.coin.symbol == 'wCAPS' || newFarmInfo.lp.coin.symbol == 'wCAPS_v1'){
             (newFarmInfo as any).twitterLink = 'https://twitter.com/Ternoa_'
+          } else if(newFarmInfo.lp.coin.symbol == 'SAMO'){
+            (newFarmInfo as any).twitterLink = 'https://twitter.com/samoyedcoin'
           }
 
           ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
