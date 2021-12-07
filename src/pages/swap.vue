@@ -5,17 +5,16 @@
       <span class="title"> Swap </span>
       <span class="information">
         <div class="setting-btn-group">
-          <div
-            class="setting-btn-container"
-            :class="this.showInformations ? 'active' : ''"
-            @click="
-              () => {
-                if (this.showSlippage) this.showSlippage = false
-                this.showInformations = !this.showInformations
-              }
-            "
-          >
-            <div class="sort-by">
+          <div class="setting-btn-container" :class="this.showInformations ? 'active' : ''">
+            <div
+              class="sort-by"
+              @click="
+                () => {
+                  if (this.showSlippage) this.showSlippage = false
+                  this.showInformations = !this.showInformations
+                }
+              "
+            >
               <label class="label">
                 <img class="info-icon" src="@/assets/icons/wow.svg" />
               </label>
@@ -128,17 +127,16 @@
               </div>
             </div>
           </div>
-          <div
-            class="setting-btn-container"
-            :class="this.showSlippage ? 'active' : ''"
-            @click="
-              () => {
-                if (this.showInformations) this.showInformations = false
-                this.showSlippage = !this.showSlippage
-              }
-            "
-          >
-            <div class="sort-by">
+          <div class="setting-btn-container" :class="this.showSlippage ? 'active' : ''">
+            <div
+              class="sort-by"
+              @click="
+                () => {
+                  if (this.showInformations) this.showInformations = false
+                  this.showSlippage = !this.showSlippage
+                }
+              "
+            >
               <label class="label">
                 <img class="setting-icon" src="@/assets/icons/setting.svg" />
               </label>
@@ -815,9 +813,8 @@ export default Vue.extend({
     // @ts-ignore
     this.setCoinFromMint(ammId, from, to)
 
-    this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP');
-    this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC');
-          
+    this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP')
+    this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC')
   },
   methods: {
     gt,
@@ -835,47 +832,43 @@ export default Vue.extend({
       }, 1)
     },
     async getTvl() {
-
-
       let cur_date = new Date().getTime()
-      if(window.localStorage.TVL_last_updated){
+      if (window.localStorage.TVL_last_updated) {
         const last_updated = parseInt(window.localStorage.TVL_last_updated)
-        if(cur_date - last_updated <= 600000){
+        if (cur_date - last_updated <= 600000) {
           this.TVL = window.localStorage.TVL
           return
         }
       }
 
-      let responseData:any = []
-      let tvl = 0;
+      let responseData: any = []
+      let tvl = 0
       try {
         responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-        
+
         Object.keys(responseData).forEach(function (key) {
-          if(((responseData as any)[key as any].tvl * 1) < 2000000){
-            tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+          if ((responseData as any)[key as any].tvl * 1 < 2000000) {
+            tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
           }
         })
       } catch {
         // dummy data
       } finally {
-
       }
 
       try {
         responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
-        tvl = (tvl * 1) + ((responseData as any).value * 1)
+        tvl = tvl * 1 + (responseData as any).value * 1
       } catch {
         // dummy data
       } finally {
-
       }
 
-      this.TVL = Math.round(tvl);
+      this.TVL = Math.round(tvl)
 
       window.localStorage.TVL_last_updated = new Date().getTime()
       window.localStorage.TVL = this.TVL
-  },
+    },
     async flush() {
       clearInterval(this.marketTimer)
       this.countdown = 0
@@ -1275,9 +1268,8 @@ export default Vue.extend({
     },
     updateAmounts() {
       let max_coinAmount = 0
-      
-      try{
 
+      try {
         if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
           if (this.isWrap) {
             // wrap & unwrap
@@ -1334,9 +1326,9 @@ export default Vue.extend({
                 this.fromCoinAmount,
                 this.setting.slippage
               )
-              
-              if(!poolInfo) return;
-              
+
+              if (!poolInfo) return
+
               const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
                 poolInfo,
                 // @ts-ignore
@@ -1376,8 +1368,8 @@ export default Vue.extend({
                 this.fromCoinAmount,
                 this.setting.slippage
               )
-              
-              if(!fromPoolInfo) return;
+
+              if (!fromPoolInfo) return
 
               let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
                 fromPoolInfo,
@@ -1396,8 +1388,8 @@ export default Vue.extend({
                 amountOut.fixed(),
                 this.setting.slippage
               )
-              
-              if(!toPoolInfo) return;
+
+              if (!toPoolInfo) return
 
               let final = getSwapOutAmount(
                 toPoolInfo,
@@ -1446,9 +1438,9 @@ export default Vue.extend({
                 this.fromCoinAmount,
                 this.setting.slippage
               )
-              
-              if(!fromPoolInfo) return;
-              
+
+              if (!fromPoolInfo) return
+
               let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
                 fromPoolInfo,
                 // @ts-ignore
@@ -1467,7 +1459,7 @@ export default Vue.extend({
                 this.setting.slippage
               )
 
-              if(!toPoolInfo) return;
+              if (!toPoolInfo) return
 
               let final = getSwapOutAmount(
                 toPoolInfo,
@@ -1506,9 +1498,7 @@ export default Vue.extend({
             }
           })
         }
-      }catch{
-
-      }
+      } catch {}
 
       if (max_coinAmount === 0) {
         this.toCoinAmount = ''
@@ -2040,7 +2030,7 @@ export default Vue.extend({
           justify-content: center;
           margin-right: 5px;
           cursor: pointer;
-          
+
           &.active {
             background: #172058;
           }
