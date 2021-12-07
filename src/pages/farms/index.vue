@@ -840,9 +840,8 @@
                         class="btn-container btn-container-outline"
                         v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                       > -->
-                      <div class="btn-container btn-container-outline">
+                      <div class="btn-container btn-container-outline" v-if="farm.farmInfo.poolInfo.end_timestamp > currentTimestamp">
                         <Button
-                          v-if="farm.farmInfo.poolInfo.end_timestamp > currentTimestamp"
                           size="large"
                           ghost
                           :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
@@ -2933,7 +2932,7 @@ export default Vue.extend({
 
                   @media @max-t-mobile {
                     height: 30px;
-                    min-width: 160px;
+                    width: 180px;
                   }
 
                   .icons {
