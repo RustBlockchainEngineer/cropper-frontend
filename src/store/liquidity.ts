@@ -72,8 +72,8 @@ async function getSerumMarkets(conn:any){
   let need_to_update = false
   let cur_date = new Date().getTime()
 
-  if(window.localStorage.market_last_updated_ && !DEVNET_MODE){
-    const last_updated = parseInt(window.localStorage.market_last_updated_)
+  if(window.localStorage.market_last_updated_v2 && !DEVNET_MODE){
+    const last_updated = parseInt(window.localStorage.market_last_updated_v2)
     if(cur_date - last_updated >= MARKET_UPDATE_INTERVAL || last_updated < 1638191914){
       need_to_update = true
     }
@@ -105,7 +105,7 @@ async function getSerumMarkets(conn:any){
     })
     if(!DEVNET_MODE)
     {
-      window.localStorage.market_last_updated_ = new Date().getTime()
+      window.localStorage.market_last_updated_v2 = new Date().getTime()
       window.localStorage.markets = JSON.stringify(markets)
     }
   }
@@ -411,8 +411,8 @@ export const actions = actionTree(
       let need_to_update = false
       let cur_date = new Date().getTime()
 
-      if(window.localStorage.pool_last_updated && !DEVNET_MODE){
-        const last_updated = parseInt(window.localStorage.pool_last_updated)
+      if(window.localStorage.pool_last_updated_v2 && !DEVNET_MODE){
+        const last_updated = parseInt(window.localStorage.pool_last_updated_v2)
 
         if(cur_date - last_updated >= LP_UPDATE_INTERVAL || last_updated < 1635525130){
           need_to_update = true
@@ -450,7 +450,7 @@ export const actions = actionTree(
         await getRaydiumPools(conn);
         if(!DEVNET_MODE)
         { 
-          window.localStorage.pool_last_updated = new Date().getTime()
+          window.localStorage.pool_last_updated_v2 = new Date().getTime()
           window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
         }
       }
