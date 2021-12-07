@@ -32,7 +32,9 @@
           <span class="title noDesktop">
             Pools
             <NuxtLink to="/pools/create-pool/" class="create-btn-mobile">
-              <div class="create-plus-btn">+</div>
+              <div class="create-plus-btn">
+                <img src="@/assets/icons/plus-icon-10.svg" />
+              </div>
             </NuxtLink>
           </span>
           <span class="information">
@@ -1202,9 +1204,11 @@ section {
 
           a {
             position: absolute;
+
             &.create-btn-desktop {
               top: 20px;
               right: -90px;
+              
               .create-plus-btn {
                 font-weight: 400;
                 background: @color-outline;
@@ -1345,6 +1349,9 @@ section {
                   position: absolute;
                   top: -5px;
                   right: -20px;
+                  display: flex;
+                  align-items: center;
+                  width: fit-content;
 
                   &.labelized {
                     left: -20px;

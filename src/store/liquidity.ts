@@ -565,7 +565,7 @@ export const actions = actionTree(
       })
 
       commit('setInfos', liquidityPools)
-      logger('Liquidity pool infomations updated')
+      logger('Liquidity pool infomations updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
 
       commit('setInitialized')
       commit('setLoading', false)

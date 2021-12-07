@@ -33,6 +33,15 @@ export const actions:any = actionTree(
       let need_to_update = false
       let cur_date = new Date().getTime()
 
+
+      if(window.localStorage.tokensLoading && window.localStorage.tokensLoading == 1){
+        logger('Skiped')
+        return
+      }
+
+
+      window.localStorage.tokensLoading = 1
+
       if(window.localStorage.token_last_updated_){
         const last_updated = parseInt(window.localStorage.token_last_updated_)
         if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1638191914){
@@ -150,8 +159,9 @@ export const actions:any = actionTree(
 
       }
 
-      logger('Token list updated')
+      window.localStorage.tokensLoading = 0
 
+      logger('Token list updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
       commit('setInitialized')
       commit('setLoading', false)
     }

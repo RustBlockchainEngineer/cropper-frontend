@@ -5,7 +5,7 @@
       <div class="card-body">
         <div class="page-head fs-container">
           <span class="title">Fertilizer Beta</span>
-          <a href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/apply-for-fertilizer" target="_blank">
+          <a href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/apply-for-fertilizer" target="_blank">
             <div class="create">
               <Button size="large" ghost> + &nbsp; Apply </Button>
             </div>
