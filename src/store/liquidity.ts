@@ -3,7 +3,10 @@ import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 import { ACCOUNT_LAYOUT, getBigNumber, MINT_LAYOUT } from '@/utils/layouts'
 import { AMM_INFO_LAYOUT, AMM_INFO_LAYOUT_V3, AMM_INFO_LAYOUT_V4, getLpMintListDecimals } from '@/utils/liquidity'
 import { LIQUIDITY_POOLS, getAddressForWhat, LiquidityPoolInfo } from '@/utils/pools'
+import fixedpools from './pairs.json';
 import { commitment, createAmmAuthority, getFilteredProgramAccounts, getMultipleAccounts, getMintDecimals, getAMMGlobalStateAccount as getAMMGlobalStateAccount } from '@/utils/web3'
+
+
 
 import { OpenOrders } from '@project-serum/serum'
 import { PublicKey } from '@solana/web3.js'
@@ -138,6 +141,10 @@ async function getCropperPools(conn:any){
 
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
     const ammInfo = CRP_AMM_LAYOUT_V1.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
+
+    if (fixedpools.find((item) => item.ammId === ammAll[indexAmmInfo].publicKey.toString())) {
+      continue
+    }
 
     if (
       !Object.keys(lpMintListDecimls).includes(ammInfo.lpMintAddress.toString()) ||
@@ -279,6 +286,10 @@ async function getRaydiumPools(conn:any){
 
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
     const ammInfo = AMM_INFO_LAYOUT_V4.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
+    if (fixedpools.find((item) => item.ammId === ammAll[indexAmmInfo].publicKey.toString())) {
+      continue
+    }
+
     if (
       !Object.keys(lpMintListDecimls).includes(ammInfo.lpMintAddress.toString()) ||
       ammInfo.pcMintAddress.toString() === ammInfo.serumMarket.toString() ||
@@ -410,10 +421,6 @@ export const actions = actionTree(
       const conn = this.$web3
       let need_to_update = false
       let cur_date = new Date().getTime()
-
-      const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
-
-
       if(window.localStorage.pool_last_updated_v2 && !DEVNET_MODE){
         const last_updated = parseInt(window.localStorage.pool_last_updated_v2)
 
@@ -449,18 +456,26 @@ export const actions = actionTree(
 
       if(need_to_update)
       {
+
+
+
         await getCropperPools(conn);
 
-        if(!isSafari)
-        { 
         await getRaydiumPools(conn);
-        }
-        if(!DEVNET_MODE &&  !isSafari)
+
+        if(!DEVNET_MODE)
         { 
           window.localStorage.pool_last_updated_v2 = new Date().getTime()
           window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
         }
+
+
       }
+
+      
+        fixedpools.forEach((pool:LiquidityPoolInfo)=>{
+            LIQUIDITY_POOLS.push(pool)
+        })
 
       const liquidityPools = {} as any
       const publicKeys = [] as any
