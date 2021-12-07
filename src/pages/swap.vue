@@ -3,10 +3,6 @@
     <img src="@/assets/icons/greenPlanet2.svg" class="planetMiddle" />
     <div class="page-head fs-container">
       <span class="title"> Swap </span>
-      <div v-if="wsolBalance" >
-        You got {{ wsolBalance.balance.fixed() }} wrapped SOL
-       <Button ghost @click="unwrap">Unwrap</Button>
-      </div>
       <span class="information">
         <div class="setting-btn-group">
           <div
@@ -177,6 +173,14 @@
       </span>
     </div>
     <div class="swap-content">
+      <div v-if="wsolBalance" class="note-unwrapped-sol">
+        <div class="note-content">
+          <img class="note-icon" src="@/assets/icons/warning-icon.svg" />
+          <label>You have {{ wsolBalance.balance.fixed() }} <span style="color: #23ADB4">wrapped SOL</span> in your wallet. Click to unwrap to native SOL.</label>
+        </div>
+        <Button class="note-btn" @click="unwrap">Unwrap SOL</Button>
+      </div>
+
       <CoinSelect v-if="coinSelectShow" @onClose="() => (coinSelectShow = false)" @onSelect="onCoinSelect" />
       <AmmIdSelect
         :show="ammIdSelectShow"
@@ -2279,6 +2283,52 @@ export default Vue.extend({
   .swap-content {
     max-width: 662px; //550
     margin: auto;
+
+    .note-unwrapped-sol {
+      background: #CCD1F115;
+      border-radius: 15px;
+      padding: 24px;
+      margin-bottom: 20px;
+      margin-top: -50px;
+      display: flex;
+      align-items: center;
+
+      @media @max-t-mobile {
+        margin-top: 0;
+        display: block;
+      }
+
+      .note-content {
+        font-size: 16px;
+        line-height: 24px;
+        display: flex;
+        align-items: baseline;
+
+        .note-icon {
+          margin-right: 20px;
+        }
+      }
+
+      .note-btn {
+        background: @gradient-color-social;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        border: none;
+        width: 138px;
+        height: 33px;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 14px;
+        letter-spacing: -0.05em;
+
+        @media @max-t-mobile {
+          margin: 10px auto auto auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
 
     .coin-budge {
       align-items: center;
