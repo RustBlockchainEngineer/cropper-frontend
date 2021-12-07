@@ -21,7 +21,7 @@
           <span class="title">Liquidity pool creation</span>
           <span class="buttonsd">
             <a
-              href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+              href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
               target="_blank"
             >
               <div class="create">
@@ -97,7 +97,7 @@
                         ><u>Note:</u> This tool is for advanced users. Before attempting to create a new liquidity pool,
                         we suggest going through this
                         <a
-                          href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                          href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
                           target="_blank"
                         >
                           detailed guide.</a

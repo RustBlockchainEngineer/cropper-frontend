@@ -29,7 +29,7 @@
             </NuxtLink>
           </div>
           <div class="stdEmptyGradientButton">
-            <a href="https://cropper-finance.gitbook.io/cropperfinance/" target="_blank">
+            <a href="https://docs.cropper.finance/cropperfinance/" target="_blank">
                 <button id="ReadMore">
                    <img src="@/assets/icons/caret-right.svg" />
                     Read More

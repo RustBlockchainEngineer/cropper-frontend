@@ -20,7 +20,7 @@
         <div class="page-head fs-container">
           <span class="title">Farm creation</span>
           <span class="buttonsd">
-            <a href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm" target="_blank">
+            <a href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm" target="_blank">
               <div class="create">
                 <Button size="large" ghost>Detailed guide </Button>
               </div>
@@ -151,7 +151,7 @@
                       <em>
                         This tool is for advanced users. Before attempting to create a new farm, we suggest going through this
                         <a
-                          href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
+                          href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
                           target="_blank"
                         >
                           detailed guide.</a
