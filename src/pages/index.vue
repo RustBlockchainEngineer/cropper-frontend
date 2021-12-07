@@ -21,8 +21,8 @@
               <div class="token-infos">
                 <img src="@/assets/icons/cropper.svg" />
                 <label class="bodyM weightS"><u>CRP Token</u></label>
-                <label class="bodyM weightS">Price: 0,50€</label>
-                <label class="bodyM weightS">Market Cap: 0,50€</label>
+                <label class="bodyM weightS">Price: {{ CRPPrice }}€</label>
+                <label class="bodyM weightS">Market Cap: {{ marketCap }}€</label>
               </div>
             </div>
             <div class="cropper-content">
@@ -39,10 +39,10 @@
               </div>
             </div>
             <div class="social-links">
-              <a href="#"><img src="@/assets/social/medium-blue.svg" /></a>
-              <a href="#"><img src="@/assets/social/discord-blue.svg" /></a>
-              <a href="#"><img src="@/assets/social/twitter-blue.svg" /></a>
-              <a href="#"><img src="@/assets/social/telegram-blue.svg" /></a>
+              <a :href="socialLinks.medium" target="_blank"><img src="@/assets/social/medium-blue.svg" /></a>
+              <a :href="socialLinks.discord" target="_blank"><img src="@/assets/social/discord-blue.svg" /></a>
+              <a :href="socialLinks.twitter" target="_blank"><img src="@/assets/social/twitter-blue.svg" /></a>
+              <a :href="socialLinks.telegram" target="_blank"><img src="@/assets/social/telegram-blue.svg" /></a>
             </div>
             <img class="move-next-section" src="@/assets/icons/transparent-arrow.svg" />
           </Col>
@@ -129,7 +129,9 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-swap.svg" />
                 <h4 class="title weightB">Swap</h4>
                 <p class="bodyM content">Designed to give you the best price on Solana</p>
-                <a class="bodyM now-btn weightS">Swap Now</a>
+                <NuxtLink to="/swap" class="bodyM now-btn weightS">
+                  Swap Now
+                </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
@@ -137,7 +139,9 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-farming.svg" />
                 <h4 class="title weightB">Farming</h4>
                 <p class="bodyM content">Enjoy a wide variety of Permissionless and Labelized farms</p>
-                <a class="bodyM now-btn weightS">Farm Now</a>
+                <NuxtLink to="/farms" class="bodyM now-btn weightS">
+                  Farm Now
+                </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
@@ -145,7 +149,9 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-staking.svg" />
                 <h4 class="title weightB">Staking</h4>
                 <p class="bodyM content">Stake CRP through 4 tiers and get advantages on the plateform</p>
-                <a class="bodyM now-btn weightS">Stake Now</a>
+                <NuxtLink to="/staking" class="bodyM now-btn weightS">
+                  Stake Now
+                </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
@@ -153,7 +159,9 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-fertilizer.svg" />
                 <h4 class="title weightB">Fertilizer</h4>
                 <p class="bodyM content">The Fertilizer launcher is curently being imrpoved.</p>
-                <a class="bodyM now-btn weightS">Soon!</a>
+                <NuxtLink to="/" class="bodyM now-btn weightS">
+                  Soon
+                </NuxtLink>
               </div>
             </Col>
           </Row>
@@ -246,132 +254,21 @@
 
     <section class="cropper-feed">
       <h2 class="weightB text-center">@cropper.finance</h2>
-      <div class="feed-container desktop">
-        <Row :gutter="20">
-          <Col :span="22" :offset="1">
-            <Col :span="8">
-              <div class="feed-twitter">
-                <div class="feed-logo">
-                  <img src="@/assets/social/twitter-white.svg" />
-                </div>
-                <div class="feed-title weightS bodyM">🖼 The wCAPS-USDC farm is now open!</div>
-                <br />
-                <div class="feed-content bodyM">
-                  @Ternoa_ 's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
-                  <br /><br />
-                  May your harvests be bountiful and your APRs high Downwards arrow
-                  https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
-                </div>
-              </div>
-              <div class="feed-video" style="margin-top: 20px"></div>
-            </Col>
-            <Col :span="8">
-              <div class="feed-medium">
-                <div class="feed-logo">
-                  <img src="@/assets/social/medium-white.svg" />
-                </div>
-                <div class="feed-title">
-                  <h4 class="weightB">Weekly Update #5</h4>
-                </div>
-                <br />
-                <div class="feed-content bodyM">3 min read</div>
-              </div>
-
-              <div class="feed-medium" style="margin-top: 20px">
-                <div class="feed-logo">
-                  <img src="@/assets/social/medium-white.svg" />
-                </div>
-                <div class="feed-title">
-                  <h4 class="weightB">Weekly Update #5</h4>
-                </div>
-                <br />
-                <div class="feed-content bodyM">3 min read</div>
-              </div>
-
-              <div class="feed-twitter" style="margin-top: 20px">
-                <div class="feed-logo">
-                  <img src="@/assets/social/twitter-white.svg" />
-                </div>
-                <div class="feed-title weightS bodyM">🖼 The wCAPS-USDC farm is now open!</div>
-                <br />
-                <div class="feed-content bodyM">
-                  @Ternoa_ 's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
-                  <br /><br />
-                  May your harvests be bountiful and your APRs high Downwards arrow
-                  https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
-                </div>
-              </div>
-            </Col>
-            <Col :span="8">
-              <div class="feed-medium">
-                <div class="feed-logo">
-                  <img src="@/assets/social/medium-white.svg" />
-                </div>
-                <div class="feed-title">
-                  <h4 class="weightB">Weekly Update #5</h4>
-                </div>
-                <br />
-                <div class="feed-content bodyM">3 min read</div>
-              </div>
-
-              <div class="feed-medium" style="margin-top: 20px">
-                <div class="feed-logo">
-                  <img src="@/assets/social/medium-white.svg" />
-                </div>
-                <div class="feed-title">
-                  <h4 class="weightB">Weekly Update #5</h4>
-                </div>
-                <br />
-                <div class="feed-content bodyM">3 min read</div>
-              </div>
-
-              <div class="feed-twitter" style="margin-top: 20px">
-                <div class="feed-logo">
-                  <img src="@/assets/social/twitter-white.svg" />
-                </div>
-                <div class="feed-title weightS bodyM">🖼 The wCAPS-USDC farm is now open!</div>
-                <br />
-                <div class="feed-content bodyM">
-                  @Ternoa_ 's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
-                  <br /><br />
-                  May your harvests be bountiful and your APRs high Downwards arrow
-                  https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
-                </div>
-              </div>
-            </Col>
-          </Col>
-        </Row>
-      </div>
-
-      <div class="feed-container mobile">
+      <div class="feed-container">
         <Row>
-          <Col :span="24">
-            <div class="feed-medium">
-              <div class="feed-logo">
-                <img src="@/assets/social/medium-white.svg" />
-              </div>
-              <div class="feed-title">
-                <h4 class="weightB">Weekly Update #5</h4>
-              </div>
-              <br />
-              <div class="feed-content bodyM">3 min read</div>
-            </div>
-
-            <div class="feed-video" style="margin-top: 20px"></div>
-
-            <div class="feed-twitter" style="margin-top: 20px">
-              <div class="feed-logo">
-                <img src="@/assets/social/twitter-white.svg" />
-              </div>
-              <div class="feed-title weightS bodyM">🖼 The wCAPS-USDC farm is now open!</div>
-              <br />
-              <div class="feed-content bodyM">
-                @Ternoa_ 's NFT time capsules will last as long as you want them to but this farm won't! Dizzy symbol
-                <br /><br />
-                May your harvests be bountiful and your APRs high Downwards arrow
-                https://cropper.finance/farms/?s=BNmV9A29jtHhsVoQKe3ViUgHRxYrQ6FrVj3KpcKEAMBZ
-              </div>
-            </div>
+          <Col :span="22" :offset="1">
+            <Row :gutter="[20, 20]">
+              <Col :xs="24" :sm="24" :md="8" v-for="twitter in twitterFeeds" :key="twitter.id">
+                <div class="feed-twitter">
+                  <div class="feed-logo">
+                    <img src="@/assets/social/twitter-white.svg" />
+                  </div>
+                  <div class="feed-content bodyM">
+                    {{twitter.content}}
+                  </div>
+                </div>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </div>
@@ -464,6 +361,9 @@ export default class Landing extends Vue {
   isPartners: boolean = false
   isPowered: boolean = false
   isDirect: boolean = false
+  twitterFeeds: string[] = []
+  CRPPrice: any = 0
+  marketCap: any = 0
   currentCategory: string = 'advisors'
   currentPlay: number = 1
   surroundedList = {
@@ -577,9 +477,18 @@ export default class Landing extends Vue {
     ]
   }
   currentIndustry: any = this.surroundedList.advisors
+  socialLinks = {
+    twitter: 'https://twitter.com/CropperFinance',
+    discord: 'https://discord.com/invite/9hdP7cM3ec',
+    medium: 'https://cropperfinance.medium.com/',
+    telegram: 'https://linktr.ee/cropperfinance',
+  }
 
   mounted() {
-    this.getTvl();
+    this.getTvl()
+    this.getCRPPrice()
+    this.getMarketCap()
+    this.getTwitterFeeds()
   }
 
   beforeDestroy() {
@@ -635,55 +544,87 @@ export default class Landing extends Vue {
     this.currentPlay = id
   }
 
-    async getTvl() {
+  async getCRPPrice() {
+    let responseData: any = []
+    try {
+      responseData = await fetch('https://api.cropper.finance/prices/').then((res) => res.json())
+    } catch (err) {
+      console.log(err)
+    } finally {
+      let result = responseData.find((element: any) => element.symbol === 'CRP')
+      this.CRPPrice = result.price
+      this.CRPPrice = this.CRPPrice.toLocaleString('en-US')
+    }
+  }
 
+  async getMarketCap() {
+    let responseData: any = []
+    try {
+      responseData = await fetch('https://api.cropper.finance/supply/').then((res) => res.json())
+    } catch (err) {
+      console.log(err)
+    } finally {
+      this.marketCap = Math.round(responseData * this.CRPPrice)
+      this.marketCap = this.marketCap.toLocaleString('en-US')
+    }
+  }
 
-        let cur_date = new Date().getTime()
-        if(window.localStorage.TVL_last_updated && false){
-          const last_updated = parseInt(window.localStorage.TVL_last_updated)
-          if(cur_date - last_updated <= 600000){
-            this.TVL = window.localStorage.TVL
-            this.TVL = this.TVL.toLocaleString("en-US")
-            return
-          }
-        }
-
-        let responseData:any = []
-        let tvl = 0;
-        try {
-          responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-          
-          Object.keys(responseData).forEach(function (key) {
-            if(((responseData as any)[key as any].tvl * 1) < 2000000){
-              tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
-            }
-          })
-        } catch {
-          // dummy data
-        } finally {
-
-        }
-
-        try {
-          responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
-          tvl = (tvl * 1) + ((responseData as any).value * 1)
-        } catch {
-          // dummy data
-        } finally {
-
-        }
-
-        this.TVL = Math.round(tvl);
-
-        window.localStorage.TVL_last_updated = new Date().getTime()
-        window.localStorage.TVL = this.TVL
-
-        this.TVL = this.TVL.toLocaleString("en-US")
+  async getTvl() {
+    let cur_date = new Date().getTime()
+    if (window.localStorage.TVL_last_updated && false) {
+      const last_updated = parseInt(window.localStorage.TVL_last_updated)
+      if (cur_date - last_updated <= 600000) {
+        this.TVL = window.localStorage.TVL
+        this.TVL = this.TVL.toLocaleString('en-US')
+        return
+      }
     }
 
-  
+    let responseData: any = []
+    let tvl = 0
+    try {
+      responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+
+      Object.keys(responseData).forEach(function (key) {
+        if ((responseData as any)[key as any].tvl * 1 < 2000000) {
+          tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
+        }
+      })
+    } catch {
+      // dummy data
+    } finally {
+    }
+
+    try {
+      responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
+      tvl = tvl * 1 + (responseData as any).value * 1
+    } catch {
+      // dummy data
+    } finally {
+    }
+
+    this.TVL = Math.round(tvl)
+
+    window.localStorage.TVL_last_updated = new Date().getTime()
+    window.localStorage.TVL = this.TVL
+
+    this.TVL = this.TVL.toLocaleString('en-US')
+  }
+
+  async getTwitterFeeds() {
+    let responseData: any = []
+    try {
+      responseData = await fetch('https://api.cropper.finance/tweets/').then((res) => res.json())
+    } catch (err) {
+      console.log(err)
+    } finally {
+      this.twitterFeeds = responseData
+      console.log(this.twitterFeeds)
+    }
+  }
 }
 </script>
+
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
@@ -1129,19 +1070,6 @@ export default class Landing extends Vue {
     .feed-container {
       margin-top: 50px;
 
-      &.desktop {
-        @media @max-b-mobile {
-          display: none;
-        }
-      }
-
-      &.mobile {
-        display: none;
-        @media @max-b-mobile {
-          display: block;
-        }
-      }
-
       .feed-twitter {
         background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
@@ -1151,6 +1079,7 @@ export default class Landing extends Vue {
 
         .feed-content {
           word-break: break-all;
+          white-space: pre-line;
         }
       }
 
