@@ -366,6 +366,28 @@ async function getTokenBalance(connection:any, tokenAccount:string){
   return parsed.amount
 }
 
+export async function unwrapWsol(
+  connection: Connection,
+  wallet: any,
+  wsolAccount: any,
+) {
+  if (!wsolAccount) throw new Error('No any WSOL account')
+
+  const transaction = new Transaction()
+  const signers: Account[] = []
+
+  const owner = wallet?.publicKey
+
+  transaction.add(
+    closeAccount({
+      source: new PublicKey(wsolAccount),
+      destination: owner,
+      owner
+    })
+  )
+
+  return await sendTransaction(connection, wallet, transaction, signers)
+}
 
 export async function prepareTwoStepSwap(
   connection: Connection,

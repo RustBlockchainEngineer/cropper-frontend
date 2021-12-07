@@ -171,6 +171,14 @@
       </span>
     </div>
     <div class="swap-content">
+      <div v-if="wsolBalance" class="note-unwrapped-sol">
+        <div class="note-content">
+          <img class="note-icon" src="@/assets/icons/warning-icon.svg" />
+          <label>You have {{ wsolBalance.balance.fixed() }} <span style="color: #23ADB4">wrapped SOL</span> in your wallet. Click to unwrap to native SOL.</label>
+        </div>
+        <Button class="note-btn" @click="unwrap">Unwrap SOL</Button>
+      </div>
+
       <CoinSelect v-if="coinSelectShow" @onClose="() => (coinSelectShow = false)" @onSelect="onCoinSelect" />
       <AmmIdSelect
         :show="ammIdSelectShow"
@@ -580,7 +588,8 @@ import {
   wrap,
   checkUnsettledInfo,
   settleFund,
-  prepareTwoStepSwap
+  prepareTwoStepSwap,
+  unwrapWsol
 } from '@/utils/swap'
 import BigNumber from 'bignumber.js'
 import { TokenAmount, gt } from '@/utils/safe-math'
@@ -616,6 +625,7 @@ export default Vue.extend({
       TOKENS,
       // should check if user have enough SOL to have a swap
       solBalance: null as TokenAmount | null,
+      wsolBalance: null as TokenAmount | null,
       autoRefreshTime: 60,
       countdown: 0,
       marketTimer: null as any,
@@ -717,6 +727,7 @@ export default Vue.extend({
           this.fetchUnsettledByMarket()
         }
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
+        this.wsolBalance = this.wallet.tokenAccounts[TOKENS.WSOL.mintAddress]
         this.flush()
       },
       deep: true
@@ -772,7 +783,6 @@ export default Vue.extend({
     },
     'liquidity.infos': {
       handler(_newInfos: any) {
-        this.updateAmounts()
         const { from, to, ammId } = this.$route.query
         // @ts-ignore
         this.setCoinFromMint(ammId, from, to)
@@ -1269,7 +1279,10 @@ export default Vue.extend({
     updateAmounts() {
       let max_coinAmount = 0
 
-      try {
+      try{
+        if(this.fromCoinAmount == ''){
+          this.best_dex_type = 'Unknown'
+        }
         if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
           if (this.isWrap) {
             // wrap & unwrap
@@ -1517,6 +1530,10 @@ export default Vue.extend({
             if (this.countdown === this.autoRefreshTime) {
               this.getOrderBooks()
               this.$accessor.wallet.getTokenAccounts()
+              if(this.$accessor.liquidity.initialized && this.$accessor.liquidity.loading == false)
+              {
+                this.$accessor.liquidity.requestInfos()
+              }
               this.countdown = 0
             }
           }
@@ -1551,6 +1568,45 @@ export default Vue.extend({
       }
       return 0
     },
+    
+    unwrap() {
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+      unwrapWsol(
+          this.$web3,
+          // @ts-ignore
+          this.$wallet,
+          get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.tokenAccountAddress`)
+      )
+        .then((txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+              ])
+          })
+
+          const description = `Unwrap WSOL`
+          this.$accessor.transaction.sub({ txid, description })
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Unwrap WSOL failed',
+            description: error.message
+          })
+        })
+    },
+
     placeOrder() {
       this.swaping = true
       const key = getUnixTs().toString()
@@ -2218,6 +2274,52 @@ export default Vue.extend({
   .swap-content {
     max-width: 662px; //550
     margin: auto;
+
+    .note-unwrapped-sol {
+      background: #CCD1F115;
+      border-radius: 15px;
+      padding: 24px;
+      margin-bottom: 20px;
+      margin-top: -50px;
+      display: flex;
+      align-items: center;
+
+      @media @max-t-mobile {
+        margin-top: 0;
+        display: block;
+      }
+
+      .note-content {
+        font-size: 16px;
+        line-height: 24px;
+        display: flex;
+        align-items: baseline;
+
+        .note-icon {
+          margin-right: 20px;
+        }
+      }
+
+      .note-btn {
+        background: @gradient-color-social;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        border: none;
+        width: 138px;
+        height: 33px;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 14px;
+        letter-spacing: -0.05em;
+
+        @media @max-t-mobile {
+          margin: 10px auto auto auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
 
     .coin-budge {
       align-items: center;
