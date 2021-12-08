@@ -116,6 +116,10 @@ async function getSerumMarkets(conn:any){
   {
     markets = JSON.parse(window.localStorage.markets)
   }
+
+  console.log(JSON.stringify(markets));
+
+
   return markets
 }
 
@@ -472,10 +476,19 @@ export const actions = actionTree(
 
       }
 
-      
-        fixedpools.forEach((pool:LiquidityPoolInfo)=>{
-            LIQUIDITY_POOLS.push(pool)
+
+        let ammSet: any = {};
+
+        LIQUIDITY_POOLS.forEach((pool) => {
+          ammSet[pool.ammId] = pool.ammId
         })
+
+        fixedpools.forEach((pool:LiquidityPoolInfo)=>{
+          if(!ammSet[pool.ammId]){
+            LIQUIDITY_POOLS.push(pool)
+          }
+        })
+        
 
       const liquidityPools = {} as any
       const publicKeys = [] as any
