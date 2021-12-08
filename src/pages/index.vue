@@ -28,9 +28,7 @@
             <div class="cropper-content">
               <label class="displayL weightB"
                 >The Ultimate <br />
-                Permissionless <br />
-                Yield Farming</label
-              >
+                DeFi Protocol</label>
               <p class="powered-by bodyL weightB">Powered by Solana</p>
             </div>
             <div class="read-more">
@@ -159,8 +157,8 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-fertilizer.svg" />
                 <h4 class="title weightB">Fertilizer</h4>
                 <p class="bodyM content">The Fertilizer launcher is curently being imrpoved.</p>
-                <NuxtLink to="/" class="bodyM now-btn weightS">
-                  Soon
+                <NuxtLink to="/" class="bodyM now-btn weightS soon">
+                  Coming Soon!
                 </NuxtLink>
               </div>
             </Col>
@@ -763,7 +761,7 @@ export default class Landing extends Vue {
 
       .balance-infos {
         .tlv-value {
-          background: -webkit-linear-gradient(333.93deg, #22b5b6 6.07%, #280c86 134.97%);
+          background: -webkit-linear-gradient(90deg, #22B5B6 6.07%, #280C86 134.97%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
@@ -1022,6 +1020,7 @@ export default class Landing extends Vue {
         padding-left: 36px;
         padding-right: 36px;
         height: 472px;
+        padding-top: 50px;
 
         @media @max-b-mobile {
           padding: 18px 8px;
@@ -1060,12 +1059,31 @@ export default class Landing extends Vue {
         }
 
         .now-btn {
-          color: #22b5b6;
+          color: #fff;
           position: absolute;
           bottom: 55px;
+          background: #23ADB4;
+          border-radius: 48px;
+          padding: 8px 0;
+          width: calc(100% - 72px);
+          text-align: center;
+          display: none;
+
+          &.soon {
+            background: rgba(35, 173, 180, 0.5);
+          }
 
           @media @max-b-mobile {
             bottom: 18px;
+          }
+        }
+
+        &:hover {
+          padding-top: 0;
+          border: 4px solid #23ADB4;
+
+          .now-btn {
+            display: block;
           }
         }
       }
