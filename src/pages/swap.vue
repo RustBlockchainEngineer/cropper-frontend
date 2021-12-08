@@ -817,6 +817,7 @@ export default Vue.extend({
   mounted() {
     this.getTvl()
     this.$accessor.token.loadTokens()
+    this.$accessor.wallet.getTokenAccounts()
     this.updateCoinInfo(this.wallet.tokenAccounts)
     this.setMarketTimer()
     const { from, to, ammId } = this.$route.query
