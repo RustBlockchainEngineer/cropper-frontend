@@ -478,8 +478,12 @@ export default class Landing extends Vue {
     ],
     partners: [
       {
-        title: 'FTX',
-        img: 'https://cropper.finance/distant/industry/ftx.svg'
+        title: 'GenesysGo',
+        img: 'https://cropper.finance/distant/industry/genesysgo.png'
+      },
+      {
+        title: 'Sonar',
+        img: 'https://cropper.finance/distant/industry/sonar.jpeg'
       },
       {
         title: 'MEXC Global',
