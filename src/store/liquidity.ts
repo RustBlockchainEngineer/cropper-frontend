@@ -312,15 +312,7 @@ async function getRaydiumPools(conn:any){
         : ammInfo.pcMintAddress.toString()
     let coin = Object.values(TOKENS).find((item) => item.mintAddress === fromCoin)
     if (!coin) {
-      TOKENS[`unknow-${ammInfo.coinMintAddress.toString()}`] = {
-        symbol: 'unknown',
-        name: 'unknown',
-        mintAddress: ammInfo.coinMintAddress.toString(),
-        decimals: getBigNumber(ammInfo.coinDecimals),
-        cache: true,
-        tags: []
-      }
-      coin = TOKENS[`unknow-${ammInfo.coinMintAddress.toString()}`]
+      continue;
     }
     if (!coin.tags.includes('unofficial')) {
       coin.tags.push('unofficial')
@@ -328,15 +320,7 @@ async function getRaydiumPools(conn:any){
 
     let pc = Object.values(TOKENS).find((item) => item.mintAddress === toCoin)
     if (!pc) {
-      TOKENS[`unknow-${ammInfo.pcMintAddress.toString()}`] = {
-        symbol: 'unknown',
-        name: 'unknown',
-        mintAddress: ammInfo.pcMintAddress.toString(),
-        decimals: getBigNumber(ammInfo.pcDecimals),
-        cache: true,
-        tags: []
-      }
-      pc = TOKENS[`unknow-${ammInfo.pcMintAddress.toString()}`]
+      continue;
     }
     if (!pc.tags.includes('unofficial')) {
       pc.tags.push('unofficial')
@@ -495,6 +479,8 @@ export const actions = actionTree(
       const amm_state_info = await getAMMGlobalStateAccount(conn);
 
       LIQUIDITY_POOLS.forEach((pool) => {
+
+
         const { poolCoinTokenAccount, poolPcTokenAccount, ammOpenOrders, ammId, coin, pc, lp } = pool
 
         publicKeys.push(
