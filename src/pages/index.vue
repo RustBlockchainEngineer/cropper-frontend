@@ -403,109 +403,109 @@ export default class Landing extends Vue {
     advisors: [
       {
         title: 'Dexlab',
-        img: '@/assets/industry/dexlab.svg'
+        img: 'https://cropper.finance/distant/industry/dexlab.svg'
       },
       {
         title: 'Solanium',
-        img: '/_nuxt/src/assets/industry/solanium.svg'
+        img: 'https://cropper.finance/distant/industry/solanium.svg'
       },
       {
         title: 'Halborn',
-        img: '/_nuxt/src/assets/industry/halborn.svg'
+        img: 'https://cropper.finance/distant/industry/halborn.svg'
       }
     ],
     backedBy: [
       {
         title: 'SKYVision Capital',
-        img: '/_nuxt/src/assets/industry/svc.svg'
+        img: 'https://cropper.finance/distant/industry/svc.svg'
       },
       {
         title: 'MEXC Global',
-        img: '/_nuxt/src/assets/industry/mexc.svg'
+        img: 'https://cropper.finance/distant/industry/mexc.svg'
       },
       {
         title: 'Gate.io',
-        img: '/_nuxt/src/assets/industry/gateio.svg'
+        img: 'https://cropper.finance/distant/industry/gateio.svg'
       },
       {
         title: 'Negocia Capital',
-        img: '/_nuxt/src/assets/industry/negocia.svg'
+        img: 'https://cropper.finance/distant/industry/negocia.svg'
       },
       {
         title: 'Solanium Ventures',
-        img: '/_nuxt/src/assets/industry/solaniumV.svg'
+        img: 'https://cropper.finance/distant/industry/solaniumV.svg'
       },
       {
         title: 'Newave Capital',
-        img: '/_nuxt/src/assets/industry/newave.svg'
+        img: 'https://cropper.finance/distant/industry/newave.svg'
       },
       {
         title: 'DeltaHub Capital',
-        img: '/_nuxt/src/assets/industry/deltahub.svg'
+        img: 'https://cropper.finance/distant/industry/deltahub.svg'
       },
       {
         title: 'AngelONE',
-        img: '/_nuxt/src/assets/industry/angelone.svg'
+        img: 'https://cropper.finance/distant/industry/angelone.svg'
       },
       {
         title: 'Cropperbros',
-        img: '/_nuxt/src/assets/industry/cropperbros.svg'
+        img: 'https://cropper.finance/distant/industry/cropperbros.svg'
       },
       {
         title: 'Basics Capital',
-        img: '/_nuxt/src/assets/industry/basics.svg'
+        img: 'https://cropper.finance/distant/industry/basics.svg'
       },
       {
         title: 'AVA Capital',
-        img: '/_nuxt/src/assets/industry/ava.svg'
+        img: 'https://cropper.finance/distant/industry/ava.svg'
       },
       {
         title: 'M6',
-        img: '/_nuxt/src/assets/industry/m6.svg'
+        img: 'https://cropper.finance/distant/industry/m6.svg'
       },
       {
         title: 'OIG',
-        img: '/_nuxt/src/assets/industry/oig.svg'
+        img: 'https://cropper.finance/distant/industry/oig.svg'
       },
       {
         title: 'EX Capital',
-        img: '/_nuxt/src/assets/industry/ex.svg'
+        img: 'https://cropper.finance/distant/industry/ex.svg'
       },
       {
         title: 'CryptoJ',
-        img: '/_nuxt/src/assets/industry/cryptoj.svg'
+        img: 'https://cropper.finance/distant/industry/cryptoj.svg'
       }
     ],
     partners: [
       {
         title: 'FTX',
-        img: '/_nuxt/src/assets/industry/ftx.svg'
+        img: 'https://cropper.finance/distant/industry/ftx.svg'
       },
       {
         title: 'MEXC Global',
-        img: '/_nuxt/src/assets/industry/mexc.svg'
+        img: 'https://cropper.finance/distant/industry/mexc.svg'
       },
       {
         title: 'Gate.io',
-        img: '/_nuxt/src/assets/industry/gateio.svg'
+        img: 'https://cropper.finance/distant/industry/gateio.svg'
       },
       {
         title: 'Dexlab',
-        img: '/_nuxt/src/assets/industry/dexlab.svg'
+        img: 'https://cropper.finance/distant/industry/dexlab.svg'
       }
     ],
     poweredBy: [
       {
         title: 'Solana',
-        img: '/_nuxt/src/assets/industry/solana.svg'
+        img: 'https://cropper.finance/distant/industry/solana.svg'
       },
       {
         title: 'Serum',
-        img: '/_nuxt/src/assets/industry/serum.svg'
+        img: 'https://cropper.finance/distant/industry/serum.svg'
       },
       {
         title: 'Bonafide',
-        img: '/_nuxt/src/assets/industry/bonafide.svg'
+        img: 'https://cropper.finance/distant/industry/bonafide.svg'
       }
     ]
   }
