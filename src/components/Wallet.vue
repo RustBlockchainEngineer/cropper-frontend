@@ -623,7 +623,7 @@ export default class Wallet extends Vue {
     color: white !important;
   }
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     height: 46px;
     top: 5px;
   }
@@ -679,7 +679,7 @@ export default class Wallet extends Vue {
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     right: 20px;
   }
   
@@ -688,7 +688,7 @@ export default class Wallet extends Vue {
     overflow-y: scroll;
     padding: 0 24px;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       max-height: 230px;
     }
 
@@ -788,7 +788,7 @@ export default class Wallet extends Vue {
     width: 50px;
     height: 50px;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       margin-left: 10px !important;
       width: 46px;
       height: 46px;
@@ -809,7 +809,7 @@ export default class Wallet extends Vue {
     }
   }
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     display: none;
   }
 }

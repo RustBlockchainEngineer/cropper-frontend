@@ -118,12 +118,12 @@ export default class Foot extends Vue {
   display: flex;
   justify-content: space-between;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     display: unset;
   }
 
   .logo {
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       margin-bottom: 35px;
     }
   }
@@ -133,14 +133,14 @@ export default class Foot extends Vue {
       display: flex;
       align-items: center;
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         display: none;
       }
     }
 
     &.noDesktop {
       display: none;
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         display: inline-block;
       }
     }
@@ -149,7 +149,7 @@ export default class Foot extends Vue {
       margin-right: 38px;
       color: #ccd1f1;
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         display: block;
         margin-bottom: 18px;
 
@@ -194,14 +194,14 @@ export default class Foot extends Vue {
       display: flex;
       justify-content: space-between;
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         display: block;
       }
 
       a {
         color: #fff;
         
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           display: block;
           width: 50%;
           float: left;
@@ -227,12 +227,12 @@ export default class Foot extends Vue {
   display: flex;
   justify-content: space-between;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     color: #98a2e4;
   }
 
   .decentralized {
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       display: none;
     }
   }
@@ -241,7 +241,7 @@ export default class Foot extends Vue {
     label {
       margin-right: 38px;
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         margin-right: 0;
         margin-bottom: 20px;
         display: block;
@@ -250,7 +250,7 @@ export default class Foot extends Vue {
       &:last-child {
         margin-right: 0;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           margin-bottom: 0;
         }
       }
@@ -260,7 +260,7 @@ export default class Foot extends Vue {
 
 // ant customization
 .ant-layout-footer {
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     width: 375px;
     margin: auto;
     padding: 22px !important;

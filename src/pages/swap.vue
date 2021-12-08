@@ -1866,7 +1866,7 @@ export default Vue.extend({
   margin-top: 10px;
   justify-content: space-between;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     justify-content: center;
   }
 
@@ -1885,7 +1885,7 @@ export default Vue.extend({
     justify-content: space-between;
     position: relative;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       top: -25px;
     }
   }
@@ -2254,7 +2254,7 @@ export default Vue.extend({
 //   height: 10px;
 // }
 // ******* Mobile *******
-@media @max-b-mobile {
+@media @max-sm-mobile {
   .swapWrapper {
     margin: auto;
     padding: 0;

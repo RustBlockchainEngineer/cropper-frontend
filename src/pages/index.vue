@@ -17,12 +17,12 @@
         <Row :gutter="20">
           <Col :span="22" :offset="1">
             <div class="balance-infos">
-              <h2 class="weightS tlv-value">TLV {{ TVL }}€</h2>
+              <h2 class="weightS tvl-value">TVL {{ TVL }}$</h2>
               <div class="token-infos">
                 <img src="@/assets/icons/cropper.svg" />
                 <label class="bodyM weightS"><u>CRP Token</u></label>
-                <label class="bodyM weightS">Price: {{ CRPPrice }}€</label>
-                <label class="bodyM weightS">Market Cap: {{ marketCap }}€</label>
+                <label class="bodyM weightS">Price: {{ CRPPrice }}$</label>
+                <label class="bodyM weightS">Market Cap: {{ marketCap }}$</label>
               </div>
             </div>
             <div class="cropper-content">
@@ -42,13 +42,13 @@
               <a :href="socialLinks.twitter" target="_blank"><img src="@/assets/social/twitter-blue.svg" /></a>
               <a :href="socialLinks.telegram" target="_blank"><img src="@/assets/social/telegram-blue.svg" /></a>
             </div>
-            <img class="move-next-section" src="@/assets/icons/transparent-arrow.svg" />
+            <a href="#why-cropper"><img class="move-next-section" src="@/assets/icons/transparent-arrow.svg" /></a>
           </Col>
         </Row>
       </div>
     </section>
 
-    <section class="why-cropper">
+    <section class="why-cropper" id="why-cropper">
       <Row>
         <Col :span="22" :offset="1">
           <h2 class="weightB text-center">Why Cropper?</h2>
@@ -57,7 +57,7 @@
 
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-apr.svg" />
-              <h4 class="weightB">Best Farms APR%</h4>
+              <h4 class="weightB">Top Farms APR%</h4>
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-community.svg" />
@@ -116,17 +116,17 @@
     <section class="features-headline">
       <Row>
         <Col :span="22" :offset="1">
-          <h2 class="weightB text-center">Features headline</h2>
-          <p class="bodyL text-center" style="margin-top: 20px">
-            Reprehenderit esse labore id veniam ut veniam non ex adipisicing
+          <h2 class="weightB text-center">The Cropper Ecosystem</h2>
+          <p class="bodyL weightS text-center eco-content">
+            By farmers, for farmers. With AI-powered low fees and high-impact APRs, our full line of DeFi services give you everything you need in a few clicks. 
           </p>
-          <Row :gutter="25" class="feature-box-group">
+          <Row :gutter="[25, 25]" class="feature-box-group">
             <img class="stars-third-bg" src="@/assets/landing_v2/stars-third-bg.svg" />
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing_v2/feature-swap.svg" />
                 <h4 class="title weightB">Swap</h4>
-                <p class="bodyM content">Designed to give you the best price on Solana</p>
+                <p class="bodyM content">Our smart search delivers the fairest swap instantly</p>
                 <NuxtLink to="/swap" class="bodyM now-btn weightS">
                   Swap Now
                 </NuxtLink>
@@ -136,7 +136,7 @@
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing_v2/feature-farming.svg" />
                 <h4 class="title weightB">Farming</h4>
-                <p class="bodyM content">Enjoy a wide variety of Permissionless and Labelized farms</p>
+                <p class="bodyM content">Explore a vast selection of Labelized and Permissionless Farms</p>
                 <NuxtLink to="/farms" class="bodyM now-btn weightS">
                   Farm Now
                 </NuxtLink>
@@ -146,7 +146,7 @@
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing_v2/feature-staking.svg" />
                 <h4 class="title weightB">Staking</h4>
-                <p class="bodyM content">Stake CRP through 4 tiers and get advantages on the plateform</p>
+                <p class="bodyM content">Earn rewards and gain access to exclusive opportunities with our 5 staking tiers</p>
                 <NuxtLink to="/staking" class="bodyM now-btn weightS">
                   Stake Now
                 </NuxtLink>
@@ -156,7 +156,7 @@
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing_v2/feature-fertilizer.svg" />
                 <h4 class="title weightB">Fertilizer</h4>
-                <p class="bodyM content">The Fertilizer launcher is curently being imrpoved.</p>
+                <p class="bodyM content">The fertilizer launcher is currently being improved</p>
                 <NuxtLink to="/" class="bodyM now-btn weightS soon">
                   Coming Soon!
                 </NuxtLink>
@@ -175,7 +175,7 @@
           <Tabs defaultActiveKey="1" onChange="{callback}">
             <TabPane tab="For Farmers" key="1">
               <Row :gutter="20">
-                <Col :xs="24" :sm="24" :md="8">
+                <Col :sm="8" :md="8" class="play-list-col">
                   <p class="bodyL weightB">Prepare to harvest</p>
                   <div class="play-list">
                     <Button
@@ -204,7 +204,7 @@
                     >
                   </div>
                 </Col>
-                <Col :xs="24" :sm="24" :md="16">
+                <Col :sm="16" :md="16" class="video-play-col">
                   <div class="video-player"></div>
                 </Col>
               </Row>
@@ -666,6 +666,7 @@ export default class Landing extends Vue {
 
 <style lang="less" scoped>
 // global stylesheet
+
 .btn-container {
   background-image: @gradient-btn-primary;
   padding: 3px;
@@ -679,7 +680,7 @@ export default class Landing extends Vue {
     background-image: @gradient-btn-primary-reverse;
   }
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     height: 44px;
   }
 }
@@ -700,7 +701,7 @@ export default class Landing extends Vue {
     // background: blue;
   }
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     padding: 13px 22.5px;
     height: 44px;
   }
@@ -724,7 +725,12 @@ export default class Landing extends Vue {
     background-repeat: no-repeat;
     background-size: cover;
 
-    @media @max-b-mobile {
+    @media @max-lg-tablet {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    @media @max-sm-mobile {
       padding: 20px 20px 0 20px;
       background-image: unset;
     }
@@ -735,7 +741,7 @@ export default class Landing extends Vue {
       justify-content: space-between;
 
       .cropper-logo {
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           width: 92.86px;
           height: 30.86px;
         }
@@ -746,7 +752,7 @@ export default class Landing extends Vue {
         justify-content: space-between;
 
         .doc-btn {
-          @media @max-b-mobile {
+          @media @max-sm-mobile {
             display: none;
           }
         }
@@ -756,7 +762,7 @@ export default class Landing extends Vue {
           font-size: 18px;
           line-height: 14px;
 
-          @media @max-b-mobile {
+          @media @max-sm-mobile {
             font-size: 16px;
             line-height: 18px;
           }
@@ -769,15 +775,15 @@ export default class Landing extends Vue {
     }
 
     .landing-content {
-      margin-top: 160px;
+      margin-top: 120px;
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         margin-top: 50px;
         text-align: center;
       }
 
       .balance-infos {
-        .tlv-value {
+        .tvl-value {
           background: -webkit-linear-gradient(90deg, #22B5B6 6.07%, #280C86 134.97%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -789,7 +795,7 @@ export default class Landing extends Vue {
           align-items: center;
           color: #d4d5f2;
 
-          @media @max-b-mobile {
+          @media @max-sm-mobile {
             justify-content: center;
           }
 
@@ -810,7 +816,7 @@ export default class Landing extends Vue {
       .cropper-content {
         margin-top: 68px;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           margin-top: 28px;
         }
 
@@ -823,7 +829,7 @@ export default class Landing extends Vue {
       .read-more {
         display: none;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           display: block;
         }
 
@@ -844,7 +850,7 @@ export default class Landing extends Vue {
         margin-top: 58px;
         margin-bottom: 12px;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           display: none;
         }
 
@@ -861,7 +867,7 @@ export default class Landing extends Vue {
         display: flex;
         margin: auto;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           display: none;
         }
       }
@@ -871,7 +877,12 @@ export default class Landing extends Vue {
   .why-cropper {
     padding: 98px 64px 0 64px;
 
-    @media @max-b-mobile {
+    @media @max-lg-tablet {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    @media @max-sm-mobile {
       padding: 30px 20px 0 20px;
     }
 
@@ -882,7 +893,7 @@ export default class Landing extends Vue {
       display: flex;
       width: 100%;
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         margin-top: 30px;
         margin-bottom: 48px;
         display: inline-block;
@@ -893,7 +904,7 @@ export default class Landing extends Vue {
         top: calc(50% - 170px);
         left: calc(50% - 170px);
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           display: none;
         }
       }
@@ -906,7 +917,7 @@ export default class Landing extends Vue {
         width: calc((100% - 40px) / 3);
         margin-right: 20px;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           padding: 18px 24px;
           height: auto;
           border-radius: 22px;
@@ -927,7 +938,7 @@ export default class Landing extends Vue {
         .card-img {
           margin: auto;
 
-          @media @max-b-mobile {
+          @media @max-sm-mobile {
             margin: unset;
             margin-right: 18px;
             width: 32px;
@@ -943,7 +954,7 @@ export default class Landing extends Vue {
     .landing-second-img {
       width: 100%;
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         display: none;
       }
     }
@@ -954,7 +965,11 @@ export default class Landing extends Vue {
       padding: 0 64px;
       width: 100%;
 
-      @media @max-b-mobile {
+      @media @max-lg-tablet {
+        padding: 0 32px;
+      }
+
+      @media @max-sm-mobile {
         position: relative;
         top: 0;
         left: 0;
@@ -964,7 +979,7 @@ export default class Landing extends Vue {
       .audit-box-group {
         display: flex;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           display: inline-block;
           width: 100%;
         }
@@ -984,10 +999,15 @@ export default class Landing extends Vue {
             border: 4px solid #23ADB4;
           }
 
-          @media @max-b-mobile {
+          @media @max-lg-tablet {
+            padding-left: 37px;
+          }
+
+          @media @max-sm-mobile {
             padding: 18px;
             width: 100%;
             background: linear-gradient(136.82deg, rgba(34, 181, 182, 0.5) 10.14%, rgba(40, 12, 134, 0.15) 85.36%);
+            background-origin: border-box;
             border-radius: 22px;
             margin-bottom: 25px;
 
@@ -1018,13 +1038,22 @@ export default class Landing extends Vue {
   .features-headline {
     padding: 0 64px 98px 64px;
 
-    @media @max-b-mobile {
+    @media @max-lg-tablet {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    @media @max-sm-mobile {
       padding: 70px 20px 80px 20px;
     }
 
+    .eco-content {
+      margin: 20px auto;
+      width: 50%;
+    }
+
     .feature-box-group {
-      // display: flex;
-      margin-top: 68px;
+      margin-top: 48px !important;
       position: relative;
 
       .stars-third-bg {
@@ -1032,7 +1061,7 @@ export default class Landing extends Vue {
         left: calc(50% - 350px);
         top: calc(50% - 350px);
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           display: none;
         }
       }
@@ -1049,16 +1078,19 @@ export default class Landing extends Vue {
         background-origin: border-box;
         text-align: center;
 
-        @media @max-b-mobile {
+        @media @max-lg-tablet {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+
+        @media @max-md-tablet {
+          height: 376px;
+        }
+
+        @media @max-sm-mobile {
           padding: 18px 8px;
           border-radius: 22px;
-          height: 285px;
-          margin-bottom: 34px !important;
-
-          &:nth-child(3),
-          &:nth-child(4) {
-            margin-bottom: 0 !important ;
-          }
+          height: 325px;
         }
 
         &:last-child {
@@ -1066,9 +1098,11 @@ export default class Landing extends Vue {
         }
 
         .feature-img {
-          @media @max-b-mobile {
-            width: 100px;
-            height: 90px;
+          width: 100%;
+          max-width: 214px;
+
+          @media @max-md-tablet {
+            max-width: 154px;
           }
         }
 
@@ -1082,7 +1116,7 @@ export default class Landing extends Vue {
           margin-bottom: 60px !important;
           text-align: left;
 
-          @media @max-b-mobile {
+          @media @max-sm-mobile {
             margin-bottom: 18px !important;
           }
         }
@@ -1090,7 +1124,7 @@ export default class Landing extends Vue {
         .now-btn {
           color: #fff;
           position: absolute;
-          bottom: 55px;
+          bottom: 50px;
           background: #23ADB4;
           border-radius: 48px;
           padding: 8px 0;
@@ -1102,7 +1136,13 @@ export default class Landing extends Vue {
             background: rgba(35, 173, 180, 0.5);
           }
 
-          @media @max-b-mobile {
+          @media @max-lg-tablet {
+            width: calc(100% - 36px);
+            bottom: 40px;
+          }
+
+          @media @max-sm-mobile {
+            width: calc(100% - 16px);
             bottom: 18px;
           }
         }
@@ -1122,23 +1162,37 @@ export default class Landing extends Vue {
   .how-works {
     .tutorial-container {
       position: relative;
+      height: 900px;
+
+      @media @max-lg-tablet {
+        height: 750px;
+      }
+
+      @media @max-sm-mobile {
+        height: auto;
+      }
 
       .landing-third-bg {
+        position: absolute;
+        bottom: 0;
         width: 100%;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           display: none;
         }
       }
 
       .tutorial-group {
-        position: absolute;
-        top: 58px;
+        margin-top: 58px;
         width: 100%;
 
-        @media @max-b-mobile {
-          top: 40px;
-          position: relative;
+        @media @max-sm-mobile {
+          margin-top: 40px;
+
+          .play-list-col,
+          .video-play-col {
+            width: 100%;
+          }
         }
       }
     }
@@ -1147,7 +1201,12 @@ export default class Landing extends Vue {
   .cropper-feed {
     padding: 98px 64px;
 
-    @media @max-b-mobile {
+    @media @max-lg-tablet {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    @media @max-sm-mobile {
       padding: 100px 32px 48px 32px;
     }
 
@@ -1173,7 +1232,7 @@ export default class Landing extends Vue {
         border-radius: 22px;
         height: 380px;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           height: 208px;
         }
       }
@@ -1183,7 +1242,7 @@ export default class Landing extends Vue {
         border-radius: 22px;
         padding: 22px;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           height: 124px;
         }
       }
@@ -1197,7 +1256,7 @@ export default class Landing extends Vue {
       border-top: 2px solid rgba(255, 255, 255, 0.2);
       border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         margin-top: 18px;
         padding: 12px 0;
       }
@@ -1210,7 +1269,7 @@ export default class Landing extends Vue {
         color: #fff;
         margin-right: 38px;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           padding: 8px 12px;
           font-size: 13px !important;
           line-height: 19.5px !important;
@@ -1235,14 +1294,18 @@ export default class Landing extends Vue {
       max-width: 952px;
       margin: auto;
 
-      @media @max-b-mobile {
+      @media @max-lg-tablet {
+        padding: 0 32px;
+      }
+
+      @media @max-sm-mobile {
         padding: 0 20px;
       }
 
       .industry-group {
         padding: 90px 0;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           padding: 24px 0;
         }
 
@@ -1252,7 +1315,7 @@ export default class Landing extends Vue {
           padding: 2px;
           border-radius: 8px;
 
-          @media @max-b-mobile {
+          @media @max-sm-mobile {
             height: 80px;
           }
 
@@ -1274,7 +1337,16 @@ export default class Landing extends Vue {
 <style lang="less">
 // ant customization
 .ant-row {
-  @media @max-b-mobile {
+  @media @max-lg-tablet {
+    .ant-col-22 {
+      width: 100%;
+    }
+    .ant-col-offset-1 {
+      margin-left: 0;
+    }
+  }
+
+  @media @max-sm-mobile {
     .ant-col-22 {
       width: 100%;
     }
@@ -1290,7 +1362,11 @@ export default class Landing extends Vue {
     padding: 0 calc(64px + 4.166666666666667%);
     margin: 0 0 48px 0;
 
-    @media @max-b-mobile {
+    @media @max-lg-tablet {
+      padding: 0 32px;
+    }
+
+    @media @max-sm-mobile {
       padding: 0 20px;
       margin-bottom: 20px;
     }
@@ -1304,7 +1380,7 @@ export default class Landing extends Vue {
         padding-bottom: 20px;
         margin-right: 65px;
 
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           font-size: 20px;
           line-height: 30px;
         }
@@ -1336,7 +1412,11 @@ export default class Landing extends Vue {
   .ant-tabs-top-content > .ant-tabs-tabpane {
     padding: 0 calc(64px + 4.166666666666667%);
 
-    @media @max-b-mobile {
+    @media @max-lg-tablet {
+      padding: 0 32px;
+    }
+
+    @media @max-sm-mobile {
       padding: 0 20px;
     }
 
@@ -1355,9 +1435,17 @@ export default class Landing extends Vue {
         max-width: 292px;
         text-align: unset;
 
+        @media @max-lg-tablet {
+          padding: 15px 10px;
+        }
+
+        @media @max-md-tablet {
+          padding: 15px 5px;
+        }
+
         &:hover,
         &.active {
-          background: linear-gradient(278.99deg, #22b5b6 0%, #280c86 100%);
+          background: #1F2A75;
           border: 3px solid #82d4dc;
           box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
         }
@@ -1370,12 +1458,15 @@ export default class Landing extends Vue {
     .video-player {
       border: 3px solid #7a88b6;
       box-sizing: border-box;
-      filter: drop-shadow(0 44px 64px rgba(0, 0, 0, 0.35));
       height: 524px;
       border-radius: 42px;
       background: @color-bg;
 
-      @media @max-b-mobile {
+      @media @max-lg-tablet {
+        height: 434px;
+      }
+
+      @media @max-sm-mobile {
         margin-top: 20px;
         height: 200px;
       }

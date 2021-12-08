@@ -1165,7 +1165,7 @@ section {
   margin-bottom: 20px;
   padding: 15px;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     margin-top: 0;
   }
 
@@ -1174,7 +1174,7 @@ section {
     left: 0;
     top: 35%;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       display: none;
     }
   }
@@ -1209,7 +1209,7 @@ section {
                 font-size: 10px;
                 line-height: 12px;
 
-                @media @max-b-mobile {
+                @media @max-sm-mobile {
                   display: none;
                 }
               }
@@ -1232,7 +1232,7 @@ section {
                 height: 18px;
                 display: none;
 
-                @media @max-b-mobile {
+                @media @max-sm-mobile {
                   display: flex;
                 }
               }
@@ -1282,7 +1282,7 @@ section {
           border: 4px solid @color-outline;
           width: 100%;
 
-          @media @max-b-mobile {
+          @media @max-sm-mobile {
             margin-bottom: 5px;
             height: 54px;
 
@@ -1482,7 +1482,7 @@ section {
   display: none;
 }
 
-@media @max-b-mobile {
+@media @max-sm-mobile {
   body .pool.container {
     .card-body {
       overflow-x: unset !important;
@@ -1768,7 +1768,7 @@ p {
 
 <style lang="less">
 ::-webkit-scrollbar {
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     display: none; /* Chrome Safari */
   }
 }
@@ -1787,18 +1787,18 @@ p {
 
 .pool.container {
   .ant-collapse-header {
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       padding-right: 16px !important;
     }
     .ant-collapse-arrow {
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         right: 30px !important;
         z-index: 2;
       }
     }
   }
   .ant-collapse-content {
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       background-color: #16164a;
       border-top: none !important;
     }
@@ -1873,7 +1873,7 @@ p {
       line-height: 42px;
       letter-spacing: -0.05em;
 
-      @media @max-b-mobile {
+      @media @max-sm-mobile {
         font-size: 14px;
         line-height: 24px;
         padding: 0;
@@ -2057,7 +2057,7 @@ p {
             border: none;
             border-radius: 14px;
 
-            @media @max-b-mobile {
+            @media @max-sm-mobile {
               font-size: 14px;
               line-height: 17px;
             }

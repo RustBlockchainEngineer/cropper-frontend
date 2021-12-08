@@ -4,6 +4,10 @@
   width: 8px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @font-face {
   font-family: "Gilroy";
   src: local("Gilroy"),
@@ -85,7 +89,7 @@ body {
 .container {
   margin: 0 auto;
   padding: 24px;
-  min-width: @mobile-s-width;
+  min-width: @mobile-xs-width;
   font-family: Gilroy, sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -103,7 +107,7 @@ body {
   position: relative
 }
 
-@media @max-b-mobile {
+@media @max-sm-mobile {
   .farm .btncontainer {
     display: none !important
   }
@@ -114,13 +118,13 @@ a {
 }
 
 // .ant-menu-horizontal>.ant-menu-submenu {
-//   @media @max-b-mobile {
+//   @media @max-sm-mobile {
 //     display: none !important;
 //   }
 // }
 
 // .ant-menu-horizontal>.ant-menu-item {
-//   @media @max-b-mobile {
+//   @media @max-sm-mobile {
 //     display: block !important
 //   }
 // }
@@ -161,7 +165,7 @@ a {
     font-size: 35px;
     font-weight: 700;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       font-size: 40px;
     }
   }
@@ -255,7 +259,15 @@ a {
 
 .ant-layout-header,
 .ant-layout-footer {
-  padding: 24px 100px !important;
+  padding: 24px 64px !important;
+
+  @media @max-lg-tablet {
+    padding: 24px 32px !important;
+  }
+
+  @media @max-sm-mobile {
+    padding: 24px 20px !important;
+  }
 }
 
 .ant-menu-horizontal,
@@ -295,7 +307,7 @@ a {
   margin: 0 auto;
 }
 
-@media @max-b-mobile {
+@media @max-sm-mobile {
   .card .card-body {
     padding: unset;
   }
@@ -317,7 +329,7 @@ a {
   font-size: 76px;
   line-height: 91.2px;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     font-size: 49px;
     line-height: 58.8px
   }
@@ -327,7 +339,7 @@ a {
   font-size: 61px;
   line-height: 73.2px;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     font-size: 49px;
     line-height: 58.8px
   }
@@ -338,7 +350,7 @@ h1 {
   line-height: 58.8px;
   margin-bottom: 0 !important;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     font-size: 39px;
     line-height: 46.6px;
   }
@@ -349,7 +361,7 @@ h2 {
   line-height: 46.6px;
   margin-bottom: 0 !important;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     font-size: 31px;
     line-height: 37.2px;
   }
@@ -361,7 +373,7 @@ h3 {
   letter-spacing: -0.15px;
   margin-bottom: 0 !important;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     font-size: 25px;
     line-height: 35px;
   }
@@ -372,7 +384,7 @@ h4 {
   line-height: 35px;
   margin-bottom: 0 !important;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     font-size: 20px !important;
     line-height: 30px !important;
   }
@@ -386,7 +398,7 @@ p {
   font-size: 20px !important;
   line-height: 30px !important;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     font-size: 16px !important;
     line-height: 24px !important;
   }
@@ -396,7 +408,7 @@ p {
   font-size: 16px !important;
   line-height: 24px !important;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     font-size: 13px !important;
     line-height: 19.5px !important;
   }
@@ -440,7 +452,7 @@ p {
 .ant-modal {
   width: 800px;
 
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     width: calc(100% - 40px) !important;
   }
   
@@ -497,7 +509,7 @@ p {
     color: #fff;
     min-width: 187px !important;
   
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       max-width: 300px !important;
     }
   
