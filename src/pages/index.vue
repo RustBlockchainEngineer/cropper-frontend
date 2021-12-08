@@ -663,11 +663,15 @@ export default class Landing extends Vue {
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background: @gradient-color-outline;
-  padding: 2px;
+  background: @gradient-btn-primary;
+  padding: 3px;
   border-radius: 48px;
   height: 54px;
   width: fit-content;
+
+  &:hover {
+    background: @gradient-btn-primary-reverse;
+  }
 
   @media @max-b-mobile {
     height: 44px;
@@ -675,13 +679,17 @@ export default class Landing extends Vue {
 }
 
 .btn-fill {
-  background: linear-gradient(300.64deg, #22b5b6 -11.12%, #280c86 96.46%);
+  background: @gradient-btn-primary;
   padding: 18px 30px;
   display: flex;
   align-items: center;
   border-radius: 48px;
   border: none;
   height: 54px;
+
+  &:hover {
+    background: @gradient-btn-primary-reverse;
+  }
 
   @media @max-b-mobile {
     padding: 13px 22.5px;
@@ -959,6 +967,13 @@ export default class Landing extends Vue {
           border-radius: 42px;
           width: calc((100% - 20px) / 2);
           margin-right: 20px;
+          border: 4px solid transparent;
+          background-origin: border-box;
+
+          &:hover {
+            mix-blend-mode: normal;
+            border: 4px solid #23ADB4;
+          }
 
           @media @max-b-mobile {
             padding: 18px;
@@ -1021,6 +1036,8 @@ export default class Landing extends Vue {
         padding-right: 36px;
         height: 472px;
         padding-top: 50px;
+        border: 4px solid transparent;
+        background-origin: border-box;
 
         @media @max-b-mobile {
           padding: 18px 8px;
@@ -1218,7 +1235,7 @@ export default class Landing extends Vue {
         }
 
         .industry-card {
-          background: @gradient-color-outline;
+          background: @gradient-color-icon;
           height: 130px;
           padding: 2px;
           border-radius: 8px;
