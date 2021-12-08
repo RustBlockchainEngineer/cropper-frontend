@@ -90,22 +90,22 @@ export default {
           type: "image/x-icon"
         },
         {
-          src: "/apple-icon-72x72.png",
+          src: "/Logo_web_app.png",
           sizes: "72x72",
           type: "image/png"
         },
         {
-          src: "/apple-icon-152x152.png",
+          src: "/Logo_web_app.png",
           sizes: "152x152",
           type: "image/png"
         },
         {
-          src: "/logo192.png",
+          src: "/Logo_web_app.png",
           type: "image/png",
           sizes: "192x192"
         },
         {
-          src: "/logo512.png",
+          src: "/Logo_web_app.png",
           type: "image/png",
           sizes: "512x512"
         }
