@@ -85,9 +85,9 @@ export default {
       display: "standalone",
       icons: [
         {
-          src: "/favicon.ico",
+          src: "/webapp.png",
           sizes: "64x64 32x32 24x24 16x16",
-          type: "image/x-icon"
+          type: "image/png"
         },
         {
           src: "/webapp.png",
