@@ -403,7 +403,7 @@ export default class Landing extends Vue {
     advisors: [
       {
         title: 'Dexlab',
-        img: '/_nuxt/src/assets/industry/dexlab.svg'
+        img: '@/assets/industry/dexlab.svg'
       },
       {
         title: 'Solanium',
@@ -663,14 +663,16 @@ export default class Landing extends Vue {
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background: @gradient-btn-primary;
+  background-image: @gradient-btn-primary;
   padding: 3px;
   border-radius: 48px;
   height: 54px;
   width: fit-content;
+  -webkit-transition: background-color 2s ease-out;
+  transition: background-color 2s ease-out;
 
   &:hover {
-    background: @gradient-btn-primary-reverse;
+    background-image: @gradient-btn-primary-reverse;
   }
 
   @media @max-b-mobile {
@@ -679,16 +681,19 @@ export default class Landing extends Vue {
 }
 
 .btn-fill {
-  background: @gradient-btn-primary;
+  background-image: @gradient-btn-primary;
   padding: 18px 30px;
   display: flex;
   align-items: center;
   border-radius: 48px;
   border: none;
   height: 54px;
+  -webkit-transition: background-color .7s ease-out;
+  transition: background-color .7s ease-out;
 
   &:hover {
-    background: @gradient-btn-primary-reverse;
+    background-image: @gradient-btn-primary-reverse;
+    // background: blue;
   }
 
   @media @max-b-mobile {
@@ -1038,6 +1043,7 @@ export default class Landing extends Vue {
         padding-top: 50px;
         border: 4px solid transparent;
         background-origin: border-box;
+        text-align: center;
 
         @media @max-b-mobile {
           padding: 18px 8px;
@@ -1064,11 +1070,13 @@ export default class Landing extends Vue {
 
         .title {
           margin-top: 18px;
+          text-align: left;
         }
 
         .content {
           margin-top: 5px;
           margin-bottom: 60px !important;
+          text-align: left;
 
           @media @max-b-mobile {
             margin-bottom: 18px !important;
@@ -1316,10 +1324,13 @@ export default class Landing extends Vue {
       }
     }
   }
+  
+  .ant-tabs-top-content.ant-tabs-content-animated {
+    transition: margin-left 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
 
   .ant-tabs-top-content > .ant-tabs-tabpane {
     padding: 0 calc(64px + 4.166666666666667%);
-    transition: all 2s;
 
     @media @max-b-mobile {
       padding: 0 20px;
@@ -1340,6 +1351,7 @@ export default class Landing extends Vue {
         max-width: 292px;
         text-align: unset;
 
+        &:hover,
         &.active {
           background: linear-gradient(278.99deg, #22b5b6 0%, #280c86 100%);
           border: 3px solid #82d4dc;
