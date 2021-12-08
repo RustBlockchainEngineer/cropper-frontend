@@ -61,7 +61,7 @@
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-community.svg" />
-              <h4 class="weightB">Community driven</h4>
+              <h4 class="weightB">Community Driven</h4>
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-swap.svg" />
@@ -306,7 +306,7 @@
 
     <section class="surrounded-by">
       <h2 class="weightB text-center">
-        Surrounded by the Best <br />
+        Surrounded by the best <br />
         in the Industry
       </h2>
       <div class="category-group text-center">
@@ -403,113 +403,113 @@ export default class Landing extends Vue {
     advisors: [
       {
         title: 'Dexlab',
-        img: 'https://cropper.finance/distant/industry/dexlab.svg'
+        img: 'industry/dexlab.svg'
       },
       {
         title: 'Solanium',
-        img: 'https://cropper.finance/distant/industry/solanium.svg'
+        img: 'industry/solanium.svg'
       },
       {
         title: 'Halborn',
-        img: 'https://cropper.finance/distant/industry/halborn.svg'
+        img: 'industry/halborn.svg'
       }
     ],
     backedBy: [
       {
         title: 'SKYVision Capital',
-        img: 'https://cropper.finance/distant/industry/svc.svg'
+        img: 'industry/svc.svg'
       },
       {
         title: 'MEXC Global',
-        img: 'https://cropper.finance/distant/industry/mexc.svg'
+        img: 'industry/mexc.svg'
       },
       {
         title: 'Gate.io',
-        img: 'https://cropper.finance/distant/industry/gateio.svg'
+        img: 'industry/gateio.svg'
       },
       {
         title: 'Negocia Capital',
-        img: 'https://cropper.finance/distant/industry/negocia.svg'
+        img: 'industry/negocia.svg'
       },
       {
         title: 'Solanium Ventures',
-        img: 'https://cropper.finance/distant/industry/solaniumV.svg'
+        img: 'industry/solaniumV.svg'
       },
       {
         title: 'Newave Capital',
-        img: 'https://cropper.finance/distant/industry/newave.svg'
+        img: 'industry/newave.svg'
       },
       {
         title: 'DeltaHub Capital',
-        img: 'https://cropper.finance/distant/industry/deltahub.svg'
+        img: 'industry/deltahub.svg'
       },
       {
         title: 'AngelONE',
-        img: 'https://cropper.finance/distant/industry/angelone.svg'
+        img: 'industry/angelone.svg'
       },
       {
         title: 'Cropperbros',
-        img: 'https://cropper.finance/distant/industry/cropperbros.svg'
+        img: 'industry/cropperbros.svg'
       },
       {
         title: 'Basics Capital',
-        img: 'https://cropper.finance/distant/industry/basics.svg'
+        img: 'industry/basics.svg'
       },
       {
         title: 'AVA Capital',
-        img: 'https://cropper.finance/distant/industry/ava.svg'
+        img: 'industry/ava.svg'
       },
       {
         title: 'M6',
-        img: 'https://cropper.finance/distant/industry/m6.svg'
+        img: 'industry/m6.svg'
       },
       {
         title: 'OIG',
-        img: 'https://cropper.finance/distant/industry/oig.svg'
+        img: 'industry/oig.svg'
       },
       {
         title: 'EX Capital',
-        img: 'https://cropper.finance/distant/industry/ex.svg'
+        img: 'industry/ex.svg'
       },
       {
         title: 'CryptoJ',
-        img: 'https://cropper.finance/distant/industry/cryptoj.svg'
+        img: 'industry/cryptoj.svg'
       }
     ],
     partners: [
       {
         title: 'GenesysGo',
-        img: 'https://cropper.finance/distant/industry/genesysgo.png'
+        img: 'industry/genesysgo.png'
       },
       {
         title: 'Sonar',
-        img: 'https://cropper.finance/distant/industry/sonar.jpeg'
+        img: 'industry/sonar.jpeg'
       },
       {
         title: 'MEXC Global',
-        img: 'https://cropper.finance/distant/industry/mexc.svg'
+        img: 'industry/mexc.svg'
       },
       {
         title: 'Gate.io',
-        img: 'https://cropper.finance/distant/industry/gateio.svg'
+        img: 'industry/gateio.svg'
       },
       {
         title: 'Dexlab',
-        img: 'https://cropper.finance/distant/industry/dexlab.svg'
+        img: 'industry/dexlab.svg'
       }
     ],
     poweredBy: [
       {
         title: 'Solana',
-        img: 'https://cropper.finance/distant/industry/solana.svg'
+        img: 'industry/solana.svg'
       },
       {
         title: 'Serum',
-        img: 'https://cropper.finance/distant/industry/serum.svg'
+        img: 'industry/serum.svg'
       },
       {
         title: 'Bonafide',
-        img: 'https://cropper.finance/distant/industry/bonafide.svg'
+        img: 'industry/bonafide.svg'
       }
     ]
   }
@@ -1174,9 +1174,13 @@ export default class Landing extends Vue {
 
       .landing-third-bg {
         position: absolute;
-        bottom: 0;
+        top: 0;
         width: 100%;
 
+        @media @max-md-tablet {
+          bottom: 0;
+        }
+        
         @media @max-sm-mobile {
           display: none;
         }
