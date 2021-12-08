@@ -1254,6 +1254,7 @@ export default class Landing extends Vue {
     }
   }
 }
+
 .ant-tabs {
   .ant-tabs-bar {
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
@@ -1301,6 +1302,7 @@ export default class Landing extends Vue {
 
   .ant-tabs-top-content > .ant-tabs-tabpane {
     padding: 0 calc(64px + 4.166666666666667%);
+    transition: all 2s;
 
     @media @max-b-mobile {
       padding: 0 20px;
