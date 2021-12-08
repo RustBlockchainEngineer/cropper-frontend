@@ -90,22 +90,22 @@ export default {
           type: "image/x-icon"
         },
         {
-          src: "/Logo_web_app.png",
+          src: "/webapp.png",
           sizes: "72x72",
           type: "image/png"
         },
         {
-          src: "/Logo_web_app.png",
+          src: "/webapp.png",
           sizes: "152x152",
           type: "image/png"
         },
         {
-          src: "/Logo_web_app.png",
+          src: "/webapp.png",
           type: "image/png",
           sizes: "192x192"
         },
         {
-          src: "/Logo_web_app.png",
+          src: "/webapp.png",
           type: "image/png",
           sizes: "512x512"
         }
