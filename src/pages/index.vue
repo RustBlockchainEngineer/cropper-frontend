@@ -409,7 +409,7 @@ export default class Landing extends Vue {
   marketCap: any = 0
   currentCategory: string = 'advisors'
   currentPlay: number = 1
-  currentVideo: string = 'video/swap.gif'
+  currentVideo: string = ''
   surroundedList = {
     advisors: [
       {
@@ -513,7 +513,7 @@ export default class Landing extends Vue {
       },
       {
         title: 'Sonar',
-        img: 'industry/sonar.png',
+        img: 'industry/sonar.svg',
         width: '150px'
       },
       {
@@ -615,9 +615,6 @@ export default class Landing extends Vue {
 
   selectVideo(id: number) {
     this.currentPlay = id
-    let source = 'video/'
-    if (id === 1) this.currentVideo = source + 'swap.gif'
-    else if (id === 3) this.currentVideo = source + 'harvest.gif'
   }
 
   async getMarketCap(price: any) {
@@ -1201,11 +1198,7 @@ export default class Landing extends Vue {
   .how-works {
     .tutorial-container {
       position: relative;
-      height: 900px;
-
-      @media @max-lg-tablet {
-        height: 750px;
-      }
+      height: calc(100vw * 0.6275);
 
       @media @max-sm-mobile {
         height: auto;
@@ -1302,10 +1295,10 @@ export default class Landing extends Vue {
       text-align: center;
 
       .join-btn {
-        color: #fff;
+        color: #F7FCFD;
         background: #23ADB4;
         border-radius: 48px;
-        padding: 8px 30px;
+        padding: 8px 28px;
         text-align: center;
       }
     }
@@ -1426,6 +1419,12 @@ export default class Landing extends Vue {
 
     @media @max-lg-tablet {
       padding: 0 32px;
+      margin: 0 0 32px 0;
+    }
+
+    @media @max-md-tablet {
+      padding: 0 32px;
+      margin: 0 0 16px 0;
     }
 
     @media @max-sm-mobile {
@@ -1524,13 +1523,8 @@ export default class Landing extends Vue {
       border-radius: 42px;
       background: @color-bg;
 
-      @media @max-lg-tablet {
-        // height: 434px;
-      }
-
       @media @max-sm-mobile {
         margin-top: 20px;
-        // height: 200px;
       }
 
       .video {
