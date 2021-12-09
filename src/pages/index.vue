@@ -256,7 +256,7 @@
 
     <section class="cropper-feed">
       <h2 class="weightB text-center">100,000 Croppers And Counting</h2>
-      <p class="bodyL text-center feed-content">
+      <p class="bodyL text-center feed-description">
         Our community is at the heart of everything we do. The first Croppers formed as a collective of serious farmers seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the harvests that come with it.
       </p>
       <div class="feed-container">
@@ -1253,7 +1253,7 @@ export default class Landing extends Vue {
       padding: 100px 32px 48px 32px;
     }
 
-    .feed-content {
+    .feed-description {
       margin-top: 20px;
       width: 80%;
       margin-left: 10%;
