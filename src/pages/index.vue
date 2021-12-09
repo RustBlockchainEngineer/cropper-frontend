@@ -4,9 +4,9 @@
       <div class="landing-top">
         <img class="cropper-logo" src="@/assets/icons/cropper-logo.svg" />
         <div class="lunch-btn-group">
-          <div class="btn-container doc-btn">
+          <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-container doc-btn">
             <Button class="btn-outline weightS">Documentation</Button>
-          </div>
+          </a>
           <NuxtLink to="/swap/">
             <Button class="btn-fill weightS">Launch App</Button>
           </NuxtLink>
@@ -33,7 +33,7 @@
             </div>
             <div class="read-more">
               <div class="btn-container">
-                <Button class="btn-outline">Read More</Button>
+                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline">Read More</a>
               </div>
             </div>
             <div class="social-links">
@@ -205,7 +205,7 @@
                   </div>
                 </Col>
                 <Col :sm="16" :md="16" class="video-play-col">
-                  <video class="video-player" controls muted autoplay>
+                  <video class="video-player" controls autoplay>
                     <source :src="currentVideo" type="video/mp4" />
                   </video>
                 </Col>
@@ -715,7 +715,7 @@ export default class Landing extends Vue {
   }
 
   @media @max-sm-mobile {
-    height: 44px;
+    height: 60px;
   }
 }
 
