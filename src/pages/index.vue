@@ -760,6 +760,7 @@ export default class Landing extends Vue {
     background-image: url('@/assets/landing_v2/landing-first-bg.svg');
     background-repeat: no-repeat;
     background-size: cover;
+    height: calc(100vw * 902 / 1440);
 
     @media @max-lg-tablet {
       padding-left: 32px;
@@ -1198,7 +1199,7 @@ export default class Landing extends Vue {
   .how-works {
     .tutorial-container {
       position: relative;
-      height: calc(100vw * 0.6275);
+      height: calc(100vw * 1004 / 1600);
 
       @media @max-sm-mobile {
         height: auto;
