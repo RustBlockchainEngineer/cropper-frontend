@@ -205,9 +205,9 @@
                   </div>
                 </Col>
                 <Col :sm="16" :md="16" class="video-play-col">
-                  <div class="video-player">
-                    <img class="video" :src="currentVideo" />
-                  </div>
+                  <video class="video-player" controls muted autoplay>
+                    <source :src="currentVideo" type="video/mp4" />
+                  </video>
                 </Col>
               </Row>
             </TabPane>
@@ -219,33 +219,31 @@
                     <Button
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(5)"
-                      :class="currentPlay === 1 ? 'active' : ''"
+                      :class="currentPlay === 5 ? 'active' : ''"
                       >1. Buy the token you want to</Button
                     >
                     <Button
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(6)"
-                      :class="currentPlay === 2 ? 'active' : ''"
+                      :class="currentPlay === 6 ? 'active' : ''"
                       >2. Stack liquidity</Button
                     >
                     <Button
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(7)"
-                      :class="currentPlay === 3 ? 'active' : ''"
+                      :class="currentPlay === 7 ? 'active' : ''"
                       >3. Harvest rewards</Button
                     >
                     <Button
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(8)"
-                      :class="currentPlay === 4 ? 'active' : ''"
+                      :class="currentPlay === 8 ? 'active' : ''"
                       >4. Unstack liquidity</Button
                     >
                   </div>
                 </Col>
                 <Col :xs="24" :sm="24" :md="16">
-                  <div class="video-player">
-                    <img class="video" :src="currentVideo" />
-                  </div>
+                  
                 </Col>
               </Row>
             </TabPane>
@@ -357,7 +355,7 @@
               :key="card.title"
               :xs="24"
               :sm="24"
-              :md="currentIndustry.length >= 4 ? 6 : 8"
+              :md="currentIndustry.length >= 4 ? 6 : 24 / currentIndustry.length"
             >
               <div class="industry-card">
                 <div class="industry-card-body">
@@ -409,7 +407,7 @@ export default class Landing extends Vue {
   marketCap: any = 0
   currentCategory: string = 'advisors'
   currentPlay: number = 1
-  currentVideo: string = ''
+  currentVideo: string = 'video/swap.mp4'
   surroundedList = {
     advisors: [
       {
@@ -534,11 +532,6 @@ export default class Landing extends Vue {
     ],
     poweredBy: [
       {
-        title: 'Cropper',
-        img: 'industry/cropper.svg',
-        width: 'unset'
-      },
-      {
         title: 'Solana',
         img: 'industry/solana.svg',
         width: '200px'
@@ -615,6 +608,10 @@ export default class Landing extends Vue {
 
   selectVideo(id: number) {
     this.currentPlay = id
+    if (id === 1) this.currentVideo = 'video/swap.mov'
+    else if (id === 2) this.currentVideo = 'video/stack.mov'
+    else if (id === 3) this.currentVideo = 'video/harvest.mov'
+    else if (id === 4) this.currentVideo = 'video/unstack.mov'
   }
 
   async getMarketCap(price: any) {
@@ -1130,7 +1127,7 @@ export default class Landing extends Vue {
         @media @max-sm-mobile {
           padding: 18px 8px;
           border-radius: 22px;
-          height: 325px;
+          height: 357px;
         }
 
         &:last-child {
@@ -1523,17 +1520,12 @@ export default class Landing extends Vue {
     .video-player {
       border: 3px solid #7a88b6;
       box-sizing: border-box;
-      height: auto;
+      width: 100%;
       border-radius: 42px;
       background: @color-bg;
 
       @media @max-sm-mobile {
         margin-top: 20px;
-      }
-
-      .video {
-        width: 100%;
-        border-radius: 42px;
       }
     }
   }
