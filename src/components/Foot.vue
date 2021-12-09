@@ -59,10 +59,10 @@
     <div class="footer-line"></div>
     <div class="footer-refer">
       <label class="bodyS weightS decentralized">Decentralized 2021</label>
-      <div class="refer-list">
+      <!-- <div class="refer-list">
         <label class="bodyS weightS">Terms & Conditions</label>
         <label class="bodyS weightS">Privacy Policy</label>
-      </div>
+      </div> -->
     </div>
   </Footer>
 </template>
@@ -221,41 +221,33 @@ export default class Foot extends Vue {
 
 .footer-refer {
   color: #ccd1f1;
-  text-align: left;
   position: relative;
   z-index: 2;
-  display: flex;
-  justify-content: space-between;
+  text-align: center;
 
   @media @max-sm-mobile {
     color: #98a2e4;
   }
 
-  .decentralized {
-    @media @max-sm-mobile {
-      display: none;
-    }
-  }
+  // .refer-list {
+  //   label {
+  //     margin-right: 38px;
 
-  .refer-list {
-    label {
-      margin-right: 38px;
+  //     @media @max-sm-mobile {
+  //       margin-right: 0;
+  //       margin-bottom: 20px;
+  //       display: block;
+  //     }
 
-      @media @max-sm-mobile {
-        margin-right: 0;
-        margin-bottom: 20px;
-        display: block;
-      }
+  //     &:last-child {
+  //       margin-right: 0;
 
-      &:last-child {
-        margin-right: 0;
-
-        @media @max-sm-mobile {
-          margin-bottom: 0;
-        }
-      }
-    }
-  }
+  //       @media @max-sm-mobile {
+  //         margin-bottom: 0;
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 // ant customization

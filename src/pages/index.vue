@@ -205,7 +205,9 @@
                   </div>
                 </Col>
                 <Col :sm="16" :md="16" class="video-play-col">
-                  <div class="video-player"></div>
+                  <div class="video-player">
+                    <img class="video" :src="currentVideo" />
+                  </div>
                 </Col>
               </Row>
             </TabPane>
@@ -216,32 +218,34 @@
                   <div class="play-list">
                     <Button
                       class="play-list-btn bodyM weightS"
-                      @click="selectVideo(1)"
+                      @click="selectVideo(5)"
                       :class="currentPlay === 1 ? 'active' : ''"
                       >1. Buy the token you want to</Button
                     >
                     <Button
                       class="play-list-btn bodyM weightS"
-                      @click="selectVideo(2)"
+                      @click="selectVideo(6)"
                       :class="currentPlay === 2 ? 'active' : ''"
                       >2. Stack liquidity</Button
                     >
                     <Button
                       class="play-list-btn bodyM weightS"
-                      @click="selectVideo(3)"
+                      @click="selectVideo(7)"
                       :class="currentPlay === 3 ? 'active' : ''"
                       >3. Harvest rewards</Button
                     >
                     <Button
                       class="play-list-btn bodyM weightS"
-                      @click="selectVideo(4)"
+                      @click="selectVideo(8)"
                       :class="currentPlay === 4 ? 'active' : ''"
                       >4. Unstack liquidity</Button
                     >
                   </div>
                 </Col>
                 <Col :xs="24" :sm="24" :md="16">
-                  <div class="video-player"></div>
+                  <div class="video-player">
+                    <img class="video" :src="currentVideo" />
+                  </div>
                 </Col>
               </Row>
             </TabPane>
@@ -251,7 +255,10 @@
     </section>
 
     <section class="cropper-feed">
-      <h2 class="weightB text-center">@cropper.finance</h2>
+      <h2 class="weightB text-center">100,000 Croppers And Counting</h2>
+      <p class="bodyL text-center feed-content">
+        Our community is at the heart of everything we do. The first Croppers formed as a collective of serious farmers seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the harvests that come with it.
+      </p>
       <div class="feed-container">
         <Row>
           <Col :span="22" :offset="1">
@@ -301,6 +308,9 @@
             </Row>
           </Col>
         </Row>
+        <div class="feed-link">
+          <a :href="socialLinks.telegram" class="bodyL join-btn weightB" target="_blank">Join the Croppers</a>
+        </div>
       </div>
     </section>
 
@@ -351,7 +361,7 @@
             >
               <div class="industry-card">
                 <div class="industry-card-body">
-                  <img :src="card.img" />
+                  <img :src="card.img" :width="card.width"/>
                 </div>
               </div>
             </Col>
@@ -399,117 +409,144 @@ export default class Landing extends Vue {
   marketCap: any = 0
   currentCategory: string = 'advisors'
   currentPlay: number = 1
+  currentVideo: string = 'video/swap.gif'
   surroundedList = {
     advisors: [
       {
         title: 'Dexlab',
-        img: 'industry/dexlab.svg'
+        img: 'industry/dexlab.svg',
+        width: 'unset'
       },
       {
         title: 'Solanium',
-        img: 'industry/solanium.svg'
+        img: 'industry/solanium.svg',
+        width: 'unset'
       },
       {
         title: 'Halborn',
-        img: 'industry/halborn.svg'
+        img: 'industry/halborn.svg',
+        width: 'unset'
       }
     ],
     backedBy: [
       {
         title: 'SKYVision Capital',
-        img: 'industry/svc.svg'
+        img: 'industry/svc.svg',
+        width: 'unset'
       },
       {
         title: 'MEXC Global',
-        img: 'industry/mexc.svg'
+        img: 'industry/mexc.svg',
+        width: 'unset'
       },
       {
         title: 'Gate.io',
-        img: 'industry/gateio.svg'
+        img: 'industry/gateio.svg',
+        width: 'unset'
       },
       {
         title: 'Negocia Capital',
-        img: 'industry/negocia.svg'
+        img: 'industry/negocia.svg',
+        width: 'unset'
       },
       {
         title: 'Solanium Ventures',
-        img: 'industry/solaniumV.svg'
+        img: 'industry/solaniumV.svg',
+        width: 'unset'
       },
       {
         title: 'Newave Capital',
-        img: 'industry/newave.svg'
+        img: 'industry/newave.svg',
+        width: 'unset'
       },
       {
         title: 'DeltaHub Capital',
-        img: 'industry/deltahub.svg'
+        img: 'industry/deltahub.svg',
+        width: 'unset'
       },
       {
         title: 'AngelONE',
-        img: 'industry/angelone.svg'
+        img: 'industry/angelone.svg',
+        width: 'unset'
       },
       {
         title: 'Cropperbros',
-        img: 'industry/cropperbros.svg'
+        img: 'industry/cropperbros.svg',
+        width: '150px'
       },
       {
         title: 'Basics Capital',
-        img: 'industry/basics.svg'
+        img: 'industry/basics.svg',
+        width: 'unset'
       },
       {
         title: 'AVA Capital',
-        img: 'industry/ava.svg'
+        img: 'industry/ava.svg',
+        width: 'unset'
       },
       {
         title: 'M6',
-        img: 'industry/m6.svg'
+        img: 'industry/m6.svg',
+        width: 'unset'
       },
       {
         title: 'OIG',
-        img: 'industry/oig.svg'
+        img: 'industry/oig.svg',
+        width: 'unset'
       },
       {
         title: 'EX Capital',
-        img: 'industry/ex.svg'
+        img: 'industry/ex.svg',
+        width: 'unset'
       },
       {
         title: 'CryptoJ',
-        img: 'industry/cryptoj.svg'
+        img: 'industry/cryptoj.svg',
+        width: 'unset'
       }
     ],
     partners: [
       {
         title: 'GenesysGo',
-        img: 'industry/genesysgo.png'
+        img: 'industry/genesysgo.svg',
+        width: '150px'
       },
       {
         title: 'Sonar',
-        img: 'industry/sonar.jpeg'
+        img: 'industry/sonar.png',
+        width: '150px'
       },
       {
         title: 'MEXC Global',
-        img: 'industry/mexc.svg'
+        img: 'industry/mexc.svg',
+        width: 'unset'
       },
       {
         title: 'Gate.io',
-        img: 'industry/gateio.svg'
+        img: 'industry/gateio.svg',
+        width: 'unset'
       },
       {
         title: 'Dexlab',
-        img: 'industry/dexlab.svg'
+        img: 'industry/dexlab.svg',
+        width: 'unset'
       }
     ],
     poweredBy: [
       {
+        title: 'Cropper',
+        img: 'industry/cropper.svg',
+        width: 'unset'
+      },
+      {
         title: 'Solana',
-        img: 'industry/solana.svg'
+        img: 'industry/solana.svg',
+        width: '200px'
       },
       {
         title: 'Serum',
-        img: 'industry/serum.svg'
-      },
-      {
-        title: 'Bonafide',
-        img: 'industry/bonafide.svg'
+        img: 'industry/serum.svg',
+        width: '200px'
       }
     ]
   }
@@ -578,6 +615,9 @@ export default class Landing extends Vue {
 
   selectVideo(id: number) {
     this.currentPlay = id
+    let source = 'video/'
+    if (id === 1) this.currentVideo = source + 'swap.gif'
+    else if (id === 3) this.currentVideo = source + 'harvest.gif'
   }
 
   async getMarketCap(price: any) {
@@ -698,7 +738,6 @@ export default class Landing extends Vue {
 
   &:hover {
     background-image: @gradient-btn-primary-reverse;
-    // background: blue;
   }
 
   @media @max-sm-mobile {
@@ -1214,6 +1253,12 @@ export default class Landing extends Vue {
       padding: 100px 32px 48px 32px;
     }
 
+    .feed-content {
+      margin-top: 20px;
+      width: 80%;
+      margin-left: 10%;
+    }
+
     .feed-container {
       margin-top: 50px;
 
@@ -1249,6 +1294,19 @@ export default class Landing extends Vue {
         @media @max-sm-mobile {
           height: 124px;
         }
+      }
+    }
+
+    .feed-link {
+      margin-top: 20px;
+      text-align: center;
+
+      .join-btn {
+        color: #fff;
+        background: #23ADB4;
+        border-radius: 48px;
+        padding: 8px 30px;
+        text-align: center;
       }
     }
   }
@@ -1462,17 +1520,22 @@ export default class Landing extends Vue {
     .video-player {
       border: 3px solid #7a88b6;
       box-sizing: border-box;
-      height: 524px;
+      height: auto;
       border-radius: 42px;
       background: @color-bg;
 
       @media @max-lg-tablet {
-        height: 434px;
+        // height: 434px;
       }
 
       @media @max-sm-mobile {
         margin-top: 20px;
-        height: 200px;
+        // height: 200px;
+      }
+
+      .video {
+        width: 100%;
+        border-radius: 42px;
       }
     }
   }
