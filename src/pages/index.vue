@@ -206,23 +206,14 @@
                 </Col>
                 <Col :sm="16" :md="16" class="video-play-col">
                   <video controls autoplay
-                      class="video-player"
-                      src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
-                      poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217"
-                      width="620">
+                    class="video-player"
+                    src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
+                    poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217"
+                  >
                     Sorry, your browser doesn't support embedded videos,
                     but don't worry, you can <a href="https://archive.org/details/BigBuckBunny_124">download it</a>
                     and watch it with your favorite video player!
                   </video>
-                  
-                  <!-- <video controls width="250">
-                    <source :src="currentVideo" type="video/mp4">
-                    Sorry, your browser doesn't support embedded videos.
-                  </video> -->
-
-                  <!-- <video class="video-player" controls muted autoplay>
-                    <source  type="video/mp4" />
-                  </video> -->
                 </Col>
               </Row>
             </TabPane>
