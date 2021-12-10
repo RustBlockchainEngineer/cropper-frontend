@@ -221,8 +221,7 @@
                 </Col>
                 <Col :sm="16" :md="16" class="video-play-col">
                   <video class="video-player"
-                    src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
-                    poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217"
+                    :src="currentVideo"
                     controls
                     autoplay>
                   </video>
@@ -238,30 +237,22 @@
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(5)"
                       :class="currentPlay === 5 ? 'active' : ''"
-                      >1. Buy the token you want to</Button
+                      >1. Set up Pool</Button
                     >
                     <Button
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(6)"
                       :class="currentPlay === 6 ? 'active' : ''"
-                      >2. Stack liquidity</Button
-                    >
-                    <Button
-                      class="play-list-btn bodyM weightS"
-                      @click="selectVideo(7)"
-                      :class="currentPlay === 7 ? 'active' : ''"
-                      >3. Harvest rewards</Button
-                    >
-                    <Button
-                      class="play-list-btn bodyM weightS"
-                      @click="selectVideo(8)"
-                      :class="currentPlay === 8 ? 'active' : ''"
-                      >4. Unstack liquidity</Button
+                      >2. Lunch Farm</Button
                     >
                   </div>
                 </Col>
                 <Col :xs="24" :sm="24" :md="16">
-                  
+                  <video class="video-player"
+                    :src="currentVideo"
+                    controls
+                    autoplay>
+                  </video>
                 </Col>
               </Row>
             </TabPane>
@@ -293,7 +284,7 @@
           </Col>
         </Row>
         <div class="feed-link">
-          <a :href="socialLinks.telegram" target="_blank" class="btn-container join-btn-container">
+          <a :href="socialLinks.twitter" target="_blank" class="btn-container join-btn-container">
             <Button class="btn-outline bodyM weightS join-btn">Join the Croppers</Button>
           </a>
         </div>
@@ -393,7 +384,7 @@ export default class Landing extends Vue {
   marketCap: any = 0
   currentCategory: string = 'backedBy'
   currentPlay: number = 1
-  currentVideo: string = 'video/swap.mp4'
+  currentVideo: string = 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4'
   surroundedList = {
     advisors: [
       {
@@ -599,10 +590,12 @@ export default class Landing extends Vue {
 
   selectVideo(id: number) {
     this.currentPlay = id
-    if (id === 1) this.currentVideo = 'video/swap.mp4'
-    else if (id === 2) this.currentVideo = 'video/stack.mp4'
-    else if (id === 3) this.currentVideo = 'video/harvest.mp4'
-    else if (id === 4) this.currentVideo = 'video/unstack.mp4'
+    if (id === 1) this.currentVideo = 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4'
+    else if (id === 2) this.currentVideo = 'https://cropper.finance/distant/industry/createfarmvideo.mp4'
+    else if (id === 3) this.currentVideo = 'https://cropper.finance/distant/industry/HarvestvideoforGIF.mp4'
+    else if (id === 4) this.currentVideo = 'https://cropper.finance/distant/industry/UnstackLPvideoforGIF.mp4'
+    else if (id === 5) this.currentVideo = 'https://cropper.finance/distant/industry/poolcreationvideoforGIIF.mp4'
+    else if (id === 6) this.currentVideo = 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4'
   }
 
   async getMarketCap(price: any) {
