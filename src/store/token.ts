@@ -34,17 +34,11 @@ export const actions:any = actionTree(
       let cur_date = new Date().getTime()
 
 
-      if(window.localStorage.tokensLoading && window.localStorage.tokensLoading == 1){
-        logger('Skiped')
-        return
-      }
+      window.localStorage.tokensLoading = 0
 
-
-      window.localStorage.tokensLoading = 1
-
-      if(window.localStorage.token_last_updated_v2){
-        const last_updated = parseInt(window.localStorage.token_last_updated_v2)
-        if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1638191914){
+      if(window.localStorage.token_last_updated_v3){
+        const last_updated = parseInt(window.localStorage.token_last_updated_v3)
+        if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1639125197){
           need_to_update = true
         }
       }
@@ -72,6 +66,7 @@ export const actions:any = actionTree(
 
         if(need_to_update)
         {
+
           let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
           const tokens = myJson.tokens
 
@@ -154,7 +149,7 @@ export const actions:any = actionTree(
             
           })
           TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
-          window.localStorage.token_last_updated_v2 = new Date().getTime()
+          window.localStorage.token_last_updated_v3 = new Date().getTime()
           window.localStorage.tokens = JSON.stringify(TOKENS)
         }
 

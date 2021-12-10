@@ -159,7 +159,7 @@
         </div>
         <div class="my-info">
           <label>
-            TVL : <b>{{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} $</b>
+            TVL : <b>${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</b>
           </label>
         </div>
 

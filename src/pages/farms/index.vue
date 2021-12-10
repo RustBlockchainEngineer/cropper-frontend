@@ -82,7 +82,7 @@
           <span class="information">
             <div class="my-info">
               <p>
-                TVL : <b>{{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} $</b>
+                TVL : <b>${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</b>
               </p>
               <!-- <p>Your deposit: <b>28,009 $</b></p> -->
             </div>
@@ -405,11 +405,11 @@
                   -
                 </div>
                 <div v-else class="value">
-                  {{
+                  ${{
                     Math.round(farm.farmInfo.liquidityUsdValue)
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                  }}$
+                  }}
                 </div>
               </Col>
 
@@ -711,11 +711,11 @@
                         -
                       </div>
                       <div v-else class="value">
-                        {{
+                        ${{
                           Math.round(farm.farmInfo.liquidityUsdValue)
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                        }}$
+                        }}
                       </div>
                     </Col>
 

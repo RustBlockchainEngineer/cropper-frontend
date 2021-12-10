@@ -11,8 +11,8 @@
           </span>
           <span class="information">
             <div class="my-info">
-              <p>TVL : <b>{{TVL.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} $</b></p>
+              <p>TVL : <b>${{TVL.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}}</b></p>
             </div>
 
             <!-- {{ autoRefreshTime - countdown }} -->
