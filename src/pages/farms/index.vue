@@ -1052,6 +1052,7 @@ export default Vue.extend({
       endedFarmsPoolId: [] as string[],
       showCollapse: [] as any[],
       currentTimestamp: 0,
+      initBasedSearch: 0,
       tempInfo: null as any,
       stakeLPError: false,
       labelizedAmms: {} as any,
@@ -1175,9 +1176,7 @@ export default Vue.extend({
       const query = new URLSearchParams(window.location.search)
       if (query.get('s')) {
         this.searchName = query.get('s') as string
-        if(this.labelizedAmms[this.searchName]){
-          this.searchCertifiedFarm = true
-        }
+        this.initBasedSearch = 1;
       }
     }
   },
@@ -1303,6 +1302,15 @@ export default Vue.extend({
           this.labelizedAmmsExtended[element.ammID] = element
         })
       }
+
+      if(this.initBasedSearch == 1 && this.searchName.length > 10){
+        if(!this.labelizedAmms[this.searchName]){
+          this.searchCertifiedFarm = true
+        }
+      }
+
+      this.initBasedSearch == 0
+
 
       try {
         this.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
