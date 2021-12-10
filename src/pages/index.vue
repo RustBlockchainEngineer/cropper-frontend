@@ -133,7 +133,7 @@
         <Col :span="22" :offset="1">
           <h2 class="weightB text-center">The Cropper Ecosystem</h2>
           <p class="bodyL text-center eco-content">
-            By farmers, for farmers. With AI-powered low fees and high-impact APRs, our full line of DeFi services give you everything you need in a few clicks. 
+            By farmers, for farmers. With low fees and high-impact APRs, our full line of DeFi services give you everything you need in a few clicks.
           </p>
           <Row :gutter="[25, 25]" class="feature-box-group">
             <img class="stars-third-bg" src="@/assets/landing_v2/stars-third-bg.svg" />
@@ -187,7 +187,7 @@
       <div class="tutorial-container">
         <img class="landing-third-bg" src="@/assets/landing_v2/landing-third-bg.svg" />
         <div class="tutorial-group">
-          <Tabs defaultActiveKey="1" onChange="{callback}">
+          <Tabs defaultActiveKey="1" @change="switchTab">
             <TabPane tab="For Farmers" key="1">
               <Row :gutter="20">
                 <Col :sm="8" :md="8" class="play-list-col">
@@ -203,7 +203,7 @@
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(2)"
                       :class="currentPlay === 2 ? 'active' : ''"
-                      >2. Stack liquidity</Button
+                      >2. Stake liquidity</Button
                     >
                     <Button
                       class="play-list-btn bodyM weightS"
@@ -215,7 +215,7 @@
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(4)"
                       :class="currentPlay === 4 ? 'active' : ''"
-                      >4. Unstack liquidity</Button
+                      >4. Unstake liquidity</Button
                     >
                   </div>
                 </Col>
@@ -223,7 +223,9 @@
                   <video class="video-player"
                     :src="currentVideo"
                     controls
-                    autoplay>
+                    autoplay
+                    loop
+                  >
                   </video>
                 </Col>
               </Row>
@@ -243,7 +245,7 @@
                       class="play-list-btn bodyM weightS"
                       @click="selectVideo(6)"
                       :class="currentPlay === 6 ? 'active' : ''"
-                      >2. Lunch Farm</Button
+                      >2. Launch Farm</Button
                     >
                   </div>
                 </Col>
@@ -251,7 +253,9 @@
                   <video class="video-player"
                     :src="currentVideo"
                     controls
-                    autoplay>
+                    autoplay
+                    loop
+                  >
                   </video>
                 </Col>
               </Row>
@@ -525,14 +529,14 @@ export default class Landing extends Vue {
       }
     ]
   }
-  currentIndustry: any = this.surroundedList.advisors
+  currentIndustry: any = this.surroundedList.backedBy
   socialLinks = {
     twitter: 'https://twitter.com/CropperFinance',
     discord: 'https://discord.com/invite/9hdP7cM3ec',
     medium: 'https://cropperfinance.medium.com/',
     telegram: 'https://linktr.ee/cropperfinance',
   }
-
+  
   mounted() {
     this.getTvl()
     this.getCRPPrice()
@@ -591,11 +595,11 @@ export default class Landing extends Vue {
   selectVideo(id: number) {
     this.currentPlay = id
     if (id === 1) this.currentVideo = 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4'
-    else if (id === 2) this.currentVideo = 'https://cropper.finance/distant/industry/createfarmvideo.mp4'
+    else if (id === 2) this.currentVideo = 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4'
     else if (id === 3) this.currentVideo = 'https://cropper.finance/distant/industry/HarvestvideoforGIF.mp4'
     else if (id === 4) this.currentVideo = 'https://cropper.finance/distant/industry/UnstackLPvideoforGIF.mp4'
     else if (id === 5) this.currentVideo = 'https://cropper.finance/distant/industry/poolcreationvideoforGIIF.mp4'
-    else if (id === 6) this.currentVideo = 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4'
+    else if (id === 6) this.currentVideo = 'https://cropper.finance/distant/industry/createfarmvideo.mp4'
   }
 
   async getMarketCap(price: any) {
@@ -675,6 +679,18 @@ export default class Landing extends Vue {
     } finally {
       this.twitterFeeds = responseData
       this.twitterShows = this.twitterFeeds.slice(0,3)
+    }
+  }
+
+  switchTab(activeKey: any) {
+    console.log(activeKey)
+    if (activeKey === '1') {
+      this.currentPlay = 1
+      this.currentVideo = 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4'
+    }
+    else if (activeKey === '2') {
+      this.currentPlay = 5
+      this.currentVideo = 'https://cropper.finance/distant/industry/poolcreationvideoforGIIF.mp4'
     }
   }
 }
