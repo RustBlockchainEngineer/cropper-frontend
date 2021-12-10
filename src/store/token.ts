@@ -2,6 +2,7 @@ import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 
 import { cloneDeep } from 'lodash-es'
 import logger from '@/utils/logger'
+import fixedtokens from './tokens.json';
 
 import { DEVNET_MODE, TOKEN_UPDATE_INTERVAL } from '@/utils/ids'
 import { POP_TOKENS, TOKENS, WRAPPED_SOL } from '@/utils/tokens'
@@ -34,16 +35,16 @@ export const actions:any = actionTree(
       let cur_date = new Date().getTime()
 
 
-      if(window.localStorage.tokensLoading_v2 && window.localStorage.tokensLoading_v2 == 1){
-        logger('Skiped')
-        return
+      if(window.localStorage.tokensLoading_v3 && window.localStorage.tokensLoading_v3 == 1){
+     //   logger('Skiped')
+     //   return
       }
 
 
-      window.localStorage.tokensLoading_v2 = 0
+      window.localStorage.tokensLoading_v3 = 0
 
-      if(window.localStorage.token_last_updated_v3){
-        const last_updated = parseInt(window.localStorage.token_last_updated_v3)
+      if(window.localStorage.token_last_updated_v5){
+        const last_updated = parseInt(window.localStorage.token_last_updated_v5)
         if(cur_date - last_updated >= TOKEN_UPDATE_INTERVAL || last_updated < 1639125197){
           need_to_update = true
         }
@@ -73,8 +74,16 @@ export const actions:any = actionTree(
         if(need_to_update)
         {
 
+          let tokens = {}
+          try {
           let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
-          const tokens = myJson.tokens
+           tokens = myJson.tokens
+          } catch {
+           tokens = fixedtokens.tokens
+          }
+
+
+
 
           let allowed = await fetch('https://api.cropper.finance/tokens/').then((res) => res.json())
 
@@ -86,10 +95,11 @@ export const actions:any = actionTree(
               ( 
                 itemToken.tags.includes('lp-token') || 
                 itemToken.tags.includes('lending') ||
-                itemToken.tags.includes('stake-pool') || 
                 !allowed[itemToken.address] ||
+                itemToken.tags.includes('stake-pool') || 
                 itemToken.name.includes("(Allbridge")
               )
+
               && itemToken.symbol != 'wUSDT'
               && itemToken.symbol != 'wSOL'
               && itemToken.symbol != 'USDC'
@@ -99,6 +109,9 @@ export const actions:any = actionTree(
 
 
             if(itemToken.address == 'FCqfQSujuPxy6V42UvafBhsysWtEq1vhjfMN1PUbgaxA') { return ; }
+
+
+
 
               if(itemToken.symbol == 'PANDA'){
                 itemToken.decimals = 9;
@@ -155,13 +168,13 @@ export const actions:any = actionTree(
             
           })
           TOKENS['WSOL'] = cloneDeep(WRAPPED_SOL)
-          window.localStorage.token_last_updated_v3 = new Date().getTime()
+          window.localStorage.token_last_updated_v5 = new Date().getTime()
           window.localStorage.tokens = JSON.stringify(TOKENS)
         }
 
       }
 
-      window.localStorage.tokensLoading_v2 = 0
+      window.localStorage.tokensLoading_v3 = 0
 
       logger('Token list updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
       commit('setInitialized')
