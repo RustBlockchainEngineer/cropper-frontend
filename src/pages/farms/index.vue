@@ -2517,7 +2517,7 @@ export default Vue.extend({
   display: flex;
   align-items: center;
 
-  @media @max-t-mobile {
+  @media @max-lg-tablet {
     margin-left: 5px;
   }
 }
@@ -2656,7 +2656,7 @@ export default Vue.extend({
             font-size: 15px;
             line-height: 18px;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               font-size: 12px;
               line-height: 15px;
             }
@@ -2674,7 +2674,7 @@ export default Vue.extend({
             justify-content: center;
             cursor: pointer;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               margin-left: 5px;
             }
 
