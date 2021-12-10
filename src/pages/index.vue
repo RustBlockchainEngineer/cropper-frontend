@@ -387,8 +387,6 @@ export default class Landing extends Vue {
   CRPPrice: any = 0
   marketCap: any = 0
   currentCategory: string = 'backedBy'
-  currentPlay: number = 1
-  currentVideo: string = 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4'
   surroundedList = {
     advisors: [
       {
@@ -536,7 +534,17 @@ export default class Landing extends Vue {
     medium: 'https://cropperfinance.medium.com/',
     telegram: 'https://linktr.ee/cropperfinance',
   }
-  
+  videoLinks = {
+    swap: 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4',
+    stake: 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4',
+    harvest: 'https://cropper.finance/distant/industry/HarvestvideoforGIF.mp4',
+    unstake: 'https://cropper.finance/distant/industry/UnstackLPvideoforGIF.mp4',
+    pool: 'https://cropper.finance/distant/industry/poolcreationvideoforGIIF.mp4',
+    farm: 'https://cropper.finance/distant/industry/createfarmvideo.mp4'
+  }
+  currentPlay: number = 1
+  currentVideo: string = this.videoLinks.swap
+
   mounted() {
     this.getTvl()
     this.getCRPPrice()
@@ -594,12 +602,12 @@ export default class Landing extends Vue {
 
   selectVideo(id: number) {
     this.currentPlay = id
-    if (id === 1) this.currentVideo = 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4'
-    else if (id === 2) this.currentVideo = 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4'
-    else if (id === 3) this.currentVideo = 'https://cropper.finance/distant/industry/HarvestvideoforGIF.mp4'
-    else if (id === 4) this.currentVideo = 'https://cropper.finance/distant/industry/UnstackLPvideoforGIF.mp4'
-    else if (id === 5) this.currentVideo = 'https://cropper.finance/distant/industry/poolcreationvideoforGIIF.mp4'
-    else if (id === 6) this.currentVideo = 'https://cropper.finance/distant/industry/createfarmvideo.mp4'
+    if (id === 1) this.currentVideo = this.videoLinks.swap
+    else if (id === 2) this.currentVideo = this.videoLinks.stake
+    else if (id === 3) this.currentVideo = this.videoLinks.harvest
+    else if (id === 4) this.currentVideo = this.videoLinks.unstake
+    else if (id === 5) this.currentVideo = this.videoLinks.pool
+    else if (id === 6) this.currentVideo = this.videoLinks.farm
   }
 
   async getMarketCap(price: any) {
@@ -686,11 +694,11 @@ export default class Landing extends Vue {
     console.log(activeKey)
     if (activeKey === '1') {
       this.currentPlay = 1
-      this.currentVideo = 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4'
+      this.currentVideo = this.videoLinks.swap
     }
     else if (activeKey === '2') {
       this.currentPlay = 5
-      this.currentVideo = 'https://cropper.finance/distant/industry/poolcreationvideoforGIIF.mp4'
+      this.currentVideo = this.videoLinks.pool
     }
   }
 }
