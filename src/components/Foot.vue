@@ -5,17 +5,21 @@
         <a href="/"><img src="@/assets/icons/cropper-logo.svg" /></a>
       </div>
       <div class="icon_list noMobile">
-        <a :href="linkUrl.medium" target="_blank">
-          <img src="@/assets/social/medium-transparent.svg" />
+        <a class="social-medium" :href="linkUrl.medium" target="_blank">
+          <img class="social-icon" src="@/assets/social/medium-blue.svg" />
+          <img class="social-icon" src="@/assets/social/medium-gradient.svg" />
         </a>
-        <a :href="linkUrl.discord" target="_blank">
-          <img src="@/assets/social/discord-transparent.svg" />
+        <a class="social-discord" :href="linkUrl.discord" target="_blank">
+          <img class="social-icon" src="@/assets/social/discord-blue.svg" />
+          <img class="social-icon" src="@/assets/social/discord-gradient.svg" />
         </a>
-        <a :href="linkUrl.twitter" target="_blank">
-          <img src="@/assets/social/twitter-transparent.svg" />
+        <a class="social-twitter" :href="linkUrl.twitter" target="_blank">
+          <img class="social-icon" src="@/assets/social/twitter-blue.svg" />
+          <img class="social-icon" src="@/assets/social/twitter-gradient.svg" />
         </a>
-        <a :href="linkUrl.telegram" target="_blank">
-          <img src="@/assets/social/telegram-transparent.svg" />
+        <a class="social-telegram" :href="linkUrl.telegram" target="_blank">
+          <img class="social-icon" src="@/assets/social/telegram-blue.svg" />
+          <img class="social-icon" src="@/assets/social/telegram-gradient.svg" />
         </a>
       </div>
       <div class="icon_list noDesktop">
@@ -135,6 +139,32 @@ export default class Foot extends Vue {
 
       @media @max-sm-mobile {
         display: none;
+      }
+
+      .social-telegram .social-icon {
+        margin-right: 0;
+      }
+      
+      .social-medium,
+      .social-discord,
+      .social-twitter,
+      .social-telegram {
+        .social-icon {
+          height: 24px;
+          margin-right: 38px;
+        }
+
+        .social-icon:last-child {
+          display: none;
+        }
+
+        &:hover .social-icon:last-child {
+          display: unset;
+        }
+
+        &:hover .social-icon:first-child {
+          display: none;
+        }
       }
     }
 

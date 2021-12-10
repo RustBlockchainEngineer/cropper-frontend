@@ -37,10 +37,22 @@
               </div>
             </div>
             <div class="social-links">
-              <a :href="socialLinks.medium" target="_blank"><img src="@/assets/social/medium-blue.svg" /></a>
-              <a :href="socialLinks.discord" target="_blank"><img src="@/assets/social/discord-blue.svg" /></a>
-              <a :href="socialLinks.twitter" target="_blank"><img src="@/assets/social/twitter-blue.svg" /></a>
-              <a :href="socialLinks.telegram" target="_blank"><img src="@/assets/social/telegram-blue.svg" /></a>
+              <a class="social-medium" :href="socialLinks.medium" target="_blank">
+                <img class="social-icon" src="@/assets/social/medium-blue.svg" />
+                <img class="social-icon" src="@/assets/social/medium-gradient.svg" />
+              </a>
+              <a class="social-discord" :href="socialLinks.discord" target="_blank">
+                <img class="social-icon" src="@/assets/social/discord-blue.svg" />
+                <img class="social-icon" src="@/assets/social/discord-gradient.svg" />
+              </a>
+              <a class="social-twitter" :href="socialLinks.twitter" target="_blank">
+                <img class="social-icon" src="@/assets/social/twitter-blue.svg" />
+                <img class="social-icon" src="@/assets/social/twitter-gradient.svg" />
+              </a>
+              <a class="social-telegram" :href="socialLinks.telegram" target="_blank">
+                <img class="social-icon" src="@/assets/social/telegram-blue.svg" />
+                <img class="social-icon" src="@/assets/social/telegram-gradient.svg" />
+              </a>
             </div>
             <a href="#why-cropper"><img class="move-next-section" src="@/assets/icons/transparent-arrow.svg" /></a>
           </Col>
@@ -205,10 +217,11 @@
                   </div>
                 </Col>
                 <Col :sm="16" :md="16" class="video-play-col">
-                  <video controls autoplay
-                    class="video-player"
+                  <video class="video-player"
                     src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
-                    poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217">
+                    poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217"
+                    controls
+                    autoplay>
                   </video>
                 </Col>
               </Row>
@@ -893,11 +906,29 @@ export default class Landing extends Vue {
           display: none;
         }
 
-        a {
-          margin-right: 38px;
+        .social-telegram .social-icon {
+          margin-right: 0;
+        }
+        
+        .social-medium,
+        .social-discord,
+        .social-twitter,
+        .social-telegram {
+          .social-icon {
+            height: 24px;
+            margin-right: 38px;
+          }
 
-          &:last-child {
-            margin-right: 0;
+          .social-icon:last-child {
+            display: none;
+          }
+
+          &:hover .social-icon:last-child {
+            display: unset;
+          }
+
+          &:hover .social-icon:first-child {
+            display: none;
           }
         }
       }
