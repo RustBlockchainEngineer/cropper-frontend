@@ -1283,13 +1283,10 @@ export default class Landing extends Vue {
         background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
         padding: 20px;
-        height: 345px;
         
         .feed-content {
           word-break: break-all;
           white-space: pre-line;
-          height: 275px;
-          overflow: hidden;
         }
       }
 
