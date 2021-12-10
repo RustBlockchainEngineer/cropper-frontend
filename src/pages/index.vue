@@ -758,6 +758,7 @@ export default class Landing extends Vue {
     top: 0;
     z-index: 999;
     padding: 10px;
+    opacity: 90%;
 
     .landing-top {
       padding-left: 64px;
@@ -813,6 +814,7 @@ export default class Landing extends Vue {
   }
 
   .landing-body {
+    margin-top: 56px;
     padding: 38px 64px 89px 64px;
     background-image: url('@/assets/landing_v2/landing-first-bg.svg');
     background-repeat: no-repeat;
