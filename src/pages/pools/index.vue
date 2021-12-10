@@ -32,7 +32,9 @@
           <span class="title noDesktop">
             Pools
             <NuxtLink to="/pools/create-pool/" class="create-btn-mobile">
-              <div class="create-plus-btn">+</div>
+              <div class="create-plus-btn">
+                <img src="@/assets/icons/plus-icon-10.svg" />
+              </div>
             </NuxtLink>
           </span>
           <span class="information">
@@ -68,11 +70,11 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon">
+                    <div class="info-icon labelized">
                       <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
                   </Tooltip>
@@ -87,7 +89,7 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
                         </div>
                       </div>
                     </template>
@@ -118,8 +120,8 @@
             </Col>
             <Col span="12" class="tool-option">
               <div class="toggle deposit-toggle">
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
                 <Toggle v-model="stakedOnly" :disabled="!wallet.connected"/>
+                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
               </div>
             </Col>
           </Row>
@@ -135,11 +137,11 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and project.
+                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
                         </div>
                       </div>
                     </template>
-                    <div class="info-icon">
+                    <div class="info-icon labelized">
                       <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
                     </div>
                   </Tooltip>
@@ -154,7 +156,7 @@
                     <template slot="title">
                       <div>
                         <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
+                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
                         </div>
                       </div>
                     </template>
@@ -925,7 +927,12 @@ export default class Pools extends Vue {
       const liquidityPcValue =
         getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
         price.prices[liquidityItem?.pc.symbol as string]
-      const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
+
+      let liquidityTotalValue = liquidityPcValue + liquidityCoinValue;
+      if(price.prices[liquidityItem?.pc.symbol as string] == 1){
+         liquidityTotalValue = liquidityPcValue * 2
+      }
+
 
       const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
       const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
@@ -1015,13 +1022,6 @@ export default class Pools extends Vue {
         polo.push(value)
       }
 
-      if (newCoin) {
-        delete price.prices[liquidityItem?.coin.symbol as string]
-      }
-
-      if (newPc) {
-        delete price.prices[liquidityItem?.pc.symbol as string]
-      }
     })
     return polo
   }
@@ -1104,9 +1104,20 @@ export default class Pools extends Vue {
       try {
         responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
         
-        Object.keys(responseData).forEach(function(key) {
-          tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
-        });
+        Object.keys(responseData).forEach(function (key) {
+          if(((responseData as any)[key as any].tvl * 1) < 2000000){
+            tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+          }
+        })
+      } catch {
+        // dummy data
+      } finally {
+
+      }
+
+      try {
+        responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
+        tvl = (tvl * 1) + ((responseData as any).value * 1)
       } catch {
         // dummy data
       } finally {
@@ -1165,7 +1176,7 @@ section {
   margin-bottom: 20px;
   padding: 15px;
 
-  @media @max-sm-mobile {
+  @media @max-t-mobile {
     margin-top: 0;
   }
 
@@ -1174,7 +1185,7 @@ section {
     left: 0;
     top: 35%;
 
-    @media @max-sm-mobile {
+    @media @max-t-mobile {
       display: none;
     }
   }
@@ -1193,9 +1204,11 @@ section {
 
           a {
             position: absolute;
+
             &.create-btn-desktop {
               top: 20px;
               right: -90px;
+              
               .create-plus-btn {
                 font-weight: 400;
                 background: @color-outline;
@@ -1209,7 +1222,7 @@ section {
                 font-size: 10px;
                 line-height: 12px;
 
-                @media @max-sm-mobile {
+                @media @max-t-mobile {
                   display: none;
                 }
               }
@@ -1232,7 +1245,7 @@ section {
                 height: 18px;
                 display: none;
 
-                @media @max-sm-mobile {
+                @media @max-t-mobile {
                   display: flex;
                 }
               }
@@ -1248,6 +1261,11 @@ section {
           .my-info {
             font-size: 15px;
             line-height: 18px;
+
+            @media @max-t-mobile {
+              font-size: 12px;
+              line-height: 15px;
+            }
           }
 
           .reload-btn {
@@ -1261,6 +1279,10 @@ section {
             align-items: center;
             justify-content: center;
             cursor: pointer;
+
+            @media @max-t-mobile {
+              margin-left: 5px;
+            }
 
             img {
               width: 18px;
@@ -1282,7 +1304,7 @@ section {
           border: 4px solid @color-outline;
           width: 100%;
 
-          @media @max-sm-mobile {
+          @media @max-t-mobile {
             margin-bottom: 5px;
             height: 54px;
 
@@ -1316,8 +1338,9 @@ section {
               justify-content: space-evenly;
 
               .label {
+                opacity: 0.5;
                 font-size: 16px;
-                color: rgba(255, 255, 255, 0.5);
+                color: #fff;
                 cursor: pointer;
                 position: relative;
 
@@ -1326,17 +1349,27 @@ section {
                   position: absolute;
                   top: -5px;
                   right: -20px;
+                  display: flex;
+                  align-items: center;
+                  width: fit-content;
+
+                  &.labelized {
+                    left: -20px;
+                  }
                 }
 
                 &.active-label {
                   font-weight: 700;
-                  color: #fff;
+                  opacity: 1;
                 }
               }
 
               &.deposit-toggle {
-                .ant-switch-checked {
+                .ant-switch {
                   background-color: @color-disable !important;
+                }
+                .ant-switch-checked {
+                  background-color: #fff !important;
                 }
               }
             }
@@ -1482,7 +1515,7 @@ section {
   display: none;
 }
 
-@media @max-sm-mobile {
+@media @max-t-mobile {
   body .pool.container {
     .card-body {
       overflow-x: unset !important;
@@ -1768,7 +1801,7 @@ p {
 
 <style lang="less">
 ::-webkit-scrollbar {
-  @media @max-sm-mobile {
+  @media @max-t-mobile {
     display: none; /* Chrome Safari */
   }
 }
@@ -1787,18 +1820,18 @@ p {
 
 .pool.container {
   .ant-collapse-header {
-    @media @max-sm-mobile {
+    @media @max-t-mobile {
       padding-right: 16px !important;
     }
     .ant-collapse-arrow {
-      @media @max-sm-mobile {
+      @media @max-t-mobile {
         right: 30px !important;
         z-index: 2;
       }
     }
   }
   .ant-collapse-content {
-    @media @max-sm-mobile {
+    @media @max-t-mobile {
       background-color: #16164a;
       border-top: none !important;
     }
@@ -1873,7 +1906,7 @@ p {
       line-height: 42px;
       letter-spacing: -0.05em;
 
-      @media @max-sm-mobile {
+      @media @max-t-mobile {
         font-size: 14px;
         line-height: 24px;
         padding: 0;
@@ -2057,7 +2090,7 @@ p {
             border: none;
             border-radius: 14px;
 
-            @media @max-sm-mobile {
+            @media @max-t-mobile {
               font-size: 14px;
               line-height: 17px;
             }

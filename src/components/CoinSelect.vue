@@ -464,7 +464,7 @@ export default Vue.extend({
       font-weight: 400;
     }
 
-    @media @max-sm-mobile {
+    @media @max-b-mobile {
       display: none;
     }
   }

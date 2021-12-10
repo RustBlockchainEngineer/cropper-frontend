@@ -636,7 +636,7 @@ export default Vue.extend({
                 font-size: 10px;
                 line-height: 12px;
 
-                @media @max-sm-mobile {
+                @media @max-b-mobile {
                   display: none;
                 }
               }
@@ -659,7 +659,7 @@ export default Vue.extend({
                 height: 18px;
                 display: none;
 
-                @media @max-sm-mobile {
+                @media @max-b-mobile {
                   display: flex;
                 }
               }

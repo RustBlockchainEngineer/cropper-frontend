@@ -92,7 +92,7 @@ export default Vue.extend({
       border-radius: 6px;
       margin-bottom: 6px;
 
-      @media @max-sm-mobile {
+      @media @max-b-mobile {
         padding: 10px;
         text-align: left;
         font-size: 15px;
@@ -109,7 +109,7 @@ export default Vue.extend({
       }
 
       span {
-        @media @max-sm-mobile {
+        @media @max-b-mobile {
           display: block;
         }
       }
