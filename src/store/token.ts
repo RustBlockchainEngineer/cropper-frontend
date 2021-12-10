@@ -74,7 +74,7 @@ export const actions:any = actionTree(
         if(need_to_update)
         {
 
-          let tokens = {}
+          let tokens = []
           try {
           let myJson:any = await (await fetch('https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json')).json()
            tokens = myJson.tokens
