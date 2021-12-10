@@ -208,7 +208,7 @@ export default class Nav extends Vue {
   line-height: 62px;
   border-bottom: none;
 
-  @media @max-t-mobile {
+  @media @max-sm-mobile {
     display: flex;
     border-top: 1px solid rgba(255,255,255,0.3);
     border-bottom: 1px solid rgba(255,255,255,0.3);
@@ -222,7 +222,7 @@ export default class Nav extends Vue {
     font-weight: 400;
     height: 60px;
 
-    @media @max-m-mobile {
+    @media @max-s-mobile {
       font-size: 12px;
     }
   }

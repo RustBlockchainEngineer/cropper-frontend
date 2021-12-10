@@ -1990,19 +1990,58 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="less" scoped>
-.swap.container {
-  max-width: 1350px;
-  width: 100%;
-  background: @color-bg;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 15px;
-  margin-left: auto;
-  margin-right: auto;
+<style lang="less" sxcoped>
+//sxcoped
+.warning-style {
+  font-weight: bold;
+  color: #f0b90b;
+}
+.swap-btn.warning-style {
+  font-weight: normal;
+}
+.error-style {
+  font-weight: bold;
+  color: #ed4b9e;
+}
+.swap-btn.error-style {
+  font-weight: normal;
+}
+.planetMiddle {
+  position: absolute;
+  left: -150px;
+  top: 446px;
+  transform: rotate(90deg);
+}
+.btn-grad {
+  background: @gradient-color-icon;
+  background-origin: border-box;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  height: 62px;
+  margin-left: 20px;
+  width: 170px;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 42px;
+  letter-spacing: -0.05em;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  .ant-layout {
-    background: #000 !important;
+  img {
+    margin: 10px 5px;
+  }
+}
+.swapHead {
+  align-items: center;
+  display: flex;
+  margin-top: 10px;
+  justify-content: space-between;
+
+  @media @max-sm-mobile {
+    justify-content: center;
   }
 
   button.ant-btn-background-ghost[disabled] {
@@ -2013,33 +2052,85 @@ export default Vue.extend({
   .page-head {
     margin-top: 10px;
 
-    .title {
-      text-align: center;
-      position: relative;
-      float: left;
+    @media @max-sm-mobile {
+      top: -25px;
+    }
+  }
+}
+.count-down-group {
+  background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+  background-origin: border-box;
+  height: 62px;
+  border-radius: 63px;
+  position: relative;
+  padding: 2px;
+}
+.count-down {
+  background-color: @color-bg;
+  border-radius: 63px;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 3px 3px 20px;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 42px;
+  position: relative;
 
-      a {
-        position: absolute;
-        &.create-btn-desktop {
-          top: 20px;
-          right: -90px;
-          .create-plus-btn {
-            font-weight: 400;
-            background: @color-outline;
-            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            color: white;
-            padding: 3px 7px;
-            border-radius: 4px;
-            font-size: 10px;
-            line-height: 12px;
-
-            @media @max-b-mobile {
-              display: none;
-            }
-          }
+  .ant-progress {
+    margin-left: 15px;
+  }
+  
+  .reload-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background: @gradient-color-icon;
+    background-origin: border-box;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    .anticon {
+      font-size: 16px !important;
+      color: white !important;
+    }
+  }
+}
+.container {
+  max-width: 662px; //550
+  .card {
+    background: rgba(236, 228, 228, 0.05);
+    border-radius: 15px;
+  }
+  .price-info {
+    display: grid;
+    grid-auto-rows: auto;
+    grid-row-gap: 8px;
+    row-gap: 8px;
+    padding: 0 12px;
+    font-size: 12px;
+    line-height: 20px;
+    margin-bottom: 6px;
+    .swap-icon {
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .price-base {
+      font-size: 12px;
+      line-height: 15px;
+      opacity: 0.5;
+    }
+    .fs-container {
+      margin-top: 20px;
+      .name {
+        color: #fff;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        label {
+          opacity: 0.5;
         }
 
         &.create-btn-mobile {
@@ -2515,27 +2606,6 @@ export default Vue.extend({
   }
 }
 
-.warning-style {
-  font-weight: bold;
-  color: #f0b90b;
-}
-.swap-btn.warning-style {
-  font-weight: normal;
-}
-.error-style {
-  font-weight: bold;
-  color: #ed4b9e;
-}
-.swap-btn.error-style {
-  font-weight: normal;
-}
-
-.planetMiddle {
-  position: absolute;
-  left: -150px;
-  top: 446px;
-  transform: rotate(90deg);
-}
 
 .ant-tooltip-inner {
   background: @gradient-color-icon !important;
@@ -2551,9 +2621,16 @@ export default Vue.extend({
 .ant-tooltip-arrow {
   display: none;
 }
-
-@media @max-b-mobile {
-  .swap.container {
+// .ant-tooltip-arrow::before {
+//   background-color: #271789 !important;
+//   border-top: 2px solid rgba(255, 255, 255, 0.14);
+//   border-left: 2px solid rgba(255, 255, 255, 0.14);
+//   width: 10px;
+//   height: 10px;
+// }
+// ******* Mobile *******
+@media @max-sm-mobile {
+  .swapWrapper {
     margin: auto;
     padding: 0 22px;
     min-width: 375px;

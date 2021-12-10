@@ -409,7 +409,7 @@ export default Vue.extend({
   }
 
   .pc-list {
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       display: none;
     }
   }
@@ -417,7 +417,7 @@ export default Vue.extend({
   .mobile-list {
     display: none;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       display: block;
     }
 
@@ -430,13 +430,13 @@ export default Vue.extend({
       margin-bottom: 20px;
 
       .ant-collapse-content .farm-head .btncontainer {
-        @media @max-b-mobile {
+        @media @max-sm-mobile {
           height: 44px;
           width: 105px;
         }
 
         button {
-            @media @max-b-mobile {
+            @media @max-sm-mobile {
             height: 40px;
             font-size: 14px;
           }
@@ -534,7 +534,7 @@ export default Vue.extend({
   }
 }
 
-@media @max-b-mobile {
+@media @max-sm-mobile {
   .fertilizer.cont {
     max-width: 95%;
   }
@@ -545,7 +545,7 @@ export default Vue.extend({
 @import '../../styles/variables';
 
 ::-webkit-scrollbar {
-  @media @max-b-mobile {
+  @media @max-sm-mobile {
     display: none; /* Chrome Safari */
   }
 }
@@ -576,7 +576,7 @@ export default Vue.extend({
     left: 0;
     top: 35%;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       display: none;
     }
   }
@@ -695,7 +695,7 @@ export default Vue.extend({
   .page-head {
     margin-top: 10px;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       display: none;
     }
   }
@@ -703,7 +703,7 @@ export default Vue.extend({
   .ant-collapse-header {
     padding: 0 !important;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       margin-bottom: 10px;
     }
   }
@@ -822,7 +822,7 @@ export default Vue.extend({
     align-items: center;
     padding: 30px 5px !important;
 
-    @media @max-b-mobile {
+    @media @max-sm-mobile {
       padding: 10px 5px !important;
     }
 
