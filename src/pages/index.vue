@@ -12,7 +12,9 @@
           </NuxtLink>
         </div>
       </div>
+    </section>
 
+    <section class="landing-body">
       <div class="landing-content">
         <Row :gutter="20">
           <Col :span="22" :offset="1">
@@ -28,7 +30,8 @@
             <div class="cropper-content">
               <label class="displayL weightB"
                 >The Ultimate <br />
-                DeFi Protocol</label>
+                Yield Farming <br />
+                Protocol </label>
               <p class="powered-by bodyL weightB">Powered by Solana</p>
             </div>
             <div class="read-more">
@@ -129,7 +132,7 @@
       <Row>
         <Col :span="22" :offset="1">
           <h2 class="weightB text-center">The Cropper Ecosystem</h2>
-          <p class="bodyL weightS text-center eco-content">
+          <p class="bodyL text-center eco-content">
             By farmers, for farmers. With AI-powered low fees and high-impact APRs, our full line of DeFi services give you everything you need in a few clicks. 
           </p>
           <Row :gutter="[25, 25]" class="feature-box-group">
@@ -275,54 +278,24 @@
       <div class="feed-container">
         <Row>
           <Col :span="22" :offset="1">
-            <Row :gutter="20">
-              <Col :xs="24" :sm="24" :md="8">
-                <Row :gutter="[20, 20]">
-                  <Col :span="24" v-for="twitter in firstTwitter" :key="twitter.id">
-                    <div class="feed-twitter">
-                      <div class="feed-logo">
-                        <img src="@/assets/social/twitter-white.svg" />
-                      </div>
-                      <div class="feed-content bodyM">
-                        {{twitter.content}}
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
-              <Col :xs="24" :sm="24" :md="8">
-                <Row :gutter="[20, 20]">
-                  <Col :span="24" v-for="twitter in secondTwitter" :key="twitter.id">
-                    <div class="feed-twitter">
-                      <div class="feed-logo">
-                        <img src="@/assets/social/twitter-white.svg" />
-                      </div>
-                      <div class="feed-content bodyM">
-                        {{twitter.content}}
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
-              <Col :xs="24" :sm="24" :md="8">
-                <Row :gutter="[20, 20]">
-                  <Col :span="24" v-for="twitter in thirdTwitter" :key="twitter.id">
-                    <div class="feed-twitter">
-                      <div class="feed-logo">
-                        <img src="@/assets/social/twitter-white.svg" />
-                      </div>
-                      <div class="feed-content bodyM">
-                        {{twitter.content}}
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
+            <Row :gutter="[20, 20]">
+              <Col v-for="twitter in twitterShows" :key="twitter.id" :xs="24" :sm="24" :md="8">
+                <div class="feed-twitter">
+                  <div class="feed-logo">
+                    <img src="@/assets/social/twitter-white.svg" />
+                  </div>
+                  <div class="feed-content bodyM">
+                    {{twitter.content}}
+                  </div>
+                </div>
               </Col>
             </Row>
           </Col>
         </Row>
         <div class="feed-link">
-          <a :href="socialLinks.telegram" class="bodyL join-btn weightB" target="_blank">Join the Croppers</a>
+          <a :href="socialLinks.telegram" target="_blank" class="btn-container join-btn-container">
+            <Button class="btn-outline bodyM weightS join-btn">Join the Croppers</Button>
+          </a>
         </div>
       </div>
     </section>
@@ -335,17 +308,17 @@
       <div class="category-group text-center">
         <Button
           class="category-btn bodyL weightS"
-          :class="currentCategory === 'advisors' ? 'active' : ''"
-          @click="selectCategory('advisors')"
-        >
-          Advisors
-        </Button>
-        <Button
-          class="category-btn bodyL weightS"
           :class="currentCategory === 'backedBy' ? 'active' : ''"
           @click="selectCategory('backedBy')"
         >
           Backed by
+        </Button>
+        <Button
+          class="category-btn bodyL weightS"
+          :class="currentCategory === 'advisors' ? 'active' : ''"
+          @click="selectCategory('advisors')"
+        >
+          Advisors
         </Button>
         <Button
           class="category-btn bodyL weightS"
@@ -415,12 +388,10 @@ export default class Landing extends Vue {
   isPowered: boolean = false
   isDirect: boolean = false
   twitterFeeds: any[] = []
-  firstTwitter: any[] = []
-  secondTwitter: any[] = []
-  thirdTwitter: any[] = []
+  twitterShows: any[] = []
   CRPPrice: any = 0
   marketCap: any = 0
-  currentCategory: string = 'advisors'
+  currentCategory: string = 'backedBy'
   currentPlay: number = 1
   currentVideo: string = 'video/swap.mp4'
   surroundedList = {
@@ -438,6 +409,11 @@ export default class Landing extends Vue {
       {
         title: 'Halborn',
         img: 'industry/halborn.svg',
+        width: 'unset'
+      },
+      {
+        title: 'SKYVision Capital',
+        img: 'industry/svc.svg',
         width: 'unset'
       }
     ],
@@ -705,9 +681,7 @@ export default class Landing extends Vue {
       console.log(err)
     } finally {
       this.twitterFeeds = responseData
-      this.firstTwitter = this.twitterFeeds.filter((val, idx) => idx as any % 3 === 0)
-      this.secondTwitter = this.twitterFeeds.filter((val, idx) => idx as any % 3 === 1)
-      this.thirdTwitter = this.twitterFeeds.filter((val, idx) => idx as any % 3 === 2)
+      this.twitterShows = this.twitterFeeds.slice(0,3)
     }
   }
 }
@@ -724,6 +698,7 @@ export default class Landing extends Vue {
   width: fit-content;
   -webkit-transition: background-color 2s ease-out;
   transition: background-color 2s ease-out;
+  display: flex;
 
   &:hover {
     background-image: @gradient-btn-primary-reverse;
@@ -768,26 +743,27 @@ export default class Landing extends Vue {
 // class stylesheet
 .landing {
   .landing-header {
-    padding: 38px 64px 89px 64px;
-    background-image: url('@/assets/landing_v2/landing-first-bg.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    
-    @media @min-xl-desktop {
-      height: calc(100vw * 902 / 1440);
-    }
-
-    @media @max-lg-tablet {
-      padding-left: 32px;
-      padding-right: 32px;
-    }
-
-    @media @max-sm-mobile {
-      padding: 20px 20px 0 20px;
-      background-image: unset;
-    }
+    position: fixed;
+    width: 100%;
+    background: #000539;
+    top: 0;
+    z-index: 999;
+    padding: 10px;
 
     .landing-top {
+      padding-left: 64px;
+      padding-right: 64px;
+
+      @media @max-lg-tablet {
+        padding-left: 32px;
+        padding-right: 32px;
+      }
+
+      @media @max-sm-mobile {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -824,6 +800,27 @@ export default class Landing extends Vue {
           margin-left: 18px;
         }
       }
+    }
+  }
+
+  .landing-body {
+    padding: 38px 64px 89px 64px;
+    background-image: url('@/assets/landing_v2/landing-first-bg.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    @media @min-xl-desktop {
+      height: calc(100vw * 902 / 1440);
+    }
+
+    @media @max-lg-tablet {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    @media @max-sm-mobile {
+      padding: 20px 20px 0 20px;
+      background-image: unset;
     }
 
     .landing-content {
@@ -1119,7 +1116,7 @@ export default class Landing extends Vue {
 
     .eco-content {
       margin: 20px auto;
-      width: 50%;
+      width: 60%;
     }
 
     .feature-box-group {
@@ -1292,12 +1289,14 @@ export default class Landing extends Vue {
       .feed-twitter {
         background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
-        padding: 22px;
-        overflow: hidden;
-
+        padding: 20px;
+        height: 345px;
+        
         .feed-content {
           word-break: break-all;
           white-space: pre-line;
+          height: 275px;
+          overflow: hidden;
         }
       }
 
@@ -1328,12 +1327,13 @@ export default class Landing extends Vue {
       margin-top: 20px;
       text-align: center;
 
-      .join-btn {
-        color: #F7FCFD;
-        background: #23ADB4;
-        border-radius: 48px;
-        padding: 8px 28px;
-        text-align: center;
+      .join-btn-container {
+        height: 45px;
+        margin: auto;
+
+        .join-btn {
+          padding: 7.5px 15px;
+        }
       }
     }
   }
