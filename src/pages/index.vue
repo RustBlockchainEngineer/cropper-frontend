@@ -766,7 +766,7 @@ export default class Landing extends Vue {
     top: 0;
     z-index: 999;
     padding: 10px;
-    opacity: 90%;
+    opacity: 0.9;
 
     .landing-top {
       padding-left: 64px;
