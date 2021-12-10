@@ -16,10 +16,32 @@ html {
 
 @font-face {
   font-family: "Gilroy";
+  font-weight: 300;
+  src: local("Gilroy"),
+    url(../assets/fonts/Gilroy/Gilroy-Light.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 600;
+  src: local("Gilroy"),
+    url(../assets/fonts/Gilroy/Gilroy-Semibold.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Gilroy";
   font-weight: bold;
   src: local("Gilroy"),
     url(../assets/fonts/Gilroy/Gilroy-Bold.ttf) format("truetype");
 }
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 900;
+  src: local("Gilroy"),
+    url(../assets/fonts/Gilroy/Gilroy-Heavy.ttf) format("truetype");
+}
+
 
 .ant-progress-circle-path {
   stroke: #13ECAB !important
@@ -408,7 +430,7 @@ p {
   font-size: 16px !important;
   line-height: 24px !important;
   letter-spacing: 0.15px;
-  
+
   @media @max-sm-mobile {
     font-size: 13px !important;
     line-height: 19.5px !important;
@@ -428,6 +450,10 @@ p {
 }
 
 // font-weight
+.weightX {
+  font-weight: 900 !important
+}
+
 .weightB {
   font-weight: bold !important;
 }

@@ -28,11 +28,11 @@
               </div>
             </div>
             <div class="cropper-content">
-              <label class="displayL weightB"
+              <label class="displayL weightX"
                 >The Ultimate <br />
                 Yield Farming <br />
                 Protocol </label>
-              <p class="powered-by bodyL weightB">Powered by Solana</p>
+              <p class="powered-by bodyL">Powered by Solana</p>
             </div>
             <div class="read-more">
               <div class="btn-container">
