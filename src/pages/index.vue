@@ -1580,4 +1580,11 @@ export default class Landing extends Vue {
     }
   }
 }
+
+@media @max-md-tablet {
+  .balance-infos{
+    margin-top:40px
+  }
+}
+
 </style>
