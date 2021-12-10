@@ -1173,7 +1173,12 @@ export default Vue.extend({
       this.searchName = hash
     } else {
       const query = new URLSearchParams(window.location.search)
-      if (query.get('s')) this.searchName = query.get('s') as string
+      if (query.get('s')) {
+        this.searchName = query.get('s') as string
+        if(this.labelizedAmms[this.searchName]){
+          this.searchCertifiedFarm = true
+        }
+      }
     }
   },
 
