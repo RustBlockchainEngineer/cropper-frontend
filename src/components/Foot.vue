@@ -247,6 +247,10 @@ export default class Foot extends Vue {
   background: #fff;
   opacity: 0.2;
   margin: 20px 0;
+
+  @media @max-sl-mobile {
+    display: none;
+  }
 }
 
 .footer-refer {
@@ -257,6 +261,7 @@ export default class Foot extends Vue {
 
   @media @max-sl-mobile {
     color: #98a2e4;
+    display: none;
   }
 
   // .refer-list {
