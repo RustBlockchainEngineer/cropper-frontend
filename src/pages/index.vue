@@ -706,8 +706,6 @@ export default class Landing extends Vue {
 
 <style lang="less" scoped>
 // global stylesheet
-@import '../styles/variables';
-
 .btn-container {
   background-image: @gradient-btn-primary;
   padding: 3px;
@@ -1446,6 +1444,10 @@ export default class Landing extends Vue {
 }
 </style>
 <style lang="less">
+::-webkit-scrollbar {
+  display: none;
+}
+
 // ant customization
 .ant-row {
   @media @max-lg-tablet {
