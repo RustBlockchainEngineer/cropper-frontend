@@ -706,8 +706,6 @@ export default class Landing extends Vue {
 
 <style lang="less" scoped>
 // global stylesheet
-@import '../styles/variables';
-
 .btn-container {
   background-image: @gradient-btn-primary;
   padding: 3px;
@@ -1280,11 +1278,6 @@ export default class Landing extends Vue {
 
         @media @max-sl-mobile {
           margin-top: 40px;
-
-          .play-list-col,
-          .video-play-col {
-            width: 100%;
-          }
         }
       }
     }
@@ -1446,6 +1439,10 @@ export default class Landing extends Vue {
 }
 </style>
 <style lang="less">
+::-webkit-scrollbar {
+  display: none;
+}
+
 // ant customization
 .ant-row {
   @media @max-lg-tablet {
@@ -1572,15 +1569,21 @@ export default class Landing extends Vue {
         }
       }
     }
-    .video-player {
+    
+    .video-play-col {
+      display: flex;
       border: 3px solid #7a88b6;
-      box-sizing: border-box;
-      width: 100%;
       border-radius: 42px;
       background: @color-bg;
+      padding: 0 !important;
 
       @media @max-sl-mobile {
         margin-top: 20px;
+      }
+      
+      .video-player {
+        border-radius: 42px;
+        width: 100%;
       }
     }
   }

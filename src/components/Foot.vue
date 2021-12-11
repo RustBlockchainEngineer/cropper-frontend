@@ -22,7 +22,7 @@
           <img class="social-icon" src="@/assets/social/telegram-gradient.svg" />
         </a>
       </div>
-      <div class="icon_list noDesktop">
+      <!-- <div class="icon_list noDesktop">
         <a :href="linkUrl.medium" target="_blank" class="bodyM weightS"> Medium </a>
         <a :href="linkUrl.discord" target="_blank" class="bodyM weightS"> Discord </a>
         <a :href="linkUrl.twitter" target="_blank" class="bodyM weightS"> Twitter </a>
@@ -42,9 +42,9 @@
           Telegram
           <img src="@/assets/icons/arrow-down.svg" />
         </a>
-      </div>
+      </div> -->
     </div>
-    <div class="telegram noDesktop" v-if="displayfilters" :class="displayfilters ? 'visible' : ''">
+    <!-- <div class="telegram noDesktop" v-if="displayfilters" :class="displayfilters ? 'visible' : ''">
       <div class="telegram-group">
         <a :href="linkUrl.telegram_en" target="_blank" class="bodyM"> Telegram(EN) </a>
         <a :href="linkUrl.telegram_cn" target="_blank" class="bodyM"> Telegram(CN) </a>
@@ -59,10 +59,10 @@
         <a :href="linkUrl.telegram_in" target="_blank" class="bodyM"> Telegram(IN) </a>
         <a :href="linkUrl.telegram_it" target="_blank" class="bodyM"> Telegram(IT) </a>
       </div>
-    </div>
+    </div> -->
     <div class="footer-line"></div>
     <div class="footer-refer">
-      <label class="bodyS weightS decentralized">Decentralized 2021</label>
+      <label class="bodyS decentralized">Decentralized 2021</label>
       <!-- <div class="refer-list">
         <label class="bodyS weightS">Terms & Conditions</label>
         <label class="bodyS weightS">Privacy Policy</label>
@@ -128,7 +128,7 @@ export default class Foot extends Vue {
 
   .logo {
     @media @max-sl-mobile {
-      margin-bottom: 35px;
+      margin-bottom: 30px;
     }
   }
 
@@ -136,10 +136,6 @@ export default class Foot extends Vue {
     &.noMobile {
       display: flex;
       align-items: center;
-
-      @media @max-sl-mobile {
-        display: none;
-      }
 
       .social-telegram .social-icon {
         margin-right: 0;
@@ -151,7 +147,6 @@ export default class Foot extends Vue {
       .social-telegram {
         .social-icon {
           height: 24px;
-          margin-right: 38px;
         }
 
         .social-icon:last-child {
@@ -181,11 +176,6 @@ export default class Foot extends Vue {
 
       @media @max-sl-mobile {
         display: block;
-        margin-bottom: 18px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
       }
 
       &:last-child {
@@ -247,10 +237,6 @@ export default class Foot extends Vue {
   background: #fff;
   opacity: 0.2;
   margin: 20px 0;
-
-  @media @max-sl-mobile {
-    display: none;
-  }
 }
 
 .footer-refer {
@@ -260,8 +246,8 @@ export default class Foot extends Vue {
   text-align: center;
 
   @media @max-sl-mobile {
+    text-align: left;
     color: #98a2e4;
-    display: none;
   }
 
   // .refer-list {
@@ -288,7 +274,6 @@ export default class Foot extends Vue {
 // ant customization
 .ant-layout-footer {
   @media @max-sl-mobile {
-    width: 375px;
     margin: auto;
     padding: 22px !important;
   }
