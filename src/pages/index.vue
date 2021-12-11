@@ -36,7 +36,7 @@
             </div>
             <div class="read-more">
               <div class="btn-container">
-                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline">Read More</a>
+                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline bodyM weightS">Documentation</a>
               </div>
             </div>
             <div class="social-links">
@@ -828,7 +828,8 @@ export default class Landing extends Vue {
     background-image: url('@/assets/landing_v2/landing-first-bg.svg');
     background-repeat: no-repeat;
     background-size: cover;
-    
+    background-position: center;
+
     @media @min-xl-desktop {
       height: calc(100vw * 902 / 1440);
     }
@@ -840,7 +841,10 @@ export default class Landing extends Vue {
 
     @media @max-sl-mobile {
       padding: 20px 20px 0 20px;
-      background-image: unset;
+    }
+
+    @media @max-xs-mobile {
+      background-image: url('@/assets/landing_v2/landing-first-bg-mobile.svg');
     }
 
     .landing-content {
@@ -903,13 +907,14 @@ export default class Landing extends Vue {
         }
 
         .btn-container {
-          border-radius: 8px;
-          width: 100%;
-          margin-top: 28px;
+          border-radius: 48px;
+          margin: 28px auto;
+          height: 54px;
 
           .btn-outline {
-            border-radius: 8px;
+            border-radius: 48px;
             width: 100%;
+            padding: 7.5px 15px;
             justify-content: center;
           }
         }
