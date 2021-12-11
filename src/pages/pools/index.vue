@@ -39,8 +39,8 @@
           </span>
           <span class="information">
             <div class="my-info">
-              <p>TVL : <b>{{TVL.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} $</b></p>
+              <p>TVL : <b>${{TVL.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}}</b></p>
               <!-- <p>Your deposit: <b>28,009 $</b></p> -->
             </div>
 
