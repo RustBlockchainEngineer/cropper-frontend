@@ -2036,7 +2036,7 @@ export default Vue.extend({
             font-size: 10px;
             line-height: 12px;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               display: none;
             }
           }
@@ -2059,7 +2059,7 @@ export default Vue.extend({
             height: 18px;
             display: none;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               display: flex;
             }
           }
@@ -2095,7 +2095,7 @@ export default Vue.extend({
           &:last-child {
             margin-right: 30px;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               margin-right: 5px;
             }
           }
@@ -2237,7 +2237,7 @@ export default Vue.extend({
         font-size: 15px;
         line-height: 18px;
 
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           font-size: 12px;
           line-height: 15px;
         }
@@ -2255,7 +2255,7 @@ export default Vue.extend({
         justify-content: center;
         cursor: pointer;
 
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           margin-left: 5px;
         }
 
@@ -2285,7 +2285,7 @@ export default Vue.extend({
       display: flex;
       align-items: center;
 
-      @media @max-t-mobile {
+      @media @max-lg-tablet {
         margin-top: 0;
         display: block;
       }
@@ -2313,7 +2313,7 @@ export default Vue.extend({
         line-height: 14px;
         letter-spacing: -0.05em;
 
-        @media @max-t-mobile {
+        @media @max-lg-tablet {
           margin: 10px auto auto auto;
           display: flex;
           align-items: center;
@@ -2552,7 +2552,7 @@ export default Vue.extend({
   display: none;
 }
 
-@media @max-b-mobile {
+@media @max-sl-mobile {
   .swap.container {
     margin: auto;
     padding: 0 22px;

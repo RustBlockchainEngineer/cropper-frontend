@@ -49,7 +49,7 @@ export default Vue.extend({
   .logo {
     height: 55px;
 
-    @media @max-t-mobile {
+    @media @max-lg-tablet {
       height: 30px;
     }
   }
@@ -127,7 +127,7 @@ export default Vue.extend({
   }
 }
 
-@media @max-t-mobile {
+@media @max-lg-tablet {
   .header {
     margin: 10px 20px 80px 20px;
     padding: 0 !important;

@@ -155,7 +155,7 @@ export default Vue.extend({
     color: rgba(255,255,255,0.5);
     padding-left: 10px;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       font-size: 12px !important;
       line-height: 15px;
     }
@@ -175,7 +175,7 @@ export default Vue.extend({
     overflow: hidden;
     text-overflow: ellipsis;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       font-size: 15px;
       line-height: 18px;
     }

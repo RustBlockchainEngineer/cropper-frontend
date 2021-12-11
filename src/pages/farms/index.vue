@@ -2517,7 +2517,7 @@ export default Vue.extend({
   display: flex;
   align-items: center;
 
-  @media @max-t-mobile {
+  @media @max-lg-tablet {
     margin-left: 5px;
   }
 }
@@ -2538,7 +2538,7 @@ export default Vue.extend({
   margin-bottom: 20px;
   padding: 15px;
 
-  @media @max-t-mobile {
+  @media @max-lg-tablet {
     margin-top: 0;
   }
 
@@ -2547,7 +2547,7 @@ export default Vue.extend({
     left: 0;
     top: 35%;
 
-    @media @max-t-mobile {
+    @media @max-lg-tablet {
       display: none;
     }
   }
@@ -2560,7 +2560,7 @@ export default Vue.extend({
         display: inline-flex;
         padding: 10px;
 
-        @media @max-t-mobile {
+        @media @max-lg-tablet {
           display: none;
         }
 
@@ -2616,7 +2616,7 @@ export default Vue.extend({
                 font-size: 10px;
                 line-height: 12px;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   display: none;
                 }
               }
@@ -2639,7 +2639,7 @@ export default Vue.extend({
                 height: 18px;
                 display: none;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   display: flex;
                 }
               }
@@ -2656,7 +2656,7 @@ export default Vue.extend({
             font-size: 15px;
             line-height: 18px;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               font-size: 12px;
               line-height: 15px;
             }
@@ -2674,7 +2674,7 @@ export default Vue.extend({
             justify-content: center;
             cursor: pointer;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               margin-left: 5px;
             }
 
@@ -2698,7 +2698,7 @@ export default Vue.extend({
           border: 4px solid @color-outline;
           width: 100%;
 
-          @media @max-t-mobile {
+          @media @max-lg-tablet {
             margin-bottom: 5px;
             height: 54px;
 
@@ -2861,7 +2861,7 @@ export default Vue.extend({
             border-radius: 5px;
             margin-top: 10px;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               display: block;
               padding: 0;
               background: @color-bg-dark !important;
@@ -2895,7 +2895,7 @@ export default Vue.extend({
                 font-weight: 400;
                 display: flex;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   font-size: 12px;
                   color: rgba(255, 255, 255, 0.5);
                 }
@@ -2908,7 +2908,7 @@ export default Vue.extend({
                 font-weight: 600;
                 word-break: break-all;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   margin-top: 5px;
                   font-size: 14px;
                   line-height: 17px;
@@ -2919,7 +2919,7 @@ export default Vue.extend({
                 position: absolute;
                 bottom: 10px;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   position: relative;
                   bottom: unset;
                 }
@@ -2931,7 +2931,7 @@ export default Vue.extend({
                 display: flex;
                 align-items: center;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   justify-content: space-between;
                 }
 
@@ -2943,7 +2943,7 @@ export default Vue.extend({
                   padding: 2px;
                   width: 240px;
 
-                  @media @max-t-mobile {
+                  @media @max-lg-tablet {
                     height: 30px;
                     width: 180px;
                   }
@@ -2956,7 +2956,7 @@ export default Vue.extend({
                     justify-content: center;
 
                     img {
-                      @media @max-t-mobile {
+                      @media @max-lg-tablet {
                         width: 12px;
                         height: 12px;
                       }
@@ -2973,7 +2973,7 @@ export default Vue.extend({
                         margin-right: 0;
                       }
 
-                      @media @max-t-mobile {
+                      @media @max-lg-tablet {
                         font-size: 15px;
                         line-height: 18px;
                       }
@@ -2986,7 +2986,7 @@ export default Vue.extend({
                 margin-top: 15px;
                 display: flex;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   margin-top: 0;
                 }
 
@@ -3034,7 +3034,7 @@ export default Vue.extend({
                     text-transform: uppercase;
                   }
 
-                  @media @max-t-mobile {
+                  @media @max-lg-tablet {
                     font-weight: 600 !important;
                     font-size: 10px !important;
                     padding: 0 4px;
@@ -3059,7 +3059,7 @@ export default Vue.extend({
                 cursor: pointer;
                 border-bottom: none;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   padding: 5px;
                 }
               }
@@ -3080,7 +3080,7 @@ export default Vue.extend({
               display: flex;
               margin-left: 15px;
 
-              @media @max-t-mobile {
+              @media @max-lg-tablet {
                 margin-left: 0;
               }
 
@@ -3093,7 +3093,7 @@ export default Vue.extend({
                 justify-content: center;
                 background: @gradient-color-icon;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   width: 24px;
                   height: 24px;
                   background: @gradient-color-social;
@@ -3108,7 +3108,7 @@ export default Vue.extend({
             .farm-infos {
               margin-top: 15px;
 
-              @media @max-t-mobile {
+              @media @max-lg-tablet {
                 margin-top: 0;
               }
 
@@ -3116,7 +3116,7 @@ export default Vue.extend({
                 display: flex;
                 align-items: center;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   font-size: 12px;
                   line-height: 15px;
                 }
@@ -3177,7 +3177,7 @@ export default Vue.extend({
       border: none;
       color: #fff;
 
-      @media @max-t-mobile {
+      @media @max-lg-tablet {
         font-size: 12px !important;
         line-height: 14px !important;
         font-weight: 600 !important;
@@ -3188,7 +3188,7 @@ export default Vue.extend({
       height: 28px;
       padding: 2px;
 
-      @media @max-t-mobile {
+      @media @max-lg-tablet {
         height: 35px;
       }
 
@@ -3203,7 +3203,7 @@ export default Vue.extend({
     &.btn-container-fill {
       height: 52px;
 
-      @media @max-t-mobile {
+      @media @max-lg-tablet {
         margin-bottom: 10px;
       }
 
@@ -3219,7 +3219,7 @@ export default Vue.extend({
       height: 28px;
       background: @gradient-color-outline;
 
-      @media @max-t-mobile {
+      @media @max-lg-tablet {
         height: 35px;
       }
 
@@ -3240,13 +3240,13 @@ export default Vue.extend({
   .noDesktop {
     display: none;
 
-    @media @max-t-mobile {
+    @media @max-lg-tablet {
       display: block;
     }
   }
 
   .noMobile {
-    @media @max-t-mobile {
+    @media @max-lg-tablet {
       display: none !important;
     }
   }
@@ -3255,7 +3255,7 @@ export default Vue.extend({
 
 <style lang="less">
 ::-webkit-scrollbar {
-  @media @max-t-mobile {
+  @media @max-lg-tablet {
     display: none; /* Chrome Safari */
   }
 }
@@ -3316,7 +3316,7 @@ export default Vue.extend({
             border: none;
             border-radius: 14px;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               font-size: 14px;
               line-height: 17px;
             }
