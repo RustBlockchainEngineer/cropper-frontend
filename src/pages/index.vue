@@ -233,7 +233,7 @@
             <TabPane tab="For SPL Builders" key="2">
               <Row :gutter="20">
                 <Col :xs="24" :sm="24" :md="8">
-                  <p class="bodyL weightB">Prepare to harvest</p>
+                  <p class="bodyL weightB">Launch your own farm</p>
                   <div class="play-list">
                     <Button
                       class="play-list-btn bodyM weightS"
