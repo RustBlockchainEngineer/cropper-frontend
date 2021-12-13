@@ -397,7 +397,8 @@ import {
   AMM_ASSOCIATED_SEED,
   FARM_PROGRAM_ID,
   LIQUIDITY_POOL_PROGRAM_ID_V4,
-  FARM_INITIAL_ALLOWED_CREATOR
+  FARM_INITIAL_ALLOWED_CREATOR,
+  FARM_VERSION
 } from '@/utils/ids'
 import { getBigNumber } from '@/utils/layouts'
 import { cloneDeep, get } from 'lodash-es'
@@ -405,6 +406,7 @@ import moment from 'moment'
 import { YieldFarm } from '@/utils/farm'
 import { getCropperPoolListByTokenMintAddresses, LIQUIDITY_POOLS, LiquidityPoolInfo } from '@/utils/pools'
 import { Token } from '@solana/spl-token'
+import { addSingleRewardV3, createFarmV3 } from '@/utils/farm-v3'
 const Step = Steps.Step
 const RadioGroup = Radio.Group
 
@@ -623,6 +625,7 @@ export default class CreateFarm extends Vue {
   }
 
   async addRewardToFarm() { 
+    console.log("adding reward");
     this.activeSpin = true
     //EgaHTGJeDbytze85LqMStxgTJgq22yjTvYSfqoiZevSK
     const connection = this.$web3
@@ -698,16 +701,23 @@ export default class CreateFarm extends Vue {
     }
     try {
 
-      let fetchedFarm = await YieldFarm.loadFarm(connection, this.farmId, new PublicKey(FARM_PROGRAM_ID))
-
-      if (fetchedFarm) {
-        await fetchedFarm.addReward(wallet, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals))
-        this.current += 1
+      if(FARM_VERSION < 3){
+        let fetchedFarm = await YieldFarm.loadFarm(connection, this.farmId, new PublicKey(FARM_PROGRAM_ID))
+        if (fetchedFarm) {
+          await fetchedFarm.addReward(wallet, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals))
+        }
       }
+      else if(FARM_VERSION === 3){
+        await addSingleRewardV3(connection, wallet, this.farmId, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals));
+      }
+      
+      this.current += 1
 
-    } catch {
+    } catch(e) {
       this.activeSpin = false;
-      console.log('creating farm failed')
+      
+      console.log(e)
+      console.log('adding reward failed')
     }
   }
 
@@ -787,29 +797,47 @@ export default class CreateFarm extends Vue {
     }
 
     try {
-      let createdFarm = await YieldFarm.createFarmWithParams(
-        connection,
-        wallet,
-        rewardMintPubkey,
-        lpMintPubkey,
-        ammPubkey,
-        startTimestamp,
-        endTimestamp
-      )
-      await this.delay(500)
-
-      // wait for the synchronization
-      let loopCount = 0
-      while ((await connection.getAccountInfo(createdFarm.farmId)) === null) {
-        if (loopCount > 5) {
-          // allow loop for 5 times
-          break
+      if(FARM_VERSION === 3) {
+        const {createdFarm, farmKey} = await createFarmV3(
+          connection,
+          wallet,
+          rewardMintPubkey,
+          lpMintPubkey,
+          ammPubkey,
+          startTimestamp,
+          endTimestamp
+        )
+        if(createdFarm){
+          this.farmId = farmKey
+          window.localStorage['owner_'+ this.farmId] = 1;
         }
-        loopCount++
       }
+      else if(FARM_VERSION < 3) {
+        let createdFarm = await YieldFarm.createFarmWithParams(
+          connection,
+          wallet,
+          rewardMintPubkey,
+          lpMintPubkey,
+          ammPubkey,
+          startTimestamp,
+          endTimestamp
+        )
+        await this.delay(500)
 
-      this.farmId = createdFarm.farmId
-      window.localStorage['owner_'+ createdFarm.farmId] = 1;
+        // wait for the synchronization
+        let loopCount = 0
+        while ((await connection.getAccountInfo(createdFarm.farmId)) === null) {
+          if (loopCount > 5) {
+            // allow loop for 5 times
+            break
+          }
+          loopCount++
+        }
+
+        this.farmId = createdFarm.farmId
+        window.localStorage['owner_'+ createdFarm.farmId] = 1;
+      }
+      
 
       this.activeSpin = false;
       this.farm_created = true;

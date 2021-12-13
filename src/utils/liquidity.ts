@@ -1,5 +1,5 @@
 import { ACCOUNT_LAYOUT, getBigNumber, MINT_LAYOUT } from './layouts'
-import { Connection, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js'
+import { Connection, PublicKey, Signer, Transaction, TransactionInstruction } from '@solana/web3.js'
 import {
   LiquidityPoolInfo,
   getLpMintByTokenMintAddresses,
@@ -88,8 +88,9 @@ export async function addLiquidity(
   toCoin: TokenInfo | undefined | null,
   fromAmount: string | undefined | null,
   toAmount: string | undefined | null,
-  fixedCoin: string
-): Promise<string> {
+  fixedCoin: string,
+  withFarmStakeLp = false
+): Promise<any> {
   if (!connection || !wallet) throw new Error('Miss connection')
   if (!poolInfo || !fromCoin || !toCoin) {
     throw new Error('Miss pool infomations')
@@ -224,7 +225,9 @@ export async function addLiquidity(
       })
     )
   }
-
+  if(withFarmStakeLp){
+    return {addLiquidityInstructions: transaction.instructions, addLiquiditysigners: signers};
+  }
   return await sendTransaction(connection, wallet, transaction, signers)
 }
 
@@ -235,7 +238,10 @@ export async function removeLiquidity(
   lpAccount: string | undefined | null,
   fromCoinAccount: string | undefined | null,
   toCoinAccount: string | undefined | null,
-  amount: string | undefined | null
+  amount: string | undefined | null,
+  withFarmUnstakeLP = false,
+  farmInstructions: TransactionInstruction[] | undefined = undefined,
+  farmSigners: Signer[] | undefined = undefined
 ) {
   if (!connection || !wallet) throw new Error('Miss connection')
   if (!poolInfo) throw new Error('Miss pool infomations')
@@ -245,8 +251,17 @@ export async function removeLiquidity(
   if (!amount) throw new Error('Miss amount infomations')
 
   const transaction = new Transaction()
-  const signers: any = []
+  const signers: any[] = []
 
+  if(withFarmUnstakeLP){
+    farmInstructions?.forEach((inst) => {
+      transaction.add(inst);
+    })
+    farmSigners?.forEach((signer) => {
+      signers.push(signer);
+    })
+  }
+  
   const owner = wallet.publicKey
 
   const lpAmount = getBigNumber(new TokenAmount(amount, poolInfo.lp.decimals, false).wei)
@@ -346,6 +361,7 @@ export async function removeLiquidity(
     )
   }
 
+  
   return await sendTransaction(connection, wallet, transaction, signers)
 }
 

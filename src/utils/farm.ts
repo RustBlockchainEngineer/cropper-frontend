@@ -577,9 +577,9 @@ export class YieldFarm {
     startTimestamp:number,
     endTimestamp:number,
   ){
-    if(DEVNET_MODE){
-      endTimestamp = startTimestamp + 300; //temp
-    }
+    // if(DEVNET_MODE){
+    //   endTimestamp = startTimestamp + 300; //temp
+    // }
     
 
     const farmAccount = new Account();
