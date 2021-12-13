@@ -10,15 +10,16 @@ html {
 
 @font-face {
   font-family: "Gilroy";
+  font-weight: 300;
   src: local("Gilroy"),
-    url(../assets/fonts/Gilroy/Gilroy-Regular.ttf) format("truetype");
+    url(../assets/fonts/Gilroy/Gilroy-Light.ttf) format("truetype");
 }
 
 @font-face {
   font-family: "Gilroy";
-  font-weight: 300;
+  font-weight: 400;
   src: local("Gilroy"),
-    url(../assets/fonts/Gilroy/Gilroy-Light.ttf) format("truetype");
+    url(../assets/fonts/Gilroy/Gilroy-Regular.ttf) format("truetype");
 }
 
 @font-face {
@@ -30,7 +31,7 @@ html {
 
 @font-face {
   font-family: "Gilroy";
-  font-weight: bold;
+  font-weight: 700;
   src: local("Gilroy"),
     url(../assets/fonts/Gilroy/Gilroy-Bold.ttf) format("truetype");
 }
@@ -292,12 +293,6 @@ a {
   }
 }
 
-.ant-menu-horizontal,
-.ant-layout-header,
-.ant-layout-footer {
-  background: @color-bg !important;
-}
-
 .nofooter .ant-modal-footer {
   display: none !important
 }
@@ -441,6 +436,12 @@ p {
   font-size: 13px !important;
   line-height: 19.5px !important;
   letter-spacing: -0.5px !important;
+
+  @media @max-md-tablet {
+    font-size: 11px !important;
+    line-height: 16.5px !important;
+    letter-spacing: -0.5px !important;
+  }
 }
 
 .bodyXS {
@@ -455,7 +456,7 @@ p {
 }
 
 .weightB {
-  font-weight: bold !important;
+  font-weight: 700 !important;
 }
 
 .weightS {
@@ -476,16 +477,9 @@ p {
 }
 
 // ant-modal
-.ant-modal {
-  width: 800px;
-
-  @media @max-sl-mobile {
-    width: calc(100% - 40px) !important;
-  }
-  
+.ant-modal {  
   .ant-modal-content {
     background-color: @color-modal-dark;
-    padding: 15px;
     border-radius: 5px;
 
     .ant-modal-close .ant-modal-close-x .anticon{
@@ -503,7 +497,7 @@ p {
       .ant-modal-title {
         width: 100%;
         background-color: @color-modal-dark;
-        font-weight: bold;
+        font-weight: 700;
         font-size: 18px;
         line-height: 22px;
         color: #fff;

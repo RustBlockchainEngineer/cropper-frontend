@@ -44,12 +44,10 @@ export default Vue.extend({
 @import '../styles/variables';
 
 .header {
-  margin-top: 40px;
-  
   .logo {
-    height: 55px;
+    height: 42px;
 
-    @media @max-lg-tablet {
+    @media @max-md-tablet {
       height: 30px;
     }
   }
@@ -127,24 +125,24 @@ export default Vue.extend({
   }
 }
 
-@media @max-lg-tablet {
-  .header {
-    margin: 10px 20px 80px 20px;
-    padding: 0 !important;
-    display: block;
+// @media @max-md-tablet {
+//   .header {
+//     margin: 10px 20px 80px 20px;
+//     padding: 0 !important;
+//     display: block;
 
-    .logo {
-      height: 32px;
-    }
+//     .logo {
+//       height: 32px;
+//     }
 
-    .nav-button {
-      display: none;
-    }
-  }
+//     .nav-button {
+//       display: none;
+//     }
+//   }
 
-  .wallet-container {
-    float: right;
-    margin-top: -140px;
-  }
-}
+//   .wallet-container {
+//     float: right;
+//     margin-top: -140px;
+//   }
+// }
 </style>

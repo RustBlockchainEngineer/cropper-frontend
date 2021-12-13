@@ -1994,16 +1994,11 @@ export default Vue.extend({
 .swap.container {
   max-width: 1350px;
   width: 100%;
-  background: @color-bg;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
   margin-left: auto;
   margin-right: auto;
-
-  .ant-layout {
-    background: #000 !important;
-  }
 
   button.ant-btn-background-ghost[disabled] {
     background: #80819d !important;
@@ -2503,15 +2498,6 @@ export default Vue.extend({
         }
       }
     }
-  }
-
-  .ant-menu-horizontal,
-  .ant-layout-header,
-  .ant-layout-footer {
-    background: @color-bg !important;
-  }
-  .ant-layout-content {
-    background: @color-bg !important;
   }
 }
 

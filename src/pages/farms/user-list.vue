@@ -192,10 +192,6 @@ div {
 .item-msg-mobile {
   padding-left: 10px;
 }
-.ant-layout {
-  background: @color-bg !important;
-}
-
 .ant-col {
   margin-bottom: 10px;
 }

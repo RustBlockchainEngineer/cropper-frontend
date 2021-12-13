@@ -2,15 +2,15 @@
   <div class="wallet">
     <div class="wallet-btn">
       <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-if="!wallet.connected" ghost @click="openPopIn">
-        <Button>
-          <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+        <Button class="bodyS weightB">
+          <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
           Connect wallet
         </Button>
       </div>
 
       <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-else ghost @click="$accessor.wallet.openModal">
-        <Button>
-          <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+        <Button class="bodyS weightB">
+          <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
           {{ wallet.address.substr(0, 4) }}
           ...
           {{ wallet.address.substr(wallet.address.length - 4, 4) }}
@@ -611,38 +611,188 @@ export default class Wallet extends Vue {
 }
 </script>
 
-<style lang="less">
-@import '../styles/variables';
+<style lang="less" scoped>
 
-.btncontainer {
-  background: @gradient-color-primary;
-  background-origin: border-box;
+.wallet {
   display: flex;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  margin: auto;
-  padding: 3px;
-  border-radius: 63px;
-  height: 50px;
 
-  button {
-    background: transparent;
-    position: relative;
-    border-radius: 63px;
-    height: 100%;
-    width: 100%;
-    border-color: transparent;
-    border: none;
-    color: white !important;
+  .wallet-list {
+    position: absolute;
+    right: 100px;
+    margin-top: 10px;
+    z-index: 999;
+    background: @gradient-color-wallet;
+    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+
+    @media @max-lg-tablet {
+      right: 20px;
+    }
+    
+    &::before {
+      content: ' ';
+      height: 0;
+      position: absolute;
+      width: 0;
+      right: 20px;
+      top: -20px;
+      border: 10px solid transparent;
+      border-right-color: #3238EA;
+      transform: rotate(90deg);
+    }
+
+    .select-wallet {
+      max-height: 460px;
+      overflow-y: scroll;
+      padding: 0 24px;
+
+      @media @max-lg-tablet {
+        max-height: 230px;
+      }
+
+      button {
+        border: none;
+        background: rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+        width: 100%;
+        height: 48px;
+        text-align: left;
+        margin-bottom: 10px;
+
+        img {
+          height: 32px;
+          width: 32px;
+          border-radius: 50%;
+        }
+      }
+    }
+    
+    .select-wallet::-webkit-scrollbar {
+      display: block !important; /* Chrome Safari */
+    }
+
+    .select-wallet-header {
+      padding: 0 15px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      
+      .select-wallet-header-title {
+        font-size: 15px;
+        line-height: 19px;
+        color: #fff;
+      }
+
+      .select-wallet-header-close img{
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+    }
+
+    .wallet-info {
+      text-align: center;
+    }
+
+    .wallet-info .address {
+      border-radius: 7px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      font-size: 17px;
+    }
   }
 
-  @media @max-lg-tablet {
-    height: 46px;
-    top: 5px;
+  .wallet-btn {
+    display: inline-flex;
+    align-items: center;
+    
+    .btncontainer {
+      background: @gradient-btn-wallet;
+      background-origin: border-box;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      margin: auto;
+      padding: 3px;
+      border-radius: 48px;
+      height: 45px;
+
+      button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: @color-bg;
+        border-radius: 48px;
+        border: none;
+        height: 100%;
+        width: 100%;
+        color: white !important;
+        padding: 0 10px;
+      }
+
+      @media @max-md-tablet {
+        height: 32px;
+      }
+    }
+
+    .sonar-container {
+      .sonar-dashboard {
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid #fff;
+        border-radius: 6px;
+        padding: 5px 10px;
+        font-size: 14px;
+        line-height: 17px;
+        font-weight: 400;
+        color: #fff;
+        position: absolute;
+        right: 32px;
+        margin-top: 10px;
+        display: none;
+      }
+
+      .btncontainer.sonar {
+        margin-left:20px !important;
+        width: 50px;
+        height: 50px;
+
+        @media @max-lg-tablet {
+          margin-left: 10px !important;
+          width: 46px;
+          height: 46px;
+        }
+
+        &:hover ~ .sonar-dashboard {
+          display: block;
+        }
+
+        button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          img {
+            height: 26px;
+          }
+        }
+      }
+
+      @media @max-lg-tablet {
+        display: none;
+      }
+    }
   }
 }
+</style>
 
+<style lang="less">
 .ant-modal-body {
   .select-wallet {
     button {
@@ -663,200 +813,6 @@ export default class Wallet extends Vue {
         width: 32px;
         border-radius: 50%;
       }
-    }
-  }
-}
-
-.wallet-btn {
-  display: inline-flex;
-  align-items: center;
-}
-
-.wallet-list::before {
-  content: ' ';
-  height: 0;
-  position: absolute;
-  width: 0;
-  right: 20px;
-  top: -20px;
-  border: 10px solid transparent;
-  border-right-color: #3238EA;
-  transform: rotate(90deg);
-}
-
-.wallet-list {
-  position: absolute;
-  right: 100px;
-  margin-top: 10px;
-  z-index: 999;
-  background: @gradient-color-wallet;
-  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-
-  @media @max-lg-tablet {
-    right: 20px;
-  }
-  
-  .select-wallet {
-    max-height: 460px;
-    overflow-y: scroll;
-    padding: 0 24px;
-
-    @media @max-lg-tablet {
-      max-height: 230px;
-    }
-
-    button {
-      border: none;
-      background: rgba(255, 255, 255, 0.1) !important;
-      box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      width: 100%;
-      height: 48px;
-      text-align: left;
-      margin-bottom: 10px;
-
-      img {
-        height: 32px;
-        width: 32px;
-        border-radius: 50%;
-      }
-    }
-  }
-  
-  .select-wallet::-webkit-scrollbar {
-    display: block !important; /* Chrome Safari */
-  }
-
-  .select-wallet-header {
-    padding: 0 15px 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-    .select-wallet-header-title {
-      font-size: 15px;
-      line-height: 19px;
-      color: #fff;
-    }
-
-    .select-wallet-header-close img{
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
-  }
-}
-
-.btncontainer.unconnected button{
-  background: @color-bg;
-}
-
-.btncontainer.connected button{
-  &:hover, &:focus {
-    background: @color-bg;
-  }
-}
-.btncontainer.unconnected button:hover,
-.btncontainer.unconnected button:focus
-{
-  background: transparent;
-}
-
-</style>
-
-<style lang="less" scoped>
-.wallet-info {
-  text-align: center;
-}
-
-.wallet-info .address {
-  border-radius: 7px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  font-size: 17px;
-}
-
-.sonar-container {
-  .sonar-dashboard {
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid #fff;
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 14px;
-    line-height: 17px;
-    font-weight: 400;
-    color: #fff;
-    position: absolute;
-    right: 65px;
-    margin-top: 10px;
-    display: none;
-  }
-
-  .btncontainer.sonar {
-    margin-left:20px !important;
-    width: 50px;
-    height: 50px;
-
-    @media @max-lg-tablet {
-      margin-left: 10px !important;
-      width: 46px;
-      height: 46px;
-    }
-
-    &:hover ~ .sonar-dashboard {
-      display: block;
-    }
-
-    button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      img {
-        height: 26px;
-      }
-    }
-  }
-
-  @media @max-lg-tablet {
-    display: none;
-  }
-}
-
-
-.tx-history-panel {
-  display: none;
-  h2 {
-    margin-top: 32px;
-    text-align: left;
-  }
-  .tx-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .extra-info {
-      font-size: 0.9em;
-      opacity: 0.8;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-
-      a {
-        font-size: 1.2em;
-      }
-
-      .icon {
-        margin-right: 8px;
-      }
-    }
-    .extra-info.time {
-      flex-shrink: 0;
     }
   }
 }

@@ -22,51 +22,10 @@
           <img class="social-icon" src="@/assets/social/telegram-gradient.svg" />
         </a>
       </div>
-      <!-- <div class="icon_list noDesktop">
-        <a :href="linkUrl.medium" target="_blank" class="bodyM weightS"> Medium </a>
-        <a :href="linkUrl.discord" target="_blank" class="bodyM weightS"> Discord </a>
-        <a :href="linkUrl.twitter" target="_blank" class="bodyM weightS"> Twitter </a>
-        <a
-          class="telegramButton bodyM weightS"
-          :class="displayfilters ? 'telegramButton-active' : ''"
-          @click="
-            () => {
-              if (displayfilters == true) {
-                displayfilters = false
-              } else {
-                displayfilters = true
-              }
-            }
-          "
-        >
-          Telegram
-          <img src="@/assets/icons/arrow-down.svg" />
-        </a>
-      </div> -->
     </div>
-    <!-- <div class="telegram noDesktop" v-if="displayfilters" :class="displayfilters ? 'visible' : ''">
-      <div class="telegram-group">
-        <a :href="linkUrl.telegram_en" target="_blank" class="bodyM"> Telegram(EN) </a>
-        <a :href="linkUrl.telegram_cn" target="_blank" class="bodyM"> Telegram(CN) </a>
-        <a :href="linkUrl.telegram_kr" target="_blank" class="bodyM"> Telegram(KR) </a>
-        <a :href="linkUrl.telegram_jp" target="_blank" class="bodyM"> Telegram(JP) </a>
-        <a :href="linkUrl.telegram_es" target="_blank" class="bodyM"> Telegram(ES) </a>
-        <a :href="linkUrl.telegram_tr" target="_blank" class="bodyM"> Telegram(TR) </a>
-        <a :href="linkUrl.telegram_vn" target="_blank" class="bodyM"> Telegram(VN) </a>
-        <a :href="linkUrl.telegram_ru" target="_blank" class="bodyM"> Telegram(RU) </a>
-        <a :href="linkUrl.telegram_fr" target="_blank" class="bodyM"> Telegram(FR) </a>
-        <a :href="linkUrl.telegram_br" target="_blank" class="bodyM"> Telegram(BR) </a>
-        <a :href="linkUrl.telegram_in" target="_blank" class="bodyM"> Telegram(IN) </a>
-        <a :href="linkUrl.telegram_it" target="_blank" class="bodyM"> Telegram(IT) </a>
-      </div>
-    </div> -->
     <div class="footer-line"></div>
     <div class="footer-refer">
       <label class="bodyS decentralized">Decentralized 2021</label>
-      <!-- <div class="refer-list">
-        <label class="bodyS weightS">Terms & Conditions</label>
-        <label class="bodyS weightS">Privacy Policy</label>
-      </div> -->
     </div>
   </Footer>
 </template>
@@ -249,32 +208,11 @@ export default class Foot extends Vue {
     text-align: left;
     color: #98a2e4;
   }
-
-  // .refer-list {
-  //   label {
-  //     margin-right: 38px;
-
-  //     @media @max-sl-mobile {
-  //       margin-right: 0;
-  //       margin-bottom: 20px;
-  //       display: block;
-  //     }
-
-  //     &:last-child {
-  //       margin-right: 0;
-
-  //       @media @max-sl-mobile {
-  //         margin-bottom: 0;
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 // ant customization
 .ant-layout-footer {
   @media @max-sl-mobile {
-    margin: auto;
     padding: 22px !important;
   }
 }

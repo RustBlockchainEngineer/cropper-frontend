@@ -99,16 +99,9 @@ export default class Default extends Vue {
 <style lang="less">
 .ant-layout-content {
   min-height: calc(100vh - 64px - 82px);
+  margin-top: 70px;
 }
 
-// footer {
-//   width: 100%;
-//   height: 100px;
-//   position: absolute;
-//   bottom: 0;
-//   left: 0;
-//   background: #333;
-// }
 .ant-alert-warning {
   width: 500px;
   margin-top: 30px;

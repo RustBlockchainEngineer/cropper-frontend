@@ -6,6 +6,22 @@
 
 .ant-layout {
   background: @color-bg !important;
+  background-image: url('@/assets/background/background.svg') !important;
+  background-size: cover !important;
+}
+
+.ant-layout-header {
+  position: fixed;
+  width: 100%;
+  background: @color-bg !important;
+  top: 0;
+  z-index: 999;
+  opacity: 0.9;
+  height: 70px !important;
+}
+
+.ant-layout-footer {
+  background: transparent !important;
 }
 
 .ant-switch::after {

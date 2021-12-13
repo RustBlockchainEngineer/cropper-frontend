@@ -1635,8 +1635,4 @@ main {
 .coin-select .coin-input button:hover {
   background-color: rgba(0, 0, 0, 0.9471) !important;
 }
-
-.ant-layout {
-  background: @color-bg !important;
-}
 </style>

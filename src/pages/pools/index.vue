@@ -1159,11 +1159,6 @@ export default class Pools extends Vue {
 </script>
 
 <style lang="less" scoped>
-.ant-layout,
-.ant-layout-content {
-  background: @color-bg !important;
-}
-
 section {
   background: @color-bg !important;
 }
