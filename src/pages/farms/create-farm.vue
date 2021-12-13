@@ -20,7 +20,7 @@
         <div class="page-head fs-container">
           <span class="title">Farm creation</span>
           <span class="buttonsd">
-            <a href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm" target="_blank">
+            <a href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm" target="_blank">
               <div class="create">
                 <Button size="large" ghost>Detailed guide </Button>
               </div>
@@ -151,7 +151,7 @@
                       <em>
                         This tool is for advanced users. Before attempting to create a new farm, we suggest going through this
                         <a
-                          href="https://cropper-finance.gitbook.io/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
+                          href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
                           target="_blank"
                         >
                           detailed guide.</a
@@ -1437,7 +1437,7 @@ export default class CreateFarm extends Vue {
   line-height: 22px;
   cursor: pointer;
 
-  @media @max-b-mobile {
+  @media @max-sl-mobile {
     font-size: 14px;
     line-height: 18px;
   }
@@ -1449,7 +1449,7 @@ export default class CreateFarm extends Vue {
 
 .ant-calendar-picker-container {
 
-  @media @max-b-mobile {
+  @media @max-sl-mobile {
     width: calc(100% - 60px);
   }
 
@@ -1462,7 +1462,7 @@ export default class CreateFarm extends Vue {
     border-radius: 12px;
     border: none;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       max-width: 585px;
       width: 100%;
       margin: auto;
@@ -1632,7 +1632,7 @@ main {
 .create-farm {
   max-width: 90%;
 
-  @media @max-b-mobile {
+  @media @max-sl-mobile {
     min-width: 100%;
   }
 
@@ -1652,7 +1652,7 @@ main {
     width: 163px;
     text-align: center;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       width: 140px;
       height: 50px;
       display: flex;
@@ -1672,7 +1672,7 @@ main {
       letter-spacing: -0.05em;
       padding: 0;
 
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         font-size: 14px;
         line-height: 24px;
       }
@@ -1693,7 +1693,7 @@ main {
     width: 163px;
     text-align: center;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       width: 140px;
       display: flex;
       align-items: center;
@@ -1713,7 +1713,7 @@ main {
       letter-spacing: -0.05em;
       padding: 0;
 
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         font-size: 14px;
         line-height: 24px;
       }
@@ -1743,12 +1743,12 @@ main {
       justify-content: space-between;
       align-items: center;
 
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         display: block;
       }
 
       .buttonsd {
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           padding: 20px 15px;
           border: 4px solid #16164a;
           box-sizing: border-box;
@@ -1769,7 +1769,7 @@ main {
     padding: 40px 60px;
     background-color: #16164a;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       padding: 20px 16px;
     }
 
@@ -1779,7 +1779,7 @@ main {
       line-height: 37px;
       background: transparent;
 
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         font-size: 23px;
         font-weight: 600;
         line-height: 28px;
@@ -1797,7 +1797,7 @@ main {
 
   .bordered-left,
   .bordered-right {
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       border: none;
     }
   }
@@ -1805,7 +1805,7 @@ main {
   .step {
     padding-top: 20px;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       padding-top: 0;
     }
   }
@@ -1814,7 +1814,7 @@ main {
     vertical-align: middle;
     padding-left: 50px;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       padding-left: 0;
     }
 
@@ -1854,7 +1854,7 @@ main {
             }
           }
 
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             margin-left: -30px;
 
             .selected-pool-box {
@@ -1876,7 +1876,7 @@ main {
         .max-80 {
           max-width: 80% !important ;
 
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             max-width: 100% !important;
             padding: 0 !important;
           }
@@ -1886,8 +1886,8 @@ main {
           padding: 20px 0 0 30px;
           max-width: 615px;
           
-          @media @max-b-mobile {
-            max-width: @mobile-b-width;
+          @media @max-sl-mobile {
+            max-width: @mobile-sm-width;
           }
 
           b {
@@ -1903,7 +1903,7 @@ main {
             width: max-content;
             padding-left: 10px;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               width: 100%;
               font-size: 15px;
               line-height: 18px;
@@ -1918,7 +1918,7 @@ main {
             margin-bottom: 10px;
             padding-left: 10px;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               font-size: 12px;
               line-height: 15px;
             }
@@ -1961,7 +1961,7 @@ main {
               top: 15%;
               left: 20%;
 
-              @media @max-b-mobile {
+              @media @max-sl-mobile {
                 left: 7%;
               }
             }
@@ -1979,7 +1979,7 @@ main {
 
         .reward-emission,
         .farm-duration {
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             padding: 0;
             margin: 0 -10px;
           }
@@ -1993,7 +1993,7 @@ main {
         .create-amm {
           line-height: 22px;
 
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             line-height: 18px;
           }
 
@@ -2001,7 +2001,7 @@ main {
             font-size: 18px;
             color: #80819D;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               font-size: 15px;
             }
           }
@@ -2026,7 +2026,7 @@ main {
         .selected-pool {
           padding: 0 30px 25px 30px;
 
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             padding: 0 0 25px 0;
           }
         }
@@ -2038,7 +2038,7 @@ main {
           margin-top: 15px;
           padding-left: 10px;
 
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             word-break: break-all;
             font-size: 15px;
             line-height: 18px;
@@ -2057,7 +2057,7 @@ main {
         .farm-created {
           line-height: 25px;
 
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             text-align: center;
           }
         }
@@ -2072,7 +2072,7 @@ main {
           border-radius: 8px;
           padding: 2px;
 
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             margin: auto;
           }
 

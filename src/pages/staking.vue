@@ -11,8 +11,8 @@
           </span>
           <span class="information">
             <div class="my-info">
-              <p>TVL : <b>{{TVL.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} $</b></p>
+              <p>TVL : <b>${{TVL.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}}</b></p>
             </div>
 
             <!-- {{ autoRefreshTime - countdown }} -->
@@ -636,7 +636,7 @@ export default Vue.extend({
                 font-size: 10px;
                 line-height: 12px;
 
-                @media @max-b-mobile {
+                @media @max-sl-mobile {
                   display: none;
                 }
               }
@@ -659,7 +659,7 @@ export default Vue.extend({
                 height: 18px;
                 display: none;
 
-                @media @max-b-mobile {
+                @media @max-sl-mobile {
                   display: flex;
                 }
               }

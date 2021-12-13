@@ -1,22 +1,33 @@
 <template>
   <Footer>
-    <div :class="isMobile ? 'mobile' : 'pc'">
+    <div class="footer-body">
       <div class="logo">
         <a href="/"><img src="@/assets/icons/cropper-logo.svg" /></a>
       </div>
-      <div class="icon_list" v-if="!isMobile">
-        <label>Our Social</label>
-        <a :href="linkUrl.medium" target="_blank">
-          Medium
+      <div class="icon_list noMobile">
+        <a class="social-medium" :href="linkUrl.medium" target="_blank">
+          <img class="social-icon" src="@/assets/social/medium-blue.svg" />
+          <img class="social-icon" src="@/assets/social/medium-gradient.svg" />
         </a>
-        <a :href="linkUrl.discord" target="_blank">
-          Discord
+        <a class="social-discord" :href="linkUrl.discord" target="_blank">
+          <img class="social-icon" src="@/assets/social/discord-blue.svg" />
+          <img class="social-icon" src="@/assets/social/discord-gradient.svg" />
         </a>
-        <a :href="linkUrl.twitter" target="_blank">
-          Twitter
+        <a class="social-twitter" :href="linkUrl.twitter" target="_blank">
+          <img class="social-icon" src="@/assets/social/twitter-blue.svg" />
+          <img class="social-icon" src="@/assets/social/twitter-gradient.svg" />
         </a>
+        <a class="social-telegram" :href="linkUrl.telegram" target="_blank">
+          <img class="social-icon" src="@/assets/social/telegram-blue.svg" />
+          <img class="social-icon" src="@/assets/social/telegram-gradient.svg" />
+        </a>
+      </div>
+      <!-- <div class="icon_list noDesktop">
+        <a :href="linkUrl.medium" target="_blank" class="bodyM weightS"> Medium </a>
+        <a :href="linkUrl.discord" target="_blank" class="bodyM weightS"> Discord </a>
+        <a :href="linkUrl.twitter" target="_blank" class="bodyM weightS"> Twitter </a>
         <a
-          class="telegramButton"
+          class="telegramButton bodyM weightS"
           :class="displayfilters ? 'telegramButton-active' : ''"
           @click="
             () => {
@@ -28,82 +39,34 @@
             }
           "
         >
-            Telegram
-            <img src="@/assets/icons/arrow-down.svg" />
+          Telegram
+          <img src="@/assets/icons/arrow-down.svg" />
         </a>
-      </div>
-      <div class="icon_list" v-if="isMobile">
-        <label>Our Social</label>
-        <a :href="linkUrl.medium" target="_blank">
-          Medium
-        </a>
-        <a :href="linkUrl.discord" target="_blank">
-          Discord
-        </a>
-        <a :href="linkUrl.twitter" target="_blank">
-          Twitter
-        </a>
-        <a
-          class="telegramButton"
-          :class="displayfilters ? 'telegramButton-active' : ''"
-          @click="
-            () => {
-              if (displayfilters == true) {
-                displayfilters = false
-              } else {
-                displayfilters = true
-              }
-            }
-          "
-        >
-            Telegram
-            <img src="@/assets/icons/arrow-down.svg" />
-        </a>
-      </div>
+      </div> -->
     </div>
-    <div class="telegram">
-      <div class="telegram-group" v-if="displayfilters">
-        <a :href="linkUrl.telegram_en" target="_blank">
-          Telegram(EN)
-        </a>
-        <a :href="linkUrl.telegram_cn" target="_blank">
-          Telegram(CN)
-        </a>
-        <a :href="linkUrl.telegram_kr" target="_blank">
-          Telegram(KR)
-        </a>
-        <a :href="linkUrl.telegram_jp" target="_blank">
-          Telegram(JP)
-        </a>
-        <a :href="linkUrl.telegram_es" target="_blank">
-          Telegram(ES)
-        </a>
-        <a :href="linkUrl.telegram_tr" target="_blank">
-          Telegram(TR)
-        </a>
-        <a :href="linkUrl.telegram_vn" target="_blank">
-          Telegram(VN)
-        </a>
-        <a :href="linkUrl.telegram_ru" target="_blank">
-          Telegram(RU)
-        </a>
-        <a :href="linkUrl.telegram_fr" target="_blank">
-          Telegram(FR)
-        </a>
-        <a :href="linkUrl.telegram_br" target="_blank">
-          Telegram(BR)
-        </a>
-        <a :href="linkUrl.telegram_in" target="_blank">
-          Telegram(IN)
-        </a>
-        <a :href="linkUrl.telegram_it" target="_blank">
-          Telegram(IT)
-        </a>
+    <!-- <div class="telegram noDesktop" v-if="displayfilters" :class="displayfilters ? 'visible' : ''">
+      <div class="telegram-group">
+        <a :href="linkUrl.telegram_en" target="_blank" class="bodyM"> Telegram(EN) </a>
+        <a :href="linkUrl.telegram_cn" target="_blank" class="bodyM"> Telegram(CN) </a>
+        <a :href="linkUrl.telegram_kr" target="_blank" class="bodyM"> Telegram(KR) </a>
+        <a :href="linkUrl.telegram_jp" target="_blank" class="bodyM"> Telegram(JP) </a>
+        <a :href="linkUrl.telegram_es" target="_blank" class="bodyM"> Telegram(ES) </a>
+        <a :href="linkUrl.telegram_tr" target="_blank" class="bodyM"> Telegram(TR) </a>
+        <a :href="linkUrl.telegram_vn" target="_blank" class="bodyM"> Telegram(VN) </a>
+        <a :href="linkUrl.telegram_ru" target="_blank" class="bodyM"> Telegram(RU) </a>
+        <a :href="linkUrl.telegram_fr" target="_blank" class="bodyM"> Telegram(FR) </a>
+        <a :href="linkUrl.telegram_br" target="_blank" class="bodyM"> Telegram(BR) </a>
+        <a :href="linkUrl.telegram_in" target="_blank" class="bodyM"> Telegram(IN) </a>
+        <a :href="linkUrl.telegram_it" target="_blank" class="bodyM"> Telegram(IT) </a>
       </div>
-    </div>
-    <div class="foot-line"></div>
-    <div class="foot-refer">
-      <label>Decentralized 2021</label>
+    </div> -->
+    <div class="footer-line"></div>
+    <div class="footer-refer">
+      <label class="bodyS decentralized">Decentralized 2021</label>
+      <!-- <div class="refer-list">
+        <label class="bodyS weightS">Terms & Conditions</label>
+        <label class="bodyS weightS">Privacy Policy</label>
+      </div> -->
     </div>
   </Footer>
 </template>
@@ -128,6 +91,7 @@ export default class Foot extends Vue {
     twitter: 'https://twitter.com/CropperFinance',
     discord: 'https://discord.com/invite/9hdP7cM3ec',
     medium: 'https://cropperfinance.medium.com/',
+    telegram: 'https://linktr.ee/cropperfinance',
     telegram_en: 'https://t.me/CropperFinance',
     telegram_cn: 'https://t.me/cropperChineseofficial',
     telegram_kr: 'https://t.me/CropperFinance_Korea',
@@ -139,7 +103,7 @@ export default class Foot extends Vue {
     telegram_fr: 'https://t.me/cropperfinancefrance',
     telegram_br: 'https://t.me/cropperfinancebrazil',
     telegram_id: 'https://t.me/cropperfinanceindo',
-    telegram_it: 'https://t.me/cropperitalia',
+    telegram_it: 'https://t.me/cropperitalia'
   }
   displayfilters = false
 
@@ -154,158 +118,168 @@ export default class Foot extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables.less';
-
-.ant-layout-footer {
-  padding: 24px 128px !important;
-  position: relative;
-}
-
-.telegram {
-  height: 30px;
-
-  @media @max-b-mobile {
-    height: 230px;
-  }
-
-  .telegram-group {
-    display: flex;
-    justify-content: space-between;
-
-    @media @max-b-mobile {
-      display: block;
-    }
-
-    a {
-      font-size: 16px;
-      font-weight: normal;
-      line-height: 42px;
-      letter-spacing: -0.05em;
-      color: #fff;
-
-      @media @max-b-mobile {
-        display: block;
-        width: 50%;
-        float: left;
-      }
-    }
-  }
-}
-
-.mobile {
-  .icon_list {
-    text-align: center;
-    margin: 48px 0;
-    a {
-      color: #505F8C !important;
-    }
-  }
-}
-
-.pc {
+.footer-body {
   display: flex;
   justify-content: space-between;
 
-  .icon_list {
-    font-style: normal;
-    font-weight: 400;
-    line-height: 42px;
-    letter-spacing: -0.05em;
-    text-align: left;
-    a {
-      color: #505F8C !important;
-      font-size: 18px;
-      padding-right: 5px;
-      margin-left: 55.81px;
+  @media @max-sl-mobile {
+    display: unset;
+  }
+
+  .logo {
+    @media @max-sl-mobile {
+      margin-bottom: 30px;
     }
+  }
+
+  .icon_list {
+    &.noMobile {
+      display: flex;
+      align-items: center;
+
+      .social-telegram .social-icon {
+        margin-right: 0;
+      }
+      
+      .social-medium,
+      .social-discord,
+      .social-twitter,
+      .social-telegram {
+        .social-icon {
+          height: 24px;
+        }
+
+        .social-icon:last-child {
+          display: none;
+        }
+
+        &:hover .social-icon:last-child {
+          display: unset;
+        }
+
+        &:hover .social-icon:first-child {
+          display: none;
+        }
+      }
+    }
+
+    &.noDesktop {
+      display: none;
+      @media @max-sl-mobile {
+        display: inline-block;
+      }
+    }
+
+    a {
+      margin-right: 38px;
+      color: #ccd1f1;
+
+      @media @max-sl-mobile {
+        display: block;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
     label {
       color: #fff !important;
       font-size: 22px;
     }
-  }
-}
 
-.foot-line {
-  height: 1.16px;
-  background: #fff;
-  opacity: 0.2;
-  margin: 30px 0;
-}
+    .telegramButton > img {
+      margin-left: 12px;
+      transform: 0;
+    }
 
-.foot-refer {
-  color: #505F8C !important;
-  // font-family: Gilroy;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 32px;
-  letter-spacing: -0.05em;
-  text-align: left;
-  position:relative;
-  z-index:2;
-
-  .refer-list {
-    label{
-      margin-left: 55.81px;
-      padding-right: 10px;
-      font-weight: 400;
-      line-height: 42px;
+    .telegramButton-active > img {
+      transform: rotate(180deg);
+      transition: transform 0.3s;
     }
   }
 }
 
-.telegramButton > img {
-  margin-left: 12px;
-  transform: 0;
+.telegram {
+  &.noDesktop {
+    display: none;
+
+    &.visible {
+      height: 250px;
+      display: block;
+      padding-top: 18px;
+    }
+
+    .telegram-group {
+      display: flex;
+      justify-content: space-between;
+
+      @media @max-sl-mobile {
+        display: block;
+      }
+
+      a {
+        color: #fff;
+        
+        @media @max-sl-mobile {
+          display: block;
+          width: 50%;
+          float: left;
+          margin-bottom: 18px;
+        }
+      }
+    }
+  }
 }
 
-.telegramButton-active > img {
-  transform: rotate(180deg);
-  transition: transform 0.3s;
+.footer-line {
+  height: 1px;
+  background: #fff;
+  opacity: 0.2;
+  margin: 20px 0;
 }
-// ******* Mobile *******
-@media @max-b-mobile {
-  .ant-layout-footer {
-    width: 375px;
+
+.footer-refer {
+  color: #ccd1f1;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+
+  @media @max-sl-mobile {
+    text-align: left;
+    color: #98a2e4;
+  }
+
+  // .refer-list {
+  //   label {
+  //     margin-right: 38px;
+
+  //     @media @max-sl-mobile {
+  //       margin-right: 0;
+  //       margin-bottom: 20px;
+  //       display: block;
+  //     }
+
+  //     &:last-child {
+  //       margin-right: 0;
+
+  //       @media @max-sl-mobile {
+  //         margin-bottom: 0;
+  //       }
+  //     }
+  //   }
+  // }
+}
+
+// ant customization
+.ant-layout-footer {
+  @media @max-sl-mobile {
     margin: auto;
     padding: 22px !important;
   }
-  .planet-bottom {
-    display: none;
-  }
-  .foot-refer {
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: -0.05em;
-    font-weight: normal;
-    .refer-list {
-      display: inline-block;
-      width: 100%;
-      label {
-        line-height: 40px;
-        margin-left: 0;
-        display: block;
-      }
-    }
-  }
-  .mobile {
-    .icon_list {
-      display: inline-block;
-      justify-items: center;
-      margin: 10px 0;
-      font-size: 18px;
-      line-height: 24px;
-      letter-spacing: -0.05em;
-      width: 100%;
-      label {
-        display: none;
-      }
-      a {
-        display: block;
-        margin-top: 10px;
-        text-align: left;
-      }
-    }
-  }
+}
+
+.planet-bottom {
+  display: none;
 }
 </style>

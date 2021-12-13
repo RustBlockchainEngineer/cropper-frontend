@@ -32,13 +32,15 @@
           <span class="title noDesktop">
             Pools
             <NuxtLink to="/pools/create-pool/" class="create-btn-mobile">
-              <div class="create-plus-btn">+</div>
+              <div class="create-plus-btn">
+                <img src="@/assets/icons/plus-icon-10.svg" />
+              </div>
             </NuxtLink>
           </span>
           <span class="information">
             <div class="my-info">
-              <p>TVL : <b>{{TVL.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} $</b></p>
+              <p>TVL : <b>${{TVL.toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}}</b></p>
               <!-- <p>Your deposit: <b>28,009 $</b></p> -->
             </div>
 
@@ -1174,7 +1176,7 @@ section {
   margin-bottom: 20px;
   padding: 15px;
 
-  @media @max-t-mobile {
+  @media @max-lg-tablet {
     margin-top: 0;
   }
 
@@ -1183,7 +1185,7 @@ section {
     left: 0;
     top: 35%;
 
-    @media @max-t-mobile {
+    @media @max-lg-tablet {
       display: none;
     }
   }
@@ -1202,9 +1204,11 @@ section {
 
           a {
             position: absolute;
+
             &.create-btn-desktop {
               top: 20px;
               right: -90px;
+              
               .create-plus-btn {
                 font-weight: 400;
                 background: @color-outline;
@@ -1218,7 +1222,7 @@ section {
                 font-size: 10px;
                 line-height: 12px;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   display: none;
                 }
               }
@@ -1241,7 +1245,7 @@ section {
                 height: 18px;
                 display: none;
 
-                @media @max-t-mobile {
+                @media @max-lg-tablet {
                   display: flex;
                 }
               }
@@ -1258,7 +1262,7 @@ section {
             font-size: 15px;
             line-height: 18px;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               font-size: 12px;
               line-height: 15px;
             }
@@ -1276,7 +1280,7 @@ section {
             justify-content: center;
             cursor: pointer;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               margin-left: 5px;
             }
 
@@ -1300,7 +1304,7 @@ section {
           border: 4px solid @color-outline;
           width: 100%;
 
-          @media @max-t-mobile {
+          @media @max-lg-tablet {
             margin-bottom: 5px;
             height: 54px;
 
@@ -1345,6 +1349,9 @@ section {
                   position: absolute;
                   top: -5px;
                   right: -20px;
+                  display: flex;
+                  align-items: center;
+                  width: fit-content;
 
                   &.labelized {
                     left: -20px;
@@ -1508,7 +1515,7 @@ section {
   display: none;
 }
 
-@media @max-t-mobile {
+@media @max-lg-tablet {
   body .pool.container {
     .card-body {
       overflow-x: unset !important;
@@ -1794,7 +1801,7 @@ p {
 
 <style lang="less">
 ::-webkit-scrollbar {
-  @media @max-t-mobile {
+  @media @max-lg-tablet {
     display: none; /* Chrome Safari */
   }
 }
@@ -1813,18 +1820,18 @@ p {
 
 .pool.container {
   .ant-collapse-header {
-    @media @max-t-mobile {
+    @media @max-lg-tablet {
       padding-right: 16px !important;
     }
     .ant-collapse-arrow {
-      @media @max-t-mobile {
+      @media @max-lg-tablet {
         right: 30px !important;
         z-index: 2;
       }
     }
   }
   .ant-collapse-content {
-    @media @max-t-mobile {
+    @media @max-lg-tablet {
       background-color: #16164a;
       border-top: none !important;
     }
@@ -1899,7 +1906,7 @@ p {
       line-height: 42px;
       letter-spacing: -0.05em;
 
-      @media @max-t-mobile {
+      @media @max-lg-tablet {
         font-size: 14px;
         line-height: 24px;
         padding: 0;
@@ -2083,7 +2090,7 @@ p {
             border: none;
             border-radius: 14px;
 
-            @media @max-t-mobile {
+            @media @max-lg-tablet {
               font-size: 14px;
               line-height: 17px;
             }

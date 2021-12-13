@@ -3,7 +3,10 @@ import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 import { ACCOUNT_LAYOUT, getBigNumber, MINT_LAYOUT } from '@/utils/layouts'
 import { AMM_INFO_LAYOUT, AMM_INFO_LAYOUT_V3, AMM_INFO_LAYOUT_V4, getLpMintListDecimals } from '@/utils/liquidity'
 import { LIQUIDITY_POOLS, getAddressForWhat, LiquidityPoolInfo } from '@/utils/pools'
+import fixedpools from './pairs.json';
 import { commitment, createAmmAuthority, getFilteredProgramAccounts, getMultipleAccounts, getMintDecimals, getAMMGlobalStateAccount as getAMMGlobalStateAccount } from '@/utils/web3'
+
+
 
 import { OpenOrders } from '@project-serum/serum'
 import { PublicKey } from '@solana/web3.js'
@@ -72,8 +75,8 @@ async function getSerumMarkets(conn:any){
   let need_to_update = false
   let cur_date = new Date().getTime()
 
-  if(window.localStorage.market_last_updated_ && !DEVNET_MODE){
-    const last_updated = parseInt(window.localStorage.market_last_updated_)
+  if(window.localStorage.market_last_updated_v2 && !DEVNET_MODE){
+    const last_updated = parseInt(window.localStorage.market_last_updated_v2)
     if(cur_date - last_updated >= MARKET_UPDATE_INTERVAL || last_updated < 1638191914){
       need_to_update = true
     }
@@ -105,7 +108,7 @@ async function getSerumMarkets(conn:any){
     })
     if(!DEVNET_MODE)
     {
-      window.localStorage.market_last_updated_ = new Date().getTime()
+      window.localStorage.market_last_updated_v2 = new Date().getTime()
       window.localStorage.markets = JSON.stringify(markets)
     }
   }
@@ -113,6 +116,10 @@ async function getSerumMarkets(conn:any){
   {
     markets = JSON.parse(window.localStorage.markets)
   }
+
+  console.log(JSON.stringify(markets));
+
+
   return markets
 }
 
@@ -138,6 +145,10 @@ async function getCropperPools(conn:any){
 
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
     const ammInfo = CRP_AMM_LAYOUT_V1.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
+
+    if (fixedpools.find((item) => item.ammId === ammAll[indexAmmInfo].publicKey.toString())) {
+      continue
+    }
 
     if (
       !Object.keys(lpMintListDecimls).includes(ammInfo.lpMintAddress.toString()) ||
@@ -279,6 +290,10 @@ async function getRaydiumPools(conn:any){
 
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
     const ammInfo = AMM_INFO_LAYOUT_V4.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
+    if (fixedpools.find((item) => item.ammId === ammAll[indexAmmInfo].publicKey.toString())) {
+      continue
+    }
+
     if (
       !Object.keys(lpMintListDecimls).includes(ammInfo.lpMintAddress.toString()) ||
       ammInfo.pcMintAddress.toString() === ammInfo.serumMarket.toString() ||
@@ -297,15 +312,7 @@ async function getRaydiumPools(conn:any){
         : ammInfo.pcMintAddress.toString()
     let coin = Object.values(TOKENS).find((item) => item.mintAddress === fromCoin)
     if (!coin) {
-      TOKENS[`unknow-${ammInfo.coinMintAddress.toString()}`] = {
-        symbol: 'unknown',
-        name: 'unknown',
-        mintAddress: ammInfo.coinMintAddress.toString(),
-        decimals: getBigNumber(ammInfo.coinDecimals),
-        cache: true,
-        tags: []
-      }
-      coin = TOKENS[`unknow-${ammInfo.coinMintAddress.toString()}`]
+      continue;
     }
     if (!coin.tags.includes('unofficial')) {
       coin.tags.push('unofficial')
@@ -313,15 +320,7 @@ async function getRaydiumPools(conn:any){
 
     let pc = Object.values(TOKENS).find((item) => item.mintAddress === toCoin)
     if (!pc) {
-      TOKENS[`unknow-${ammInfo.pcMintAddress.toString()}`] = {
-        symbol: 'unknown',
-        name: 'unknown',
-        mintAddress: ammInfo.pcMintAddress.toString(),
-        decimals: getBigNumber(ammInfo.pcDecimals),
-        cache: true,
-        tags: []
-      }
-      pc = TOKENS[`unknow-${ammInfo.pcMintAddress.toString()}`]
+      continue;
     }
     if (!pc.tags.includes('unofficial')) {
       pc.tags.push('unofficial')
@@ -405,12 +404,13 @@ export const actions = actionTree(
     async requestInfos({ commit }) {
       commit('setLoading', true)
 
+      logger('Liquidity pool infomations fetch')
+
       const conn = this.$web3
       let need_to_update = false
       let cur_date = new Date().getTime()
-
-      if(window.localStorage.pool_last_updated && !DEVNET_MODE){
-        const last_updated = parseInt(window.localStorage.pool_last_updated)
+      if(window.localStorage.pool_last_updated_v2 && !DEVNET_MODE){
+        const last_updated = parseInt(window.localStorage.pool_last_updated_v2)
 
         if(cur_date - last_updated >= LP_UPDATE_INTERVAL || last_updated < 1635525130){
           need_to_update = true
@@ -444,20 +444,43 @@ export const actions = actionTree(
 
       if(need_to_update)
       {
+
+
+
         await getCropperPools(conn);
+
         await getRaydiumPools(conn);
+
         if(!DEVNET_MODE)
         { 
-          window.localStorage.pool_last_updated = new Date().getTime()
+          window.localStorage.pool_last_updated_v2 = new Date().getTime()
           window.localStorage.pools = JSON.stringify(LIQUIDITY_POOLS)
         }
+
+
       }
+
+
+        let ammSet: any = {};
+
+        LIQUIDITY_POOLS.forEach((pool) => {
+          ammSet[pool.ammId] = pool.ammId
+        })
+
+        fixedpools.forEach((pool:LiquidityPoolInfo)=>{
+          if(!ammSet[pool.ammId]){
+            LIQUIDITY_POOLS.push(pool)
+          }
+        })
+        
 
       const liquidityPools = {} as any
       const publicKeys = [] as any
       const amm_state_info = await getAMMGlobalStateAccount(conn);
 
       LIQUIDITY_POOLS.forEach((pool) => {
+
+
         const { poolCoinTokenAccount, poolPcTokenAccount, ammOpenOrders, ammId, coin, pc, lp } = pool
 
         publicKeys.push(
@@ -565,7 +588,7 @@ export const actions = actionTree(
       })
 
       commit('setInfos', liquidityPools)
-      logger('Liquidity pool infomations updated')
+      logger('Liquidity pool infomations updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
 
       commit('setInitialized')
       commit('setLoading', false)

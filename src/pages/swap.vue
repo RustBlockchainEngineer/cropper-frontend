@@ -5,17 +5,16 @@
       <span class="title"> Swap </span>
       <span class="information">
         <div class="setting-btn-group">
-          <div
-            class="setting-btn-container"
-            :class="this.showInformations ? 'active' : ''"
-            @click="
-              () => {
-                if (this.showSlippage) this.showSlippage = false
-                this.showInformations = !this.showInformations
-              }
-            "
-          >
-            <div class="sort-by">
+          <div class="setting-btn-container" :class="this.showInformations ? 'active' : ''">
+            <div
+              class="sort-by"
+              @click="
+                () => {
+                  if (this.showSlippage) this.showSlippage = false
+                  this.showInformations = !this.showInformations
+                }
+              "
+            >
               <label class="label">
                 <img class="info-icon" src="@/assets/icons/wow.svg" />
               </label>
@@ -128,17 +127,16 @@
               </div>
             </div>
           </div>
-          <div
-            class="setting-btn-container"
-            :class="this.showSlippage ? 'active' : ''"
-            @click="
-              () => {
-                if (this.showInformations) this.showInformations = false
-                this.showSlippage = !this.showSlippage
-              }
-            "
-          >
-            <div class="sort-by">
+          <div class="setting-btn-container" :class="this.showSlippage ? 'active' : ''">
+            <div
+              class="sort-by"
+              @click="
+                () => {
+                  if (this.showInformations) this.showInformations = false
+                  this.showSlippage = !this.showSlippage
+                }
+              "
+            >
               <label class="label">
                 <img class="setting-icon" src="@/assets/icons/setting.svg" />
               </label>
@@ -161,7 +159,7 @@
         </div>
         <div class="my-info">
           <label>
-            TVL : <b>{{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} $</b>
+            TVL : <b>${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</b>
           </label>
         </div>
 
@@ -173,6 +171,14 @@
       </span>
     </div>
     <div class="swap-content">
+      <div v-if="wsolBalance && wsolBalance.balance.fixed() > 0" class="note-unwrapped-sol">
+        <div class="note-content">
+          <img class="note-icon" src="@/assets/icons/warning-icon.svg" />
+          <label>You have {{ wsolBalance.balance.fixed() }} <span style="color: #23ADB4">wrapped SOL</span> in your wallet. Click to unwrap to native SOL.</label>
+        </div>
+        <Button class="note-btn" @click="unwrap">Unwrap SOL</Button>
+      </div>
+
       <CoinSelect v-if="coinSelectShow" @onClose="() => (coinSelectShow = false)" @onSelect="onCoinSelect" />
       <AmmIdSelect
         :show="ammIdSelectShow"
@@ -582,7 +588,8 @@ import {
   wrap,
   checkUnsettledInfo,
   settleFund,
-  prepareTwoStepSwap
+  prepareTwoStepSwap,
+  unwrapWsol
 } from '@/utils/swap'
 import BigNumber from 'bignumber.js'
 import { TokenAmount, gt } from '@/utils/safe-math'
@@ -618,6 +625,7 @@ export default Vue.extend({
       TOKENS,
       // should check if user have enough SOL to have a swap
       solBalance: null as TokenAmount | null,
+      wsolBalance: null as TokenAmount | null,
       autoRefreshTime: 60,
       countdown: 0,
       marketTimer: null as any,
@@ -719,6 +727,7 @@ export default Vue.extend({
           this.fetchUnsettledByMarket()
         }
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
+        this.wsolBalance = this.wallet.tokenAccounts[TOKENS.WSOL.mintAddress]
         this.flush()
       },
       deep: true
@@ -774,7 +783,6 @@ export default Vue.extend({
     },
     'liquidity.infos': {
       handler(_newInfos: any) {
-        this.updateAmounts()
         const { from, to, ammId } = this.$route.query
         // @ts-ignore
         this.setCoinFromMint(ammId, from, to)
@@ -809,15 +817,15 @@ export default Vue.extend({
   mounted() {
     this.getTvl()
     this.$accessor.token.loadTokens()
+    this.$accessor.wallet.getTokenAccounts()
     this.updateCoinInfo(this.wallet.tokenAccounts)
     this.setMarketTimer()
     const { from, to, ammId } = this.$route.query
     // @ts-ignore
     this.setCoinFromMint(ammId, from, to)
 
-    this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP');
-    this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC');
-          
+    this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP')
+    this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC')
   },
   methods: {
     gt,
@@ -835,47 +843,43 @@ export default Vue.extend({
       }, 1)
     },
     async getTvl() {
-
-
       let cur_date = new Date().getTime()
-      if(window.localStorage.TVL_last_updated){
+      if (window.localStorage.TVL_last_updated) {
         const last_updated = parseInt(window.localStorage.TVL_last_updated)
-        if(cur_date - last_updated <= 600000){
+        if (cur_date - last_updated <= 600000) {
           this.TVL = window.localStorage.TVL
           return
         }
       }
 
-      let responseData:any = []
-      let tvl = 0;
+      let responseData: any = []
+      let tvl = 0
       try {
         responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-        
+
         Object.keys(responseData).forEach(function (key) {
-          if(((responseData as any)[key as any].tvl * 1) < 2000000){
-            tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
+          if ((responseData as any)[key as any].tvl * 1 < 2000000) {
+            tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
           }
         })
       } catch {
         // dummy data
       } finally {
-
       }
 
       try {
         responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
-        tvl = (tvl * 1) + ((responseData as any).value * 1)
+        tvl = tvl * 1 + (responseData as any).value * 1
       } catch {
         // dummy data
       } finally {
-
       }
 
-      this.TVL = Math.round(tvl);
+      this.TVL = Math.round(tvl)
 
       window.localStorage.TVL_last_updated = new Date().getTime()
       window.localStorage.TVL = this.TVL
-  },
+    },
     async flush() {
       clearInterval(this.marketTimer)
       this.countdown = 0
@@ -1275,9 +1279,11 @@ export default Vue.extend({
     },
     updateAmounts() {
       let max_coinAmount = 0
-      
-      try{
 
+      try{
+        if(this.fromCoinAmount == ''){
+          this.best_dex_type = 'Unknown'
+        }
         if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
           if (this.isWrap) {
             // wrap & unwrap
@@ -1334,9 +1340,9 @@ export default Vue.extend({
                 this.fromCoinAmount,
                 this.setting.slippage
               )
-              
-              if(!poolInfo) return;
-              
+
+              if (!poolInfo) return
+
               const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
                 poolInfo,
                 // @ts-ignore
@@ -1376,8 +1382,8 @@ export default Vue.extend({
                 this.fromCoinAmount,
                 this.setting.slippage
               )
-              
-              if(!fromPoolInfo) return;
+
+              if (!fromPoolInfo) return
 
               let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
                 fromPoolInfo,
@@ -1396,8 +1402,8 @@ export default Vue.extend({
                 amountOut.fixed(),
                 this.setting.slippage
               )
-              
-              if(!toPoolInfo) return;
+
+              if (!toPoolInfo) return
 
               let final = getSwapOutAmount(
                 toPoolInfo,
@@ -1446,9 +1452,9 @@ export default Vue.extend({
                 this.fromCoinAmount,
                 this.setting.slippage
               )
-              
-              if(!fromPoolInfo) return;
-              
+
+              if (!fromPoolInfo) return
+
               let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
                 fromPoolInfo,
                 // @ts-ignore
@@ -1467,7 +1473,7 @@ export default Vue.extend({
                 this.setting.slippage
               )
 
-              if(!toPoolInfo) return;
+              if (!toPoolInfo) return
 
               let final = getSwapOutAmount(
                 toPoolInfo,
@@ -1506,9 +1512,7 @@ export default Vue.extend({
             }
           })
         }
-      }catch{
-
-      }
+      } catch {}
 
       if (max_coinAmount === 0) {
         this.toCoinAmount = ''
@@ -1527,6 +1531,10 @@ export default Vue.extend({
             if (this.countdown === this.autoRefreshTime) {
               this.getOrderBooks()
               this.$accessor.wallet.getTokenAccounts()
+              if(this.$accessor.liquidity.initialized && this.$accessor.liquidity.loading == false)
+              {
+                this.$accessor.liquidity.requestInfos()
+              }
               this.countdown = 0
             }
           }
@@ -1561,6 +1569,45 @@ export default Vue.extend({
       }
       return 0
     },
+    
+    unwrap() {
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+      unwrapWsol(
+          this.$web3,
+          // @ts-ignore
+          this.$wallet,
+          get(this.wallet.tokenAccounts, `${TOKENS.WSOL.mintAddress}.tokenAccountAddress`)
+      )
+        .then((txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h('a', { attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' } }, 'here')
+              ])
+          })
+
+          const description = `Unwrap WSOL`
+          this.$accessor.transaction.sub({ txid, description })
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Unwrap WSOL failed',
+            description: error.message
+          })
+        })
+    },
+
     placeOrder() {
       this.swaping = true
       const key = getUnixTs().toString()
@@ -1989,7 +2036,7 @@ export default Vue.extend({
             font-size: 10px;
             line-height: 12px;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               display: none;
             }
           }
@@ -2012,7 +2059,7 @@ export default Vue.extend({
             height: 18px;
             display: none;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               display: flex;
             }
           }
@@ -2040,7 +2087,7 @@ export default Vue.extend({
           justify-content: center;
           margin-right: 5px;
           cursor: pointer;
-          
+
           &.active {
             background: #172058;
           }
@@ -2048,7 +2095,7 @@ export default Vue.extend({
           &:last-child {
             margin-right: 30px;
 
-            @media @max-b-mobile {
+            @media @max-sl-mobile {
               margin-right: 5px;
             }
           }
@@ -2190,7 +2237,7 @@ export default Vue.extend({
         font-size: 15px;
         line-height: 18px;
 
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           font-size: 12px;
           line-height: 15px;
         }
@@ -2208,7 +2255,7 @@ export default Vue.extend({
         justify-content: center;
         cursor: pointer;
 
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           margin-left: 5px;
         }
 
@@ -2228,6 +2275,52 @@ export default Vue.extend({
   .swap-content {
     max-width: 662px; //550
     margin: auto;
+
+    .note-unwrapped-sol {
+      background: #CCD1F115;
+      border-radius: 15px;
+      padding: 24px;
+      margin-bottom: 20px;
+      margin-top: -50px;
+      display: flex;
+      align-items: center;
+
+      @media @max-lg-tablet {
+        margin-top: 0;
+        display: block;
+      }
+
+      .note-content {
+        font-size: 16px;
+        line-height: 24px;
+        display: flex;
+        align-items: baseline;
+
+        .note-icon {
+          margin-right: 20px;
+        }
+      }
+
+      .note-btn {
+        background: @gradient-color-social;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        border: none;
+        width: 138px;
+        height: 33px;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 14px;
+        letter-spacing: -0.05em;
+
+        @media @max-lg-tablet {
+          margin: 10px auto auto auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
 
     .coin-budge {
       align-items: center;
@@ -2459,7 +2552,7 @@ export default Vue.extend({
   display: none;
 }
 
-@media @max-b-mobile {
+@media @max-sl-mobile {
   .swap.container {
     margin: auto;
     padding: 0 22px;

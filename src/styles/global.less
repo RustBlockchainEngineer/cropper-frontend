@@ -4,6 +4,10 @@
   width: 8px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @font-face {
   font-family: "Gilroy";
   src: local("Gilroy"),
@@ -12,10 +16,32 @@
 
 @font-face {
   font-family: "Gilroy";
+  font-weight: 300;
+  src: local("Gilroy"),
+    url(../assets/fonts/Gilroy/Gilroy-Light.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 600;
+  src: local("Gilroy"),
+    url(../assets/fonts/Gilroy/Gilroy-Semibold.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Gilroy";
   font-weight: bold;
   src: local("Gilroy"),
     url(../assets/fonts/Gilroy/Gilroy-Bold.ttf) format("truetype");
 }
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 900;
+  src: local("Gilroy"),
+    url(../assets/fonts/Gilroy/Gilroy-Heavy.ttf) format("truetype");
+}
+
 
 .ant-progress-circle-path {
   stroke: #13ECAB !important
@@ -32,10 +58,6 @@
 
 body {
   font-family: Gilroy, sans-serif !important;
-}
-
-.text-center {
-  text-align: center;
 }
 
 .stdEmptyGradientButton {
@@ -89,7 +111,7 @@ body {
 .container {
   margin: 0 auto;
   padding: 24px;
-  min-width: @mobile-s-width;
+  min-width: @mobile-xs-width;
   font-family: Gilroy, sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -107,7 +129,7 @@ body {
   position: relative
 }
 
-@media @max-b-mobile {
+@media @max-sl-mobile {
   .farm .btncontainer {
     display: none !important
   }
@@ -118,13 +140,13 @@ a {
 }
 
 // .ant-menu-horizontal>.ant-menu-submenu {
-//   @media @max-b-mobile {
+//   @media @max-sl-mobile {
 //     display: none !important;
 //   }
 // }
 
 // .ant-menu-horizontal>.ant-menu-item {
-//   @media @max-b-mobile {
+//   @media @max-sl-mobile {
 //     display: block !important
 //   }
 // }
@@ -165,7 +187,7 @@ a {
     font-size: 35px;
     font-weight: 700;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       font-size: 40px;
     }
   }
@@ -259,7 +281,15 @@ a {
 
 .ant-layout-header,
 .ant-layout-footer {
-  padding: 24px 100px !important;
+  padding: 24px 64px !important;
+
+  @media @max-lg-tablet {
+    padding: 24px 32px !important;
+  }
+
+  @media @max-sl-mobile {
+    padding: 24px 20px !important;
+  }
 }
 
 .ant-menu-horizontal,
@@ -299,7 +329,7 @@ a {
   margin: 0 auto;
 }
 
-@media @max-b-mobile {
+@media @max-sl-mobile {
   .card .card-body {
     padding: unset;
   }
@@ -314,11 +344,142 @@ a {
   }
 }
 
+// Defined by Lionel
+
+// font-size
+.displayL {
+  font-size: 76px;
+  line-height: 91.2px;
+
+  @media @max-sl-mobile {
+    font-size: 49px;
+    line-height: 58.8px
+  }
+}
+
+.displayM {
+  font-size: 61px;
+  line-height: 73.2px;
+
+  @media @max-sl-mobile {
+    font-size: 49px;
+    line-height: 58.8px
+  }
+}
+
+h1 {
+  font-size: 49px;
+  line-height: 58.8px;
+  margin-bottom: 0 !important;
+
+  @media @max-sl-mobile {
+    font-size: 39px;
+    line-height: 46.6px;
+  }
+}
+
+h2 {
+  font-size: 39px;
+  line-height: 46.6px;
+  margin-bottom: 0 !important;
+
+  @media @max-sl-mobile {
+    font-size: 31px;
+    line-height: 37.2px;
+  }
+}
+
+h3 {
+  font-size: 31px;
+  line-height: 37.2px;
+  letter-spacing: -0.15px;
+  margin-bottom: 0 !important;
+
+  @media @max-sl-mobile {
+    font-size: 25px;
+    line-height: 35px;
+  }
+}
+
+h4 {
+  font-size: 25px;
+  line-height: 35px;
+  margin-bottom: 0 !important;
+
+  @media @max-sl-mobile {
+    font-size: 20px !important;
+    line-height: 30px !important;
+  }
+}
+
+p {
+  margin-bottom: 0 !important;
+}
+
+.bodyL {
+  font-size: 20px !important;
+  line-height: 30px !important;
+
+  @media @max-sl-mobile {
+    font-size: 16px !important;
+    line-height: 24px !important;
+  }
+}
+
+.bodyM {
+  font-size: 16px !important;
+  line-height: 24px !important;
+  letter-spacing: 0.15px;
+
+  @media @max-sl-mobile {
+    font-size: 13px !important;
+    line-height: 19.5px !important;
+  }
+}
+
+.bodyS {
+  font-size: 13px !important;
+  line-height: 19.5px !important;
+  letter-spacing: -0.5px !important;
+}
+
+.bodyXS {
+  font-size: 11px !important;
+  line-height: 16.5px !important;
+  letter-spacing: -0.5px !important;
+}
+
+// font-weight
+.weightX {
+  font-weight: 900 !important
+}
+
+.weightB {
+  font-weight: bold !important;
+}
+
+.weightS {
+  font-weight: 600 !important;
+}
+
+.weightR {
+  font-weight: 400 !important;
+}
+
+.weightL {
+  font-weight: 300 !important;
+}
+
+// text-position
+.text-center {
+  text-align: center;
+}
+
 // ant-modal
 .ant-modal {
   width: 800px;
 
-  @media @max-b-mobile {
+  @media @max-sl-mobile {
     width: calc(100% - 40px) !important;
   }
   
@@ -375,7 +536,7 @@ a {
     color: #fff;
     min-width: 187px !important;
   
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       max-width: 300px !important;
     }
   
@@ -402,7 +563,6 @@ a {
     }
   
     p {
-      margin-bottom: 0;
       font-weight: 600;
       font-size: 12px;
       line-height: 20px;

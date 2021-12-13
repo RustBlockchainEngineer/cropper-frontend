@@ -397,7 +397,7 @@ export default Vue.extend({
   letter-spacing: -0.05em;
   margin-bottom: 20px;
 
-  @media @max-b-mobile {
+  @media @max-sl-mobile {
     font-size: 30px;
   }
 }
@@ -420,7 +420,7 @@ span.inputContent {
     line-height: 22px;
     font-weight: normal;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       font-size: 12px;
       padding: 4px 12px;
     }
@@ -446,7 +446,7 @@ span.inputContent {
     padding: 0 20px;
     cursor: pointer;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       font-size: 14px;
     }
   }
@@ -497,7 +497,7 @@ span.inputContent {
   max-width: 400px;
   margin: 10px auto;
 
-  @media @max-b-mobile {
+  @media @max-sl-mobile {
     height: 40px;
   }
 
@@ -525,7 +525,7 @@ span.inputContent {
     align-items: center;
     justify-content: center;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       font-size: 14px;
     }
   }
@@ -545,7 +545,7 @@ span.inputContent {
   color: #FFF;
   margin: 45px auto 20px auto;
 
-  @media @max-b-mobile {
+  @media @max-sl-mobile {
     font-size: 12px;
     line-height: 14px;
   }
@@ -574,7 +574,7 @@ span.inputContent {
       display: flex;
       align-items: center;
 
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         font-size: 14px;
         display: block;
       }
@@ -583,7 +583,7 @@ span.inputContent {
         position: absolute;
         right: 22px;
         
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           display: none;
         }
       }
@@ -602,7 +602,7 @@ span.inputContent {
       border-radius: 4px 13px 13px 4px;
       height: 40px;
       
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         position: relative;
       }
 
@@ -621,7 +621,7 @@ span.inputContent {
       width: 40px;
       transform: translate(0, -50%);
 
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         left: -50px;
         height: 35px;
         width: 35px;
@@ -641,7 +641,7 @@ span.inputContent {
         position: absolute;
         top: -18px;
 
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           height: 60px;
           top: -60px;
           left: 16px;
@@ -664,7 +664,7 @@ span.inputContent {
       align-items: center;
       justify-content: center;
 
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         left: -50px;
         height: 35px;
         width: 35px;
@@ -684,7 +684,7 @@ span.inputContent {
         position: absolute;
         top: -18px;
 
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           height: 60px;
           top: -60px;
           left: 16px;
@@ -768,12 +768,12 @@ span.inputContent {
     margin-left: 50px !important;
     padding: 10px;
 
-    @media @max-b-mobile {
+    @media @max-sl-mobile {
       margin-left: 30px !important;
     }
 
     .first {
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         left: -45px !important;
         width: 35px;
         height: 35px;
@@ -793,7 +793,7 @@ span.inputContent {
       background-color: white;
       margin-right: 20px;
       
-      @media @max-b-mobile {
+      @media @max-sl-mobile {
         width: 100%;
         margin-bottom: 10px;
       }
@@ -815,7 +815,7 @@ span.inputContent {
         line-height: 24px;
         color: #B5B5B5;
 
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           margin-bottom: 20px;
           font-size: 14px;
           line-height: 17px;
@@ -824,7 +824,7 @@ span.inputContent {
         span {
           text-decoration: underline;
 
-          @media @max-b-mobile {
+          @media @max-sl-mobile {
             font-size: 18px;
             line-height: 22px;
             font-weight: 600;
@@ -836,7 +836,7 @@ span.inputContent {
         bottom: 10px;
         left: calc(41.66666667% + 20px);
 
-        @media @max-b-mobile {
+        @media @max-sl-mobile {
           left: 0;
         }
       }
@@ -864,7 +864,7 @@ span.inputContent {
   margin: auto;
 }
 
-@media @max-b-mobile {
+@media @max-sl-mobile {
   .multistepmodal .steps > div {
     margin: 10px -20px 10px 30px;
     height: 85px;
