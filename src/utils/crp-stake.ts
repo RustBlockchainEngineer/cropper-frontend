@@ -89,7 +89,7 @@ export function estimateRewards(
 
   let extraPercentage = new BN(0)
   extraConfigData.configs.forEach((item:any)=>{
-    if(item.duration == userData.duration)
+    if(item.duration.toString() === userData.lockDuration.toString())
     {
       extraPercentage = item.extraPercentage
       return;

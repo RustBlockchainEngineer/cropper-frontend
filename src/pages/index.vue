@@ -547,7 +547,6 @@ export default class Landing extends Vue {
 
   mounted() {
     this.getTvl()
-    this.getCRPPrice()
     this.getTwitterFeeds()
   }
 
@@ -622,20 +621,6 @@ export default class Landing extends Vue {
     }
   }
 
-  async getCRPPrice() {
-    let responseData: any = []
-    try {
-      responseData = await fetch('https://api.cropper.finance/prices/').then((res) => res.json())
-    } catch (err) {
-      console.log(err)
-    } finally {
-      let result = responseData.find((element: any) => element.symbol === 'CRP')
-      this.CRPPrice = result.price
-      this.getMarketCap(this.CRPPrice)
-      this.CRPPrice = this.CRPPrice.toLocaleString('en-US')
-    }
-  }
-
   async getTvl() {
     let cur_date = new Date().getTime()
     if (window.localStorage.TVL_last_updated && false) {
@@ -665,12 +650,16 @@ export default class Landing extends Vue {
     try {
       responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
       tvl = tvl * 1 + (responseData as any).value * 1
+      this.CRPPrice = (responseData as any).price * 1
+      this.getMarketCap(this.CRPPrice)
+      this.CRPPrice = this.CRPPrice.toLocaleString('en-US')
     } catch {
       // dummy data
     } finally {
     }
 
     this.TVL = Math.round(tvl)
+
 
     window.localStorage.TVL_last_updated = new Date().getTime()
     window.localStorage.TVL = this.TVL
