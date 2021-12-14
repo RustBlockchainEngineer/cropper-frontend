@@ -33,7 +33,7 @@
     <div v-if="title == 'Unstake LP'">
       <h4 class="text-center">LP Breakdown</h4><br />
       <div class="text-center">
-        <label class="label-lp-breakdown">{{lpbreakdown.pcSymbol}} {{lpbreakdown.pcBalance}}</label><label class="label-lp-breakdown">{{lpbreakdown.coinSymbol}} {{lpbreakdown.coinBalance}}</label>
+        <label class="label-lp-breakdown">{{lpbreakdown.pcSymbol}} {{ Math.round(lpbreakdown.pcBalance * 1000 * ( value / coin.balance.fixed() )) / 1000 }}</label><label class="label-lp-breakdown">{{lpbreakdown.coinSymbol}} {{Math.round(lpbreakdown.coinBalance * 1000 * ( value / coin.balance.fixed() )) / 1000 }}</label>
       </div>
       <br />
     </div>
