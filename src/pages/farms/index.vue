@@ -463,8 +463,8 @@
                 <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
                 <div v-else class="value">
                   {{ ((
-                    !wallet.connected || 
-                    (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000) &lt; 0 
+                    !wallet.connected ||
+                    (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000) &lt; 0
                     ) ? farm.farmInfo.reward.symbol + ' ' + 0 : farm.farmInfo.reward.symbol + ' ' + (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000)) }}
                 </div>
 
@@ -2263,15 +2263,10 @@ export default Vue.extend({
 
       let ammId = this.getAmmId(poolInfo)
       const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === ammId)
-      console.log('currentPoolInfo', currentPoolInfo)
-      console.log('lpBalance', )
       const totalSupply = getTotalSupply(currentPoolInfo)
 
       const pcBalance = (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
       const coinBalance = (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
-      console.log('pcBalance', pcBalance)
-      console.log('coinBlalance', coinBalance)
-      console.log('totalSupply', totalSupply)
       set(this.unstakePoolInfo, 'pcBalance', pcBalance)
       set(this.unstakePoolInfo, 'coinBalance', coinBalance)
       set(this.unstakePoolInfo, 'totalSupply', totalSupply)
