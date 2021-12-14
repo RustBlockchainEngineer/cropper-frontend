@@ -395,7 +395,7 @@ export type AnchorFarm = {
         },
         {
           "name": "userInfo",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -1537,7 +1537,7 @@ export const IDL: AnchorFarm = {
         },
         {
           "name": "userInfo",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {

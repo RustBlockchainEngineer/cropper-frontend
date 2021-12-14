@@ -395,7 +395,7 @@
         },
         {
           "name": "userInfo",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {

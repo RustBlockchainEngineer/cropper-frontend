@@ -636,7 +636,7 @@
                     <hr />
                     <br />
 
-                    <div class="title" style="text-align: left">
+                    <!-- <div class="title" style="text-align: left">
                       <div><b>Remaining rewards : </b></div>
                       <br />{{
                         Math.round(
@@ -649,7 +649,7 @@
                     <div class="title" style="text-align: left">
                       <div><b>End time : </b></div>
                       {{ new Date(getFarmEndTime(farm.farmInfo.poolInfo) * 1e3).toISOString() }}
-                    </div>
+                    </div> -->
 
                     <div
                       class="btncontainer noMobile"
@@ -999,7 +999,7 @@ import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
 import BigNumber from 'bignumber.js'
-import { depositLPV3, getGlobalStateV3, setGlobalStateV3, withdrawLPV3 } from '@/utils/farm-v3'
+import { addSingleRewardV3, depositLPV3, getGlobalStateV3, harvestRewardsV3, setGlobalStateV3, withdrawLPV3 } from '@/utils/farm-v3'
 const CollapsePanel = Collapse.Panel
 
 export default Vue.extend({
@@ -1582,9 +1582,6 @@ export default Vue.extend({
               .toFixed(2)
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
-          console.log('userInfo.depositBalanceUSD', userInfo.depositBalanceUSD)
-          console.log('depositBalance', userInfo.depositBalance.toEther().toNumber())
-
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
         } else {
           userInfo = {
@@ -2150,6 +2147,78 @@ export default Vue.extend({
       this.addRewardModalOpening = true
     },
     async addReward(amount: string) {
+      if(FARM_VERSION < 3) {
+        this.addRewardV2(amount);
+      }
+      else if(FARM_VERSION === 3) {
+        this.addRewardV3(amount);
+      }
+    },
+    async addRewardV3(amount: string) {
+      this.adding = true
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      const rewardAccountAddress = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`
+      )
+
+      const farmKey = new PublicKey(this.farmInfo.poolId);
+      let addRewardAmount: number = Number.parseFloat(amount);
+      addRewardAmount = addRewardAmount * Math.pow(10, this.farmInfo.reward.decimals);
+      let userRwardTokenPubkey = new PublicKey(rewardAccountAddress)
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+      
+      addSingleRewardV3(conn, wallet, farmKey, userRwardTokenPubkey, addRewardAmount)
+      .then((txid) => {
+        this.$notify.info({
+          key,
+          message: 'Transaction has been sent',
+          description: (h: any) =>
+            h('div', [
+              'Confirmation is in progress.  Check your transaction on ',
+              h(
+                'a',
+                {
+                  attrs: {
+                    href: `${this.url.explorer}/tx/${txid}`,
+                    target: '_blank'
+                  }
+                },
+                'here'
+              )
+            ])
+        })
+
+        const description = `Add ${amount} ${this.farmInfo.reward.name}`
+        this.$accessor.transaction.sub({ txid, description })
+      })
+      .catch((error) => {
+        this.$notify.error({
+          key,
+          message: 'Adding Reward failed',
+          description: error.message
+        })
+
+        this.$accessor.farm.requestInfos()
+        this.$accessor.wallet.getTokenAccounts()
+      })
+      .finally(() => {
+        this.adding = false
+        this.addRewardModalOpening = false
+
+        this.$accessor.farm.requestInfos()
+        this.$accessor.wallet.getTokenAccounts()
+      })
+    },
+    async addRewardV2(amount: string) {
       this.adding = true
       const conn = this.$web3
       const wallet = (this as any).$wallet
@@ -2360,8 +2429,9 @@ export default Vue.extend({
         console.log('user does not have any lp token')
         return;
       }
+      const userLpTokenAccount = get(this.wallet.tokenAccounts, this.farmInfo.lp.mintAddress);
       const farmKey = new PublicKey(this.farmInfo.poolId);
-      const currentLpAmount = this.farmInfo.lp.balance.wei.toNumber();
+      const currentLpAmount = userLpTokenAccount.balance.wei.toNumber();
       console.log('current lp amount', currentLpAmount);
       const key = getUnixTs().toString()
       this.$notify.info({
@@ -2530,6 +2600,77 @@ export default Vue.extend({
         })
     },
     async stakeLP(
+      conn: any,
+      wallet: any,
+      farmInfo: any,
+      lpAccount: any,
+      rewardAccount: any,
+      infoAccount: any,
+      amount: number
+    ) {
+      if(FARM_VERSION < 3) {
+        this.stakeLPV2(conn, wallet, farmInfo, lpAccount, rewardAccount, infoAccount, amount);
+      }
+      else if(FARM_VERSION === 3) {
+        this.stakeLPV3(conn, wallet, farmInfo, lpAccount,amount);
+      }
+    },
+    async stakeLPV3(
+      conn: any,
+      wallet: any,
+      farmInfo: any,
+      lpAccount: any,
+      amount: number
+    ) {
+      console.log('staking lp...')
+      if(!lpAccount) {
+        console.log('user does not have any lp amount');
+        return;
+      }
+      const key = getUnixTs().toString()
+      const farmKey = new PublicKey(farmInfo.poolId);
+      const value = getBigNumber(new TokenAmount(amount, farmInfo.lp.decimals, false).wei)
+      depositLPV3(conn, wallet, farmKey, new PublicKey(lpAccount), value)
+        .then((txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
+
+          const description = `Stake ${amount} ${this.farmInfo.lp.name}`
+          this.$accessor.transaction.sub({ txid, description })
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Stake failed',
+            description: error.message
+          })
+          
+          this.stakeLPError = true
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
+        })
+        .finally(() => {
+          this.staking = false
+          this.stakeModalOpening = false
+          this.farmInfo = null
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
+        })
+    },
+    async stakeLPV2(
       conn: any,
       wallet: any,
       farmInfo: any,
@@ -2884,8 +3025,75 @@ export default Vue.extend({
       }
       return liquidityPoolInfo.ammId
     },
-
     harvest(farmInfo: FarmInfo, idx: number) {
+      if(FARM_VERSION < 3) {
+        this.harvestV2(farmInfo, idx);
+      }
+      else if(FARM_VERSION === 3) {
+        this.harvestV3(farmInfo, idx);
+      }
+    },
+    harvestV3(farmInfo: FarmInfo, idx: number) {
+      this.harvesting[idx] = true
+
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+
+      let rewardAccount = get(this.wallet.tokenAccounts, `${farmInfo.reward.mintAddress}.tokenAccountAddress`)
+      const farmKey = new PublicKey(farmInfo.poolId);
+      if(rewardAccount) {
+        rewardAccount = new PublicKey(rewardAccount);
+      }
+      else {
+        rewardAccount = null;
+      }
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+      harvestRewardsV3(conn, wallet, farmKey, rewardAccount)
+        .then((txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
+
+          const description = `Harvest ${farmInfo.reward.symbol} from ${farmInfo.lp.name}`
+          this.$accessor.transaction.sub({ txid, description })
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Harvest failed',
+            description: error.message
+          })
+
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
+        })
+        .finally(() => {
+          this.$accessor.farm.requestInfos()
+          this.harvesting[idx] = false
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
+        })
+    },
+    harvestV2(farmInfo: FarmInfo, idx: number) {
       this.harvesting[idx] = true
 
       const conn = this.$web3

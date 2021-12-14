@@ -477,7 +477,6 @@ export async function depositLPV3(
   swapInstructions = [],
   swapSigners = []
 ) {
-  
   const program = getFarmProgramV3(connection, wallet)
   let [globalStateKey, globalStateKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from(GLOBAL_STATE_TAG)],
@@ -496,6 +495,7 @@ export async function depositLPV3(
     [Buffer.from(FARM_TAG), oldFarm.seedKey.toBuffer()],
     program.programId
   )
+
   if(withSwapAction){
     const tx = await program.rpc.deposit(
       globalStateKeyNonce,
@@ -522,7 +522,7 @@ export async function depositLPV3(
         signers: swapSigners,
       }
     )
-    console.log('depositLPV3 txid = ', tx)
+    return tx;
   }
   else{
     const tx = await program.rpc.deposit(
@@ -548,7 +548,7 @@ export async function depositLPV3(
         }
       }
     )
-    console.log('depositLPV3 txid = ', tx)
+    return tx;
   }
 }
 
@@ -659,7 +659,7 @@ export async function withdrawLPV3(
   
 }
 
-export async function harvestV3(
+export async function harvestRewardsV3(
   connection: anchor.web3.Connection,
   wallet: any,
   farmKey: anchor.web3.PublicKey,
@@ -744,6 +744,7 @@ export async function harvestV3(
       signers
     })
     console.log('harvestV3 txid = ', tx)
+    return tx;
   }
 }
 
