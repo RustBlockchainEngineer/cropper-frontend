@@ -31,8 +31,9 @@
       :loading="unstaking"
       @onOk="unstakeAndRemove"
       @onCancel="cancelUnstake"
+      :lpbreakdown="this.unstakePoolInfo"
       text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.<br />
-      If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
+            If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
     />
 
     <CoinModal
@@ -977,9 +978,9 @@ import {
   Switch as Toggle,
   Pagination
 } from 'ant-design-vue'
-import { get, cloneDeep, forIn, indexOf } from 'lodash-es'
+import { get, set, cloneDeep, forIn, indexOf } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
-import { FarmInfo } from '@/utils/farms'
+import { FarmInfo, getCoinBalance, getPcBalance, getTotalSupply } from '@/utils/farms'
 import { deposit, withdraw } from '@/utils/stake'
 import { getUnixTs } from '@/utils'
 import { getBigNumber, toBigNumber } from '@/utils/layouts'
@@ -1088,7 +1089,8 @@ export default Vue.extend({
         }
       ],
       activeSpinning: false as boolean,
-      userMigrations: [] as any[]
+      userMigrations: [] as any[],
+      unstakePoolInfo: {} as any
     }
   },
 
@@ -2257,6 +2259,25 @@ export default Vue.extend({
 
       this.lp = coin
       this.farmInfo = cloneDeep(poolInfo)
+
+
+      let ammId = this.getAmmId(poolInfo)
+      const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === ammId)
+      console.log('currentPoolInfo', currentPoolInfo)
+      console.log('lpBalance', )
+      const totalSupply = getTotalSupply(currentPoolInfo)
+
+      const pcBalance = (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+      const coinBalance = (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+      console.log('pcBalance', pcBalance)
+      console.log('coinBlalance', coinBalance)
+      console.log('totalSupply', totalSupply)
+      set(this.unstakePoolInfo, 'pcBalance', pcBalance)
+      set(this.unstakePoolInfo, 'coinBalance', coinBalance)
+      set(this.unstakePoolInfo, 'totalSupply', totalSupply)
+      set(this.unstakePoolInfo, 'pcSymbol', get(currentPoolInfo, 'pc.symbol'))
+      set(this.unstakePoolInfo, 'coinSymbol', get(currentPoolInfo, 'coin.symbol'))
+      console.log('unstakePoolInfo', this.unstakePoolInfo)
       this.unstakeModalOpening = true
     },
 
@@ -2511,6 +2532,12 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 // global stylesheet
+.label {
+    padding: .75rem 1rem 0;
+    font-size: 15px;
+    line-height: 14px;
+    color: #85858d;
+}
 
 .info-icon {
   margin: -10px 0 0 10px;

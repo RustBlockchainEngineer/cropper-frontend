@@ -30,8 +30,17 @@
         </div>
       </div>
     </div>
-
-    <div v-html="text">{{text}}</div>
+    <div v-if="title == 'Unstake LP'">
+      <h4 class="text-center">LP Breakdown</h4><br />
+      <div class="text-center">
+        <label class="label-lp-breakdown">{{lpbreakdown.pcSymbol}} {{lpbreakdown.pcBalance}}</label><label class="label-lp-breakdown">{{lpbreakdown.coinSymbol}} {{lpbreakdown.coinBalance}}</label>
+      </div>
+      <br />
+    </div>
+    <div v-html="text">
+      
+      {{text}}
+    </div>
 
     <Row :gutter="32" class="actions">
       <Col :span="12" class="text-center">
@@ -91,6 +100,10 @@ export default Vue.extend({
     text: {
       type: String,
       default: ''
+    },
+    lpbreakdown: {
+      type: Object,
+      default: null
     }
   },
 
@@ -165,14 +178,17 @@ export default Vue.extend({
     width: 100%;
   }
 }
-
-.coin-modal {
-  .label {
-    padding: .75rem 1rem 0;
+  .label-lp-breakdown {
+    padding: 0.75rem;
     font-size: 15px;
     line-height: 14px;
     color: #85858d;
+    background-color: #3f2a83;
+    margin: 1rem;
+    border-radius: 12px;
   }
+.coin-modal {
+
 
   input {
     width: 0;

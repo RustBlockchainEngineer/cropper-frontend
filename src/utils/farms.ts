@@ -2,6 +2,7 @@ import { TokenInfo } from '@/utils/tokens'
 
 import { STAKE_PROGRAM_ID, STAKE_PROGRAM_ID_V4, STAKE_PROGRAM_ID_V5 } from '@/utils/ids'
 import { cloneDeep } from 'lodash-es'
+import { TokenAmount } from './safe-math'
 
 export interface FarmInfo {
   name: string
@@ -78,6 +79,19 @@ export function getAddressForWhat(address: string) {
 
   return {}
 }
+
+export function getPcBalance(poolInfo: any) {
+  return parseFloat(new TokenAmount(poolInfo.pc.balance.wei, poolInfo.pc.decimals).toEther().toString())
+}
+
+export function getCoinBalance(poolInfo: any) {
+  return parseFloat(new TokenAmount(poolInfo.coin.balance.wei, poolInfo.coin.decimals).toEther().toString())
+}
+
+export function getTotalSupply(poolInfo: any) {
+  return parseFloat(new TokenAmount(poolInfo.lp.totalSupply.wei, poolInfo.lp.totalSupply.decimals).toEther().toString())
+}
+
 export const FARMS: FarmInfo[] = [
   
 ];
