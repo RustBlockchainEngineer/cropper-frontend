@@ -306,19 +306,6 @@ a {
   background: transparent !important;
 }
 
-.coin-input {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
-  margin: 9px;
-  padding: 0.75rem 0.75rem 0.75rem 1rem;
-}
-
-.ant-btn:hover,
-.ant-btn:focus,
-.coin-select .coin-input .input-button {
-  color: #13ECAB !important;
-}
-
 .ant-modal-body .stdGradientButton {
   height: unset;
   margin: 0 auto;
@@ -387,7 +374,6 @@ h2 {
 h3 {
   font-size: 31px;
   line-height: 37.2px;
-  letter-spacing: -0.15px;
   margin-bottom: 0 !important;
 
   @media @max-sl-mobile {
@@ -424,7 +410,6 @@ p {
 .bodyM {
   font-size: 16px !important;
   line-height: 24px !important;
-  letter-spacing: 0.15px;
 
   @media @max-sl-mobile {
     font-size: 13px !important;
@@ -435,19 +420,31 @@ p {
 .bodyS {
   font-size: 13px !important;
   line-height: 19.5px !important;
-  letter-spacing: -0.5px !important;
 
   @media @max-md-tablet {
     font-size: 11px !important;
     line-height: 16.5px !important;
-    letter-spacing: -0.5px !important;
   }
+}
+
+.textL {
+  font-size: 20px !important;
+  line-height: 30px !important;
+}
+
+.textM {
+  font-size: 16px !important;
+  line-height: 24px !important;
+}
+
+.textS {
+  font-size: 13px !important;
+  line-height: 19.5px !important;
 }
 
 .bodyXS {
   font-size: 11px !important;
   line-height: 16.5px !important;
-  letter-spacing: -0.5px !important;
 }
 
 // font-weight
@@ -476,6 +473,15 @@ p {
   text-align: center;
 }
 
+// icon style
+.icon-cursor {
+  cursor: pointer;
+}
+
+.icon-centered {
+  margin: auto;
+}
+
 // ant-modal
 .ant-modal {  
   .ant-modal-content {
@@ -491,7 +497,7 @@ p {
       background-color: @color-modal-dark;
       display: flex;
       justify-content: space-between;
-      padding: 0;
+      padding: 20px;
       border-bottom: 0;
 
       .ant-modal-title {

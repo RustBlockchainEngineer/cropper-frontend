@@ -1,11 +1,27 @@
 <template>
-  <Modal class="nofooter" v-if="!showSelectSourceFlag" title="Select a token" :visible="true" @cancel="$emit('onClose')">
-    <div class="select-token">
-      <input ref="userInput" v-model="keyword" placeholder="Search name or mint address" />
-      <div v-if="!addUserCoin" class="sort fs-container">
+  <Modal
+    v-if="!showSelectSourceFlag"
+    :closable="false"
+    :visible="true"
+    :footer="null"
+    @cancel="$emit('onClose')"
+    class="coin-select-modal"
+  >
+    <div class="select-token-header fs-container">
+      <label class="textL weightB">Select a token</label>
+      <img class="icon-cursor" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onClose')"/>
+    </div>
+    <div class="select-token-search">
+      <input ref="userInput" v-model="keyword" class="textM" placeholder="Search name or paste address" />
+      <!-- <div v-if="!addUserCoin" class="sort fs-container">
         <span class="title">Token name</span>
         <Icon :type="desc ? 'arrow-up' : 'arrow-down'" @click="setDesc" />
+      </div> -->
+      <div class="common-bases">
+        <label class="textM">Common bases</label>
       </div>
+    </div>
+    <div class="select-token">
       <div v-if="!addUserCoin" class="token-list">
         <template v-for="token of filteredTokenList()">
           <div
@@ -17,10 +33,10 @@
             @mouseleave="tokenMove(token)"
           >
             <CoinIcon :mint-address="token.mintAddress" />
-            <div>
-              <span>{{ token.symbol }}</span>
+            <div class="token-group">
+              <span class="token-symbol textS weightS">{{ token.symbol }}</span>
+              <span class="token-name bodyXS">{{ token.name }}</span>
             </div>
-            <span></span>
             <div class="balance">
               <div v-if="wallet.loading">
                 <Icon type="loading" />
@@ -71,7 +87,7 @@ import { cloneDeep } from 'lodash-es'
 import { PublicKey } from '@solana/web3.js'
 // import { getFilteredProgramAccounts } from '@/utils/web3'
 import { MINT_LAYOUT } from '@/utils/layouts'
-import { ALLOWED_TOKENB_LIST, LOCKED_TOKENA_LIST} from '@/utils/farm'
+import { ALLOWED_TOKENB_LIST, LOCKED_TOKENA_LIST } from '@/utils/farm'
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
@@ -106,9 +122,7 @@ export default Vue.extend({
 
       userInputCoinName: undefined,
       showSelectSourceFlag: false,
-      showUserButton: {} as { [key: string]: boolean },
-      
-      
+      showUserButton: {} as { [key: string]: boolean }
     }
   },
 
@@ -154,29 +168,26 @@ export default Vue.extend({
   },
 
   methods: {
-    filteredTokenList(){
-      let filteredList:TokenInfo[] = [];
-      if(this.farmTokenASelect && !this.allowedAllFarm){
-        filteredList = this.tokenList.filter((token)=>{
-          if(LOCKED_TOKENA_LIST.includes(token.symbol)){
-            return false;
-          }
-          else{
-            return true;
-          }
-        })
-      }
-      else if(this.farmTokenBSelect){
-        filteredList = this.tokenList.filter((token)=>{
-          if(ALLOWED_TOKENB_LIST.includes(token.symbol)){
-            return true;
+    filteredTokenList() {
+      let filteredList: TokenInfo[] = []
+      if (this.farmTokenASelect && !this.allowedAllFarm) {
+        filteredList = this.tokenList.filter((token) => {
+          if (LOCKED_TOKENA_LIST.includes(token.symbol)) {
+            return false
+          } else {
+            return true
           }
         })
+      } else if (this.farmTokenBSelect) {
+        filteredList = this.tokenList.filter((token) => {
+          if (ALLOWED_TOKENB_LIST.includes(token.symbol)) {
+            return true
+          }
+        })
+      } else {
+        filteredList = this.tokenList
       }
-      else {
-        filteredList = this.tokenList;
-      }
-      return filteredList;
+      return filteredList
     },
     tokenHover(token: any) {
       this.$set(this.showUserButton, token.symbol + token.mintAddress, true)
@@ -423,55 +434,60 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 @import '../styles/variables';
-.source-manager {
-  text-align: center;
-  background: transparent;
-  border: none;
-  width: 100%;
-}
-.source-manager:hover {
-  color: #5ac4be;
+
+.select-token-header {
+  margin-bottom: 10px;
+  padding: 0 15px;
 }
 
-.nodisplay{
-  display:none !important
-}
-
-.select-token {
-  display: grid;
-  grid-auto-rows: auto;
-  row-gap: 14px;
+.select-token-search {
+  padding: 0 15px;
 
   input {
-    border: 4px solid #16164A;
-    border-radius: 14px;
-    padding: 16px;
+    border: 1px solid #6574D6;
+    border-radius: 8px;
+    padding: 8px 18px;
     background-color: transparent;
-    font-size: 18px;
-    color: @text-color;
+    color: #CCD1F1;
+    width: 100%;
 
     &:active,
     &:focus,
     &:hover {
       outline: 0;
     }
-  }
 
-  .sort {
-    .title {
-      font-size: 14px;
-      line-height: 36px;
-      font-weight: 400;
-    }
-
-    @media @max-sl-mobile {
-      display: none;
+    &::placeholder {
+      color: #CCD1F1;
     }
   }
+
+  // .sort {
+  //   .title {
+  //     font-size: 14px;
+  //     line-height: 36px;
+  //     font-weight: 400;
+  //   }
+
+  //   @media @max-sl-mobile {
+  //     display: none;
+  //   }
+  // }
+
+  .common-bases {
+    margin-top: 8px;
+    margin-bottom: 18px;
+  }
+}
+
+.select-token {
+  display: grid;
+  grid-auto-rows: auto;
+  row-gap: 14px;
+  background: @color-bg;
 
   .token-list {
     max-height: 50vh;
-    padding-right: 10px;
     overflow: auto;
     direction: ltr;
     will-change: transform;
@@ -480,12 +496,15 @@ export default Vue.extend({
       display: grid;
       justify-content: space-between;
       align-items: center;
-      height: 56px;
-      padding: 4px 0;
-      gap: 16px;
+      padding: 12.5px 25px;
+      gap: 9px;
       grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
+      border-bottom: 1px solid #0F1757;
       cursor: pointer;
-      opacity: 1;
+
+      &:last-child {
+        border-bottom: none;
+      }
 
       img {
         border-radius: 50%;
@@ -493,6 +512,16 @@ export default Vue.extend({
         width: 24px;
       }
 
+      .token-group {
+        .token-symbol {
+          display: block;
+          letter-spacing: 0.5px;
+        }
+
+        .token-name {
+          color: #CCD1F1;
+        }
+      }
       .balance {
         justify-self: flex-end;
         width: fit-content;
@@ -511,6 +540,17 @@ export default Vue.extend({
       // pointer-events: none;
       opacity: 0.5;
     }
+  }
+}
+</style>
+<style lang="less">
+.coin-select-modal .ant-modal{
+  .ant-modal-content {
+    background: #172058;
+    border: 3px solid #273592;
+    box-sizing: border-box;
+    border-radius: 18px;
+    padding: 10px 0 18px 0;
   }
 }
 </style>

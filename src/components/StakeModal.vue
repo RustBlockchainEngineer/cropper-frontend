@@ -302,7 +302,8 @@ export default Vue.extend({
   }
 })
 </script>
-<style lang="less">
+
+<style lang="less" scoped>
 // global styles
 
 .btn-container {
@@ -329,10 +330,12 @@ export default Vue.extend({
   cursor: pointer;
 
   &:disabled {
-        opacity: 0.5;
+    opacity: 0.5;
   }
 }
+</style>
 
+<style lang="less">
 // class styles
 
 .stake-container {

@@ -5,6 +5,7 @@
     :mask-closable="true"
     :closable="false"
     :width="375"
+    class="menu-modal"
     :bodyStyle = "{ 
       background : '#000539',
       padding: '20px 20px 50px 20px',
@@ -12,7 +13,7 @@
     @cancel="$emit('onCancel')"
     centered
   >
-    <img class="close-modal" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <img class="close-btn" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
     <div class="menu-container">
       <Menu v-model="currentRoute" :mode="'vertical'" :theme="'light'" @click="changeRoute">
         <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()" :class="name === banURL ? 'disable' : ''">
@@ -103,7 +104,7 @@ export default class MenuModal extends Vue {
 
 <style lang="less" scoped>
 
-.close-modal {
+.close-btn {
   position: absolute;
   left: 20px;
   top: 20px;
@@ -149,5 +150,23 @@ export default class MenuModal extends Vue {
 
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   background: transparent;
+}
+
+</style>
+
+<style lang="less">
+.menu-modal .ant-modal {
+  @media @max-sl-mobile {
+    width: 100% !important;
+    max-width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #000539;
+
+    .ant-modal-content {
+      box-shadow: none;
+    }
+  }
 }
 </style>

@@ -618,14 +618,18 @@ export default class Wallet extends Vue {
 
   .wallet-list {
     position: absolute;
-    right: 100px;
-    margin-top: 10px;
+    right: 64px;
+    margin-top: 70px;
     z-index: 999;
     background: @gradient-color-wallet;
     box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
 
     @media @max-lg-tablet {
+      right: 32px;
+    }
+
+    @media @max-sl-mobile {
       right: 20px;
     }
     
