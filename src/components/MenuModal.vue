@@ -21,7 +21,7 @@
             {{ name.replace('-', ' ') }}
           </a>
           <div v-else class="menu-icon-group">
-            <span class="bodyM weightS"> {{ name.replace('-', ' ') }} </span>
+            <span class="textM weightS"> {{ name.replace('-', ' ') }} </span>
           </div>
           <div v-if="name === banURL" class="soon">Soon</div>
         </MenuItem>
@@ -163,6 +163,7 @@ export default class MenuModal extends Vue {
     margin: 0;
     padding: 0;
     background: #000539;
+    opacity: 0.9;
 
     .ant-modal-content {
       box-shadow: none;
