@@ -249,7 +249,7 @@
                     >
                   </div>
                 </Col>
-                <Col :xs="24" :sm="24" :md="16">
+                <Col :sm="16" :md="16" class="video-play-col">
                   <video class="video-player"
                     :src="currentVideo"
                     controls
