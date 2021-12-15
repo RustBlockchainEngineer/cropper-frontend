@@ -32,6 +32,7 @@
         :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
         :visible="wallet.modalShow && isModal"
         :footer="null"
+        class="connect-modal"
         centered
         @cancel="$accessor.wallet.closeModal"
       >
@@ -797,25 +798,35 @@ export default class Wallet extends Vue {
 </style>
 
 <style lang="less">
-.ant-modal-body {
-  .select-wallet {
-    button {
-      border: none;
-      background: rgba(255, 255, 255, 0.1) !important;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      width: 100%;
-      height: 48px;
-      text-align: left;
-      margin-bottom: 10px;
+.connect-modal {
+  .ant-modal-body {
+    text-align: center;
 
-      img {
-        height: 32px;
-        width: 32px;
-        border-radius: 50%;
+    .select-wallet {
+      button {
+        border: none;
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+        width: 100%;
+        height: 48px;
+        text-align: left;
+        margin-bottom: 10px;
+
+        img {
+          height: 32px;
+          width: 32px;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .wallet-info {
+      .stdGradientButton {
+        margin-top: 20px;
       }
     }
   }

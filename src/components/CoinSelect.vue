@@ -19,6 +19,14 @@
       </div> -->
       <div class="common-bases">
         <label class="textM">Common bases</label>
+        <div class="common-bases-group">
+          <div v-for="common in commonBases" :key="common.symbol" class="common-select-container icon-cursor" @click="selectCommonToken(common)">
+            <div class="common-box fc-container">
+              <CoinIcon class="coin-icon" :mint-address="common.mintAddress" />
+              {{ common.symbol }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="select-token">
@@ -119,10 +127,19 @@ export default Vue.extend({
       desc: false,
       addUserCoin: false,
       addUserCoinToken: null as any | null,
-
       userInputCoinName: undefined,
       showSelectSourceFlag: false,
-      showUserButton: {} as { [key: string]: boolean }
+      showUserButton: {} as { [key: string]: boolean },
+      commonBases: [
+        {
+          mintAddress: "DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz",
+          symbol: "CRP"
+        },
+        {
+          mintAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          symbol: "USDC"
+        }
+      ] as any
     }
   },
 
@@ -168,6 +185,11 @@ export default Vue.extend({
   },
 
   methods: {
+    selectCommonToken(common: any) {
+      let selectedToken = this.tokenList.find((token) => token.symbol === common.symbol)
+      console.log(selectedToken)
+      this.$emit('onSelect', selectedToken);
+    },
     filteredTokenList() {
       let filteredList: TokenInfo[] = []
       if (this.farmTokenASelect && !this.allowedAllFarm) {
@@ -477,6 +499,35 @@ export default Vue.extend({
   .common-bases {
     margin-top: 8px;
     margin-bottom: 18px;
+
+    .common-bases-group {
+      display: flex;
+      margin-top: 8px;
+
+      .common-select-container {
+        background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+        border-radius: 8px;
+        padding: 2px;
+        margin-right: 8px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        .common-box {
+          background: @color-bg;
+          border-radius: 8px;
+          padding: 8px;
+
+          .coin-icon {
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -551,6 +602,10 @@ export default Vue.extend({
     box-sizing: border-box;
     border-radius: 18px;
     padding: 10px 0 18px 0;
+
+    .ant-modal-body {
+      padding: 0 !important;
+    }
   }
 }
 </style>
