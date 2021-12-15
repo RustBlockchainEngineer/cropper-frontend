@@ -188,7 +188,12 @@ export default Vue.extend({
     border-radius: 12px;
   }
 .coin-modal {
-
+  .label {
+    padding: .75rem 1rem 0;
+    font-size: 15px;
+    line-height: 14px;
+    color: #85858d;
+  }
 
   input {
     width: 0;
