@@ -2107,12 +2107,12 @@ export default Vue.extend({
               position: absolute;
               top: 30px;
               right: 0;
-              background: linear-gradient(292.73deg, #21bdb8 -20.31%, #280684 100%);
+              background: @gradient-color-primary;
               background-origin: border-box;
               border: 2px solid rgba(255, 255, 255, 0.14);
               box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
               border-radius: 8px;
-              padding: 27px 17px;
+              padding: 12px;
               width: 178px;
               z-index: 999;
 
@@ -2135,7 +2135,7 @@ export default Vue.extend({
               &::after {
                 content: "%";
                 position: absolute;
-                top: 33px;
+                top: 18px;
                 left: 55px;
                 transition: all 0.05s ease-in-out;
               }
