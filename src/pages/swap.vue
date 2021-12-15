@@ -94,196 +94,198 @@
           @onSelect="openToCoinSelect"
         />
 
-        <div class="exchange-info">
-          <div
-            v-if="fromCoin && toCoin && isWrap && fromCoinAmount"
-            class="textS weightS price-base fc-container"
-          >
-            <span>
-              1 {{ fromCoin.symbol }} = 1
-              {{ toCoin.symbol }}
-            </span>
-          </div>
-          <div
-            v-else-if="fromCoin && toCoin && !isWrap && fromCoinAmount"
-            class="textS weightS price-base fc-container"
-          >
-            <span>
-              1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
-              {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
-              {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-              <img
-                src="@/assets/icons/swap-vertical.svg"
-                @click="() => (hasPriceSwapped = !hasPriceSwapped)"
-                class="swap-icon"
-              />
-            </span>
-          </div>
-          <div
-            v-else-if="
-              fromCoin &&
-              toCoin &&
-              marketAddress &&
-              market &&
-              asks &&
-              bids &&
-              fromCoinAmount
-            "
-            class="textS weightS price-base fc-container"
-          >
-            <span>
-              1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
-              {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
-              {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-              <img
-                src="@/assets/icons/swap-vertical.svg"
-                @click="() => (hasPriceSwapped = !hasPriceSwapped)"
-                class="swap-icon"
-              />
-            </span>
-          </div>
-        </div>
-
-        <div class="swap-actions fs-container">
-          <div class="swap-status textM weightS">
-            <div v-if="priceImpact < 2" class="price-status">
-              <img class="status-icon" src="@/assets/icons/info-okay.svg" />
-              <label class="textM weightS price-impact-green">Fair Price</label>
+        <div v-if="wallet.connected">
+          <div class="exchange-info">
+            <div
+              v-if="fromCoin && toCoin && isWrap && fromCoinAmount"
+              class="textS weightS price-base fc-container"
+            >
+              <span>
+                1 {{ fromCoin.symbol }} = 1
+                {{ toCoin.symbol }}
+              </span>
             </div>
-            <div v-else class="price-status">
-              <img class="status-icon" src="@/assets/icons/info-red.svg" />
-              <label
-                class="textM weightS"
-                :class="`price-impact-${
-                  priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : ''
-                }`"
-                >Price impact Warning</label
-              >
-            </div>
-          </div>
-          <div class="action-group">
-            <div class="action-btn-container fc-container icon-cursor">
-              <div
-                @click="
-                  () => {
-                    this.showSlippage = !this.showSlippage;
-                  }
-                "
-              >
-                <img class="setting-icon" src="@/assets/icons/setting-icon.svg" />
-              </div>
-              <div v-if="showSlippage" class="slippage-container">
-                <input
-                  class="slippage-input"
-                  id="number"
-                  type="number"
-                  min="1"
-                  max="100"
-                  v-model="setting.slippage"
-                  @keypress="validateNumber"
+            <div
+              v-else-if="fromCoin && toCoin && !isWrap && fromCoinAmount"
+              class="textS weightS price-base fc-container"
+            >
+              <span>
+                1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
+                {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
+                {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
+                <img
+                  src="@/assets/icons/swap-vertical.svg"
+                  @click="() => (hasPriceSwapped = !hasPriceSwapped)"
+                  class="swap-icon"
                 />
+              </span>
+            </div>
+            <div
+              v-else-if="
+                fromCoin &&
+                toCoin &&
+                marketAddress &&
+                market &&
+                asks &&
+                bids &&
+                fromCoinAmount
+              "
+              class="textS weightS price-base fc-container"
+            >
+              <span>
+                1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
+                {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
+                {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
+                <img
+                  src="@/assets/icons/swap-vertical.svg"
+                  @click="() => (hasPriceSwapped = !hasPriceSwapped)"
+                  class="swap-icon"
+                />
+              </span>
+            </div>
+          </div>
+
+          <div class="swap-actions fs-container">
+            <div class="swap-status textM weightS">
+              <div v-if="priceImpact < 2" class="price-status">
+                <img class="status-icon" src="@/assets/icons/info-okay.svg" />
+                <label class="textM weightS price-impact-green">Fair Price</label>
               </div>
+              <div v-else class="price-status">
+                <img class="status-icon" src="@/assets/icons/info-red.svg" />
+                <label
+                  class="textM weightS"
+                  :class="`price-impact-${
+                    priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : ''
+                  }`"
+                  >Price impact Warning</label
+                >
+              </div>
+            </div>
+            <div class="action-group">
+              <div class="action-btn-container fc-container icon-cursor">
+                <div
+                  @click="
+                    () => {
+                      this.showSlippage = !this.showSlippage;
+                    }
+                  "
+                >
+                  <img class="setting-icon" src="@/assets/icons/setting-icon.svg" />
+                </div>
+                <div v-if="showSlippage" class="slippage-container">
+                  <input
+                    class="slippage-input"
+                    id="number"
+                    type="number"
+                    min="1"
+                    max="100"
+                    v-model="setting.slippage"
+                    @keypress="validateNumber"
+                  />
+                </div>
+              </div>
+
+              <div
+                class="action-btn-container fc-container icon-cursor"
+                :class="activeSpinning ? 'loading' : ''"
+                @click="reloadTimer"
+              >
+                <!-- {{ autoRefreshTime - countdown }} -->
+                <img class="load-icon" src="@/assets/icons/reload-icon.svg" />
+              </div>
+            </div>
+          </div>
+
+          <div class="price-info">
+            <div class="info-box">
+              <span class="name">
+                <label class="textS weightB">Pathway</label>
+                <Tooltip placement="bottomLeft">
+                  <template slot="title">
+                    This trade routes though the following tokens to give you the best price
+                  </template>
+                  <img
+                    src="@/assets/icons/info.svg"
+                    class="tooltip-icon icon-cursor"
+                  />
+                </Tooltip>
+              </span>
+
+              <span v-if="fromCoin && toCoin" class="pathway">
+                <div class="coin-box-container">
+                  <div class="coin-box">
+                    <CoinIcon :mint-address="fromCoin.mintAddress" />
+                    <span class="textS weightS">{{ fromCoin.symbol }}</span>
+                  </div>
+                </div>
+                <img class="fst" src="@/assets/icons/arrow-right.svg" />
+                <div v-if="midTokenSymbol" class="coin-box-container">
+                  <div class="coin-box">
+                    <CoinIcon :mint-address="midTokenMint" />
+                    <span class="textS weightS">{{ midTokenSymbol }}</span>
+                  </div>
+                </div>
+                <img
+                  v-if="midTokenSymbol"
+                  class="fst"
+                  src="@/assets/icons/arrow-right.svg"
+                />
+                <div class="coin-box-container">
+                  <div class="coin-box">
+                    <CoinIcon :mint-address="toCoin.mintAddress" />
+                    <span class="textS weightS">{{ toCoin.symbol }}</span>
+                  </div>
+                </div>
+              </span>
+            </div>
+
+            <div v-if="priceImpact" class="info-box">
+              <span class="name">
+                <label class="textS weightB"> Price Impact </label>
+                <Tooltip placement="bottomLeft">
+                  <template slot="title">
+                    The difference between the market price and estimated price due to trade
+                    size
+                  </template>
+                  <img
+                    src="@/assets/icons/info.svg"
+                    class="tooltip-icon icon-cursor"
+                  />
+                </Tooltip>
+              </span>
+              <span
+                class="value"
+                :class="`price-impact-${
+                  priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'
+                }`"
+              >
+                <label class="textS weightB"> {{ priceImpact.toFixed(2) }}% </label>
+              </span>
             </div>
 
             <div
-              class="action-btn-container fc-container icon-cursor"
-              :class="activeSpinning ? 'loading' : ''"
-              @click="reloadTimer"
+              v-if="fromCoin && toCoin && fromCoinAmount && toCoinWithSlippage"
+              class="info-box"
             >
-              <!-- {{ autoRefreshTime - countdown }} -->
-              <img class="load-icon" src="@/assets/icons/reload-icon.svg" />
+              <span class="name">
+                <label class="textS weightB">Minimum Received</label>
+                <Tooltip placement="bottomLeft">
+                  <template slot="title">
+                    The least amount of tokens you will receive for this trade
+                  </template>
+                  <img
+                    src="@/assets/icons/info.svg"
+                    class="tooltip-icon icon-cursor"
+                  />
+                </Tooltip>
+              </span>
+              <span class="value">
+                <label class="textS weightB">
+                  {{ toCoinWithSlippage }} {{ toCoin.symbol }}
+                </label>
+              </span>
             </div>
-          </div>
-        </div>
-
-        <div class="price-info">
-          <div class="info-box">
-            <span class="name">
-              <label class="textS weightB">Pathway</label>
-              <Tooltip placement="bottomLeft">
-                <template slot="title">
-                  This trade routes though the following tokens to give you the best price
-                </template>
-                <img
-                  src="@/assets/icons/info.svg"
-                  class="tooltip-icon icon-cursor"
-                />
-              </Tooltip>
-            </span>
-
-            <span v-if="fromCoin && toCoin" class="pathway">
-              <div class="coin-box-container">
-                <div class="coin-box">
-                  <CoinIcon :mint-address="fromCoin.mintAddress" />
-                  <span class="textS weightS">{{ fromCoin.symbol }}</span>
-                </div>
-              </div>
-              <img class="fst" src="@/assets/icons/arrow-right.svg" />
-              <div v-if="midTokenSymbol" class="coin-box-container">
-                <div class="coin-box">
-                  <CoinIcon :mint-address="midTokenMint" />
-                  <span class="textS weightS">{{ midTokenSymbol }}</span>
-                </div>
-              </div>
-              <img
-                v-if="midTokenSymbol"
-                class="fst"
-                src="@/assets/icons/arrow-right.svg"
-              />
-              <div class="coin-box-container">
-                <div class="coin-box">
-                  <CoinIcon :mint-address="toCoin.mintAddress" />
-                  <span class="textS weightS">{{ toCoin.symbol }}</span>
-                </div>
-              </div>
-            </span>
-          </div>
-
-          <div v-if="priceImpact" class="info-box">
-            <span class="name">
-              <label class="textS weightB"> Price Impact </label>
-              <Tooltip placement="bottomLeft">
-                <template slot="title">
-                  The difference between the market price and estimated price due to trade
-                  size
-                </template>
-                <img
-                  src="@/assets/icons/info.svg"
-                  class="tooltip-icon icon-cursor"
-                />
-              </Tooltip>
-            </span>
-            <span
-              class="value"
-              :class="`price-impact-${
-                priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'
-              }`"
-            >
-              <label class="textS weightB"> {{ priceImpact.toFixed(2) }}% </label>
-            </span>
-          </div>
-
-          <div
-            v-if="fromCoin && toCoin && fromCoinAmount && toCoinWithSlippage"
-            class="info-box"
-          >
-            <span class="name">
-              <label class="textS weightB">Minimum Received</label>
-              <Tooltip placement="bottomLeft">
-                <template slot="title">
-                  The least amount of tokens you will receive for this trade
-                </template>
-                <img
-                  src="@/assets/icons/info.svg"
-                  class="tooltip-icon icon-cursor"
-                />
-              </Tooltip>
-            </span>
-            <span class="value">
-              <label class="textS weightB">
-                {{ toCoinWithSlippage }} {{ toCoin.symbol }}
-              </label>
-            </span>
           </div>
         </div>
 
@@ -2076,6 +2078,8 @@ export default Vue.extend({
       }
 
       .swap-actions {
+        margin-bottom: 8px;
+
         .swap-status {
           .price-status {
             display: flex;
