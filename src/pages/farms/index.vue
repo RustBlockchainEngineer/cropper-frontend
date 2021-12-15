@@ -2527,12 +2527,6 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 // global stylesheet
-.label {
-    padding: .75rem 1rem 0;
-    font-size: 15px;
-    line-height: 14px;
-    color: #85858d;
-}
 
 .info-icon {
   margin: -10px 0 0 10px;
