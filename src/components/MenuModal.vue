@@ -156,7 +156,7 @@ export default class MenuModal extends Vue {
 
 <style lang="less">
 .menu-modal .ant-modal {
-  @media @max-sl-mobile {
+  @media @max-md-tablet {
     width: 100% !important;
     max-width: 100%;
     height: 100%;

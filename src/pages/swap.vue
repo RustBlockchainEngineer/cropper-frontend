@@ -147,19 +147,17 @@
 
           <div class="swap-actions fs-container">
             <div class="swap-status textM weightS">
-              <div v-if="priceImpact < 2" class="price-status">
-                <img class="status-icon" src="@/assets/icons/info-okay.svg" />
+              <div v-if="priceImpact <= 2" class="price-status">
+                <img class="status-icon" src="@/assets/icons/status-ok.svg" />
                 <label class="textM weightS price-impact-green">Fair Price</label>
               </div>
-              <div v-else class="price-status">
-                <img class="status-icon" src="@/assets/icons/info-red.svg" />
-                <label
-                  class="textM weightS"
-                  :class="`price-impact-${
-                    priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : ''
-                  }`"
-                  >Price impact Warning</label
-                >
+              <div v-else-if="priceImpact > 2 && priceImpact <= 5" class="price-status">
+                <img class="status-icon" src="@/assets/icons/status-warning.svg" />
+                <label class="textM weightS price-impact-orange">Price impact Warning</label>
+              </div>
+              <div v-else-if="priceImpact > 5" class="price-status">
+                <img class="status-icon" src="@/assets/icons/status-error.svg" />
+                <label class="textM weightS price-impact-red">Price impact Warning</label>
               </div>
             </div>
             <div class="action-group">
@@ -254,12 +252,7 @@
                   />
                 </Tooltip>
               </span>
-              <span
-                class="value"
-                :class="`price-impact-${
-                  priceImpact > 5 ? 'red' : priceImpact > 2 ? 'orange' : 'white'
-                }`"
-              >
+              <span class="value">
                 <label class="textS weightB"> {{ priceImpact.toFixed(2) }}% </label>
               </span>
             </div>
@@ -2234,8 +2227,9 @@ export default Vue.extend({
 }
 
 .price-impact-red {
-  color: #f00 !important;
+  color: #FDA095 !important;
 }
+
 // .not-enough-sol-alert {
 //   display: flex;
 //   justify-content: center;
