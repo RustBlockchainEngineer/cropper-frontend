@@ -23,6 +23,15 @@ const DUAL_TAG = 'farm-dual'
 const HARVEST_FEE_NUMERATOR = 1
 const HARVEST_FEE_DENOMINATOR = 1000
 
+export enum FarmState {
+  NotAllowed,
+  SingleYield,
+  DualYield
+}
+export function farmIsDual(state: number) {
+  return state === FarmState.DualYield;
+}
+
 // This command makes an Lottery
 export function getFarmProgramV3(connection: anchor.web3.Connection, wallet: any, farmProgramId = FARM_PROGRAM_ID) {
   const provider = new anchor.Provider(connection, wallet, anchor.Provider.defaultOptions())
@@ -212,6 +221,83 @@ export async function addDualYieldV3(
   console.log('addDualYieldV3 txid = ', tx)
 }
 
+export async function makeDualV3(
+  connection: anchor.web3.Connection,
+  wallet: any,
+  farmKey: anchor.web3.PublicKey,
+  dualRewardTokenMint: anchor.web3.PublicKey,
+  startTimestamp: number,
+  endTimestamp: number,
+  userRewardTokenAccount: anchor.web3.PublicKey,
+  amount: number
+) {
+  const program = getFarmProgramV3(connection, wallet)
+  let [globalStateKey, globalStateKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(GLOBAL_STATE_TAG)],
+    program.programId
+  )
+  const [farmPoolLpKey, farmPoolLpKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(FARM_POOL_LP_TAG), farmKey.toBuffer()],
+    program.programId
+  )
+  const [farmPoolRewardKey, farmPoolRewardKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(DUAL_POOL_REWARD_TAG), farmKey.toBuffer()],
+    program.programId
+  )
+  const oldFarm = await program.account.farmPool.fetch(farmKey)
+  let [_farmKey, farmKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(FARM_TAG), oldFarm.seedKey.toBuffer()],
+    program.programId
+  )
+  const createInstruction = await program.instruction.createDual(
+    globalStateKeyNonce,
+    farmKeyNonce,
+    farmPoolRewardKeyNonce,
+    new anchor.BN(startTimestamp),
+    new anchor.BN(endTimestamp),
+    {
+      accounts: {
+        creator: wallet.publicKey,
+        globalState: globalStateKey,
+        farm: farmKey,
+        farmSeed: oldFarm.seedKey,
+        poolRewardMintDual: dualRewardTokenMint,
+        poolRewardTokenDual: farmPoolRewardKey,
+        systemProgram: SYSTEM_PROGRAM_ID,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: RENT_PROGRAM_ID
+      }
+    }
+  )
+  const instructions = []
+  instructions.push(createInstruction)
+
+  const tx = await program.rpc.addRewardDual(
+    globalStateKeyNonce,
+    farmKeyNonce,
+    farmPoolLpKeyNonce,
+    farmPoolRewardKeyNonce,
+    new anchor.BN(amount),
+    {
+      accounts: {
+        depositor: wallet.publicKey,
+        globalState: globalStateKey,
+        farm: farmKey,
+        farmSeed: oldFarm.seedKey,
+        poolLpToken: farmPoolLpKey,
+        poolRewardTokenDual: farmPoolRewardKey,
+        userRewardTokenDual: userRewardTokenAccount,
+        systemProgram: SYSTEM_PROGRAM_ID,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: RENT_PROGRAM_ID,
+        clock: CLOCK_PROGRAM_ID
+      },
+      instructions
+    }
+  )
+  console.log('makeDualV3 txid = ', tx)
+  return tx;
+}
 export async function extendDualYieldDurationV3(
   connection: anchor.web3.Connection,
   wallet: any,
@@ -384,7 +470,7 @@ export async function addDualRewardV3(
     program.programId
   )
   const [farmPoolRewardKey, farmPoolRewardKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
-    [Buffer.from(FARM_POOL_REWARD_TAG), farmKey.toBuffer()],
+    [Buffer.from(DUAL_POOL_REWARD_TAG), farmKey.toBuffer()],
     program.programId
   )
   const oldFarm = await program.account.farmPool.fetch(farmKey)
@@ -415,6 +501,7 @@ export async function addDualRewardV3(
     }
   )
   console.log('addDualRewardV3 txid = ', tx)
+  return tx;
 }
 
 export async function removeDualRewardV3(

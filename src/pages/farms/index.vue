@@ -43,6 +43,31 @@
       @onOk="addReward"
       @onCancel="cancelAddReward"
     />
+    <CoinModal
+      v-if="addDualRewardModalOpening"
+      title="Add Dual Reward"
+      :coin="rewardCoin"
+      :loading="adding"
+      @onOk="addDualReward"
+      @onCancel="cancelAddDualReward"
+    />
+
+    <CoinSelect
+      v-if="coinSelectShow"
+      @onClose="() => ((coinSelectShow = false), (selectTokenB = false), (selectTokenA = false))"
+      @onSelect="onCoinSelect"
+    />
+
+    <MakeDual
+      v-if="makeDualFarmModalOpening"
+      title="Make Dual Farm"
+      :loading="making"
+      :farmInfo="farmInfo"
+      :dualRewardCoin="dualRewardCoin"
+      @onOk="makeDual"
+      @onCancel="cancelMakeDual"
+      @onSelect="() => (coinSelectShow = true)"
+    />
 
     <CoinModal
       v-if="stakeModalOpeningLP"
@@ -466,6 +491,14 @@
                     (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000) &lt; 0 
                     ) ? farm.farmInfo.reward.symbol + ' ' + 0 : farm.farmInfo.reward.symbol + ' ' + (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000)) }}
                 </div>
+                <div v-if="farm.farmInfo.dual" class="value">
+                  CRP 0.34153
+                  <!-- {{ ((
+                    !wallet.connected || 
+                    (Math.round(farm.userInfo.pendingRewardDual.format().replace(/,/g, '') * 100000) / 100000) &lt; 0 
+                    ) ? farm.farmInfo.rewardB.symbol + ' ' + 0 : farm.farmInfo.rewardB.symbol + ' ' + (Math.round(farm.userInfo.pendingRewardDual.format().replace(/,/g, '') * 100000) / 100000)) }}
+                  -->
+                </div>
 
                 <div class="btn-container btn-container-harvest">
                   <Button
@@ -661,6 +694,28 @@
                     >
                       <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
                     </div>
+                    
+                    <div
+                      class="btncontainer noMobile"
+                      v-if="
+                        superOwnerAddress == wallet.address &&
+                        !farm.farmInfo.dual &&
+                        currentTimestamp < getFarmEndTime(farm.farmInfo.poolInfo)
+                      "
+                    >
+                      <Button size="large" ghost @click="openMakeDualModal(farm)"> Make Dual </Button>
+                    </div>
+                    <div
+                      class="btncontainer noMobile"
+                      v-if="
+                        superOwnerAddress == wallet.address &&
+                        farm.farmInfo.dual &&
+                        currentTimestamp < getFarmEndTime(farm.farmInfo.poolInfo)
+                      "
+                    >
+                      <Button size="large" ghost @click="openAddDualRewardModal(farm)"> Add Dual Rewards </Button>
+                    </div>
+
                   </div>
                 </div>
               </Col>
@@ -995,11 +1050,12 @@ import {
 } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER, FARM_VERSION } from '@/utils/ids'
-import { TOKENS } from '@/utils/tokens'
+import { TokenInfo, TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
 import BigNumber from 'bignumber.js'
-import { addSingleRewardV3, depositLPV3, getGlobalStateV3, harvestRewardsV3, setGlobalStateV3, withdrawLPV3 } from '@/utils/farm-v3'
+import { addDualRewardV3, addSingleRewardV3, depositLPV3, getGlobalStateV3, harvestRewardsV3, makeDualV3, setGlobalStateV3, withdrawLPV3 } from '@/utils/farm-v3'
+import { connection } from '@project-serum/common'
 const CollapsePanel = Collapse.Panel
 
 export default Vue.extend({
@@ -1037,13 +1093,18 @@ export default Vue.extend({
       displayfilters: false,
       lp: null,
       rewardCoin: null,
+      dualRewardCoin: null as any,
       farmInfo: null as any,
       harvesting: [] as boolean[],
       stakeModalOpening: false,
       stakeModalOpeningLP: false,
       addRewardModalOpening: false,
+      addDualRewardModalOpening: false,
+      makeDualFarmModalOpening: false,
+      coinSelectShow: false,
       staking: false,
       adding: false,
+      making: false,
       paying: false,
       TVL: 0,
       suppling: false,
@@ -1107,10 +1168,21 @@ export default Vue.extend({
       },
       deep: true
     },
+    'wallet.connected': {
+      handler(connected: boolean) {
+        if(connected){
+          this.checkIfFarmProgramExist();
+        }
+      },
+      deep: true
+    },
 
     'farm.infos': {
       handler() {
         this.updateFarms()
+        if(this.wallet.connected){
+          this.checkIfFarmProgramExist();
+        }
       },
       deep: true
     },
@@ -1366,6 +1438,7 @@ export default Vue.extend({
       window.localStorage.TVL = this.TVL
     },
     async updateFarms() {
+      
       if(FARM_VERSION === 3) {
         this.updateFarmsV3();
       }
@@ -2146,6 +2219,165 @@ export default Vue.extend({
       this.farmInfo = cloneDeep(farm.farmInfo)
       this.addRewardModalOpening = true
     },
+    openAddDualRewardModal(farm: any) {
+      const rewardCoin = farm.farmInfo.rewardB
+      const coin = cloneDeep(rewardCoin)
+      const rewardBalance = get(this.wallet.tokenAccounts, `${rewardCoin.mintAddress}.balance`)
+      coin.balance = rewardBalance
+
+      this.rewardCoin = coin
+      this.farmInfo = cloneDeep(farm.farmInfo)
+      this.addDualRewardModalOpening = true
+    },
+    openMakeDualModal(farm:any) {
+      console.log('here')
+      this.farmInfo = cloneDeep(farm.farmInfo)
+      this.makeDualFarmModalOpening = true
+      
+    },
+    onCoinSelect(tokenInfo: TokenInfo) {
+      if (tokenInfo !== null) {
+        if (this.makeDualFarmModalOpening) {
+          this.dualRewardCoin = cloneDeep(tokenInfo)
+        }
+      }
+      this.coinSelectShow = false
+    },
+    async makeDual(rewardDualMint: string, amount: string, startTimestamp: number, endTimestamp: number) {
+      this.making = true
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      const rewardDualAccount = get(
+        this.wallet.tokenAccounts,
+        rewardDualMint
+      )
+      if(!rewardDualAccount) {
+        console.log('user does not have any dual reward token')
+        this.making = false;
+        return;
+      }
+      const farmKey = new PublicKey(this.farmInfo.poolId);
+      let addRewardAmount: number = Number.parseFloat(amount);
+      addRewardAmount = addRewardAmount * Math.pow(10, rewardDualAccount.decimals);
+      let userRwardTokenPubkey = new PublicKey(rewardDualAccount.tokenAccountAddress)
+      let dualRewardTokenMint = new PublicKey(rewardDualMint)
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+      console.log(rewardDualAccount)
+      
+      makeDualV3(conn, wallet, farmKey, dualRewardTokenMint, startTimestamp, endTimestamp, userRwardTokenPubkey, addRewardAmount)
+      .then((txid) => {
+        this.$notify.info({
+          key,
+          message: 'Transaction has been sent',
+          description: (h: any) =>
+            h('div', [
+              'Confirmation is in progress.  Check your transaction on ',
+              h(
+                'a',
+                {
+                  attrs: {
+                    href: `${this.url.explorer}/tx/${txid}`,
+                    target: '_blank'
+                  }
+                },
+                'here'
+              )
+            ])
+        })
+
+        const description = `Make dual farm with ${amount} ${rewardDualAccount.name}`
+        this.$accessor.transaction.sub({ txid, description })
+      })
+      .catch((error) => {
+        this.$notify.error({
+          key,
+          message: 'Making Dual failed',
+          description: error.message
+        })
+
+        this.$accessor.farm.requestInfos()
+        this.$accessor.wallet.getTokenAccounts()
+      })
+      .finally(() => {
+        this.making = false
+        this.makeDualFarmModalOpening = false
+
+        this.$accessor.farm.requestInfos()
+        this.$accessor.wallet.getTokenAccounts()
+      })
+
+    },
+    async addDualReward(amount: string) {
+      this.adding = true
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      const rewardAccountAddress = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.rewardB.mintAddress}.tokenAccountAddress`
+      )
+
+      const farmKey = new PublicKey(this.farmInfo.poolId);
+      let addRewardAmount: number = Number.parseFloat(amount);
+      addRewardAmount = addRewardAmount * Math.pow(10, this.farmInfo.rewardB.decimals);
+      let userRwardTokenPubkey = new PublicKey(rewardAccountAddress)
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+      
+      addDualRewardV3(conn, wallet, farmKey, userRwardTokenPubkey, addRewardAmount)
+      .then((txid) => {
+        this.$notify.info({
+          key,
+          message: 'Transaction has been sent',
+          description: (h: any) =>
+            h('div', [
+              'Confirmation is in progress.  Check your transaction on ',
+              h(
+                'a',
+                {
+                  attrs: {
+                    href: `${this.url.explorer}/tx/${txid}`,
+                    target: '_blank'
+                  }
+                },
+                'here'
+              )
+            ])
+        })
+
+        const description = `Add ${amount} ${this.farmInfo.rewardB.name}`
+        this.$accessor.transaction.sub({ txid, description })
+      })
+      .catch((error) => {
+        this.$notify.error({
+          key,
+          message: 'Adding Dual Reward failed',
+          description: error.message
+        })
+
+        this.$accessor.farm.requestInfos()
+        this.$accessor.wallet.getTokenAccounts()
+      })
+      .finally(() => {
+        this.adding = false
+        this.addDualRewardModalOpening = false
+
+        this.$accessor.farm.requestInfos()
+        this.$accessor.wallet.getTokenAccounts()
+      })
+    },
     async addReward(amount: string) {
       if(FARM_VERSION < 3) {
         this.addRewardV2(amount);
@@ -2793,6 +3025,15 @@ export default Vue.extend({
       this.rewardCoin = null
       this.farmInfo = null
       this.addRewardModalOpening = false
+    },
+    cancelAddDualReward() {
+      this.rewardCoin = null
+      this.farmInfo = null
+      this.addDualRewardModalOpening = false
+    },
+    cancelMakeDual() {
+      this.makeDualFarmModalOpening = false
+      this.farmInfo = null
     },
 
     openUnstakeModal(poolInfo: FarmInfo, lp: any, lpBalance: any) {

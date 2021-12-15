@@ -38,11 +38,11 @@ export let FARM_VERSION = 3;//@Hongbo
 export const FARM_PROGRAM_ID_VS = DEVNET_MODE ? [
     'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR',
     'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR',
-    '4QD8SXKev9GvNZ7Cd5CgoLeJQuneGZNMDbmYWiotUxeA'
+    'FgkXfBQ9bsF7crkVsg1x458A85UhxAQHWtg3pyzGEsRa'
 ] : [
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J',
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J',
-    '4QD8SXKev9GvNZ7Cd5CgoLeJQuneGZNMDbmYWiotUxeA'
+    'FgkXfBQ9bsF7crkVsg1x458A85UhxAQHWtg3pyzGEsRa'
 ]//@Hongbo
 export const FARM_PROGRAM_ID = FARM_PROGRAM_ID_VS[FARM_VERSION-1];//@Hongbo
 

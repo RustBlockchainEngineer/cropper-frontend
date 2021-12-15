@@ -19,7 +19,7 @@ import { FarmAccountLayout, UserInfoAccountLayout, YieldFarm } from '@/utils/far
 import { TOKENS, getTokenByMintAddress } from '@/utils/tokens'
 
 import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
-import { getFilteredFarms, getFilteredUserInfos } from '@/utils/farm-v3'
+import { farmIsDual, getFilteredFarms, getFilteredUserInfos } from '@/utils/farm-v3'
 
 const AUTO_REFRESH_TIME = 60
 
@@ -108,16 +108,16 @@ export const actions = actionTree(
 
           //get reward token info
           let rewardToken: any
-          if (liquidityPoolInfo.coin.mintAddress === rewardTokenMintAddress) {
-            rewardToken = liquidityPoolInfo.coin
-          } else if (liquidityPoolInfo.pc.mintAddress === rewardTokenMintAddress) {
-            rewardToken = liquidityPoolInfo.pc
-          } else if (liquidityPoolInfo.lp.mintAddress === rewardTokenMintAddress) {
-            rewardToken = liquidityPoolInfo.lp
-          }
-          // const query = new URLSearchParams(window.location.search)
-          // if (query.get('rtf'))
-          //   rewardToken = Object.values(TOKENS).find((item) => item.mintAddress === (query.get('rtf') as string))
+          // if (liquidityPoolInfo.coin.mintAddress === rewardTokenMintAddress) {
+          //   rewardToken = liquidityPoolInfo.coin
+          // } else if (liquidityPoolInfo.pc.mintAddress === rewardTokenMintAddress) {
+          //   rewardToken = liquidityPoolInfo.pc
+          // } else if (liquidityPoolInfo.lp.mintAddress === rewardTokenMintAddress) {
+          //   rewardToken = liquidityPoolInfo.lp
+          // }
+          const query = new URLSearchParams(window.location.search)
+          if (query.get('rtf'))
+            rewardToken = Object.values(TOKENS).find((item) => item.mintAddress === (query.get('rtf') as string))
           if (rewardTokenMintAddress) {
             rewardToken = getTokenByMintAddress(rewardTokenMintAddress)
           }
@@ -125,7 +125,8 @@ export const actions = actionTree(
             console.log('find reward token info error')
             return
           }
-          const _farmInfo: FarmInfo = {
+          
+          let _farmInfo: FarmInfo = {
             name: '',
             lp: { ...lpTokenInfo },
             reward: { ...rewardToken },
@@ -150,6 +151,26 @@ export const actions = actionTree(
           _farmInfo.reward.balance = new TokenAmount(0, rewardToken.decimals)
           publicKeys.push(farmAccountInfo.account.poolLpTokenAccount)
           publicKeys.push(farmAccountInfo.account.poolRewardTokenAccount)
+
+          const isDual = farmIsDual(farmAccountInfo.account.state);
+          if (isDual) {
+            let rewardTokenDual: any
+            const rewardDualTokenMintAddress = farmAccountInfo.account.rewardMintAddressDual.toBase58();
+            if (rewardDualTokenMintAddress) {
+              rewardTokenDual = getTokenByMintAddress(rewardDualTokenMintAddress)
+            }
+            if (rewardTokenDual === undefined || rewardTokenDual === null) {
+              console.log('find reward dual token info error')
+              return
+            }
+            _farmInfo.rewardB = { ...rewardTokenDual };
+            _farmInfo.dual = true;
+            _farmInfo.poolRewardTokenAccountB = farmAccountInfo.account.poolRewardTokenAccountDual.toBase58();
+            if (_farmInfo.rewardB != undefined){
+              _farmInfo.rewardB.balance = new TokenAmount(0, rewardTokenDual.decimals);
+              publicKeys.push(farmAccountInfo.account.poolRewardTokenAccountDual)
+            }
+          }
           farms[farmAccountAddress] = _farmInfo
           farms[farmAccountAddress].poolInfo = farmAccountInfo.account
         })
@@ -166,12 +187,18 @@ export const actions = actionTree(
                 getBigNumber(parsed.amount)
               )
             }
-
             let foundFarmForReward = FARMS.find((item) => item.poolRewardTokenAccount === address)
             if (foundFarmForReward != undefined) {
               farms[foundFarmForReward.poolId].reward.balance.wei = farms[
                 foundFarmForReward.poolId
               ].reward.balance.wei.plus(getBigNumber(parsed.amount))
+            }
+
+            let foundFarmForRewardDual = FARMS.find((item) => item.poolRewardTokenAccountB === address)
+            if (foundFarmForRewardDual != undefined) {
+              farms[foundFarmForRewardDual.poolId].rewardB.balance.wei = farms[
+                foundFarmForRewardDual.poolId
+              ].rewardB.balance.wei.plus(getBigNumber(parsed.amount))
             }
           }
         })
@@ -316,12 +343,16 @@ export const actions = actionTree(
                 if (farm) {
                   const depositBalance = new TokenAmount(getBigNumber(stakeAccountInfo.account.depositBalance), farm.lp.decimals)
                   const rewardDebt = new TokenAmount(getBigNumber(stakeAccountInfo.account.rewardDebt), farm.reward.decimals)
+                  const rewardDebtDual = new TokenAmount(getBigNumber(stakeAccountInfo.account.rewardDebtDual), farm.rewardB?.decimals)
                   const pendingRewards = new TokenAmount(getBigNumber(stakeAccountInfo.account.pendingRewards), farm.reward.decimals)
+                  const pendingRewardsDual = new TokenAmount(getBigNumber(stakeAccountInfo.account.pendingRewardsDual), farm.rewardB?.decimals)
                   stakeAccounts[poolId] = {
                     depositBalance,
                     rewardDebt,
                     pendingRewards,
-                    stakeAccountAddress
+                    stakeAccountAddress,
+                    rewardDebtDual,
+                    pendingRewardsDual
                   }
                 }
               })
