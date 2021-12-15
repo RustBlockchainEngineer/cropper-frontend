@@ -2242,14 +2242,7 @@ export default Vue.extend({
 <style lang="less">
 // ant customize
 .ant-tooltip-inner {
-  background: @gradient-color-icon !important;
-  background-origin: border-box !important;
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 18px 11px 14px rgb(0 0 0 / 25%);
-  border-radius: 8px;
-  display: inline-block;
-  width: auto;
-  color: rgba(255, 255, 255, 0.5) !important;
+  width: 160px;
 }
 
 .ant-tooltip-arrow {
