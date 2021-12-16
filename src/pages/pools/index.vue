@@ -169,7 +169,7 @@
           <Row class="pools-table-header">
             <Col
               class="header-column textS weightB text-left header-column-start"
-              span="4"
+              span="5"
             >
               Name
             </Col>
@@ -224,7 +224,7 @@
                 />
               </div>
             </Col>
-            <Col class="header-column textS weightB" span="3">
+            <Col class="header-column textS weightB" span="2">
               <div class="header-column-title" @click="sortbyColumn('feesh')">
                 Fees (24 hrs)
                 <img
@@ -241,7 +241,7 @@
                 />
               </div>
             </Col>
-            <Col class="header-column textS weightB" span="3">
+            <Col class="header-column textS weightB" span="2">
               <div class="header-column-title" @click="sortbyColumn('apy')">
                 APY
                 <img
@@ -279,7 +279,7 @@
 
           <div class="pools-table-body">
             <Row class="pools-table-item" v-for="data in poolsShow" :key="data.lp_mint">
-              <Col class="state" span="4">
+              <Col class="state" span="5">
                 <div class="lp-iconscontainer">
                   <div class="icons textL weightS">
                     <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
@@ -306,16 +306,16 @@
               <Col class="state textM weightS" span="3">
                 ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
               </Col>
-              <Col class="state textM weightS" span="3">
+              <Col class="state textM weightS" span="2">
                 ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
               </Col>
-              <Col class="state textM weightS" span="3">
+              <Col class="state textM weightS" span="2">
                 {{ new TokenAmount(data.apy, 2, false).format() }}%
               </Col>
               <Col class="state textM weightS" span="3">
                 ${{ new TokenAmount(data.current, 2, false).format() }}
               </Col>
-              <Col class="state textM weightS" span="2">
+              <Col class="state textM weightS" span="3">
                 <div class="btn-container">
                   <Button
                     class="btn-transparent textS weightB"
