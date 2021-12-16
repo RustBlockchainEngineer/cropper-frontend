@@ -121,8 +121,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .coin-select {
   .coin-input {
     background: rgba(226, 227, 236, 0.1);

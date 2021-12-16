@@ -66,8 +66,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .select-token {
   display: grid;
   grid-auto-rows: auto;

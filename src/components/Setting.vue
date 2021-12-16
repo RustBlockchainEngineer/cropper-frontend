@@ -87,8 +87,6 @@ export default class Setting extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .slippage {
   display: flex;
   flex-direction: column;
@@ -180,8 +178,6 @@ export default class Setting extends Vue {
 </style>
 
 <style lang="less">
-@import '../styles/variables';
-
 .has-error {
   input {
     border-color: #f5222d;

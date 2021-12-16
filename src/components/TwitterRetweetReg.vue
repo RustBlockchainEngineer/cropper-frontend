@@ -387,8 +387,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .whitelisting {
   font-weight: bold;
   font-size: 40px;

@@ -234,7 +234,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
 .info-guide {
   font-size: 15px;
   line-height: 18px;

@@ -22,15 +22,24 @@
       <div class="card-body">
         <div v-if="showGuide" class="guide-card">
           <div class="guide-content">
-            <label class="textL weightB">Learn about providing <br /> liquidity </label>
-            <img 
+            <label class="textL weightB"
+              >Learn about providing <br />
+              liquidity
+            </label>
+            <img
               class="icon-cursor close-icon"
               src="@/assets/icons/close-circle-icon.svg"
-              @click="() => { this.showGuide = false }"
+              @click="
+                () => {
+                  this.showGuide = false;
+                }
+              "
             />
             <Row class="guide-detail">
               <Col span="14">
-                <label class="textS weightS letterL">Check out our v3 LP walkthrough and migration guides.</label>
+                <label class="textS weightS letterL"
+                  >Check out our v3 LP walkthrough and migration guides.</label
+                >
                 <div class="learn-btn-container">
                   <Button class="learn-btn textS weightS letterL">Learn more</Button>
                 </div>
@@ -115,11 +124,11 @@
               <span class="bodyM weightS option-select-sort fc-container">
                 <label>Sort by:</label>
                 <span class="sort-detail">
-                  Liquidity (dsc)
+                  Liquidity ({{ sortLiquidityAsc ? "asc" : "dsc" }})
                   <img
                     class="arrow-icon"
                     :class="showSortMenu ? 'up' : ''"
-                    src="@/assets/icons/arrow-down.svg"
+                    src="@/assets/icons/arrow-down-white.svg"
                   />
                 </span>
               </span>
@@ -128,13 +137,27 @@
             <div v-if="showSortMenu" class="option-select-menu">
               <div
                 class="option-select-item textM weightS icon-cursor"
-                :class="sortMethod === 'liquidity' && sortLiquidityAsc"
+                :class="sortLiquidityAsc ? 'active-item' : ''"
+                @click="
+                  () => {
+                    this.showSortMenu = false;
+                    this.sortLiquidityAsc = false; // true -> false becuase sortbColumn function
+                    sortbyColumn('liquidity');
+                  }
+                "
               >
                 Liquidity A -> Z
               </div>
               <div
                 class="option-select-item textM weightS icon-cursor"
-                :class="sortMethod === 'liquidity' && !sortLiquidityAsc"
+                :class="!sortLiquidityAsc ? 'active-item' : ''"
+                @click="
+                  () => {
+                    this.showSortMenu = false;
+                    this.sortLiquidityAsc = true; // false -> true becuase sortbColumn function
+                    sortbyColumn('liquidity');
+                  }
+                "
               >
                 Liquidity Z -> A
               </div>
@@ -144,94 +167,111 @@
 
         <div v-if="poolLoaded" class="noMobile pools-table">
           <Row class="pools-table-header">
-            <Col class="header-column textS weightB text-left header-column-start" span="4"> Name </Col>
+            <Col
+              class="header-column textS weightB text-left header-column-start"
+              span="4"
+            >
+              Name
+            </Col>
             <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('liquidity')">
                 Liquidity
-                <Icon
-                  v-if="sortLiquidityAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''"
+                <img
+                  v-if="sortMethod === 'liquidity'"
+                  src="@/assets/icons/arrow-down-green.svg"
+                  class="arrow-icon"
+                  :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
                 />
-                <Icon
+                <img
                   v-else
-                  type="arrow-up"
-                  :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''"
+                  src="@/assets/icons/arrow-down-white.svg"
+                  class="arrow-icon"
+                  :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
                 />
               </div>
             </Col>
             <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('volh')">
                 Volume (24hrs)
-                <Icon
-                  v-if="sortVolHAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'volh' ? 'sort-icon-active' : ''"
+                <img
+                  v-if="sortMethod === 'volh'"
+                  src="@/assets/icons/arrow-down-green.svg"
+                  class="arrow-icon"
+                  :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
                 />
-                <Icon
+                <img
                   v-else
-                  type="arrow-up"
-                  :class="sortMethod === 'volh' ? 'sort-icon-active' : ''"
+                  src="@/assets/icons/arrow-down-white.svg"
+                  class="arrow-icon"
+                  :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
                 />
               </div>
             </Col>
             <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('vold')">
                 Volume (7d)
-                <Icon
-                  v-if="sortVolDAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'vold' ? 'sort-icon-active' : ''"
+                <img
+                  v-if="sortMethod === 'vold'"
+                  src="@/assets/icons/arrow-down-green.svg"
+                  class="arrow-icon"
+                  :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
                 />
-                <Icon
+                <img
                   v-else
-                  type="arrow-up"
-                  :class="sortMethod === 'vold' ? 'sort-icon-active' : ''"
+                  src="@/assets/icons/arrow-down-white.svg"
+                  class="arrow-icon"
+                  :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
                 />
               </div>
             </Col>
             <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('feesh')">
                 Fees (24 hrs)
-                <Icon
-                  v-if="sortFeesAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''"
+                <img
+                  v-if="sortMethod === 'feesh'"
+                  src="@/assets/icons/arrow-down-green.svg"
+                  class="arrow-icon"
+                  :class="sortFeesAsc ? 'arrow-down' : 'arrow-up'"
                 />
-                <Icon
+                <img
                   v-else
-                  type="arrow-up"
-                  :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''"
+                  src="@/assets/icons/arrow-down-white.svg"
+                  class="arrow-icon"
+                  :class="sortFeesAsc ? 'arrow-down' : 'arrow-up'"
                 />
               </div>
             </Col>
             <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('apy')">
                 APY
-                <Icon
-                  v-if="sortAPYAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'apy' ? 'sort-icon-active' : ''"
+                <img
+                  v-if="sortMethod === 'apy'"
+                  src="@/assets/icons/arrow-down-green.svg"
+                  class="arrow-icon"
+                  :class="sortAPYAsc ? 'arrow-down' : 'arrow-up'"
                 />
-                <Icon
+                <img
                   v-else
-                  type="arrow-up"
-                  :class="sortMethod === 'apy' ? 'sort-icon-active' : ''"
+                  src="@/assets/icons/arrow-down-white.svg"
+                  class="arrow-icon"
+                  :class="sortAPYAsc ? 'arrow-down' : 'arrow-up'"
                 />
               </div>
             </Col>
-            <Col class="header-column textS weightB" span="2">
+            <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('yliquidity')">
                 Your Liquidity
-                <Icon
-                  v-if="sortCurrentAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''"
+                <img
+                  v-if="sortMethod === 'yliquidity'"
+                  src="@/assets/icons/arrow-down-green.svg"
+                  class="arrow-icon"
+                  :class="sortCurrentAsc ? 'arrow-down' : 'arrow-up'"
                 />
-                <Icon
+                <img
                   v-else
-                  type="arrow-up"
-                  :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''"
+                  src="@/assets/icons/arrow-down-white.svg"
+                  class="arrow-icon"
+                  :class="sortCurrentAsc ? 'arrow-down' : 'arrow-up'"
                 />
               </div>
             </Col>
@@ -277,10 +317,14 @@
               </Col>
               <Col class="state textM weightS" span="2">
                 <div class="btn-container">
-                  <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
+                  <Button
+                    class="btn-transparent textS weightB"
+                    @click="openPoolAddModal(data)"
+                    >Add</Button
+                  >
                 </div>
                 <div class="btn-container">
-                  <Button 
+                  <Button
                     class="btn-primary textS weightB"
                     :disabled="!wallet.connected || !data.current"
                     @click="openUnstakeModal(data, data.lp, 1)"
@@ -557,11 +601,11 @@ export default class Pools extends Vue {
   searchCertifiedFarm: boolean = false;
   sortMethod: string = "liquidity";
   sortLiquidityAsc: boolean = true;
-  sortVolHAsc: boolean = false;
-  sortVolDAsc: boolean = false;
-  sortFeesAsc: boolean = false;
-  sortAPYAsc: boolean = false;
-  sortCurrentAsc: boolean = false;
+  sortVolHAsc: boolean = true;
+  sortVolDAsc: boolean = true;
+  sortFeesAsc: boolean = true;
+  sortAPYAsc: boolean = true;
+  sortCurrentAsc: boolean = true;
   activeSpinning: boolean = false;
   showGuide: boolean = true;
   showSortMenu: boolean = false;
@@ -615,43 +659,13 @@ export default class Pools extends Vue {
 
   sortbyColumn(col: string) {
     this.sortMethod = col;
-    if (this.sortMethod == "liquidity") {
-      if (this.sortLiquidityAsc) {
-        this.sortLiquidityAsc = false;
-      } else {
-        this.sortLiquidityAsc = true;
-      }
-    } else if (this.sortMethod == "volh") {
-      if (this.sortVolHAsc) {
-        this.sortVolHAsc = false;
-      } else {
-        this.sortVolHAsc = true;
-      }
-    } else if (this.sortMethod == "vold") {
-      if (this.sortVolDAsc) {
-        this.sortVolDAsc = false;
-      } else {
-        this.sortVolDAsc = true;
-      }
-    } else if (this.sortMethod == "feesh") {
-      if (this.sortFeesAsc) {
-        this.sortFeesAsc = false;
-      } else {
-        this.sortFeesAsc = true;
-      }
-    } else if (this.sortMethod == "apy") {
-      if (this.sortAPYAsc) {
-        this.sortAPYAsc = false;
-      } else {
-        this.sortAPYAsc = true;
-      }
-    } else if (this.sortMethod == "yliquidity") {
-      if (this.sortCurrentAsc) {
-        this.sortCurrentAsc = false;
-      } else {
-        this.sortCurrentAsc = true;
-      }
-    }
+    if (this.sortMethod == "liquidity") this.sortLiquidityAsc = !this.sortLiquidityAsc
+    else if (this.sortMethod == "volh") this.sortVolHAsc = !this.sortVolHAsc
+    else if (this.sortMethod == "vold") this.sortVolDAsc = !this.sortVolDAsc
+    else if (this.sortMethod == "feesh") this.sortFeesAsc = !this.sortFeesAsc
+    else if (this.sortMethod == "apy") this.sortAPYAsc = !this.sortAPYAsc
+    else if (this.sortMethod == "yliquidity") this.sortCurrentAsc = !this.sortCurrentAsc
+
     this.showPool(this.searchName, this.stakedOnly, this.currentPage);
   }
 
@@ -1282,11 +1296,11 @@ export default class Pools extends Vue {
 
       .guide-card {
         width: 420px;
-        position: absolute;
-        top: 30vh;
-        right: 0;
+        position: fixed;
+        top: 50vh;
+        right: 40px;
         padding: 18px;
-        background: linear-gradient(215.52deg, #273592 0.03%, #23ADB4 99.97%);
+        background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
         border-radius: 18px;
         z-index: 999;
 
@@ -1298,7 +1312,7 @@ export default class Pools extends Vue {
 
             .learn-btn-container {
               height: 45px;
-              background: linear-gradient(190.83deg, #23A7B2 -119.02%, #273A93 86.38%);
+              background: linear-gradient(190.83deg, #23a7b2 -119.02%, #273a93 86.38%);
               padding: 2px;
               border-radius: 48px;
               margin-top: 18px;
@@ -1306,7 +1320,7 @@ export default class Pools extends Vue {
 
               .learn-btn {
                 height: 100%;
-                background: linear-gradient(97.75deg, #280C86 -29.89%, #22B5B6 150.53%);
+                background: linear-gradient(97.75deg, #280c86 -29.89%, #22b5b6 150.53%);
                 border-radius: 48px;
                 padding: 10.5px 23px;
                 border: none;
@@ -1383,6 +1397,92 @@ export default class Pools extends Vue {
 
                 @media @max-lg-tablet {
                   display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .pools-table {
+        .pools-table-header {
+          .header-column {
+            text-align: center;
+            padding: 16px 0;
+            color: @color-neutral400;
+
+            &.header-column-start {
+              margin-left: 5px;
+            }
+
+            .header-column-title {
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+
+              .arrow-icon {
+                margin-left: 4px;
+                transition: all 0.3s;
+
+                &.arrow-up {
+                  transform: rotate(180deg);
+                }
+              }
+
+              .sort-icon-active {
+                color: #13ecab;
+              }
+            }
+          }
+        }
+
+        .pools-table-body {
+          .pools-table-item {
+            display: flex;
+            align-items: center;
+            background: rgba(23, 32, 88, 0.9);
+            border-radius: 8px;
+            padding: 30px 18px;
+            margin-bottom: 8px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            .state {
+              text-align: center;
+
+              .lp-iconscontainer {
+                background: @gradient-color-outline;
+                background-origin: border-box;
+                padding: 2px;
+                border-radius: 8px;
+                width: fit-content;
+
+                .icons {
+                  position: relative;
+                  display: block !important;
+                  border-radius: 8px;
+                  padding: 7px 10px;
+                  white-space: nowrap;
+                  background: @color-bg;
+                  text-align: center;
+                  height: 100%;
+                  width: fit-content;
+
+                  img {
+                    border-radius: 50%;
+                    width: 18px;
+                    height: 18px;
+                  }
+                }
+              }
+
+              .btn-container {
+                margin: auto auto 8px auto;
+
+                &:last-child {
+                  margin-bottom: 0;
                 }
               }
             }
@@ -1485,89 +1585,9 @@ export default class Pools extends Vue {
               &:last-child {
                 border-bottom: 0;
               }
-            }
-          }
-        }
-      }
 
-      .pools-table {
-        .pools-table-header {
-          .header-column {
-            text-align: center;
-            padding: 16px 0;
-            color: @color-neutral400;
-
-            &.header-column-start {
-              margin-left: 5px;
-            }
-
-            .header-column-title {
-              cursor: pointer;
-              display: flex;
-              justify-content: center;
-
-              i {
-                color: white;
-                margin-left: 10px;
-                display: flex;
-                align-items: center;
-              }
-
-              .sort-icon-active {
-                color: #13ecab;
-              }
-            }
-          }
-        }
-
-        .pools-table-body {
-          .pools-table-item {
-            display: flex;
-            align-items: center;
-            background: rgba(23, 32, 88, 0.9);
-            border-radius: 8px;
-            padding: 30px 18px;
-            margin-bottom: 8px;
-
-            &:last-child {
-              margin-bottom: 0;
-            }
-
-            .state {
-              text-align: center;
-              
-              .lp-iconscontainer {
-                background: @gradient-color-outline;
-                background-origin: border-box;
-                padding: 2px;
-                border-radius: 8px;
-                width: fit-content;
-
-                .icons {
-                  position: relative;
-                  display: block !important;
-                  border-radius: 8px;
-                  padding: 7px 10px;
-                  white-space: nowrap;
-                  background: @color-bg;
-                  text-align: center;
-                  height: 100%;
-                  width: fit-content;
-
-                  img {
-                    border-radius: 50%;
-                    width: 18px;
-                    height: 18px;
-                  }
-                }
-              }
-
-              .btn-container {
-                margin: auto auto 8px auto;
-
-                &:last-child {
-                  margin-bottom: 0;
-                }
+              &.active-item {
+                color: @color-petrol500;
               }
             }
           }

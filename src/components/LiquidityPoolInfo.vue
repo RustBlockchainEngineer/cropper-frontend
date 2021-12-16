@@ -67,8 +67,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .pool-info {
   display: grid;
   grid-auto-rows: auto;

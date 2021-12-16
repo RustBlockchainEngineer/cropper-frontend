@@ -455,8 +455,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .select-token-header {
   margin-bottom: 10px;
   padding: 0 15px;

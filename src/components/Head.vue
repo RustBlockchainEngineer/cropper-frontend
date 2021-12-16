@@ -41,8 +41,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .header {
   .logo {
     height: 42px;

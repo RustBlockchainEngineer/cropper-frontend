@@ -263,8 +263,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less">
-@import '../styles/variables';
-
 .your-liquidity {
   display: grid;
   grid-auto-rows: auto;

@@ -214,22 +214,19 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-@import '../styles/global';
+.addliq .add-icon .fc-container img{
+  cursor: pointer;
+}
 
-  .addliq .add-icon .fc-container img{
-    cursor: pointer;
+.addliq .btnContainer{
+  background:transparent !important;
+  display:inline-block !important;
+  
+  button{
+    background: @gradient-color-icon !important;
+    background-origin: border-box;
+    border: 2px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 8px;
   }
-
-  .addliq .btnContainer{
-    background:transparent !important;
-    display:inline-block !important;
-    
-    button{
-      background: @gradient-color-icon !important;
-      background-origin: border-box;
-      border: 2px solid rgba(255, 255, 255, 0.14) !important;
-      border-radius: 8px;
-    }
-  }
+}
 </style>

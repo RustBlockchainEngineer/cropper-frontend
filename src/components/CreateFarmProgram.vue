@@ -47,8 +47,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .actions {
   margin-top: 10px;
 
