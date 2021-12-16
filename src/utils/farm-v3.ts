@@ -11,6 +11,7 @@ import {
   SYSTEM_PROGRAM_ID,
   TOKEN_PROGRAM_ID
 } from './ids'
+import { Signer, TransactionInstruction } from '@solana/web3.js'
 
 const GLOBAL_STATE_TAG = 'golbal-state-seed'
 const FARM_TAG = 'farm-seed'
@@ -508,7 +509,7 @@ export async function removeDualRewardV3(
   connection: anchor.web3.Connection,
   wallet: any,
   farmKey: anchor.web3.PublicKey,
-  userRewardTokenAccount: anchor.web3.PublicKey,
+  userRewardTokenAccount: anchor.web3.PublicKey | null,
   amount: number
 ) {
   const program = getFarmProgramV3(connection, wallet)
@@ -521,14 +522,33 @@ export async function removeDualRewardV3(
     program.programId
   )
   const [farmPoolRewardKey, farmPoolRewardKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
-    [Buffer.from(FARM_POOL_REWARD_TAG), farmKey.toBuffer()],
+    [Buffer.from(DUAL_POOL_REWARD_TAG), farmKey.toBuffer()],
     program.programId
   )
+  const globalState = await program.account.farmProgram.fetch(globalStateKey);
   const oldFarm = await program.account.farmPool.fetch(farmKey)
   let [_farmKey, farmKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from(FARM_TAG), oldFarm.seedKey.toBuffer()],
     program.programId
   )
+  const rewardTokenMint = oldFarm.rewardMintAddressDual;
+  const signers = []
+  const instructions = []
+  if (userRewardTokenAccount == null) {
+    const newUserTokenAccount = anchor.web3.Keypair.generate()
+    signers.push(newUserTokenAccount)
+    userRewardTokenAccount = newUserTokenAccount.publicKey
+    instructions.push(
+      Token.createAssociatedTokenAccountInstruction(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        rewardTokenMint,
+        userRewardTokenAccount,
+        globalState.feeOwner,
+        wallet.publicKey
+      )
+    )
+  }
   const tx = await program.rpc.removeRewardDual(
     globalStateKeyNonce,
     farmKeyNonce,
@@ -548,10 +568,13 @@ export async function removeDualRewardV3(
         tokenProgram: TOKEN_PROGRAM_ID,
         rent: RENT_PROGRAM_ID,
         clock: CLOCK_PROGRAM_ID
-      }
+      },
+      instructions,
+      signers
     }
   )
   console.log('removeDualRewardV3 txid = ', tx)
+  return tx;
 }
 
 export async function depositLPV3(
@@ -751,7 +774,8 @@ export async function harvestRewardsV3(
   wallet: any,
   farmKey: anchor.web3.PublicKey,
   userRewardTokenAccount: anchor.web3.PublicKey | null,
-  isDual: boolean = false
+  isDual: boolean = false,
+  userRewardBTokenAccount: anchor.web3.PublicKey | null = null,
 ) {
   const program = getFarmProgramV3(connection, wallet)
   let [globalStateKey, globalStateKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
@@ -763,7 +787,7 @@ export async function harvestRewardsV3(
     program.programId
   )
   const [farmPoolRewardKey] = await anchor.web3.PublicKey.findProgramAddress(
-    [Buffer.from(isDual ? DUAL_POOL_REWARD_TAG : FARM_POOL_REWARD_TAG), farmKey.toBuffer()],
+    [Buffer.from(FARM_POOL_REWARD_TAG), farmKey.toBuffer()],
     program.programId
   )
   const globalState = await program.account.farmProgram.fetch(globalStateKey)
@@ -772,7 +796,7 @@ export async function harvestRewardsV3(
     [Buffer.from(FARM_TAG), oldFarm.seedKey.toBuffer()],
     program.programId
   )
-  const rewardTokenMint = isDual ? oldFarm.rewardMintAddressDual : oldFarm.rewardMintAddress
+  const rewardTokenMint = oldFarm.rewardMintAddress
   const signers = []
   const instructions = []
   if (userRewardTokenAccount == null) {
@@ -812,7 +836,10 @@ export async function harvestRewardsV3(
     )
   }
   if (userRewardTokenAccount && rewardATA) {
-    const tx = await program.rpc.harvest(globalStateKeyNonce, farmKeyNonce, userInfoKeyNonce, isDual ? 1 : 0, {
+    if(isDual) {
+      await harvestDualInstructionV3(connection, wallet, farmKey, userRewardBTokenAccount, instructions, signers);
+    }
+    const tx = await program.rpc.harvest(globalStateKeyNonce, farmKeyNonce, userInfoKeyNonce, 0, {
       accounts: {
         harvester: wallet.publicKey,
         globalState: globalStateKey,
@@ -830,8 +857,94 @@ export async function harvestRewardsV3(
       instructions,
       signers
     })
-    console.log('harvestV3 txid = ', tx)
+    console.log('harvestRewardsV3 txid = ', tx)
     return tx;
+  }
+}
+
+
+export async function harvestDualInstructionV3(
+  connection: anchor.web3.Connection,
+  wallet: any,
+  farmKey: anchor.web3.PublicKey,
+  userRewardTokenAccount: anchor.web3.PublicKey | null,
+  instructions: TransactionInstruction[],
+  signers: Signer[]
+) {
+  const program = getFarmProgramV3(connection, wallet)
+  let [globalStateKey, globalStateKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(GLOBAL_STATE_TAG)],
+    program.programId
+  )
+  const [userInfoKey, userInfoKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(USER_INFO_TAG), farmKey.toBuffer(), wallet.publicKey.toBuffer()],
+    program.programId
+  )
+  const [farmPoolRewardKey] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(DUAL_POOL_REWARD_TAG), farmKey.toBuffer()],
+    program.programId
+  )
+  const globalState = await program.account.farmProgram.fetch(globalStateKey)
+  const oldFarm = await program.account.farmPool.fetch(farmKey)
+  let [_farmKey, farmKeyNonce] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(FARM_TAG), oldFarm.seedKey.toBuffer()],
+    program.programId
+  )
+  const rewardTokenMint = oldFarm.rewardMintAddressDual
+  if (userRewardTokenAccount == null) {
+    const newUserTokenAccount = anchor.web3.Keypair.generate()
+    signers.push(newUserTokenAccount)
+    userRewardTokenAccount = newUserTokenAccount.publicKey
+    instructions.push(
+      Token.createAssociatedTokenAccountInstruction(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        rewardTokenMint,
+        userRewardTokenAccount,
+        globalState.feeOwner,
+        wallet.publicKey
+      )
+    )
+  }
+  let rewardATA = await checkWalletATA(
+    connection,
+    globalState.feeOwner,
+    rewardTokenMint.toBase58()
+  )
+
+  if (rewardATA == null) {
+    const newFeeTokenAccount = anchor.web3.Keypair.generate()
+    signers.push(newFeeTokenAccount)
+    rewardATA = newFeeTokenAccount.publicKey
+    instructions.push(
+      Token.createAssociatedTokenAccountInstruction(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        rewardTokenMint,
+        rewardATA,
+        globalState.feeOwner,
+        wallet.publicKey
+      )
+    )
+  }
+  if (userRewardTokenAccount && rewardATA) {
+    const instruction = await program.instruction.harvest(globalStateKeyNonce, farmKeyNonce, userInfoKeyNonce, 1, {
+      accounts: {
+        harvester: wallet.publicKey,
+        globalState: globalStateKey,
+        farm: farmKey,
+        farmSeed: oldFarm.seedKey,
+        userInfo: userInfoKey,
+        poolRewardToken: farmPoolRewardKey,
+        userRewardToken: userRewardTokenAccount,
+        feeRewardToken: rewardATA,
+        systemProgram: SYSTEM_PROGRAM_ID,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: RENT_PROGRAM_ID,
+        clock: CLOCK_PROGRAM_ID
+      },
+    })
+    instructions.push(instruction);
   }
 }
 

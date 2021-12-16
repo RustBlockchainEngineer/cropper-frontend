@@ -51,6 +51,14 @@
       @onOk="addDualReward"
       @onCancel="cancelAddDualReward"
     />
+    <CoinModal
+      v-if="removeDualRewardModalOpening"
+      title="Remove Dual Reward"
+      :coin="rewardCoin"
+      :loading="removing"
+      @onOk="removeDualReward"
+      @onCancel="cancelRemoveDualReward"
+    />
 
     <CoinSelect
       v-if="coinSelectShow"
@@ -492,12 +500,12 @@
                     ) ? farm.farmInfo.reward.symbol + ' ' + 0 : farm.farmInfo.reward.symbol + ' ' + (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000)) }}
                 </div>
                 <div v-if="farm.farmInfo.dual" class="value">
-                  CRP 0.34153
-                  <!-- {{ ((
+                  <!-- CRP 0.34153 -->
+                  {{ ((
                     !wallet.connected || 
                     (Math.round(farm.userInfo.pendingRewardDual.format().replace(/,/g, '') * 100000) / 100000) &lt; 0 
                     ) ? farm.farmInfo.rewardB.symbol + ' ' + 0 : farm.farmInfo.rewardB.symbol + ' ' + (Math.round(farm.userInfo.pendingRewardDual.format().replace(/,/g, '') * 100000) / 100000)) }}
-                  -->
+                 
                 </div>
 
                 <div class="btn-container btn-container-harvest">
@@ -714,6 +722,17 @@
                       "
                     >
                       <Button size="large" ghost @click="openAddDualRewardModal(farm)"> Add Dual Rewards </Button>
+                    </div>
+
+                    <div
+                      class="btncontainer noMobile"
+                      v-if="
+                        superOwnerAddress == wallet.address &&
+                        farm.farmInfo.dual &&
+                        currentTimestamp < getFarmEndTime(farm.farmInfo.poolInfo)
+                      "
+                    >
+                      <Button size="large" ghost @click="openRemoveDualRewardModal(farm)"> Remove Dual Rewards </Button>
                     </div>
 
                   </div>
@@ -1054,7 +1073,7 @@ import { TokenInfo, TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
 import BigNumber from 'bignumber.js'
-import { addDualRewardV3, addSingleRewardV3, depositLPV3, getGlobalStateV3, harvestRewardsV3, makeDualV3, setGlobalStateV3, withdrawLPV3 } from '@/utils/farm-v3'
+import { addDualRewardV3, addSingleRewardV3, depositLPV3, getGlobalStateV3, harvestRewardsV3, makeDualV3, removeDualRewardV3, setGlobalStateV3, withdrawLPV3 } from '@/utils/farm-v3'
 import { connection } from '@project-serum/common'
 const CollapsePanel = Collapse.Panel
 
@@ -1100,10 +1119,12 @@ export default Vue.extend({
       stakeModalOpeningLP: false,
       addRewardModalOpening: false,
       addDualRewardModalOpening: false,
+      removeDualRewardModalOpening: false,
       makeDualFarmModalOpening: false,
       coinSelectShow: false,
       staking: false,
       adding: false,
+      removing: false,
       making: false,
       paying: false,
       TVL: 0,
@@ -1459,10 +1480,10 @@ export default Vue.extend({
         let isPFO = false
 
         // @ts-ignore
-        const { rewardPerShareNet, lastTimestamp, endTimestamp, startTimestamp, currentRewards, distributedRewards, harvestedRewards } = farmInfo.poolInfo
+        const { rewardPerShareNet, lastTimestamp, endTimestamp, startTimestamp, currentRewards, distributedRewards, harvestedRewards, rewardPerShareNetDual, lastTimestampDual, endTimestampDual, startTimestampDual, currentRewardsDual, distributedRewardsDual, harvestedRewardsDual } = farmInfo.poolInfo
         
         // @ts-ignore
-        const { reward, lp } = farmInfo
+        const { reward, rewardB, lp, dual } = farmInfo
 
         const newFarmInfo: any = cloneDeep(farmInfo)
 
@@ -1475,6 +1496,13 @@ export default Vue.extend({
           )
           .dividedBy(
           toBigNumber(endTimestamp).minus(toBigNumber(lastTimestamp))
+        )
+        const rewardPerTimestampDual = toBigNumber(currentRewardsDual)
+          .minus(toBigNumber(distributedRewardsDual)
+            .minus(toBigNumber(harvestedRewardsDual))
+          )
+          .dividedBy(
+          toBigNumber(endTimestampDual).minus(toBigNumber(lastTimestampDual))
         )
         if (reward && lp) {
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
@@ -1611,23 +1639,27 @@ export default Vue.extend({
 
           const { rewardDebt, depositBalance, pendingRewards } = userInfo
           let currentTimestamp = this.currentTimestamp
+          let currentTimestampDual = this.currentTimestamp
 
           if (currentTimestamp > endTimestamp.toNumber()) {
             currentTimestamp = endTimestamp.toNumber()
           }
-
           const duration = currentTimestamp - lastTimestamp.toNumber()
+          
 
           const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(newFarmInfo.lp.balance.wei)
             .plus(getBigNumber(rewardPerShareNet))
+          
+            
           let pendingReward = (depositBalance.wei as BigNumber)
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
             .minus(toBigNumber(rewardDebt.wei))
             .plus(toBigNumber(pendingRewards.wei))
+          
             
 
           userInfo.needRefresh = false
@@ -1637,6 +1669,7 @@ export default Vue.extend({
             userInfo.needRefresh = true
             this.displaynoticeupdate = true
           }
+          
           
           userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toFixed(2)
 
@@ -1656,12 +1689,48 @@ export default Vue.extend({
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           }
           userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
+          if (dual) {
+            const { depositBalance, rewardDebtDual, pendingRewardsDual } = userInfo
+            if (currentTimestampDual > endTimestampDual.toNumber()) {
+              currentTimestampDual = endTimestampDual.toNumber()
+            }
+            const durationDual = currentTimestampDual - lastTimestampDual.toNumber()
+            const rewardPerShareCalcDual = rewardPerTimestampDual
+              .multipliedBy(durationDual)
+              .multipliedBy(REWARD_MULTIPLER)
+              .dividedBy(newFarmInfo.lp.balance.wei)
+              .plus(getBigNumber(rewardPerShareNetDual))
+            let pendingRewardDual = (depositBalance.wei as BigNumber)
+              .multipliedBy(rewardPerShareCalcDual)
+              .dividedBy(REWARD_MULTIPLER)
+              .minus(toBigNumber(rewardDebtDual.wei))
+              .plus(toBigNumber(pendingRewardsDual.wei))
+            if (pendingRewardDual.toNumber() > newFarmInfo.rewardB.balance.wei.toNumber()) {
+              pendingRewardDual = newFarmInfo.rewardB.balance.wei
+              userInfo.needRefresh = true
+              this.displaynoticeupdate = true
+            }
+            userInfo.pendingRewardDual = new TokenAmount(pendingRewardDual, newFarmInfo.rewardB.decimals)
+          }
         } else {
-          userInfo = {
-            // @ts-ignore
-            depositBalance: new TokenAmount(0, farmInfo.lp.decimals),
-            // @ts-ignore
-            pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
+          // @ts-ignore
+          if (farmInfo.dual) {
+            userInfo = {
+              // @ts-ignore
+              depositBalance: new TokenAmount(0, farmInfo.lp.decimals),
+              // @ts-ignore
+              pendingReward: new TokenAmount(0, farmInfo.reward.decimals),
+              // @ts-ignore
+              pendingRewardDual: new TokenAmount(0, farmInfo.rewardB.decimals)
+            }
+          }
+          else {
+            userInfo = {
+              // @ts-ignore
+              depositBalance: new TokenAmount(0, farmInfo.lp.decimals),
+              // @ts-ignore
+              pendingReward: new TokenAmount(0, farmInfo.reward.decimals),
+            }
           }
         }
 
@@ -2229,6 +2298,16 @@ export default Vue.extend({
       this.farmInfo = cloneDeep(farm.farmInfo)
       this.addDualRewardModalOpening = true
     },
+    openRemoveDualRewardModal(farm: any) {
+      const rewardCoin = farm.farmInfo.rewardB
+      const coin = cloneDeep(rewardCoin)
+      //const rewardBalance = get(this.wallet.tokenAccounts, `${rewardCoin.mintAddress}.balance`)
+      //coin.balance = rewardBalance
+
+      this.rewardCoin = coin
+      this.farmInfo = cloneDeep(farm.farmInfo)
+      this.removeDualRewardModalOpening = true
+    },
     openMakeDualModal(farm:any) {
       console.log('here')
       this.farmInfo = cloneDeep(farm.farmInfo)
@@ -2373,6 +2452,77 @@ export default Vue.extend({
       .finally(() => {
         this.adding = false
         this.addDualRewardModalOpening = false
+
+        this.$accessor.farm.requestInfos()
+        this.$accessor.wallet.getTokenAccounts()
+      })
+    },
+    async removeDualReward(amount: string) {
+      this.removing = true
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
+      const rewardAccountAddress = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.rewardB.mintAddress}.tokenAccountAddress`
+      )
+
+      const farmKey = new PublicKey(this.farmInfo.poolId);
+      let removeRewardAmount: number = Number.parseFloat(amount);
+      removeRewardAmount = removeRewardAmount * Math.pow(10, this.farmInfo.rewardB.decimals);
+
+      let userRwardTokenPubkey:any;
+      if (rewardAccountAddress) {
+        userRwardTokenPubkey = new PublicKey(rewardAccountAddress);
+      }
+      else {
+        userRwardTokenPubkey = null;
+      }
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+      
+      removeDualRewardV3(conn, wallet, farmKey, userRwardTokenPubkey, removeRewardAmount)
+      .then((txid) => {
+        this.$notify.info({
+          key,
+          message: 'Transaction has been sent',
+          description: (h: any) =>
+            h('div', [
+              'Confirmation is in progress.  Check your transaction on ',
+              h(
+                'a',
+                {
+                  attrs: {
+                    href: `${this.url.explorer}/tx/${txid}`,
+                    target: '_blank'
+                  }
+                },
+                'here'
+              )
+            ])
+        })
+
+        const description = `Remove ${amount} ${this.farmInfo.rewardB.name}`
+        this.$accessor.transaction.sub({ txid, description })
+      })
+      .catch((error) => {
+        this.$notify.error({
+          key,
+          message: 'Adding Dual Reward failed',
+          description: error.message
+        })
+
+        this.$accessor.farm.requestInfos()
+        this.$accessor.wallet.getTokenAccounts()
+      })
+      .finally(() => {
+        this.removing = false
+        this.removeDualRewardModalOpening = false
 
         this.$accessor.farm.requestInfos()
         this.$accessor.wallet.getTokenAccounts()
@@ -3031,6 +3181,11 @@ export default Vue.extend({
       this.farmInfo = null
       this.addDualRewardModalOpening = false
     },
+    cancelRemoveDualReward() {
+      this.rewardCoin = null
+      this.farmInfo = null
+      this.removeDualRewardModalOpening = false
+    },
     cancelMakeDual() {
       this.makeDualFarmModalOpening = false
       this.farmInfo = null
@@ -3288,6 +3443,16 @@ export default Vue.extend({
       else {
         rewardAccount = null;
       }
+      let rewardBAccount = null;
+      if (farmInfo.dual) {
+        rewardBAccount = get(this.wallet.tokenAccounts, `${farmInfo.rewardB?.mintAddress}.tokenAccountAddress`)
+        if(rewardBAccount) {
+          rewardBAccount = new PublicKey(rewardBAccount);
+        }
+        else {
+          rewardBAccount = null;
+        }
+      }
       const key = getUnixTs().toString()
       this.$notify.info({
         key,
@@ -3296,7 +3461,7 @@ export default Vue.extend({
         duration: 0
       })
 
-      harvestRewardsV3(conn, wallet, farmKey, rewardAccount)
+      harvestRewardsV3(conn, wallet, farmKey, rewardAccount, farmInfo.dual, rewardBAccount)
         .then((txid) => {
           this.$notify.info({
             key,
