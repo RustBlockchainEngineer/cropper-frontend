@@ -144,8 +144,8 @@
 
         <div v-if="poolLoaded" class="noMobile pools-table">
           <Row class="pools-table-header">
-            <Col class="header-column textS weightB" span="5"> Name </Col>
-            <Col class="header-column textS weightB" span="2">
+            <Col class="header-column textS weightB text-left header-column-start" span="4"> Name </Col>
+            <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('liquidity')">
                 Liquidity
                 <Icon
@@ -205,7 +205,7 @@
                 />
               </div>
             </Col>
-            <Col class="header-column textS weightB" span="2">
+            <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('apy')">
                 APY
                 <Icon
@@ -220,7 +220,7 @@
                 />
               </div>
             </Col>
-            <Col class="header-column textS weightB" span="3">
+            <Col class="header-column textS weightB" span="2">
               <div class="header-column-title" @click="sortbyColumn('yliquidity')">
                 Your Liquidity
                 <Icon
@@ -239,9 +239,9 @@
 
           <div class="pools-table-body">
             <Row class="pools-table-item" v-for="data in poolsShow" :key="data.lp_mint">
-              <Col span="5">
+              <Col class="state" span="4">
                 <div class="lp-iconscontainer">
-                  <div class="icons">
+                  <div class="icons textL weightS">
                     <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
                     {{ data.lp.coin.symbol }}
                     <span>-</span>
@@ -256,7 +256,7 @@
                 </div>
               </Col>
 
-              <Col class="state textM weightS" span="2">
+              <Col class="state textM weightS" span="3">
                 ${{ new TokenAmount(data.liquidity, 2, false).format() }}
               </Col>
 
@@ -269,13 +269,13 @@
               <Col class="state textM weightS" span="3">
                 ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
               </Col>
-              <Col class="state textM weightS" span="2">
+              <Col class="state textM weightS" span="3">
                 {{ new TokenAmount(data.apy, 2, false).format() }}%
               </Col>
               <Col class="state textM weightS" span="3">
                 ${{ new TokenAmount(data.current, 2, false).format() }}
               </Col>
-              <Col class="state textM weightS" span="3">
+              <Col class="state textM weightS" span="2">
                 <div class="btn-container">
                   <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
                 </div>
@@ -1495,6 +1495,11 @@ export default class Pools extends Vue {
           .header-column {
             text-align: center;
             padding: 16px 0;
+            color: @color-neutral400;
+
+            &.header-column-start {
+              margin-left: 5px;
+            }
 
             .header-column-title {
               cursor: pointer;
@@ -1528,36 +1533,34 @@ export default class Pools extends Vue {
               margin-bottom: 0;
             }
 
-            .lp-iconscontainer {
-              background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-              background-origin: border-box;
-              padding: 2px;
-              border-radius: 8px;
-              width: 100%;
-
-              .icons {
-                display: block !important;
-                border-radius: 8px;
-                font-weight: normal;
-                padding: 14px 20px;
-                font-size: 18px;
-                line-height: 20px;
-                white-space: nowrap;
-                position: relative;
-                background: @color-bg;
-                text-align: center;
-                width: 100%;
-
-                img {
-                  border-radius: 50%;
-                  width: 24px;
-                  height: 24px;
-                }
-              }
-            }
-
             .state {
               text-align: center;
+              
+              .lp-iconscontainer {
+                background: @gradient-color-outline;
+                background-origin: border-box;
+                padding: 2px;
+                border-radius: 8px;
+                width: fit-content;
+
+                .icons {
+                  position: relative;
+                  display: block !important;
+                  border-radius: 8px;
+                  padding: 7px 10px;
+                  white-space: nowrap;
+                  background: @color-bg;
+                  text-align: center;
+                  height: 100%;
+                  width: fit-content;
+
+                  img {
+                    border-radius: 50%;
+                    width: 18px;
+                    height: 18px;
+                  }
+                }
+              }
 
               .btn-container {
                 margin: auto auto 8px auto;
