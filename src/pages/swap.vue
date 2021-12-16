@@ -190,7 +190,7 @@
                 @click="reloadTimer"
               >
                 <!-- {{ autoRefreshTime - countdown }} -->
-                <img class="load-icon" src="@/assets/icons/reload-icon.svg" />
+                <img class="load-icon" src="@/assets/icons/reload.svg" />
               </div>
             </div>
           </div>
@@ -2008,7 +2008,7 @@ export default Vue.extend({
 
   .note-unwrapped-sol {
     max-width: 440px;
-    background: #172058;
+    background: @color-blue700;
     border-radius: 18px;
     padding: 8px 18px;
     margin: auto auto 12px auto;
@@ -2044,10 +2044,10 @@ export default Vue.extend({
   .card {
     max-width: 440px;
     margin: auto;
-    border: 3px solid #273592;
+    border: 3px solid @color-blue500;
     box-shadow: 0 40px 70px rgba(0, 0, 0, 0.3);
     border-radius: 18px;
-    background: #172058;
+    background: @color-blue700;
 
     .card-body {
       background: transparent;
@@ -2090,7 +2090,7 @@ export default Vue.extend({
             position: relative;
             width: 24px;
             height: 24px;
-            background: #1f2a75;
+            background: @color-blue600;
             border-radius: 8px;
             margin-right: 8px;
 
@@ -2166,7 +2166,7 @@ export default Vue.extend({
           }
 
           .value {
-            color: #ccd1f1;
+            color: @color-blue100;
           }
 
           .pathway {

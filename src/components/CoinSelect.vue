@@ -597,7 +597,7 @@ export default Vue.extend({
 <style lang="less">
 .coin-select-modal .ant-modal{
   .ant-modal-content {
-    background: #172058;
+    background: @color-blue700;
     border: 3px solid #273592;
     box-sizing: border-box;
     border-radius: 18px;

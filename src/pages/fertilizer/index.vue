@@ -25,7 +25,7 @@
                     }
                   "
                 >
-                  <img src="@/assets/icons/loading.svg" />
+                  <img src="@/assets/icons/reload.svg" />
                 </div>
               </div>
             </div>

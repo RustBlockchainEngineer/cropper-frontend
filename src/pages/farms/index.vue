@@ -89,7 +89,7 @@
 
             <!-- {{ farm.autoRefreshTime - farm.countdown }} -->
             <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
-              <img src="@/assets/icons/loading.svg" />
+              <img src="@/assets/icons/reload.svg" />
             </div>
           </span>
         </div>

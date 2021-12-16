@@ -756,6 +756,20 @@ export default class Landing extends Vue {
   border: none;
 }
 
+h2 {
+  @media @max-sl-mobile {
+    font-size: 31px !important;
+    line-height: 37.2px !important;
+  }
+}
+
+h4 {
+  @media @max-sl-mobile {
+    font-size: 20px !important;
+    line-height: 30px !important;
+  }
+}
+
 // class stylesheet
 .landing {
   .landing-header {
@@ -1560,7 +1574,7 @@ export default class Landing extends Vue {
 
         &:hover,
         &.active {
-          background: #1F2A75;
+          background: @color-blue600;
           border: 3px solid #82d4dc;
           box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
         }

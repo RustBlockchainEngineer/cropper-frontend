@@ -110,15 +110,6 @@ body {
   }
 }
 
-.container {
-  margin: 0 auto;
-  padding: 24px;
-  min-width: @mobile-xs-width;
-  font-family: Gilroy, sans-serif;
-  font-style: normal;
-  font-weight: normal;
-}
-
 .ant-progress {
   background: @color-bg !important;
 }
@@ -169,30 +160,8 @@ a {
   background-color: #13ECAB !important;
 }
 
-
-.fc-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fs-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .page-head {
   position: relative;
-
-  .title {
-    font-size: 35px;
-    font-weight: 700;
-
-    @media @max-sl-mobile {
-      font-size: 40px;
-    }
-  }
 
   .buttons {
     display: flex;
@@ -238,17 +207,9 @@ a {
     grid-auto-rows: auto;
     row-gap: 12px;
     padding: 37px;
-    background-color: @color-bg;
     opacity: 1;
     border-radius: 0;
     margin: 0 auto !important;
-
-    >.fs-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      text-align: left;
-    }
 
     .buttons {
       display: inline-block;
@@ -329,6 +290,35 @@ a {
 
 // Defined by Lionel
 
+.container {
+  margin: 0 auto;
+  min-width: @mobile-xs-width;
+  font-family: Gilroy, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  padding: 0 64px;
+
+  @media @max-lg-tablet {
+    padding: 0 32px;
+  }
+
+  @media @max-sl-mobile {
+    padding: 0 20px;
+  }
+}
+
+.fc-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fs-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 // font-size
 .displayL {
   font-size: 76px;
@@ -354,44 +344,24 @@ h1 {
   font-size: 49px;
   line-height: 58.8px;
   margin-bottom: 0 !important;
-
-  @media @max-sl-mobile {
-    font-size: 39px;
-    line-height: 46.6px;
-  }
 }
 
 h2 {
   font-size: 39px;
   line-height: 46.6px;
   margin-bottom: 0 !important;
-
-  @media @max-sl-mobile {
-    font-size: 31px;
-    line-height: 37.2px;
-  }
 }
 
 h3 {
   font-size: 31px;
   line-height: 37.2px;
   margin-bottom: 0 !important;
-
-  @media @max-sl-mobile {
-    font-size: 25px;
-    line-height: 35px;
-  }
 }
 
 h4 {
   font-size: 25px;
   line-height: 35px;
   margin-bottom: 0 !important;
-
-  @media @max-sl-mobile {
-    font-size: 20px !important;
-    line-height: 30px !important;
-  }
 }
 
 p {

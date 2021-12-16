@@ -17,7 +17,7 @@
 
             <!-- {{ autoRefreshTime - countdown }} -->
             <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
-              <img class="load-icon" src="@/assets/icons/loading.svg" />
+              <img class="load-icon" src="@/assets/icons/reload.svg" />
             </div>
           </span>
         </div>

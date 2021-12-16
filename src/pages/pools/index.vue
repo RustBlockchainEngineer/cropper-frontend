@@ -1,7 +1,5 @@
 <template>
   <div class="pool container">
-    <img class="planet-left" src="@/assets/Green Planet 1.png" />
-
     <CoinModalMulti
       v-if="stakeModalOpening"
       title="Add Liquidity"
@@ -23,32 +21,22 @@
     <div class="card">
       <div class="card-body">
         <div class="page-head fs-container">
-          <span class="title noMobile">
-            Liquidity Pools
-            <NuxtLink to="/pools/create-pool/" class="create-btn-desktop">
-              <div class="create-plus-btn">+ Create pool</div>
-            </NuxtLink>
-          </span>
-          <span class="title noDesktop">
-            Pools
-            <NuxtLink to="/pools/create-pool/" class="create-btn-mobile">
-              <div class="create-plus-btn">
-                <img src="@/assets/icons/plus-icon-10.svg" />
-              </div>
-            </NuxtLink>
-          </span>
-          <span class="information">
-            <div class="my-info">
-              <p>TVL : <b>${{TVL.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}}</b></p>
-              <!-- <p>Your deposit: <b>28,009 $</b></p> -->
+          <h3 class="title weightB">Liquidity Pools</h3>
+          <div class="information">
+            <div class="tvl-info">
+              <p class="textL weightS">TVL : ${{TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} </p>
             </div>
 
-            <!-- {{ autoRefreshTime - countdown }} -->
-            <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
-              <img src="@/assets/icons/loading.svg" />
+            <div class="action-btn-group">
+              <div class="reload-btn icon-cursor" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
+                <img src="@/assets/icons/reload.svg" />
+              </div>
+
+              <NuxtLink to="/pools/create-pool/" class="create-btn icon-cursor">
+                <div class="create-plus-btn textS weightS">+ Create pool</div>
+              </NuxtLink>
             </div>
-          </span>
+          </div>
         </div>
 
         <div class="page-content">
@@ -1159,31 +1147,8 @@ export default class Pools extends Vue {
 </script>
 
 <style lang="less" scoped>
-section {
-  background: @color-bg !important;
-}
-
 .pool.container {
-  max-width: 1350px;
-  width: 100%;
-  background: @color-bg;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 15px;
-
-  @media @max-lg-tablet {
-    margin-top: 0;
-  }
-
-  .planet-left {
-    position: absolute;
-    left: 0;
-    top: 35%;
-
-    @media @max-lg-tablet {
-      display: none;
-    }
-  }
+  margin-top: 38px;
 
   .card {
     .card-body {
@@ -1196,97 +1161,62 @@ section {
           text-align: center;
           position: relative;
           float: left;
-
-          a {
-            position: absolute;
-
-            &.create-btn-desktop {
-              top: 20px;
-              right: -90px;
-              
-              .create-plus-btn {
-                font-weight: 400;
-                background: @color-outline;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                align-items: center;
-                display: flex;
-                justify-content: center;
-                color: white;
-                padding: 3px 7px;
-                border-radius: 4px;
-                font-size: 10px;
-                line-height: 12px;
-
-                @media @max-lg-tablet {
-                  display: none;
-                }
-              }
-            }
-
-            &.create-btn-mobile {
-              top: 5px;
-              right: -25px;
-
-              .create-plus-btn {
-                font-weight: 400;
-                background: @color-outline;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 18px;
-                border-radius: 8px;
-                width: 18px;
-                height: 18px;
-                display: none;
-
-                @media @max-lg-tablet {
-                  display: flex;
-                }
-              }
-            }
-          }
         }
 
         .information {
           display: flex;
           align-items: center;
-          text-align: right;
+          justify-content: space-around;
 
-          .my-info {
-            font-size: 15px;
-            line-height: 18px;
-
-            @media @max-lg-tablet {
-              font-size: 12px;
-              line-height: 15px;
-            }
+          .tvl-info {
+            margin-right: 18px;
           }
 
-          .reload-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 15px;
-            background: @gradient-color-primary;
-            background-origin: border-box;
-            margin-left: 15px;
+          .action-btn-group {
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            
+            .reload-btn {
+              background: @color-blue600;
+              border-radius: 8px;
+              padding: 6px;
+              margin-right: 18px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
 
-            @media @max-lg-tablet {
-              margin-left: 5px;
+              @media @max-lg-tablet {
+                margin-left: 5px;
+              }
+
+              img {
+                width: 18px;
+                height: 18px;
+              }
+
+              &.active img {
+                transform: rotate(360deg);
+                transition: all 1s ease-in-out;
+              }
             }
 
-            img {
-              width: 18px;
-              height: 18px;
-            }
+            .create-btn {
+              top: 20px;
+              right: -90px;
+              
+              .create-plus-btn {
+                background: @color-blue600;
+                border-radius: 8px;
+                padding: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
 
-            &.active img {
-              transform: rotate(360deg);
-              transition: all 1s ease-in-out;
+                @media @max-lg-tablet {
+                  display: none;
+                }
+              }
             }
           }
         }
@@ -1787,11 +1717,6 @@ section {
     }
   }
 }
-
-// global used styles
-p {
-  margin-bottom: 0;
-}
 </style>
 
 <style lang="less">
@@ -1920,50 +1845,6 @@ p {
     text-align: center;
     float: none;
     margin-top: 40px;
-  }
-
-  .count-down-group {
-    background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-    background-origin: border-box;
-    height: 60px;
-    border-radius: 63px;
-    position: relative;
-    padding: 2px;
-  }
-
-  .count-down {
-    background-color: @color-bg;
-    border-radius: 63px;
-    height: 100%;
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 3px 3px 20px;
-    font-size: 26px;
-    font-weight: 400;
-    line-height: 42px;
-    position: relative;
-
-    .ant-progress {
-      margin-left: 15px;
-    }
-
-    .reload-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 25px;
-      background: @gradient-color-icon;
-      background-origin: border-box;
-      margin-left: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-
-      .anticon {
-        font-size: 16px !important;
-        color: white !important;
-      }
-    }
   }
 
   .btncontainer {
