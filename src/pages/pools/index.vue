@@ -350,7 +350,7 @@
           </div>
         </div>
 
-        <!-- <div v-if="poolLoaded" class="noDesktop">
+        <div v-if="poolLoaded" class="noDesktop">
           <Collapse
             v-model="showCollapse"
             expand-icon-position="right"
@@ -450,7 +450,7 @@
               </Pagination>
             </div>
           </div>
-        </div> -->
+        </div>
 
         <div v-else class="fc-container">
           <Spin :spinning="true">
@@ -1606,20 +1606,6 @@ export default class Pools extends Vue {
       display: inline-block;
     }
   }
-
-  h6 {
-    margin-bottom: 0;
-  }
-
-  .action {
-    display: grid;
-    grid-gap: 4px;
-  }
-}
-
-.radioButtonStyle {
-  width: 50%;
-  text-align: center;
 }
 
 .noDesktop {
