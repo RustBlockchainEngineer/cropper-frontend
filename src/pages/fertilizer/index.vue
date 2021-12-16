@@ -371,8 +371,6 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../../styles/variables';
-
 .card-body {
   padding: 0;
   margin: 0;
@@ -542,7 +540,7 @@ export default Vue.extend({
 </style>
 
 <style lang="less">
-@import '../../styles/variables';
+
 
 ::-webkit-scrollbar {
   @media @max-sl-mobile {

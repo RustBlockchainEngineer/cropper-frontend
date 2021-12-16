@@ -20,15 +20,43 @@
 
     <div class="card">
       <div class="card-body">
+        <div v-if="showGuide" class="guide-card">
+          <div class="guide-content">
+            <label class="textL weightB">Learn about providing <br /> liquidity </label>
+            <img 
+              class="icon-cursor close-icon"
+              src="@/assets/icons/close-circle-icon.svg"
+              @click="() => { this.showGuide = false }"
+            />
+            <Row class="guide-detail">
+              <Col span="14">
+                <label class="textS weightS letterL">Check out our v3 LP walkthrough and migration guides.</label>
+                <div class="learn-btn-container">
+                  <Button class="learn-btn textS weightS letterL">Learn more</Button>
+                </div>
+              </Col>
+              <Col span="10">
+                <img src="@/assets/background/guide.svg" />
+              </Col>
+            </Row>
+          </div>
+        </div>
+
         <div class="page-head fs-container">
           <h3 class="title weightB">Liquidity Pools</h3>
           <div class="information">
             <div class="tvl-info">
-              <p class="textL weightS">TVL : ${{TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} </p>
+              <p class="textL weightS">
+                TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+              </p>
             </div>
 
             <div class="action-btn-group">
-              <div class="reload-btn icon-cursor" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
+              <div
+                class="reload-btn icon-cursor"
+                :class="activeSpinning ? 'active' : ''"
+                @click="reloadTimer"
+              >
                 <img src="@/assets/icons/reload.svg" />
               </div>
 
@@ -39,128 +67,85 @@
           </div>
         </div>
 
-        <div class="page-content">
-          <!-- Filter bar for desktop -->
-          <Row class="tool-bar noMobile">
-            <Col span="5" class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
-                <Icon slot="prefix" type="search" />
-              </Input>
-            </Col>
-            <Col span="6" class="tool-option">
-              <div class="toggle">
-                <label
-                  class="label"
-                  :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('labelized')">
-                  Labelized
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon labelized">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-                <Toggle v-model="searchCertifiedFarm" />
-                <label
-                  class="label"
-                  :class="searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('permissionless')"
-                  >Permissionless
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-              </div>
-            </Col>
-            <Col span="5" class="tool-option"> </Col>
-            <Col span="4" class="tool-option"> </Col>
-            <Col span="4" class="tool-option">
-              <div class="toggle deposit-toggle">
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">My deposit</label>
-              </div>
-            </Col>
-          </Row>
+        <div class="page-option-bar fs-container">
+          <div class="option-tab-group">
+            <div class="option-tab">
+              <Button
+                class="textL weightS"
+                :class="!searchCertifiedFarm ? 'active-tab' : ''"
+                @click="activeSearch('labelized')"
+                >Labelized</Button
+              >
+              <div v-if="!searchCertifiedFarm" class="active-underline"></div>
+            </div>
+            <div class="option-tab">
+              <Button
+                class="textL weightS"
+                :class="searchCertifiedFarm ? 'active-tab' : ''"
+                @click="activeSearch('permissionless')"
+              >
+                Permissionless
+              </Button>
+              <div v-if="searchCertifiedFarm" class="active-underline"></div>
+            </div>
+            <div class="option-tab">
+              <Button
+                class="textL weightS"
+                :class="stakedOnly ? 'active-tab' : ''"
+                @click="activeSearch('deposit')"
+              >
+                <img class="deposit-icon" src="@/assets/icons/deposit.svg" />
+                My Deposit
+              </Button>
+              <div v-if="stakedOnly" class="active-underline"></div>
+            </div>
+          </div>
+          <div class="option-select-group">
+            <div class="option-select fc-container icon-cursor">
+              <img src="@/assets/icons/search.svg" />
+            </div>
+            <div
+              class="option-select fc-container icon-cursor"
+              @click="
+                () => {
+                  this.showSortMenu = !this.showSortMenu;
+                }
+              "
+            >
+              <span class="bodyM weightS option-select-sort fc-container">
+                <label>Sort by:</label>
+                <span class="sort-detail">
+                  Liquidity (dsc)
+                  <img
+                    class="arrow-icon"
+                    :class="showSortMenu ? 'up' : ''"
+                    src="@/assets/icons/arrow-down.svg"
+                  />
+                </span>
+              </span>
+            </div>
 
-          <!-- Filter bar for mobile -->
-
-          <Row class="tool-bar noDesktop">
-            <Col span="12" class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
-                <Icon slot="prefix" type="search" />
-              </Input>
-            </Col>
-            <Col span="12" class="tool-option">
-              <div class="toggle deposit-toggle">
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected"/>
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
+            <div v-if="showSortMenu" class="option-select-menu">
+              <div
+                class="option-select-item textM weightS icon-cursor"
+                :class="sortMethod === 'liquidity' && sortLiquidityAsc"
+              >
+                Liquidity A -> Z
               </div>
-            </Col>
-          </Row>
-          <Row class="tool-bar noDesktop">
-            <Col span="24" class="tool-option">
-              <div class="toggle">
-                <label
-                  class="label"
-                  :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('labelized')">
-                  Labelized
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon labelized">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-                <Toggle v-model="searchCertifiedFarm" />
-                <label
-                  class="label"
-                  :class="searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('permissionless')"
-                  >Permissionless
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
+              <div
+                class="option-select-item textM weightS icon-cursor"
+                :class="sortMethod === 'liquidity' && !sortLiquidityAsc"
+              >
+                Liquidity Z -> A
               </div>
-            </Col>
-          </Row>
+            </div>
+          </div>
         </div>
+
         <div v-if="poolLoaded" class="noMobile pools-table">
           <Row class="pools-table-header">
-            <Col class="header-column" span="5"> Name </Col>
-            <Col class="header-column" span="2">
+            <Col class="header-column textS weightB" span="5"> Name </Col>
+            <Col class="header-column textS weightB" span="2">
               <div class="header-column-title" @click="sortbyColumn('liquidity')">
                 Liquidity
                 <Icon
@@ -168,38 +153,74 @@
                   type="arrow-down"
                   :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''"
                 />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''" />
+                <Icon
+                  v-else
+                  type="arrow-up"
+                  :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''"
+                />
               </div>
             </Col>
-            <Col class="header-column" span="3">
+            <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('volh')">
                 Volume (24hrs)
-                <Icon v-if="sortVolHAsc" type="arrow-down" :class="sortMethod === 'volh' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'volh' ? 'sort-icon-active' : ''" />
+                <Icon
+                  v-if="sortVolHAsc"
+                  type="arrow-down"
+                  :class="sortMethod === 'volh' ? 'sort-icon-active' : ''"
+                />
+                <Icon
+                  v-else
+                  type="arrow-up"
+                  :class="sortMethod === 'volh' ? 'sort-icon-active' : ''"
+                />
               </div>
             </Col>
-            <Col class="header-column" span="3">
+            <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('vold')">
                 Volume (7d)
-                <Icon v-if="sortVolDAsc" type="arrow-down" :class="sortMethod === 'vold' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'vold' ? 'sort-icon-active' : ''" />
+                <Icon
+                  v-if="sortVolDAsc"
+                  type="arrow-down"
+                  :class="sortMethod === 'vold' ? 'sort-icon-active' : ''"
+                />
+                <Icon
+                  v-else
+                  type="arrow-up"
+                  :class="sortMethod === 'vold' ? 'sort-icon-active' : ''"
+                />
               </div>
             </Col>
-            <Col class="header-column" span="3">
+            <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('feesh')">
                 Fees (24 hrs)
-                <Icon v-if="sortFeesAsc" type="arrow-down" :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''" />
+                <Icon
+                  v-if="sortFeesAsc"
+                  type="arrow-down"
+                  :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''"
+                />
+                <Icon
+                  v-else
+                  type="arrow-up"
+                  :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''"
+                />
               </div>
             </Col>
-            <Col class="header-column" span="2">
+            <Col class="header-column textS weightB" span="2">
               <div class="header-column-title" @click="sortbyColumn('apy')">
                 APY
-                <Icon v-if="sortAPYAsc" type="arrow-down" :class="sortMethod === 'apy' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'apy' ? 'sort-icon-active' : ''" />
+                <Icon
+                  v-if="sortAPYAsc"
+                  type="arrow-down"
+                  :class="sortMethod === 'apy' ? 'sort-icon-active' : ''"
+                />
+                <Icon
+                  v-else
+                  type="arrow-up"
+                  :class="sortMethod === 'apy' ? 'sort-icon-active' : ''"
+                />
               </div>
             </Col>
-            <Col class="header-column" span="3">
+            <Col class="header-column textS weightB" span="3">
               <div class="header-column-title" @click="sortbyColumn('yliquidity')">
                 Your Liquidity
                 <Icon
@@ -207,10 +228,13 @@
                   type="arrow-down"
                   :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''"
                 />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''" />
+                <Icon
+                  v-else
+                  type="arrow-up"
+                  :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''"
+                />
               </div>
             </Col>
-            <Col class="header-column" span="3"> Add / Remove </Col>
           </Row>
 
           <div class="pools-table-body">
@@ -232,31 +256,36 @@
                 </div>
               </Col>
 
-              <Col class="state" span="2"> ${{ new TokenAmount(data.liquidity, 2, false).format() }} </Col>
+              <Col class="state textM weightS" span="2">
+                ${{ new TokenAmount(data.liquidity, 2, false).format() }}
+              </Col>
 
-              <Col class="state" span="3"> ${{ new TokenAmount(data.volume_24h, 2, false).format() }} </Col>
-              <Col class="state" span="3"> ${{ new TokenAmount(data.volume_7d, 2, false).format() }} </Col>
-              <Col class="state" span="3"> ${{ new TokenAmount(data.fee_24h, 2, false).format() }} </Col>
-              <Col class="state" span="2"> {{ new TokenAmount(data.apy, 2, false).format() }}% </Col>
-              <Col class="state" span="3"> ${{ new TokenAmount(data.current, 2, false).format() }} </Col>
-              <Col class="state" span="3">
-                <div class="btncontainer small plus-btn">
-                  <Button size="small" ghost @click="openPoolAddModal(data)">
-                    <Icon type="plus" />
-                  </Button>
+              <Col class="state textM weightS" span="3">
+                ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
+              </Col>
+              <Col class="state textM weightS" span="3">
+                ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
+              </Col>
+              <Col class="state textM weightS" span="3">
+                ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
+              </Col>
+              <Col class="state textM weightS" span="2">
+                {{ new TokenAmount(data.apy, 2, false).format() }}%
+              </Col>
+              <Col class="state textM weightS" span="3">
+                ${{ new TokenAmount(data.current, 2, false).format() }}
+              </Col>
+              <Col class="state textM weightS" span="3">
+                <div class="btn-container">
+                  <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
                 </div>
-
-                &nbsp;
-
-                <div class="btncontainer small minus-btn">
-                  <Button
-                    size="small"
-                    class="minus"
-                    ghost
+                <div class="btn-container">
+                  <Button 
+                    class="btn-primary textS weightB"
                     :disabled="!wallet.connected || !data.current"
                     @click="openUnstakeModal(data, data.lp, 1)"
                   >
-                    <Icon type="minus" />
+                    Remove
                   </Button>
                 </div>
               </Col>
@@ -277,9 +306,18 @@
           </div>
         </div>
 
-        <div v-if="poolLoaded" class="noDesktop">
-          <Collapse v-model="showCollapse" expand-icon-position="right" class="pools-table-mobile">
-            <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
+        <!-- <div v-if="poolLoaded" class="noDesktop">
+          <Collapse
+            v-model="showCollapse"
+            expand-icon-position="right"
+            class="pools-table-mobile"
+          >
+            <CollapsePanel
+              v-for="data in poolsShow"
+              :key="data.lp_mint"
+              v-show="true"
+              :show-arrow="poolCollapse"
+            >
               <Row slot="header" class="pool-head">
                 <Col class="lp-icons" :span="24">
                   <div class="icons">
@@ -329,7 +367,9 @@
                 </Col>
                 <Col class="current-liquidity" span="24">
                   <div class="liquidity-content">Your liquidity</div>
-                  <div class="liquidity-value">${{ new TokenAmount(data.current, 2, false).format() }}</div>
+                  <div class="liquidity-value">
+                    ${{ new TokenAmount(data.current, 2, false).format() }}
+                  </div>
                   <div class="btncontainer small plus-btn">
                     <Button size="small" ghost @click="openPoolAddModal(data)">
                       <Icon type="plus" />
@@ -366,7 +406,7 @@
               </Pagination>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div v-else class="fc-container">
           <Spin :spinning="true">
@@ -379,9 +419,9 @@
 </template>
 
 <script lang="ts">
-import { get, cloneDeep } from 'lodash-es'
-import { Vue, Component, Watch } from 'nuxt-property-decorator'
-import { mapState } from 'vuex'
+import { get, cloneDeep } from "lodash-es";
+import { Vue, Component, Watch } from "nuxt-property-decorator";
+import { mapState } from "vuex";
 import {
   Table,
   Radio,
@@ -395,34 +435,34 @@ import {
   Input,
   Icon,
   Pagination,
-  Switch as Toggle
-} from 'ant-design-vue'
-import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
-import { TokenAmount } from '@/utils/safe-math'
-import { getBigNumber } from '@/utils/layouts'
-import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
-import { LiquidityPoolInfo } from '@/utils/pools'
-import { getUnixTs } from '@/utils'
-import { DEVNET_MODE } from '../../utils/ids'
-const CollapsePanel = Collapse.Panel
-const RadioGroup = Radio.Group
-const poolAdd = false
-const RadioButton = Radio.Button
-declare const window: any
+  Switch as Toggle,
+} from "ant-design-vue";
+import { getPoolByLpMintAddress, getAllCropperPools } from "@/utils/pools";
+import { TokenAmount } from "@/utils/safe-math";
+import { getBigNumber } from "@/utils/layouts";
+import { addLiquidity, removeLiquidity } from "@/utils/liquidity";
+import { LiquidityPoolInfo } from "@/utils/pools";
+import { getUnixTs } from "@/utils";
+import { DEVNET_MODE } from "../../utils/ids";
+const CollapsePanel = Collapse.Panel;
+const RadioGroup = Radio.Group;
+const poolAdd = false;
+const RadioButton = Radio.Button;
+declare const window: any;
 @Component({
   head: {
-    title: 'Cropper Finance Pools'
+    title: "Cropper Finance Pools",
   },
 
   computed: {
     ...mapState([
       // 'wallet',
-      'swap',
-      'liquidity',
-      'price',
-      'url',
-      'setting'
-    ])
+      "swap",
+      "liquidity",
+      "price",
+      "url",
+      "setting",
+    ]),
   },
 
   data() {
@@ -435,9 +475,9 @@ declare const window: any
       poolAdd: false,
       totalCount: 110,
       pageSize: 50,
-      TVL : 0,
-      currentPage: 1
-    }
+      TVL: 0,
+      currentPage: 1,
+    };
   },
 
   components: {
@@ -455,360 +495,396 @@ declare const window: any
     Input,
     Icon,
     Spin,
-    Pagination
+    Pagination,
   },
   async asyncData({ $api }) {
-
-
-
-    window.poolsDatas = {} as any
+    window.poolsDatas = {} as any;
 
     try {
-      window.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
+      window.poolsDatas = await fetch("https://api.cropper.finance/pools/").then((res) =>
+        res.json()
+      );
     } catch {
-      window.poolsDatas = []
+      window.poolsDatas = [];
     } finally {
     }
 
     try {
-      window.labelised = await fetch('https://api.cropper.finance/pool/').then((res) => res.json())
+      window.labelised = await fetch("https://api.cropper.finance/pool/").then((res) =>
+        res.json()
+      );
     } catch {
     } finally {
     }
 
-    const pools = getAllCropperPools()
-    return { pools }
-  }
+    const pools = getAllCropperPools();
+    return { pools };
+  },
 })
 export default class Pools extends Vue {
-  poolCollapse: any = true
-  showCollapse: any = []
-  pools: any = []
-  displayPoolID: any = 0
-  poolsShow: any = []
-  poolType: string = 'RaydiumPools'
-  fromCoin: any = false
-  staking: any = false
-  lp: any = false
-  TVL: any = 0
-  unstaking: any = false
-  wallet: any = this.$accessor.wallet
-  lpMintAddress: any = false
-  stakeModalOpening: any = false
-  unstakeModalOpening: any = false
-  toCoin: any = false
-  displayfilters: any = false
-  poolAdd: any = false
-  poolInf: any = false
-  lptoken: any = false
-  poolLoaded: any = false
-  autoRefreshTime: number = 60
-  countdown: number = 0
-  timer: any = null
-  timer_init: any = null
-  loading: boolean = false
-  stakedOnly: boolean = false
-  searchButton = true
-  searchName = ''
-  totalCount = 110
-  pageSize = 50
-  currentPage = 1
-  searchCertifiedFarm: boolean = false
-  sortMethod: string = 'liquidity'
-  sortLiquidityAsc: boolean = true
-  sortVolHAsc: boolean = false
-  sortVolDAsc: boolean = false
-  sortFeesAsc: boolean = false
-  sortAPYAsc: boolean = false
-  sortCurrentAsc: boolean = false
-  activeSpinning: boolean = false
+  poolCollapse: any = true;
+  showCollapse: any = [];
+  pools: any = [];
+  displayPoolID: any = 0;
+  poolsShow: any = [];
+  poolType: string = "RaydiumPools";
+  fromCoin: any = false;
+  staking: any = false;
+  lp: any = false;
+  TVL: any = 0;
+  unstaking: any = false;
+  wallet: any = this.$accessor.wallet;
+  lpMintAddress: any = false;
+  stakeModalOpening: any = false;
+  unstakeModalOpening: any = false;
+  toCoin: any = false;
+  displayfilters: any = false;
+  poolAdd: any = false;
+  poolInf: any = false;
+  lptoken: any = false;
+  poolLoaded: any = false;
+  autoRefreshTime: number = 60;
+  countdown: number = 0;
+  timer: any = null;
+  timer_init: any = null;
+  loading: boolean = false;
+  stakedOnly: boolean = false;
+  searchButton = true;
+  searchName = "";
+  totalCount = 110;
+  pageSize = 50;
+  currentPage = 1;
+  searchCertifiedFarm: boolean = false;
+  sortMethod: string = "liquidity";
+  sortLiquidityAsc: boolean = true;
+  sortVolHAsc: boolean = false;
+  sortVolDAsc: boolean = false;
+  sortFeesAsc: boolean = false;
+  sortAPYAsc: boolean = false;
+  sortCurrentAsc: boolean = false;
+  activeSpinning: boolean = false;
+  showGuide: boolean = true;
+  showSortMenu: boolean = false;
+  showSearchMenu: boolean = false;
 
   get liquidity() {
-    this.$accessor.wallet.getTokenAccounts()
-    return this.$accessor.liquidity
+    this.$accessor.wallet.getTokenAccounts();
+    return this.$accessor.liquidity;
   }
-  @Watch('$accessor.liquidity.initialized', { immediate: true, deep: true })
+  @Watch("$accessor.liquidity.initialized", { immediate: true, deep: true })
   refreshThePage() {
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
   }
-  @Watch('showCollapse', { immediate: true, deep: true }) handler() {
+  @Watch("showCollapse", { immediate: true, deep: true }) handler() {
     if (!this.poolType && this.showCollapse.length > 0) {
-      this.showCollapse.splice(0, this.showCollapse.length)
+      this.showCollapse.splice(0, this.showCollapse.length);
     }
   }
-  @Watch('$accessor.liquidity.info', { immediate: true, deep: true })
+  @Watch("$accessor.liquidity.info", { immediate: true, deep: true })
   async onLiquidityChanged() {
-    this.pools = this.poolsFormated()
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    this.pools = this.poolsFormated();
+    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
   }
 
-  @Watch('currentPage', { immediate: true, deep: true })
+  @Watch("currentPage", { immediate: true, deep: true })
   async onpageChange(newPage: number) {
-    this.showPool(this.searchName, this.stakedOnly, newPage)
+    this.showPool(this.searchName, this.stakedOnly, newPage);
   }
 
-  @Watch('stakedOnly', { immediate: true, deep: true })
+  @Watch("stakedOnly", { immediate: true, deep: true })
   async onStckChange(newStakedOnly: any) {
-    this.showPool(this.searchName, newStakedOnly)
+    this.showPool(this.searchName, newStakedOnly);
   }
 
-  @Watch('searchName', { immediate: true, deep: true })
+  @Watch("searchName", { immediate: true, deep: true })
   async onSearchChange(newSearchName: string) {
-    this.showPool(newSearchName, this.stakedOnly)
+    this.showPool(newSearchName, this.stakedOnly);
   }
-  @Watch('searchCertifiedFarm', { immediate: true, deep: true })
+  @Watch("searchCertifiedFarm", { immediate: true, deep: true })
   selectHandler(newSearchCertifiedFarm: boolean = false) {
-    this.pools = this.poolsFormated()
+    this.pools = this.poolsFormated();
     if (!newSearchCertifiedFarm) {
       //labelized
-      this.pools = this.pools.filter((pool: any) => pool.labelized)
+      this.pools = this.pools.filter((pool: any) => pool.labelized);
     } else if (newSearchCertifiedFarm) {
       //permissionless
-      this.pools = this.pools.filter((pool: any) => !pool.labelized)
+      this.pools = this.pools.filter((pool: any) => !pool.labelized);
     }
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
   }
 
   sortbyColumn(col: string) {
-    this.sortMethod = col
-    if (this.sortMethod == 'liquidity') {
+    this.sortMethod = col;
+    if (this.sortMethod == "liquidity") {
       if (this.sortLiquidityAsc) {
-        this.sortLiquidityAsc = false
+        this.sortLiquidityAsc = false;
       } else {
-        this.sortLiquidityAsc = true
+        this.sortLiquidityAsc = true;
       }
-    } else if (this.sortMethod == 'volh') {
+    } else if (this.sortMethod == "volh") {
       if (this.sortVolHAsc) {
-        this.sortVolHAsc = false
+        this.sortVolHAsc = false;
       } else {
-        this.sortVolHAsc = true
+        this.sortVolHAsc = true;
       }
-    } else if (this.sortMethod == 'vold') {
+    } else if (this.sortMethod == "vold") {
       if (this.sortVolDAsc) {
-        this.sortVolDAsc = false
+        this.sortVolDAsc = false;
       } else {
-        this.sortVolDAsc = true
+        this.sortVolDAsc = true;
       }
-    } else if (this.sortMethod == 'feesh') {
+    } else if (this.sortMethod == "feesh") {
       if (this.sortFeesAsc) {
-        this.sortFeesAsc = false
+        this.sortFeesAsc = false;
       } else {
-        this.sortFeesAsc = true
+        this.sortFeesAsc = true;
       }
-    } else if (this.sortMethod == 'apy') {
+    } else if (this.sortMethod == "apy") {
       if (this.sortAPYAsc) {
-        this.sortAPYAsc = false
+        this.sortAPYAsc = false;
       } else {
-        this.sortAPYAsc = true
+        this.sortAPYAsc = true;
       }
-    } else if (this.sortMethod == 'yliquidity') {
+    } else if (this.sortMethod == "yliquidity") {
       if (this.sortCurrentAsc) {
-        this.sortCurrentAsc = false
+        this.sortCurrentAsc = false;
       } else {
-        this.sortCurrentAsc = true
+        this.sortCurrentAsc = true;
       }
     }
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
   }
 
-  showPool(searchName: any = '', stakedOnly: boolean = false, pageNum: any = 1) {
-    const pool = []
+  showPool(searchName: any = "", stakedOnly: boolean = false, pageNum: any = 1) {
+    const pool = [];
 
-    this.pools = this.poolsFormated()
+    this.pools = this.poolsFormated();
 
     if (!this.searchCertifiedFarm) {
       //labelized
-      this.pools = this.pools.filter((pool: any) => pool.labelized)
+      this.pools = this.pools.filter((pool: any) => pool.labelized);
     } else if (this.searchCertifiedFarm) {
       //permissionless
-      this.pools = this.pools.filter((pool: any) => !pool.labelized)
+      this.pools = this.pools.filter((pool: any) => !pool.labelized);
     }
 
     // sort by column
-    if (this.sortMethod == 'liquidity') {
+    if (this.sortMethod == "liquidity") {
       if (this.sortLiquidityAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.liquidity - a.liquidity
-        })
+          return b.liquidity - a.liquidity;
+        });
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.liquidity - b.liquidity
-        })
+          return a.liquidity - b.liquidity;
+        });
       }
-    } else if (this.sortMethod == 'volh') {
+    } else if (this.sortMethod == "volh") {
       if (this.sortVolHAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.volume_24h - a.volume_24h
-        })
+          return b.volume_24h - a.volume_24h;
+        });
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.volume_24h - b.volume_24h
-        })
+          return a.volume_24h - b.volume_24h;
+        });
       }
-    } else if (this.sortMethod == 'vold') {
+    } else if (this.sortMethod == "vold") {
       if (this.sortVolDAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.volume_7d - a.volume_7d
-        })
+          return b.volume_7d - a.volume_7d;
+        });
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.volume_7d - b.volume_7d
-        })
+          return a.volume_7d - b.volume_7d;
+        });
       }
-    } else if (this.sortMethod == 'feesh') {
+    } else if (this.sortMethod == "feesh") {
       if (this.sortFeesAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.fee_24h - a.fee_24h
-        })
+          return b.fee_24h - a.fee_24h;
+        });
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.fee_24h - b.fee_24h
-        })
+          return a.fee_24h - b.fee_24h;
+        });
       }
-    } else if (this.sortMethod == 'apy') {
+    } else if (this.sortMethod == "apy") {
       if (this.sortAPYAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.apy - a.apy
-        })
+          return b.apy - a.apy;
+        });
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.apy - b.apy
-        })
+          return a.apy - b.apy;
+        });
       }
-    } else if (this.sortMethod == 'yliquidity') {
+    } else if (this.sortMethod == "yliquidity") {
       if (this.sortCurrentAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.current - a.current
-        })
+          return b.current - a.current;
+        });
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.current - b.current
-        })
+          return a.current - b.current;
+        });
       }
     }
 
     for (const item of this.pools) {
-      pool.push(item)
+      pool.push(item);
     }
-    this.poolsShow = pool
+    this.poolsShow = pool;
 
     if (
-      searchName != '' &&
-      this.poolsShow.filter((pool: any) => (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase())
-        .length > 0
+      searchName != "" &&
+      this.poolsShow.filter(
+        (pool: any) =>
+          (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase()
+      ).length > 0
     ) {
       this.poolsShow = this.poolsShow.filter(
-        (pool: any) => (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase()
-      )
-    } else if (searchName != '') {
+        (pool: any) =>
+          (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase()
+      );
+    } else if (searchName != "") {
       this.poolsShow = this.poolsShow.filter((pool: any) =>
-        (pool.nameSymbol as string).toLowerCase().includes((searchName as string).toLowerCase())
-      )
+        (pool.nameSymbol as string)
+          .toLowerCase()
+          .includes((searchName as string).toLowerCase())
+      );
     }
 
     if (stakedOnly) {
-      this.poolsShow = this.poolsShow.filter((pool: any) => pool.current > 0.01)
+      this.poolsShow = this.poolsShow.filter((pool: any) => pool.current > 0.01);
     }
 
-    this.currentPage = pageNum
+    this.currentPage = pageNum;
 
-    this.totalCount = this.poolsShow.length
+    this.totalCount = this.poolsShow.length;
 
-    let max = this.poolsShow.length
-    let start = (this.currentPage - 1) * this.pageSize
-    let end = this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max
-    this.poolsShow = this.poolsShow.slice(start, end)
+    let max = this.poolsShow.length;
+    let start = (this.currentPage - 1) * this.pageSize;
+    let end =
+      this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max;
+    this.poolsShow = this.poolsShow.slice(start, end);
   }
 
   async delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   openUnstakeModal(poolInfo: any, lp: any, lpBalance: any) {
-    const coin = cloneDeep(lp)
-    coin.balance = get(this.wallet.tokenAccounts, `${coin.mintAddress}.balance`)
-    this.lp = coin
+    const coin = cloneDeep(lp);
+    coin.balance = get(this.wallet.tokenAccounts, `${coin.mintAddress}.balance`);
+    this.lp = coin;
 
-    this.poolInf = cloneDeep(poolInfo)
+    this.poolInf = cloneDeep(poolInfo);
 
-    this.unstakeModalOpening = true
+    this.unstakeModalOpening = true;
   }
 
   cancelUnstake() {
-    this.unstakeModalOpening = false
+    this.unstakeModalOpening = false;
   }
 
   unstake(amount: string) {
-    this.unstaking = true
+    this.unstaking = true;
 
-    const conn = this.$web3
-    const wallet = (this as any).$wallet
-    const coin = this.poolInf.lp.coin
-    const pc = this.poolInf.lp.pc
-    const lp = this.poolInf.lp
+    const conn = this.$web3;
+    const wallet = (this as any).$wallet;
+    const coin = this.poolInf.lp.coin;
+    const pc = this.poolInf.lp.pc;
+    const lp = this.poolInf.lp;
 
-    const lpAccount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.mintAddress}.tokenAccountAddress`)
-    const fromCoinAccount = get(this.wallet.tokenAccounts, `${coin.mintAddress}.tokenAccountAddress`)
-    const toCoinAccount = get(this.wallet.tokenAccounts, `${pc.mintAddress}.tokenAccountAddress`)
+    const lpAccount = get(
+      this.wallet.tokenAccounts,
+      `${this.poolInf.lp.mintAddress}.tokenAccountAddress`
+    );
+    const fromCoinAccount = get(
+      this.wallet.tokenAccounts,
+      `${coin.mintAddress}.tokenAccountAddress`
+    );
+    const toCoinAccount = get(
+      this.wallet.tokenAccounts,
+      `${pc.mintAddress}.tokenAccountAddress`
+    );
 
-    const key = getUnixTs().toString()
+    const key = getUnixTs().toString();
     this.$notify.info({
       key,
-      message: 'Making transaction...',
-      description: '',
-      duration: 0
-    })
+      message: "Making transaction...",
+      description: "",
+      duration: 0,
+    });
 
-    const poolInfo = get(this.liquidity.infos, lp.mintAddress)
+    const poolInfo = get(this.liquidity.infos, lp.mintAddress);
     //remove whole lp amount
-    removeLiquidity(conn, wallet, poolInfo, lpAccount, fromCoinAccount, toCoinAccount, amount)
+    removeLiquidity(
+      conn,
+      wallet,
+      poolInfo,
+      lpAccount,
+      fromCoinAccount,
+      toCoinAccount,
+      amount
+    )
       .then((txid) => {
         this.$notify.info({
           key,
-          message: 'Transaction has been sent',
-          description: (h: any) => h('div', ['Confirmation is in progress.'])
-        })
+          message: "Transaction has been sent",
+          description: (h: any) => h("div", ["Confirmation is in progress."]),
+        });
 
-        const description = `Remove liquidity for ${amount} LP Token`
+        const description = `Remove liquidity for ${amount} LP Token`;
 
-        this.$accessor.transaction.sub({ txid, description })
+        this.$accessor.transaction.sub({ txid, description });
       })
       .catch((error) => {
         this.$notify.error({
           key,
-          message: 'Remove liquidity failed',
-          description: error.message
-        })
+          message: "Remove liquidity failed",
+          description: error.message,
+        });
       })
       .finally(() => {
-        this.flush()
-        this.$accessor.wallet.getTokenAccounts()
-        this.unstaking = false
-        this.unstakeModalOpening = false
-      })
+        this.flush();
+        this.$accessor.wallet.getTokenAccounts();
+        this.unstaking = false;
+        this.unstakeModalOpening = false;
+      });
   }
 
   stake(fromCoinAmount: string, toCoinAmount: string, fixedCoin: string) {
-    this.staking = true
+    this.staking = true;
 
-    const conn = this.$web3
-    const wallet = (this as any).$wallet
+    const conn = this.$web3;
+    const wallet = (this as any).$wallet;
 
-    const poolInfo = get(this.liquidity.infos, this.poolInf.lp.mintAddress)
+    const poolInfo = get(this.liquidity.infos, this.poolInf.lp.mintAddress);
 
-    const lpAccount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.mintAddress}.tokenAccountAddress`)
+    const lpAccount = get(
+      this.wallet.tokenAccounts,
+      `${this.poolInf.lp.mintAddress}.tokenAccountAddress`
+    );
     // @ts-ignore
-    const fromCoinAccount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.coin.mintAddress}.tokenAccountAddress`)
+    const fromCoinAccount = get(
+      this.wallet.tokenAccounts,
+      `${this.poolInf.lp.coin.mintAddress}.tokenAccountAddress`
+    );
     // @ts-ignore
-    const toCoinAccount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.pc.mintAddress}.tokenAccountAddress`)
+    const toCoinAccount = get(
+      this.wallet.tokenAccounts,
+      `${this.poolInf.lp.pc.mintAddress}.tokenAccountAddress`
+    );
 
-    const key = getUnixTs().toString()
+    const key = getUnixTs().toString();
     this.$notify.info({
       key,
-      message: 'Making transaction...',
-      description: '',
-      duration: 0
-    })
+      message: "Making transaction...",
+      description: "",
+      duration: 0,
+    });
     addLiquidity(
       conn,
       wallet,
@@ -825,335 +901,427 @@ export default class Pools extends Vue {
       .then(async (txid) => {
         this.$notify.info({
           key,
-          message: 'Transaction has been sent',
-          description: (h: any) => h('div', ['Confirmation is in progress.'])
-        })
+          message: "Transaction has been sent",
+          description: (h: any) => h("div", ["Confirmation is in progress."]),
+        });
 
-        const description = `Add liquidity for ${fromCoinAmount} ${this.poolInf.lp.coin?.symbol} and ${toCoinAmount} ${this.poolInf.lp.pc?.symbol}`
-        this.$accessor.transaction.sub({ txid, description })
+        const description = `Add liquidity for ${fromCoinAmount} ${this.poolInf.lp.coin?.symbol} and ${toCoinAmount} ${this.poolInf.lp.pc?.symbol}`;
+        this.$accessor.transaction.sub({ txid, description });
 
-        let txStatus = this.$accessor.transaction.history[txid].status
-        while (txStatus === 'Pending') {
-          await this.delay(500)
-          txStatus = this.$accessor.transaction.history[txid].status
-          await this.delay(500)
+        let txStatus = this.$accessor.transaction.history[txid].status;
+        while (txStatus === "Pending") {
+          await this.delay(500);
+          txStatus = this.$accessor.transaction.history[txid].status;
+          await this.delay(500);
         }
-        if (txStatus === 'Fail') {
-          console.log('add lp failed')
-          return
+        if (txStatus === "Fail") {
+          console.log("add lp failed");
+          return;
         }
-        let amount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.mintAddress}.balance`)
+        let amount = get(
+          this.wallet.tokenAccounts,
+          `${this.poolInf.lp.mintAddress}.balance`
+        );
         //stake whole lp amount
-        amount = amount.wei.toNumber() / Math.pow(10, amount.decimals)
-        let delayTime = 0
+        amount = amount.wei.toNumber() / Math.pow(10, amount.decimals);
+        let delayTime = 0;
         while (amount <= 0 && delayTime < 10000) {
           //after 4 seconds ,it's failed
-          await this.delay(200)
-          delayTime += 200
-          amount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.mintAddress}.balance`)
-          amount = amount.wei.toNumber() / Math.pow(10, amount.decimals)
+          await this.delay(200);
+          delayTime += 200;
+          amount = get(
+            this.wallet.tokenAccounts,
+            `${this.poolInf.lp.mintAddress}.balance`
+          );
+          amount = amount.wei.toNumber() / Math.pow(10, amount.decimals);
         }
         if (amount <= 0) {
-          console.log('added lp amount is 0')
-          return
+          console.log("added lp amount is 0");
+          return;
         }
       })
       .catch((error) => {
         this.$notify.error({
           key,
-          message: 'Add liquidity failed',
-          description: error.message
-        })
+          message: "Add liquidity failed",
+          description: error.message,
+        });
       })
       .finally(async () => {
-        this.flush()
-        this.$accessor.wallet.getTokenAccounts()
-        this.staking = false
-        this.stakeModalOpening = false
-      })
+        this.flush();
+        this.$accessor.wallet.getTokenAccounts();
+        this.staking = false;
+        this.stakeModalOpening = false;
+      });
   }
 
   poolsFormated() {
-    const conn = this.$web3
-    const wallet = (this as any).$accessor.wallet
-    const liquidity = (this as any).$accessor.liquidity
-    const price = (this as any).$accessor.price
+    const conn = this.$web3;
+    const wallet = (this as any).$accessor.wallet;
+    const liquidity = (this as any).$accessor.liquidity;
+    const price = (this as any).$accessor.price;
 
-    const polo: any = []
+    const polo: any = [];
 
     getAllCropperPools().forEach(function (value: any) {
-      const liquidityItem = get(liquidity.infos, value.lp_mint)
+      const liquidityItem = get(liquidity.infos, value.lp_mint);
 
       if (!liquidityItem) {
-        return
+        return;
       }
 
-      let lp = getPoolByLpMintAddress(value.lp_mint)
+      let lp = getPoolByLpMintAddress(value.lp_mint);
 
-      let newCoin = 0
-      let newPc = 0
+      let newCoin = 0;
+      let newPc = 0;
 
-      if (!price.prices[liquidityItem?.coin.symbol as string] && price.prices[liquidityItem?.pc.symbol as string]) {
+      if (
+        !price.prices[liquidityItem?.coin.symbol as string] &&
+        price.prices[liquidityItem?.pc.symbol as string]
+      ) {
         price.prices[liquidityItem?.coin.symbol as string] =
           (price.prices[liquidityItem?.pc.symbol as string] *
             getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())) /
-          getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())
-        newCoin = 1
+          getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+        newCoin = 1;
       }
 
-      if (!price.prices[liquidityItem?.pc.symbol as string] && price.prices[liquidityItem?.coin.symbol as string]) {
+      if (
+        !price.prices[liquidityItem?.pc.symbol as string] &&
+        price.prices[liquidityItem?.coin.symbol as string]
+      ) {
         price.prices[liquidityItem?.pc.symbol as string] =
           (price.prices[liquidityItem?.coin.symbol as string] *
             getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())) /
-          getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())
-        newPc = 1
+          getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+        newPc = 1;
       }
 
       const liquidityCoinValue =
         getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
-        price.prices[liquidityItem?.coin.symbol as string]
+        price.prices[liquidityItem?.coin.symbol as string];
       const liquidityPcValue =
         getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
-        price.prices[liquidityItem?.pc.symbol as string]
+        price.prices[liquidityItem?.pc.symbol as string];
 
       let liquidityTotalValue = liquidityPcValue + liquidityCoinValue;
-      if(price.prices[liquidityItem?.pc.symbol as string] == 1){
-         liquidityTotalValue = liquidityPcValue * 2
+      if (price.prices[liquidityItem?.pc.symbol as string] == 1) {
+        liquidityTotalValue = liquidityPcValue * 2;
       }
 
+      const liquidityTotalSupply = getBigNumber(
+        (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
+      );
+      const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply;
 
-      const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
-      const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
-
-      value.liquidity = liquidityTotalValue
+      value.liquidity = liquidityTotalValue;
 
       if (!window.poolsDatas) {
-        window.poolsDatas = {}
+        window.poolsDatas = {};
       }
 
       if (window.poolsDatas[value.ammId]) {
-        value.volume_24h = 0
+        value.volume_24h = 0;
         if (
           window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress] &&
-          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['1day']
+          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]["1day"]
         ) {
           value.volume_24h +=
-            window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['1day'] *
-            price.prices[liquidityItem?.coin.symbol as string]
+            window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]["1day"] *
+            price.prices[liquidityItem?.coin.symbol as string];
         }
 
         if (
           window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress] &&
-          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['1day']
+          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]["1day"]
         ) {
           value.volume_24h +=
-            window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['1day'] *
-            price.prices[liquidityItem?.pc.symbol as string]
+            window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]["1day"] *
+            price.prices[liquidityItem?.pc.symbol as string];
         }
-
       } else {
-        value.volume_24h = 0
+        value.volume_24h = 0;
       }
 
       if (window.poolsDatas[value.ammId]) {
-        value.volume_7d = 0
+        value.volume_7d = 0;
         if (
           window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress] &&
-          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['7day']
+          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]["7day"]
         ) {
           value.volume_7d +=
-            window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['7day'] *
-            price.prices[liquidityItem?.coin.symbol as string]
+            window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]["7day"] *
+            price.prices[liquidityItem?.coin.symbol as string];
         }
 
         if (
           window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress] &&
-          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['7day']
+          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]["7day"]
         ) {
           value.volume_7d +=
-            window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['7day'] *
-            price.prices[liquidityItem?.pc.symbol as string]
+            window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]["7day"] *
+            price.prices[liquidityItem?.pc.symbol as string];
         }
       } else {
-        value.volume_7d = 0
+        value.volume_7d = 0;
       }
 
       if (window.poolsDatas[value.ammId]) {
-        value.fee_24h = value.volume_24h * 0.003
+        value.fee_24h = value.volume_24h * 0.003;
       } else {
-        value.fee_24h = 0
+        value.fee_24h = 0;
       }
 
       if (window.poolsDatas[value.ammId]) {
-        value.apy = (value.fee_24h * 365 * 100) / liquidityTotalValue
+        value.apy = (value.fee_24h * 365 * 100) / liquidityTotalValue;
       } else {
-        value.apy = 0
+        value.apy = 0;
       }
 
-      value.nameSymbol = value.coin1.symbol + ' - ' + value.coin2.symbol
+      value.nameSymbol = value.coin1.symbol + " - " + value.coin2.symbol;
 
       if (window.labelised.includes(value.ammId)) {
-        value.labelized = 1
+        value.labelized = 1;
       }
 
       if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
         if (wallet) {
-          value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`)
+          value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`);
           if (value.current) {
-            value.current = (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) * liquidityItemValue
+            value.current =
+              (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) *
+              liquidityItemValue;
           } else {
-            value.current = 0
+            value.current = 0;
           }
         } else {
-          value.current = 0
+          value.current = 0;
         }
-        polo.push(value)
+        polo.push(value);
       }
-
-    })
-    return polo
+    });
+    return polo;
   }
 
   openPoolAddModal(poolInfo: any) {
     if (!this.wallet.connected) {
-      this.$accessor.wallet.openModal()
+      this.$accessor.wallet.openModal();
     } else {
-      this.poolInf = cloneDeep(poolInfo)
-      const coinBalance = get(this.wallet.tokenAccounts, `${this.poolInf.coin1.mintAddress}.balance`)
-      const pcBalance = get(this.wallet.tokenAccounts, `${this.poolInf.coin2.mintAddress}.balance`)
-      this.poolInf.lp.coin.balance = coinBalance
-      this.poolInf.lp.pc.balance = pcBalance
-      this.stakeModalOpening = true
+      this.poolInf = cloneDeep(poolInfo);
+      const coinBalance = get(
+        this.wallet.tokenAccounts,
+        `${this.poolInf.coin1.mintAddress}.balance`
+      );
+      const pcBalance = get(
+        this.wallet.tokenAccounts,
+        `${this.poolInf.coin2.mintAddress}.balance`
+      );
+      this.poolInf.lp.coin.balance = coinBalance;
+      this.poolInf.lp.pc.balance = pcBalance;
+      this.stakeModalOpening = true;
     }
   }
 
   cancelPoolAdd() {
-    this.fromCoin = null
-    this.toCoin = null
-    this.lptoken = null
-    this.lpMintAddress = null
-    this.stakeModalOpening = false
+    this.fromCoin = null;
+    this.toCoin = null;
+    this.lptoken = null;
+    this.lpMintAddress = null;
+    this.stakeModalOpening = false;
   }
 
   mounted() {
     this.getTvl();
-    this.$accessor.token.loadTokens()
+    this.$accessor.token.loadTokens();
     this.timer_init = setInterval(async () => {
       if (!this.poolLoaded) {
-        await this.flush()
+        await this.flush();
         if (this.pools.length > 0) {
-          var hash = window.location.hash
+          var hash = window.location.hash;
           if (hash) {
-            hash = hash.substring(1)
-            this.searchName = hash
+            hash = hash.substring(1);
+            this.searchName = hash;
           } else {
-            const query = new URLSearchParams(window.location.search)
-            if (query.get('s')) this.searchName = query.get('s') as string
+            const query = new URLSearchParams(window.location.search);
+            if (query.get("s")) this.searchName = query.get("s") as string;
 
-            if (query.get('d')) this.displayPoolID = query.get('d') as string
+            if (query.get("d")) this.displayPoolID = query.get("d") as string;
           }
 
-          this.poolLoaded = true
+          this.poolLoaded = true;
         }
       }
-    }, 1000)
-    this.setTimer()
+    }, 1000);
+    this.setTimer();
   }
 
   setTimer() {
-
-
     this.timer = setInterval(async () => {
       if (!this.loading) {
         if (this.countdown < this.autoRefreshTime) {
-          this.countdown += 1
+          this.countdown += 1;
           if (this.countdown === this.autoRefreshTime) {
-            await this.flush()
+            await this.flush();
           }
         }
       }
-    }, 1000)
+    }, 1000);
   }
 
-  async getTvl(){
+  async getTvl() {
+    let cur_date = new Date().getTime();
+    if (window.localStorage.TVL_last_updated) {
+      const last_updated = parseInt(window.localStorage.TVL_last_updated);
+      if (cur_date - last_updated <= 600000) {
+        this.TVL = window.localStorage.TVL;
+        return;
+      }
+    }
 
+    let responseData: any = [];
+    let tvl = 0;
+    try {
+      responseData = await fetch("https://api.cropper.finance/cmc/").then((res) =>
+        res.json()
+      );
 
-      let cur_date = new Date().getTime()
-      if(window.localStorage.TVL_last_updated){
-        const last_updated = parseInt(window.localStorage.TVL_last_updated)
-        if(cur_date - last_updated <= 600000){
-          this.TVL = window.localStorage.TVL
-          return
+      Object.keys(responseData).forEach(function (key) {
+        if ((responseData as any)[key as any].tvl * 1 < 2000000) {
+          tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1;
         }
-      }
+      });
+    } catch {
+      // dummy data
+    } finally {
+    }
 
-      let responseData:any = []
-      let tvl = 0;
-      try {
-        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-        
-        Object.keys(responseData).forEach(function (key) {
-          if(((responseData as any)[key as any].tvl * 1) < 2000000){
-            tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
-          }
-        })
-      } catch {
-        // dummy data
-      } finally {
+    try {
+      responseData = await fetch("https://api.cropper.finance/staking/").then((res) =>
+        res.json()
+      );
+      tvl = tvl * 1 + (responseData as any).value * 1;
+    } catch {
+      // dummy data
+    } finally {
+    }
 
-      }
+    this.TVL = Math.round(tvl);
 
-      try {
-        responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
-        tvl = (tvl * 1) + ((responseData as any).value * 1)
-      } catch {
-        // dummy data
-      } finally {
-
-      }
-
-      this.TVL = Math.round(tvl);
-
-      window.localStorage.TVL_last_updated = new Date().getTime()
-      window.localStorage.TVL = this.TVL
+    window.localStorage.TVL_last_updated = new Date().getTime();
+    window.localStorage.TVL = this.TVL;
   }
 
   async flush() {
-    this.loading = true
-    this.pools = this.poolsFormated()
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
-    this.loading = false
-    this.countdown = 0
+    this.loading = true;
+    this.pools = this.poolsFormated();
+    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
+    this.loading = false;
+    this.countdown = 0;
   }
 
-  getPoolByLpMintAddress = getPoolByLpMintAddress
-  TokenAmount = TokenAmount
+  getPoolByLpMintAddress = getPoolByLpMintAddress;
+  TokenAmount = TokenAmount;
 
   reloadTimer() {
-    this.activeSpinning = true
+    this.activeSpinning = true;
     setTimeout(() => {
-      this.activeSpinning = false
-    }, 1000)
-    this.flush()
-    this.$accessor.wallet.getTokenAccounts()
+      this.activeSpinning = false;
+    }, 1000);
+    this.flush();
+    this.$accessor.wallet.getTokenAccounts();
   }
 
   activeSearch(mode: string) {
-    if (mode === 'labelized') this.searchCertifiedFarm = false
-    else if (mode === 'permissionless') this.searchCertifiedFarm = true
-    else if (mode === 'deposit' && this.wallet.connected) this.stakedOnly = !this.stakedOnly
+    if (mode === "labelized") this.searchCertifiedFarm = false;
+    else if (mode === "permissionless") this.searchCertifiedFarm = true;
+    else if (mode === "deposit") this.stakedOnly = !this.stakedOnly;
   }
 }
 </script>
 
 <style lang="less" scoped>
+// global stylesheet
+.btn-container {
+  background: @gradient-btn-primary;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 48px;
+  padding: 3px;
+  width: 95px;
+  height: auto;
+}
+
+.btn-transparent {
+  background: transparent;
+  padding: 4.5px 0;
+  border-radius: 48px;
+  border: none;
+  width: 100%;
+}
+
+.btn-primary {
+  background: rgba(23, 32, 88, 0.9);
+  padding: 4.5px 0;
+  border-radius: 48px;
+  border: none;
+  width: 100%;
+  color: #fff;
+
+  &:disabled {
+    background: rgba(23, 32, 88, 0.9);
+  }
+}
+
+// class stylesheet
 .pool.container {
   margin-top: 38px;
 
   .card {
     .card-body {
+      position: relative;
       padding: 0;
-      
+
+      .guide-card {
+        width: 420px;
+        position: absolute;
+        top: 30vh;
+        right: 0;
+        padding: 18px;
+        background: linear-gradient(215.52deg, #273592 0.03%, #23ADB4 99.97%);
+        border-radius: 18px;
+        z-index: 999;
+
+        .guide-content {
+          position: relative;
+
+          .guide-detail {
+            margin-top: 8px;
+
+            .learn-btn-container {
+              height: 45px;
+              background: linear-gradient(190.83deg, #23A7B2 -119.02%, #273A93 86.38%);
+              padding: 2px;
+              border-radius: 48px;
+              margin-top: 18px;
+              width: fit-content;
+
+              .learn-btn {
+                height: 100%;
+                background: linear-gradient(97.75deg, #280C86 -29.89%, #22B5B6 150.53%);
+                border-radius: 48px;
+                padding: 10.5px 23px;
+                border: none;
+              }
+            }
+          }
+
+          .close-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+          }
+        }
+      }
+
       .page-head {
         margin-top: 10px;
 
@@ -1175,7 +1343,7 @@ export default class Pools extends Vue {
           .action-btn-group {
             display: flex;
             align-items: center;
-            
+
             .reload-btn {
               background: @color-blue600;
               border-radius: 8px;
@@ -1203,7 +1371,7 @@ export default class Pools extends Vue {
             .create-btn {
               top: 20px;
               right: -90px;
-              
+
               .create-plus-btn {
                 background: @color-blue600;
                 border-radius: 8px;
@@ -1222,117 +1390,100 @@ export default class Pools extends Vue {
         }
       }
 
-      .page-content {
-        .tool-bar {
-          height: 64px;
-          border-radius: 14px;
-          border: 4px solid @color-outline;
-          width: 100%;
+      .page-option-bar {
+        margin: 38px 0;
 
-          @media @max-lg-tablet {
-            margin-bottom: 5px;
-            height: 54px;
+        .option-tab-group {
+          display: flex;
+
+          .option-tab {
+            margin-right: 48px;
 
             &:last-child {
-              margin-bottom: 0;
+              margin-right: 0;
+            }
+
+            button {
+              background: transparent;
+              border: none;
+              outline: none;
+              padding: 0;
+              margin-bottom: 8px;
+
+              &.active-tab {
+                color: @color-petrol500;
+              }
+
+              .deposit-icon {
+                margin-right: 8px;
+              }
+            }
+
+            .active-underline {
+              height: 4px;
+              border-radius: 10px;
+              background: @color-petrol400;
+            }
+          }
+        }
+
+        .option-select-group {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          .option-select {
+            border: 2px solid @color-blue500;
+            border-radius: 8px;
+            padding: 6px 10px;
+            height: 40px;
+
+            &:first-child {
+              margin-right: 18px;
+            }
+
+            .option-select-sort {
+              letter-spacing: 0.15px;
+
+              label {
+                color: #eae8f1;
+                opacity: 0.5;
+                margin-right: 8px;
+              }
+
+              .sort-detail {
+                display: flex;
+                align-items: center;
+
+                .arrow-icon {
+                  margin-left: 8px;
+                  transition: all 0.3s ease-in-out;
+
+                  &.up {
+                    transform: rotate(180deg);
+                  }
+                }
+              }
             }
           }
 
-          .tool-option {
-            height: 100%;
-            display: inline-block;
-            border-right: 4px solid @color-outline;
-            position: relative;
+          .option-select-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: @gradient-color-primary;
+            background-origin: border-box;
+            border: 2px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            z-index: 999;
 
-            &:last-child {
-              border-right: none !important;
-            }
+            .option-select-item {
+              padding: 16px 32px;
+              border-bottom: 1px solid #c4c4c420;
 
-            .input-search {
-              height: 100%;
-              position: absolute;
-              width: 100%;
-            }
-
-            .toggle {
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: space-evenly;
-
-              .label {
-                opacity: 0.5;
-                font-size: 16px;
-                color: #fff;
-                cursor: pointer;
-                position: relative;
-
-                .info-icon {
-                  margin: 0;
-                  position: absolute;
-                  top: -5px;
-                  right: -20px;
-                  display: flex;
-                  align-items: center;
-                  width: fit-content;
-
-                  &.labelized {
-                    left: -20px;
-                  }
-                }
-
-                &.active-label {
-                  font-weight: 700;
-                  opacity: 1;
-                }
-              }
-
-              &.deposit-toggle {
-                .ant-switch {
-                  background-color: @color-disable !important;
-                }
-                .ant-switch-checked {
-                  background-color: #fff !important;
-                }
-              }
-            }
-
-            .sort-by {
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: space-evenly;
-
-              .label {
-                font-size: 16px;
-                opacity: 0.5;
-
-                &.active-label {
-                  font-weight: 700;
-                  opacity: 1;
-                }
-
-                .sort-up,
-                .sort-down {
-                  margin-right: 5px;
-                  transition: 0.5s;
-                }
-
-                .sort-down {
-                  transform: rotate(180deg);
-                }
-              }
-
-              .collapse-down,
-              .collapse-up {
-                cursor: pointer;
-                transition: 0.5s;
-              }
-
-              .collapse-down {
-                transform: rotate(180deg);
+              &:last-child {
+                border-bottom: 0;
               }
             }
           }
@@ -1342,15 +1493,13 @@ export default class Pools extends Vue {
       .pools-table {
         .pools-table-header {
           .header-column {
-            font-size: 18px;
-            line-height: 21px;
-            color: rgba(255, 255, 255, 0.5);
             text-align: center;
             padding: 16px 0;
 
             .header-column-title {
               cursor: pointer;
               display: flex;
+              justify-content: center;
 
               i {
                 color: white;
@@ -1368,10 +1517,16 @@ export default class Pools extends Vue {
 
         .pools-table-body {
           .pools-table-item {
-            padding: 16px 0;
-            border-top: 1px solid hsla(0, 0%, 100%, 0.2);
             display: flex;
             align-items: center;
+            background: rgba(23, 32, 88, 0.9);
+            border-radius: 8px;
+            padding: 30px 18px;
+            margin-bottom: 8px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
 
             .lp-iconscontainer {
               background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
@@ -1403,6 +1558,14 @@ export default class Pools extends Vue {
 
             .state {
               text-align: center;
+
+              .btn-container {
+                margin: auto auto 8px auto;
+
+                &:last-child {
+                  margin-bottom: 0;
+                }
+              }
             }
           }
         }
@@ -1688,33 +1851,6 @@ export default class Pools extends Vue {
         }
       }
     }
-
-    .start,
-    .harvest {
-      background: @color-bg;
-      border-radius: 14px;
-      .reward .token {
-        font-size: 26px;
-        line-height: 31px;
-      }
-    }
-
-    .btncontainer {
-      display: inline-block !important;
-    }
-
-    .start .btncontainer:not(.largebtn) {
-      width: calc(50% - 20px);
-      margin-left: 5px;
-      margin-right: 5px;
-      margin-bottom: 10px;
-    }
-
-    .start .btncontainer:not(.largebtn):last-of-type {
-      width: calc(100% - 30px);
-      margin-left: 5px;
-      margin-right: 5px;
-    }
   }
 }
 </style>
@@ -1881,7 +2017,11 @@ export default class Pools extends Vue {
       }
 
       &.minus-btn {
-        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%) !important;
+        background: linear-gradient(
+          97.63deg,
+          #280c86 -29.92%,
+          #22b5b6 103.89%
+        ) !important;
         background-origin: border-box !important;
         padding: 2px !important;
         border-radius: 8px !important;
@@ -1950,7 +2090,7 @@ export default class Pools extends Vue {
 
 // ant customization
 .pool {
-  .page-content {
+  .page-option-bar {
     .tool-bar {
       .tool-option {
         .input-search {
