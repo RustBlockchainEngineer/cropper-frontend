@@ -104,7 +104,7 @@
                   class="active-underline"
                 ></div>
               </div>
-              <div class="option-tab">
+              <div v-if="wallet.connected" class="option-tab">
                 <Button
                   class="textL weightS"
                   :class="searchCertifiedFarm === 'deposit' ? 'active-tab' : ''"
@@ -816,7 +816,6 @@ export default class Pools extends Vue {
   timer: any = null;
   timer_init: any = null;
   loading: boolean = false;
-  stakedOnly: boolean = false;
   searchButton = true;
   searchName = "";
   totalCount = 110;
@@ -842,7 +841,7 @@ export default class Pools extends Vue {
   }
   @Watch("$accessor.liquidity.initialized", { immediate: true, deep: true })
   refreshThePage() {
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
+    this.showPool(this.searchName, this.currentPage);
   }
   @Watch("showCollapse", { immediate: true, deep: true }) handler() {
     if (!this.poolType && this.showCollapse.length > 0) {
@@ -852,22 +851,17 @@ export default class Pools extends Vue {
   @Watch("$accessor.liquidity.info", { immediate: true, deep: true })
   async onLiquidityChanged() {
     this.pools = this.poolsFormated();
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
+    this.showPool(this.searchName, this.currentPage);
   }
 
   @Watch("currentPage", { immediate: true, deep: true })
   async onpageChange(newPage: number) {
-    this.showPool(this.searchName, this.stakedOnly, newPage);
-  }
-
-  @Watch("stakedOnly", { immediate: true, deep: true })
-  async onStckChange(newStakedOnly: any) {
-    this.showPool(this.searchName, newStakedOnly);
+    this.showPool(this.searchName, newPage);
   }
 
   @Watch("searchName", { immediate: true, deep: true })
   async onSearchChange(newSearchName: string) {
-    this.showPool(newSearchName, this.stakedOnly);
+    this.showPool(newSearchName);
   }
   @Watch("searchCertifiedFarm", { immediate: true, deep: true })
   selectHandler(newSearchCertifiedFarm: string = "labelized") {
@@ -881,7 +875,7 @@ export default class Pools extends Vue {
     } else if (newSearchCertifiedFarm === "deposit") {
       this.pools = this.pools.filter((pool: any) => pool.current > 0.01);
     }
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
+    this.showPool(this.searchName, this.currentPage);
   }
 
   sortbyColumn(col: string) {
@@ -893,10 +887,10 @@ export default class Pools extends Vue {
     else if (this.sortMethod == "apy") this.sortAPYAsc = !this.sortAPYAsc;
     else if (this.sortMethod == "yliquidity") this.sortCurrentAsc = !this.sortCurrentAsc;
 
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
+    this.showPool(this.searchName, this.currentPage);
   }
 
-  showPool(searchName: any = "", stakedOnly: boolean = false, pageNum: any = 1) {
+  showPool(searchName: any = "", pageNum: any = 1) {
     const pool = [];
 
     this.pools = this.poolsFormated();
@@ -911,10 +905,6 @@ export default class Pools extends Vue {
       // deposit
       this.pools = this.pools.filter((pool: any) => pool.current > 0.01);
     }
-
-    // if (stakedOnly) {
-    //   this.poolsShow = this.poolsShow.filter((pool: any) => pool.current > 0.01);
-    // }
 
     // sort by column
     if (this.sortMethod == "liquidity") {
@@ -1458,7 +1448,7 @@ export default class Pools extends Vue {
   async flush() {
     this.loading = true;
     this.pools = this.poolsFormated();
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage);
+    this.showPool(this.searchName, this.currentPage);
     this.loading = false;
     this.countdown = 0;
   }
@@ -1735,6 +1725,11 @@ export default class Pools extends Vue {
               border-radius: 8px;
               padding: 18px;
               margin-bottom: 8px;
+              border: 3px solid transparent;
+
+              &:hover {
+                border-color: @color-blue500;
+              }
 
               &:last-child {
                 margin-bottom: 0;
@@ -2028,7 +2023,11 @@ export default class Pools extends Vue {
       background: rgba(23, 32, 88, 0.9);
       border-radius: 8px !important;
       margin-bottom: 8px;
-      border: none;
+      border: 3px solid transparent;
+
+      &:hover {
+        border-color: @color-blue500;
+      }
 
       .ant-collapse-header {
         padding: 18px;
