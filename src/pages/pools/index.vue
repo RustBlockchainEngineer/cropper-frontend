@@ -109,12 +109,55 @@
               <div v-if="stakedOnly" class="active-underline"></div>
             </div>
           </div>
+
+          <div
+            class="option-tab-group option-tab-collapse icon-cursor"
+            @click="
+              () => {
+                this.showTabMenu = !this.showTabMenu;
+              }
+            "
+          >
+            <label class="textL weightS icon-cursor">Labelized</label>
+            <img
+              class="arrow-icon"
+              :class="showTabMenu ? 'arrow-up' : 'arrow-down'"
+              src="@/assets/icons/arrow-down-white.svg"
+            />
+
+            <div v-if="showTabMenu" class="option-collapse-menu collapse-left">
+              <div
+                class="option-collapse-item text-center textM weightS icon-cursor"
+                :class="!searchCertifiedFarm ? 'active-item' : ''"
+                @click="activeSearch('labelized')"
+              >
+                Labelized
+              </div>
+              <div
+                class="option-collapse-item text-center textM weightS icon-cursor"
+                :class="searchCertifiedFarm ? 'active-item' : ''"
+                @click="activeSearch('permissionless')"
+              >
+                Permissionless
+              </div>
+              <div
+                class="option-collapse-item text-center textM weightS icon-cursor"
+                :class="stakedOnly ? 'active-item' : ''"
+                @click="activeSearch('deposit')"
+              >
+                My Deposit
+              </div>
+            </div>
+          </div>
+
           <div class="option-select-group">
             <div class="option-select fc-container icon-cursor">
               <img src="@/assets/icons/search.svg" />
             </div>
+
+            <!-- option sort > 768px -->
             <div
-              class="option-select fc-container icon-cursor"
+              class="option-select option-sort fc-container icon-cursor"
               @click="
                 () => {
                   this.showSortMenu = !this.showSortMenu;
@@ -127,16 +170,27 @@
                   Liquidity ({{ sortLiquidityAsc ? "asc" : "dsc" }})
                   <img
                     class="arrow-icon"
-                    :class="showSortMenu ? 'up' : ''"
+                    :class="showSortMenu ? 'arrow-up' : 'arrow-down'"
                     src="@/assets/icons/arrow-down-white.svg"
                   />
                 </span>
               </span>
             </div>
 
-            <div v-if="showSortMenu" class="option-select-menu">
+            <!-- option sort < 768px -->
+            <img
+              class="option-sort-collapse icon-cursor"
+              src="@/assets/icons/menu-collapse.svg"
+              @click="
+                () => {
+                  this.showSortMenu = !this.showSortMenu;
+                }
+              "
+            />
+
+            <div v-if="showSortMenu" class="option-collapse-menu collapse-right">
               <div
-                class="option-select-item textM weightS icon-cursor"
+                class="option-collapse-item text-center textM weightS icon-cursor"
                 :class="sortLiquidityAsc ? 'active-item' : ''"
                 @click="
                   () => {
@@ -149,7 +203,7 @@
                 Liquidity A -> Z
               </div>
               <div
-                class="option-select-item textM weightS icon-cursor"
+                class="option-collapse-item text-center textM weightS icon-cursor"
                 :class="!sortLiquidityAsc ? 'active-item' : ''"
                 @click="
                   () => {
@@ -610,6 +664,7 @@ export default class Pools extends Vue {
   showGuide: boolean = true;
   showSortMenu: boolean = false;
   showSearchMenu: boolean = false;
+  showTabMenu: boolean = false;
 
   get liquidity() {
     this.$accessor.wallet.getTokenAccounts();
@@ -659,12 +714,12 @@ export default class Pools extends Vue {
 
   sortbyColumn(col: string) {
     this.sortMethod = col;
-    if (this.sortMethod == "liquidity") this.sortLiquidityAsc = !this.sortLiquidityAsc
-    else if (this.sortMethod == "volh") this.sortVolHAsc = !this.sortVolHAsc
-    else if (this.sortMethod == "vold") this.sortVolDAsc = !this.sortVolDAsc
-    else if (this.sortMethod == "feesh") this.sortFeesAsc = !this.sortFeesAsc
-    else if (this.sortMethod == "apy") this.sortAPYAsc = !this.sortAPYAsc
-    else if (this.sortMethod == "yliquidity") this.sortCurrentAsc = !this.sortCurrentAsc
+    if (this.sortMethod == "liquidity") this.sortLiquidityAsc = !this.sortLiquidityAsc;
+    else if (this.sortMethod == "volh") this.sortVolHAsc = !this.sortVolHAsc;
+    else if (this.sortMethod == "vold") this.sortVolDAsc = !this.sortVolDAsc;
+    else if (this.sortMethod == "feesh") this.sortFeesAsc = !this.sortFeesAsc;
+    else if (this.sortMethod == "apy") this.sortAPYAsc = !this.sortAPYAsc;
+    else if (this.sortMethod == "yliquidity") this.sortCurrentAsc = !this.sortCurrentAsc;
 
     this.showPool(this.searchName, this.stakedOnly, this.currentPage);
   }
@@ -1289,6 +1344,10 @@ export default class Pools extends Vue {
 .pool.container {
   margin-top: 38px;
 
+  @media @max-sl-mobile {
+    margin-top: 28px;
+  }
+
   .card {
     .card-body {
       position: relative;
@@ -1337,18 +1396,28 @@ export default class Pools extends Vue {
       }
 
       .page-head {
-        margin-top: 10px;
+        @media @max-sl-mobile {
+          display: block;
+        }
 
         .title {
           text-align: center;
           position: relative;
           float: left;
+
+          @media @max-sl-mobile {
+            margin-bottom: 18px !important;
+          }
         }
 
         .information {
           display: flex;
           align-items: center;
-          justify-content: space-around;
+          justify-content: space-between;
+
+          @media @max-sl-mobile {
+            width: 100%;
+          }
 
           .tvl-info {
             margin-right: 18px;
@@ -1394,10 +1463,6 @@ export default class Pools extends Vue {
                 align-items: center;
                 justify-content: center;
                 color: white;
-
-                @media @max-lg-tablet {
-                  display: none;
-                }
               }
             }
           }
@@ -1493,8 +1558,42 @@ export default class Pools extends Vue {
       .page-option-bar {
         margin: 38px 0;
 
+        @media @max-sl-mobile {
+          margin: 28px 0;
+        }
+
         .option-tab-group {
           display: flex;
+
+          @media @max-sl-mobile {
+            display: none;
+          }
+
+          &.option-tab-collapse {
+            display: none;
+
+            @media @max-sl-mobile {
+              position: relative;
+              display: flex;
+              align-items: center;
+              padding: 6px 10px;
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+
+              label {
+                color: @color-petrol500;
+              }
+
+              .arrow-icon {
+                margin-left: 4px;
+                transition: all 0.3s;
+
+                &.arrow-up {
+                  transform: rotate(180deg);
+                }
+              }
+            }
+          }
 
           .option-tab {
             margin-right: 48px;
@@ -1535,11 +1634,22 @@ export default class Pools extends Vue {
           .option-select {
             border: 2px solid @color-blue500;
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 0 8px;
             height: 40px;
+
+            @media @max-sl-mobile {
+              height: 32px;
+              padding: 0 4px;
+            }
 
             &:first-child {
               margin-right: 18px;
+            }
+
+            &.option-sort {
+              @media @max-md-tablet {
+                display: none;
+              }
             }
 
             .option-select-sort {
@@ -1559,7 +1669,7 @@ export default class Pools extends Vue {
                   margin-left: 8px;
                   transition: all 0.3s ease-in-out;
 
-                  &.up {
+                  &.arrow-up {
                     transform: rotate(180deg);
                   }
                 }
@@ -1567,28 +1677,44 @@ export default class Pools extends Vue {
             }
           }
 
-          .option-select-menu {
-            position: absolute;
-            top: 50px;
+          .option-sort-collapse {
+            display: none;
+
+            @media @max-md-tablet {
+              display: block;
+            }
+          }
+        }
+
+        .option-collapse-menu {
+          position: absolute;
+          top: 50px;
+          background: @gradient-color-primary;
+          background-origin: border-box;
+          border: 2px solid rgba(255, 255, 255, 0.14);
+          box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+          border-radius: 8px;
+          min-width: 180px;
+          z-index: 999;
+
+          &.collapse-left {
+            left: 0;
+          }
+
+          &.collapse-right {
             right: 0;
-            background: @gradient-color-primary;
-            background-origin: border-box;
-            border: 2px solid rgba(255, 255, 255, 0.14);
-            box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
-            border-radius: 8px;
-            z-index: 999;
+          }
 
-            .option-select-item {
-              padding: 16px 32px;
-              border-bottom: 1px solid #c4c4c420;
+          .option-collapse-item {
+            padding: 16px 32px;
+            border-bottom: 1px solid #c4c4c420;
 
-              &:last-child {
-                border-bottom: 0;
-              }
+            &:last-child {
+              border-bottom: 0;
+            }
 
-              &.active-item {
-                color: @color-petrol500;
-              }
+            &.active-item {
+              color: @color-petrol500;
             }
           }
         }
