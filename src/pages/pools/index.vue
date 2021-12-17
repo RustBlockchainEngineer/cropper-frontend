@@ -489,7 +489,7 @@
 
             <Collapse
               v-model="showCollapse"
-              expand-icon-position="right"
+              accordion
             >
               <CollapsePanel
                 v-for="data in poolsShow"
@@ -524,7 +524,7 @@
                   <Button class="detail-btn textS weightS">
                     <img
                       class="arrow-icon"
-                      :class="showCollapse ? 'arrow-up' : 'arrow-down'"
+                      :class="data.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
                       src="@/assets/icons/arrow-down-white.svg"
                     />
                   </Button>
@@ -593,7 +593,7 @@
           <div v-if="poolLoaded" class="pools-table isMobile">
             <Collapse
               v-model="showCollapse"
-              expand-icon-position="right"
+              accordion
             >
               <CollapsePanel
                 v-for="data in poolsShow"
@@ -618,7 +618,7 @@
                     Details
                     <img
                       class="arrow-icon"
-                      :class="showCollapse ? 'arrow-up' : 'arrow-down'"
+                      :class="data.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
                       src="@/assets/icons/arrow-down-white.svg"
                     />
                   </Button>
