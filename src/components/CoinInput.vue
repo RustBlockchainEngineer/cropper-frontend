@@ -161,7 +161,7 @@ export default Vue.extend({
       justify-content: flex-start;
       position: relative;
       padding: 0 10px;
-      background: @color-bg;
+      background: @color-blue800;
       border-radius: 8px;
       width: 130px;
       height: 32px;

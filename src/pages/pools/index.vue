@@ -1516,7 +1516,7 @@ export default class Pools extends Vue {
     border-radius: 8px;
     padding: 7px 10px;
     white-space: nowrap;
-    background: @color-bg;
+    background: @color-blue800;
     text-align: center;
     height: 100%;
     width: fit-content;
@@ -1975,7 +1975,7 @@ export default class Pools extends Vue {
           flex-direction: unset;
           float: unset;
           flex: unset;
-          background: @color-bg;
+          background: @color-blue800;
           border-radius: 8px;
           padding: 8px 18px 18px 18px;
           border-bottom: 0;

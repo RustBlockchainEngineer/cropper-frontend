@@ -526,7 +526,7 @@ export default Vue.extend({
 .staking.container {
   max-width: 1350px;
   width: 100%;
-  background: @color-bg;
+  background: @color-blue800;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
@@ -568,7 +568,7 @@ export default Vue.extend({
       height: 100%;
       width: 100%;
       border: none;
-      background: @color-bg-dark;
+      background: @color-blue-dark;
       color: #fff;
       font-weight: 600;
       font-size: 12px;
@@ -706,7 +706,7 @@ export default Vue.extend({
         max-width: 450px;
         min-height: 465px;
         margin: auto;
-        background: @color-bg-dark;
+        background: @color-blue-dark;
         padding: 15px;
         border-radius: 5px;
 

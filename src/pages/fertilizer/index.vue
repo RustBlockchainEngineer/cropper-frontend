@@ -394,7 +394,7 @@ export default Vue.extend({
   max-height: 65px;
 
   button {
-    background: @color-bg !important;
+    background: @color-blue800 !important;
     position: relative;
     border-radius: 30px;
     border-color: transparent;
@@ -524,7 +524,7 @@ export default Vue.extend({
   }
   
   .ant-collapse {
-    background-color: @color-bg !important;
+    background-color: @color-blue800 !important;
   }
 
   .pf-record .pf-record-content {
@@ -562,7 +562,7 @@ export default Vue.extend({
 .fertilizer.cont {
   max-width: 1350px;
   width: 100%;
-  background: @color-bg;
+  background: @color-blue800;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
@@ -629,7 +629,7 @@ export default Vue.extend({
   }
 
   .count-down {
-    background-color: @color-bg;
+    background-color: @color-blue800;
     border-radius: 63px;
     height: 100%;
     display: inline-flex;
@@ -707,7 +707,7 @@ export default Vue.extend({
   }
 
   .ant-collapse-content {
-    background-color: @color-bg;
+    background-color: @color-blue800;
     border-top: 1px solid #1c274f;
 
     .ant-collapse-content-box .ant-row{
@@ -789,7 +789,7 @@ export default Vue.extend({
 
   .page-head a {
     z-index: 2;
-    background: @color-bg;
+    background: @color-blue800;
     float: right;
 
     .btncontainer {
@@ -842,7 +842,7 @@ export default Vue.extend({
 
         .icons {
           height: 47px;
-          background-color: @color-bg;
+          background-color: @color-blue800;
           border-radius: 8px;
           align-items: center;
           padding: 0 20px;
@@ -895,7 +895,7 @@ export default Vue.extend({
 }
 
 main {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -930,7 +930,7 @@ main {
   text-align: right;
 }
 .pf-record {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   border-bottom: 1px solid #d9d9d9;
 
   .pf-record-content {

@@ -315,7 +315,7 @@ export default Vue.extend({
     height: 100%;
     width: 100%;
     border: none;
-    background: @color-bg-dark;
+    background: @color-blue-dark;
     color: #fff;
     border-radius: 6px;
     cursor: pointer;

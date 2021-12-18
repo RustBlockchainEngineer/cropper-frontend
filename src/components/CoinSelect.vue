@@ -513,7 +513,7 @@ export default Vue.extend({
         }
 
         .common-box {
-          background: @color-bg;
+          background: @color-blue800;
           border-radius: 8px;
           padding: 8px;
 
@@ -533,7 +533,7 @@ export default Vue.extend({
   display: grid;
   grid-auto-rows: auto;
   row-gap: 14px;
-  background: @color-bg;
+  background: @color-blue800;
 
   .token-list {
     max-height: 50vh;

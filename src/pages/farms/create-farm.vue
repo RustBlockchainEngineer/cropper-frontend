@@ -1328,7 +1328,7 @@ export default class CreateFarm extends Vue {
           font-size: 20px;
           font-weight: 600;
           line-height: 25px;
-          color: @color-bg;
+          color: @color-blue800;
         }
       }
 
@@ -1623,7 +1623,7 @@ export default class CreateFarm extends Vue {
 
 <style lang="less" scoped>
 main {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -2078,7 +2078,7 @@ main {
 
           .icons {
             height: 47px;
-            background-color: @color-bg;
+            background-color: @color-blue800;
             border-radius: 8px;
             align-items: center;
             padding: 0 20px;

@@ -74,7 +74,7 @@
 
             <NuxtLink to="/farms/create-farm/" class="create-btn-mobile">
               <div class="create-plus-btn">
-                <img src="@/assets/icons/plus-icon-10.svg" />
+                <img src="@/assets/icons/plus.svg" />
               </div>
             </NuxtLink>
           </span>
@@ -2533,7 +2533,7 @@ export default Vue.extend({
 .farm.container {
   max-width: 1350px;
   width: 100%;
-  background: @color-bg;
+  background: @color-blue800;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 15px;
@@ -2864,7 +2864,7 @@ export default Vue.extend({
             @media @max-lg-tablet {
               display: block;
               padding: 0;
-              background: @color-bg-dark !important;
+              background: @color-blue-dark !important;
               border-radius: 0;
               margin-top: 0;
             }
@@ -2950,7 +2950,7 @@ export default Vue.extend({
 
                   .icons {
                     height: 100%;
-                    background-color: @color-bg;
+                    background-color: @color-blue800;
                     border-radius: 8px;
                     align-items: center;
                     justify-content: center;

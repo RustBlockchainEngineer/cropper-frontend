@@ -112,7 +112,7 @@ export default class CreateFarm extends Vue {
 </script>
 <style lang="less" scoped>
 main {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;

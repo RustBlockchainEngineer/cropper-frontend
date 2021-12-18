@@ -32,10 +32,12 @@
         :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
         :visible="wallet.modalShow && isModal"
         :footer="null"
+        :closable="false"
         class="connect-modal"
         centered
         @cancel="$accessor.wallet.closeModal"
       >
+        <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$accessor.wallet.closeModal" />
         <div v-if="!wallet.connected" class="select-wallet">
           <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
             <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
@@ -733,7 +735,7 @@ export default class Wallet extends Vue {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: @color-bg;
+        background: @color-blue800;
         border-radius: 48px;
         border: none;
         height: 100%;

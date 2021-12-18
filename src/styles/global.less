@@ -71,7 +71,7 @@ body {
   margin: 0 auto;
 
   button {
-    background: @color-bg !important;
+    background: @color-blue800 !important;
     padding: 9px 30px;
     display: block;
     height: 51px;
@@ -111,7 +111,7 @@ body {
 }
 
 .ant-progress {
-  background: @color-bg !important;
+  background: @color-blue800 !important;
 }
 
 .flex {
@@ -191,7 +191,7 @@ a {
       cursor: pointer;
 
       &:hover {
-        background: @color-bg;
+        background: @color-blue800;
       }
     }
 
@@ -462,6 +462,10 @@ p {
   text-align: center !important;
 }
 
+.text-right {
+  text-align: right !important;
+}
+
 // icon style
 .icon-cursor {
   cursor: pointer;
@@ -473,35 +477,44 @@ p {
 
 // ant-modal
 .ant-modal {  
-  .ant-modal-content {
-    background-color: @color-modal-dark;
-    border-radius: 5px;
+  background: @color-blue700;
+  border: 3px solid @color-blue500;
+  box-shadow: 0 40px 70px rgba(0, 0, 0, 0.3);
+  border-radius: 18px;
+  padding: 12px 18px !important;
 
-    .ant-modal-close .ant-modal-close-x .anticon{
-      color: #fff;
-      font-size: 20px;
-    }
+  .modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+  }
+
+  .ant-modal-content {
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
 
     .ant-modal-header {
-      background-color: @color-modal-dark;
+      background-color: transparent;
       display: flex;
       justify-content: space-between;
-      padding: 20px;
+      padding: 0;
       border-bottom: 0;
 
       .ant-modal-title {
         width: 100%;
-        background-color: @color-modal-dark;
+        background-color: transparent;
         font-weight: 700;
-        font-size: 18px;
-        line-height: 22px;
+        font-size: 20px;
+        line-height: 30px;
         color: #fff;
       }
     }
-      
-    .card-body {
-      background-color: unset !important;
-      padding: unset !important
+    
+    .ant-modal-body {
+      padding: 0;
+      margin-top: 8px;
     }
   }
 }

@@ -1,180 +1,210 @@
 <template>
-  <Modal :title="title" :visible="true" :footer="null" :width="400" centered @cancel="$emit('onCancel')">
-    <div class="card addliq">
-      <div class="card-body">
-        <CoinInput
-          v-model="fromCoinAmount"
-          label="Input"
-          :mint-address="farmInfo.lp.coin ? farmInfo.lp.coin.mintAddress : ''"
-          :coin-name="farmInfo.lp.coin ? farmInfo.lp.coin.symbol : ''"
-          :balance="farmInfo.lp.coin ? farmInfo.lp.coin.balance : null"
-          @onInput="(amount) => (fromCoinAmount = amount)"
-          @onFocus="
-            () => {
-              fixedCoin = farmInfo.lp.coin.mintAddress
-            }
-          "
-          @onMax="
-            () => {
-              fixedCoin = farmInfo.lp.coin.mintAddress
-              fromCoinAmount = farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : ''
-            }
-          "
-        />
+  <Modal
+    :title="title"
+    :visible="true"
+    :footer="null"
+    :width="400"
+    :closable="false"
+    class="addliq-modal"
+    centered
+    @cancel="$emit('onCancel')"
+  > 
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <div class="addliq">
+      <CoinInput
+        v-model="fromCoinAmount"
+        label="Input"
+        :mint-address="farmInfo.lp.coin ? farmInfo.lp.coin.mintAddress : ''"
+        :coin-name="farmInfo.lp.coin ? farmInfo.lp.coin.symbol : ''"
+        :balance="farmInfo.lp.coin ? farmInfo.lp.coin.balance : null"
+        @onInput="(amount) => (fromCoinAmount = amount)"
+        @onFocus="
+          () => {
+            fixedCoin = farmInfo.lp.coin.mintAddress;
+          }
+        "
+        @onMax="
+          () => {
+            fixedCoin = farmInfo.lp.coin.mintAddress;
+            fromCoinAmount = farmInfo.lp.coin.balance
+              ? farmInfo.lp.coin.balance.fixed()
+              : '';
+          }
+        "
+      />
 
-        <div class="add-icon fc-container">
-          <div class="fc-container">
-            <img src="@/assets/icons/plus-icon.svg"/>
+      <div class="plus-icon-container text-center">
+        <img
+          src="@/assets/icons/plus.svg"
+          class="plus-icon icon-centered"
+        />
+      </div>
+
+      <CoinInput
+        v-model="toCoinAmount"
+        label="Input"
+        :mint-address="farmInfo.lp.pc ? farmInfo.lp.pc.mintAddress : ''"
+        :coin-name="farmInfo.lp.pc ? farmInfo.lp.pc.symbol : ''"
+        :balance="farmInfo.lp.pc ? farmInfo.lp.pc.balance : null"
+        @onInput="(amount) => (toCoinAmount = amount)"
+        @onFocus="
+          () => {
+            fixedCoin = farmInfo.lp.pc.mintAddress;
+          }
+        "
+        @onMax="
+          () => {
+            fixedCoin = farmInfo.lp.pc.mintAddress;
+            toCoinAmount = farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '';
+          }
+        "
+      />
+
+      <LiquidityPoolInfo
+        :initialized="liquidity.initialized"
+        :pool-info="liquidity.infos[farmInfo.lp.mintAddress]"
+      />
+      <div v-if="officialPool === false">
+        <div style="margin: 10px">
+          <div>AMM ID:</div>
+          <div>
+            {{ farmInfo.poolId.substr(0, 14) }}
+            ...
+            {{ farmInfo.poolId.substr(farmInfo.poolId.length - 14, 14) }}
           </div>
         </div>
+      </div>
 
-        <CoinInput
-          v-model="toCoinAmount"
-          label="Input"
-          :mint-address="farmInfo.lp.pc ? farmInfo.lp.pc.mintAddress : ''"
-          :coin-name="farmInfo.lp.pc ? farmInfo.lp.pc.symbol : ''"
-          :balance="farmInfo.lp.pc ? farmInfo.lp.pc.balance : null"
-          @onInput="(amount) => (toCoinAmount = amount)"
-          @onFocus="
-            () => {
-              fixedCoin = farmInfo.lp.pc.mintAddress
-            }
+      <div class="btn-container">
+        <Button
+          class="textL weightB"
+          :disabled="
+            !farmInfo.lp.coin ||
+            !fromCoinAmount ||
+            !farmInfo.lp.pc ||
+            !farmInfo.lp.mintAddress ||
+            !liquidity.initialized ||
+            liquidity.loading ||
+            gt(
+              fromCoinAmount,
+              farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0'
+            ) ||
+            gt(
+              toCoinAmount,
+              farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '0'
+            ) ||
+            suppling
           "
-          @onMax="
-            () => {
-              fixedCoin = farmInfo.lp.pc.mintAddress
-              toCoinAmount = farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : ''
-            }
-          "
-        />
-
-        <LiquidityPoolInfo :initialized="liquidity.initialized" :pool-info="liquidity.infos[farmInfo.lp.mintAddress]" />
-        <div v-if="officialPool === false">
-          <div style="margin: 10px">
-            <div>AMM ID:</div>
-            <div>
-              {{ farmInfo.poolId.substr(0, 14) }}
-              ...
-              {{ farmInfo.poolId.substr(farmInfo.poolId.length - 14, 14) }}
-            </div>
-          </div>
-        </div>
-
-
-        <div class="stdGradientButton">
-          <Button
-            size="large"
-            ghost
-            :disabled="
-              !farmInfo.lp.coin ||
-              !fromCoinAmount ||
-              !farmInfo.lp.pc ||
-              !farmInfo.lp.mintAddress ||
-              !liquidity.initialized ||
-              liquidity.loading ||
-              gt(fromCoinAmount, farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0') ||
-              gt(toCoinAmount, farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '0') ||
-              suppling
+          :loading="suppling"
+          @click="$emit('onOk', fromCoinAmount, toCoinAmount, fixedCoin)"
+        >
+          <template v-if="!farmInfo.lp.coin || !farmInfo.lp.pc">
+            Select a token
+          </template>
+          <template v-else-if="!farmInfo.lp.mintAddress || !liquidity.initialized">
+            Invalid pair
+          </template>
+          <template v-else-if="!fromCoinAmount"> Enter an amount </template>
+          <template v-else-if="liquidity.loading"> Updating pool information </template>
+          <template
+            v-else-if="
+              gt(
+                fromCoinAmount,
+                farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0'
+              )
             "
-            :loading="suppling"
-             @click="$emit('onOk',fromCoinAmount,toCoinAmount,fixedCoin)"
           >
-            <template v-if="!farmInfo.lp.coin || !farmInfo.lp.pc"> Select a token </template>
-            <template v-else-if="!farmInfo.lp.mintAddress || !liquidity.initialized"> Invalid pair </template>
-            <template v-else-if="!fromCoinAmount"> Enter an amount </template>
-            <template v-else-if="liquidity.loading"> Updating pool information </template>
-            <template v-else-if="gt(fromCoinAmount, farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0')">
-              Insufficient {{ farmInfo.lp.coin.symbol }} balance
-            </template>
-            <template v-else-if="gt(toCoinAmount, farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '')">
-              Insufficient {{ farmInfo.lp.pc.symbol }} balance
-            </template>
-            <template v-else>Add liquidity</template>
-          </Button>
-        </div>
-
-
+            Insufficient {{ farmInfo.lp.coin.symbol }} balance
+          </template>
+          <template
+            v-else-if="
+              gt(
+                toCoinAmount,
+                farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : ''
+              )
+            "
+          >
+            Insufficient {{ farmInfo.lp.pc.symbol }} balance
+          </template>
+          <template v-else>Add liquidity</template>
+        </Button>
       </div>
     </div>
   </Modal>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Modal,  Button } from 'ant-design-vue'
-import { mapState } from 'vuex'
-import { inputRegex, escapeRegExp } from '@/utils/regex'
-import { getOutAmount } from '@/utils/liquidity'
-import { gt } from '@/utils/safe-math'
+import Vue from "vue";
+import { Modal, Button } from "ant-design-vue";
+import { mapState } from "vuex";
+import { inputRegex, escapeRegExp } from "@/utils/regex";
+import { getOutAmount } from "@/utils/liquidity";
+import { gt } from "@/utils/safe-math";
 
 // fix: Failed to resolve directive: ant-portal
-Vue.use(Modal)
+Vue.use(Modal);
 
 export default Vue.extend({
   components: {
     Modal,
-    Button
+    Button,
   },
   props: {
     title: {
       type: String,
-      default: ''
+      default: "",
     },
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    farmInfo:{
-        type: Object,
-        required: true
-    }
+    farmInfo: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
-        fromCoinAmount: '',
-        toCoinAmount: '',
-        fixedCoin: '',
-        officialPool: true,
-        userCheckUnofficial: false,
-        userCheckUnofficialMint: undefined as string | undefined,
-        userCheckUnofficialShow: false,
-        suppling: false,
-    }
+      fromCoinAmount: "",
+      toCoinAmount: "",
+      fixedCoin: "",
+      officialPool: true,
+      userCheckUnofficial: false,
+      userCheckUnofficialMint: undefined as string | undefined,
+      userCheckUnofficialShow: false,
+      suppling: false,
+    };
   },
-    computed: {
-        ...mapState([ 'liquidity','setting'])
+  computed: {
+    ...mapState(["liquidity", "setting"]),
+  },
+  watch: {
+    fromCoinAmount(newAmount: string, oldAmount: string) {
+      this.$nextTick(() => {
+        if (!inputRegex.test(escapeRegExp(newAmount))) {
+          this.fromCoinAmount = oldAmount;
+        } else {
+          this.updateAmounts();
+        }
+      });
     },
-    watch: {
-        fromCoinAmount(newAmount: string, oldAmount: string) {
-            this.$nextTick(() => {
-                if (!inputRegex.test(escapeRegExp(newAmount))) {
-                this.fromCoinAmount = oldAmount
-                } else {
-                this.updateAmounts()
-                }
-            })
-        },
 
-        toCoinAmount(newAmount: string, oldAmount: string) {
-            this.$nextTick(() => {
-                if (!inputRegex.test(escapeRegExp(newAmount))) {
-                this.toCoinAmount = oldAmount
-                } else {
-                this.updateAmounts()
-                }
-            })
-        },
+    toCoinAmount(newAmount: string, oldAmount: string) {
+      this.$nextTick(() => {
+        if (!inputRegex.test(escapeRegExp(newAmount))) {
+          this.toCoinAmount = oldAmount;
+        } else {
+          this.updateAmounts();
+        }
+      });
     },
-  
-
-  
-    
+  },
 
   methods: {
     gt,
     updateAmounts() {
       if (this.farmInfo.lp.coin && this.farmInfo.lp.pc && this.farmInfo.lp.mintAddress) {
-        const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress]
+        const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress];
 
         if (this.fixedCoin === this.farmInfo.lp.coin.mintAddress) {
           const amount = getOutAmount(
@@ -183,15 +213,15 @@ export default Vue.extend({
             this.farmInfo.lp.coin.mintAddress,
             this.farmInfo.lp.pc.mintAddress,
             this.setting.slippage
-          )
+          );
 
           if (amount.isNaN() || !amount.isFinite()) {
-            this.toCoinAmount = ''
+            this.toCoinAmount = "";
           } else {
-            this.toCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals)
+            this.toCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals);
           }
         } else {
-          const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress]
+          const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress];
 
           const amount = getOutAmount(
             poolInfo,
@@ -199,34 +229,35 @@ export default Vue.extend({
             this.farmInfo.lp.pc.mintAddress,
             this.farmInfo.lp.coin.mintAddress,
             this.setting.slippage
-          )
+          );
 
           if (amount.isNaN() || !amount.isFinite()) {
-            this.fromCoinAmount = ''
+            this.fromCoinAmount = "";
           } else {
-            this.fromCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals)
+            this.fromCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals);
           }
         }
       }
     },
-  }
-})
+  },
+});
 </script>
-
 <style lang="less" scoped>
-.addliq .add-icon .fc-container img{
-  cursor: pointer;
+.addliq {
+  .plus-icon-container {
+    margin: 8px 0;
+  }
 }
-
-.addliq .btnContainer{
-  background:transparent !important;
-  display:inline-block !important;
-  
-  button{
-    background: @gradient-color-icon !important;
-    background-origin: border-box;
-    border: 2px solid rgba(255, 255, 255, 0.14) !important;
-    border-radius: 8px;
+.btn-container {
+  button {
+    background: @gradient-btn-primary !important;
+    background-origin: border-box !important;
+    border: none;
+    position: relative;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 38px;
+    width: 100%;
+    height: 50px;
   }
 }
 </style>

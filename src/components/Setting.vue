@@ -104,7 +104,7 @@ export default class Setting extends Vue {
     transition: ease all .3s;
 
     button{
-      background:@color-bg !important;
+      background:@color-blue800 !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;

@@ -2041,7 +2041,7 @@ export default Vue.extend({
 
       .icons {
         height: 47px;
-        background-color: @color-bg;
+        background-color: @color-blue800;
         border-radius: 8px;
         align-items: center;
         padding: 0 20px;
@@ -2851,7 +2851,7 @@ export default Vue.extend({
 
     .start,
     .harvest {
-      background: @color-bg;
+      background: @color-blue800;
       border-radius: 14px;
       margin: auto;
       .reward .token {
@@ -2954,7 +2954,7 @@ export default Vue.extend({
       border: none;
       padding: 9px 10px;
       border-radius: 5px 0 0 5px;
-      background: @color-bg;
+      background: @color-blue800;
       width: 293px;
     }
 
@@ -3394,7 +3394,7 @@ export default Vue.extend({
   max-height: 65px;
 
   button {
-    background: @color-bg !important;
+    background: @color-blue800 !important;
     position: relative;
     border-radius: 30px;
     border-color: transparent;
@@ -3407,7 +3407,7 @@ export default Vue.extend({
 }
 
 main {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -3442,7 +3442,7 @@ main {
   text-align: right;
 }
 .pf-record {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   border-bottom: 1px solid #d9d9d9;
 
   .pf-record-content {
@@ -3466,14 +3466,14 @@ main {
 
 .farm.container {
   max-width: 1200px;
-  background: @color-bg;
+  background: @color-blue800;
   margin-top: 20px;
   margin-bottom: 20px;
 
   .card {
     .card-body {
       padding: 0;
-      background: @color-bg;
+      background: @color-blue800;
       overflow-x: scroll;
       scrollbar-width: none;
       -ms-overflow-style: none;

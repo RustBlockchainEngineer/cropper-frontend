@@ -2150,7 +2150,7 @@ export default Vue.extend({
         grid-row-gap: 8px;
         row-gap: 8px;
         padding: 12px;
-        background: @color-bg;
+        background: @color-blue800;
         border-radius: 18px;
 
         .info-box {
@@ -2182,7 +2182,7 @@ export default Vue.extend({
                 align-items: center;
                 height: 100%;
                 padding: 8px;
-                background: @color-bg;
+                background: @color-blue800;
                 border-radius: 8px;
 
                 img {

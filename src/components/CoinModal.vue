@@ -1,9 +1,18 @@
 <template>
-  <Modal :title="title" :visible="true" :footer="null" :width="400" centered @cancel="$emit('onCancel')">
+  <Modal
+    :title="title"
+    :visible="true"
+    :footer="null"
+    :width="400"
+    centered
+    @cancel="$emit('onCancel')"
+  >
     <div class="coin-modal">
       <div class="label fs-container">
         <span></span>
-        <span v-if="coin.balance && !coin.balance.wei.isNaN()"> Balance: {{ coin.balance.fixed() }} </span>
+        <span v-if="coin.balance && !coin.balance.wei.isNaN()">
+          Balance: {{ coin.balance.fixed() }}
+        </span>
       </div>
       <div class="coin-input fs-container">
         <input
@@ -19,7 +28,9 @@
           spellcheck="false"
         />
         <button
-          v-if="coin.balance && (isNullOrZero(value) || lt(value, coin.balance.toEther()))"
+          v-if="
+            coin.balance && (isNullOrZero(value) || lt(value, coin.balance.toEther()))
+          "
           class="max-button"
           @click="setMax"
         >
@@ -31,11 +42,10 @@
       </div>
     </div>
 
-    <div v-html="text">{{text}}</div>
+    <div v-html="text">{{ text }}</div>
 
     <Row :gutter="32" class="actions">
       <Col :span="12" class="text-center">
-
         <div class="stdEmptyGradientButton">
           <Button ghost @click="$emit('onCancel')"> Cancel </Button>
         </div>
@@ -44,7 +54,12 @@
         <div class="stdGradientButton">
           <Button
             :loading="loading"
-            :disabled="loading || isNullOrZero(value) || !lte(value, coin.balance.toEther()) || !validateTotalSupply()"
+            :disabled="
+              loading ||
+              isNullOrZero(value) ||
+              !lte(value, coin.balance.toEther()) ||
+              !validateTotalSupply()
+            "
             ghost
             @click="$emit('onOk', value)"
           >
@@ -57,102 +72,97 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Modal, Row, Col, Button } from 'ant-design-vue'
+import Vue from "vue";
+import { Modal, Row, Col, Button } from "ant-design-vue";
 
-import { inputRegex, escapeRegExp } from '@/utils/regex'
-import { lt, lte, isNullOrZero } from '@/utils/safe-math'
-import {getTotalSupply} from '@/store/liquidity'
-const MIN_LP_SUPPLY = 0.001
+import { inputRegex, escapeRegExp } from "@/utils/regex";
+import { lt, lte, isNullOrZero } from "@/utils/safe-math";
+import { getTotalSupply } from "@/store/liquidity";
+const MIN_LP_SUPPLY = 0.001;
 // fix: Failed to resolve directive: ant-portal
-Vue.use(Modal)
+Vue.use(Modal);
 
 export default Vue.extend({
   components: {
     Modal,
     Row,
     Col,
-    Button
+    Button,
   },
 
   props: {
     title: {
       type: String,
-      default: ''
+      default: "",
     },
     coin: {
       type: Object,
-      required: true
+      required: true,
     },
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     text: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
 
   data() {
     return {
-      value: ''
-    }
+      value: "",
+    };
   },
   watch: {
     // input amount change
     value(newValue: string, oldValue: string) {
       this.$nextTick(() => {
         if (!inputRegex.test(escapeRegExp(newValue))) {
-          this.value = oldValue
+          this.value = oldValue;
         }
-      })
-    }
+      });
+    },
   },
 
   methods: {
     lt,
     lte,
     isNullOrZero,
-    validateTotalSupply()
-    {
-      if(this.title == "Remove Liquidity")
-      {
-        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
-        if(lp_info)
-        {
-            const totalSupply = lp_info.lp.totalSupply.fixed()
-            const res = parseFloat(this.value) <= (parseFloat(totalSupply)  - MIN_LP_SUPPLY)//
-            return res
-        }
-        else
-        {
-          return false
+    validateTotalSupply() {
+      if (this.title == "Remove Liquidity") {
+        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress];
+        if (lp_info) {
+          const totalSupply = lp_info.lp.totalSupply.fixed();
+          const res = parseFloat(this.value) <= parseFloat(totalSupply) - MIN_LP_SUPPLY; //
+          return res;
+        } else {
+          return false;
         }
       }
-      return true
+      return true;
     },
 
-    setMax() 
-    {
+    setMax() {
+      if (this.title == "Remove Liquidity") {
+        let self = this;
 
-      if(this.title == "Remove Liquidity")
-      {
-        let self = this
-
-        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
-        if(lp_info){
-          const totalSupply = lp_info.lp.totalSupply.fixed()
-          self.value = "" + Math.min(parseFloat(self.coin.balance.fixed()), parseFloat(totalSupply)  - MIN_LP_SUPPLY)
+        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress];
+        if (lp_info) {
+          const totalSupply = lp_info.lp.totalSupply.fixed();
+          self.value =
+            "" +
+            Math.min(
+              parseFloat(self.coin.balance.fixed()),
+              parseFloat(totalSupply) - MIN_LP_SUPPLY
+            );
         }
+      } else {
+        this.value = this.coin.balance.fixed();
       }
-      else
-      {
-        this.value = this.coin.balance.fixed()
-      }
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style lang="less" scoped>
@@ -166,7 +176,7 @@ export default Vue.extend({
 
 .coin-modal {
   .label {
-    padding: .75rem 1rem 0;
+    padding: 0.75rem 1rem 0;
     font-size: 15px;
     line-height: 14px;
     color: #85858d;

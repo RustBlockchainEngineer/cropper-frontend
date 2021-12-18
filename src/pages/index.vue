@@ -752,7 +752,7 @@ export default class Landing extends Vue {
   display: flex;
   align-items: center;
   border-radius: 48px;
-  background: @color-bg;
+  background: @color-blue800;
   border: none;
 }
 
@@ -1555,9 +1555,9 @@ h4 {
       .play-list-btn {
         margin-bottom: 18px;
         padding: 15px 0 15px 19px;
-        background: @color-bg;
+        background: @color-blue800;
         border-radius: 8px;
-        border: 3px solid @color-bg;
+        border: 3px solid @color-blue800;
         color: #fff;
         height: auto;
         width: 100%;
@@ -1589,7 +1589,7 @@ h4 {
       display: flex;
       border: 3px solid #7a88b6;
       border-radius: 42px;
-      background: @color-bg;
+      background: @color-blue800;
       padding: 0 !important;
 
       @media @max-sl-mobile {

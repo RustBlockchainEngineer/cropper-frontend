@@ -13,7 +13,7 @@
     @cancel="$emit('onCancel')"
     centered
   >
-    <img class="close-btn" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
     <div class="menu-container">
       <Menu v-model="currentRoute" :mode="'vertical'" :theme="'light'" @click="changeRoute">
         <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()" :class="name === banURL ? 'disable' : ''">
@@ -104,8 +104,7 @@ export default class MenuModal extends Vue {
 
 <style lang="less" scoped>
 
-.close-btn {
-  position: absolute;
+.modal-close {
   left: 20px;
   top: 20px;
 }
