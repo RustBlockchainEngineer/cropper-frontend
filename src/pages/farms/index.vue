@@ -585,7 +585,7 @@
                     v-if="
                       currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
                       farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
-                      farm.farmInfo.currentLPtokens > 0.001
+                      farm.farmInfo.currentLPtokens > 0.00001
                     "
                   >
                     <Button
@@ -812,7 +812,7 @@
                         v-if="
                           currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
                           farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
-                          farm.farmInfo.currentLPtokens > 0.001
+                          farm.farmInfo.currentLPtokens > 0.00001
                         "
                       >
                         <Button
@@ -1674,6 +1674,8 @@ export default Vue.extend({
             ;(newFarmInfo as any).twitterLink = 'https://twitter.com/Ternoa_'
           } else if (newFarmInfo.lp.coin.symbol == 'SAMO') {
             ;(newFarmInfo as any).twitterLink = 'https://twitter.com/samoyedcoin'
+          } else if (newFarmInfo.lp.coin.symbol == 'XVC') {
+            ;(newFarmInfo as any).twitterLink = 'https://twitter.com/Xverseofficial'
           }
 
           ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
