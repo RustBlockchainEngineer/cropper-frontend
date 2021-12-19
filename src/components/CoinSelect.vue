@@ -6,6 +6,7 @@
     :footer="null"
     @cancel="$emit('onClose')"
     class="coin-select-modal"
+    :width="380"
   >
     <div class="select-token-header fs-container">
       <label class="textL weightB">Select a token</label>
@@ -457,12 +458,9 @@ export default Vue.extend({
 <style lang="less" scoped>
 .select-token-header {
   margin-bottom: 10px;
-  padding: 0 15px;
 }
 
 .select-token-search {
-  padding: 0 15px;
-
   input {
     border: 1px solid #6574D6;
     border-radius: 8px;
@@ -481,18 +479,6 @@ export default Vue.extend({
       color: #CCD1F1;
     }
   }
-
-  // .sort {
-  //   .title {
-  //     font-size: 14px;
-  //     line-height: 36px;
-  //     font-weight: 400;
-  //   }
-
-  //   @media @max-sl-mobile {
-  //     display: none;
-  //   }
-  // }
 
   .common-bases {
     margin-top: 8px;
@@ -534,6 +520,7 @@ export default Vue.extend({
   grid-auto-rows: auto;
   row-gap: 14px;
   background: @color-blue800;
+  margin: 0 -18px;
 
   .token-list {
     max-height: 50vh;
@@ -588,21 +575,6 @@ export default Vue.extend({
       cursor: not-allowed;
       // pointer-events: none;
       opacity: 0.5;
-    }
-  }
-}
-</style>
-<style lang="less">
-.coin-select-modal .ant-modal{
-  .ant-modal-content {
-    background: @color-blue700;
-    border: 3px solid #273592;
-    box-sizing: border-box;
-    border-radius: 18px;
-    padding: 10px 0 18px 0;
-
-    .ant-modal-body {
-      padding: 0 !important;
     }
   }
 }
