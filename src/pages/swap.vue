@@ -295,8 +295,7 @@
 
         <div v-if="!wallet.connected" class="btn-container">
           <Button
-            class="swap-btn textL weightB"
-            size="large"
+            class="textL weightB"
             ghost
             @click="$accessor.wallet.openModal"
           >
@@ -309,8 +308,7 @@
           class="btn-container"
         >
           <Button
-            size="large"
-            class="swap-btn textL weightB"
+            class="textL weightB"
             ghost
             @click="
               () => {
@@ -326,9 +324,7 @@
 
         <div v-else class="btn-container">
           <Button
-            size="large"
-            ghost
-            class="swap-btn textL weightB"
+            class="textL weightB"
             :disabled="
               !fromCoin ||
               !fromCoinAmount ||
@@ -346,8 +342,7 @@
               (toCoin.mintAddress === TOKENS.xCOPE.mintAddress && gt(5, toCoinAmount))
             "
             :loading="swaping"
-            style="width: 100%"
-            :class="`swap-btn ${priceImpact > 5 ? '' : priceImpact > 2 ? '' : ''}`"
+            :class="`${priceImpact > 5 ? '' : priceImpact > 2 ? '' : ''}`"
             @click="placeOrder"
           >
             <template v-if="!fromCoin || !toCoin"> Select</template>
