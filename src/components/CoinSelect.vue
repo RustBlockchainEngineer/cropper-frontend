@@ -12,10 +12,6 @@
     <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onClose')"/>
     <div class="select-token-search">
       <input ref="userInput" v-model="keyword" class="textM" placeholder="Search name or paste address" />
-      <!-- <div v-if="!addUserCoin" class="sort fs-container">
-        <span class="title">Token name</span>
-        <Icon :type="desc ? 'arrow-up' : 'arrow-down'" @click="setDesc" />
-      </div> -->
       <div class="common-bases">
         <label class="textM">Common bases</label>
         <div class="common-bases-group">
