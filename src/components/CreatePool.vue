@@ -106,7 +106,7 @@
               <Col :span="24" class="item-title">
                 <label class="textL weightB">Create a new liquidity pool:</label>
                 <div class="inner-content">
-                  <label class="textS weightS">Input market ID here</label>
+                  <label class="textS weightS letterL">Input market ID here</label>
                   <input
                     v-model="inputMarket"
                     :disabled="!marketInputFlag"
@@ -156,147 +156,137 @@
               </div>
             </Row>
 
-            <div v-if="current === 1">
-              <Row>
-                <Col span="24" class="item-title">
-                  <b>Market Information:</b>
-                  <div class="inner-content">
-                    <div class="market-info">
-                      <div>Tick Size: {{ marketTickSize }}</div>
-                      <div>Min Order Size: {{ marketMsg.minOrderSize }}</div>
-                      <div>
-                        Current Price:
-                        {{
-                          marketMsg.tickSize.toString().split(".").length === 2
-                            ? marketPrice.toFixed(
-                                marketMsg.tickSize.toString().split(".")[1].length
-                              )
-                            : parseInt((marketPrice / marketMsg.tickSize).toFixed(0)) *
-                              marketMsg.tickSize
-                        }}
-                      </div>
-                    </div>
-                  </div>
-                  <Row class="token-mint-address">
-                    <Col span="24" class="mint-address">
-                      <b>Base Token Mint Address:</b> <br />
+            <Row v-if="current === 1">
+              <Col span="24" class="item-title">
+                <label class="textL weightB">Market Information:</label>
+                <Row class="token-mint-address">
+                  <Col span="24" class="mint-address-container">
+                    <label class="mint-label textS weightS letterL">Base token mint address</label>
+                    <div class="mint-address textM">
                       {{ getNameForMint(marketMsg.baseMintAddress.toBase58()) }}
-                    </Col>
+                    </div>
+                  </Col>
 
-                    <Col span="24" class="mint-address">
-                      <b>Quote Token Mint Address:</b> <br />
+                  <Col span="24" class="mint-address-container">
+                    <label class="mint-label textS weightS">Quote Token Mint Address</label>
+                    <div class="mint-address">
                       {{ getNameForMint(marketMsg.quoteMintAddress.toBase58()) }}
-                    </Col>
-                  </Row>
-                </Col>
-
-                <div class="item-title">
-                  <div class="inner-content market-input-group">
-                    <Col span="24" class="market-input-info">
-                      Set
-                      <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b>
-                      Starting Price in
-                      <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b
-                      >:
-                    </Col>
-                    <Col span="24" class="market-input-form">
-                      <input
-                        v-model="inputPrice"
-                        type="number"
-                        :disabled="createAmmFlag"
-                        :step="1"
-                        accuracy="2"
-                        style="width: 100%"
-                        placeholder="input amount"
-                      />
-                    </Col>
-                  </div>
-
-                  <div class="inner-content market-input-group">
-                    <Col span="24" class="market-input-info">
-                      <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b>
-                      Initial Liquidity:
-                    </Col>
-                    <Col span="24" class="market-input-form">
-                      <input
-                        v-model="inputBaseValue"
-                        type="number"
-                        :disabled="createAmmFlag"
-                        :step="1"
-                        accuracy="2"
-                        style="width: 100%"
-                        placeholder="input amount"
-                      />
-                    </Col>
-                  </div>
-
-                  <div class="inner-content market-input-group">
-                    <Col span="24" class="market-input-info">
-                      <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b>
-                      Initial Liquidity:
-                    </Col>
-                    <Col span="24" class="market-input-form">
-                      <input
-                        v-model="inputQuoteValue"
-                        type="number"
-                        :disabled="createAmmFlag"
-                        :step="1"
-                        accuracy="2"
-                        style="width: 100%"
-                        placeholder="input amount"
-                      />
-                    </Col>
-                  </div>
-
-                  <div class="inner-content">
-                    <div class="detailed-guide">
-                      <em>
-                        <u>Note:</u>
-                        after clicking on "confirm" you will need to
-                        <b>approve two transactions</b>
-                        to initialize the pool, create the AMM account, and add liquidity.
-                      </em>
                     </div>
+                  </Col>
+                </Row>
+              </Col>
+
+              <div class="item-title">
+                <div class="inner-content market-input-group">
+                  <div class="market-input-info textM">
+                    Set
+                    <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b>
+                    Starting Price in
+                    <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b
+                    >:
                   </div>
-
-                  <div class="inner-content">
-                    <div v-if="!wallet.connected" class="btn-container">
-                      <Button
-                        class="create-btn textM weightS"
-                        @click="$accessor.wallet.openModal"
-                      >
-                        Connect wallet
-                      </Button>
-                    </div>
-
-                    <div v-else class="btn-container">
-                      <Button
-                        class="create-btn textM weightS"
-                        :loading="createAmmFlag"
-                        :disabled="
-                          createAmmFlag || !(inputPrice !== null && isAmountValid)
-                        "
-                        @click="createKey"
-                      >
-                        {{
-                          createAmmFlag
-                            ? ""
-                            : isAmountValid == false
-                            ? "Insufficient amount"
-                            : "Confirm"
-                        }}
-                      </Button>
-                    </div>
+                  <div class="market-input-form">
+                    <input
+                      v-model="inputPrice"
+                      type="number"
+                      class="textM"
+                      :disabled="createAmmFlag"
+                      :step="1"
+                      accuracy="2"
+                      style="width: 100%"
+                      placeholder="input amount"
+                    />
                   </div>
                 </div>
-              </Row>
-            </div>
+
+                <div class="inner-content market-input-group">
+                  <div class="market-input-info textM">
+                    <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b>
+                    Initial Liquidity:
+                  </div>
+                  <div class="market-input-form">
+                    <input
+                      v-model="inputBaseValue"
+                      type="number"
+                      class="textM"
+                      :disabled="createAmmFlag"
+                      :step="1"
+                      accuracy="2"
+                      style="width: 100%"
+                      placeholder="input amount"
+                    />
+                  </div>
+                </div>
+
+                <div class="inner-content market-input-group">
+                  <div class="market-input-info textM">
+                    <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b>
+                    Initial Liquidity:
+                  </div>
+                  <div class="market-input-form">
+                    <input
+                      v-model="inputQuoteValue"
+                      type="number"
+                      class="textM"
+                      :disabled="createAmmFlag"
+                      :step="1"
+                      accuracy="2"
+                      style="width: 100%"
+                      placeholder="input amount"
+                    />
+                  </div>
+                </div>
+
+                <div class="inner-content">
+                  <div class="detailed-guide textS">
+                    <u>Note:</u> This tool is for advanced users. Before attempting to
+                    create a new liquidity pool, we suggest going through this
+                    <a
+                      href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
+                      target="_blank"
+                    >
+                      detailed guide.</a
+                    >
+                  </div>
+                </div>
+
+                <div class="inner-content">
+                  <div v-if="!wallet.connected" class="btn-container">
+                    <Button
+                      class="create-btn textM weightS"
+                      @click="$accessor.wallet.openModal"
+                    >
+                      Connect wallet
+                    </Button>
+                  </div>
+
+                  <div v-else class="btn-container">
+                    <Button
+                      class="create-btn textM weightS"
+                      :loading="createAmmFlag"
+                      :disabled="
+                        createAmmFlag || !(inputPrice !== null && isAmountValid)
+                      "
+                      @click="createKey"
+                    >
+                      {{
+                        createAmmFlag
+                          ? ""
+                          : isAmountValid == false
+                          ? "Insufficient amount"
+                          : "Confirm"
+                      }}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Row>
 
             <Row v-if="current === 2">
               <Col :span="24" class="item-title">
-                <div class="pool-created">
-                  <b>Congratulations! Your pool has been successfully created!</b>
-                </div>
+                <label class="pool-created textL weightB">
+                  Congratulations! Your pool has been successfully created!
+                </label>
               </Col>
               <Col class="lp-icons" :span="24">
                 <div class="lp-icons-group">
@@ -304,37 +294,33 @@
                     <CoinIcon
                       :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())"
                     />
-                    <span
-                      >{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }} -
+                    <span class="textS weightS">
+                      {{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }} -
                     </span>
                     <CoinIcon
                       :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())"
                     />
-                    <span>{{
-                      getSymbolForMint(marketMsg.quoteMintAddress.toBase58())
-                    }}</span>
+                    <span class="textS weightS">
+                      {{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}
+                    </span>
                   </div>
                 </div>
               </Col>
               <Col class="item-title">
-                <div class="created-amm-id"><b>AMM ID:</b> {{ userCreateAmmId }}</div>
+                <label class="created-amm-id textS">AMM ID: {{ userCreateAmmId }}</label>
               </Col>
-              <Col :span="isMobile ? 24 : 24">
-                <div class="btn-container">
-                  <Button
-                    v-if="!wallet.connected"
-                    class="create-btn textM weightS"
-                    @click="$accessor.wallet.openModal"
-                  >
-                    Connect wallet
-                  </Button>
-                  <NuxtLink to="/pools/" v-else>
-                    <div class="next">
-                      <Button size="large" ghost> View pool </Button>
-                    </div>
-                  </NuxtLink>
-                </div>
-              </Col>
+              <div class="btn-container">
+                <Button
+                  v-if="!wallet.connected"
+                  class="create-btn textM weightS"
+                  @click="$accessor.wallet.openModal"
+                >
+                  Connect wallet
+                </Button>
+                <NuxtLink to="/pools/" v-else>
+                  <Button class="create-btn textM weightS">View pool</Button>
+                </NuxtLink>
+              </div>
             </Row>
           </Col>
         </Row>
@@ -1189,137 +1175,15 @@ export default class CreatePool extends Vue {
       .item-title {
         margin-bottom: 28px;
 
-        .selected-pool {
-          font-size: 15px;
-          line-height: 18px;
-
-          .selected-pool-box {
-            position: relative;
-            margin-top: 10px;
-            padding: 17px 10px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 6px;
-            font-size: 18px;
-            line-height: 22px;
-            text-align: center;
-            color: #fff;
-            word-break: break-word;
-
-            .pool-info:nth-child(2) {
-              margin-top: 12px;
-            }
-
-            img {
-              position: absolute;
-              top: 6px;
-              right: 9px;
-              cursor: pointer;
-            }
-          }
-
-          @media @max-sl-mobile {
-            margin-left: -30px;
-
-            .selected-pool-box {
-              text-align: left;
-              font-size: 15px;
-              line-height: 18px;
-
-              .pool-info span {
-                display: block;
-              }
-            }
-          }
-        }
-
         .created-amm-id {
-          font-size: 16px;
-          line-height: 18px;
-          color: #80819d;
-
-          b {
-            font-size: 16px;
-          }
+          color: rgba(255, 255, 255, 0.6);
         }
 
         .inner-content {
           margin-top: 18px;
 
           label {
-            letter-spacing: 0.5px;
             color: rgba(255, 255, 255, 0.5);
-          }
-
-          .market-info {
-            display: inline-flex;
-            font-size: 16px;
-            line-height: 20px;
-            color: #80819d;
-
-            div {
-              margin-right: 10px;
-            }
-          }
-
-          .label {
-            font-size: 18px;
-            line-height: 22px;
-            color: rgb(133, 133, 141);
-            width: max-content;
-            padding-left: 10px;
-
-            @media @max-sl-mobile {
-              width: 100%;
-              font-size: 15px;
-              line-height: 18px;
-              text-align: center;
-            }
-          }
-
-          .label-today,
-          .label-to {
-            font-size: 18px;
-            line-height: 22px;
-            margin-bottom: 10px;
-            padding-left: 10px;
-
-            @media @max-sl-mobile {
-              font-size: 12px;
-              line-height: 15px;
-            }
-          }
-
-          .label-today {
-            color: #80819d;
-          }
-
-          .label-to {
-            color: #fff;
-          }
-
-          .calendar-from,
-          .calendar-to {
-            position: relative;
-
-            img:nth-child(1) {
-              position: absolute;
-              top: 15%;
-              left: 20%;
-
-              @media @max-sl-mobile {
-                left: 7%;
-              }
-            }
-
-            img:nth-child(3) {
-              position: absolute;
-              top: 35%;
-              right: 5%;
-              width: 11px;
-              height: 6px;
-              transition: transform 0.3s;
-            }
           }
 
           input {
@@ -1344,177 +1208,69 @@ export default class CreatePool extends Vue {
             a {
               color: #1e758f;
             }
-
-            b {
-              font-size: 18px;
-              line-height: 22px;
-            }
           }
         }
 
         .market-input-group {
-          display: flex;
-          align-items: center;
-
-          .market-input-info {
-            font-size: 16px;
-            line-height: 19px;
-
-            b {
-              font-size: 16px;
-            }
-          }
+          margin-bottom: 28px;
 
           .market-input-form {
             input {
-              background: rgba(255, 255, 255, 0.1);
-              border-radius: 14px;
-              padding: 18px;
-              font-size: 18px;
-              line-height: 22px;
+              background: rgba(226, 227, 236, 0.1);
+              border-radius: 12px;
+              padding: 10px 12px;
             }
           }
         }
 
         .token-mint-address {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 20px;
+          margin-top: 28px;
 
-          .mint-address {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 15px;
-            font-size: 16px;
-            line-height: 20px;
-            color: #80819d;
-            word-break: break-all;
+          .mint-address-container {
+            margin-bottom: 28px;
 
-            b {
-              font-size: 16px;
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            .mint-label {
+              color: rgba(255, 255, 255, 0.5);
+            }
+
+            .mint-address {
+              background: rgba(226, 227, 236, 0.1);
+              border-radius: 12px;
+              padding: 10px 12px;
+              color: rgba(255, 255, 255, 0.5);
+              word-break: break-all;
+              margin-top: 8px;
             }
           }
-        }
-
-        .reward-emission,
-        .farm-duration {
-          @media @max-sl-mobile {
-            padding: 0;
-            margin: 0 -10px;
-          }
-        }
-
-        .note-reminder u,
-        .reward-emission .label u {
-          text-underline-position: under;
-        }
-
-        .create-amm {
-          line-height: 22px;
-
-          @media @max-sl-mobile {
-            line-height: 18px;
-          }
-
-          em {
-            font-size: 18px;
-            color: #80819d;
-
-            @media @max-sl-mobile {
-              font-size: 15px;
-            }
-          }
-
-          .link-pool {
-            margin-bottom: 10px;
-            display: block;
-
-            u {
-              text-underline-position: under;
-              text-decoration-color: #13ecab;
-
-              em {
-                color: #13ecab;
-              }
-            }
-          }
-        }
-
-        .existing-amm,
-        .create-amm,
-        .selected-pool {
-          padding: 0 30px 25px 30px;
-
-          @media @max-sl-mobile {
-            padding: 0 0 25px 0;
-          }
-        }
-
-        .reward-weekly,
-        .amm-id {
-          font-size: 18px;
-          line-height: 22px;
-          margin-top: 15px;
-          padding-left: 10px;
-
-          @media @max-sl-mobile {
-            word-break: break-all;
-            font-size: 15px;
-            line-height: 18px;
-
-            b {
-              font-size: 15px;
-              line-height: 18px;
-            }
-          }
+          
         }
 
         .pool-created {
-          line-height: 25px;
-
-          @media @max-sl-mobile {
-            text-align: center;
-          }
+          margin-bottom: 18px;
         }
       }
 
       .lp-icons {
-        margin-bottom: 30px;
+        margin-bottom: 28px;
 
         .lp-icons-group {
-          height: 51px;
-          background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+          height: 30px;
+          background: @gradient-color-outline;
           background-origin: border-box;
           border-radius: 8px;
           padding: 2px;
 
-          @media @max-sl-mobile {
-            margin: auto;
-          }
-
           .icons {
-            height: 47px;
+            height: 100%;
             background-color: @color-blue800;
             border-radius: 8px;
             align-items: center;
-            padding: 0 20px;
+            padding: 6px 22px;
           }
-
-          .icons span {
-            margin-left: 12px;
-            margin-right: 12px;
-            font-weight: 400;
-            font-size: 18px;
-            line-height: 21px;
-          }
-        }
-
-        .title {
-          font-weight: normal;
-          font-size: 18px;
-          line-height: 21px;
-          color: #fff;
-          opacity: 0.3;
         }
       }
     }
@@ -1540,13 +1296,16 @@ export default class CreatePool extends Vue {
 <style lang="less">
 .create-pool-modal {
   .ant-modal {
-    width: auto !important;
-    max-width: 886px;
+    width: 886px !important;
     margin: 20px;
     padding: 28px !important;
 
+    @media @max-lg-tablet {
+      width: 700px !important;
+    }
+
     @media @max-sl-mobile {
-      max-width: 346px;
+      width: 346px;
     }
 
     .ant-modal-content {
