@@ -433,6 +433,7 @@ export default class CreateFarm extends Vue {
   tokenA: TokenInfo | null = null
   tokenB: TokenInfo | null = null
   fromCoinAmount: string = ''
+  farmKey: any = false
   fixedFromCoin: boolean = true
   selectFromCoin: boolean = false
   selectTokenA: boolean = false
@@ -708,7 +709,8 @@ export default class CreateFarm extends Vue {
         }
       }
       else if(FARM_VERSION === 3){
-        await addSingleRewardV3(connection, wallet, this.farmId, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals));
+      console.log(this.farmId);
+        await addSingleRewardV3(connection, wallet, this.farmKey, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals));
       }
       
       this.current += 1
@@ -807,10 +809,13 @@ export default class CreateFarm extends Vue {
           startTimestamp,
           endTimestamp
         )
-        if(createdFarm){
-          this.farmId = farmKey
+        await this.delay(500)
+        if(createdFarm || farmKey){
+          this.farmId = farmKey.toString()
+          this.farmKey = farmKey
           window.localStorage['owner_'+ this.farmId] = 1;
         }
+
       }
       else if(FARM_VERSION < 3) {
         let createdFarm = await YieldFarm.createFarmWithParams(

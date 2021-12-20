@@ -101,78 +101,79 @@ export const actions = actionTree(
           //check liquidity pool
           if (liquidityPoolInfo == undefined || liquidityPoolInfo == null) {
             console.log('find liquidity pool error')
-            return
-          }
-          //get lp token info
-          const lpTokenInfo = liquidityPoolInfo.lp
+          } else {
 
-          //get reward token info
-          let rewardToken: any
-          // if (liquidityPoolInfo.coin.mintAddress === rewardTokenMintAddress) {
-          //   rewardToken = liquidityPoolInfo.coin
-          // } else if (liquidityPoolInfo.pc.mintAddress === rewardTokenMintAddress) {
-          //   rewardToken = liquidityPoolInfo.pc
-          // } else if (liquidityPoolInfo.lp.mintAddress === rewardTokenMintAddress) {
-          //   rewardToken = liquidityPoolInfo.lp
-          // }
-          const query = new URLSearchParams(window.location.search)
-          if (query.get('rtf'))
-            rewardToken = Object.values(TOKENS).find((item) => item.mintAddress === (query.get('rtf') as string))
-          if (rewardTokenMintAddress) {
-            rewardToken = getTokenByMintAddress(rewardTokenMintAddress)
-          }
-          if (rewardToken === undefined || rewardToken === null) {
-            console.log('find reward token info error')
-            return
-          }
-          
-          let _farmInfo: FarmInfo = {
-            name: '',
-            lp: { ...lpTokenInfo },
-            reward: { ...rewardToken },
-            isStake: false,
+            //get lp token info
+            const lpTokenInfo = liquidityPoolInfo.lp
 
-            fusion: false,
-            legacy: false,
-            dual: false,
-            version: 1,
-            programId: FARM_PROGRAM_ID,
-
-            poolId: farmAccountAddress,
-            poolAuthority: ownerAddress,
-            poolLpTokenAccount: farmAccountInfo.account.poolLpTokenAccount.toBase58(), // lp vault
-            poolRewardTokenAccount: farmAccountInfo.account.poolRewardTokenAccount.toBase58() // reward vault
-          }
-          let foundFarm = FARMS.find((item) => item.poolId === farmAccountAddress)
-          if (foundFarm == undefined) {
-            FARMS.push(_farmInfo)
-          }
-          _farmInfo.lp.balance = new TokenAmount(0, lpTokenInfo.decimals)
-          _farmInfo.reward.balance = new TokenAmount(0, rewardToken.decimals)
-          publicKeys.push(farmAccountInfo.account.poolLpTokenAccount)
-          publicKeys.push(farmAccountInfo.account.poolRewardTokenAccount)
-
-          const isDual = farmIsDual(farmAccountInfo.account.state);
-          if (isDual) {
-            let rewardTokenDual: any
-            const rewardDualTokenMintAddress = farmAccountInfo.account.rewardMintAddressDual.toBase58();
-            if (rewardDualTokenMintAddress) {
-              rewardTokenDual = getTokenByMintAddress(rewardDualTokenMintAddress)
+            //get reward token info
+            let rewardToken: any
+            // if (liquidityPoolInfo.coin.mintAddress === rewardTokenMintAddress) {
+            //   rewardToken = liquidityPoolInfo.coin
+            // } else if (liquidityPoolInfo.pc.mintAddress === rewardTokenMintAddress) {
+            //   rewardToken = liquidityPoolInfo.pc
+            // } else if (liquidityPoolInfo.lp.mintAddress === rewardTokenMintAddress) {
+            //   rewardToken = liquidityPoolInfo.lp
+            // }
+            const query = new URLSearchParams(window.location.search)
+            if (query.get('rtf'))
+              rewardToken = Object.values(TOKENS).find((item) => item.mintAddress === (query.get('rtf') as string))
+            if (rewardTokenMintAddress) {
+              rewardToken = getTokenByMintAddress(rewardTokenMintAddress)
             }
-            if (rewardTokenDual === undefined || rewardTokenDual === null) {
-              console.log('find reward dual token info error')
-              return
-            }
-            _farmInfo.rewardB = { ...rewardTokenDual };
-            _farmInfo.dual = true;
-            _farmInfo.poolRewardTokenAccountB = farmAccountInfo.account.poolRewardTokenAccountDual.toBase58();
-            if (_farmInfo.rewardB != undefined){
-              _farmInfo.rewardB.balance = new TokenAmount(0, rewardTokenDual.decimals);
-              publicKeys.push(farmAccountInfo.account.poolRewardTokenAccountDual)
+            if (rewardToken === undefined || rewardToken === null) {
+              console.log('find reward token info error')
+            } else {
+              
+              let _farmInfo: FarmInfo = {
+                name: '',
+                lp: { ...lpTokenInfo },
+                reward: { ...rewardToken },
+                isStake: false,
+
+                fusion: false,
+                legacy: false,
+                dual: false,
+                version: 1,
+                programId: FARM_PROGRAM_ID,
+
+                poolId: farmAccountAddress,
+                poolAuthority: ownerAddress,
+                poolLpTokenAccount: farmAccountInfo.account.poolLpTokenAccount.toBase58(), // lp vault
+                poolRewardTokenAccount: farmAccountInfo.account.poolRewardTokenAccount.toBase58() // reward vault
+              }
+              let foundFarm = FARMS.find((item) => item.poolId === farmAccountAddress)
+              if (foundFarm == undefined) {
+                FARMS.push(_farmInfo)
+              }
+              _farmInfo.lp.balance = new TokenAmount(0, lpTokenInfo.decimals)
+              _farmInfo.reward.balance = new TokenAmount(0, rewardToken.decimals)
+              publicKeys.push(farmAccountInfo.account.poolLpTokenAccount)
+              publicKeys.push(farmAccountInfo.account.poolRewardTokenAccount)
+
+              const isDual = farmIsDual(farmAccountInfo.account.state);
+              if (isDual) {
+                let rewardTokenDual: any
+                const rewardDualTokenMintAddress = farmAccountInfo.account.rewardMintAddressDual.toBase58();
+                if (rewardDualTokenMintAddress) {
+                  rewardTokenDual = getTokenByMintAddress(rewardDualTokenMintAddress)
+                }
+                if (rewardTokenDual === undefined || rewardTokenDual === null) {
+                  console.log('find reward dual token info error')
+                  return
+                }
+                _farmInfo.rewardB = { ...rewardTokenDual };
+                _farmInfo.dual = true;
+                _farmInfo.poolRewardTokenAccountB = farmAccountInfo.account.poolRewardTokenAccountDual.toBase58();
+                if (_farmInfo.rewardB != undefined){
+                  _farmInfo.rewardB.balance = new TokenAmount(0, rewardTokenDual.decimals);
+                  publicKeys.push(farmAccountInfo.account.poolRewardTokenAccountDual)
+                }
+              }
+              farms[farmAccountAddress] = _farmInfo
+              farms[farmAccountAddress].poolInfo = farmAccountInfo.account
             }
           }
-          farms[farmAccountAddress] = _farmInfo
-          farms[farmAccountAddress].poolInfo = farmAccountInfo.account
         })
 
         const splTokenInfo = await getMultipleAccounts(conn, publicKeys, commitment)
