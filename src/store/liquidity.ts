@@ -146,7 +146,7 @@ async function getCropperPools(conn:any){
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
     const ammInfo = CRP_AMM_LAYOUT_V1.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
 
-    if (fixedpools.find((item) => item.ammId === ammAll[indexAmmInfo].publicKey.toString())) {
+    if (fixedpools.find((item) => item.ammId === ammAll[indexAmmInfo].publicKey.toString()) && !DEVNET_MODE) {
       continue
     }
 
@@ -290,7 +290,7 @@ async function getRaydiumPools(conn:any){
 
   for (let indexAmmInfo = 0; indexAmmInfo < ammAll.length; indexAmmInfo += 1) {
     const ammInfo = AMM_INFO_LAYOUT_V4.decode(Buffer.from(ammAll[indexAmmInfo].accountInfo.data))
-    if (fixedpools.find((item) => item.ammId === ammAll[indexAmmInfo].publicKey.toString())) {
+    if (fixedpools.find((item) => item.ammId === ammAll[indexAmmInfo].publicKey.toString()) && !DEVNET_MODE) {
       continue
     }
 
@@ -468,7 +468,7 @@ export const actions = actionTree(
         })
 
         fixedpools.forEach((pool:LiquidityPoolInfo)=>{
-          if(!ammSet[pool.ammId]){
+          if(!ammSet[pool.ammId] && !DEVNET_MODE){
             LIQUIDITY_POOLS.push(pool)
           }
         })

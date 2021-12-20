@@ -1435,7 +1435,7 @@ export default class Pools extends Vue {
     this.timer_init = setInterval(async () => {
       if (!this.poolLoaded) {
         await this.flush();
-        if (this.pools.length > 0) {
+        if (this.pools.length > 0 || DEVNET_MODE) {
           var hash = window.location.hash;
           if (hash) {
             hash = hash.substring(1);
