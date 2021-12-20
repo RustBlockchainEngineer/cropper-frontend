@@ -462,7 +462,7 @@ export default Vue.extend({
 
 .select-token-search {
   input {
-    border: 1px solid #6574D6;
+    border: 1px solid @color-blue300;
     border-radius: 8px;
     padding: 8px 18px;
     background-color: transparent;

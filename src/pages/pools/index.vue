@@ -172,7 +172,56 @@
 
             <div class="option-select-group">
               <div class="option-select fc-container icon-cursor">
-                <img src="@/assets/icons/search.svg" />
+                <img
+                  src="@/assets/icons/search.svg"
+                  @click="
+                    () => {
+                      this.showSearchMenu = !this.showSearchMenu;
+                    }
+                  "
+                />
+              </div>
+
+              <div
+                class="option-search-collapse"
+                :class="showSearchMenu ? 'visible' : 'hidden'"
+              >
+                <div class="select-token-header fs-container">
+                  <label class="textL weightB">Search</label>
+                  <img
+                    class="icon-cursor"
+                    src="@/assets/icons/close-circle-icon.svg"
+                    @click="
+                      () => {
+                        this.showSearchMenu = false;
+                      }
+                    "
+                  />
+                </div>
+                <div class="select-token-search">
+                  <input
+                    ref="userInput"
+                    v-model="searchName"
+                    class="textM"
+                    placeholder="Search"
+                  />
+                  <div class="shortcut-list">
+                    <label class="textS weightS">Most Used</label>
+                    <div class="shortcut-group">
+                      <div
+                        v-for="item in mostUsed"
+                        :key="item.symbol"
+                        class="shortcut-container icon-cursor"
+                        @click="searchShortcut(item.name)"
+                      >
+                        <div class="shortcut-box fc-container">
+                          <CoinIcon class="coin-icon" :mint-address="item.mintAddress" />
+                          {{ item.symbol }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <!-- option sort > 768px -->
@@ -242,13 +291,8 @@
           <div v-if="poolLoaded">
             <!-- desktop version -->
             <div class="pools-table isDesktop">
-              <Row class="pools-table-header">
-                <Col
-                  class="header-column textS weightB text-left"
-                  span="5"
-                >
-                  Name
-                </Col>
+              <Row class="pools-table-header" :class="{ scrollFixed : scrollPosition > 200 }">
+                <Col class="header-column textS weightB text-left" span="5"> Name </Col>
                 <Col class="header-column textS weightB" span="3">
                   <div class="header-column-title" @click="sortbyColumn('liquidity')">
                     Liquidity
@@ -354,7 +398,11 @@
               </Row>
 
               <div class="pools-table-body">
-                <Row class="pools-table-item" v-for="data in poolsShow" :key="data.lp_mint">
+                <Row
+                  class="pools-table-item"
+                  v-for="data in poolsShow"
+                  :key="data.lp_mint"
+                >
                   <Col class="state" span="5">
                     <div class="lp-iconscontainer">
                       <div class="icons textM weightS">
@@ -416,12 +464,7 @@
             <!-- tablet version -->
             <div class="pools-table isTablet">
               <Row class="pools-table-header">
-                <Col
-                  class="header-column textS weightB text-left"
-                  span="6"
-                >
-                  Name
-                </Col>
+                <Col class="header-column textS weightB text-left" span="6"> Name </Col>
                 <Col class="header-column textS weightB" span="6">
                   <div class="header-column-title" @click="sortbyColumn('liquidity')">
                     Liquidity
@@ -475,10 +518,7 @@
                 </Col>
               </Row>
 
-              <Collapse
-                v-model="showCollapse"
-                accordion
-              >
+              <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
                   v-for="data in poolsShow"
                   :key="data.lp_mint"
@@ -489,7 +529,9 @@
                     <Col class="state" span="6">
                       <div class="lp-iconscontainer">
                         <div class="icons textM weightS">
-                          <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
+                          <CoinIcon
+                            :mint-address="data ? data.lp.coin.mintAddress : ''"
+                          />
                           {{ data.lp.coin.symbol }}
                           <span>-</span>
                           <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
@@ -508,7 +550,7 @@
                     <Col class="state textM weightS text-center" span="5">
                       ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
                     </Col>
-                    
+
                     <Button class="detail-btn textS weightS">
                       <img
                         class="arrow-icon"
@@ -567,10 +609,7 @@
 
             <!-- mobile version -->
             <div class="pools-table isMobile">
-              <Collapse
-                v-model="showCollapse"
-                accordion
-              >
+              <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
                   v-for="data in poolsShow"
                   :key="data.lp_mint"
@@ -581,7 +620,9 @@
                     <Col class="state" :span="24">
                       <div class="lp-iconscontainer">
                         <div class="icons textM weightS">
-                          <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
+                          <CoinIcon
+                            :mint-address="data ? data.lp.coin.mintAddress : ''"
+                          />
                           {{ data.lp.coin.symbol }}
                           <span>-</span>
                           <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
@@ -816,7 +857,6 @@ export default class Pools extends Vue {
   timer: any = null;
   timer_init: any = null;
   loading: boolean = false;
-  searchButton = true;
   searchName = "";
   totalCount = 110;
   pageSize = 50;
@@ -834,6 +874,17 @@ export default class Pools extends Vue {
   showSortMenu: boolean = false;
   showSearchMenu: boolean = false;
   showTabMenu: boolean = false;
+  mostUsed: any = [
+    {
+      mintAddress: "DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz",
+      symbol: "CRP",
+    },
+    {
+      mintAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      symbol: "USDC",
+    },
+  ];
+  scrollPosition: any = null;
 
   get liquidity() {
     this.$accessor.wallet.getTokenAccounts();
@@ -1364,6 +1415,10 @@ export default class Pools extends Vue {
     this.stakeModalOpening = false;
   }
 
+  updateScroll() {
+    this.scrollPosition = window.scrollY
+  }
+
   mounted() {
     this.getTvl();
     this.$accessor.token.loadTokens();
@@ -1387,6 +1442,7 @@ export default class Pools extends Vue {
       }
     }, 1000);
     this.setTimer();
+    window.addEventListener('scroll', this.updateScroll);
   }
 
   setTimer() {
@@ -1467,6 +1523,11 @@ export default class Pools extends Vue {
 
   activeSearch(mode: string) {
     this.searchCertifiedFarm = mode;
+  }
+
+  searchShortcut(name: string) {
+    this.searchName = name;
+    this.showSearchMenu = false;
   }
 }
 </script>
@@ -1696,6 +1757,24 @@ export default class Pools extends Vue {
           width: 100%;
 
           .pools-table-header {
+
+            &.scrollFixed {
+              position: fixed;
+              background: @color-blue800;
+              opacity: 0.9;
+              top: 70px;
+              z-index: 999;
+              width: calc(100% - 128px);
+
+              @media @max-lg-tablet {
+                width: calc(100% - 64px);
+              }
+
+              @media @max-sl-mobile {
+                width: calc(100% - 40px);
+              }
+            }
+
             .header-column {
               text-align: center;
               padding: 16px 0;
@@ -1869,6 +1948,88 @@ export default class Pools extends Vue {
                 display: block;
               }
             }
+
+            .option-search-collapse {
+              position: absolute;
+              top: 0;
+              left: -209px;
+              visibility: hidden;
+              opacity: 0;
+              transition: visibility 0s, opacity 0.5s linear;
+              background: @color-blue700;
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+              padding: 18px;
+              z-index: 999;
+              width: 250px;
+
+              &.visible {
+                visibility: visible;
+                opacity: 1;
+              }
+
+              .select-token-header {
+                margin-bottom: 10px;
+              }
+
+              .select-token-search {
+                input {
+                  border: 2px solid @color-blue400;
+                  border-radius: 8px;
+                  padding: 8px 18px;
+                  background-color: transparent;
+                  color: #ccd1f1;
+                  width: 100%;
+
+                  &:active,
+                  &:focus,
+                  &:hover {
+                    outline: 0;
+                  }
+
+                  &::placeholder {
+                    color: #ccd1f1;
+                  }
+                }
+
+                .shortcut-list {
+                  margin-top: 8px;
+
+                  .shortcut-group {
+                    display: flex;
+                    margin-top: 8px;
+
+                    .shortcut-container {
+                      background: linear-gradient(
+                        97.63deg,
+                        #280c86 -29.92%,
+                        #22b5b6 103.89%
+                      );
+                      border-radius: 8px;
+                      padding: 2px;
+                      margin-right: 8px;
+
+                      &:last-child {
+                        margin-right: 0;
+                      }
+
+                      .shortcut-box {
+                        background: @color-blue800;
+                        border-radius: 8px;
+                        padding: 8px;
+
+                        .coin-icon {
+                          width: 12px;
+                          height: 12px;
+                          margin-right: 4px;
+                          border-radius: 50%;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
 
           .option-collapse-menu {
@@ -2023,6 +2184,7 @@ export default class Pools extends Vue {
       background: rgba(23, 32, 88, 0.9);
       border-radius: 8px !important;
       margin-bottom: 8px;
+      border-bottom: 0;
 
       &:hover {
         border: 3px solid transparent;
