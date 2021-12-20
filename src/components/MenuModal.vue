@@ -6,10 +6,6 @@
     :closable="false"
     :width="375"
     class="menu-modal"
-    :bodyStyle = "{ 
-      background : '#000539',
-      padding: '20px 20px 50px 20px',
-    }"
     @cancel="$emit('onCancel')"
     centered
   >
@@ -106,13 +102,16 @@ export default class MenuModal extends Vue {
 
 .modal-close {
   left: 20px;
-  top: 20px;
+  top: 0;
+}
+
+.menu-container {
+  padding: 20px;
 }
 
 .ant-menu {
   text-transform: capitalize;
   background: transparent;
-  margin-top: 30px;
   text-align: center;
   border: none;
 
@@ -154,15 +153,17 @@ export default class MenuModal extends Vue {
 </style>
 
 <style lang="less">
-.menu-modal .ant-modal {
+.menu-modal .ant-modal {  
   @media @max-md-tablet {
     width: 100% !important;
     max-width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
-    background: #000539;
+    background: @color-blue800;
     opacity: 0.9;
+    border-radius: 0;
+    border: none;
 
     .ant-modal-content {
       box-shadow: none;

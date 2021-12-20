@@ -17,6 +17,11 @@
       @onOk="unstake"
       @onCancel="cancelUnstake"
     />
+    
+    <CreatePool
+      v-if="createPoolModalOpening"
+      @onCancel="cancelCreatePool"
+    />
 
     <div class="card">
       <div class="card-body">
@@ -70,9 +75,9 @@
                   <img src="@/assets/icons/reload.svg" />
                 </div>
 
-                <NuxtLink to="/pools/create-pool/" class="create-btn icon-cursor">
+                <a class="create-btn icon-cursor" @click="() => { this.createPoolModalOpening = true }">
                   <div class="create-plus-btn textS weightS">+ Create pool</div>
-                </NuxtLink>
+                </a>
               </div>
             </div>
           </div>
@@ -846,6 +851,7 @@ export default class Pools extends Vue {
   lpMintAddress: any = false;
   stakeModalOpening: any = false;
   unstakeModalOpening: any = false;
+  createPoolModalOpening: boolean = false;
   toCoin: any = false;
   displayfilters: any = false;
   poolAdd: any = false;
@@ -1071,6 +1077,10 @@ export default class Pools extends Vue {
 
   cancelUnstake() {
     this.unstakeModalOpening = false;
+  }
+
+  cancelCreatePool() {
+    this.createPoolModalOpening = false;
   }
 
   unstake(amount: string) {

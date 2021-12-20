@@ -4,14 +4,12 @@
     :closable="false"
     :visible="true"
     :footer="null"
+    title="Select a token"
     @cancel="$emit('onClose')"
     class="coin-select-modal"
     :width="380"
   >
-    <div class="select-token-header fs-container">
-      <label class="textL weightB">Select a token</label>
-      <img class="icon-cursor" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onClose')"/>
-    </div>
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onClose')"/>
     <div class="select-token-search">
       <input ref="userInput" v-model="keyword" class="textM" placeholder="Search name or paste address" />
       <!-- <div v-if="!addUserCoin" class="sort fs-container">
