@@ -4,10 +4,11 @@
     :closable="false"
     :visible="true"
     :footer="null"
+    :width="380"
+    :mask="true"
     title="Select a token"
     @cancel="$emit('onClose')"
     class="coin-select-modal"
-    :width="380"
   >
     <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onClose')"/>
     <div class="select-token-search">

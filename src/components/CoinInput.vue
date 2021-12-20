@@ -3,13 +3,13 @@
     <div class="coin-input">
       <div class="fs-container">
         <div class="fc-container">
-          <button class="select-button fc-container" @click="$emit('onSelect')">
+          <button class="select-button fs-container" @click="$emit('onSelect')">
             <div v-if="coinName" class="coin-group fc-container">
               <CoinIcon :mint-address="mintAddress" />
               <span class="bodyM weightB">{{ coinName }}</span>
             </div>
             <span v-else>Select a token</span>
-            <img class="collapse-arrow" v-if="showArrow" src="@/assets/icons/arrow-down-swap.svg" />
+            <img class="collapse-arrow" v-if="showArrow" src="@/assets/icons/arrow-down-white.svg" />
           </button>
           <button v-if="!disabled && !showHalf && balance" class="input-button bodyXS weightB fc-container" @click="inputBalanceByPercent(1)"> 
             Max
@@ -157,13 +157,12 @@ export default Vue.extend({
     }
     
     .select-button {
-      display: flex;
-      justify-content: flex-start;
       position: relative;
       padding: 0 10px;
       background: @color-blue800;
       border-radius: 8px;
-      width: 130px;
+      width: auto;
+      min-width: 100px;
       height: 32px;
       margin-right: 10px;
 
@@ -174,8 +173,8 @@ export default Vue.extend({
       }
 
       .collapse-arrow {
-        position: absolute;
-        right: 10px;
+        // position: absolute;
+        margin-left: 4px;
         width: 14px;
         height: 8px;
       }

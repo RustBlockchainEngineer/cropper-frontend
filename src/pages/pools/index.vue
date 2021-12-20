@@ -115,7 +115,9 @@
                   :class="searchCertifiedFarm === 'deposit' ? 'active-tab' : ''"
                   @click="activeSearch('deposit')"
                 >
-                  <img class="deposit-icon" src="@/assets/icons/deposit.svg" />
+                  <img v-if="searchCertifiedFarm === 'deposit'" class="deposit-icon" src="@/assets/icons/deposit-green.svg" />
+                  <img v-else class="deposit-icon" src="@/assets/icons/deposit.svg" />
+
                   My Deposit
                 </Button>
                 <div
@@ -241,7 +243,7 @@
                 <span class="bodyM weightS option-select-sort fc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
-                    Liquidity ({{ sortLiquidityAsc ? "asc" : "dsc" }})
+                    Liquidity {{ sortLiquidityAsc ? "A -> Z" : "Z -> A" }}
                     <img
                       class="arrow-icon"
                       :class="showSortMenu ? 'arrow-up' : 'arrow-down'"
@@ -1636,8 +1638,8 @@ export default class Pools extends Vue {
 
       .guide-card {
         position: fixed;
-        top: 50vh;
-        right: 40px;
+        bottom: 20px;
+        right: 20px;
         width: calc(100% - 40px);
         max-width: 420px;
         padding: 18px;
@@ -1646,7 +1648,7 @@ export default class Pools extends Vue {
         z-index: 999;
 
         @media @max-sl-mobile {
-          top: 70px;
+          bottom: 20px;
           right: unset;
         }
 
