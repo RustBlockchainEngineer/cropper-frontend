@@ -775,7 +775,7 @@ h4 {
   .landing-header {
     position: fixed;
     width: 100%;
-    background: #000539;
+    background: @color-blue800;
     top: 0;
     z-index: 999;
     height: 70px;
@@ -1101,7 +1101,7 @@ h4 {
 
           &:hover {
             mix-blend-mode: normal;
-            border: 4px solid #23ADB4;
+            border: 4px solid @color-petrol500;
           }
 
           @media @max-lg-tablet {
@@ -1230,7 +1230,7 @@ h4 {
           color: #fff;
           position: absolute;
           bottom: 50px;
-          background: #23ADB4;
+          background: @color-petrol500;
           border-radius: 48px;
           padding: 8px 0;
           width: calc(100% - 72px);
@@ -1254,7 +1254,7 @@ h4 {
 
         &:hover {
           padding-top: 0;
-          border: 4px solid #23ADB4;
+          border: 4px solid @color-petrol500;
 
           .now-btn {
             display: block;
@@ -1441,7 +1441,7 @@ h4 {
           .industry-card-body {
             width: 100%;
             height: 100%;
-            background: #000539;
+            background: @color-blue800;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -1520,16 +1520,16 @@ h4 {
 
         &:active,
         &:hover {
-          color: #23adb4;
+          color: @color-petrol500;
         }
       }
 
       .ant-tabs-tab-active {
-        color: #23adb4;
+        color: @color-petrol500;
       }
 
       .ant-tabs-ink-bar {
-        background: #23adb4;
+        background: @color-petrol500;
       }
     }
   }
@@ -1575,7 +1575,7 @@ h4 {
         &:hover,
         &.active {
           background: @color-blue600;
-          border: 3px solid #82d4dc;
+          border: 3px solid @color-petrol400;
           box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
         }
 

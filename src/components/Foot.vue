@@ -206,7 +206,7 @@ export default class Foot extends Vue {
 
   @media @max-sl-mobile {
     text-align: left;
-    color: #98a2e4;
+    color: @color-blue200;
   }
 }
 

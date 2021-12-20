@@ -227,7 +227,7 @@ export default Vue.extend({
 
     .label {
       margin-top: 10px;
-      color: #98A2E4;
+      color: @color-blue200;
     }
   }
 }

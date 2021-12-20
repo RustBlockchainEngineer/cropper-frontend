@@ -234,7 +234,7 @@ export default Vue.extend({
   .input-button {
     height: 32px;
     width: 32px;
-    border: 1px solid #6574d6;
+    border: 1px solid @color-blue300;
     border-radius: 4px;
     color: #ccd1f1;
     background: transparent;

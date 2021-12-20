@@ -2061,7 +2061,7 @@ export default Vue.extend({
 
         .price-base {
           letter-spacing: 0.5px;
-          color: #98a2e4;
+          color: @color-blue200;
         }
       }
 
@@ -2152,7 +2152,7 @@ export default Vue.extend({
           .name {
             display: flex;
             align-items: center;
-            color: #98a2e4;
+            color: @color-blue200;
             margin-bottom: 4px;
 
             .tooltip-icon {

@@ -76,7 +76,7 @@ export default Vue.extend({
 .pool-info {
   .price-base {
     letter-spacing: 0.5px;
-    color: #98a2e4;
+    color: @color-blue200;
     margin-top: 8px;
 
     .swap-icon {
