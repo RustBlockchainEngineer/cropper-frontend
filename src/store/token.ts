@@ -65,8 +65,6 @@ export const actions:any = actionTree(
             TOKENS[key] = value
           }
 
-          alert('TOKEN LENGTH ' + TOKENS.length);
-
           if(Object.entries(TOKENS).length == 0)
           {
             need_to_update = true

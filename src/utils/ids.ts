@@ -10,7 +10,7 @@ export const ENDPOINT_SRM = 'Serum Dex'
 export const ENDPOINT_CRP = 'CropperFinance Pool'
 export const ENDPOINT_RAY = 'Raydium Pool'
 
-export const DEVNET_MODE = true;
+export const DEVNET_MODE = false;
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
@@ -35,14 +35,15 @@ export const STAKE_TIERS_PROGRAM_ID = DEVNET_MODE ? "3cjoBZpiEe49TiFcyvPVBTmR5Gx
 
 export let FARM_VERSION = 3;//@Hongbo
 
+
 export const FARM_PROGRAM_ID_VS = DEVNET_MODE ? [
     'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR',
     'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR',
     'FgkXfBQ9bsF7crkVsg1x458A85UhxAQHWtg3pyzGEsRa'
 ] : [
-    '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J',
-    '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J',
-    'FgkXfBQ9bsF7crkVsg1x458A85UhxAQHWtg3pyzGEsRa'
+    'mA2czmEhzCcoXXz5sW2xyPzzpsH947KRpMFrWqMKs5Z',
+    'mA2czmEhzCcoXXz5sW2xyPzzpsH947KRpMFrWqMKs5Z',
+    'BMybfKU6Vqr1fyjWmmYWduzYYddajysjivB3QL84VJ4N'
 ]//@Hongbo
 export const FARM_PROGRAM_ID = FARM_PROGRAM_ID_VS[FARM_VERSION-1];//@Hongbo
 

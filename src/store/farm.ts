@@ -83,7 +83,7 @@ export const actions = actionTree(
 
       const farms = {} as any
 
-      if (FARM_VERSION === 3 && wallet && wallet.connected) {
+      if (FARM_VERSION === 3) {
         const farmAccountInfos = await getFilteredFarms(conn, wallet)
         const publicKeys = [] as any
         farmAccountInfos.forEach((farmAccountInfo) => {

@@ -668,7 +668,8 @@
                   <div
                     class="owner"
                     v-if="
-                      farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+
+                      ( farm.farmInfo.poolInfo.owner.toBase58() == wallet.address || superOwnerAddress == wallet.address ) && 
                       isFarmAllowed(farm.farmInfo.poolInfo) &&
                       currentTimestamp < getFarmEndTime(farm.farmInfo.poolInfo)
                     "
@@ -702,7 +703,7 @@
                     >
                       <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
                     </div>
-                    
+
                     <div
                       class="btncontainer noMobile"
                       v-if="
@@ -1476,7 +1477,13 @@ export default Vue.extend({
       const wallet = (this as any).$accessor.wallet
       const farms: any = []
       const endedFarmsPoolId: string[] = []
+
+      console.log(this.farm.infos, Object.entries(this.farm.infos));
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
+
+
+        console.log(farmInfo);
+
         let isPFO = false
 
         // @ts-ignore
@@ -1504,6 +1511,7 @@ export default Vue.extend({
           .dividedBy(
           toBigNumber(endTimestampDual).minus(toBigNumber(lastTimestampDual))
         )
+
         if (reward && lp) {
           const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
@@ -1658,9 +1666,7 @@ export default Vue.extend({
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
             .minus(toBigNumber(rewardDebt.wei))
-            .plus(toBigNumber(pendingRewards.wei))
-          
-            
+            .plus(toBigNumber(pendingRewards.wei)) 
 
           userInfo.needRefresh = false
 
@@ -1734,10 +1740,6 @@ export default Vue.extend({
           }
         }
 
-        if (
-          (newFarmInfo as any).poolInfo.is_allowed > 0 ||
-          (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
-        ) {
           let labelized = false
           if (lp) {
             const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
@@ -1780,7 +1782,7 @@ export default Vue.extend({
               farmInfo: newFarmInfo
             })
           }
-        }
+        
       }
 
       if (this.sortAsc) {
@@ -2309,7 +2311,6 @@ export default Vue.extend({
       this.removeDualRewardModalOpening = true
     },
     openMakeDualModal(farm:any) {
-      console.log('here')
       this.farmInfo = cloneDeep(farm.farmInfo)
       this.makeDualFarmModalOpening = true
       
