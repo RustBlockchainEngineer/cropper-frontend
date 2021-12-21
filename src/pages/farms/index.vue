@@ -1,12 +1,11 @@
 <template>
   <div class="farm container">
-    <img class="planet-left" src="@/assets/Green Planet 1.png" />
-
     <CreateFarmProgram
       v-if="!farmProgramCreated && wallet.connected"
       :isSuperOwner="wallet.address === superOwnerAddress"
       @onCreate="createFarmProgram"
     />
+
     <StakeModel
       v-if="stakeModalOpening"
       title="Supply & Stake LP"
@@ -17,6 +16,7 @@
       @onOk="supplyAndStake"
       @onCancel="cancelStake"
     />
+    
     <StakeErrorModal
       v-if="stakeLPError"
       @onRetry="onRetryStakeLP"
@@ -65,260 +65,258 @@
 
     <div class="card">
       <div class="card-body">
-        <div class="page-head fs-container">
-          <span class="title">
-            Farms
-            <NuxtLink to="/farms/create-farm/" class="create-btn-desktop">
-              <div class="create-plus-btn">+ Create farm</div>
-            </NuxtLink>
-
-            <NuxtLink to="/farms/create-farm/" class="create-btn-mobile">
-              <div class="create-plus-btn">
-                <img src="@/assets/icons/plus.svg" />
-              </div>
-            </NuxtLink>
-          </span>
-
-          <span class="information">
-            <div class="my-info">
-              <p>
-                TVL : <b>${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</b>
+        <div class="farm-head fs-container">
+          <h3 class="title weightB">Farms</h3>
+          <div class="information">
+            <div class="tvl-info">
+              <p class="textL weightS">
+                TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
               </p>
-              <!-- <p>Your deposit: <b>28,009 $</b></p> -->
             </div>
 
-            <!-- {{ farm.autoRefreshTime - farm.countdown }} -->
-            <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
-              <img src="@/assets/icons/reload.svg" />
+            <div class="action-btn-group">
+              <div
+                class="reload-btn icon-cursor"
+                :class="activeSpinning ? 'active' : ''"
+                @click="reloadTimer"
+              >
+                <img src="@/assets/icons/reload.svg" />
+              </div>
+
+              <a class="create-btn icon-cursor">
+                <div class="create-plus-btn textS weightS">+ Create farm</div>
+              </a>
             </div>
-          </span>
-        </div>
-
-        <div class="page-content">
-          <!-- Filter bar for desktop -->
-          <Row class="tool-bar noMobile">
-            <Col span="5" class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
-                <Icon slot="prefix" type="search" />
-              </Input>
-            </Col>
-            <Col span="6" class="tool-option">
-              <div class="toggle">
-                <label
-                  class="label"
-                  :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('labelized')"
-                >
-                  Labelized
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and
-                          project.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon labelized">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-                <Toggle v-model="searchCertifiedFarm" />
-                <label
-                  class="label"
-                  :class="searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('permissionless')"
-                  >Permissionless
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-              </div>
-            </Col>
-            <Col span="5" class="tool-option">
-              <div class="toggle">
-                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''" @click="activeSearch('open')"
-                  >Open</label
-                >
-                <Toggle v-model="searchLifeFarm" />
-                <label class="label" :class="searchLifeFarm ? 'active-label' : ''" @click="activeSearch('ended')"
-                  >Ended</label
-                >
-              </div>
-            </Col>
-            <Col span="4" class="tool-option">
-              <div class="toggle deposit-toggle">
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">
-                  My deposit
-                </label>
-              </div>
-            </Col>
-            <Col span="4" class="tool-option">
-              <div class="sort-by">
-                <label class="label">Sort by:</label>
-                <label
-                  class="label active-label"
-                  @click="
-                    () => {
-                      this.showSortOption = !this.showSortOption
-                    }
-                  "
-                >
-                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }} ({{ !this.sortAsc ? 'asc' : 'dsc' }})
-                </label>
-                <img
-                  :class="showSortOption ? 'collapse-down' : 'collapse-up'"
-                  src="@/assets/icons/collapse-arrow.svg"
-                  @click="
-                    () => {
-                      this.showSortOption = !this.showSortOption
-                    }
-                  "
-                />
-              </div>
-              <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', true)">Liquidity (dsc)</div>
-                <div class="option" @click="setSortOption('liquidity', false)">Liquidity (asc)</div>
-                <div class="option" @click="setSortOption('apr', false)">APR % (asc)</div>
-                <div class="option" @click="setSortOption('apr', true)">APR % (dsc)</div>
-              </div>
-            </Col>
-          </Row>
-
-          <!-- Filter bar for mobile -->
-
-          <Row class="tool-bar noDesktop">
-            <Col span="12" class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
-                <Icon slot="prefix" type="search" />
-              </Input>
-            </Col>
-            <Col span="12" class="tool-option">
-              <div class="toggle deposit-toggle">
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')"
-                  >Deposited</label
-                >
-              </div>
-            </Col>
-          </Row>
-          <Row class="tool-bar noDesktop">
-            <Col span="24" class="tool-option">
-              <div class="toggle">
-                <label
-                  class="label"
-                  :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('labelized')"
-                >
-                  Labelized
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this farm after running due diligence on its team and
-                          project.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon labelized">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-                <Toggle v-model="searchCertifiedFarm" />
-                <label
-                  class="label"
-                  :class="searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('permissionless')"
-                  >Permissionless
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its farm without any review from the Cropper Team.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-              </div>
-            </Col>
-          </Row>
-          <Row class="tool-bar noDesktop">
-            <Col span="24" class="tool-option">
-              <div class="toggle">
-                <label class="label" :class="!searchLifeFarm ? 'active-label' : ''" @click="activeSearch('open')"
-                  >Open</label
-                >
-                <Toggle v-model="searchLifeFarm" />
-                <label class="label" :class="searchLifeFarm ? 'active-label' : ''" @click="activeSearch('ended')"
-                  >Ended</label
-                >
-              </div>
-            </Col>
-          </Row>
-          <Row class="tool-bar noDesktop">
-            <Col span="24" class="tool-option">
-              <div class="sort-by">
-                <label class="label">Sort by:</label>
-                <label
-                  class="label active-label"
-                  @click="
-                    () => {
-                      this.showSortOption = !this.showSortOption
-                    }
-                  "
-                >
-                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }} ({{ !this.sortAsc ? 'asc' : 'dsc' }})
-                </label>
-                <img
-                  :class="showSortOption ? 'collapse-down' : 'collapse-up'"
-                  src="@/assets/icons/collapse-arrow.svg"
-                  @click="
-                    () => {
-                      this.showSortOption = !this.showSortOption
-                    }
-                  "
-                />
-              </div>
-              <div v-if="showSortOption" class="sort-options">
-                <div class="option" @click="setSortOption('liquidity', true)">Liquidity (dsc)</div>
-                <div class="option" @click="setSortOption('liquidity', false)">Liquidity (asc)</div>
-                <div class="option" @click="setSortOption('apr', false)">APR % (asc)</div>
-                <div class="option" @click="setSortOption('apr', true)">APR % (dsc)</div>
-              </div>
-            </Col>
-          </Row>
-
-          <!-- Pre list -->
-
-          <div class="farm-shortcut">
-            <button
-              class="farm-prelist"
-              v-for="list in preList"
-              :key="list.symbol"
-              @click="searchByShortcut(list.symbol)"
-            >
-              <CoinIcon v-if="list.mintAddress != ''" :mint-address="list.mintAddress" />
-              {{ list.symbol }}
-            </button>
           </div>
         </div>
-        <div v-if="farm.initialized" class="page-content">
+
+        <div class="farm-content">
+          <div class="farm-option-bar fs-container">
+            <div class="option-tab-group">
+              <div class="option-tab">
+                <Button
+                  class="textL weightS"
+                  :class="searchCertifiedFarm === 'labelized' ? 'active-tab' : ''"
+                  @click="activeSearch('labelized')"
+                  >Labelized</Button
+                >
+                <div
+                  v-if="searchCertifiedFarm === 'labelized'"
+                  class="active-underline"
+                ></div>
+              </div>
+              <div class="option-tab">
+                <Button
+                  class="textL weightS"
+                  :class="searchCertifiedFarm === 'permissionless' ? 'active-tab' : ''"
+                  @click="activeSearch('permissionless')"
+                >
+                  Permissionless
+                </Button>
+                <div
+                  v-if="searchCertifiedFarm === 'permissionless'"
+                  class="active-underline"
+                ></div>
+              </div>
+              <div v-if="wallet.connected" class="option-tab">
+                <Button
+                  class="textL weightS"
+                  :class="searchCertifiedFarm === 'deposit' ? 'active-tab' : ''"
+                  @click="activeSearch('deposit')"
+                >
+                  <img v-if="searchCertifiedFarm === 'deposit'" class="deposit-icon" src="@/assets/icons/deposit-green.svg" />
+                  <img v-else class="deposit-icon" src="@/assets/icons/deposit.svg" />
+
+                  My Deposit
+                </Button>
+                <div
+                  v-if="searchCertifiedFarm === 'deposit'"
+                  class="active-underline"
+                ></div>
+              </div>
+            </div>
+
+            <div
+              class="option-tab-group option-tab-collapse icon-cursor"
+              @click="
+                () => {
+                  this.showTabMenu = !this.showTabMenu;
+                }
+              "
+            >
+              <label class="textL weightS icon-cursor">
+                {{
+                  searchCertifiedFarm === "labelized"
+                    ? "Labelized"
+                    : searchCertifiedFarm === "permissionless"
+                    ? "Permissionless"
+                    : searchCertifiedFarm === "deposit"
+                    ? "My Deposit"
+                    : ""
+                }}
+              </label>
+              <img
+                class="arrow-icon"
+                :class="showTabMenu ? 'arrow-up' : 'arrow-down'"
+                src="@/assets/icons/arrow-down-white.svg"
+              />
+
+              <div v-if="showTabMenu" class="option-collapse-menu collapse-left">
+                <div
+                  class="option-collapse-item text-center textM weightS icon-cursor"
+                  :class="searchCertifiedFarm === 'labelized' ? 'active-item' : ''"
+                  @click="activeSearch('labelized')"
+                >
+                  Labelized
+                </div>
+                <div
+                  class="option-collapse-item text-center textM weightS icon-cursor"
+                  :class="searchCertifiedFarm === 'permissionless' ? 'active-item' : ''"
+                  @click="activeSearch('permissionless')"
+                >
+                  Permissionless
+                </div>
+                <div
+                  class="option-collapse-item text-center textM weightS icon-cursor"
+                  :class="searchCertifiedFarm === 'deposit' ? 'active-item' : ''"
+                  @click="activeSearch('deposit')"
+                >
+                  My Deposit
+                </div>
+              </div>
+            </div>
+            <div class="option-select-group">
+              <div class="option-select fc-container icon-cursor">
+                <img
+                  src="@/assets/icons/search.svg"
+                  @click="
+                    () => {
+                      this.showSearchMenu = !this.showSearchMenu;
+                    }
+                  "
+                />
+              </div>
+
+              <div
+                class="option-search-collapse"
+                :class="showSearchMenu ? 'visible' : 'hidden'"
+              >
+                <div class="select-token-header fs-container">
+                  <label class="textL weightB">Search</label>
+                  <img
+                    class="icon-cursor"
+                    src="@/assets/icons/close-circle-icon.svg"
+                    @click="
+                      () => {
+                        this.showSearchMenu = false;
+                      }
+                    "
+                  />
+                </div>
+                <div class="select-token-search">
+                  <input
+                    ref="userInput"
+                    v-model="searchName"
+                    class="textM"
+                    placeholder="Search"
+                  />
+                  <div class="shortcut-list">
+                    <label class="textS weightS">Most Used</label>
+                    <div class="shortcut-group">
+                      <div
+                        v-for="item in mostUsed"
+                        :key="item.symbol"
+                        class="shortcut-container icon-cursor"
+                        @click="searchShortcut(item.symbol)"
+                      >
+                        <div class="shortcut-box fc-container">
+                          <CoinIcon class="coin-icon" :mint-address="item.mintAddress" />
+                          {{ item.symbol }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="option-select option-toggle fc-container">
+                <label class="toggle-label icon-cursor textS weightB" :class="!searchLifeFarm ? 'active-label' : ''" @click="activeSearch('open')"
+                  >Open</label
+                >
+                <Toggle v-model="searchLifeFarm" />
+                <label class="toggle-label icon-cursor textS weightB" :class="searchLifeFarm ? 'active-label' : ''" @click="activeSearch('ended')"
+                  >Ended</label
+                >
+              </div>
+              
+              <!-- option sort > 768px -->
+              <div
+                class="option-select option-sort fc-container icon-cursor"
+                @click="
+                  () => {
+                    this.showSortMenu = !this.showSortMenu;
+                  }
+                "
+              >
+                <span class="bodyM weightS option-select-sort fc-container">
+                  <label>Sort by:</label>
+                  <span class="sort-detail">
+                    {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }} ({{ !this.sortAsc ? 'A -> Z' : 'Z -> A' }})
+                    <img
+                      class="arrow-icon"
+                      :class="showSortMenu ? 'arrow-up' : 'arrow-down'"
+                      src="@/assets/icons/arrow-down-white.svg"
+                    />
+                  </span>
+                </span>
+              </div>
+
+              <!-- option sort < 768px -->
+              <img
+                class="option-sort-collapse icon-cursor"
+                src="@/assets/icons/menu-collapse.svg"
+                @click="
+                  () => {
+                    this.showSortMenu = !this.showSortMenu;
+                  }
+                "
+              />
+
+              <div v-if="showSortMenu" class="option-collapse-menu collapse-right">
+                <div
+                  class="option-collapse-item text-center textM weightS icon-cursor"
+                  :class="sortMethod === 'liquidity'  && !sortAsc ? 'active-item' : ''"
+                  @click="setSortOption('liquidity', false)"
+                >
+                  Liquidity A -> Z
+                </div>
+                <div
+                  class="option-collapse-item text-center textM weightS icon-cursor"
+                  :class="sortMethod === 'liquidity' && sortAsc ? 'active-item' : ''"
+                  @click="setSortOption('liquidity', true)"
+                >
+                  Liquidity Z -> A
+                </div>
+                <div
+                  class="option-collapse-item text-center textM weightS icon-cursor"
+                  :class="sortMethod === 'apr' && !sortAsc ? 'active-item' : ''"
+                  @click="setSortOption('apr', false)"
+                >
+                  APR % A -> Z
+                </div>
+                <div
+                  class="option-collapse-item text-center textM weightS icon-cursor"
+                  :class="sortMethod === 'apr' && sortAsc ? 'active-item' : ''"
+                  @click="setSortOption('apr', true)"
+                >
+                  APR % Z -> A
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="farm.initialized">
           <div class="farm-table">
             <!-- Farm table for desktop -->
             <Row
@@ -964,16 +962,12 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import {
   Tooltip,
-  // Progress,
   Collapse,
   Spin,
   Icon,
   Row,
   Col,
   Button,
-  // Radio,
-  Input,
-  // Select,
   Switch as Toggle,
   Pagination
 } from 'ant-design-vue'
@@ -1005,8 +999,6 @@ export default Vue.extend({
   components: {
     Tooltip,
     Toggle,
-    Input,
-    // Progress,
     Collapse,
     CollapsePanel,
     Spin,
@@ -1014,15 +1006,8 @@ export default Vue.extend({
     Row,
     Col,
     Button,
-    // Radio,
-    // Select,
     Pagination
   },
-
-  //    ,
-  //    RadioGroup,
-  //    RadioButton
-
   data() {
     return {
       isMobile: false,
@@ -1058,10 +1043,8 @@ export default Vue.extend({
       labelizedAmms: {} as any,
       labelizedAmmsExtended: {} as any,
       poolsDatas: {} as any,
-      searchCertifiedFarm: false as boolean,
+      searchCertifiedFarm: 'labelized' as string,
       searchLifeFarm: false as boolean,
-      stakedOnly: false as boolean,
-      showSortOption: false as boolean,
       totalCount: 110,
       pageSize: 50,
       displaynoticeupdate: false,
@@ -1069,11 +1052,10 @@ export default Vue.extend({
       labelizedPermission: false as any,
       sortMethod: 'liquidity' as string,
       sortAsc: true as boolean,
-      preList: [
-        {
-          symbol: 'All',
-          mintAddress: ''
-        },
+      showSortMenu: false as boolean,
+      showSearchMenu: false as boolean,
+      showTabMenu: false as boolean,
+      mostUsed: [
         {
           symbol: 'CRP',
           mintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz'
@@ -1086,7 +1068,7 @@ export default Vue.extend({
           symbol: 'SOL',
           mintAddress: '11111111111111111111111111111111'
         }
-      ],
+      ] as any,
       activeSpinning: false as boolean,
       userMigrations: [] as any[]
     }
@@ -1132,31 +1114,25 @@ export default Vue.extend({
     },
     searchName: {
       handler(newSearchName: string) {
-        this.filterFarms(newSearchName, this.searchCertifiedFarm, this.searchLifeFarm, this.stakedOnly)
+        this.filterFarms(newSearchName, this.searchCertifiedFarm, this.searchLifeFarm)
       },
       deep: true
     },
     searchCertifiedFarm: {
       handler(newSearchCertifiedFarm: any) {
-        this.filterFarms(this.searchName, newSearchCertifiedFarm, this.searchLifeFarm, this.stakedOnly)
+        this.filterFarms(this.searchName, newSearchCertifiedFarm, this.searchLifeFarm)
       },
       deep: true
     },
     searchLifeFarm: {
       handler(newSearchLifeFarm: any) {
-        this.filterFarms(this.searchName, this.searchCertifiedFarm, newSearchLifeFarm, this.stakedOnly)
-      },
-      deep: true
-    },
-    stakedOnly: {
-      handler(newStakedOnly: any) {
-        this.filterFarms(this.searchName, this.searchCertifiedFarm, this.searchLifeFarm, newStakedOnly)
+        this.filterFarms(this.searchName, this.searchCertifiedFarm, newSearchLifeFarm)
       },
       deep: true
     },
     currentPage: {
       handler(newPage: number) {
-        this.filterFarms(this.searchName, this.searchCertifiedFarm, this.searchLifeFarm, this.stakedOnly, newPage)
+        this.filterFarms(this.searchName, this.searchCertifiedFarm, this.searchLifeFarm, newPage)
       },
       deep: true
     }
@@ -1305,7 +1281,7 @@ export default Vue.extend({
 
       if(this.initBasedSearch == 1 && this.searchName.length > 10){
         if(!this.labelizedAmms[this.searchName]){
-          this.searchCertifiedFarm = true
+          this.searchCertifiedFarm = 'labelized'
         }
       }
 
@@ -1711,15 +1687,13 @@ export default Vue.extend({
         this.searchName,
         this.searchCertifiedFarm,
         this.searchLifeFarm,
-        this.stakedOnly,
         this.currentPage
       )
     },
     filterFarms(
       searchName: string,
-      searchCertifiedFarm: boolean,
+      searchCertifiedFarm: string,
       searchLifeFarm: boolean,
-      stakedOnly: boolean,
       pageNum: number = 1
     ) {
       this.currentPage = pageNum
@@ -1760,13 +1734,17 @@ export default Vue.extend({
         )
       }
 
-      if (!searchCertifiedFarm) {
+      if (searchCertifiedFarm === 'labelized') {
         //labelized
         this.showFarms = this.showFarms.filter((farm: any) => farm.labelized)
-      } else {
+      } else if (searchCertifiedFarm === 'permissionless') {
         //permissionless
         this.showFarms = this.showFarms.filter((farm: any) => !farm.labelized)
+      } else if (searchCertifiedFarm === 'deposit') {
+        //deposit
+        this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0)
       }
+      
 
       const currentTimestamp = moment().unix()
       if (!searchLifeFarm) {
@@ -1779,10 +1757,6 @@ export default Vue.extend({
       } else {
         //Ended
         this.showFarms = this.showFarms.filter((farm: any) => farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)
-      }
-
-      if (stakedOnly) {
-        this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0)
       }
 
       this.totalCount = this.showFarms.length
@@ -2476,23 +2450,18 @@ export default Vue.extend({
 
       return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
     },
-    searchByShortcut(option: string) {
-      option = option.toLowerCase()
-      if (option == 'all') option = ''
-      this.searchName = option
-    },
     setSortOption(mode: string, asc: boolean) {
       this.sortMethod = mode
       this.sortAsc = asc
-      this.showSortOption = false
+      this.showSortMenu = false
       this.updateFarms()
     },
     activeSearch(mode: string) {
-      if (mode === 'labelized') this.searchCertifiedFarm = false
-      else if (mode === 'permissionless') this.searchCertifiedFarm = true
+      if (mode === 'labelized') this.searchCertifiedFarm = 'labelized'
+      else if (mode === 'permissionless') this.searchCertifiedFarm = 'permissionless'
       else if (mode === 'open') this.searchLifeFarm = false
       else if (mode === 'ended') this.searchLifeFarm = true
-      else if (mode === 'deposit' && this.wallet.connected) this.stakedOnly = !this.stakedOnly
+      else if (mode === 'deposit') this.searchCertifiedFarm = 'deposit'
     },
     hideCollapse() {
       this.showCollapse = []
@@ -2504,6 +2473,10 @@ export default Vue.extend({
       }, 1000)
       this.$accessor.farm.requestInfos()
       this.$accessor.wallet.getTokenAccounts()
+    },
+    searchShortcut(name: string) {
+      this.searchName = name.toLowerCase()
+      this.showSearchMenu = false
     }
   }
 })
@@ -2522,732 +2495,751 @@ export default Vue.extend({
   }
 }
 
-.planet-img-left {
-  position: absolute;
-  left: 0;
-  top: 35%;
+.pagination-container {
+  text-align: center;
+  width: 100%;
+  margin-top: 30px;
+
+  .pagination-body {
+    width: 80%;
+    display: inline-block;
+  }
+}
+
+.btn-container {
+  width: 100%;
+  max-width: 150px;
+  background: @gradient-color-fill;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 5px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  button {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    color: #fff;
+
+    @media @max-lg-tablet {
+      font-size: 12px !important;
+      line-height: 14px !important;
+      font-weight: 600 !important;
+    }
+  }
+
+  &.btn-container-outline {
+    height: 28px;
+    padding: 2px;
+
+    @media @max-lg-tablet {
+      height: 35px;
+    }
+
+    button {
+      font-size: 10px;
+      line-height: 24px;
+      font-weight: 400;
+      background: #0b2e6a !important;
+    }
+  }
+
+  &.btn-container-fill {
+    height: 52px;
+
+    @media @max-lg-tablet {
+      margin-bottom: 10px;
+    }
+
+    button {
+      font-size: 14px;
+      line-height: 24px;
+      font-weight: 600;
+      background: transparent !important;
+    }
+  }
+
+  &.btn-container-harvest {
+    height: 28px;
+    background: @gradient-color-outline;
+
+    @media @max-lg-tablet {
+      height: 35px;
+    }
+
+    button {
+      font-size: 12px;
+      line-height: 24px;
+      font-weight: 400;
+      background: transparent !important;
+    }
+  }
+
+  &.btn-container-harvest button:disabled {
+    background: @gradient-color-disable !important;
+    color: #fff;
+  }
+}
+
+.noDesktop {
+  display: none;
+
+  @media @max-lg-tablet {
+    display: block;
+  }
+}
+
+.noMobile {
+  @media @max-lg-tablet {
+    display: none !important;
+  }
 }
 
 // class stylesheet
 
 .farm.container {
-  max-width: 1350px;
-  width: 100%;
-  background: @color-blue800;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 15px;
+  margin-top: 38px;
 
-  @media @max-lg-tablet {
-    margin-top: 0;
-  }
-
-  .planet-left {
-    position: absolute;
-    left: 0;
-    top: 35%;
-
-    @media @max-lg-tablet {
-      display: none;
-    }
+  @media @max-sl-mobile {
+    margin-top: 28px;
   }
 
   .card {
     .card-body {
       padding: 0;
 
-      .farm-shortcut {
-        display: inline-flex;
-        padding: 10px;
-
-        @media @max-lg-tablet {
-          display: none;
+      .farm-head {
+        @media @max-sl-mobile {
+          display: block;
         }
-
-        .farm-prelist {
-          background: rgba(255, 255, 255, 0.3);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          border-radius: 6px;
-          padding: 6px 24px;
-          font-size: 14px;
-          line-height: 17px;
-          text-transform: uppercase;
-          margin-right: 5px;
-          width: 75px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-
-          img {
-            width: 15px;
-            height: 15px;
-            margin-right: 5px;
-            border-radius: 50%;
-          }
-        }
-      }
-
-      .page-head {
-        margin-top: 10px;
 
         .title {
           text-align: center;
           position: relative;
           float: left;
 
-          a {
-            position: absolute;
-
-            &.create-btn-desktop {
-              top: 20px;
-              right: -90px;
-
-              .create-plus-btn {
-                font-weight: 400;
-                background: @color-outline;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                align-items: center;
-                display: flex;
-                justify-content: center;
-                color: white;
-                padding: 3px 7px;
-                border-radius: 4px;
-                font-size: 10px;
-                line-height: 12px;
-
-                @media @max-lg-tablet {
-                  display: none;
-                }
-              }
-            }
-
-            &.create-btn-mobile {
-              top: 5px;
-              right: -25px;
-
-              .create-plus-btn {
-                font-weight: 400;
-                background: @color-outline;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 18px;
-                border-radius: 8px;
-                width: 18px;
-                height: 18px;
-                display: none;
-
-                @media @max-lg-tablet {
-                  display: flex;
-                }
-              }
-            }
+          @media @max-sl-mobile {
+            margin-bottom: 18px !important;
           }
         }
 
         .information {
           display: flex;
           align-items: center;
-          text-align: right;
+          justify-content: space-between;
 
-          .my-info {
-            font-size: 15px;
-            line-height: 18px;
-
-            @media @max-lg-tablet {
-              font-size: 12px;
-              line-height: 15px;
-            }
+          @media @max-sl-mobile {
+            width: 100%;
           }
 
-          .reload-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 15px;
-            background: @gradient-color-primary;
-            background-origin: border-box;
-            margin-left: 15px;
+          .tvl-info {
+            margin-right: 18px;
+          }
+
+          .action-btn-group {
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
 
-            @media @max-lg-tablet {
-              margin-left: 5px;
+            .reload-btn {
+              background: @color-blue600;
+              border-radius: 8px;
+              padding: 6px;
+              margin-right: 18px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              @media @max-lg-tablet {
+                margin-left: 5px;
+              }
+
+              img {
+                width: 18px;
+                height: 18px;
+              }
+
+              &.active img {
+                transform: rotate(360deg);
+                transition: all 1s ease-in-out;
+              }
             }
 
-            img {
-              width: 18px;
-              height: 18px;
-            }
+            .create-btn {
+              top: 20px;
+              right: -90px;
 
-            &.active img {
-              transform: rotate(360deg);
-              transition: all 1s ease-in-out;
+              .create-plus-btn {
+                background: @color-blue600;
+                border-radius: 8px;
+                padding: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+              }
             }
           }
         }
       }
 
-      .page-content {
-        .tool-bar {
-          height: 64px;
-          border-radius: 14px;
-          border: 4px solid @color-outline;
-          width: 100%;
+      .farm-content {
+        .farm-option-bar {
+          margin: 38px 0;
 
-          @media @max-lg-tablet {
-            margin-bottom: 5px;
-            height: 54px;
-
-            &:last-child {
-              margin-bottom: 0;
-            }
+          @media @max-sl-mobile {
+            margin: 28px 0;
           }
 
-          .tool-option {
-            height: 100%;
-            display: inline-block;
-            border-right: 4px solid @color-outline;
-            position: relative;
-
-            &:last-child {
-              border-right: none !important;
-            }
-
-            .input-search {
-              height: 100%;
-              position: absolute;
-              width: 100%;
-            }
-
-            .toggle {
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: space-evenly;
-
-              .label {
-                opacity: 0.5;
-                font-size: 16px;
-                color: #fff;
-                cursor: pointer;
-                position: relative;
-
-                .info-icon {
-                  margin: 0;
-                  position: absolute;
-                  top: -5px;
-                  right: -20px;
-                  width: fit-content;
-
-                  &.labelized {
-                    left: -20px;
-                  }
-                }
-
-                &.active-label {
-                  font-weight: 700;
-                  opacity: 1;
-                }
-              }
-
-              &.deposit-toggle {
-                .ant-switch {
-                  background-color: @color-disable !important;
-                }
-                .ant-switch-checked {
-                  background-color: #fff !important;
-                }
-              }
-            }
-
-            .sort-by {
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: space-evenly;
-
-              .label {
-                font-size: 16px;
-                opacity: 0.5;
-                cursor: pointer;
-
-                &.active-label {
-                  font-weight: 700;
-                  opacity: 1;
-                }
-
-                .sort-up,
-                .sort-down {
-                  margin-right: 5px;
-                  transition: 0.5s;
-                }
-
-                .sort-down {
-                  transform: rotate(180deg);
-                }
-              }
-
-              .collapse-down,
-              .collapse-up {
-                cursor: pointer;
-                transition: 0.5s;
-              }
-
-              .collapse-down {
-                transform: rotate(180deg);
-              }
-            }
-
-            .sort-options {
-              position: absolute;
-              width: 100%;
-              top: 64px;
-              padding: 18px;
-              background: @gradient-color-primary;
-              background-origin: border-box;
-              border: 2px solid rgba(255, 255, 255, 0.1);
-              box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
-              border-radius: 8px;
-              z-index: 999;
-
-              .option {
-                display: flex;
-                align-items: center;
-                padding: 10px;
-                border-bottom: 1px solid #c4c4c420;
-                font-size: 16px;
-                line-height: 19px;
-                cursor: pointer;
-
-                &:hover {
-                  background: @gradient-color-primary;
-                  border: 1px solid rgba(255, 255, 255, 0.1);
-                  border-radius: 6px;
-                }
-
-                &.active {
-                  background: @gradient-color-primary;
-                  border: 1px solid rgba(255, 255, 255, 0.1);
-                }
-
-                &:last-child {
-                  border-bottom: none;
-                }
-
-                img {
-                  margin-right: 20px;
-                }
-              }
-            }
-          }
-        }
-
-        .farm-table {
-          .farm-table-mobile {
-            margin-top: 15px;
-            background: transparent;
-          }
-
-          .farm-item {
+          .option-tab-group {
             display: flex;
-            padding: 24px 18px;
-            background: @gradient-color-labelized;
-            border-radius: 5px;
-            margin-top: 10px;
 
-            @media @max-lg-tablet {
-              display: block;
-              padding: 0;
-              background: @color-blue-dark !important;
-              border-radius: 0;
-              margin-top: 0;
+            @media @max-sl-mobile {
+              display: none;
             }
 
-            &:first-child {
-              margin-top: 0;
-            }
+            &.option-tab-collapse {
+              display: none;
 
-            &.permissionless {
-              background: @gradient-color-permissionless;
-
-              &:hover {
-                background: @gradient-color-permissionless-brighter;
-              }
-            }
-
-            &.labelized {
-              background: @gradient-color-labelized;
-              &:hover {
-                background: @gradient-color-labelized-brighter;
-              }
-            }
-
-            .state {
-              .title {
-                font-size: 18px;
-                line-height: 15px;
-                font-weight: 400;
-                display: flex;
-
-                @media @max-lg-tablet {
-                  font-size: 12px;
-                  color: rgba(255, 255, 255, 0.5);
-                }
-              }
-
-              .value {
-                margin-top: 10px;
-                font-size: 20px;
-                line-height: 24px;
-                font-weight: 600;
-                word-break: break-all;
-
-                @media @max-lg-tablet {
-                  margin-top: 5px;
-                  font-size: 14px;
-                  line-height: 17px;
-                }
-              }
-
-              .btn-container-harvest {
-                position: absolute;
-                bottom: 10px;
-
-                @media @max-lg-tablet {
-                  position: relative;
-                  bottom: unset;
-                }
-              }
-            }
-
-            .lp-icons {
-              .lp-farm {
+              @media @max-sl-mobile {
+                position: relative;
                 display: flex;
                 align-items: center;
+                padding: 6px 10px;
+                border: 2px solid @color-blue500;
+                border-radius: 8px;
 
-                @media @max-lg-tablet {
-                  justify-content: space-between;
+                label {
+                  color: @color-petrol500;
                 }
 
-                .lp-icons-group {
-                  height: 44px;
-                  background: @gradient-color-outline;
-                  background-origin: border-box;
-                  border-radius: 8px;
-                  padding: 2px;
-                  width: 240px;
+                .arrow-icon {
+                  margin-left: 4px;
+                }
+              }
+            }
 
-                  @media @max-lg-tablet {
-                    height: 30px;
-                    width: 180px;
+            .option-tab {
+              margin-right: 48px;
+
+              &:last-child {
+                margin-right: 0;
+              }
+
+              button {
+                background: transparent;
+                border: none;
+                outline: none;
+                padding: 0;
+                margin-bottom: 8px;
+
+                &.active-tab {
+                  color: @color-petrol500;
+                }
+
+                .deposit-icon {
+                  margin-right: 8px;
+                }
+              }
+
+              .active-underline {
+                height: 4px;
+                border-radius: 10px;
+                background: @color-petrol400;
+              }
+            }
+          }
+          
+          .option-select-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            .option-select {
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+              padding: 0 8px;
+              height: 40px;
+              margin-right: 18px;
+              
+              @media @max-sl-mobile {
+                height: 32px;
+                padding: 0 4px;
+              }
+
+              &:last-child {
+                margin-right: 0;
+              }
+
+              &.option-toggle {
+                .toggle-label {
+                  position: relative;
+                  opacity: 0.5;
+                  color: #fff;
+                  
+                  .info-icon {
+                    position: absolute;
+                    top: -5px;
+                    right: -20px;
+                    margin: 0;
+                    width: fit-content;
+
+                    &.labelized {
+                      left: -20px;
+                    }
                   }
 
-                  .icons {
-                    height: 100%;
-                    background-color: @color-blue800;
-                    border-radius: 8px;
-                    align-items: center;
-                    justify-content: center;
+                  &.active-label {
+                    opacity: 1;
+                  }
+                }
+              }
+              
+              &.option-sort {
+                @media @max-md-tablet {
+                  display: none;
+                }
+              }
 
-                    img {
-                      @media @max-lg-tablet {
-                        width: 12px;
-                        height: 12px;
-                      }
-                    }
+              .option-select-sort {
+                letter-spacing: 0.15px;
 
-                    span {
-                      margin-left: 5px;
-                      margin-right: 5px;
-                      font-weight: 400;
-                      font-size: 18px;
-                      line-height: 21px;
+                label {
+                  color: #eae8f1;
+                  opacity: 0.5;
+                  margin-right: 8px;
+                }
+
+                .sort-detail {
+                  display: flex;
+                  align-items: center;
+
+                  .arrow-icon {
+                    margin-left: 8px;
+                  }
+                }
+              }
+            }
+
+            .option-sort-collapse {
+              display: none;
+
+              @media @max-md-tablet {
+                display: block;
+              }
+            }
+
+            .option-search-collapse {
+              position: absolute;
+              top: 0;
+              left: -209px;
+              visibility: hidden;
+              opacity: 0;
+              transition: visibility 0s, opacity 0.5s linear;
+              background: @color-blue700;
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+              padding: 18px;
+              z-index: 999;
+              width: 250px;
+
+              &.visible {
+                visibility: visible;
+                opacity: 1;
+              }
+
+              .select-token-header {
+                margin-bottom: 10px;
+              }
+
+              .select-token-search {
+                input {
+                  border: 2px solid @color-blue400;
+                  border-radius: 8px;
+                  padding: 8px 18px;
+                  background-color: transparent;
+                  color: #ccd1f1;
+                  width: 100%;
+
+                  &:active,
+                  &:focus,
+                  &:hover {
+                    outline: 0;
+                  }
+
+                  &::placeholder {
+                    color: #ccd1f1;
+                  }
+                }
+
+                .shortcut-list {
+                  margin-top: 8px;
+
+                  .shortcut-group {
+                    display: flex;
+                    margin-top: 8px;
+
+                    .shortcut-container {
+                      background: linear-gradient(
+                        97.63deg,
+                        #280c86 -29.92%,
+                        #22b5b6 103.89%
+                      );
+                      border-radius: 8px;
+                      padding: 2px;
+                      margin-right: 8px;
 
                       &:last-child {
                         margin-right: 0;
                       }
 
-                      @media @max-lg-tablet {
-                        font-size: 15px;
-                        line-height: 18px;
+                      .shortcut-box {
+                        background: @color-blue800;
+                        border-radius: 8px;
+                        padding: 8px;
+
+                        .coin-icon {
+                          width: 12px;
+                          height: 12px;
+                          margin-right: 4px;
+                          border-radius: 50%;
+                        }
                       }
                     }
                   }
                 }
               }
+            }
+          }
 
-              .farm-labels {
-                margin-top: 15px;
-                display: flex;
+          .option-collapse-menu {
+            position: absolute;
+            top: 50px;
+            background: @gradient-color-primary;
+            background-origin: border-box;
+            border: 2px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            min-width: 180px;
+            z-index: 999;
+
+            &.collapse-left {
+              left: 0;
+            }
+
+            &.collapse-right {
+              right: 0;
+            }
+
+            .option-collapse-item {
+              padding: 16px 32px;
+              border-bottom: 1px solid #c4c4c420;
+
+              &:last-child {
+                border-bottom: 0;
+              }
+
+              &.active-item {
+                color: @color-petrol500;
+              }
+            }
+          }
+        }
+      }
+
+      .farm-table {
+        .farm-table-mobile {
+          margin-top: 15px;
+          background: transparent;
+        }
+
+        .farm-item {
+          display: flex;
+          padding: 24px 18px;
+          background: @gradient-color-labelized;
+          border-radius: 5px;
+          margin-top: 10px;
+
+          @media @max-lg-tablet {
+            display: block;
+            padding: 0;
+            background: @color-blue-dark !important;
+            border-radius: 0;
+            margin-top: 0;
+          }
+
+          &:first-child {
+            margin-top: 0;
+          }
+
+          &.permissionless {
+            background: @gradient-color-permissionless;
+
+            &:hover {
+              background: @gradient-color-permissionless-brighter;
+            }
+          }
+
+          &.labelized {
+            background: @gradient-color-labelized;
+            &:hover {
+              background: @gradient-color-labelized-brighter;
+            }
+          }
+
+          .state {
+            .title {
+              font-size: 18px;
+              line-height: 15px;
+              font-weight: 400;
+              display: flex;
+
+              @media @max-lg-tablet {
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.5);
+              }
+            }
+
+            .value {
+              margin-top: 10px;
+              font-size: 20px;
+              line-height: 24px;
+              font-weight: 600;
+              word-break: break-all;
+
+              @media @max-lg-tablet {
+                margin-top: 5px;
+                font-size: 14px;
+                line-height: 17px;
+              }
+            }
+
+            .btn-container-harvest {
+              position: absolute;
+              bottom: 10px;
+
+              @media @max-lg-tablet {
+                position: relative;
+                bottom: unset;
+              }
+            }
+          }
+
+          .lp-icons {
+            .lp-farm {
+              display: flex;
+              align-items: center;
+
+              @media @max-lg-tablet {
+                justify-content: space-between;
+              }
+
+              .lp-icons-group {
+                height: 44px;
+                background: @gradient-color-outline;
+                background-origin: border-box;
+                border-radius: 8px;
+                padding: 2px;
+                width: 240px;
 
                 @media @max-lg-tablet {
-                  margin-top: 0;
+                  height: 30px;
+                  width: 180px;
                 }
 
-                .label {
-                  border-radius: 6px;
-                  padding: 5px 9px;
-                  font-size: 14px;
-                  font-weight: 400;
-                  width: fit-content;
-                  margin-right: 10px;
+                .icons {
+                  height: 100%;
+                  background-color: @color-blue800;
+                  border-radius: 8px;
+                  align-items: center;
+                  justify-content: center;
 
-                  &:last-child {
-                    margin-right: 0;
+                  img {
+                    @media @max-lg-tablet {
+                      width: 12px;
+                      height: 12px;
+                    }
                   }
 
-                  &.labelized {
-                    background: @color-labelized;
-                  }
-
-                  &.permissionless {
-                    background: @color-permissionless;
-                  }
-
-                  &.ended {
-                    border: 2px solid @color-ended;
-                    font-size: 14px;
-                    line-height: 17px;
-                    color: @color-ended;
-                    text-transform: uppercase;
-                  }
-
-                  &.dual {
-                    border: 2px solid @color-dual;
-                    font-size: 14px;
-                    line-height: 17px;
-                    color: @color-dual;
-                    text-transform: uppercase;
-                  }
-
-                  &.new {
-                    border: 2px solid @color-new;
-                    font-size: 14px;
-                    line-height: 17px;
-                    color: @color-new;
-                    text-transform: uppercase;
-                  }
-
-                  @media @max-lg-tablet {
-                    font-weight: 600 !important;
-                    font-size: 10px !important;
-                    padding: 0 4px;
+                  span {
+                    margin-left: 5px;
                     margin-right: 5px;
+                    font-weight: 400;
+                    font-size: 18px;
+                    line-height: 21px;
 
-                    &.ended,
-                    &.dual,
-                    &.new {
-                      text-transform: unset;
+                    &:last-child {
+                      margin-right: 0;
+                    }
+
+                    @media @max-lg-tablet {
+                      font-size: 15px;
+                      line-height: 18px;
                     }
                   }
                 }
               }
             }
 
-            .farm-mobile-section {
-              padding: 10px;
-              border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
-              &.btn-show-collapse {
-                text-align: center;
-                cursor: pointer;
-                border-bottom: none;
-
-                @media @max-lg-tablet {
-                  padding: 5px;
-                }
-              }
-
-              &.btn-hide-collapse {
-                text-align: center;
-                cursor: pointer;
-                border-bottom: none;
-
-                .btn-hide-collapse-icon {
-                  margin-top: 5px;
-                  transform: rotate(180deg);
-                }
-              }
-            }
-
-            .social-icons-group {
-              display: flex;
-              margin-left: 15px;
-
-              @media @max-lg-tablet {
-                margin-left: 0;
-              }
-
-              .social-icon {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: @gradient-color-icon;
-
-                @media @max-lg-tablet {
-                  width: 24px;
-                  height: 24px;
-                  background: @gradient-color-social;
-                }
-
-                &:first-child {
-                  margin-right: 5px;
-                }
-              }
-            }
-
-            .farm-infos {
+            .farm-labels {
               margin-top: 15px;
+              display: flex;
 
               @media @max-lg-tablet {
                 margin-top: 0;
               }
 
-              .farm-info-group {
-                display: flex;
-                align-items: center;
+              .label {
+                border-radius: 6px;
+                padding: 5px 9px;
+                font-size: 14px;
+                font-weight: 400;
+                width: fit-content;
+                margin-right: 10px;
 
-                @media @max-lg-tablet {
-                  font-size: 12px;
-                  line-height: 15px;
+                &:last-child {
+                  margin-right: 0;
                 }
 
-                .farm-info-img {
-                  width: 20px;
-                  display: flex;
-                  opacity: 0.5;
+                &.labelized {
+                  background: @color-labelized;
+                }
+
+                &.permissionless {
+                  background: @color-permissionless;
+                }
+
+                &.ended {
+                  border: 2px solid @color-ended;
+                  font-size: 14px;
+                  line-height: 17px;
+                  color: @color-ended;
+                  text-transform: uppercase;
+                }
+
+                &.dual {
+                  border: 2px solid @color-dual;
+                  font-size: 14px;
+                  line-height: 17px;
+                  color: @color-dual;
+                  text-transform: uppercase;
+                }
+
+                &.new {
+                  border: 2px solid @color-new;
+                  font-size: 14px;
+                  line-height: 17px;
+                  color: @color-new;
+                  text-transform: uppercase;
+                }
+
+                @media @max-lg-tablet {
+                  font-weight: 600 !important;
+                  font-size: 10px !important;
+                  padding: 0 4px;
+                  margin-right: 5px;
+
+                  &.ended,
+                  &.dual,
+                  &.new {
+                    text-transform: unset;
+                  }
                 }
               }
             }
+          }
 
-            .details {
-              top: 50%;
-              transform: translate(0, -50%);
-              position: absolute;
-              right: 17px;
-              margin-top: unset;
+          .farm-mobile-section {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+            &.btn-show-collapse {
+              text-align: center;
+              cursor: pointer;
+              border-bottom: none;
+
+              @media @max-lg-tablet {
+                padding: 5px;
+              }
             }
+
+            &.btn-hide-collapse {
+              text-align: center;
+              cursor: pointer;
+              border-bottom: none;
+
+              .btn-hide-collapse-icon {
+                margin-top: 5px;
+                transform: rotate(180deg);
+              }
+            }
+          }
+
+          .social-icons-group {
+            display: flex;
+            margin-left: 15px;
+
+            @media @max-lg-tablet {
+              margin-left: 0;
+            }
+
+            .social-icon {
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: @gradient-color-icon;
+
+              @media @max-lg-tablet {
+                width: 24px;
+                height: 24px;
+                background: @gradient-color-social;
+              }
+
+              &:first-child {
+                margin-right: 5px;
+              }
+            }
+          }
+
+          .farm-infos {
+            margin-top: 15px;
+
+            @media @max-lg-tablet {
+              margin-top: 0;
+            }
+
+            .farm-info-group {
+              display: flex;
+              align-items: center;
+
+              @media @max-lg-tablet {
+                font-size: 12px;
+                line-height: 15px;
+              }
+
+              .farm-info-img {
+                width: 20px;
+                display: flex;
+                opacity: 0.5;
+              }
+            }
+          }
+
+          .details {
+            top: 50%;
+            transform: translate(0, -50%);
+            position: absolute;
+            right: 17px;
+            margin-top: unset;
           }
         }
       }
-    }
-  }
-
-  // global used styles
-  p {
-    margin-bottom: 0;
-  }
-
-  .pagination-container {
-    text-align: center;
-    width: 100%;
-    margin-top: 30px;
-
-    .pagination-body {
-      width: 80%;
-      display: inline-block;
-    }
-  }
-
-  .btn-container {
-    width: 100%;
-    max-width: 150px;
-    background: @gradient-color-fill;
-    border-radius: 8px;
-    border: none;
-    margin-bottom: 5px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    button {
-      height: 100%;
-      width: 100%;
-      border-radius: 8px;
-      border: none;
-      color: #fff;
-
-      @media @max-lg-tablet {
-        font-size: 12px !important;
-        line-height: 14px !important;
-        font-weight: 600 !important;
-      }
-    }
-
-    &.btn-container-outline {
-      height: 28px;
-      padding: 2px;
-
-      @media @max-lg-tablet {
-        height: 35px;
-      }
-
-      button {
-        font-size: 10px;
-        line-height: 24px;
-        font-weight: 400;
-        background: #0b2e6a !important;
-      }
-    }
-
-    &.btn-container-fill {
-      height: 52px;
-
-      @media @max-lg-tablet {
-        margin-bottom: 10px;
-      }
-
-      button {
-        font-size: 14px;
-        line-height: 24px;
-        font-weight: 600;
-        background: transparent !important;
-      }
-    }
-
-    &.btn-container-harvest {
-      height: 28px;
-      background: @gradient-color-outline;
-
-      @media @max-lg-tablet {
-        height: 35px;
-      }
-
-      button {
-        font-size: 12px;
-        line-height: 24px;
-        font-weight: 400;
-        background: transparent !important;
-      }
-    }
-
-    &.btn-container-harvest button:disabled {
-      background: @gradient-color-disable !important;
-      color: #fff;
-    }
-  }
-
-  .noDesktop {
-    display: none;
-
-    @media @max-lg-tablet {
-      display: block;
-    }
-  }
-
-  .noMobile {
-    @media @max-lg-tablet {
-      display: none !important;
     }
   }
 }
@@ -3299,41 +3291,12 @@ export default Vue.extend({
   }
 }
 
+.ant-switch {
+  margin: 0 8px;
+}
+
 .farm {
-  .page-content {
-    .tool-bar {
-      .tool-option {
-        .input-search {
-          .ant-input-prefix {
-            left: 10%;
-            font-size: 20px;
-            color: white;
-          }
-
-          .ant-input {
-            padding: 0 10% 0 25%;
-            height: 100% !important;
-            border: none;
-            border-radius: 14px;
-
-            @media @max-lg-tablet {
-              font-size: 14px;
-              line-height: 17px;
-            }
-
-            &::placeholder {
-              color: white;
-              opacity: 0.5;
-            }
-
-            &:focus {
-              box-shadow: none;
-            }
-          }
-        }
-      }
-    }
-
+  .farm-content {
     .farm-table {
       .ant-collapse {
         .ant-collapse-item {

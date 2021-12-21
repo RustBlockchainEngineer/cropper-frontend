@@ -219,7 +219,7 @@
                         v-for="item in mostUsed"
                         :key="item.symbol"
                         class="shortcut-container icon-cursor"
-                        @click="searchShortcut(item.name)"
+                        @click="searchShortcut(item.symbol)"
                       >
                         <div class="shortcut-box fc-container">
                           <CoinIcon class="coin-icon" :mint-address="item.mintAddress" />
@@ -1538,7 +1538,7 @@ export default class Pools extends Vue {
   }
 
   searchShortcut(name: string) {
-    this.searchName = name;
+    this.searchName = name.toLowerCase();
     this.showSearchMenu = false;
   }
 }
