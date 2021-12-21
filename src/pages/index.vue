@@ -268,7 +268,7 @@
     <section class="cropper-feed">
       <h2 class="weightB text-center">100,000 Croppers And Counting</h2>
       <p class="bodyL text-center feed-description">
-        Our community is at the heart of everything we do. The first Croppers formed as a collective of serious farmers seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the harvests that come with it.
+        The first Croppers formed as a collective of serious farmers seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the harvests that come with it.
       </p>
       <div class="feed-container">
         <Row>
