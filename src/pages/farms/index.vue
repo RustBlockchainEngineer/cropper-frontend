@@ -1706,16 +1706,20 @@ export default Vue.extend({
               .multipliedBy(REWARD_MULTIPLER)
               .dividedBy(newFarmInfo.lp.balance.wei)
               .plus(getBigNumber(rewardPerShareNetDual))
+
+
             let pendingRewardDual = (depositBalance.wei as BigNumber)
               .multipliedBy(rewardPerShareCalcDual)
               .dividedBy(REWARD_MULTIPLER)
               .minus(toBigNumber(rewardDebtDual.wei))
               .plus(toBigNumber(pendingRewardsDual.wei))
-            if (pendingRewardDual.toNumber() > newFarmInfo.rewardB.balance.wei.toNumber()) {
+            if (pendingRewardDual.toNumber() > newFarmInfo.rewardB.balance.wei.toNumber() && newFarmInfo.rewardB.balance.wei.toNumber() != 0) {
               pendingRewardDual = newFarmInfo.rewardB.balance.wei
               userInfo.needRefresh = true
               this.displaynoticeupdate = true
             }
+
+
             userInfo.pendingRewardDual = new TokenAmount(pendingRewardDual, newFarmInfo.rewardB.decimals)
           }
         } else {
