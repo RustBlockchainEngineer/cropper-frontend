@@ -80,7 +80,7 @@
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing_v2/card-swap.svg" />
-              <h4 class="weightB">Best Price Swaps</h4>
+              <h4 class="weightB">Best Swap Prices</h4>
             </div>
           </div>
         </Col>
