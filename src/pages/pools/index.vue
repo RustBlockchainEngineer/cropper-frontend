@@ -1693,7 +1693,7 @@ export default class Pools extends Vue {
 
         .pools-head {
           @media @max-sl-mobile {
-            display: block;
+            display: block !important;
           }
 
           .title {
@@ -1929,7 +1929,7 @@ export default class Pools extends Vue {
 
               &.option-sort {
                 @media @max-md-tablet {
-                  display: none;
+                  display: none !important;
                 }
               }
 
@@ -2184,9 +2184,8 @@ export default class Pools extends Vue {
   }
 }
 
-// ant customize
-// pools table for mobile
-@media @max-lg-tablet {
+.pool {
+  // ant customize
   .ant-collapse {
     background: transparent;
     border: none;

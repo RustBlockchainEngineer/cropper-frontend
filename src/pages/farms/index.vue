@@ -1,3 +1,4 @@
+"
 <template>
   <div class="farm container">
     <CreateFarmProgram
@@ -16,7 +17,7 @@
       @onOk="supplyAndStake"
       @onCancel="cancelStake"
     />
-    
+
     <StakeErrorModal
       v-if="stakeLPError"
       @onRetry="onRetryStakeLP"
@@ -123,7 +124,11 @@
                 :class="searchCertifiedFarm === 'deposit' ? 'active-tab' : ''"
                 @click="activeSearch('deposit')"
               >
-                <img v-if="searchCertifiedFarm === 'deposit'" class="deposit-icon" src="@/assets/icons/deposit-green.svg" />
+                <img
+                  v-if="searchCertifiedFarm === 'deposit'"
+                  class="deposit-icon"
+                  src="@/assets/icons/deposit-green.svg"
+                />
                 <img v-else class="deposit-icon" src="@/assets/icons/deposit.svg" />
 
                 My Deposit
@@ -239,15 +244,21 @@
             </div>
 
             <div class="option-select option-toggle fc-container">
-              <label class="toggle-label icon-cursor textS weightB" :class="!searchLifeFarm ? 'active-label' : ''" @click="activeSearch('open')"
+              <label
+                class="toggle-label icon-cursor textS weightB"
+                :class="!searchLifeFarm ? 'active-label' : ''"
+                @click="activeSearch('open')"
                 >Open</label
               >
               <Toggle v-model="searchLifeFarm" />
-              <label class="toggle-label icon-cursor textS weightB" :class="searchLifeFarm ? 'active-label' : ''" @click="activeSearch('ended')"
+              <label
+                class="toggle-label icon-cursor textS weightB"
+                :class="searchLifeFarm ? 'active-label' : ''"
+                @click="activeSearch('ended')"
                 >Ended</label
               >
             </div>
-            
+
             <!-- option sort > 768px -->
             <div
               class="option-select option-sort fc-container icon-cursor"
@@ -260,7 +271,9 @@
               <span class="bodyM weightS option-select-sort fc-container">
                 <label>Sort by:</label>
                 <span class="sort-detail">
-                  {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }} ({{ !this.sortAsc ? 'A -> Z' : 'Z -> A' }})
+                  {{ this.sortMethod === "liquidity" ? "Liquidity" : "APR %" }} ({{
+                    !this.sortAsc ? "A -> Z" : "Z -> A"
+                  }})
                   <img
                     class="arrow-icon"
                     :class="showSortMenu ? 'arrow-up' : 'arrow-down'"
@@ -284,7 +297,7 @@
             <div v-if="showSortMenu" class="option-collapse-menu collapse-right">
               <div
                 class="option-collapse-item text-center textM weightS icon-cursor"
-                :class="sortMethod === 'liquidity'  && !sortAsc ? 'active-item' : ''"
+                :class="sortMethod === 'liquidity' && !sortAsc ? 'active-item' : ''"
                 @click="setSortOption('liquidity', false)"
               >
                 Liquidity A -> Z
@@ -315,23 +328,26 @@
         </div>
 
         <div v-if="farm.initialized">
-          <div class="farm-table">
-            <!-- Farm table for desktop -->
+          <div class="farm-table isDesktop">
             <Row
-              class="farm-item noMobile"
+              class="farm-item"
               v-for="(farm, idx) in showFarms"
               :key="farm.farmInfo.poolId"
               :gutter="16"
             >
               <Col class="fl-container" span="6">
-                <div class="state lp-icons">
-                  <div class="lp-farm">
+                <div class="state">
+                  <div class="lp-icons">
                     <div class="lp-icons-group">
                       <div class="icons">
                         <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
-                        <span class="textM weightS">{{ farm.farmInfo.lp.coin.symbol }} - </span>
+                        <span class="textM weightS"
+                          >{{ farm.farmInfo.lp.coin.symbol }} -
+                        </span>
                         <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
-                        <span class="textM weightS">{{ farm.farmInfo.lp.pc.symbol }}</span>
+                        <span class="textM weightS">{{
+                          farm.farmInfo.lp.pc.symbol
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -342,9 +358,17 @@
                         <img src="@/assets/icons/time-icon.svg" />
                       </div>
                       from
-                      {{ new Date(farm.farmInfo.poolInfo.start_timestamp * 1e3).toLocaleDateString('en-US') }}
+                      {{
+                        new Date(
+                          farm.farmInfo.poolInfo.start_timestamp * 1e3
+                        ).toLocaleDateString("en-US")
+                      }}
                       to
-                      {{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toLocaleDateString('en-US') }}
+                      {{
+                        new Date(
+                          farm.farmInfo.poolInfo.end_timestamp * 1e3
+                        ).toLocaleDateString("en-US")
+                      }}
                     </div>
                     <div class="farm-info-group bodyXS">
                       <div class="farm-info-img">
@@ -353,8 +377,10 @@
                       Remaining rewards
                       {{
                         Math.round(
-                          new TokenAmount(farm.farmInfo.reward.balance.wei, farm.farmInfo.reward.decimals).toEther() *
-                            1000
+                          new TokenAmount(
+                            farm.farmInfo.reward.balance.wei,
+                            farm.farmInfo.reward.decimals
+                          ).toEther() * 1000
                         ) / 1000
                       }}
                       {{ farm.farmInfo.lp.coin.symbol }}
@@ -362,16 +388,26 @@
                   </div>
                 </div>
               </Col>
-              
+
               <Col class="fr-container" span="2">
                 <div class="state">
                   <div class="farm-labels">
-                    <div v-if="farm.labelized" class="label labelized weightS">Labelized</div>
+                    <div v-if="farm.labelized" class="label labelized weightS">
+                      Labelized
+                    </div>
                     <div v-else class="label permissionless weightS">Permissionless</div>
 
-                    <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">Ended</div>
                     <div
-                      v-if="currentTimestamp < farm.farmInfo.poolInfo.start_timestamp * 1 + 86400 * 7"
+                      v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp"
+                      class="label ended"
+                    >
+                      Ended
+                    </div>
+                    <div
+                      v-if="
+                        currentTimestamp <
+                        farm.farmInfo.poolInfo.start_timestamp * 1 + 86400 * 7
+                      "
                       class="label new"
                     >
                       New
@@ -396,7 +432,7 @@
                     ${{
                       Math.round(farm.farmInfo.liquidityUsdValue)
                         .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     }}
                   </div>
                 </div>
@@ -442,8 +478,14 @@
                   </div>
                   <div v-else class="value textM weightS letterS">
                     {{ Math.round(farm.farmInfo.apr * 100) / 100 }}%
-                    <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
-                    <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
+                    <img
+                      v-if="farm.farmInfo.apr > 300"
+                      src="@/assets/icons/fire-icon.svg"
+                    />
+                    <img
+                      v-if="farm.farmInfo.apr > 1000"
+                      src="@/assets/icons/fire-icon.svg"
+                    />
                   </div>
                 </div>
               </Col>
@@ -451,7 +493,12 @@
               <Col class="fr-container" span="4">
                 <div class="state">
                   <div class="title textS weightS letterL">Pending Rewards</div>
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value textM weightS letterS">-</div>
+                  <div
+                    v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                    class="value textM weightS letterS"
+                  >
+                    -
+                  </div>
                   <div v-else class="value textM weightS letterS">
                     {{ ((
                       !wallet.connected || 
@@ -475,17 +522,37 @@
                       <template slot="title">
                         <div>
                           <div class="tooltip-line">
-                            LP Tokens <span>{{ farm.userInfo.depositFormat.replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</span>
+                            LP Tokens
+                            <span>{{
+                              farm.userInfo.depositFormat.replace(
+                                /\B(?=(\d{3})+(?!\d))/g,
+                                ","
+                              )
+                            }}</span>
                           </div>
                           <hr />
                           <div class="tooltip-line">
                             {{ farm.farmInfo.lp.coin.symbol }}
-                            <span> {{ farm.userInfo.depositCoin.replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} </span>
+                            <span>
+                              {{
+                                farm.userInfo.depositCoin.replace(
+                                  /\B(?=(\d{3})+(?!\d))/g,
+                                  ","
+                                )
+                              }}
+                            </span>
                           </div>
                           <hr />
                           <div class="tooltip-line">
                             {{ farm.farmInfo.lp.pc.symbol }}
-                            <span> {{ farm.userInfo.depositPc.replace(/\B(?=(\d{3})+(?!\d))/g, ',') }} </span>
+                            <span>
+                              {{
+                                farm.userInfo.depositPc.replace(
+                                  /\B(?=(\d{3})+(?!\d))/g,
+                                  ","
+                                )
+                              }}
+                            </span>
                           </div>
                         </div>
                       </template>
@@ -494,13 +561,18 @@
                       </div>
                     </Tooltip>
                   </div>
-                  <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value textM weightS letterS">-</div>
+                  <div
+                    v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                    class="value textM weightS letterS"
+                  >
+                    -
+                  </div>
                   <div v-else class="value textM weightS letterS">
                     {{
                       !wallet.connected
                         ? 0
                         : farm.userInfo.depositBalanceUSD
-                        ? '$ ' + farm.userInfo.depositBalanceUSD
+                        ? "$ " + farm.userInfo.depositBalanceUSD
                         : farm.userInfo.depositBalance.format()
                     }}
                   </div>
@@ -525,28 +597,34 @@
                         farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                         farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
                       "
-                      @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
+                      @click="
+                        openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)
+                      "
                     >
                       {{
                         !farm.farmInfo.poolInfo.is_allowed
-                          ? 'Not Allowed'
+                          ? "Not Allowed"
                           : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                          ? 'Ended'
+                          ? "Ended"
                           : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                          ? 'Unstarted'
-                          : 'Deposit'
+                          ? "Unstarted"
+                          : "Deposit"
                       }}
                     </Button>
 
-                    <Button v-else class="btn-transparent textS weightB" @click="$accessor.wallet.openModal">
+                    <Button
+                      v-else
+                      class="btn-transparent textS weightB"
+                      @click="$accessor.wallet.openModal"
+                    >
                       {{
                         !farm.farmInfo.poolInfo.is_allowed
-                          ? 'Not Allowed'
+                          ? "Not Allowed"
                           : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                          ? 'Ended'
+                          ? "Ended"
                           : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                          ? 'Unstarted'
-                          : 'Deposit'
+                          ? "Unstarted"
+                          : "Deposit"
                       }}
                     </Button>
                   </div>
@@ -571,30 +649,17 @@
                     >
                       {{
                         !farm.farmInfo.poolInfo.is_allowed
-                          ? 'Not Allowed'
+                          ? "Not Allowed"
                           : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                          ? 'Ended'
+                          ? "Ended"
                           : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                          ? 'Unstarted'
-                          : 'Deposit LP'
+                          ? "Unstarted"
+                          : "Deposit LP"
                       }}
                     </Button>
                   </div>
 
                   <!-- <div
-                    class="btn-container btn-container-outline"
-                    v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                  > -->
-                  <!-- <div class="btn-container btn-container-outline">
-                    <Button
-                      class="btn-primary"
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
-                    >
-                      Withdraw
-                    </Button>
-                  </div>
-                  <div
                     class="owner"
                     v-if="
                       farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
@@ -607,7 +672,7 @@
                     <br />
 
                     <div
-                      class="btncontainer noMobile"
+                      class="btncontainer isDesktop"
                       v-if="
                         farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
                         farm.farmInfo.poolInfo.is_allowed &&
@@ -618,14 +683,21 @@
                     </div>
                   </div> -->
 
-                  <!-- Harvest & Withdraw -->
-                  
-                  <div class="btn-container"> 
+                  <div class="btn-container">
+                    <!-- Harvest & Withdraw -->
                     <Button
                       v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                       class="btn-primary textS weightB"
-                      :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                      @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                      :disabled="
+                        !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
+                      "
+                      @click.stop="
+                        openUnstakeModal(
+                          farm.farmInfo,
+                          farm.farmInfo.lp,
+                          farm.userInfo.depositBalance
+                        )
+                      "
                     >
                       Harvest
                     </Button>
@@ -633,7 +705,11 @@
                     <Button
                       v-else
                       class="btn-primary textS weightB"
-                      :disabled="!wallet.connected || harvesting[idx] || farm.userInfo.pendingReward.isNullOrZero()"
+                      :disabled="
+                        !wallet.connected ||
+                        harvesting[idx] ||
+                        farm.userInfo.pendingReward.isNullOrZero()
+                      "
                       :loading="harvesting[idx]"
                       @click="harvest(farm.farmInfo, idx)"
                     >
@@ -642,12 +718,23 @@
                   </div>
                 </div>
                 <div class="show-more">
-                  <img class="more-icon icon-cursor" src="@/assets/icons/dot3.svg" @click="activeMore(idx)"/>
-                  <div v-if="showMoreMenu[idx]" class="option-collapse-menu collapse-right">
+                  <img
+                    class="more-icon icon-cursor"
+                    src="@/assets/icons/dot3.svg"
+                    @click="activeMore(idx)"
+                  />
+                  <div
+                    v-if="showMoreMenu[idx]"
+                    class="option-collapse-menu collapse-right"
+                  >
                     <div
                       class="option-collapse-item text-center textM weightS icon-cursor"
                     >
-                      <a class="social-link fc-container" :href="farm.farmInfo.twitterShare" target="_blank">
+                      <a
+                        class="social-link fc-container"
+                        :href="farm.farmInfo.twitterShare"
+                        target="_blank"
+                      >
                         Share
                         <img class="social-icon" src="@/assets/icons/share.svg" />
                       </a>
@@ -655,7 +742,11 @@
                     <div
                       class="option-collapse-item text-center textM weightS icon-cursor"
                     >
-                      <a class="social-link fc-container" :href="farm.farmInfo.twitterLink" target="_blank">
+                      <a
+                        class="social-link fc-container"
+                        :href="farm.farmInfo.twitterLink"
+                        target="_blank"
+                      >
                         Twitter
                         <img class="social-icon" src="@/assets/icons/twitter.svg" />
                       </a>
@@ -663,37 +754,68 @@
                     <div
                       class="option-collapse-item text-center textM weightS icon-cursor"
                     >
-                      Withdraw
+                      <a
+                        :disabled="
+                          !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
+                        "
+                        @click.stop="
+                          openUnstakeModal(
+                            farm.farmInfo,
+                            farm.farmInfo.lp,
+                            farm.userInfo.depositBalance
+                          )
+                        "
+                      >
+                        Withdraw
+                      </a>
                     </div>
                   </div>
                 </div>
               </Col>
             </Row>
+          </div>
 
-            <!-- Farm table for mobile -->
-
-            <Collapse v-model="showCollapse" class="noDesktop farm-table-mobile" accordion>
-              <CollapsePanel v-for="(farm, idx) in showFarms" v-show="true" :key="farm.farmInfo.poolId">
-                <Row slot="header" class="farm-item noDesktop">
-                  <Col class="lp-icons farm-mobile-section" span="24">
-                    <div class="lp-farm">
+          <div class="farm-table isMobile">
+            <Collapse v-model="showCollapse" class="farm-table-collapse" accordion>
+              <CollapsePanel
+                v-for="(farm, idx) in showFarms"
+                v-show="true"
+                :key="farm.farmInfo.poolId"
+              >
+                <Row slot="header" class="farm-table-head">
+                  <Col class="farm-item-mobile" span="24">
+                    <div class="lp-icons">
                       <div class="lp-icons-group">
                         <div class="icons">
                           <CoinIcon :mint-address="farm.farmInfo.lp.coin.mintAddress" />
-                          <span>{{ farm.farmInfo.lp.coin.symbol }} - </span>
+                          <span class="textM weightS"
+                            >{{ farm.farmInfo.lp.coin.symbol }} -
+                          </span>
                           <CoinIcon :mint-address="farm.farmInfo.lp.pc.mintAddress" />
-                          <span>{{ farm.farmInfo.lp.pc.symbol }}</span>
+                          <span class="textM weightS">{{
+                            farm.farmInfo.lp.pc.symbol
+                          }}</span>
                         </div>
                       </div>
                       <div class="farm-labels">
-                        <div v-if="farm.labelized" class="label labelized">Labelized</div>
-                        <div v-else class="label permissionless">Permissionless</div>
+                        <div v-if="farm.labelized" class="label labelized weightS">
+                          Labelized
+                        </div>
+                        <div v-else class="label permissionless weightS">
+                          Permissionless
+                        </div>
 
-                        <div v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp" class="label ended">
+                        <div
+                          v-if="currentTimestamp > farm.farmInfo.poolInfo.end_timestamp"
+                          class="label ended"
+                        >
                           Ended
                         </div>
                         <div
-                          v-if="currentTimestamp < farm.farmInfo.poolInfo.start_timestamp * 1 + 86400 * 7"
+                          v-if="
+                            currentTimestamp <
+                            farm.farmInfo.poolInfo.start_timestamp * 1 + 86400 * 7
+                          "
                           class="label new"
                         >
                           New
@@ -702,49 +824,86 @@
                     </div>
                   </Col>
 
-                  <Col class="farm-mobile-section" span="24">
-                    <Col class="state" span="7">
-                      <div class="title">Liquidity</div>
+                  <Col class="farm-item-mobile" span="24">
+                    <Col class="state text-center" span="8">
+                      <div class="title textS weightS letterL">Total Deposited</div>
                       <div
                         v-if="
                           farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
                           currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
                         "
-                        class="value"
+                        class="value textM weightS letterS"
                       >
                         -
                       </div>
-                      <div v-else class="value">
+                      <div v-else class="value textM weightS letterS">
                         ${{
                           Math.round(farm.farmInfo.liquidityUsdValue)
                             .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         }}
                       </div>
                     </Col>
 
-                    <Col class="state" span="10">
-                      <div class="title">Total APR</div>
+                    <Col class="state text-center" span="8">
+                      <div class="title textS weightS letterL">
+                        Total APR
+                        <Tooltip
+                          placement="bottomLeft"
+                          v-if="
+                            !(
+                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
+                              currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                            )
+                          "
+                        >
+                          <template slot="title">
+                            <div>
+                              <div class="tooltip-line">
+                                Fees <span>{{ farm.farmInfo.apr_details.apy }}%</span>
+                              </div>
+                              <hr />
+                              <div class="tooltip-line">
+                                Rewards <span>{{ farm.farmInfo.apr_details.apr }}%</span>
+                              </div>
+                            </div>
+                          </template>
+                          <div class="info-icon">
+                            <img src="@/assets/icons/info.svg" />
+                          </div>
+                        </Tooltip>
+                      </div>
                       <div
                         v-if="
                           farm.farmInfo.poolInfo.start_timestamp > currentTimestamp ||
                           currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
                         "
-                        class="value"
+                        class="value textM weightS letterS"
                       >
                         -
                       </div>
-                      <div v-else class="value">
+                      <div v-else class="value textM weightS letterS">
                         {{ Math.round(farm.farmInfo.apr * 100) / 100 }}%
-                        <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
-                        <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
+                        <img
+                          v-if="farm.farmInfo.apr > 300"
+                          src="@/assets/icons/fire-icon.svg"
+                        />
+                        <img
+                          v-if="farm.farmInfo.apr > 1000"
+                          src="@/assets/icons/fire-icon.svg"
+                        />
                       </div>
                     </Col>
 
-                    <Col class="state" span="7">
-                      <div class="title">Pending Reward</div>
-                      <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
-                      <div v-else class="value">
+                    <Col class="state text-center" span="8">
+                      <div class="title textS weightS letterL">Pending Reward</div>
+                      <div
+                        v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                        class="value textM weightS letterS"
+                      >
+                        -
+                      </div>
+                      <div v-else class="value textM weightS letterS">
                         {{ (!wallet.connected || (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000) &lt; 0) ? farm.farmInfo.reward.symbol + ' ' + 0 : farm.farmInfo.reward.symbol + ' ' + (Math.round(farm.userInfo.pendingReward.format().replace(/,/g, '') * 100000) / 100000) }}
                       </div>
                     </Col>
@@ -752,24 +911,29 @@
 
                   <Col
                     v-if="farm.farmInfo.poolId != showCollapse"
-                    class="farm-mobile-section btn-show-collapse"
+                    class="farm-item-mobile btn-show-collapse"
                     span="24"
                   >
                     <img src="@/assets/icons/collapse-arrow-mobile.svg" />
                   </Col>
                 </Row>
 
-                <Row class="farm-item noDesktop">
-                  <Col class="farm-mobile-section" span="24">
+                <Row>
+                  <Col class="farm-item-mobile" span="24">
                     <Col class="state" span="6">
                       <div class="title">Staked</div>
-                      <div v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp" class="value">-</div>
+                      <div
+                        v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                        class="value"
+                      >
+                        -
+                      </div>
                       <div v-else class="value">
                         {{
                           !wallet.connected
                             ? 0
                             : farm.userInfo.depositBalanceUSD
-                            ? '$ ' + farm.userInfo.depositBalanceUSD
+                            ? "$ " + farm.userInfo.depositBalanceUSD
                             : farm.userInfo.depositBalance.format()
                         }}
                       </div>
@@ -781,11 +945,19 @@
                             <img src="@/assets/icons/time-icon.svg" />
                           </div>
                           from
-                          {{ new Date(farm.farmInfo.poolInfo.start_timestamp * 1e3).toLocaleDateString('en-US') }}
+                          {{
+                            new Date(
+                              farm.farmInfo.poolInfo.start_timestamp * 1e3
+                            ).toLocaleDateString("en-US")
+                          }}
                           to
-                          {{ new Date(farm.farmInfo.poolInfo.end_timestamp * 1e3).toLocaleDateString('en-US') }}
+                          {{
+                            new Date(
+                              farm.farmInfo.poolInfo.end_timestamp * 1e3
+                            ).toLocaleDateString("en-US")
+                          }}
                         </div>
-                        
+
                         <div>
                           <div class="farm-info-group">
                             <div class="farm-info-img">
@@ -803,12 +975,15 @@
                             {{ farm.farmInfo.lp.coin.symbol }}
                           </div>
                         </div>
-                       
                       </div>
                     </Col>
                   </Col>
 
-                  <Col class="farm-mobile-section btn-hide-collapse" span="24" @click="hideCollapse">
+                  <Col
+                    class="farm-item-mobile btn-hide-collapse"
+                    span="24"
+                    @click="hideCollapse"
+                  >
                     <Col class="state" span="12">
                       <div
                         class="btn-container btn-container-outline"
@@ -830,12 +1005,12 @@
                         >
                           {{
                             !farm.farmInfo.poolInfo.is_allowed
-                              ? 'Not Allowed'
+                              ? "Not Allowed"
                               : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                              ? 'Ended'
+                              ? "Ended"
                               : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                              ? 'Unstarted'
-                              : 'Deposit LP'
+                              ? "Unstarted"
+                              : "Deposit LP"
                           }}
                         </Button>
                       </div>
@@ -845,12 +1020,24 @@
                         v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                       ></div>
 
-                      <div class="btn-container btn-container-outline" v-if="farm.farmInfo.poolInfo.end_timestamp > currentTimestamp">
+                      <div
+                        class="btn-container btn-container-outline"
+                        v-if="farm.farmInfo.poolInfo.end_timestamp > currentTimestamp"
+                      >
                         <Button
                           size="large"
                           ghost
-                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                          :disabled="
+                            !wallet.connected ||
+                            farm.userInfo.depositBalance.isNullOrZero()
+                          "
+                          @click.stop="
+                            openUnstakeModal(
+                              farm.farmInfo,
+                              farm.farmInfo.lp,
+                              farm.userInfo.depositBalance
+                            )
+                          "
                         >
                           Withdraw
                         </Button>
@@ -874,28 +1061,34 @@
                             farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
                             farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
                           "
-                          @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
+                          @click="
+                            openStakeModal(
+                              farm.labelized,
+                              farm.farmInfo,
+                              farm.farmInfo.lp
+                            )
+                          "
                         >
                           {{
                             !farm.farmInfo.poolInfo.is_allowed
-                              ? 'Not Allowed'
+                              ? "Not Allowed"
                               : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                              ? 'Ended'
+                              ? "Ended"
                               : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                              ? 'Unstarted'
-                              : 'Deposit'
+                              ? "Unstarted"
+                              : "Deposit"
                           }}
                         </Button>
 
                         <Button size="large" v-else @click="$accessor.wallet.openModal">
                           {{
                             !farm.farmInfo.poolInfo.is_allowed
-                              ? 'Not Allowed'
+                              ? "Not Allowed"
                               : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                              ? 'Ended'
+                              ? "Ended"
                               : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                              ? 'Unstarted'
-                              : 'Deposit'
+                              ? "Unstarted"
+                              : "Deposit"
                           }}
                         </Button>
                       </div>
@@ -903,10 +1096,19 @@
                       <div class="btn-container btn-container-harvest">
                         <Button
                           v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                          :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                          :disabled="
+                            !wallet.connected ||
+                            farm.userInfo.depositBalance.isNullOrZero()
+                          "
                           size="large"
                           ghost
-                          @click.stop="openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)"
+                          @click.stop="
+                            openUnstakeModal(
+                              farm.farmInfo,
+                              farm.farmInfo.lp,
+                              farm.userInfo.depositBalance
+                            )
+                          "
                         >
                           Harvest & Withdraw
                         </Button>
@@ -915,7 +1117,11 @@
                           v-else
                           size="large"
                           ghost
-                          :disabled="!wallet.connected || harvesting[idx] || farm.userInfo.pendingReward.isNullOrZero()"
+                          :disabled="
+                            !wallet.connected ||
+                            harvesting[idx] ||
+                            farm.userInfo.pendingReward.isNullOrZero()
+                          "
                           :loading="harvesting[idx]"
                           @click="harvest(farm.farmInfo, idx)"
                         >
@@ -924,23 +1130,26 @@
                       </div>
                     </Col>
 
-                    <img class="btn-hide-collapse-icon" src="@/assets/icons/collapse-arrow-mobile.svg" />
+                    <img
+                      class="btn-hide-collapse-icon"
+                      src="@/assets/icons/collapse-arrow-mobile.svg"
+                    />
                   </Col>
                 </Row>
               </CollapsePanel>
             </Collapse>
+          </div>
 
-            <div class="pagination-container">
-              <div class="pagination-body">
-                <Pagination
-                  v-if="totalCount > pageSize"
-                  :total="totalCount"
-                  :pageSize="pageSize"
-                  :defaultCurrent="1"
-                  v-model="currentPage"
-                >
-                </Pagination>
-              </div>
+          <div class="pagination-container">
+            <div class="pagination-body">
+              <Pagination
+                v-if="totalCount > pageSize"
+                :total="totalCount"
+                :pageSize="pageSize"
+                :defaultCurrent="1"
+                v-model="currentPage"
+              >
+              </Pagination>
             </div>
           </div>
         </div>
@@ -956,8 +1165,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapState } from 'vuex'
+import Vue from "vue";
+import { mapState } from "vuex";
 import {
   Tooltip,
   Collapse,
@@ -967,31 +1176,36 @@ import {
   Col,
   Button,
   Switch as Toggle,
-  Pagination
-} from 'ant-design-vue'
-import { get, cloneDeep, forIn, indexOf } from 'lodash-es'
-import { TokenAmount } from '@/utils/safe-math'
-import { FarmInfo } from '@/utils/farms'
-import { deposit, withdraw } from '@/utils/stake'
-import { getUnixTs } from '@/utils'
-import { getBigNumber, toBigNumber } from '@/utils/layouts'
-import { LiquidityPoolInfo, LIQUIDITY_POOLS } from '@/utils/pools'
-import moment from 'moment'
+  Pagination,
+} from "ant-design-vue";
+import { get, cloneDeep, forIn, indexOf } from "lodash-es";
+import { TokenAmount } from "@/utils/safe-math";
+import { FarmInfo } from "@/utils/farms";
+import { deposit, withdraw } from "@/utils/stake";
+import { getUnixTs } from "@/utils";
+import { getBigNumber, toBigNumber } from "@/utils/layouts";
+import { LiquidityPoolInfo, LIQUIDITY_POOLS } from "@/utils/pools";
+import moment from "moment";
 import {
   FarmProgram,
   FarmProgramAccountLayout,
   FARM_PREFIX,
   PAY_FARM_FEE,
   REWARD_MULTIPLER,
-  YieldFarm
-} from '@/utils/farm'
-import { PublicKey } from '@solana/web3.js'
-import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER, FARM_VERSION } from '@/utils/ids'
-import { TOKENS } from '@/utils/tokens'
-import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
-import { loadAccount } from '@/utils/account'
-import BigNumber from 'bignumber.js'
-const CollapsePanel = Collapse.Panel
+  YieldFarm,
+} from "@/utils/farm";
+import { PublicKey } from "@solana/web3.js";
+import {
+  DEVNET_MODE,
+  FARM_PROGRAM_ID,
+  FARM_INITIAL_SUPER_OWNER,
+  FARM_VERSION,
+} from "@/utils/ids";
+import { TOKENS } from "@/utils/tokens";
+import { addLiquidity, removeLiquidity } from "@/utils/liquidity";
+import { loadAccount } from "@/utils/account";
+import BigNumber from "bignumber.js";
+const CollapsePanel = Collapse.Panel;
 
 export default Vue.extend({
   components: {
@@ -1004,7 +1218,7 @@ export default Vue.extend({
     Row,
     Col,
     Button,
-    Pagination
+    Pagination,
   },
   data() {
     return {
@@ -1015,7 +1229,7 @@ export default Vue.extend({
 
       farms: [] as any[],
       showFarms: [] as any[],
-      searchName: '',
+      searchName: "",
       displayfilters: false,
       lp: null,
       rewardCoin: null,
@@ -1041,14 +1255,14 @@ export default Vue.extend({
       labelizedAmms: {} as any,
       labelizedAmmsExtended: {} as any,
       poolsDatas: {} as any,
-      searchCertifiedFarm: 'labelized' as string,
+      searchCertifiedFarm: "labelized" as string,
       searchLifeFarm: false as boolean,
       totalCount: 110,
       pageSize: 50,
       displaynoticeupdate: false,
       currentPage: 1,
       labelizedPermission: false as any,
-      sortMethod: 'liquidity' as string,
+      sortMethod: "liquidity" as string,
       sortAsc: true as boolean,
       showSortMenu: false as boolean,
       showMoreMenu: [] as boolean[],
@@ -1056,52 +1270,52 @@ export default Vue.extend({
       showTabMenu: false as boolean,
       mostUsed: [
         {
-          symbol: 'CRP',
-          mintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz'
+          symbol: "CRP",
+          mintAddress: "DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz",
         },
         {
-          symbol: 'USDC',
-          mintAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+          symbol: "USDC",
+          mintAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         },
         {
-          symbol: 'SOL',
-          mintAddress: '11111111111111111111111111111111'
-        }
+          symbol: "SOL",
+          mintAddress: "11111111111111111111111111111111",
+        },
       ] as any,
       activeSpinning: false as boolean,
-      userMigrations: [] as any[]
-    }
+      userMigrations: [] as any[],
+    };
   },
 
   head: {
-    title: 'CropperFinance Farm'
+    title: "CropperFinance Farm",
   },
 
   computed: {
-    ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
+    ...mapState(["app", "wallet", "farm", "url", "price", "liquidity"]),
   },
 
   watch: {
-    'wallet.tokenAccounts': {
+    "wallet.tokenAccounts": {
       handler(newTokenAccounts: any) {
-        this.updateCurrentLp(newTokenAccounts)
+        this.updateCurrentLp(newTokenAccounts);
       },
-      deep: true
+      deep: true,
     },
 
-    'farm.infos': {
+    "farm.infos": {
       handler() {
-        this.updateFarms()
+        this.updateFarms();
       },
-      deep: true
+      deep: true,
     },
 
-    'farm.stakeAccounts': {
+    "farm.stakeAccounts": {
       handler() {
-        this.updateFarms()
-        this.checkFarmMigration()
+        this.updateFarms();
+        this.checkFarmMigration();
       },
-      deep: true
+      deep: true,
     },
 
     showCollapse: {
@@ -1110,48 +1324,53 @@ export default Vue.extend({
         //   this.showCollapse.splice(0, this.showCollapse.length)
         // }
       },
-      deep: true
+      deep: true,
     },
     searchName: {
       handler(newSearchName: string) {
-        this.filterFarms(newSearchName, this.searchCertifiedFarm, this.searchLifeFarm)
+        this.filterFarms(newSearchName, this.searchCertifiedFarm, this.searchLifeFarm);
       },
-      deep: true
+      deep: true,
     },
     searchCertifiedFarm: {
       handler(newSearchCertifiedFarm: any) {
-        this.filterFarms(this.searchName, newSearchCertifiedFarm, this.searchLifeFarm)
+        this.filterFarms(this.searchName, newSearchCertifiedFarm, this.searchLifeFarm);
       },
-      deep: true
+      deep: true,
     },
     searchLifeFarm: {
       handler(newSearchLifeFarm: any) {
-        this.filterFarms(this.searchName, this.searchCertifiedFarm, newSearchLifeFarm)
+        this.filterFarms(this.searchName, this.searchCertifiedFarm, newSearchLifeFarm);
       },
-      deep: true
+      deep: true,
     },
     currentPage: {
       handler(newPage: number) {
-        this.filterFarms(this.searchName, this.searchCertifiedFarm, this.searchLifeFarm, newPage)
+        this.filterFarms(
+          this.searchName,
+          this.searchCertifiedFarm,
+          this.searchLifeFarm,
+          newPage
+        );
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
 
   mounted() {
-    this.getTvl()
-    this.$accessor.token.loadTokens()
+    this.getTvl();
+    this.$accessor.token.loadTokens();
 
-    this.updateFarms()
+    this.updateFarms();
 
-    var hash = window.location.hash
+    var hash = window.location.hash;
     if (hash) {
-      hash = hash.substring(1)
-      this.searchName = hash
+      hash = hash.substring(1);
+      this.searchName = hash;
     } else {
-      const query = new URLSearchParams(window.location.search)
-      if (query.get('s')) {
-        this.searchName = query.get('s') as string
+      const query = new URLSearchParams(window.location.search);
+      if (query.get("s")) {
+        this.searchName = query.get("s") as string;
         this.initBasedSearch = 1;
       }
     }
@@ -1160,222 +1379,257 @@ export default Vue.extend({
   methods: {
     TokenAmount,
     async createFarmProgram() {
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
-      const txid = await FarmProgram.createDefaultProgramData(conn, wallet)
-      console.log('create farm program account', txid)
+      const conn = this.$web3;
+      const wallet = (this as any).$wallet;
+      const txid = await FarmProgram.createDefaultProgramData(conn, wallet);
+      console.log("create farm program account", txid);
 
-      await this.delay(1500)
-      this.checkIfFarmProgramExist()
+      await this.delay(1500);
+      this.checkIfFarmProgramExist();
     },
     async checkFarmMigration() {
-      this.userMigrations = []
+      this.userMigrations = [];
 
       try {
-        const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
+        const migrations = await fetch(
+          "https://api.cropper.finance/migrate/"
+        ).then((res) => res.json());
         //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
 
         forIn(migrations, (newFarmId, oldFarmId, _object) => {
-          let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
-          let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
-          if (userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0) {
+          let userInfoNew = get(this.farm.stakeAccounts, newFarmId);
+          let userInfoOld = get(this.farm.stakeAccounts, oldFarmId);
+          if (
+            userInfoNew === undefined &&
+            userInfoOld != undefined &&
+            userInfoOld.depositBalance.wei.toNumber() > 0
+          ) {
             this.userMigrations.push({
               oldFarmId,
               newFarmId,
               depositBalance:
-                userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)
-            })
+                userInfoOld.depositBalance.wei.toNumber() /
+                Math.pow(10, userInfoOld.depositBalance.decimals),
+            });
           }
-        })
+        });
       } catch {
         // dummy data
-        this.userMigrations = []
+        this.userMigrations = [];
       } finally {
       }
     },
     migrateFarm(migrationFarm: any) {
-      const amount = migrationFarm.depositBalance
+      const amount = migrationFarm.depositBalance;
 
-      const oldFarm = get(this.farm.infos, migrationFarm.oldFarmId)
-      const oldFarmInfo = cloneDeep(oldFarm)
+      const oldFarm = get(this.farm.infos, migrationFarm.oldFarmId);
+      const oldFarmInfo = cloneDeep(oldFarm);
 
-      const newFarm = get(this.farm.infos, migrationFarm.newFarmId)
-      const newFarmInfo = cloneDeep(newFarm)
+      const newFarm = get(this.farm.infos, migrationFarm.newFarmId);
+      const newFarmInfo = cloneDeep(newFarm);
 
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
-      const lp = oldFarm.lp
+      const conn = this.$web3;
+      const wallet = (this as any).$wallet;
+      const lp = oldFarm.lp;
 
-      const lpAccount = get(this.wallet.tokenAccounts, `${oldFarmInfo.lp.mintAddress}.tokenAccountAddress`)
-      const rewardAccount = get(this.wallet.tokenAccounts, `${oldFarmInfo.reward.mintAddress}.tokenAccountAddress`)
-      const infoAccount = get(this.farm.stakeAccounts, `${oldFarmInfo.poolId}.stakeAccountAddress`)
+      const lpAccount = get(
+        this.wallet.tokenAccounts,
+        `${oldFarmInfo.lp.mintAddress}.tokenAccountAddress`
+      );
+      const rewardAccount = get(
+        this.wallet.tokenAccounts,
+        `${oldFarmInfo.reward.mintAddress}.tokenAccountAddress`
+      );
+      const infoAccount = get(
+        this.farm.stakeAccounts,
+        `${oldFarmInfo.poolId}.stakeAccountAddress`
+      );
 
-      const key = getUnixTs().toString()
+      const key = getUnixTs().toString();
       this.$notify.info({
         key,
-        message: 'Making transaction...',
-        description: '',
-        duration: 0
-      })
+        message: "Making transaction...",
+        description: "",
+        duration: 0,
+      });
 
-      YieldFarm.migrate(conn, wallet, oldFarmInfo, newFarmInfo, lpAccount, rewardAccount, infoAccount, amount)
+      YieldFarm.migrate(
+        conn,
+        wallet,
+        oldFarmInfo,
+        newFarmInfo,
+        lpAccount,
+        rewardAccount,
+        infoAccount,
+        amount
+      )
         .then(async (txid) => {
           this.$notify.info({
             key,
-            message: 'Transaction has been sent',
+            message: "Transaction has been sent",
             description: (h: any) =>
-              h('div', [
-                'Confirmation is in progress.  Check your transaction on ',
+              h("div", [
+                "Confirmation is in progress.  Check your transaction on ",
                 h(
-                  'a',
+                  "a",
                   {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: "_blank" },
                   },
-                  'here'
-                )
-              ])
-          })
+                  "here"
+                ),
+              ]),
+          });
 
-          const description = `Migrate ${amount} ${lp.name}`
-          this.$accessor.transaction.sub({ txid, description })
+          const description = `Migrate ${amount} ${lp.name}`;
+          this.$accessor.transaction.sub({ txid, description });
         })
         .catch((error) => {
           this.$notify.error({
             key,
-            message: 'Migrate failed',
-            description: error.message
-          })
-          this.$accessor.farm.requestInfos()
-          this.$accessor.wallet.getTokenAccounts()
+            message: "Migrate failed",
+            description: error.message,
+          });
+          this.$accessor.farm.requestInfos();
+          this.$accessor.wallet.getTokenAccounts();
         })
-        .finally(() => {})
+        .finally(() => {});
     },
     async checkIfFarmProgramExist() {
-      const conn = this.$web3
-      const farmProgramId = new PublicKey(FARM_PROGRAM_ID)
-      const seeds = [Buffer.from(FARM_PREFIX), farmProgramId.toBuffer()]
-      const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId)
+      const conn = this.$web3;
+      const farmProgramId = new PublicKey(FARM_PROGRAM_ID);
+      const seeds = [Buffer.from(FARM_PREFIX), farmProgramId.toBuffer()];
+      const [programAccount] = await PublicKey.findProgramAddress(seeds, farmProgramId);
       try {
-        const accountData = await loadAccount(conn, programAccount, farmProgramId)
-        const farmData = FarmProgramAccountLayout.decode(accountData)
-        this.farmProgramCreated = true
-        this.superOwnerAddress = farmData.super_owner.toBase58()
+        const accountData = await loadAccount(conn, programAccount, farmProgramId);
+        const farmData = FarmProgramAccountLayout.decode(accountData);
+        this.farmProgramCreated = true;
+        this.superOwnerAddress = farmData.super_owner.toBase58();
       } catch {
-        this.farmProgramCreated = false
+        this.farmProgramCreated = false;
       }
     },
     async updateLabelizedAmms() {
-      this.labelizedAmms = {}
-      this.labelizedAmmsExtended = {}
-      let responseData = []
+      this.labelizedAmms = {};
+      this.labelizedAmmsExtended = {};
+      let responseData = [];
       try {
-        responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
+        responseData = await fetch("https://api.cropper.finance/farms/").then((res) =>
+          res.json()
+        );
       } catch {
         // dummy data
       } finally {
-        ;(responseData as any).forEach((element: any) => {
-          this.labelizedAmms[element.ammID] = element.labelized
-          this.labelizedAmmsExtended[element.ammID] = element
-        })
+        (responseData as any).forEach((element: any) => {
+          this.labelizedAmms[element.ammID] = element.labelized;
+          this.labelizedAmmsExtended[element.ammID] = element;
+        });
       }
 
-      if(this.initBasedSearch == 1 && this.searchName.length > 10){
-        if(!this.labelizedAmms[this.searchName]){
-          this.searchCertifiedFarm = 'labelized'
+      if (this.initBasedSearch == 1 && this.searchName.length > 10) {
+        if (!this.labelizedAmms[this.searchName]) {
+          this.searchCertifiedFarm = "labelized";
         }
       }
 
-      this.initBasedSearch == 0
-
+      this.initBasedSearch == 0;
 
       try {
-        this.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
+        this.poolsDatas = await fetch("https://api.cropper.finance/pools/").then((res) =>
+          res.json()
+        );
       } catch {
-        this.poolsDatas = []
+        this.poolsDatas = [];
       } finally {
         // nothing to do ..
       }
     },
 
     async getTvl() {
-      let cur_date = new Date().getTime()
+      let cur_date = new Date().getTime();
       if (window.localStorage.TVL_last_updated) {
-        const last_updated = parseInt(window.localStorage.TVL_last_updated)
+        const last_updated = parseInt(window.localStorage.TVL_last_updated);
         if (cur_date - last_updated <= 600000) {
-          this.TVL = window.localStorage.TVL
-          return
+          this.TVL = window.localStorage.TVL;
+          return;
         }
       }
 
-      let responseData: any = []
-      let tvl = 0
+      let responseData: any = [];
+      let tvl = 0;
       try {
-        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+        responseData = await fetch("https://api.cropper.finance/cmc/").then((res) =>
+          res.json()
+        );
 
         Object.keys(responseData).forEach(function (key) {
           if ((responseData as any)[key as any].tvl * 1 < 2000000) {
-            tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
+            tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1;
           }
-        })
+        });
       } catch {
         // dummy data
       } finally {
       }
 
       try {
-        responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
-        tvl = tvl * 1 + (responseData as any).value * 1
+        responseData = await fetch("https://api.cropper.finance/staking/").then((res) =>
+          res.json()
+        );
+        tvl = tvl * 1 + (responseData as any).value * 1;
       } catch {
         // dummy data
       } finally {
       }
 
-      this.TVL = Math.round(tvl)
+      this.TVL = Math.round(tvl);
 
-      window.localStorage.TVL_last_updated = new Date().getTime()
-      window.localStorage.TVL = this.TVL
+      window.localStorage.TVL_last_updated = new Date().getTime();
+      window.localStorage.TVL = this.TVL;
     },
 
     async updateFarms() {
-      this.$accessor.token.loadTokens()
-      console.log('updating farms ...')
-      await this.updateLabelizedAmms()
-      this.currentTimestamp = moment().unix()
+      this.$accessor.token.loadTokens();
+      console.log("updating farms ...");
+      await this.updateLabelizedAmms();
+      this.currentTimestamp = moment().unix();
 
-      const conn = this.$web3
-      const wallet = (this as any).$accessor.wallet
-      const liquidity = (this as any).$accessor.liquidity
+      const conn = this.$web3;
+      const wallet = (this as any).$accessor.wallet;
+      const liquidity = (this as any).$accessor.liquidity;
 
-      const farms: any = []
-      const endedFarmsPoolId: string[] = []
+      const farms: any = [];
+      const endedFarmsPoolId: string[] = [];
       for (const [poolId, farmInfo] of Object.entries(this.farm.infos)) {
-        let isPFO = false
+        let isPFO = false;
 
         // @ts-ignore
         const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } = farmInfo.poolInfo
 
         // @ts-ignore
-        const { reward, lp } = farmInfo
+        const { reward, lp } = farmInfo;
 
-        const newFarmInfo: any = cloneDeep(farmInfo)
+        const newFarmInfo: any = cloneDeep(farmInfo);
 
         if (end_timestamp.toNumber() < 1635452141) {
-          continue
+          continue;
         }
 
-        let partCoin = toBigNumber(0)
-        let partPc = toBigNumber(0)
+        let partCoin = toBigNumber(0);
+        let partPc = toBigNumber(0);
 
         if (reward && lp) {
-          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(
-            toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp))
-          )
+          const rewardPerTimestamp = toBigNumber(
+            reward_per_timestamp_or_remained_reward_amount
+          ).dividedBy(toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp)));
 
-          const rewardPerTimestampAmount = new TokenAmount(rewardPerTimestamp, reward.decimals)
-          const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
+          const rewardPerTimestampAmount = new TokenAmount(
+            rewardPerTimestamp,
+            reward.decimals
+          );
+          const liquidityItem = get(this.liquidity.infos, lp.mintAddress);
 
-          let newCoin = 0
-          let newPc = 0
+          let newCoin = 0;
+          let newPc = 0;
 
           if (
             !this.price.prices[liquidityItem?.coin.symbol as string] &&
@@ -1384,8 +1638,8 @@ export default Vue.extend({
             this.price.prices[liquidityItem?.coin.symbol as string] =
               (this.price.prices[liquidityItem?.pc.symbol as string] *
                 getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())) /
-              getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())
-            newCoin = 1
+              getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
+            newCoin = 1;
           }
 
           if (
@@ -1395,300 +1649,363 @@ export default Vue.extend({
             this.price.prices[liquidityItem?.pc.symbol as string] =
               (this.price.prices[liquidityItem?.coin.symbol as string] *
                 getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())) /
-              getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())
-            newPc = 1
+              getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
+            newPc = 1;
           }
 
           const rewardPerTimestampAmountTotalValue = rewardPerTimestampAmount
             .toEther()
-            .multipliedBy(new BigNumber(60 * 60 * 24 * 365 * this.price.prices[reward.symbol as string]))
+            .multipliedBy(
+              new BigNumber(
+                60 * 60 * 24 * 365 * this.price.prices[reward.symbol as string]
+              )
+            );
 
           const liquidityCoinValue = (liquidityItem?.coin.balance as TokenAmount)
             .toEther()
-            .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.coin.symbol as string]))
+            .multipliedBy(
+              new BigNumber(this.price.prices[liquidityItem?.coin.symbol as string])
+            );
 
           const liquidityPcValue = (liquidityItem?.pc.balance as TokenAmount)
             .toEther()
-            .multipliedBy(new BigNumber(this.price.prices[liquidityItem?.pc.symbol as string]))
+            .multipliedBy(
+              new BigNumber(this.price.prices[liquidityItem?.pc.symbol as string])
+            );
 
-          let liquidityTotalValue = liquidityPcValue.plus(liquidityCoinValue)
+          let liquidityTotalValue = liquidityPcValue.plus(liquidityCoinValue);
 
           if (this.price.prices[liquidityItem?.pc.symbol as string] == 1) {
-            liquidityTotalValue = liquidityPcValue.multipliedBy(2)
+            liquidityTotalValue = liquidityPcValue.multipliedBy(2);
           }
 
-          const liquidityTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
+          const liquidityTotalSupply = (liquidityItem?.lp
+            .totalSupply as TokenAmount).toEther();
 
-          partCoin = (liquidityItem?.coin.balance as TokenAmount).toEther().dividedBy(liquidityTotalSupply)
-          partPc = (liquidityItem?.pc.balance as TokenAmount).toEther().dividedBy(liquidityTotalSupply)
+          partCoin = (liquidityItem?.coin.balance as TokenAmount)
+            .toEther()
+            .dividedBy(liquidityTotalSupply);
+          partPc = (liquidityItem?.pc.balance as TokenAmount)
+            .toEther()
+            .dividedBy(liquidityTotalSupply);
 
-          const liquidityItemValue = liquidityTotalValue.dividedBy(liquidityTotalSupply)
-          let liquidityUsdValue = lp.balance.toEther().multipliedBy(liquidityItemValue)
-          newFarmInfo.lpUSDvalue = liquidityItemValue
+          const liquidityItemValue = liquidityTotalValue.dividedBy(liquidityTotalSupply);
+          let liquidityUsdValue = lp.balance.toEther().multipliedBy(liquidityItemValue);
+          newFarmInfo.lpUSDvalue = liquidityItemValue;
 
-          let farmUsdValue = newFarmInfo.lp.balance.toEther().multipliedBy(liquidityItemValue)
+          let farmUsdValue = newFarmInfo.lp.balance
+            .toEther()
+            .multipliedBy(liquidityItemValue);
 
-          let baseCalculation = getBigNumber(farmUsdValue)
+          let baseCalculation = getBigNumber(farmUsdValue);
           if (baseCalculation < 0.01) {
-            baseCalculation = 1
+            baseCalculation = 1;
           }
 
-          let apr = ((getBigNumber(rewardPerTimestampAmountTotalValue) / baseCalculation) * 100).toFixed(2)
+          let apr = (
+            (getBigNumber(rewardPerTimestampAmountTotalValue) / baseCalculation) *
+            100
+          ).toFixed(2);
 
-          if (apr === 'NaN' || apr === 'Infinity') {
-            apr = '0'
+          if (apr === "NaN" || apr === "Infinity") {
+            apr = "0";
           }
 
           if (isNaN(liquidityUsdValue)) {
-            liquidityUsdValue = 0
+            liquidityUsdValue = 0;
           }
 
           if (
             this.currentTimestamp < newFarmInfo.poolInfo.end_timestamp &&
             (rewardPerTimestampAmountTotalValue as any) * 86400 * 7 < 1 &&
             liquidityUsdValue < 2 &&
-            !window.localStorage['owner_' + newFarmInfo.poolId]
+            !window.localStorage["owner_" + newFarmInfo.poolId]
           ) {
-            continue
+            continue;
           }
 
           // @ts-ignore
-          newFarmInfo.apr = apr
+          newFarmInfo.apr = apr;
 
           newFarmInfo.apr_details = {
             apr: Math.round((apr as any) * 100) / 100,
-            apy: 0
-          } as any
+            apy: 0,
+          } as any;
 
           if (
             this.poolsDatas[liquidityItem.ammId] &&
-            this.poolsDatas[liquidityItem.ammId]['fees'] &&
+            this.poolsDatas[liquidityItem.ammId]["fees"] &&
             (liquidityTotalValue as any) > 0
           ) {
-            let apy = (this.poolsDatas[liquidityItem.ammId]['fees'] * 365 * 100) / (liquidityTotalValue as any)
-            newFarmInfo.apr = Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100
-            newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100
+            let apy =
+              (this.poolsDatas[liquidityItem.ammId]["fees"] * 365 * 100) /
+              (liquidityTotalValue as any);
+            newFarmInfo.apr =
+              Math.round(((apr as any) * 1 - (apy as any) * -1) * 100) / 100;
+            newFarmInfo.apr_details.apy = Math.round(apy * 100) / 100;
           }
 
           if (wallet) {
-            let unstaked = get(wallet.tokenAccounts, `${liquidityItem.lp.mintAddress}.balance`)
+            let unstaked = get(
+              wallet.tokenAccounts,
+              `${liquidityItem.lp.mintAddress}.balance`
+            );
             //getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther());
             if (unstaked) {
-              newFarmInfo.currentLPtokens = getBigNumber((unstaked as TokenAmount).toEther())
+              newFarmInfo.currentLPtokens = getBigNumber(
+                (unstaked as TokenAmount).toEther()
+              );
             } else {
-              newFarmInfo.currentLPtokens = 0
+              newFarmInfo.currentLPtokens = 0;
             }
           } else {
-            newFarmInfo.currentLPtokens = 0
+            newFarmInfo.currentLPtokens = 0;
           }
 
           // @ts-ignore
-          newFarmInfo.liquidityUsdValue = liquidityUsdValue
+          newFarmInfo.liquidityUsdValue = liquidityUsdValue;
 
-          if (rewardPerTimestampAmount.toEther().toString() === '0') {
+          if (rewardPerTimestampAmount.toEther().toString() === "0") {
             //endedFarmsPoolId.push(poolId)
           }
 
           if (newCoin) {
-            delete this.price.prices[liquidityItem?.coin.symbol as string]
+            delete this.price.prices[liquidityItem?.coin.symbol as string];
           }
 
           if (newPc) {
-            delete this.price.prices[liquidityItem?.pc.symbol as string]
+            delete this.price.prices[liquidityItem?.pc.symbol as string];
           }
         }
 
-        let userInfo = get(this.farm.stakeAccounts, poolId)
+        let userInfo = get(this.farm.stakeAccounts, poolId);
         if (userInfo && lp && FARM_VERSION === 1) {
-          userInfo = cloneDeep(userInfo)
+          userInfo = cloneDeep(userInfo);
 
-          const { rewardDebt, depositBalance } = userInfo
-          let currentTimestamp = this.currentTimestamp
+          const { rewardDebt, depositBalance } = userInfo;
+          let currentTimestamp = this.currentTimestamp;
 
           if (currentTimestamp > end_timestamp.toNumber()) {
-            currentTimestamp = end_timestamp.toNumber()
+            currentTimestamp = end_timestamp.toNumber();
           }
 
-          const duration = currentTimestamp - last_timestamp.toNumber()
+          const duration = currentTimestamp - last_timestamp.toNumber();
 
-          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount)
-          const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
-          const lpTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).wei
+          const rewardPerTimestamp = toBigNumber(
+            reward_per_timestamp_or_remained_reward_amount
+          );
+          const liquidityItem = get(this.liquidity.infos, lp.mintAddress);
+          const lpTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).wei;
           const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(lpTotalSupply)
-            .plus(getBigNumber(reward_per_share_net))
+            .plus(getBigNumber(reward_per_share_net));
 
           let pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
-            .minus(rewardDebt.wei)
+            .minus(rewardDebt.wei);
 
-          userInfo.needRefresh = false
+          userInfo.needRefresh = false;
 
           if (pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()) {
-            pendingReward = newFarmInfo.reward.balance.wei
-            userInfo.needRefresh = true
-            this.displaynoticeupdate = true
+            pendingReward = newFarmInfo.reward.balance.wei;
+            userInfo.needRefresh = true;
+            this.displaynoticeupdate = true;
           }
 
-          userInfo.depositFormat = (Math.round(userInfo.depositBalance.format() * 100000) / 100000).toFixed(2)
+          userInfo.depositFormat = (
+            Math.round(userInfo.depositBalance.format() * 100000) / 100000
+          ).toFixed(2);
 
           userInfo.depositCoin = (
-            Math.round((partCoin as any) * userInfo.depositBalance.format() * 10000) / 10000
-          ).toFixed(2)
+            Math.round((partCoin as any) * userInfo.depositBalance.format() * 10000) /
+            10000
+          ).toFixed(2);
 
-          userInfo.depositPc = (Math.round((partPc as any) * userInfo.depositBalance.format() * 10000) / 10000).toFixed(
-            2
-          )
+          userInfo.depositPc = (
+            Math.round((partPc as any) * userInfo.depositBalance.format() * 10000) / 10000
+          ).toFixed(2);
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
-              Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100) / 100
+              Math.round(
+                newFarmInfo.lpUSDvalue * userInfo.depositBalance.format() * 100
+              ) / 100
             )
               .toFixed(2)
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
           }
 
-          userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
+          userInfo.pendingReward = new TokenAmount(
+            pendingReward,
+            newFarmInfo.reward.decimals
+          );
         } else if (userInfo && lp && FARM_VERSION > 1) {
-          userInfo = cloneDeep(userInfo)
+          userInfo = cloneDeep(userInfo);
 
-          const { rewardDebt, depositBalance } = userInfo
-          let currentTimestamp = this.currentTimestamp
+          const { rewardDebt, depositBalance } = userInfo;
+          let currentTimestamp = this.currentTimestamp;
 
           if (currentTimestamp > end_timestamp.toNumber()) {
-            currentTimestamp = end_timestamp.toNumber()
+            currentTimestamp = end_timestamp.toNumber();
           }
 
-          const duration = currentTimestamp - last_timestamp.toNumber()
+          const duration = currentTimestamp - last_timestamp.toNumber();
 
-          const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount).dividedBy(
-            toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp))
-          )
+          const rewardPerTimestamp = toBigNumber(
+            reward_per_timestamp_or_remained_reward_amount
+          ).dividedBy(toBigNumber(end_timestamp).minus(toBigNumber(last_timestamp)));
 
           const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
             .dividedBy(newFarmInfo.lp.balance.wei)
-            .plus(getBigNumber(reward_per_share_net))
+            .plus(getBigNumber(reward_per_share_net));
 
-          const JUMP_DEBT = new BigNumber(10000000000000000000)
-          const _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT)
+          const JUMP_DEBT = new BigNumber(10000000000000000000);
+          const _rewardDebt = rewardDebt.wei.minus(JUMP_DEBT);
           let pendingReward = depositBalance.wei
             .multipliedBy(rewardPerShareCalc)
             .dividedBy(REWARD_MULTIPLER)
-            .minus(_rewardDebt)
+            .minus(_rewardDebt);
 
-          userInfo.needRefresh = false
+          userInfo.needRefresh = false;
 
           if (pendingReward.toNumber() > newFarmInfo.reward.balance.wei.toNumber()) {
-            pendingReward = newFarmInfo.reward.balance.wei
-            userInfo.needRefresh = true
-            this.displaynoticeupdate = true
+            pendingReward = newFarmInfo.reward.balance.wei;
+            userInfo.needRefresh = true;
+            this.displaynoticeupdate = true;
           }
 
           userInfo.depositFormat = (
-            Math.round(userInfo.depositBalance.format().replace(/,/g, '') * 100000) / 100000
-          ).toFixed(2)
+            Math.round(userInfo.depositBalance.format().replace(/,/g, "") * 100000) /
+            100000
+          ).toFixed(2);
 
           userInfo.depositCoin = (
-            Math.round((partCoin as any) * userInfo.depositBalance.format().replace(/,/g, '') * 10000) / 10000
-          ).toFixed(2)
+            Math.round(
+              (partCoin as any) *
+                userInfo.depositBalance.format().replace(/,/g, "") *
+                10000
+            ) / 10000
+          ).toFixed(2);
 
           userInfo.depositPc = (
-            Math.round((partPc as any) * userInfo.depositBalance.format().replace(/,/g, '') * 10000) / 10000
-          ).toFixed(2)
+            Math.round(
+              (partPc as any) * userInfo.depositBalance.format().replace(/,/g, "") * 10000
+            ) / 10000
+          ).toFixed(2);
 
           if (newFarmInfo.lpUSDvalue) {
             userInfo.depositBalanceUSD = (
-              Math.round(newFarmInfo.lpUSDvalue * userInfo.depositBalance.format().replace(/,/g, '') * 100) / 100
+              Math.round(
+                newFarmInfo.lpUSDvalue *
+                  userInfo.depositBalance.format().replace(/,/g, "") *
+                  100
+              ) / 100
             )
               .toFixed(2)
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
           }
 
-          userInfo.pendingReward = new TokenAmount(pendingReward, newFarmInfo.reward.decimals)
+          userInfo.pendingReward = new TokenAmount(
+            pendingReward,
+            newFarmInfo.reward.decimals
+          );
         } else {
           userInfo = {
             // @ts-ignore
             depositBalance: new TokenAmount(0, farmInfo.lp.decimals),
             // @ts-ignore
-            pendingReward: new TokenAmount(0, farmInfo.reward.decimals)
-          }
+            pendingReward: new TokenAmount(0, farmInfo.reward.decimals),
+          };
         }
 
         if (
           (newFarmInfo as any).poolInfo.is_allowed > 0 ||
           (newFarmInfo as any).poolInfo.owner.toBase58() === this.wallet.address
         ) {
-          let labelized = false
+          let labelized = false;
           if (lp) {
-            const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
+            const liquidityItem = get(this.liquidity.infos, lp.mintAddress);
 
             if (this.labelizedAmms[newFarmInfo.poolId]) {
               if (this.labelizedAmmsExtended[newFarmInfo.poolId].farmhidden == true) {
-                continue
+                continue;
               }
 
               if (this.labelizedAmmsExtended[newFarmInfo.poolId].labelized == true) {
-                labelized = true
+                labelized = true;
               }
             }
           }
 
-          if (TOKENS[newFarmInfo.lp.coin.mintAddress] && TOKENS[newFarmInfo.lp.coin.mintAddress].twitter) {
-            ;(newFarmInfo as any).twitterLink = TOKENS[newFarmInfo.lp.coin.mintAddress].twitter
+          if (
+            TOKENS[newFarmInfo.lp.coin.mintAddress] &&
+            TOKENS[newFarmInfo.lp.coin.mintAddress].twitter
+          ) {
+            (newFarmInfo as any).twitterLink =
+              TOKENS[newFarmInfo.lp.coin.mintAddress].twitter;
           }
 
-          if (newFarmInfo.lp.coin.symbol == 'CRP') {
-            ;(newFarmInfo as any).twitterLink = 'https://twitter.com/CropperFinance'
-          } else if (newFarmInfo.lp.coin.symbol == 'wCAPS' || newFarmInfo.lp.coin.symbol == 'wCAPS_v1') {
-            ;(newFarmInfo as any).twitterLink = 'https://twitter.com/Ternoa_'
-          } else if (newFarmInfo.lp.coin.symbol == 'SAMO') {
-            ;(newFarmInfo as any).twitterLink = 'https://twitter.com/samoyedcoin'
+          if (newFarmInfo.lp.coin.symbol == "CRP") {
+            (newFarmInfo as any).twitterLink = "https://twitter.com/CropperFinance";
+          } else if (
+            newFarmInfo.lp.coin.symbol == "wCAPS" ||
+            newFarmInfo.lp.coin.symbol == "wCAPS_v1"
+          ) {
+            (newFarmInfo as any).twitterLink = "https://twitter.com/Ternoa_";
+          } else if (newFarmInfo.lp.coin.symbol == "SAMO") {
+            (newFarmInfo as any).twitterLink = "https://twitter.com/samoyedcoin";
           }
 
-          ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
+          (newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
             (newFarmInfo as any).lp.coin.symbol
           }-${(newFarmInfo as any).lp.pc.symbol} on @CropperFinance with ${
             newFarmInfo.apr
           }%25 APR%0A%0ACome and join me at https://cropper.finance/farms/?s=${
             (newFarmInfo as any).poolId
-          }%0A%0AFarm now, Harvest later.&url= `
+          }%0A%0AFarm now, Harvest later.&url= `;
 
           if (!isPFO || true) {
             farms.push({
               labelized,
               userInfo,
-              farmInfo: newFarmInfo
-            })
+              farmInfo: newFarmInfo,
+            });
           }
         }
       }
 
       if (this.sortAsc) {
-        if (this.sortMethod == 'apr') {
-          this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr)
-        } else if (this.sortMethod == 'liquidity') {
-          this.farms = farms.sort((a: any, b: any) => b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue)
+        if (this.sortMethod == "apr") {
+          this.farms = farms.sort((a: any, b: any) => b.farmInfo.apr - a.farmInfo.apr);
+        } else if (this.sortMethod == "liquidity") {
+          this.farms = farms.sort(
+            (a: any, b: any) =>
+              b.farmInfo.liquidityUsdValue - a.farmInfo.liquidityUsdValue
+          );
         }
       } else {
-        if (this.sortMethod == 'apr') {
-          this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr)
-        } else if (this.sortMethod == 'liquidity') {
-          this.farms = farms.sort((a: any, b: any) => a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue)
+        if (this.sortMethod == "apr") {
+          this.farms = farms.sort((a: any, b: any) => a.farmInfo.apr - b.farmInfo.apr);
+        } else if (this.sortMethod == "liquidity") {
+          this.farms = farms.sort(
+            (a: any, b: any) =>
+              a.farmInfo.liquidityUsdValue - b.farmInfo.liquidityUsdValue
+          );
         }
       }
-            
-      this.endedFarmsPoolId = endedFarmsPoolId
+
+      this.endedFarmsPoolId = endedFarmsPoolId;
       this.filterFarms(
         this.searchName,
         this.searchCertifiedFarm,
         this.searchLifeFarm,
         this.currentPage
-      )
+      );
     },
     filterFarms(
       searchName: string,
@@ -1696,344 +2013,420 @@ export default Vue.extend({
       searchLifeFarm: boolean,
       pageNum: number = 1
     ) {
-      this.currentPage = pageNum
-      this.showFarms = this.farms
+      this.currentPage = pageNum;
+      this.showFarms = this.farms;
 
       //filter for not allowed famrs
       this.showFarms = this.showFarms.filter(
         (farm: any) =>
           farm.farmInfo.poolInfo.is_allowed > 0 ||
-          (farm.farmInfo.poolInfo.owner.toBase58() === this.wallet.address && farm.farmInfo.poolInfo.is_allowed === 0)
-      )
+          (farm.farmInfo.poolInfo.owner.toBase58() === this.wallet.address &&
+            farm.farmInfo.poolInfo.is_allowed === 0)
+      );
 
       if (
-        searchName != '' &&
+        searchName != "" &&
         this.farms.filter(
-          (farm: any) => (farm.farmInfo.poolId as string).toLowerCase() == (searchName as string).toLowerCase()
+          (farm: any) =>
+            (farm.farmInfo.poolId as string).toLowerCase() ==
+            (searchName as string).toLowerCase()
         ).length > 0
       ) {
         this.showFarms = this.farms.filter(
-          (farm: any) => (farm.farmInfo.poolId as string).toLowerCase() == (searchName as string).toLowerCase()
-        )
+          (farm: any) =>
+            (farm.farmInfo.poolId as string).toLowerCase() ==
+            (searchName as string).toLowerCase()
+        );
       } else if (
-        searchName != '' &&
+        searchName != "" &&
         this.farms.filter(
           (farm: any) =>
-            (farm.farmInfo.lp.pc.symbol as string).toLowerCase() == (searchName as string).toLowerCase() ||
-            (farm.farmInfo.lp.coin.symbol as string).toLowerCase() == (searchName as string).toLowerCase()
+            (farm.farmInfo.lp.pc.symbol as string).toLowerCase() ==
+              (searchName as string).toLowerCase() ||
+            (farm.farmInfo.lp.coin.symbol as string).toLowerCase() ==
+              (searchName as string).toLowerCase()
         ).length > 0
       ) {
         this.showFarms = this.farms.filter(
           (farm: any) =>
-            (farm.farmInfo.lp.pc.symbol as string).toLowerCase() == (searchName as string).toLowerCase() ||
-            (farm.farmInfo.lp.coin.symbol as string).toLowerCase() == (searchName as string).toLowerCase()
-        )
-      } else if (searchName != '') {
+            (farm.farmInfo.lp.pc.symbol as string).toLowerCase() ==
+              (searchName as string).toLowerCase() ||
+            (farm.farmInfo.lp.coin.symbol as string).toLowerCase() ==
+              (searchName as string).toLowerCase()
+        );
+      } else if (searchName != "") {
         this.showFarms = this.farms.filter((farm: any) =>
-          (farm.farmInfo.lp.symbol as string).toLowerCase().includes((searchName as string).toLowerCase())
-        )
+          (farm.farmInfo.lp.symbol as string)
+            .toLowerCase()
+            .includes((searchName as string).toLowerCase())
+        );
       }
 
-      if (searchCertifiedFarm === 'labelized') {
+      if (searchCertifiedFarm === "labelized") {
         //labelized
-        this.showFarms = this.showFarms.filter((farm: any) => farm.labelized)
-      } else if (searchCertifiedFarm === 'permissionless') {
+        this.showFarms = this.showFarms.filter((farm: any) => farm.labelized);
+      } else if (searchCertifiedFarm === "permissionless") {
         //permissionless
-        this.showFarms = this.showFarms.filter((farm: any) => !farm.labelized)
-      } else if (searchCertifiedFarm === 'deposit') {
+        this.showFarms = this.showFarms.filter((farm: any) => !farm.labelized);
+      } else if (searchCertifiedFarm === "deposit") {
         //deposit
-        this.showFarms = this.showFarms.filter((farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0)
+        this.showFarms = this.showFarms.filter(
+          (farm: any) => farm.userInfo.depositBalance.wei.toNumber() > 0
+        );
       }
-      
 
-      const currentTimestamp = moment().unix()
+      const currentTimestamp = moment().unix();
       if (!searchLifeFarm) {
         //Opened
         this.showFarms = this.showFarms.filter(
           (farm: any) =>
             farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
             farm.farmInfo.poolInfo.end_timestamp > currentTimestamp
-        )
+        );
       } else {
         //Ended
-        this.showFarms = this.showFarms.filter((farm: any) => farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)
+        this.showFarms = this.showFarms.filter(
+          (farm: any) => farm.farmInfo.poolInfo.end_timestamp < currentTimestamp
+        );
       }
 
-      this.totalCount = this.showFarms.length
+      this.totalCount = this.showFarms.length;
 
-      let max = this.showFarms.length
-      let start = (this.currentPage - 1) * this.pageSize
-      let end = this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max
-      this.showFarms = this.showFarms.slice(start, end)
+      let max = this.showFarms.length;
+      let start = (this.currentPage - 1) * this.pageSize;
+      let end =
+        this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max;
+      this.showFarms = this.showFarms.slice(start, end);
 
-      this.showMoreMenu = []
-      this.showFarms.forEach(element => {
-        this.showMoreMenu.push(false)
+      this.showMoreMenu = [];
+      this.showFarms.forEach((element) => {
+        this.showMoreMenu.push(false);
       });
     },
 
     updateCurrentLp(newTokenAccounts: any) {
       if (this.lp) {
-        const coin = cloneDeep(this.lp)
+        const coin = cloneDeep(this.lp);
         // @ts-ignore
-        const lpBalance = get(newTokenAccounts, `${this.lp.mintAddress}.balance`)
+        const lpBalance = get(newTokenAccounts, `${this.lp.mintAddress}.balance`);
         // @ts-ignore
-        coin.balance = lpBalance
+        coin.balance = lpBalance;
 
-        this.lp = coin
+        this.lp = coin;
       }
     },
 
     openStakeModal(labelized: any, poolInfo: FarmInfo, lp: any) {
-      const coin = cloneDeep(lp)
-      const lpBalance = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`)
-      coin.balance = lpBalance
+      const coin = cloneDeep(lp);
+      const lpBalance = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`);
+      coin.balance = lpBalance;
 
-      this.lp = coin
+      this.lp = coin;
 
-      this.labelizedPermission = labelized
-      this.farmInfo = cloneDeep(poolInfo)
-      const coinBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.coin.mintAddress}.balance`)
-      const pcBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.pc.mintAddress}.balance`)
-      this.farmInfo.lp.coin.balance = coinBalance
-      this.farmInfo.lp.pc.balance = pcBalance
-      this.stakeModalOpening = true
+      this.labelizedPermission = labelized;
+      this.farmInfo = cloneDeep(poolInfo);
+      const coinBalance = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.coin.mintAddress}.balance`
+      );
+      const pcBalance = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.pc.mintAddress}.balance`
+      );
+      this.farmInfo.lp.coin.balance = coinBalance;
+      this.farmInfo.lp.pc.balance = pcBalance;
+      this.stakeModalOpening = true;
     },
 
     openStakeModalLP(poolInfo: FarmInfo, lp: any) {
-      const coin = cloneDeep(lp)
-      const lpBalance = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`)
-      coin.balance = lpBalance
+      const coin = cloneDeep(lp);
+      const lpBalance = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`);
+      coin.balance = lpBalance;
 
-      this.lp = coin
-      this.farmInfo = cloneDeep(poolInfo)
-      const coinBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.coin.mintAddress}.balance`)
-      const pcBalance = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.pc.mintAddress}.balance`)
-      this.farmInfo.lp.coin.balance = coinBalance
-      this.farmInfo.lp.pc.balance = pcBalance
-      this.stakeModalOpeningLP = true
+      this.lp = coin;
+      this.farmInfo = cloneDeep(poolInfo);
+      const coinBalance = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.coin.mintAddress}.balance`
+      );
+      const pcBalance = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.pc.mintAddress}.balance`
+      );
+      this.farmInfo.lp.coin.balance = coinBalance;
+      this.farmInfo.lp.pc.balance = pcBalance;
+      this.stakeModalOpeningLP = true;
     },
 
     openAddRewardModal(farm: any) {
-      const rewardCoin = farm.farmInfo.reward
-      const coin = cloneDeep(rewardCoin)
-      const rewardBalance = get(this.wallet.tokenAccounts, `${rewardCoin.mintAddress}.balance`)
-      coin.balance = rewardBalance
+      const rewardCoin = farm.farmInfo.reward;
+      const coin = cloneDeep(rewardCoin);
+      const rewardBalance = get(
+        this.wallet.tokenAccounts,
+        `${rewardCoin.mintAddress}.balance`
+      );
+      coin.balance = rewardBalance;
 
-      this.rewardCoin = coin
-      this.farmInfo = cloneDeep(farm.farmInfo)
-      this.addRewardModalOpening = true
+      this.rewardCoin = coin;
+      this.farmInfo = cloneDeep(farm.farmInfo);
+      this.addRewardModalOpening = true;
     },
     async addReward(amount: string) {
-      this.adding = true
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
+      this.adding = true;
+      const conn = this.$web3;
+      const wallet = (this as any).$wallet;
       const rewardAccountAddress = get(
         this.wallet.tokenAccounts,
         `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`
-      )
+      );
 
       let fetchedFarm = await YieldFarm.loadFarm(
         conn,
         new PublicKey(this.farmInfo.poolId),
         new PublicKey(FARM_PROGRAM_ID)
-      )
+      );
 
       if (fetchedFarm) {
         //transfer reward amount
-        let addRewardAmount: number = Number.parseFloat(amount)
-        let userRwardTokenPubkey = new PublicKey(rewardAccountAddress)
+        let addRewardAmount: number = Number.parseFloat(amount);
+        let userRwardTokenPubkey = new PublicKey(rewardAccountAddress);
 
-        const key = getUnixTs().toString()
+        const key = getUnixTs().toString();
         this.$notify.info({
           key,
-          message: 'Making transaction...',
-          description: '',
-          duration: 0
-        })
+          message: "Making transaction...",
+          description: "",
+          duration: 0,
+        });
         fetchedFarm
-          .addReward(wallet, userRwardTokenPubkey, addRewardAmount * Math.pow(10, this.farmInfo.reward.decimals))
+          .addReward(
+            wallet,
+            userRwardTokenPubkey,
+            addRewardAmount * Math.pow(10, this.farmInfo.reward.decimals)
+          )
           .then((txid) => {
             this.$notify.info({
               key,
-              message: 'Transaction has been sent',
+              message: "Transaction has been sent",
               description: (h: any) =>
-                h('div', [
-                  'Confirmation is in progress.  Check your transaction on ',
+                h("div", [
+                  "Confirmation is in progress.  Check your transaction on ",
                   h(
-                    'a',
+                    "a",
                     {
                       attrs: {
                         href: `${this.url.explorer}/tx/${txid}`,
-                        target: '_blank'
-                      }
+                        target: "_blank",
+                      },
                     },
-                    'here'
-                  )
-                ])
-            })
+                    "here"
+                  ),
+                ]),
+            });
 
-            const description = `Add ${amount} ${this.farmInfo.reward.name}`
-            this.$accessor.transaction.sub({ txid, description })
+            const description = `Add ${amount} ${this.farmInfo.reward.name}`;
+            this.$accessor.transaction.sub({ txid, description });
           })
           .catch((error) => {
             this.$notify.error({
               key,
-              message: 'Adding Reward failed',
-              description: error.message
-            })
+              message: "Adding Reward failed",
+              description: error.message,
+            });
 
-            this.$accessor.farm.requestInfos()
-            this.$accessor.wallet.getTokenAccounts()
+            this.$accessor.farm.requestInfos();
+            this.$accessor.wallet.getTokenAccounts();
           })
           .finally(() => {
-            this.adding = false
-            this.addRewardModalOpening = false
+            this.adding = false;
+            this.addRewardModalOpening = false;
 
-            this.$accessor.farm.requestInfos()
-            this.$accessor.wallet.getTokenAccounts()
-          })
+            this.$accessor.farm.requestInfos();
+            this.$accessor.wallet.getTokenAccounts();
+          });
       }
     },
     async payFarmFee(farm: any) {
-      this.paying = true
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
-      let key = 'USDC'
-      const usdcCoin = TOKENS[key] // to test. real - USDC
-      const usdcAccountAddress = get(this.wallet.tokenAccounts, `${usdcCoin.mintAddress}.tokenAccountAddress`)
-      const usdcBalance = get(this.wallet.tokenAccounts, `${usdcCoin.mintAddress}.balance`)
-      if (usdcAccountAddress === undefined || usdcAccountAddress === '') {
+      this.paying = true;
+      const conn = this.$web3;
+      const wallet = (this as any).$wallet;
+      let key = "USDC";
+      const usdcCoin = TOKENS[key]; // to test. real - USDC
+      const usdcAccountAddress = get(
+        this.wallet.tokenAccounts,
+        `${usdcCoin.mintAddress}.tokenAccountAddress`
+      );
+      const usdcBalance = get(
+        this.wallet.tokenAccounts,
+        `${usdcCoin.mintAddress}.balance`
+      );
+      if (usdcAccountAddress === undefined || usdcAccountAddress === "") {
         this.$notify.error({
           key,
-          message: 'Paying farm fee failed',
-          description: 'Add USDC token in your wallet, please'
-        })
-        return
+          message: "Paying farm fee failed",
+          description: "Add USDC token in your wallet, please",
+        });
+        return;
       }
 
       // check balance if wallet has enough fee
       if (usdcBalance < PAY_FARM_FEE) {
         this.$notify.error({
           key,
-          message: 'Paying farm fee failed',
-          description: 'Your USDC balance is low than farm fee'
-        })
-        return
+          message: "Paying farm fee failed",
+          description: "Your USDC balance is low than farm fee",
+        });
+        return;
       }
 
       let fetchedFarm = await YieldFarm.loadFarm(
         conn,
         new PublicKey(farm.farmInfo.poolId),
         new PublicKey(FARM_PROGRAM_ID)
-      )
+      );
 
       if (fetchedFarm) {
         //pay farm fee
-        let userUSDCTokenPubkey = new PublicKey(usdcAccountAddress)
+        let userUSDCTokenPubkey = new PublicKey(usdcAccountAddress);
 
-        const key = getUnixTs().toString()
+        const key = getUnixTs().toString();
         this.$notify.info({
           key,
-          message: 'Making transaction...',
-          description: '',
-          duration: 0
-        })
+          message: "Making transaction...",
+          description: "",
+          duration: 0,
+        });
         fetchedFarm
-          .payFarmFee(wallet, userUSDCTokenPubkey, PAY_FARM_FEE * Math.pow(10, usdcCoin.decimals))
+          .payFarmFee(
+            wallet,
+            userUSDCTokenPubkey,
+            PAY_FARM_FEE * Math.pow(10, usdcCoin.decimals)
+          )
           .then((txid) => {
             this.$notify.info({
               key,
-              message: 'Transaction has been sent',
+              message: "Transaction has been sent",
               description: (h: any) =>
-                h('div', [
-                  'Confirmation is in progress.  Check your transaction on ',
+                h("div", [
+                  "Confirmation is in progress.  Check your transaction on ",
                   h(
-                    'a',
+                    "a",
                     {
                       attrs: {
                         href: `${this.url.explorer}/tx/${txid}`,
-                        target: '_blank'
-                      }
+                        target: "_blank",
+                      },
                     },
-                    'here'
-                  )
-                ])
-            })
+                    "here"
+                  ),
+                ]),
+            });
 
-            const description = `Pay ${PAY_FARM_FEE} ${usdcCoin.name}`
-            this.$accessor.transaction.sub({ txid, description })
+            const description = `Pay ${PAY_FARM_FEE} ${usdcCoin.name}`;
+            this.$accessor.transaction.sub({ txid, description });
           })
           .catch((error) => {
             this.$notify.error({
               key,
-              message: 'Paying farm fee failed',
-              description: error.message
-            })
+              message: "Paying farm fee failed",
+              description: error.message,
+            });
 
-            this.$accessor.farm.requestInfos()
-            this.$accessor.wallet.getTokenAccounts()
+            this.$accessor.farm.requestInfos();
+            this.$accessor.wallet.getTokenAccounts();
           })
           .finally(() => {
-            this.paying = false
-            this.$accessor.farm.requestInfos()
-            this.$accessor.wallet.getTokenAccounts()
-          })
+            this.paying = false;
+            this.$accessor.farm.requestInfos();
+            this.$accessor.wallet.getTokenAccounts();
+          });
       }
     },
 
     stake(amount: number) {
-      this.staking = true
+      this.staking = true;
 
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
+      const conn = this.$web3;
+      const wallet = (this as any).$wallet;
 
-      const lpAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.mintAddress}.tokenAccountAddress`)
-      const rewardAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`)
-      const infoAccount = get(this.farm.stakeAccounts, `${this.farmInfo.poolId}.stakeAccountAddress`)
+      const lpAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.mintAddress}.tokenAccountAddress`
+      );
+      const rewardAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`
+      );
+      const infoAccount = get(
+        this.farm.stakeAccounts,
+        `${this.farmInfo.poolId}.stakeAccountAddress`
+      );
 
-      const key = getUnixTs().toString()
+      const key = getUnixTs().toString();
 
       if (amount <= 0) {
         this.$notify.error({
           key,
-          message: 'Add liquidity failed',
-          description: 'Added LP token amount is 0'
-        })
-        console.log('added lp amount is 0')
-        return
+          message: "Add liquidity failed",
+          description: "Added LP token amount is 0",
+        });
+        console.log("added lp amount is 0");
+        return;
       }
 
-      this.stakeLP(conn, wallet, this.farmInfo, lpAccount, rewardAccount, infoAccount, amount)
+      this.stakeLP(
+        conn,
+        wallet,
+        this.farmInfo,
+        lpAccount,
+        rewardAccount,
+        infoAccount,
+        amount
+      );
 
-      this.staking = false
-      this.stakeModalOpeningLP = false
+      this.staking = false;
+      this.stakeModalOpeningLP = false;
     },
     supplyAndStake(fromCoinAmount: string, toCoinAmount: string, fixedCoin: string) {
-      this.staking = true
+      this.staking = true;
 
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
+      const conn = this.$web3;
+      const wallet = (this as any).$wallet;
 
-      const poolInfo = get(this.liquidity.infos, this.farmInfo.lp.mintAddress)
+      const poolInfo = get(this.liquidity.infos, this.farmInfo.lp.mintAddress);
 
-      const lpAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.mintAddress}.tokenAccountAddress`)
-      const rewardAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`)
-      const infoAccount = get(this.farm.stakeAccounts, `${this.farmInfo.poolId}.stakeAccountAddress`)
+      const lpAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.mintAddress}.tokenAccountAddress`
+      );
+      const rewardAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`
+      );
+      const infoAccount = get(
+        this.farm.stakeAccounts,
+        `${this.farmInfo.poolId}.stakeAccountAddress`
+      );
       // @ts-ignore
-      const fromCoinAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.coin.mintAddress}.tokenAccountAddress`)
+      const fromCoinAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.coin.mintAddress}.tokenAccountAddress`
+      );
       // @ts-ignore
-      const toCoinAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.pc.mintAddress}.tokenAccountAddress`)
+      const toCoinAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.pc.mintAddress}.tokenAccountAddress`
+      );
 
-      const key = getUnixTs().toString()
+      const key = getUnixTs().toString();
       this.$notify.info({
         key,
-        message: 'Making transaction...',
-        description: '',
-        duration: 0
-      })
+        message: "Making transaction...",
+        description: "",
+        duration: 0,
+      });
 
-      let txStatus = ''
+      let txStatus = "";
       addLiquidity(
         conn,
         wallet,
@@ -2050,60 +2443,60 @@ export default Vue.extend({
         .then(async (txid) => {
           this.$notify.info({
             key,
-            message: 'Transaction has been sent',
+            message: "Transaction has been sent",
             description: (h: any) =>
-              h('div', [
-                'Confirmation is in progress.  Check your transaction on ',
+              h("div", [
+                "Confirmation is in progress.  Check your transaction on ",
                 h(
-                  'a',
+                  "a",
                   {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: "_blank" },
                   },
-                  'here'
-                )
-              ])
-          })
+                  "here"
+                ),
+              ]),
+          });
 
-          this.suppling = true
+          this.suppling = true;
 
-          const description = `Add liquidity for ${fromCoinAmount} ${this.farmInfo.lp.coin?.symbol} and ${toCoinAmount} ${this.farmInfo.lp.pc?.symbol}`
-          this.$accessor.transaction.sub({ txid, description })
+          const description = `Add liquidity for ${fromCoinAmount} ${this.farmInfo.lp.coin?.symbol} and ${toCoinAmount} ${this.farmInfo.lp.pc?.symbol}`;
+          this.$accessor.transaction.sub({ txid, description });
 
-          txStatus = this.$accessor.transaction.history[txid].status
-          let totalDelayTime = 0
-          while (txStatus === 'Pending' && totalDelayTime < 45000) {
-            let delayTime = 500
-            await this.delay(delayTime)
-            totalDelayTime += delayTime
-            txStatus = this.$accessor.transaction.history[txid].status
-            console.log('h1', totalDelayTime, txStatus)
+          txStatus = this.$accessor.transaction.history[txid].status;
+          let totalDelayTime = 0;
+          while (txStatus === "Pending" && totalDelayTime < 45000) {
+            let delayTime = 500;
+            await this.delay(delayTime);
+            totalDelayTime += delayTime;
+            txStatus = this.$accessor.transaction.history[txid].status;
+            console.log("h1", totalDelayTime, txStatus);
           }
 
-          if (txStatus === 'Fail') {
-            console.log('add lp failed')
-            return
+          if (txStatus === "Fail") {
+            console.log("add lp failed");
+            return;
           }
 
           //update wallet token account infos
 
-          let delayForUpdate = 500
-          await this.$accessor.wallet.getTokenAccounts()
-          this.stakeModalOpening = false
-          this.staking = false
-          await this.delay(400)
+          let delayForUpdate = 500;
+          await this.$accessor.wallet.getTokenAccounts();
+          this.stakeModalOpening = false;
+          this.staking = false;
+          await this.delay(400);
 
-          this.stakeModalOpeningLP = true
+          this.stakeModalOpeningLP = true;
         })
         .catch((error) => {
           this.$notify.error({
             key,
-            message: 'Add liquidity failed',
-            description: error.message
-          })
+            message: "Add liquidity failed",
+            description: error.message,
+          });
         })
         .finally(async () => {
-          this.suppling = false
-        })
+          this.suppling = false;
+        });
     },
     async stakeLP(
       conn: any,
@@ -2114,35 +2507,35 @@ export default Vue.extend({
       infoAccount: any,
       amount: number
     ) {
-      const key = getUnixTs().toString()
+      const key = getUnixTs().toString();
 
       deposit(conn, wallet, farmInfo, lpAccount, rewardAccount, infoAccount, amount)
         .then((txid) => {
           this.$notify.info({
             key,
-            message: 'Transaction has been sent',
+            message: "Transaction has been sent",
             description: (h: any) =>
-              h('div', [
-                'Confirmation is in progress.  Check your transaction on ',
+              h("div", [
+                "Confirmation is in progress.  Check your transaction on ",
                 h(
-                  'a',
+                  "a",
                   {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: "_blank" },
                   },
-                  'here'
-                )
-              ])
-          })
+                  "here"
+                ),
+              ]),
+          });
 
-          const description = `Stake ${amount} ${this.farmInfo.lp.name}`
-          this.$accessor.transaction.sub({ txid, description })
+          const description = `Stake ${amount} ${this.farmInfo.lp.name}`;
+          this.$accessor.transaction.sub({ txid, description });
         })
         .catch((error) => {
           this.$notify.error({
             key,
-            message: 'Stake failed',
-            description: error.message
-          })
+            message: "Stake failed",
+            description: error.message,
+          });
           this.tempInfo = {
             conn: conn,
             wallet: wallet,
@@ -2150,24 +2543,24 @@ export default Vue.extend({
             lpAccount: lpAccount,
             rewardAccount: rewardAccount,
             infoAccount: infoAccount,
-            amount: amount
-          }
-          this.stakeLPError = true
-          this.$accessor.farm.requestInfos()
-          this.$accessor.wallet.getTokenAccounts()
+            amount: amount,
+          };
+          this.stakeLPError = true;
+          this.$accessor.farm.requestInfos();
+          this.$accessor.wallet.getTokenAccounts();
         })
         .finally(() => {
-          this.staking = false
-          this.stakeModalOpening = false
-          this.farmInfo = null
-          this.$accessor.farm.requestInfos()
-          this.$accessor.wallet.getTokenAccounts()
-        })
+          this.staking = false;
+          this.stakeModalOpening = false;
+          this.farmInfo = null;
+          this.$accessor.farm.requestInfos();
+          this.$accessor.wallet.getTokenAccounts();
+        });
     },
     onRetryStakeLP() {
-      this.stakeLPError = false
+      this.stakeLPError = false;
       if (!this.tempInfo) {
-        return
+        return;
       }
 
       this.stakeLP(
@@ -2178,23 +2571,23 @@ export default Vue.extend({
         this.tempInfo.rewardAccount,
         this.tempInfo.infoAccount,
         this.tempInfo.amount
-      )
-      this.tempInfo = null
+      );
+      this.tempInfo = null;
     },
     onRemoveLiquidity() {
-      this.stakeLPError = false
+      this.stakeLPError = false;
       if (!this.tempInfo) {
-        return
+        return;
       }
 
       const fromCoinAccount = get(
         this.wallet.tokenAccounts,
         `${this.tempInfo.farmInfo.lp.coin.mintAddress}.tokenAccountAddress`
-      )
+      );
       const toCoinAccount = get(
         this.wallet.tokenAccounts,
         `${this.tempInfo.farmInfo.lp.pc.mintAddress}.tokenAccountAddress`
-      )
+      );
       this.removeLP(
         this.tempInfo.conn,
         this.tempInfo.wallet,
@@ -2203,295 +2596,343 @@ export default Vue.extend({
         fromCoinAccount,
         toCoinAccount,
         this.tempInfo.amount
-      )
+      );
 
-      this.tempInfo = null
+      this.tempInfo = null;
     },
     async delay(ms: number) {
-      return new Promise((resolve) => setTimeout(resolve, ms))
+      return new Promise((resolve) => setTimeout(resolve, ms));
     },
     cancelStake() {
-      this.lp = null
-      this.farmInfo = null
-      this.stakeModalOpening = false
+      this.lp = null;
+      this.farmInfo = null;
+      this.stakeModalOpening = false;
     },
     cancelStakeLP() {
-      this.lp = null
-      this.farmInfo = null
-      this.stakeModalOpeningLP = false
+      this.lp = null;
+      this.farmInfo = null;
+      this.stakeModalOpeningLP = false;
     },
     onNothing() {
-      this.stakeLPError = false
-      this.tempInfo = null
+      this.stakeLPError = false;
+      this.tempInfo = null;
     },
     cancelAddReward() {
-      this.rewardCoin = null
-      this.farmInfo = null
-      this.addRewardModalOpening = false
+      this.rewardCoin = null;
+      this.farmInfo = null;
+      this.addRewardModalOpening = false;
     },
 
     openUnstakeModal(poolInfo: FarmInfo, lp: any, lpBalance: any) {
-      const coin = cloneDeep(lp)
-      coin.balance = lpBalance
+      const coin = cloneDeep(lp);
+      coin.balance = lpBalance;
 
-      this.lp = coin
-      this.farmInfo = cloneDeep(poolInfo)
-      this.unstakeModalOpening = true
+      this.lp = coin;
+      this.farmInfo = cloneDeep(poolInfo);
+      this.unstakeModalOpening = true;
     },
 
     unstakeAndRemove(amount: string) {
-      this.unstaking = true
+      this.unstaking = true;
 
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
-      const coin = this.farmInfo.lp.coin
-      const pc = this.farmInfo.lp.pc
-      const lp = this.farmInfo.lp
+      const conn = this.$web3;
+      const wallet = (this as any).$wallet;
+      const coin = this.farmInfo.lp.coin;
+      const pc = this.farmInfo.lp.pc;
+      const lp = this.farmInfo.lp;
 
-      const lpAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.lp.mintAddress}.tokenAccountAddress`)
-      const rewardAccount = get(this.wallet.tokenAccounts, `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`)
-      const infoAccount = get(this.farm.stakeAccounts, `${this.farmInfo.poolId}.stakeAccountAddress`)
-      const fromCoinAccount = get(this.wallet.tokenAccounts, `${coin.mintAddress}.tokenAccountAddress`)
-      const toCoinAccount = get(this.wallet.tokenAccounts, `${pc.mintAddress}.tokenAccountAddress`)
+      const lpAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.lp.mintAddress}.tokenAccountAddress`
+      );
+      const rewardAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.farmInfo.reward.mintAddress}.tokenAccountAddress`
+      );
+      const infoAccount = get(
+        this.farm.stakeAccounts,
+        `${this.farmInfo.poolId}.stakeAccountAddress`
+      );
+      const fromCoinAccount = get(
+        this.wallet.tokenAccounts,
+        `${coin.mintAddress}.tokenAccountAddress`
+      );
+      const toCoinAccount = get(
+        this.wallet.tokenAccounts,
+        `${pc.mintAddress}.tokenAccountAddress`
+      );
 
-      const key = getUnixTs().toString()
+      const key = getUnixTs().toString();
       this.$notify.info({
         key,
-        message: 'Making transaction...',
-        description: '',
-        duration: 0
-      })
+        message: "Making transaction...",
+        description: "",
+        duration: 0,
+      });
 
       withdraw(conn, wallet, this.farmInfo, lpAccount, rewardAccount, infoAccount, amount)
         .then(async (txid) => {
           this.$notify.info({
             key,
-            message: 'Transaction has been sent',
+            message: "Transaction has been sent",
             description: (h: any) =>
-              h('div', [
-                'Confirmation is in progress.  Check your transaction on ',
+              h("div", [
+                "Confirmation is in progress.  Check your transaction on ",
                 h(
-                  'a',
+                  "a",
                   {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: "_blank" },
                   },
-                  'here'
-                )
-              ])
-          })
+                  "here"
+                ),
+              ]),
+          });
 
-          const description = `Unstake ${amount} ${lp.name}`
-          this.$accessor.transaction.sub({ txid, description })
+          const description = `Unstake ${amount} ${lp.name}`;
+          this.$accessor.transaction.sub({ txid, description });
 
-          let txStatus = this.$accessor.transaction.history[txid].status
-          while (txStatus === 'Pending') {
-            await this.delay(500)
-            txStatus = this.$accessor.transaction.history[txid].status
-            await this.delay(500)
+          let txStatus = this.$accessor.transaction.history[txid].status;
+          while (txStatus === "Pending") {
+            await this.delay(500);
+            txStatus = this.$accessor.transaction.history[txid].status;
+            await this.delay(500);
           }
-          if (txStatus === 'Fail') {
-            console.log('unstake transaction failed')
-            this.unstaking = false
-            this.unstakeModalOpening = false
-            return
+          if (txStatus === "Fail") {
+            console.log("unstake transaction failed");
+            this.unstaking = false;
+            this.unstakeModalOpening = false;
+            return;
           }
 
           //update wallet token account infos
-          this.$accessor.wallet.getTokenAccounts()
-          let delayForUpdate = 1000
-          await this.delay(delayForUpdate)
+          this.$accessor.wallet.getTokenAccounts();
+          let delayForUpdate = 1000;
+          await this.delay(delayForUpdate);
 
-          let value = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`)
-          value = value.wei.toNumber() / Math.pow(10, value.decimals)
+          let value = get(this.wallet.tokenAccounts, `${lp.mintAddress}.balance`);
+          value = value.wei.toNumber() / Math.pow(10, value.decimals);
           if (value <= 0) {
-            console.log('remove lp amount is 0')
-            this.unstaking = false
-            this.unstakeModalOpening = false
-            return
+            console.log("remove lp amount is 0");
+            this.unstaking = false;
+            this.unstakeModalOpening = false;
+            return;
           }
-          value = value.toString()
+          value = value.toString();
 
-          this.removeLP(conn, wallet, lp, lpAccount, fromCoinAccount, toCoinAccount, value)
+          this.removeLP(
+            conn,
+            wallet,
+            lp,
+            lpAccount,
+            fromCoinAccount,
+            toCoinAccount,
+            value
+          );
         })
         .catch((error) => {
           this.$notify.error({
             key,
-            message: 'Unstake failed',
-            description: error.message
-          })
-          this.$accessor.farm.requestInfos()
-          this.$accessor.wallet.getTokenAccounts()
+            message: "Unstake failed",
+            description: error.message,
+          });
+          this.$accessor.farm.requestInfos();
+          this.$accessor.wallet.getTokenAccounts();
         })
-        .finally(() => {})
+        .finally(() => {});
     },
-    removeLP(conn: any, wallet: any, lp: any, lpAccount: any, fromCoinAccount: any, toCoinAccount: any, value: any) {
-      const key = getUnixTs().toString()
-      const poolInfo = get(this.liquidity.infos, lp.mintAddress)
+    removeLP(
+      conn: any,
+      wallet: any,
+      lp: any,
+      lpAccount: any,
+      fromCoinAccount: any,
+      toCoinAccount: any,
+      value: any
+    ) {
+      const key = getUnixTs().toString();
+      const poolInfo = get(this.liquidity.infos, lp.mintAddress);
       //remove whole lp amount
-      removeLiquidity(conn, wallet, poolInfo, lpAccount, fromCoinAccount, toCoinAccount, value)
+      removeLiquidity(
+        conn,
+        wallet,
+        poolInfo,
+        lpAccount,
+        fromCoinAccount,
+        toCoinAccount,
+        value
+      )
         .then((txid) => {
           this.$notify.info({
             key,
-            message: 'Transaction has been sent',
+            message: "Transaction has been sent",
             description: (h: any) =>
-              h('div', [
-                'Confirmation is in progress.  Check your transaction on ',
+              h("div", [
+                "Confirmation is in progress.  Check your transaction on ",
                 h(
-                  'a',
+                  "a",
                   {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: "_blank" },
                   },
-                  'here'
-                )
-              ])
-          })
+                  "here"
+                ),
+              ]),
+          });
 
-          const description = `Remove liquidity for ${value} ${lp.name}`
+          const description = `Remove liquidity for ${value} ${lp.name}`;
 
-          this.$accessor.transaction.sub({ txid, description })
+          this.$accessor.transaction.sub({ txid, description });
         })
         .catch((error) => {
           this.$notify.error({
             key,
-            message: 'Remove liquidity failed',
-            description: error.message
-          })
+            message: "Remove liquidity failed",
+            description: error.message,
+          });
 
-          this.$accessor.farm.requestInfos()
-          this.$accessor.wallet.getTokenAccounts()
+          this.$accessor.farm.requestInfos();
+          this.$accessor.wallet.getTokenAccounts();
         })
         .finally(() => {
-          this.unstaking = false
-          this.unstakeModalOpening = false
-          this.$accessor.farm.requestInfos()
-          this.$accessor.wallet.getTokenAccounts()
-        })
+          this.unstaking = false;
+          this.unstakeModalOpening = false;
+          this.$accessor.farm.requestInfos();
+          this.$accessor.wallet.getTokenAccounts();
+        });
     },
 
     cancelUnstake() {
-      this.lp = null
-      this.farmInfo = null
-      this.unstakeModalOpening = false
+      this.lp = null;
+      this.farmInfo = null;
+      this.unstakeModalOpening = false;
     },
     getAmmId(farmInfo: FarmInfo) {
       //get liquidity pool info
       let liquidityPoolInfo: LiquidityPoolInfo = LIQUIDITY_POOLS.find(
         (item) => item.lp.mintAddress === farmInfo.lp.mintAddress
-      ) as any
+      ) as any;
 
       //check liquidity pool
       if (liquidityPoolInfo == undefined) {
-        console.log('find liquidity pool error')
-        return ''
+        console.log("find liquidity pool error");
+        return "";
       }
-      return liquidityPoolInfo.ammId
+      return liquidityPoolInfo.ammId;
     },
 
     harvest(farmInfo: FarmInfo, idx: number) {
-      this.harvesting[idx] = true
+      this.harvesting[idx] = true;
 
-      const conn = this.$web3
-      const wallet = (this as any).$wallet
+      const conn = this.$web3;
+      const wallet = (this as any).$wallet;
 
-      const lpAccount = get(this.wallet.tokenAccounts, `${farmInfo.lp.mintAddress}.tokenAccountAddress`)
-      const rewardAccount = get(this.wallet.tokenAccounts, `${farmInfo.reward.mintAddress}.tokenAccountAddress`)
-      const infoAccount = get(this.farm.stakeAccounts, `${farmInfo.poolId}.stakeAccountAddress`)
+      const lpAccount = get(
+        this.wallet.tokenAccounts,
+        `${farmInfo.lp.mintAddress}.tokenAccountAddress`
+      );
+      const rewardAccount = get(
+        this.wallet.tokenAccounts,
+        `${farmInfo.reward.mintAddress}.tokenAccountAddress`
+      );
+      const infoAccount = get(
+        this.farm.stakeAccounts,
+        `${farmInfo.poolId}.stakeAccountAddress`
+      );
 
-      const key = getUnixTs().toString()
+      const key = getUnixTs().toString();
       this.$notify.info({
         key,
-        message: 'Making transaction...',
-        description: '',
-        duration: 0
-      })
+        message: "Making transaction...",
+        description: "",
+        duration: 0,
+      });
 
-      deposit(conn, wallet, farmInfo, lpAccount, rewardAccount, infoAccount, '0')
+      deposit(conn, wallet, farmInfo, lpAccount, rewardAccount, infoAccount, "0")
         .then((txid) => {
           this.$notify.info({
             key,
-            message: 'Transaction has been sent',
+            message: "Transaction has been sent",
             description: (h: any) =>
-              h('div', [
-                'Confirmation is in progress.  Check your transaction on ',
+              h("div", [
+                "Confirmation is in progress.  Check your transaction on ",
                 h(
-                  'a',
+                  "a",
                   {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: "_blank" },
                   },
-                  'here'
-                )
-              ])
-          })
+                  "here"
+                ),
+              ]),
+          });
 
-          const description = `Harvest ${farmInfo.reward.symbol} from ${farmInfo.lp.name}`
-          this.$accessor.transaction.sub({ txid, description })
+          const description = `Harvest ${farmInfo.reward.symbol} from ${farmInfo.lp.name}`;
+          this.$accessor.transaction.sub({ txid, description });
         })
         .catch((error) => {
           this.$notify.error({
             key,
-            message: 'Harvest failed',
-            description: error.message
-          })
+            message: "Harvest failed",
+            description: error.message,
+          });
 
-          this.$accessor.farm.requestInfos()
-          this.$accessor.wallet.getTokenAccounts()
+          this.$accessor.farm.requestInfos();
+          this.$accessor.wallet.getTokenAccounts();
         })
         .finally(() => {
-          this.$accessor.farm.requestInfos()
-          this.harvesting[idx] = false
-          this.$accessor.farm.requestInfos()
-          this.$accessor.wallet.getTokenAccounts()
-        })
+          this.$accessor.farm.requestInfos();
+          this.harvesting[idx] = false;
+          this.$accessor.farm.requestInfos();
+          this.$accessor.wallet.getTokenAccounts();
+        });
     },
     getCountdownFromPeriod(period: number) {
-      let remain = period
-      let days = Math.floor(remain / (24 * 3600))
-      remain = remain % (24 * 3600)
-      let hours = Math.floor(remain / 3600)
-      remain = remain % 3600
-      let minutes = Math.floor(remain / 60)
-      remain = remain % 60
-      let seconds = remain
+      let remain = period;
+      let days = Math.floor(remain / (24 * 3600));
+      remain = remain % (24 * 3600);
+      let hours = Math.floor(remain / 3600);
+      remain = remain % 3600;
+      let minutes = Math.floor(remain / 60);
+      remain = remain % 60;
+      let seconds = remain;
 
-      return '' + days + 'd : ' + hours + 'h : ' + minutes + 'm'
+      return "" + days + "d : " + hours + "h : " + minutes + "m";
     },
     setSortOption(mode: string, asc: boolean) {
-      this.sortMethod = mode
-      this.sortAsc = asc
-      this.showSortMenu = false
-      this.updateFarms()
+      this.sortMethod = mode;
+      this.sortAsc = asc;
+      this.showSortMenu = false;
+      this.updateFarms();
     },
     activeSearch(mode: string) {
-      if (mode === 'labelized') this.searchCertifiedFarm = 'labelized'
-      else if (mode === 'permissionless') this.searchCertifiedFarm = 'permissionless'
-      else if (mode === 'open') this.searchLifeFarm = false
-      else if (mode === 'ended') this.searchLifeFarm = true
-      else if (mode === 'deposit') this.searchCertifiedFarm = 'deposit'
+      if (mode === "labelized") this.searchCertifiedFarm = "labelized";
+      else if (mode === "permissionless") this.searchCertifiedFarm = "permissionless";
+      else if (mode === "open") this.searchLifeFarm = false;
+      else if (mode === "ended") this.searchLifeFarm = true;
+      else if (mode === "deposit") this.searchCertifiedFarm = "deposit";
     },
     hideCollapse() {
-      this.showCollapse = []
+      this.showCollapse = [];
     },
     reloadTimer() {
-      this.activeSpinning = true
+      this.activeSpinning = true;
       setTimeout(() => {
-        this.activeSpinning = false
-      }, 1000)
-      this.$accessor.farm.requestInfos()
-      this.$accessor.wallet.getTokenAccounts()
+        this.activeSpinning = false;
+      }, 1000);
+      this.$accessor.farm.requestInfos();
+      this.$accessor.wallet.getTokenAccounts();
     },
     searchShortcut(name: string) {
-      this.searchName = name.toLowerCase()
-      this.showSearchMenu = false
+      this.searchName = name.toLowerCase();
+      this.showSearchMenu = false;
     },
     activeMore(idx: number) {
       this.showMoreMenu = this.showMoreMenu.map((item, i) => {
-        if(i === idx) return !item;
+        if (i === idx) return !item;
         return item;
-      })
-      console.log(this.showMoreMenu)
-    }
-  }
-})
+      });
+      console.log(this.showMoreMenu);
+    },
+  },
+});
 </script>
 
 <style lang="less" scoped>
@@ -2546,16 +2987,16 @@ export default Vue.extend({
   }
 }
 
-.noDesktop {
+.isMobile {
   display: none;
 
-  @media @max-lg-tablet {
+  @media @max-sl-mobile {
     display: block;
   }
 }
 
-.noMobile {
-  @media @max-lg-tablet {
+.isDesktop {
+  @media @max-sl-mobile {
     display: none !important;
   }
 }
@@ -2593,6 +3034,86 @@ export default Vue.extend({
   }
 }
 
+.lp-icons {
+  display: flex;
+  align-items: center;
+
+  @media @max-lg-tablet {
+    justify-content: space-between;
+  }
+
+  .lp-icons-group {
+    background: @gradient-color-outline;
+    background-origin: border-box;
+    border-radius: 8px;
+    padding: 2px;
+    width: fit-content;
+
+    .icons {
+      height: 100%;
+      background-color: @color-blue800;
+      border-radius: 8px;
+      padding: 4px 6px;
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+      }
+
+      span {
+        margin-left: 5px;
+        margin-right: 5px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+.farm-labels {
+  .label {
+    border-radius: 6px;
+    padding: 4px;
+    width: fit-content;
+    font-size: 10px;
+    line-height: 12px;
+
+    &.labelized {
+      background: @color-labelized;
+    }
+
+    &.permissionless {
+      background: @color-permissionless;
+    }
+
+    &.ended {
+      border: 2px solid @color-ended;
+      color: @color-ended;
+    }
+
+    &.dual {
+      border: 2px solid @color-dual;
+      color: @color-dual;
+    }
+
+    &.new {
+      border: 2px solid @color-new;
+      color: @color-new;
+    }
+
+    &.ended,
+    &.dual,
+    &.new {
+      padding: 2px 6px;
+      margin-top: 8px;
+    }
+  }
+}
 // class stylesheet
 
 .farm.container {
@@ -2608,7 +3129,7 @@ export default Vue.extend({
 
       .farm-head {
         @media @max-sl-mobile {
-          display: block;
+          display: block !important;
         }
 
         .title {
@@ -2745,7 +3266,7 @@ export default Vue.extend({
             }
           }
         }
-        
+
         .option-select-group {
           position: relative;
           display: flex;
@@ -2757,7 +3278,7 @@ export default Vue.extend({
             padding: 0 8px;
             height: 40px;
             margin-right: 18px;
-            
+
             @media @max-sl-mobile {
               height: 32px;
               padding: 0 4px;
@@ -2778,10 +3299,10 @@ export default Vue.extend({
                 }
               }
             }
-            
+
             &.option-sort {
               @media @max-md-tablet {
-                display: none;
+                display: none !important;
               }
             }
 
@@ -2898,29 +3419,16 @@ export default Vue.extend({
       }
 
       .farm-table {
-        .farm-table-mobile {
-          margin-top: 15px;
-          background: transparent;
-        }
-
         .farm-item {
           display: flex;
           background: rgba(23, 32, 88, 0.9);
           border-radius: 8px;
           padding: 18px;
-          margin-bottom: 8px;
+          margin-top: 8px;
           border: 3px solid transparent;
 
           &:hover {
             border-color: @color-blue500;
-          }
-
-          @media @max-lg-tablet {
-            display: block;
-            padding: 0;
-            background: @color-blue-dark !important;
-            border-radius: 0;
-            margin-top: 0;
           }
 
           &:first-child {
@@ -2930,7 +3438,7 @@ export default Vue.extend({
           .fl-container {
             padding: 0 !important;
           }
-          
+
           .state {
             .title {
               display: flex;
@@ -2941,47 +3449,9 @@ export default Vue.extend({
             }
 
             .value {
-              margin-top: 8px;
+              margin-top: 4px;
               word-break: break-all;
               text-align: right;
-            }
-
-            .farm-labels {
-              .label {
-                border-radius: 6px;
-                padding: 4px;
-                width: fit-content;
-                font-size: 10px;
-                line-height: 12px;
-
-                &.labelized {
-                  background: @color-labelized;
-                }
-
-                &.permissionless {
-                  background: @color-permissionless;
-                }
-
-                &.ended {
-                  border: 2px solid @color-ended;
-                  color: @color-ended;
-                }
-
-                &.dual {
-                  border: 2px solid @color-dual;
-                  color: @color-dual;
-                }
-
-                &.new {
-                  border: 2px solid @color-new;
-                  color: @color-new;
-                }
-
-                &.ended, &.dual, &.new {
-                  padding: 2px 6px;
-                  margin-top: 8px;
-                }
-              }
             }
 
             .btn-container {
@@ -2999,82 +3469,13 @@ export default Vue.extend({
 
                 .social-link {
                   color: #fff;
-                  
+
                   .social-icon {
                     width: 18px;
                     height: 18px;
                     margin-left: 8px;
                   }
                 }
-              }
-            }
-          }
-
-          .lp-icons {
-            .lp-farm {
-              display: flex;
-              align-items: center;
-
-              @media @max-lg-tablet {
-                justify-content: space-between;
-              }
-
-              .lp-icons-group {
-                background: @gradient-color-outline;
-                background-origin: border-box;
-                border-radius: 8px;
-                padding: 2px;
-                width: fit-content;
-
-                .icons {
-                  height: 100%;
-                  background-color: @color-blue800;
-                  border-radius: 8px;
-                  padding: 4px 6px;
-                  display: flex;
-                  align-items: center;
-
-                  img {
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 50%;
-                  }
-
-                  span {
-                    margin-left: 5px;
-                    margin-right: 5px;
-
-                    &:last-child {
-                      margin-right: 0;
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          .farm-mobile-section {
-            padding: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
-            &.btn-show-collapse {
-              text-align: center;
-              cursor: pointer;
-              border-bottom: none;
-
-              @media @max-lg-tablet {
-                padding: 5px;
-              }
-            }
-
-            &.btn-hide-collapse {
-              text-align: center;
-              cursor: pointer;
-              border-bottom: none;
-
-              .btn-hide-collapse-icon {
-                margin-top: 5px;
-                transform: rotate(180deg);
               }
             }
           }
@@ -3107,6 +3508,53 @@ export default Vue.extend({
             margin-top: unset;
           }
         }
+
+        .farm-table-collapse {
+          .farm-item-mobile {
+            margin-bottom: 8px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            .state {
+              .title {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: rgba(255, 255, 255, 0.6);
+              }
+
+              .value {
+                margin-top: 4px;
+                word-break: break-all;
+                text-align: center;
+              }
+            }
+
+            &.btn-show-collapse {
+              text-align: center;
+              cursor: pointer;
+              border-bottom: none;
+
+              @media @max-lg-tablet {
+                padding: 5px;
+              }
+            }
+
+            &.btn-hide-collapse {
+              text-align: center;
+              cursor: pointer;
+              border-bottom: none;
+
+              .btn-hide-collapse-icon {
+                margin-top: 5px;
+                transform: rotate(180deg);
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -3120,50 +3568,59 @@ export default Vue.extend({
   }
 }
 
-// ant design customization
-.ant-collapse {
-  border: none;
-
-  .ant-collapse-item {
-    border: none !important;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    overflow: hidden;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .ant-collapse-content {
-      border: none !important;
-    }
-  }
-
-  .ant-collapse-item-disabled > .ant-collapse-header {
-    color: unset;
-  }
-}
-
-.ant-tooltip-arrow {
-  display: none;
-}
-
-.ant-alert-warning {
-  width: 500px;
-  margin-top: 30px;
-  background-color: transparent;
-  border: 1px solid #85858d;
-
-  .anticon-close {
-    color: #fff;
-  }
-}
-
-.ant-switch {
-  margin: 0 8px;
-}
-
 .farm {
+  // ant design customization
+  .ant-collapse {
+    border: none;
+    background: transparent;
+
+    .ant-collapse-item {
+      background: rgba(23, 32, 88, 0.9);
+      border-radius: 8px;
+      overflow: hidden;
+      padding: 8px;
+      border-bottom: none;
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .ant-collapse-header {
+        .ant-collapse-arrow {
+          display: none;
+        }
+      }
+
+      .ant-collapse-content {
+        border: none !important;
+      }
+    }
+
+    .ant-collapse-item-disabled > .ant-collapse-header {
+      color: unset;
+    }
+  }
+
+  .ant-tooltip-arrow {
+    display: none;
+  }
+
+  .ant-alert-warning {
+    width: 500px;
+    margin-top: 30px;
+    background-color: transparent;
+    border: 1px solid #85858d;
+
+    .anticon-close {
+      color: #fff;
+    }
+  }
+
+  .ant-switch {
+    margin: 0 8px;
+  }
+
   .farm-table {
     .ant-collapse {
       .ant-collapse-item {
@@ -3181,3 +3638,4 @@ export default Vue.extend({
   }
 }
 </style>
+"
