@@ -31,7 +31,7 @@
       :loading="unstaking"
       @onOk="unstakeAndRemove"
       @onCancel="cancelUnstake"
-      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.<br />
+      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity. <br /><br />
       If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
     />
 
@@ -50,7 +50,7 @@
       :coin="lp"
       :farmInfo="farmInfo"
       :loading="staking"
-      text="<div style='text-align:center'>You now need to <b>stake your LP tokens</b> to start farming</div>"
+      text="You now need to <b>stake your LP tokens</b> to start farming"
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
@@ -977,7 +977,9 @@
                       </div>
                     </Col>
                     <Col class="state" span="10">
-                      <div class="title textS weightS letterL fr-container">Value Deposited</div>
+                      <div class="title textS weightS letterL fr-container">
+                        Value Deposited
+                      </div>
                       <div
                         v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
                         class="value textM weightS letterS text-right"
@@ -996,10 +998,7 @@
                     </Col>
                   </Col>
 
-                  <Col
-                    class="farm-collapse-item fs-container"
-                    span="24"
-                  >
+                  <Col class="farm-collapse-item fs-container" span="24">
                     <div class="fc-container">
                       <a
                         class="social-link fc-container textM weightS icon-cursor"
@@ -1111,7 +1110,7 @@
                           }}
                         </Button>
 
-                        <Button 
+                        <Button
                           v-else
                           class="btn-transparent textS weightB"
                           @click="$accessor.wallet.openModal"
@@ -1160,7 +1159,10 @@
                   </Col>
                 </Row>
                 <div class="btn-hide-collapse" @click="hideCollapse">
-                  <img class="btn-hide-collapse-icon" src="@/assets/icons/arrow-down-blue.svg" />
+                  <img
+                    class="btn-hide-collapse-icon"
+                    src="@/assets/icons/arrow-down-blue.svg"
+                  />
                 </div>
               </CollapsePanel>
             </Collapse>
@@ -1351,7 +1353,9 @@
                       </div>
                     </Col>
                     <Col class="state" span="10">
-                      <div class="title textS weightS letterL fr-container">Value Deposited</div>
+                      <div class="title textS weightS letterL fr-container">
+                        Value Deposited
+                      </div>
                       <div
                         v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
                         class="value textM weightS letterS text-right"
@@ -1370,17 +1374,13 @@
                     </Col>
                   </Col>
 
-                  <Col
-                    class="farm-collapse-item fc-container"
-                    span="24"
-                  >
+                  <Col class="farm-collapse-item fc-container" span="24">
                     <div class="btn-container">
                       <Button
                         v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
                         class="btn-primary textS weightB"
                         :disabled="
-                          !wallet.connected ||
-                          farm.userInfo.depositBalance.isNullOrZero()
+                          !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
                         "
                         @click.stop="
                           openUnstakeModal(
@@ -1415,8 +1415,7 @@
                       <Button
                         class="btn-primary textS weightB"
                         :disabled="
-                          !wallet.connected ||
-                          farm.userInfo.depositBalance.isNullOrZero()
+                          !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
                         "
                         @click.stop="
                           openUnstakeModal(
@@ -1447,11 +1446,7 @@
                           farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
                         "
                         @click="
-                          openStakeModal(
-                            farm.labelized,
-                            farm.farmInfo,
-                            farm.farmInfo.lp
-                          )
+                          openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)
                         "
                       >
                         {{
@@ -1465,7 +1460,7 @@
                         }}
                       </Button>
 
-                      <Button 
+                      <Button
                         v-else
                         class="btn-transparent textS weightB"
                         @click="$accessor.wallet.openModal"
@@ -1512,10 +1507,7 @@
                     </div>
                   </Col>
 
-                  <Col
-                    class="farm-collapse-item fc-container"
-                    span="24"
-                  >
+                  <Col class="farm-collapse-item fc-container" span="24">
                     <a
                       class="social-link fc-container textM weightS icon-cursor"
                       :href="farm.farmInfo.twitterShare"
@@ -1535,7 +1527,10 @@
                   </Col>
                 </Row>
                 <div class="btn-hide-collapse" @click="hideCollapse">
-                  <img class="btn-hide-collapse-icon" src="@/assets/icons/arrow-down-blue.svg" />
+                  <img
+                    class="btn-hide-collapse-icon"
+                    src="@/assets/icons/arrow-down-blue.svg"
+                  />
                 </div>
               </CollapsePanel>
             </Collapse>
@@ -2002,7 +1997,7 @@ export default Vue.extend({
         let isPFO = false;
 
         // @ts-ignore
-        const { reward_per_share_net, last_timestamp, end_timestamp, reward_per_timestamp_or_remained_reward_amount } = farmInfo.poolInfo
+        const {reward_per_share_net,last_timestamp,end_timestamp,reward_per_timestamp_or_remained_reward_amount} = farmInfo.poolInfo
 
         // @ts-ignore
         const { reward, lp } = farmInfo;
@@ -3396,11 +3391,11 @@ export default Vue.extend({
     &:hover {
       background: rgba(23, 32, 88, 0.9);
     }
-    
+
     &:disabled {
       color: rgba(255, 255, 255, 0.4);
     }
-    
+
     @media @max-lg-tablet {
       background: @color-blue800;
 
@@ -3963,7 +3958,8 @@ export default Vue.extend({
             }
           }
 
-          .farm-collapse-mobile, .farm-collapse-tablet {
+          .farm-collapse-mobile,
+          .farm-collapse-tablet {
             .farm-collapse-item {
               margin-bottom: 8px;
 
@@ -3985,7 +3981,7 @@ export default Vue.extend({
                   word-break: break-all;
                   text-align: center;
                 }
-                
+
                 .farm-infos {
                   .farm-info-group {
                     display: flex;

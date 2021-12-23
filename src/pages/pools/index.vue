@@ -14,14 +14,13 @@
       title="Remove Liquidity"
       :coin="lp"
       :loading="unstaking"
+      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.<br /><br />
+      If the pop up for the second operations does not appear, it may have popped up behind your browser. You an check this by minimizing your browser."
       @onOk="unstake"
       @onCancel="cancelUnstake"
     />
-    
-    <CreatePool
-      v-if="createPoolModalOpening"
-      @onCancel="cancelCreatePool"
-    />
+
+    <CreatePool v-if="createPoolModalOpening" @onCancel="cancelCreatePool" />
 
     <div class="card">
       <div class="card-body">
@@ -75,7 +74,14 @@
                   <img src="@/assets/icons/reload.svg" />
                 </div>
 
-                <a class="create-btn icon-cursor" @click="() => { this.createPoolModalOpening = true }">
+                <a
+                  class="create-btn icon-cursor"
+                  @click="
+                    () => {
+                      this.createPoolModalOpening = true;
+                    }
+                  "
+                >
                   <div class="create-plus-btn textS weightS">+ Create pool</div>
                 </a>
               </div>
@@ -115,7 +121,11 @@
                   :class="searchCertifiedFarm === 'deposit' ? 'active-tab' : ''"
                   @click="activeSearch('deposit')"
                 >
-                  <img v-if="searchCertifiedFarm === 'deposit'" class="deposit-icon" src="@/assets/icons/deposit-green.svg" />
+                  <img
+                    v-if="searchCertifiedFarm === 'deposit'"
+                    class="deposit-icon"
+                    src="@/assets/icons/deposit-green.svg"
+                  />
                   <img v-else class="deposit-icon" src="@/assets/icons/deposit.svg" />
 
                   My Deposit
@@ -298,7 +308,10 @@
           <div v-if="poolLoaded">
             <!-- desktop version -->
             <div class="pools-table isDesktop">
-              <Row class="pools-table-header" :class="{ scrollFixed : scrollPosition > 200 }">
+              <Row
+                class="pools-table-header"
+                :class="{ scrollFixed: scrollPosition > 200 }"
+              >
                 <Col class="header-column textS weightB text-left" span="5"> Name </Col>
                 <Col class="header-column textS weightB" span="3">
                   <div class="header-column-title" @click="sortbyColumn('liquidity')">
@@ -1428,7 +1441,7 @@ export default class Pools extends Vue {
   }
 
   updateScroll() {
-    this.scrollPosition = window.scrollY
+    this.scrollPosition = window.scrollY;
   }
 
   mounted() {
@@ -1454,7 +1467,7 @@ export default class Pools extends Vue {
       }
     }, 1000);
     this.setTimer();
-    window.addEventListener('scroll', this.updateScroll);
+    window.addEventListener("scroll", this.updateScroll);
   }
 
   setTimer() {
@@ -1796,7 +1809,6 @@ export default class Pools extends Vue {
             width: 100%;
 
             .pools-table-header {
-
               &.scrollFixed {
                 position: fixed;
                 background: @color-blue800;

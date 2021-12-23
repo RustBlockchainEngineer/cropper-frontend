@@ -69,10 +69,7 @@
     </div>
     <div class="info-box">
       <img class="info-icon" src="@/assets/icons/info.svg" />
-      <label class="bodyXS weightB"
-        >You will have to validate 2 operations, Unstake LP & Unstake Liquidity.<br /><br />
-        If the pop up for the second operations does not appear, it may have popped up
-        behind your browser. You an check this by minimizing your browser.
+      <label class="bodyXS weightB" v-html="text">
       </label>
     </div>
 
