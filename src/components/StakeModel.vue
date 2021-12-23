@@ -1,200 +1,237 @@
 <template>
-  <Modal :title="title" :visible="true" :footer="null" :width="400" centered @cancel="$emit('onCancel')">
-    <div class="card">
-      <div class="card-body">
-        <CoinInput
-          v-model="fromCoinAmount"
-          label="Input"
-          :mint-address="farmInfo.lp.coin ? farmInfo.lp.coin.mintAddress : ''"
-          :coin-name="farmInfo.lp.coin ? farmInfo.lp.coin.symbol : ''"
-          :balance="farmInfo.lp.coin ? farmInfo.lp.coin.balance : null"
-          @onInput="(amount) => (fromCoinAmount = amount)"
-          @onFocus="
-            () => {
-              fixedCoin = farmInfo.lp.coin.mintAddress
-            }
-          "
-          @onMax="
-            () => {
-              fixedCoin = farmInfo.lp.coin.mintAddress
-              fromCoinAmount = farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : ''
-            }
-          "
-        />
+  <Modal
+    :title="title"
+    :visible="true"
+    :footer="null"
+    :width="400"
+    :closable="false"
+    :mask="true"
+    centered
+    @cancel="$emit('onCancel')"
+  >
+    <img
+      class="modal-close"
+      src="@/assets/icons/close-circle-icon.svg"
+      @click="$emit('onCancel')"
+    />
 
-        <div class="add-icon fc-container">
-          <div class="fc-container">
-            <Icon type="plus" />
+    <div>
+      <CoinInput
+        v-model="fromCoinAmount"
+        label="Input"
+        :mint-address="farmInfo.lp.coin ? farmInfo.lp.coin.mintAddress : ''"
+        :coin-name="farmInfo.lp.coin ? farmInfo.lp.coin.symbol : ''"
+        :balance="farmInfo.lp.coin ? farmInfo.lp.coin.balance : null"
+        @onInput="(amount) => (fromCoinAmount = amount)"
+        @onFocus="
+          () => {
+            fixedCoin = farmInfo.lp.coin.mintAddress;
+          }
+        "
+        @onMax="
+          () => {
+            fixedCoin = farmInfo.lp.coin.mintAddress;
+            fromCoinAmount = farmInfo.lp.coin.balance
+              ? farmInfo.lp.coin.balance.fixed()
+              : '';
+          }
+        "
+      />
+
+      <div class="plus-icon-container text-center">
+        <img
+          src="@/assets/icons/plus.svg"
+          class="plus-icon icon-centered"
+        />
+      </div>
+
+      <CoinInput
+        v-model="toCoinAmount"
+        label="Input"
+        :mint-address="farmInfo.lp.pc ? farmInfo.lp.pc.mintAddress : ''"
+        :coin-name="farmInfo.lp.pc ? farmInfo.lp.pc.symbol : ''"
+        :balance="farmInfo.lp.pc ? farmInfo.lp.pc.balance : null"
+        @onInput="(amount) => (toCoinAmount = amount)"
+        @onFocus="
+          () => {
+            fixedCoin = farmInfo.lp.pc.mintAddress;
+          }
+        "
+        @onMax="
+          () => {
+            fixedCoin = farmInfo.lp.pc.mintAddress;
+            toCoinAmount = farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '';
+          }
+        "
+      />
+
+      <LiquidityPoolInfo
+        :initialized="liquidity.initialized"
+        :pool-info="liquidity.infos[farmInfo.lp.mintAddress]"
+      />
+
+      <div v-if="officialPool === false">
+        <div>
+          <div>AMM ID:</div>
+          <div>
+            {{ farmInfo.poolId.substr(0, 14) }}
+            ...
+            {{ farmInfo.poolId.substr(farmInfo.poolId.length - 14, 14) }}
           </div>
         </div>
+      </div>
 
-        <CoinInput
-          v-model="toCoinAmount"
-          label="Input"
-          :mint-address="farmInfo.lp.pc ? farmInfo.lp.pc.mintAddress : ''"
-          :coin-name="farmInfo.lp.pc ? farmInfo.lp.pc.symbol : ''"
-          :balance="farmInfo.lp.pc ? farmInfo.lp.pc.balance : null"
-          @onInput="(amount) => (toCoinAmount = amount)"
-          @onFocus="
-            () => {
-              fixedCoin = farmInfo.lp.pc.mintAddress
-            }
+      <div class="info-guide">
+        <img src="@/assets/icons/info.svg" />
+        <label class="textS weightB">You will have to validate a second transaction to stake your LP in the farm.</label>
+      </div>
+
+      <div v-if="!labelizedPermission" class="info-guide">
+        <img src="@/assets/icons/info.svg" />
+        <label class="textS weightB">Cropper has not ran any due dilligence on permissionless farms. Use it at your own risks.</label>
+      </div>
+
+      <div class="btn-container">
+        <Button
+          class="textL weightB"
+          :disabled="
+            !farmInfo.lp.coin ||
+            !fromCoinAmount ||
+            !farmInfo.lp.pc ||
+            !farmInfo.lp.mintAddress ||
+            !liquidity.initialized ||
+            liquidity.loading ||
+            gt(
+              fromCoinAmount,
+              farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0'
+            ) ||
+            gt(
+              toCoinAmount,
+              farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '0'
+            ) ||
+            suppling
           "
-          @onMax="
-            () => {
-              fixedCoin = farmInfo.lp.pc.mintAddress
-              toCoinAmount = farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : ''
-            }
-          "
-        />
-
-        <LiquidityPoolInfo :initialized="liquidity.initialized" :pool-info="liquidity.infos[farmInfo.lp.mintAddress]" />
-        <div v-if="officialPool === false">
-          <div style="margin: 10px">
-            <div>AMM ID:</div>
-            <div>
-              {{ farmInfo.poolId.substr(0, 14) }}
-              ...
-              {{ farmInfo.poolId.substr(farmInfo.poolId.length - 14, 14) }}
-            </div>
-          </div>
-        </div>
-
-        <div class="info-guide">
-          <img src="@/assets/icons/info-icon.svg" />
-          <em>
-            You will have to <b>validate a second transaction</b> to stake your LP in the farm.
-          </em>
-        </div>
-
-        <div v-if="!labelizedPermission" class="info-guide">
-          <img src="@/assets/icons/info-icon.svg" />
-          <em>
-            Cropper has not ran any due dilligence on permissionless farms. <b>Use it at your own risks.</b>
-          </em>
-        </div>
-
-        <div class="stdGradientButton">
-          <Button
-            size="large"
-            ghost
-            :disabled="
-              !farmInfo.lp.coin ||
-              !fromCoinAmount ||
-              !farmInfo.lp.pc ||
-              !farmInfo.lp.mintAddress ||
-              !liquidity.initialized ||
-              liquidity.loading ||
-              gt(fromCoinAmount, farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0') ||
-              gt(toCoinAmount, farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '0') ||
-              suppling
+          :loading="suppling"
+          @click="$emit('onOk', fromCoinAmount, toCoinAmount, fixedCoin)"
+        >
+          <template v-if="!farmInfo.lp.coin || !farmInfo.lp.pc">
+            Select a token
+          </template>
+          <template v-else-if="!farmInfo.lp.mintAddress || !liquidity.initialized">
+            Invalid pair
+          </template>
+          <template v-else-if="!fromCoinAmount"> Enter an amount </template>
+          <template v-else-if="liquidity.loading"> Updating pool information </template>
+          <template
+            v-else-if="
+              gt(
+                fromCoinAmount,
+                farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0'
+              )
             "
-            :loading="suppling"
-             @click="$emit('onOk',fromCoinAmount,toCoinAmount,fixedCoin);"
           >
-            <template v-if="!farmInfo.lp.coin || !farmInfo.lp.pc"> Select a token </template>
-            <template v-else-if="!farmInfo.lp.mintAddress || !liquidity.initialized"> Invalid pair </template>
-            <template v-else-if="!fromCoinAmount"> Enter an amount </template>
-            <template v-else-if="liquidity.loading"> Updating pool information </template>
-            <template v-else-if="gt(fromCoinAmount, farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0')">
-              Insufficient {{ farmInfo.lp.coin.symbol }} balance
-            </template>
-            <template v-else-if="gt(toCoinAmount, farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '')">
-              Insufficient {{ farmInfo.lp.pc.symbol }} balance
-            </template>
-            <template v-else>Supply & Stake</template>
-          </Button>
-        </div>
+            Insufficient {{ farmInfo.lp.coin.symbol }} balance
+          </template>
+          <template
+            v-else-if="
+              gt(
+                toCoinAmount,
+                farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : ''
+              )
+            "
+          >
+            Insufficient {{ farmInfo.lp.pc.symbol }} balance
+          </template>
+          <template v-else>Supply & Stake</template>
+        </Button>
       </div>
     </div>
   </Modal>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Modal,  Button,Icon } from 'ant-design-vue'
-import { mapState } from 'vuex'
-import { inputRegex, escapeRegExp } from '@/utils/regex'
-import { getOutAmount } from '@/utils/liquidity'
-import { gt } from '@/utils/safe-math'
+import Vue from "vue";
+import { Modal, Button } from "ant-design-vue";
+import { mapState } from "vuex";
+import { inputRegex, escapeRegExp } from "@/utils/regex";
+import { getOutAmount } from "@/utils/liquidity";
+import { gt } from "@/utils/safe-math";
 
 // fix: Failed to resolve directive: ant-portal
-Vue.use(Modal)
+Vue.use(Modal);
 
 export default Vue.extend({
   components: {
-    Icon,
     Modal,
-    Button
+    Button,
   },
   props: {
     title: {
       type: String,
-      default: ''
+      default: "",
     },
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    farmInfo:{
+    farmInfo: {
       type: Object,
-      required: true
+      required: true,
     },
     labelizedPermission: {
       type: Boolean,
-      default: false
+      default: false,
     },
     text: {
       type: String,
-      default: ''
+      default: "",
     },
     suppling: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-        fromCoinAmount: '',
-        toCoinAmount: '',
-        fixedCoin: '',
-        officialPool: true,
-        userCheckUnofficial: false,
-        userCheckUnofficialMint: undefined as string | undefined,
-        userCheckUnofficialShow: false,
-    }
+      fromCoinAmount: "",
+      toCoinAmount: "",
+      fixedCoin: "",
+      officialPool: true,
+      userCheckUnofficial: false,
+      userCheckUnofficialMint: undefined as string | undefined,
+      userCheckUnofficialShow: false,
+    };
   },
-    computed: {
-        ...mapState([ 'liquidity','setting'])
-    },
-    watch: {
-        fromCoinAmount(newAmount: string, oldAmount: string) {
-            this.$nextTick(() => {
-                if (!inputRegex.test(escapeRegExp(newAmount))) {
-                this.fromCoinAmount = oldAmount
-                } else {
-                this.updateAmounts()
-                }
-            })
-        },
-
-        toCoinAmount(newAmount: string, oldAmount: string) {
-            this.$nextTick(() => {
-                if (!inputRegex.test(escapeRegExp(newAmount))) {
-                this.toCoinAmount = oldAmount
-                } else {
-                this.updateAmounts()
-                }
-            })
-        },
+  computed: {
+    ...mapState(["liquidity", "setting"]),
+  },
+  watch: {
+    fromCoinAmount(newAmount: string, oldAmount: string) {
+      this.$nextTick(() => {
+        if (!inputRegex.test(escapeRegExp(newAmount))) {
+          this.fromCoinAmount = oldAmount;
+        } else {
+          this.updateAmounts();
+        }
+      });
     },
 
+    toCoinAmount(newAmount: string, oldAmount: string) {
+      this.$nextTick(() => {
+        if (!inputRegex.test(escapeRegExp(newAmount))) {
+          this.toCoinAmount = oldAmount;
+        } else {
+          this.updateAmounts();
+        }
+      });
+    },
+  },
 
   methods: {
     gt,
     updateAmounts() {
       if (this.farmInfo.lp.coin && this.farmInfo.lp.pc && this.farmInfo.lp.mintAddress) {
-        const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress]
+        const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress];
 
         if (this.fixedCoin === this.farmInfo.lp.coin.mintAddress) {
           const amount = getOutAmount(
@@ -203,15 +240,15 @@ export default Vue.extend({
             this.farmInfo.lp.coin.mintAddress,
             this.farmInfo.lp.pc.mintAddress,
             this.setting.slippage
-          )
+          );
 
           if (amount.isNaN() || !amount.isFinite()) {
-            this.toCoinAmount = ''
+            this.toCoinAmount = "";
           } else {
-            this.toCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals)
+            this.toCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals);
           }
         } else {
-          const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress]
+          const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress];
 
           const amount = getOutAmount(
             poolInfo,
@@ -219,36 +256,51 @@ export default Vue.extend({
             this.farmInfo.lp.pc.mintAddress,
             this.farmInfo.lp.coin.mintAddress,
             this.setting.slippage
-          )
+          );
 
           if (amount.isNaN() || !amount.isFinite()) {
-            this.fromCoinAmount = ''
+            this.fromCoinAmount = "";
           } else {
-            this.fromCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals)
+            this.fromCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals);
           }
         }
       }
     },
-  }
-})
+  },
+});
 </script>
 
 <style lang="less" scoped>
-.info-guide {
-  font-size: 15px;
-  line-height: 18px;
-  display: flex;
-  align-items: flex-start;
-  margin: 10px 0;
-  
-  em b {
-    font-size: 15px;
-    line-height: 18px;
-  }
+.plus-icon-container {
+  margin: 8px 0;
+}
 
-  img {
-    margin-right: 10px;
+.btn-container {
+  button {
+    background: @gradient-btn-primary !important;
+    background-origin: border-box !important;
+    border: none;
+    position: relative;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 38px;
+    width: 100%;
+    height: 50px;
   }
 }
 
+.info-guide {
+  display: flex;
+  align-items: baseline;
+  margin: 8px 0 18px 0;
+
+  label {
+    color: @color-blue100;
+  }
+
+  img {
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+  }
+}
 </style>
