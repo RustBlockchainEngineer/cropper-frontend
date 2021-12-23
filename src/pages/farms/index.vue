@@ -1,4 +1,3 @@
-"
 <template>
   <div class="farm container">
     <CreateFarmProgram
@@ -259,12 +258,12 @@
               >
             </div>
 
-            <!-- option sort > 768px -->
+            <!-- option collapse > 768px -->
             <div
               class="option-select option-sort fc-container icon-cursor"
               @click="
                 () => {
-                  this.showSortMenu = !this.showSortMenu;
+                  this.showOptionMenu = !this.showOptionMenu;
                 }
               "
             >
@@ -276,48 +275,63 @@
                   }})
                   <img
                     class="arrow-icon"
-                    :class="showSortMenu ? 'arrow-up' : 'arrow-down'"
+                    :class="showOptionMenu ? 'arrow-up' : 'arrow-down'"
                     src="@/assets/icons/arrow-down-white.svg"
                   />
                 </span>
               </span>
             </div>
 
-            <!-- option sort < 768px -->
+            <!-- option collapse < 768px -->
             <img
-              class="option-sort-collapse icon-cursor"
+              class="option-collapse icon-cursor"
               src="@/assets/icons/menu-collapse.svg"
               @click="
                 () => {
-                  this.showSortMenu = !this.showSortMenu;
+                  this.showOptionMenu = !this.showOptionMenu;
                 }
               "
             />
 
-            <div v-if="showSortMenu" class="option-collapse-menu collapse-right">
+            <div v-if="showOptionMenu" class="option-collapse-menu collapse-right">
+              <div class="option-collapse-item option-toggle fc-container">
+                <label
+                  class="toggle-label icon-cursor textS weightB"
+                  :class="!searchLifeFarm ? 'active-label' : ''"
+                  @click="activeSearch('open')"
+                  >Open</label
+                >
+                <Toggle v-model="searchLifeFarm" />
+                <label
+                  class="toggle-label icon-cursor textS weightB"
+                  :class="searchLifeFarm ? 'active-label' : ''"
+                  @click="activeSearch('ended')"
+                  >Ended</label
+                >
+              </div>
               <div
-                class="option-collapse-item text-center textM weightS icon-cursor"
+                class="option-collapse-item text-center texts weightB icon-cursor"
                 :class="sortMethod === 'liquidity' && !sortAsc ? 'active-item' : ''"
                 @click="setSortOption('liquidity', false)"
               >
                 Liquidity A -> Z
               </div>
               <div
-                class="option-collapse-item text-center textM weightS icon-cursor"
+                class="option-collapse-item text-center texts weightB icon-cursor"
                 :class="sortMethod === 'liquidity' && sortAsc ? 'active-item' : ''"
                 @click="setSortOption('liquidity', true)"
               >
                 Liquidity Z -> A
               </div>
               <div
-                class="option-collapse-item text-center textM weightS icon-cursor"
+                class="option-collapse-item text-center texts weightB icon-cursor"
                 :class="sortMethod === 'apr' && !sortAsc ? 'active-item' : ''"
                 @click="setSortOption('apr', false)"
               >
                 APR % A -> Z
               </div>
               <div
-                class="option-collapse-item text-center textM weightS icon-cursor"
+                class="option-collapse-item text-center texts weightB icon-cursor"
                 :class="sortMethod === 'apr' && sortAsc ? 'active-item' : ''"
                 @click="setSortOption('apr', true)"
               >
@@ -782,8 +796,8 @@
                 v-show="true"
                 :key="farm.farmInfo.poolId"
               >
-                <Row slot="header" class="farm-table-head">
-                  <Col class="farm-item-mobile" span="24">
+                <Row slot="header" class="farm-table-collapse-head">
+                  <Col class="farm-item-collapse" span="24">
                     <div class="lp-icons">
                       <div class="lp-icons-group">
                         <div class="icons">
@@ -824,7 +838,7 @@
                     </div>
                   </Col>
 
-                  <Col class="farm-item-mobile" span="24">
+                  <Col class="farm-item-collapse" span="24">
                     <Col class="state text-center" span="8">
                       <div class="title textS weightS letterL">Total Deposited</div>
                       <div
@@ -911,36 +925,18 @@
 
                   <Col
                     v-if="farm.farmInfo.poolId != showCollapse"
-                    class="farm-item-mobile btn-show-collapse"
+                    class="farm-item-collapse btn-show-collapse"
                     span="24"
                   >
                     <img src="@/assets/icons/collapse-arrow-mobile.svg" />
                   </Col>
                 </Row>
 
-                <Row>
-                  <Col class="farm-item-mobile" span="24">
-                    <Col class="state" span="6">
-                      <div class="title">Staked</div>
-                      <div
-                        v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
-                        class="value"
-                      >
-                        -
-                      </div>
-                      <div v-else class="value">
-                        {{
-                          !wallet.connected
-                            ? 0
-                            : farm.userInfo.depositBalanceUSD
-                            ? "$ " + farm.userInfo.depositBalanceUSD
-                            : farm.userInfo.depositBalance.format()
-                        }}
-                      </div>
-                    </Col>
-                    <Col class="state" span="18">
+                <Row class="farm-table-collapse-content">
+                  <Col class="farm-item-collapse" span="24">
+                    <Col class="state" span="14">
                       <div class="farm-infos">
-                        <div class="farm-info-group">
+                        <div class="farm-info-group bodyXS">
                           <div class="farm-info-img">
                             <img src="@/assets/icons/time-icon.svg" />
                           </div>
@@ -959,7 +955,7 @@
                         </div>
 
                         <div>
-                          <div class="farm-info-group">
+                          <div class="farm-info-group bodyXS">
                             <div class="farm-info-img">
                               <img src="@/assets/icons/reward-icon.svg" />
                             </div>
@@ -977,165 +973,193 @@
                         </div>
                       </div>
                     </Col>
+                    <Col class="state" span="10">
+                      <div class="title textS weightS letterL fr-container">Value Deposited</div>
+                      <div
+                        v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
+                        class="value textM weightS letterS text-right"
+                      >
+                        -
+                      </div>
+                      <div v-else class="value textM weightS letterS text-right">
+                        {{
+                          !wallet.connected
+                            ? 0
+                            : farm.userInfo.depositBalanceUSD
+                            ? "$ " + farm.userInfo.depositBalanceUSD
+                            : farm.userInfo.depositBalance.format()
+                        }}
+                      </div>
+                    </Col>
                   </Col>
 
                   <Col
-                    class="farm-item-mobile btn-hide-collapse"
+                    class="farm-item-collapse fc-container"
                     span="24"
-                    @click="hideCollapse"
                   >
-                    <Col class="state" span="12">
-                      <div
-                        class="btn-container btn-container-outline"
-                        v-if="
-                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                          farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
-                          farm.farmInfo.currentLPtokens > 0.001
-                        "
-                      >
-                        <Button
-                          size="large"
-                          ghost
-                          :disabled="
-                            !farm.farmInfo.poolInfo.is_allowed ||
-                            farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                            farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                          "
-                          @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
-                        >
-                          {{
-                            !farm.farmInfo.poolInfo.is_allowed
-                              ? "Not Allowed"
-                              : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                              ? "Ended"
-                              : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                              ? "Unstarted"
-                              : "Deposit LP"
-                          }}
-                        </Button>
-                      </div>
-
-                      <div
-                        class="btn-container btn-container-outline"
+                    <div class="btn-container">
+                      <Button
                         v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                      ></div>
-
-                      <div
-                        class="btn-container btn-container-outline"
-                        v-if="farm.farmInfo.poolInfo.end_timestamp > currentTimestamp"
-                      >
-                        <Button
-                          size="large"
-                          ghost
-                          :disabled="
-                            !wallet.connected ||
-                            farm.userInfo.depositBalance.isNullOrZero()
-                          "
-                          @click.stop="
-                            openUnstakeModal(
-                              farm.farmInfo,
-                              farm.farmInfo.lp,
-                              farm.userInfo.depositBalance
-                            )
-                          "
-                        >
-                          Withdraw
-                        </Button>
-                      </div>
-                    </Col>
-
-                    <Col class="state" span="12">
-                      <div
-                        class="btn-container btn-container-fill"
-                        v-if="
-                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                          farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
+                        class="btn-primary textS weightB"
+                        :disabled="
+                          !wallet.connected ||
+                          farm.userInfo.depositBalance.isNullOrZero()
+                        "
+                        @click.stop="
+                          openUnstakeModal(
+                            farm.farmInfo,
+                            farm.farmInfo.lp,
+                            farm.userInfo.depositBalance
+                          )
                         "
                       >
-                        <Button
-                          size="large"
-                          v-if="wallet.connected"
-                          :disabled="
-                            !wallet.connected ||
-                            !farm.farmInfo.poolInfo.is_allowed ||
-                            farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                            farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                          "
-                          @click="
-                            openStakeModal(
-                              farm.labelized,
-                              farm.farmInfo,
-                              farm.farmInfo.lp
-                            )
-                          "
-                        >
-                          {{
-                            !farm.farmInfo.poolInfo.is_allowed
-                              ? "Not Allowed"
-                              : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                              ? "Ended"
-                              : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                              ? "Unstarted"
-                              : "Deposit"
-                          }}
-                        </Button>
+                        Harvest
+                      </Button>
 
-                        <Button size="large" v-else @click="$accessor.wallet.openModal">
-                          {{
-                            !farm.farmInfo.poolInfo.is_allowed
-                              ? "Not Allowed"
-                              : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                              ? "Ended"
-                              : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                              ? "Unstarted"
-                              : "Deposit"
-                          }}
-                        </Button>
-                      </div>
+                      <Button
+                        v-else
+                        class="btn-primary textS weightB"
+                        :disabled="
+                          !wallet.connected ||
+                          harvesting[idx] ||
+                          farm.userInfo.pendingReward.isNullOrZero()
+                        "
+                        :loading="harvesting[idx]"
+                        @click="harvest(farm.farmInfo, idx)"
+                      >
+                        Harvest
+                      </Button>
+                    </div>
 
-                      <div class="btn-container btn-container-harvest">
-                        <Button
-                          v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                          :disabled="
-                            !wallet.connected ||
-                            farm.userInfo.depositBalance.isNullOrZero()
-                          "
-                          size="large"
-                          ghost
-                          @click.stop="
-                            openUnstakeModal(
-                              farm.farmInfo,
-                              farm.farmInfo.lp,
-                              farm.userInfo.depositBalance
-                            )
-                          "
-                        >
-                          Harvest & Withdraw
-                        </Button>
+                    <div
+                      class="btn-container"
+                      v-if="farm.farmInfo.poolInfo.end_timestamp > currentTimestamp"
+                    >
+                      <Button
+                        class="btn-primary textS weightB"
+                        :disabled="
+                          !wallet.connected ||
+                          farm.userInfo.depositBalance.isNullOrZero()
+                        "
+                        @click.stop="
+                          openUnstakeModal(
+                            farm.farmInfo,
+                            farm.farmInfo.lp,
+                            farm.userInfo.depositBalance
+                          )
+                        "
+                      >
+                        Withdraw
+                      </Button>
+                    </div>
 
-                        <Button
-                          v-else
-                          size="large"
-                          ghost
-                          :disabled="
-                            !wallet.connected ||
-                            harvesting[idx] ||
-                            farm.userInfo.pendingReward.isNullOrZero()
-                          "
-                          :loading="harvesting[idx]"
-                          @click="harvest(farm.farmInfo, idx)"
-                        >
-                          Harvest
-                        </Button>
-                      </div>
-                    </Col>
+                    <div
+                      class="btn-container"
+                      v-if="
+                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                        farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
+                      "
+                    >
+                      <Button
+                        class="btn-transparent textS weightB"
+                        v-if="wallet.connected"
+                        :disabled="
+                          !wallet.connected ||
+                          !farm.farmInfo.poolInfo.is_allowed ||
+                          farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                        "
+                        @click="
+                          openStakeModal(
+                            farm.labelized,
+                            farm.farmInfo,
+                            farm.farmInfo.lp
+                          )
+                        "
+                      >
+                        {{
+                          !farm.farmInfo.poolInfo.is_allowed
+                            ? "Not Allowed"
+                            : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                            ? "Ended"
+                            : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                            ? "Unstarted"
+                            : "Deposit"
+                        }}
+                      </Button>
 
-                    <img
-                      class="btn-hide-collapse-icon"
-                      src="@/assets/icons/collapse-arrow-mobile.svg"
-                    />
+                      <Button 
+                        v-else
+                        class="btn-transparent textS weightB"
+                        @click="$accessor.wallet.openModal"
+                      >
+                        {{
+                          !farm.farmInfo.poolInfo.is_allowed
+                            ? "Not Allowed"
+                            : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                            ? "Ended"
+                            : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                            ? "Unstarted"
+                            : "Deposit"
+                        }}
+                      </Button>
+                    </div>
+
+                    <div
+                      class="btn-container"
+                      v-if="
+                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                        farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
+                        farm.farmInfo.currentLPtokens > 0.001
+                      "
+                    >
+                      <Button
+                        class="btn-transparent textS weightB"
+                        :disabled="
+                          !farm.farmInfo.poolInfo.is_allowed ||
+                          farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                          farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                        "
+                        @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
+                      >
+                        {{
+                          !farm.farmInfo.poolInfo.is_allowed
+                            ? "Not Allowed"
+                            : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                            ? "Ended"
+                            : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                            ? "Unstarted"
+                            : "Deposit LP"
+                        }}
+                      </Button>
+                    </div>
+                  </Col>
+
+                  <Col
+                    class="farm-item-collapse fc-container"
+                    span="24"
+                  >
+                    <a
+                      class="social-link fc-container textM weightS icon-cursor"
+                      :href="farm.farmInfo.twitterShare"
+                      target="_blank"
+                    >
+                      Share
+                      <img class="social-icon" src="@/assets/icons/share.svg" />
+                    </a>
+                    <a
+                      class="social-link fc-container textM weightS icon-cursor"
+                      :href="farm.farmInfo.twitterLink"
+                      target="_blank"
+                    >
+                      Twitter
+                      <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                    </a>
                   </Col>
                 </Row>
+                <div class="btn-hide-collapse" @click="hideCollapse">
+                  <img class="btn-hide-collapse-icon" src="@/assets/icons/collapse-arrow-mobile.svg" />
+                </div>
               </CollapsePanel>
             </Collapse>
           </div>
@@ -1222,8 +1246,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      isMobile: false,
-
       farmProgramCreated: true,
       superOwnerAddress: FARM_INITIAL_SUPER_OWNER,
 
@@ -1264,7 +1286,7 @@ export default Vue.extend({
       labelizedPermission: false as any,
       sortMethod: "liquidity" as string,
       sortAsc: true as boolean,
-      showSortMenu: false as boolean,
+      showOptionMenu: false as boolean,
       showMoreMenu: [] as boolean[],
       showSearchMenu: false as boolean,
       showTabMenu: false as boolean,
@@ -2899,7 +2921,7 @@ export default Vue.extend({
     setSortOption(mode: string, asc: boolean) {
       this.sortMethod = mode;
       this.sortAsc = asc;
-      this.showSortMenu = false;
+      this.showOptionMenu = false;
       this.updateFarms();
     },
     activeSearch(mode: string) {
@@ -2936,478 +2958,551 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-// global stylesheet
+.farm {
+  // global stylesheet
 
-.info-icon {
-  display: flex;
-  align-items: center;
-  width: 12px;
-  height: 12px;
-  margin-left: 5px;
-}
-
-.pagination-container {
-  text-align: center;
-  width: 100%;
-  margin-top: 30px;
-
-  .pagination-body {
-    width: 80%;
-    display: inline-block;
-  }
-}
-
-.btn-container {
-  background: @gradient-btn-primary;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 48px;
-  padding: 3px;
-  width: 95px;
-  height: auto;
-}
-
-.btn-transparent {
-  background: transparent;
-  padding: 4.5px 0;
-  border-radius: 48px;
-  border: none;
-  width: 100%;
-}
-
-.btn-primary {
-  background: rgba(23, 32, 88, 0.9);
-  padding: 4.5px 0;
-  border-radius: 48px;
-  border: none;
-  width: 100%;
-  color: #fff;
-
-  &:disabled {
-    background: rgba(23, 32, 88, 0.9);
-  }
-}
-
-.isMobile {
-  display: none;
-
-  @media @max-sl-mobile {
-    display: block;
-  }
-}
-
-.isDesktop {
-  @media @max-sl-mobile {
-    display: none !important;
-  }
-}
-
-.option-collapse-menu {
-  position: absolute;
-  top: 50px;
-  background: @gradient-color-primary;
-  background-origin: border-box;
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
-  min-width: 180px;
-  z-index: 999;
-
-  &.collapse-left {
-    left: 0;
+  .info-icon {
+    display: flex;
+    align-items: center;
+    width: 12px;
+    height: 12px;
+    margin-left: 5px;
   }
 
-  &.collapse-right {
-    right: 0;
+  .pagination-container {
+    text-align: center;
+    width: 100%;
+    margin-top: 30px;
+
+    .pagination-body {
+      width: 80%;
+      display: inline-block;
+    }
   }
 
-  .option-collapse-item {
-    padding: 16px 32px;
-    border-bottom: 1px solid #c4c4c420;
+  .btn-container {
+    background: @gradient-btn-primary;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 48px;
+    padding: 3px;
+    width: 95px;
+    height: auto;
+    margin-bottom: 8px;
+
+    @media @max-lg-tablet {
+      margin-bottom: 0;
+      margin-right: 8px;
+    }
 
     &:last-child {
-      border-bottom: 0;
-    }
-
-    &.active-item {
-      color: @color-petrol500;
+      margin-bottom: 0;
+      margin-right: 0;
     }
   }
-}
 
-.lp-icons {
-  display: flex;
-  align-items: center;
-
-  @media @max-lg-tablet {
-    justify-content: space-between;
+  .btn-transparent {
+    background: transparent;
+    padding: 4.5px 0;
+    border-radius: 48px;
+    border: none;
+    width: 100%;
   }
 
-  .lp-icons-group {
-    background: @gradient-color-outline;
+  .btn-primary {
+    background: rgba(23, 32, 88, 0.9);
+    padding: 4.5px 0;
+    border-radius: 48px;
+    border: none;
+    width: 100%;
+    color: #fff;
+
+    &:hover {
+      background: rgba(23, 32, 88, 0.9);
+    }
+    
+    &:disabled {
+      color: rgba(255, 255, 255, 0.4);
+    }
+    
+    @media @max-lg-tablet {
+      background: @color-blue800;
+
+      &:hover {
+        background: @color-blue800;
+      }
+    }
+  }
+
+  .isDesktop {
+    @media @max-lg-tablet {
+      display: none;
+    }
+  }
+
+  .isTablet {
+    display: none;
+
+    @media @max-lg-tablet {
+      display: unset;
+    }
+
+    @media @max-sl-mobile {
+      display: none;
+    }
+  }
+
+  .isMobile {
+    display: none;
+
+    @media @max-sl-mobile {
+      display: unset;
+    }
+  }
+
+  .option-collapse-menu {
+    position: absolute;
+    top: 50px;
+    background: @gradient-color-primary;
     background-origin: border-box;
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
-    padding: 2px;
-    width: fit-content;
+    min-width: 180px;
+    z-index: 999;
 
-    .icons {
-      height: 100%;
-      background-color: @color-blue800;
+    &.collapse-left {
+      left: 0;
+    }
+
+    &.collapse-right {
+      right: 0;
+    }
+
+    .option-collapse-item {
+      padding: 16px 32px;
+      border-bottom: 1px solid #c4c4c420;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &.active-item {
+        color: @color-petrol500;
+      }
+    }
+  }
+
+  .lp-icons {
+    display: flex;
+    align-items: center;
+
+    @media @max-lg-tablet {
+      justify-content: space-between;
+    }
+
+    .lp-icons-group {
+      background: @gradient-color-outline;
+      background-origin: border-box;
       border-radius: 8px;
-      padding: 4px 6px;
-      display: flex;
-      align-items: center;
+      padding: 2px;
+      width: fit-content;
 
-      img {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
+      .icons {
+        height: 100%;
+        background-color: @color-blue800;
+        border-radius: 8px;
+        padding: 4px 6px;
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+        }
+
+        span {
+          margin-left: 5px;
+          margin-right: 5px;
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .farm-labels {
+    .label {
+      border-radius: 6px;
+      padding: 4px;
+      width: fit-content;
+      font-size: 10px;
+      line-height: 12px;
+
+      &.labelized {
+        background: @color-labelized;
       }
 
-      span {
-        margin-left: 5px;
-        margin-right: 5px;
+      &.permissionless {
+        background: @color-permissionless;
+      }
 
-        &:last-child {
-          margin-right: 0;
-        }
+      &.ended {
+        border: 2px solid @color-ended;
+        color: @color-ended;
+      }
+
+      &.dual {
+        border: 2px solid @color-dual;
+        color: @color-dual;
+      }
+
+      &.new {
+        border: 2px solid @color-new;
+        color: @color-new;
+      }
+
+      &.ended,
+      &.dual,
+      &.new {
+        padding: 2px 6px;
+        margin-top: 8px;
       }
     }
   }
-}
 
-.farm-labels {
-  .label {
-    border-radius: 6px;
-    padding: 4px;
-    width: fit-content;
-    font-size: 10px;
-    line-height: 12px;
+  .option-toggle {
+    .toggle-label {
+      position: relative;
+      opacity: 0.5;
+      color: #fff;
 
-    &.labelized {
-      background: @color-labelized;
-    }
-
-    &.permissionless {
-      background: @color-permissionless;
-    }
-
-    &.ended {
-      border: 2px solid @color-ended;
-      color: @color-ended;
-    }
-
-    &.dual {
-      border: 2px solid @color-dual;
-      color: @color-dual;
-    }
-
-    &.new {
-      border: 2px solid @color-new;
-      color: @color-new;
-    }
-
-    &.ended,
-    &.dual,
-    &.new {
-      padding: 2px 6px;
-      margin-top: 8px;
+      &.active-label {
+        opacity: 1;
+      }
     }
   }
-}
-// class stylesheet
 
-.farm.container {
-  margin-top: 38px;
+  .btn-show-collapse {
+    text-align: center;
+    cursor: pointer;
+    border-bottom: none;
 
-  @media @max-sl-mobile {
-    margin-top: 28px;
+    @media @max-lg-tablet {
+      padding: 5px;
+    }
   }
 
-  .card {
-    .card-body {
-      padding: 0;
+  .btn-hide-collapse {
+    text-align: center;
+    cursor: pointer;
+    border-bottom: none;
 
-      .farm-head {
-        @media @max-sl-mobile {
-          display: block !important;
-        }
+    .btn-hide-collapse-icon {
+      transform: rotate(180deg);
+    }
+  }
 
-        .title {
-          text-align: center;
-          position: relative;
-          float: left;
+  .social-link {
+    color: #fff;
 
+    .social-icon {
+      width: 18px;
+      height: 18px;
+      margin-left: 8px;
+    }
+  }
+
+  // class stylesheet
+  &.container {
+    margin-top: 38px;
+
+    @media @max-sl-mobile {
+      margin-top: 28px;
+    }
+
+    .card {
+      .card-body {
+        padding: 0;
+
+        .farm-head {
           @media @max-sl-mobile {
-            margin-bottom: 18px !important;
-          }
-        }
-
-        .information {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          @media @max-sl-mobile {
-            width: 100%;
+            display: block !important;
           }
 
-          .tvl-info {
-            margin-right: 18px;
+          .title {
+            text-align: center;
+            position: relative;
+            float: left;
+
+            @media @max-sl-mobile {
+              margin-bottom: 18px !important;
+            }
           }
 
-          .action-btn-group {
+          .information {
             display: flex;
             align-items: center;
+            justify-content: space-between;
 
-            .reload-btn {
-              background: @color-blue600;
-              border-radius: 8px;
-              padding: 6px;
-              margin-right: 18px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              @media @max-lg-tablet {
-                margin-left: 5px;
-              }
-
-              img {
-                width: 18px;
-                height: 18px;
-              }
-
-              &.active img {
-                transform: rotate(360deg);
-                transition: all 1s ease-in-out;
-              }
+            @media @max-sl-mobile {
+              width: 100%;
             }
 
-            .create-btn {
-              top: 20px;
-              right: -90px;
+            .tvl-info {
+              margin-right: 18px;
+            }
 
-              .create-plus-btn {
+            .action-btn-group {
+              display: flex;
+              align-items: center;
+
+              .reload-btn {
                 background: @color-blue600;
                 border-radius: 8px;
                 padding: 6px;
+                margin-right: 18px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: white;
+
+                @media @max-lg-tablet {
+                  margin-left: 5px;
+                }
+
+                img {
+                  width: 18px;
+                  height: 18px;
+                }
+
+                &.active img {
+                  transform: rotate(360deg);
+                  transition: all 1s ease-in-out;
+                }
+              }
+
+              .create-btn {
+                top: 20px;
+                right: -90px;
+
+                .create-plus-btn {
+                  background: @color-blue600;
+                  border-radius: 8px;
+                  padding: 6px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: white;
+                }
               }
             }
           }
         }
-      }
 
-      .farm-option-bar {
-        margin: 38px 0;
-
-        @media @max-sl-mobile {
-          margin: 28px 0;
-        }
-
-        .option-tab-group {
-          display: flex;
+        .farm-option-bar {
+          margin: 38px 0;
 
           @media @max-sl-mobile {
-            display: none;
+            margin: 28px 0;
           }
 
-          &.option-tab-collapse {
-            display: none;
+          .option-tab-group {
+            display: flex;
 
             @media @max-sl-mobile {
-              position: relative;
-              display: flex;
-              align-items: center;
-              padding: 6px 10px;
-              border: 2px solid @color-blue500;
-              border-radius: 8px;
-
-              label {
-                color: @color-petrol500;
-              }
-
-              .arrow-icon {
-                margin-left: 4px;
-              }
-            }
-          }
-
-          .option-tab {
-            margin-right: 48px;
-
-            &:last-child {
-              margin-right: 0;
+              display: none;
             }
 
-            button {
-              background: transparent;
-              border: none;
-              outline: none;
-              padding: 0;
-              margin-bottom: 8px;
+            &.option-tab-collapse {
+              display: none;
 
-              &.active-tab {
-                color: @color-petrol500;
-              }
-
-              .deposit-icon {
-                margin-right: 8px;
-              }
-            }
-
-            .active-underline {
-              height: 4px;
-              border-radius: 10px;
-              background: @color-petrol400;
-            }
-          }
-        }
-
-        .option-select-group {
-          position: relative;
-          display: flex;
-          align-items: center;
-
-          .option-select {
-            border: 2px solid @color-blue500;
-            border-radius: 8px;
-            padding: 0 8px;
-            height: 40px;
-            margin-right: 18px;
-
-            @media @max-sl-mobile {
-              height: 32px;
-              padding: 0 4px;
-            }
-
-            &:last-child {
-              margin-right: 0;
-            }
-
-            &.option-toggle {
-              .toggle-label {
+              @media @max-sl-mobile {
                 position: relative;
-                opacity: 0.5;
-                color: #fff;
-
-                &.active-label {
-                  opacity: 1;
-                }
-              }
-            }
-
-            &.option-sort {
-              @media @max-md-tablet {
-                display: none !important;
-              }
-            }
-
-            .option-select-sort {
-              letter-spacing: 0.15px;
-
-              label {
-                color: #eae8f1;
-                opacity: 0.5;
-                margin-right: 8px;
-              }
-
-              .sort-detail {
                 display: flex;
                 align-items: center;
+                padding: 6px 10px;
+                border: 2px solid @color-blue500;
+                border-radius: 8px;
+
+                label {
+                  color: @color-petrol500;
+                }
 
                 .arrow-icon {
-                  margin-left: 8px;
+                  margin-left: 4px;
                 }
+              }
+            }
+
+            .option-tab {
+              margin-right: 48px;
+
+              &:last-child {
+                margin-right: 0;
+              }
+
+              button {
+                background: transparent;
+                border: none;
+                outline: none;
+                padding: 0;
+                margin-bottom: 8px;
+
+                &.active-tab {
+                  color: @color-petrol500;
+                }
+
+                .deposit-icon {
+                  margin-right: 8px;
+                }
+              }
+
+              .active-underline {
+                height: 4px;
+                border-radius: 10px;
+                background: @color-petrol400;
               }
             }
           }
 
-          .option-sort-collapse {
-            display: none;
+          .option-select-group {
+            position: relative;
+            display: flex;
+            align-items: center;
 
-            @media @max-md-tablet {
-              display: block;
-            }
-          }
+            .option-select {
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+              padding: 0 8px;
+              height: 40px;
+              margin-right: 18px;
 
-          .option-search-collapse {
-            position: absolute;
-            top: 0;
-            left: -209px;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0s, opacity 0.5s linear;
-            background: @color-blue700;
-            border: 2px solid @color-blue500;
-            border-radius: 8px;
-            padding: 18px;
-            z-index: 999;
-            width: 250px;
+              @media @max-sl-mobile {
+                height: 32px;
+                padding: 0 4px;
+              }
 
-            &.visible {
-              visibility: visible;
-              opacity: 1;
-            }
+              &:last-child {
+                margin-right: 0;
+              }
 
-            .select-token-header {
-              margin-bottom: 10px;
-            }
-
-            .select-token-search {
-              input {
-                border: 2px solid @color-blue400;
-                border-radius: 8px;
-                padding: 8px 18px;
-                background-color: transparent;
-                color: #ccd1f1;
-                width: 100%;
-
-                &:active,
-                &:focus,
-                &:hover {
-                  outline: 0;
-                }
-
-                &::placeholder {
-                  color: #ccd1f1;
+              &.option-toggle {
+                @media @max-md-tablet {
+                  display: none !important;
                 }
               }
 
-              .shortcut-list {
-                margin-top: 8px;
+              &.option-sort {
+                @media @max-md-tablet {
+                  display: none !important;
+                }
+              }
 
-                .shortcut-group {
+              .option-select-sort {
+                letter-spacing: 0.15px;
+
+                label {
+                  color: #eae8f1;
+                  opacity: 0.5;
+                  margin-right: 8px;
+                }
+
+                .sort-detail {
                   display: flex;
+                  align-items: center;
+
+                  .arrow-icon {
+                    margin-left: 8px;
+                  }
+                }
+              }
+            }
+
+            .option-collapse {
+              display: none;
+
+              @media @max-md-tablet {
+                display: block;
+              }
+            }
+
+            .option-search-collapse {
+              position: absolute;
+              top: 0;
+              left: -209px;
+              visibility: hidden;
+              opacity: 0;
+              transition: visibility 0s, opacity 0.5s linear;
+              background: @color-blue700;
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+              padding: 18px;
+              z-index: 999;
+              width: 250px;
+
+              &.visible {
+                visibility: visible;
+                opacity: 1;
+              }
+
+              .select-token-header {
+                margin-bottom: 10px;
+              }
+
+              .select-token-search {
+                input {
+                  border: 2px solid @color-blue400;
+                  border-radius: 8px;
+                  padding: 8px 18px;
+                  background-color: transparent;
+                  color: #ccd1f1;
+                  width: 100%;
+
+                  &:active,
+                  &:focus,
+                  &:hover {
+                    outline: 0;
+                  }
+
+                  &::placeholder {
+                    color: #ccd1f1;
+                  }
+                }
+
+                .shortcut-list {
                   margin-top: 8px;
 
-                  .shortcut-container {
-                    background: linear-gradient(
-                      97.63deg,
-                      #280c86 -29.92%,
-                      #22b5b6 103.89%
-                    );
-                    border-radius: 8px;
-                    padding: 2px;
-                    margin-right: 8px;
+                  .shortcut-group {
+                    display: flex;
+                    margin-top: 8px;
 
-                    &:last-child {
-                      margin-right: 0;
-                    }
-
-                    .shortcut-box {
-                      background: @color-blue800;
+                    .shortcut-container {
+                      background: linear-gradient(
+                        97.63deg,
+                        #280c86 -29.92%,
+                        #22b5b6 103.89%
+                      );
                       border-radius: 8px;
-                      padding: 8px;
+                      padding: 2px;
+                      margin-right: 8px;
 
-                      .coin-icon {
-                        width: 12px;
-                        height: 12px;
-                        margin-right: 4px;
-                        border-radius: 50%;
+                      &:last-child {
+                        margin-right: 0;
+                      }
+
+                      .shortcut-box {
+                        background: @color-blue800;
+                        border-radius: 8px;
+                        padding: 8px;
+
+                        .coin-icon {
+                          width: 12px;
+                          height: 12px;
+                          margin-right: 4px;
+                          border-radius: 50%;
+                        }
                       }
                     }
                   }
@@ -3416,141 +3511,139 @@ export default Vue.extend({
             }
           }
         }
-      }
 
-      .farm-table {
-        .farm-item {
-          display: flex;
-          background: rgba(23, 32, 88, 0.9);
-          border-radius: 8px;
-          padding: 18px;
-          margin-top: 8px;
-          border: 3px solid transparent;
+        .farm-table {
+          .farm-item {
+            display: flex;
+            background: rgba(23, 32, 88, 0.9);
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 8px;
+            border: 3px solid transparent;
 
-          &:hover {
-            border-color: @color-blue500;
-          }
-
-          &:first-child {
-            margin-top: 0;
-          }
-
-          .fl-container {
-            padding: 0 !important;
-          }
-
-          .state {
-            .title {
-              display: flex;
-              align-items: center;
-              justify-content: flex-end;
-              text-align: right;
-              color: rgba(255, 255, 255, 0.6);
+            &:hover {
+              border-color: @color-blue500;
             }
 
-            .value {
-              margin-top: 4px;
-              word-break: break-all;
-              text-align: right;
-            }
-
-            .btn-container {
-              &:last-child {
-                margin-top: 8px;
-              }
-            }
-
-            .show-more {
-              position: relative;
-
-              .option-collapse-menu {
-                top: 0;
-                right: 10px;
-
-                .social-link {
-                  color: #fff;
-
-                  .social-icon {
-                    width: 18px;
-                    height: 18px;
-                    margin-left: 8px;
-                  }
-                }
-              }
-            }
-          }
-
-          .farm-infos {
-            margin-top: 15px;
-
-            @media @max-lg-tablet {
+            &:first-child {
               margin-top: 0;
             }
 
-            .farm-info-group {
-              display: flex;
-              align-items: center;
-              color: rgba(255, 255, 255, 0.8);
-
-              .farm-info-img {
-                width: 20px;
-                display: flex;
-                opacity: 0.5;
-              }
-            }
-          }
-
-          .details {
-            top: 50%;
-            transform: translate(0, -50%);
-            position: absolute;
-            right: 17px;
-            margin-top: unset;
-          }
-        }
-
-        .farm-table-collapse {
-          .farm-item-mobile {
-            margin-bottom: 8px;
-
-            &:last-child {
-              margin-bottom: 0;
+            .fl-container {
+              padding: 0 !important;
             }
 
             .state {
               .title {
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                text-align: center;
+                justify-content: flex-end;
+                text-align: right;
                 color: rgba(255, 255, 255, 0.6);
               }
 
               .value {
                 margin-top: 4px;
                 word-break: break-all;
-                text-align: center;
+                text-align: right;
+              }
+
+              .show-more {
+                position: relative;
+
+                .option-collapse-menu {
+                  top: 0;
+                  right: 10px;
+                }
               }
             }
 
-            &.btn-show-collapse {
-              text-align: center;
-              cursor: pointer;
-              border-bottom: none;
+            .farm-infos {
+              margin-top: 15px;
 
               @media @max-lg-tablet {
-                padding: 5px;
+                margin-top: 0;
+              }
+
+              .farm-info-group {
+                display: flex;
+                align-items: center;
+                color: rgba(255, 255, 255, 0.8);
+
+                .farm-info-img {
+                  width: 20px;
+                  display: flex;
+                }
               }
             }
 
-            &.btn-hide-collapse {
-              text-align: center;
-              cursor: pointer;
-              border-bottom: none;
+            .details {
+              top: 50%;
+              transform: translate(0, -50%);
+              position: absolute;
+              right: 17px;
+              margin-top: unset;
+            }
+          }
 
-              .btn-hide-collapse-icon {
-                margin-top: 5px;
-                transform: rotate(180deg);
+          .farm-table-collapse {
+            .farm-item-collapse {
+              margin-bottom: 8px;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+
+              .state {
+                .title {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  text-align: center;
+                  color: rgba(255, 255, 255, 0.6);
+                }
+
+                .value {
+                  margin-top: 4px;
+                  word-break: break-all;
+                  text-align: center;
+                }
+                
+                .farm-infos {
+                  .farm-info-group {
+                    display: flex;
+                    align-items: center;
+                    color: rgba(255, 255, 255, 0.8);
+                    margin-bottom: 4px;
+
+                    &:last-child {
+                      margin-bottom: 0;
+                    }
+
+                    .farm-info-img {
+                      width: 20px;
+                      display: flex;
+                    }
+                  }
+                }
+              }
+
+              .social-link {
+                margin-right: 18px;
+
+                &:last-child {
+                  margin-right: 0;
+                }
+              }
+            }
+
+            .farm-table-collapse-content {
+              background: @color-blue800;
+              padding: 8px;
+              margin-bottom: 18px;
+
+              .farm-item-collapse {
+                margin-bottom: 18px;
               }
             }
           }
@@ -3594,6 +3687,9 @@ export default Vue.extend({
 
       .ant-collapse-content {
         border: none !important;
+        background: transparent !important;
+        padding: 8px;
+        margin: 8px 0;
       }
     }
 
@@ -3638,4 +3734,3 @@ export default Vue.extend({
   }
 }
 </style>
-"

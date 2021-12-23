@@ -1545,498 +1545,322 @@ export default class Pools extends Vue {
 </script>
 
 <style lang="less" scoped>
-// global stylesheet
-.btn-container {
-  background: @gradient-btn-primary;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 48px;
-  padding: 3px;
-  width: 95px;
-  height: auto;
-}
-
-.btn-transparent {
-  background: transparent;
-  padding: 4.5px 0;
-  border-radius: 48px;
-  border: none;
-  width: 100%;
-}
-
-.btn-primary {
-  background: rgba(23, 32, 88, 0.9);
-  padding: 4.5px 0;
-  border-radius: 48px;
-  border: none;
-  width: 100%;
-  color: #fff;
-
-  &:disabled {
-    background: rgba(23, 32, 88, 0.9);
+.pool {
+  // global stylesheet
+  .btn-container {
+    background: @gradient-btn-primary;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 48px;
+    padding: 3px;
+    width: 95px;
+    height: auto;
   }
-}
 
-.lp-iconscontainer {
-  background: @gradient-color-outline;
-  background-origin: border-box;
-  padding: 2px;
-  border-radius: 8px;
-  width: fit-content;
+  .btn-transparent {
+    background: transparent;
+    padding: 4.5px 0;
+    border-radius: 48px;
+    border: none;
+    width: 100%;
+  }
 
-  .icons {
-    position: relative;
-    display: block !important;
-    border-radius: 8px;
-    padding: 7px 10px;
-    white-space: nowrap;
-    background: @color-blue800;
-    text-align: center;
-    height: 100%;
-    width: fit-content;
+  .btn-primary {
+    background: rgba(23, 32, 88, 0.9);
+    padding: 4.5px 0;
+    border-radius: 48px;
+    border: none;
+    width: 100%;
+    color: #fff;
 
-    img {
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
+    &:disabled {
+      background: rgba(23, 32, 88, 0.9);
     }
   }
-}
 
-.arrow-icon {
-  transition: all 0.3s;
+  .lp-iconscontainer {
+    background: @gradient-color-outline;
+    background-origin: border-box;
+    padding: 2px;
+    border-radius: 8px;
+    width: fit-content;
 
-  &.arrow-up {
-    transform: rotate(180deg);
+    .icons {
+      position: relative;
+      display: block !important;
+      border-radius: 8px;
+      padding: 7px 10px;
+      white-space: nowrap;
+      background: @color-blue800;
+      text-align: center;
+      height: 100%;
+      width: fit-content;
+
+      img {
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+      }
+    }
   }
-}
-
-.detail-btn {
-  position: absolute;
-  right: 0;
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
 
   .arrow-icon {
-    margin-left: 8px;
-  }
-}
+    transition: all 0.3s;
 
-// class stylesheet
-.pool.container {
-  margin-top: 38px;
-
-  @media @max-sl-mobile {
-    margin-top: 28px;
+    &.arrow-up {
+      transform: rotate(180deg);
+    }
   }
 
-  .card {
-    .card-body {
-      position: relative;
-      padding: 0;
+  .detail-btn {
+    position: absolute;
+    right: 0;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
 
-      .guide-card {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: calc(100% - 40px);
-        max-width: 420px;
-        padding: 18px;
-        background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
-        border-radius: 18px;
-        z-index: 999;
+    .arrow-icon {
+      margin-left: 8px;
+    }
+  }
 
-        @media @max-sl-mobile {
+  .isDesktop {
+    @media @max-lg-tablet {
+      display: none;
+    }
+  }
+
+  .isTablet {
+    display: none;
+
+    @media @max-lg-tablet {
+      display: unset;
+    }
+
+    @media @max-sl-mobile {
+      display: none;
+    }
+  }
+
+  .isMobile {
+    display: none;
+
+    @media @max-sl-mobile {
+      display: unset;
+    }
+  }
+
+  // class stylesheet
+  &.container {
+    margin-top: 38px;
+
+    @media @max-sl-mobile {
+      margin-top: 28px;
+    }
+
+    .card {
+      .card-body {
+        position: relative;
+        padding: 0;
+
+        .guide-card {
+          position: fixed;
           bottom: 20px;
-          right: unset;
-        }
+          right: 20px;
+          width: calc(100% - 40px);
+          max-width: 420px;
+          padding: 18px;
+          background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+          border-radius: 18px;
+          z-index: 999;
 
-        .guide-content {
-          position: relative;
+          @media @max-sl-mobile {
+            bottom: 20px;
+            right: unset;
+          }
 
-          .guide-detail {
-            margin-top: 8px;
+          .guide-content {
+            position: relative;
 
-            .learn-btn-container {
-              height: 45px;
-              background: linear-gradient(190.83deg, #23a7b2 -119.02%, #273a93 86.38%);
-              padding: 2px;
-              border-radius: 48px;
-              margin-top: 18px;
-              width: fit-content;
+            .guide-detail {
+              margin-top: 8px;
 
-              .learn-btn {
-                height: 100%;
-                background: linear-gradient(97.75deg, #280c86 -29.89%, #22b5b6 150.53%);
+              .learn-btn-container {
+                height: 45px;
+                background: linear-gradient(190.83deg, #23a7b2 -119.02%, #273a93 86.38%);
+                padding: 2px;
                 border-radius: 48px;
-                padding: 10.5px 23px;
-                border: none;
+                margin-top: 18px;
+                width: fit-content;
+
+                .learn-btn {
+                  height: 100%;
+                  background: linear-gradient(97.75deg, #280c86 -29.89%, #22b5b6 150.53%);
+                  border-radius: 48px;
+                  padding: 10.5px 23px;
+                  border: none;
+                }
               }
             }
-          }
 
-          .close-icon {
-            position: absolute;
-            top: 0;
-            right: 0;
-          }
-        }
-      }
-
-      .pools-content {
-        &.guide-enabled {
-          @media @max-sl-mobile {
-            opacity: 0.7;
+            .close-icon {
+              position: absolute;
+              top: 0;
+              right: 0;
+            }
           }
         }
 
-        .pools-head {
-          @media @max-sl-mobile {
-            display: block !important;
-          }
-
-          .title {
-            text-align: center;
-            position: relative;
-            float: left;
-
+        .pools-content {
+          &.guide-enabled {
             @media @max-sl-mobile {
-              margin-bottom: 18px !important;
+              opacity: 0.7;
             }
           }
 
-          .information {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
+          .pools-head {
             @media @max-sl-mobile {
-              width: 100%;
+              display: block !important;
             }
 
-            .tvl-info {
-              margin-right: 18px;
+            .title {
+              text-align: center;
+              position: relative;
+              float: left;
+
+              @media @max-sl-mobile {
+                margin-bottom: 18px !important;
+              }
             }
 
-            .action-btn-group {
+            .information {
               display: flex;
               align-items: center;
+              justify-content: space-between;
 
-              .reload-btn {
-                background: @color-blue600;
-                border-radius: 8px;
-                padding: 6px;
-                margin-right: 18px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                @media @max-lg-tablet {
-                  margin-left: 5px;
-                }
-
-                img {
-                  width: 18px;
-                  height: 18px;
-                }
-
-                &.active img {
-                  transform: rotate(360deg);
-                  transition: all 1s ease-in-out;
-                }
+              @media @max-sl-mobile {
+                width: 100%;
               }
 
-              .create-btn {
-                top: 20px;
-                right: -90px;
+              .tvl-info {
+                margin-right: 18px;
+              }
 
-                .create-plus-btn {
+              .action-btn-group {
+                display: flex;
+                align-items: center;
+
+                .reload-btn {
                   background: @color-blue600;
                   border-radius: 8px;
                   padding: 6px;
+                  margin-right: 18px;
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  color: white;
-                }
-              }
-            }
-          }
-        }
 
-        .pools-table {
-          width: 100%;
+                  @media @max-lg-tablet {
+                    margin-left: 5px;
+                  }
 
-          .pools-table-header {
+                  img {
+                    width: 18px;
+                    height: 18px;
+                  }
 
-            &.scrollFixed {
-              position: fixed;
-              background: @color-blue800;
-              opacity: 0.9;
-              top: 70px;
-              z-index: 999;
-              width: calc(100% - 128px);
-
-              @media @max-lg-tablet {
-                width: calc(100% - 64px);
-              }
-
-              @media @max-sl-mobile {
-                width: calc(100% - 40px);
-              }
-            }
-
-            .header-column {
-              text-align: center;
-              padding: 16px 0;
-              color: @color-neutral400;
-
-              .header-column-title {
-                cursor: pointer;
-                display: flex;
-                justify-content: center;
-
-                .arrow-icon {
-                  margin-left: 4px;
+                  &.active img {
+                    transform: rotate(360deg);
+                    transition: all 1s ease-in-out;
+                  }
                 }
 
-                .sort-icon-active {
-                  color: #13ecab;
-                }
-              }
-            }
-          }
+                .create-btn {
+                  top: 20px;
+                  right: -90px;
 
-          .pools-table-body {
-            .pools-table-item {
-              display: flex;
-              align-items: center;
-              background: rgba(23, 32, 88, 0.9);
-              border-radius: 8px;
-              padding: 18px;
-              margin-bottom: 8px;
-              border: 3px solid transparent;
-
-              &:hover {
-                border-color: @color-blue500;
-              }
-
-              &:last-child {
-                margin-bottom: 0;
-              }
-
-              .state {
-                text-align: center;
-
-                .btn-container {
-                  margin: auto auto 8px auto;
-
-                  &:last-child {
-                    margin-bottom: 0;
+                  .create-plus-btn {
+                    background: @color-blue600;
+                    border-radius: 8px;
+                    padding: 6px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
                   }
                 }
               }
             }
           }
-        }
 
-        .pools-option-bar {
-          margin: 38px 0;
+          .pools-table {
+            width: 100%;
 
-          @media @max-sl-mobile {
-            margin: 28px 0;
-          }
+            .pools-table-header {
 
-          .option-tab-group {
-            display: flex;
+              &.scrollFixed {
+                position: fixed;
+                background: @color-blue800;
+                opacity: 0.9;
+                top: 70px;
+                z-index: 999;
+                width: calc(100% - 128px);
 
-            @media @max-sl-mobile {
-              display: none;
-            }
-
-            &.option-tab-collapse {
-              display: none;
-
-              @media @max-sl-mobile {
-                position: relative;
-                display: flex;
-                align-items: center;
-                padding: 6px 10px;
-                border: 2px solid @color-blue500;
-                border-radius: 8px;
-
-                label {
-                  color: @color-petrol500;
+                @media @max-lg-tablet {
+                  width: calc(100% - 64px);
                 }
 
-                .arrow-icon {
-                  margin-left: 4px;
-                }
-              }
-            }
-
-            .option-tab {
-              margin-right: 48px;
-
-              &:last-child {
-                margin-right: 0;
-              }
-
-              button {
-                background: transparent;
-                border: none;
-                outline: none;
-                padding: 0;
-                margin-bottom: 8px;
-
-                &.active-tab {
-                  color: @color-petrol500;
-                }
-
-                .deposit-icon {
-                  margin-right: 8px;
+                @media @max-sl-mobile {
+                  width: calc(100% - 40px);
                 }
               }
 
-              .active-underline {
-                height: 4px;
-                border-radius: 10px;
-                background: @color-petrol400;
-              }
-            }
-          }
+              .header-column {
+                text-align: center;
+                padding: 16px 0;
+                color: @color-neutral400;
 
-          .option-select-group {
-            position: relative;
-            display: flex;
-            align-items: center;
-
-            .option-select {
-              border: 2px solid @color-blue500;
-              border-radius: 8px;
-              padding: 0 8px;
-              height: 40px;
-
-              @media @max-sl-mobile {
-                height: 32px;
-                padding: 0 4px;
-              }
-
-              &:first-child {
-                margin-right: 18px;
-              }
-
-              &.option-sort {
-                @media @max-md-tablet {
-                  display: none !important;
-                }
-              }
-
-              .option-select-sort {
-                letter-spacing: 0.15px;
-
-                label {
-                  color: #eae8f1;
-                  opacity: 0.5;
-                  margin-right: 8px;
-                }
-
-                .sort-detail {
+                .header-column-title {
+                  cursor: pointer;
                   display: flex;
-                  align-items: center;
+                  justify-content: center;
 
                   .arrow-icon {
-                    margin-left: 8px;
+                    margin-left: 4px;
+                  }
+
+                  .sort-icon-active {
+                    color: #13ecab;
                   }
                 }
               }
             }
 
-            .option-sort-collapse {
-              display: none;
+            .pools-table-body {
+              .pools-table-item {
+                display: flex;
+                align-items: center;
+                background: rgba(23, 32, 88, 0.9);
+                border-radius: 8px;
+                padding: 18px;
+                margin-bottom: 8px;
+                border: 3px solid transparent;
 
-              @media @max-md-tablet {
-                display: block;
-              }
-            }
-
-            .option-search-collapse {
-              position: absolute;
-              top: 0;
-              left: -209px;
-              visibility: hidden;
-              opacity: 0;
-              transition: visibility 0s, opacity 0.5s linear;
-              background: @color-blue700;
-              border: 2px solid @color-blue500;
-              border-radius: 8px;
-              padding: 18px;
-              z-index: 999;
-              width: 250px;
-
-              &.visible {
-                visibility: visible;
-                opacity: 1;
-              }
-
-              .select-token-header {
-                margin-bottom: 10px;
-              }
-
-              .select-token-search {
-                input {
-                  border: 2px solid @color-blue400;
-                  border-radius: 8px;
-                  padding: 8px 18px;
-                  background-color: transparent;
-                  color: #ccd1f1;
-                  width: 100%;
-
-                  &:active,
-                  &:focus,
-                  &:hover {
-                    outline: 0;
-                  }
-
-                  &::placeholder {
-                    color: #ccd1f1;
-                  }
+                &:hover {
+                  border-color: @color-blue500;
                 }
 
-                .shortcut-list {
-                  margin-top: 8px;
+                &:last-child {
+                  margin-bottom: 0;
+                }
 
-                  .shortcut-group {
-                    display: flex;
-                    margin-top: 8px;
+                .state {
+                  text-align: center;
 
-                    .shortcut-container {
-                      background: linear-gradient(
-                        97.63deg,
-                        #280c86 -29.92%,
-                        #22b5b6 103.89%
-                      );
-                      border-radius: 8px;
-                      padding: 2px;
-                      margin-right: 8px;
+                  .btn-container {
+                    margin: auto auto 8px auto;
 
-                      &:last-child {
-                        margin-right: 0;
-                      }
-
-                      .shortcut-box {
-                        background: @color-blue800;
-                        border-radius: 8px;
-                        padding: 8px;
-
-                        .coin-icon {
-                          width: 12px;
-                          height: 12px;
-                          margin-right: 4px;
-                          border-radius: 50%;
-                        }
-                      }
+                    &:last-child {
+                      margin-bottom: 0;
                     }
                   }
                 }
@@ -2044,129 +1868,307 @@ export default class Pools extends Vue {
             }
           }
 
-          .option-collapse-menu {
-            position: absolute;
-            top: 50px;
-            background: @gradient-color-primary;
-            background-origin: border-box;
-            border: 2px solid rgba(255, 255, 255, 0.14);
-            box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
-            border-radius: 8px;
-            min-width: 180px;
-            z-index: 999;
+          .pools-option-bar {
+            margin: 38px 0;
 
-            &.collapse-left {
-              left: 0;
+            @media @max-sl-mobile {
+              margin: 28px 0;
             }
 
-            &.collapse-right {
-              right: 0;
-            }
+            .option-tab-group {
+              display: flex;
 
-            .option-collapse-item {
-              padding: 16px 32px;
-              border-bottom: 1px solid #c4c4c420;
-
-              &:last-child {
-                border-bottom: 0;
+              @media @max-sl-mobile {
+                display: none;
               }
 
-              &.active-item {
-                color: @color-petrol500;
+              &.option-tab-collapse {
+                display: none;
+
+                @media @max-sl-mobile {
+                  position: relative;
+                  display: flex;
+                  align-items: center;
+                  padding: 6px 10px;
+                  border: 2px solid @color-blue500;
+                  border-radius: 8px;
+
+                  label {
+                    color: @color-petrol500;
+                  }
+
+                  .arrow-icon {
+                    margin-left: 4px;
+                  }
+                }
+              }
+
+              .option-tab {
+                margin-right: 48px;
+
+                &:last-child {
+                  margin-right: 0;
+                }
+
+                button {
+                  background: transparent;
+                  border: none;
+                  outline: none;
+                  padding: 0;
+                  margin-bottom: 8px;
+
+                  &.active-tab {
+                    color: @color-petrol500;
+                  }
+
+                  .deposit-icon {
+                    margin-right: 8px;
+                  }
+                }
+
+                .active-underline {
+                  height: 4px;
+                  border-radius: 10px;
+                  background: @color-petrol400;
+                }
+              }
+            }
+
+            .option-select-group {
+              position: relative;
+              display: flex;
+              align-items: center;
+
+              .option-select {
+                border: 2px solid @color-blue500;
+                border-radius: 8px;
+                padding: 0 8px;
+                height: 40px;
+
+                @media @max-sl-mobile {
+                  height: 32px;
+                  padding: 0 4px;
+                }
+
+                &:first-child {
+                  margin-right: 18px;
+                }
+
+                &.option-sort {
+                  @media @max-md-tablet {
+                    display: none !important;
+                  }
+                }
+
+                .option-select-sort {
+                  letter-spacing: 0.15px;
+
+                  label {
+                    color: #eae8f1;
+                    opacity: 0.5;
+                    margin-right: 8px;
+                  }
+
+                  .sort-detail {
+                    display: flex;
+                    align-items: center;
+
+                    .arrow-icon {
+                      margin-left: 8px;
+                    }
+                  }
+                }
+              }
+
+              .option-sort-collapse {
+                display: none;
+
+                @media @max-md-tablet {
+                  display: block;
+                }
+              }
+
+              .option-search-collapse {
+                position: absolute;
+                top: 0;
+                left: -209px;
+                visibility: hidden;
+                opacity: 0;
+                transition: visibility 0s, opacity 0.5s linear;
+                background: @color-blue700;
+                border: 2px solid @color-blue500;
+                border-radius: 8px;
+                padding: 18px;
+                z-index: 999;
+                width: 250px;
+
+                &.visible {
+                  visibility: visible;
+                  opacity: 1;
+                }
+
+                .select-token-header {
+                  margin-bottom: 10px;
+                }
+
+                .select-token-search {
+                  input {
+                    border: 2px solid @color-blue400;
+                    border-radius: 8px;
+                    padding: 8px 18px;
+                    background-color: transparent;
+                    color: #ccd1f1;
+                    width: 100%;
+
+                    &:active,
+                    &:focus,
+                    &:hover {
+                      outline: 0;
+                    }
+
+                    &::placeholder {
+                      color: #ccd1f1;
+                    }
+                  }
+
+                  .shortcut-list {
+                    margin-top: 8px;
+
+                    .shortcut-group {
+                      display: flex;
+                      margin-top: 8px;
+
+                      .shortcut-container {
+                        background: linear-gradient(
+                          97.63deg,
+                          #280c86 -29.92%,
+                          #22b5b6 103.89%
+                        );
+                        border-radius: 8px;
+                        padding: 2px;
+                        margin-right: 8px;
+
+                        &:last-child {
+                          margin-right: 0;
+                        }
+
+                        .shortcut-box {
+                          background: @color-blue800;
+                          border-radius: 8px;
+                          padding: 8px;
+
+                          .coin-icon {
+                            width: 12px;
+                            height: 12px;
+                            margin-right: 4px;
+                            border-radius: 50%;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            .option-collapse-menu {
+              position: absolute;
+              top: 50px;
+              background: @gradient-color-primary;
+              background-origin: border-box;
+              border: 2px solid rgba(255, 255, 255, 0.14);
+              box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+              border-radius: 8px;
+              min-width: 180px;
+              z-index: 999;
+
+              &.collapse-left {
+                left: 0;
+              }
+
+              &.collapse-right {
+                right: 0;
+              }
+
+              .option-collapse-item {
+                padding: 16px 32px;
+                border-bottom: 1px solid #c4c4c420;
+
+                &:last-child {
+                  border-bottom: 0;
+                }
+
+                &.active-item {
+                  color: @color-petrol500;
+                }
               }
             }
           }
         }
       }
     }
-  }
 
-  .pagination-container {
-    margin-top: 30px;
-    text-align: center;
-    width: 100%;
+    .pagination-container {
+      margin-top: 30px;
+      text-align: center;
+      width: 100%;
 
-    .pagination-body {
-      width: 80%;
-      display: inline-block;
+      .pagination-body {
+        width: 80%;
+        display: inline-block;
+      }
     }
   }
-}
-
-.isDesktop {
-  @media @max-lg-tablet {
-    display: none;
-  }
-}
-
-.isTablet {
-  display: none;
 
   @media @max-lg-tablet {
-    display: unset;
-  }
-
-  @media @max-sl-mobile {
-    display: none;
-  }
-}
-
-.isMobile {
-  display: none;
-
-  @media @max-sl-mobile {
-    display: unset;
-  }
-}
-
-@media @max-lg-tablet {
-  .pool.container {
-    .pool-head {
-      display: flex;
-      align-items: center;
-    }
-
-    .collapse-row {
-      .state {
+    .pool.container {
+      .pool-head {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 8px 0;
-        border-bottom: 1px solid @color-blue600;
+      }
 
-        .title {
-          color: #ffffff50;
-        }
-
-        &:last-child {
-          border-bottom: 0;
-        }
-
-        &.current-liquidity {
-          display: block;
-          width: 100%;
-          flex-direction: unset;
-          float: unset;
-          flex: unset;
-          background: @color-blue800;
-          border-radius: 8px;
-          padding: 8px 18px 18px 18px;
-          border-bottom: 0;
+      .collapse-row {
+        .state {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 0;
+          border-bottom: 1px solid @color-blue600;
 
           .title {
-            display: block;
+            color: #ffffff50;
           }
 
-          .btn-group {
-            display: flex;
-            justify-content: center;
-            margin-top: 18px;
+          &:last-child {
+            border-bottom: 0;
+          }
 
-            .btn-container {
-              margin-right: 8px;
+          &.current-liquidity {
+            display: block;
+            width: 100%;
+            flex-direction: unset;
+            float: unset;
+            flex: unset;
+            background: @color-blue800;
+            border-radius: 8px;
+            padding: 8px 18px 18px 18px;
+            border-bottom: 0;
 
-              &:last-child {
-                margin-right: 0;
+            .title {
+              display: block;
+            }
+
+            .btn-group {
+              display: flex;
+              justify-content: center;
+              margin-top: 18px;
+
+              .btn-container {
+                margin-right: 8px;
+
+                &:last-child {
+                  margin-right: 0;
+                }
               }
             }
           }
