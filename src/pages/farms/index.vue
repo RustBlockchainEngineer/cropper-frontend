@@ -50,7 +50,7 @@
       :coin="lp"
       :farmInfo="farmInfo"
       :loading="staking"
-      text="You now need to <b>stake your LP tokens</b> to start farming"
+      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity."
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
