@@ -63,6 +63,11 @@
       @onCancel="cancelStake"
     />
 
+    <CreateFarm
+      v-if="createFarmModalOpening"
+      @onCancel="cancelCreateFarm"
+    />
+
     <div class="card">
       <div class="card-body">
         <div class="farm-head fs-container">
@@ -83,7 +88,14 @@
                 <img src="@/assets/icons/reload.svg" />
               </div>
 
-              <a class="create-btn icon-cursor">
+              <a 
+                class="create-btn icon-cursor"
+                @click="
+                  () => {
+                    this.createFarmModalOpening = true;
+                  }
+                "
+              >
                 <div class="create-plus-btn textS weightS">+ Create farm</div>
               </a>
             </div>
@@ -1632,6 +1644,7 @@ export default Vue.extend({
       stakeModalOpening: false,
       stakeModalOpeningLP: false,
       addRewardModalOpening: false,
+      createFarmModalOpening: false,
       staking: false,
       adding: false,
       paying: false,
@@ -3006,6 +3019,9 @@ export default Vue.extend({
       this.lp = null;
       this.farmInfo = null;
       this.stakeModalOpeningLP = false;
+    },
+    cancelCreateFarm() {
+      this.createFarmModalOpening = false;
     },
     onNothing() {
       this.stakeLPError = false;

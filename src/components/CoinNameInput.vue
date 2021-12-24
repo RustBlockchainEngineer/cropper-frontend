@@ -1,18 +1,26 @@
 <template>
   <div class="coin-select">
-    <div class="label fs-container" :class="disabled ? 'disabled' : '' ">
+    <div class="label fs-container bodyXS weightB">
       <span>{{ label }}</span>
     </div>
     <div class="coin-input">
       <div class="main-input fs-container">
         <button class="select-button fc-container" @click="selectCoin">
-          <div v-if="coinName" class="fc-container">
+          <div v-if="coinName" class="coin-container fc-container">
             <CoinIcon :mint-address="mintAddress" />
-            <span :class="disabled ? 'coin-disabled' : '' ">{{ coinName }}</span>
+            <span class="textS weightS" :class="disabled ? 'coin-disabled' : ''">{{
+              coinName
+            }}</span>
           </div>
-          <span v-else :class="disabled ? 'coin-disabled' : '' ">Select a token</span>
-          <img v-if="!disabled" src="@/assets/icons/arrow-down.svg" />
-          <img v-else src="@/assets/icons/arrow-down-grey.svg" />
+          <span v-else class="textS weightS" :class="disabled ? 'coin-disabled' : ''"
+            >Select a token</span
+          >
+          <img
+            v-if="!disabled"
+            class="arrow-icon"
+            src="@/assets/icons/arrow-down-white.svg"
+          />
+          <img v-else class="arrow-icon" src="@/assets/icons/arrow-down-grey.svg" />
         </button>
       </div>
     </div>
@@ -20,107 +28,96 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { lt } from '@/utils/safe-math'
+import Vue from "vue";
+import { lt } from "@/utils/safe-math";
 
 export default Vue.extend({
   model: {
-    prop: 'value',
-    event: 'onInput'
+    prop: "value",
+    event: "onInput",
   },
 
   props: {
     label: {
       type: String,
-      default: 'From'
+      default: "From",
     },
     coinName: {
       type: String,
-      default: ''
+      default: "",
     },
     mintAddress: {
       type: String,
-      default: ''
+      default: "",
     },
     value: {
       type: String,
-      default: ''
+      default: "",
     },
     balance: {
       type: Object,
-      default: null
+      default: null,
     },
     balanceOffset: {
       type: Number,
-      default: 0
+      default: 0,
     },
     showMax: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showHalf: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     lt,
     focusInput() {
-      const input = this.$refs.input as HTMLInputElement
-      input.focus()
+      const input = this.$refs.input as HTMLInputElement;
+      input.focus();
     },
     inputBalanceByPercent(percent: number) {
       // error balance
-      if (!this.balance || this.balance.wei.isNaN()) return
+      if (!this.balance || this.balance.wei.isNaN()) return;
 
-      const availableBalance = Number(this.balance.toEther()) + (this.balanceOffset ?? 0)
+      const availableBalance = Number(this.balance.toEther()) + (this.balanceOffset ?? 0);
 
       // can't send negative balance
-      if (availableBalance < 0) return
+      if (availableBalance < 0) return;
 
-      const inputValue = (availableBalance * percent).toFixed(this.balance.decimals)
-      this.focusInput()
-      this.$emit('onInput', inputValue)
+      const inputValue = (availableBalance * percent).toFixed(this.balance.decimals);
+      this.focusInput();
+      this.$emit("onInput", inputValue);
     },
     selectCoin() {
-      if (this.disabled == false) this.$emit('onSelect')
-    }
-  }
-})
+      if (this.disabled == false) this.$emit("onSelect");
+    },
+  },
+});
 </script>
 
 <style lang="less" scoped>
 .coin-select {
-  display: flex;
-  align-items: center;
-  
   .label {
-    margin-right: 15px;
-    font-size: 15px !important;
-    line-height: 18px;
-    color: #fff;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.5);
   }
 
-  .label.disabled {
-    color: #40426C;
-  }
-  
   .coin-input {
-    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    background: @gradient-btn-wallet;
     background-origin: border-box;
     padding: 2px;
     border-radius: 8px;
+    width: fit-content;
 
     button {
       border: none;
       background-color: @color-blue800;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 22px;
       border-radius: 8px;
       white-space: nowrap;
       cursor: pointer;
@@ -135,45 +132,27 @@ export default Vue.extend({
         background-color: @modal-header-bg;
       }
     }
-    .select-button {
-      padding: 10px 18px;
-      line-height: 24px;
-      width: 130px;
 
-      .anticon {
-        margin-left: 4px;
-        font-size: 8px;
-      }
-      
-      img {
-        width: 11px;
+    .select-button {
+      padding: 6px;
+
+      .arrow-icon {
+        width: 9px;
         height: 6px;
-        margin-left: 10px;
+        margin-left: 4px;
       }
 
       .coin-disabled {
-        color: #40426C;
+        color: rgba(255, 255, 255, 0.5);
       }
 
-      .fc-container {
+      .coin-container {
         img {
-          height: 18px;
-          width: 18px;
-          margin-left: 0;
-        }
-
-        span {
-          margin-left: 7px;
-          font-size: 18px;
-          line-height: 22px;
-          font-weight: 400;
+          height: 12px;
+          width: 12px;
+          margin-right: 4px;
         }
       }
-    }
-
-    .shortcut-btns {
-      display: flex;
-      justify-content: space-between;
     }
   }
 }

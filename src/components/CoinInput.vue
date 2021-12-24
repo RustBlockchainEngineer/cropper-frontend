@@ -1,5 +1,8 @@
 <template>
   <div class="coin-select">
+    <div class="coin-title">
+      <label class="bodyXS weightS">{{ label }}</label>
+    </div>
     <div class="coin-input">
       <div class="fs-container">
         <div class="fc-container">
@@ -122,6 +125,14 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 .coin-select {
+  .coin-title {
+    margin-bottom: 8px;
+
+    label {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
   .coin-input {
     background: rgba(226, 227, 236, 0.1);
     border-radius: 18px;

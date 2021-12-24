@@ -5,6 +5,7 @@
     :footer="null"
     :closable="false"
     :mask-closable="true"
+    :mask="true"
     class="create-pool-modal"
     @cancel="$emit('onCancel')"
     centered
@@ -14,6 +15,7 @@
       src="@/assets/icons/close-circle-icon.svg"
       @click="$emit('onCancel')"
     />
+
     <div class="create-pool-head fs-container">
       <div class="btn-outline">
         <a
@@ -1281,15 +1283,6 @@ export default class CreatePool extends Vue {
     background: transparent;
     border-bottom: 1px solid #fff;
   }
-
-  .ant-calendar-date:hover {
-    background: @gradient-color-icon;
-    background-origin: border-box;
-  }
-}
-
-.coin-select .coin-input button:hover {
-  background-color: rgba(0, 0, 0, 0.9471) !important;
 }
 </style>
 
@@ -1327,73 +1320,73 @@ export default class CreatePool extends Vue {
       }
     }
   }
-}
 
-.ant-steps-vertical {
-  .ant-steps-item-content {
-    min-height: 60px;
-  }
-
-  .ant-steps-item-active,
-  .ant-steps-item-finish {
-    .ant-steps-item-tail::after,
-    .ant-steps-item-icon {
-      background-color: @color-petrol500 !important;
+  .ant-steps-vertical {
+    .ant-steps-item-content {
+      min-height: 60px;
     }
 
-    .ant-steps-item-title {
-      color: @color-petrol500 !important;
-    }
-  }
-
-  .ant-steps-item-error {
-    .ant-steps-item-icon {
-      background-color: red !important;
-    }
-  }
-
-  .ant-steps-item-process,
-  .ant-steps-item-finish {
-    .ant-steps-item-title {
-      font-weight: 700 !important;
-    }
-  }
-
-  .ant-steps-item {
-    .ant-steps-item-container {
-      .ant-steps-item-tail {
-        top: 5px;
-        left: 15px;
-        padding: 30px 0 11px;
-
-        &::after {
-          background-color: rgba(255, 255, 255, 0.3);
-        }
-      }
-
+    .ant-steps-item-active,
+    .ant-steps-item-finish {
+      .ant-steps-item-tail::after,
       .ant-steps-item-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-        border: none;
-        background-color: rgba(255, 255, 255, 0.3);
-
-        .ant-steps-icon {
-          font-weight: 700;
-          font-size: 16px;
-          line-height: 24px;
-          top: 0;
-          color: @color-blue700;
-        }
+        background-color: @color-petrol500 !important;
       }
 
       .ant-steps-item-title {
-        font-size: 20px;
-        line-height: 24px;
-        font-weight: normal;
-        color: rgba(255, 255, 255, 0.3);
+        color: @color-petrol500 !important;
+      }
+    }
+
+    .ant-steps-item-error {
+      .ant-steps-item-icon {
+        background-color: red !important;
+      }
+    }
+
+    .ant-steps-item-process,
+    .ant-steps-item-finish {
+      .ant-steps-item-title {
+        font-weight: 700 !important;
+      }
+    }
+
+    .ant-steps-item {
+      .ant-steps-item-container {
+        .ant-steps-item-tail {
+          top: 5px;
+          left: 15px;
+          padding: 30px 0 11px;
+
+          &::after {
+            background-color: rgba(255, 255, 255, 0.3);
+          }
+        }
+
+        .ant-steps-item-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 30px;
+          height: 30px;
+          border: none;
+          background-color: rgba(255, 255, 255, 0.3);
+
+          .ant-steps-icon {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            top: 0;
+            color: @color-blue700;
+          }
+        }
+
+        .ant-steps-item-title {
+          font-size: 20px;
+          line-height: 24px;
+          font-weight: normal;
+          color: rgba(255, 255, 255, 0.3);
+        }
       }
     }
   }
