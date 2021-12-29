@@ -1251,14 +1251,11 @@ export default class CreateFarm extends Vue {
 <style lang="less">
 .create-farm-modal {
   .ant-modal {
-    width: auto !important;
-    max-width: 886px !important;
-    min-width: 700px !important;
-    padding: 28px !important;
-
-    @media @max-sl-mobile {
-      max-width: 346px !important;
-      min-width: 346px !important;
+    max-width: @tablet-md-width;
+    width: 100% !important;
+    
+    @media @max-md-tablet {
+      max-width: calc(100vw - 16px);
     }
 
     .ant-modal-content {
@@ -1347,8 +1344,8 @@ export default class CreateFarm extends Vue {
         .ant-steps-item-title {
           font-size: 20px;
           line-height: 24px;
-          font-weight: normal;
           color: rgba(255, 255, 255, 0.3);
+          margin-top: 6px;
         }
       }
     }
@@ -1416,11 +1413,11 @@ export default class CreateFarm extends Vue {
 
 .ant-radio-checked {
   .ant-radio-inner {
-    border-color: @color-petrol500;
+    border-color: @color-farms;
   }
 
   .ant-radio-inner::after {
-    background-color: @color-petrol500;
+    background-color: @color-farms;
   }
 }
 
@@ -1430,7 +1427,7 @@ export default class CreateFarm extends Vue {
 
 .ant-radio-wrapper:hover .ant-radio-inner,
 .ant-radio:hover .ant-radio-inner {
-  border-color: @color-petrol500;
+  border-color: @color-farms;
 }
 
 .ant-radio .ant-radio-input:focus + .ant-radio-inner {
@@ -1438,7 +1435,7 @@ export default class CreateFarm extends Vue {
 }
 
 .ant-radio-checked .ant-radio-input:focus + .ant-radio-inner {
-  border-color: @color-petrol500;
+  border-color: @color-farms;
 }
 
 // ant calendar

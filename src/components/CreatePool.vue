@@ -1289,14 +1289,11 @@ export default class CreatePool extends Vue {
 <style lang="less">
 .create-pool-modal {
   .ant-modal {
-    width: auto !important;
-    max-width: 886px !important;
-    min-width: 700px !important;
-    padding: 28px !important;
-
-    @media @max-sl-mobile {
-      max-width: 346px !important;
-      min-width: 346px !important;
+    max-width: @tablet-md-width;
+    width: 100% !important;
+    
+    @media @max-md-tablet {
+      max-width: calc(100vw - 16px);
     }
 
     .ant-modal-content {
