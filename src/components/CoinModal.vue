@@ -55,6 +55,10 @@
           spellcheck="false"
         />
       </div>
+      <div v-if="coin.balance && !coin.balance.wei.isNaN()" class="balance-info fs-container bodyXS weightS">
+        <span> Balance: {{ coin.balance.fixed() }} </span>
+        <span> ~${{ coin.balance.fixed() }} </span>
+      </div>
     </div>
     <div class="lp-breakdown text-center">
       <label class="textS weightS letterL">LP Breakdown</label>
@@ -262,6 +266,11 @@ export default Vue.extend({
 
   input[disabled] {
     cursor: not-allowed;
+  }
+
+  .balance-info {
+    margin-top: 8px;
+    color: @color-blue200;
   }
 }
 
