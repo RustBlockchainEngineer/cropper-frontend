@@ -5,7 +5,7 @@
     :visible="true"
     :footer="null"
     :width="380"
-    :mask="true"
+    :mask-closable="true"
     title="Select a token"
     @cancel="$emit('onClose')"
     class="coin-select-modal"

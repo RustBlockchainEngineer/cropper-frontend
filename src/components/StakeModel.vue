@@ -5,7 +5,7 @@
     :footer="null"
     :width="400"
     :closable="false"
-    :mask="true"
+    :mask-closable="true"
     centered
     @cancel="$emit('onCancel')"
   >

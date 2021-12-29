@@ -5,7 +5,7 @@
     :footer="null"
     :width="400"
     :closable="false"
-    :mask="true"
+    :mask-closable="true"
     class="addliq-modal"
     centered
     @cancel="$emit('onCancel')"

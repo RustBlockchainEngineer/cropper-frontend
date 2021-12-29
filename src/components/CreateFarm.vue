@@ -5,7 +5,6 @@
     :footer="null"
     :closable="false"
     :mask-closable="true"
-    :mask="true"
     class="create-farm-modal"
     @cancel="$emit('onCancel')"
     centered
