@@ -747,11 +747,12 @@
                   <img
                     class="more-icon icon-cursor"
                     src="@/assets/icons/dot3.svg"
-                    @click="activeMore(idx)"
+                    @click="showMore(idx)"
                   />
                   <div
                     v-if="showMoreMenu[idx]"
                     class="option-collapse-menu collapse-right"
+                    v-click-outside="hideMore"
                   >
                     <div
                       class="option-collapse-item text-center textM weightS icon-cursor"
@@ -1614,6 +1615,8 @@ import { addLiquidity, removeLiquidity } from "@/utils/liquidity";
 import { loadAccount } from "@/utils/account";
 import BigNumber from "bignumber.js";
 const CollapsePanel = Collapse.Panel;
+const Vco = require('v-click-outside')
+Vue.use(Vco)
 
 export default Vue.extend({
   components: {
@@ -1675,6 +1678,7 @@ export default Vue.extend({
       showMoreMenu: [] as boolean[],
       showSearchMenu: false as boolean,
       showTabMenu: false as boolean,
+      currentShowMore: -1 as number,
       mostUsed: [
         {
           symbol: "CRP",
@@ -3334,13 +3338,29 @@ export default Vue.extend({
       this.searchName = name.toLowerCase();
       this.showSearchMenu = false;
     },
-    activeMore(idx: number) {
+    showMore(idx: number) {
+      if (idx != this.currentShowMore) {
+        this.showMoreMenu = this.showMoreMenu.map((item) => {
+          return false;
+        });
+      }
       this.showMoreMenu = this.showMoreMenu.map((item, i) => {
-        if (i === idx) return !item;
+        if (i === idx) { 
+          this.currentShowMore = idx; 
+          return !item; 
+        }
         return item;
       });
       console.log(this.showMoreMenu);
     },
+    hideMore() {
+      if (this.currentShowMore != -1) {
+        this.showMoreMenu = this.showMoreMenu.map((item) => {
+          return false;
+        });
+        this.currentShowMore = -1
+      }
+    }
   },
 });
 </script>
