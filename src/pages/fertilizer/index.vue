@@ -171,7 +171,7 @@
                       : sortOption === 'whitelist'
                       ? 'Whitelist Open'
                       : sortOption === 'sales'
-                      ? 'Open Sales'
+                      ? 'Sales'
                       : sortOption === 'distribution'
                       ? 'Distribution'
                       : ''
@@ -216,7 +216,7 @@
                 :class="sortOption === 'sales' ? 'active-item' : ''"
                 @click="setSortOption('sales')"
               >
-                Open Sales
+                Sales
               </div>
               <div
                 class="collapse-item text-center texts weightB icon-cursor"
@@ -229,13 +229,76 @@
           </div>
         </div>
 
-        <div v-if="initialized"></div>
+        <div class="fertilizer-content">
+          <Row :gutter="[18, 28]">
+            <Col v-for="fertilizer in fertilizerData" :key="fertilizer.title" :span="6">
+              <div class="fertilizer-project">
+                <div class="project-banner">
+                  <img class="banner" :src="fertilizer.picture" />
+                  <div 
+                    class="project-status" 
+                    :class="fertilizer.status === 'Whitelist Open'
+                      ? 'whitelist'
+                      : fertilizer.status === 'Sales'
+                      ? 'sales'
+                      : fertilizer.status === 'Distribution'
+                      ? 'distribution'
+                      : ''"
+                  >
+                    <span class="bodyXS weightB">{{ fertilizer.status }}</span>
+                  </div>
+                </div>
+
+                <div class="project-details">
+                  <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
+                  <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
+                  
+                  <div class="project-info fs-container">
+                    <div class="project-balance">
+                      <span class="label textS weightS letterL">Total raised</span>
+                      <span class="value textM weightS letterS fl-container">
+                        <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                        {{ fertilizer.hard_cap }}
+                      </span>
+                    </div>
+                    <div class="project-balance">
+                      <span class="label textS weightS letterL">Participants</span>
+                      <span class="value textM weightS letterS fl-container">{{ fertilizer.participants }}</span>
+                    </div>
+                  </div>
+
+                  <div class="project-info">
+                    <div class="project-balance">
+                      <span class="label textS weightS letterL">Sales starts in:</span>
+                      <span class="value textM weightS letterS fl-container">
+                        {{ 
+                          fertilizer.status === 'Whitelist Open'
+                            ? fertilizer.whitelist_end_data
+                            : fertilizer.status === 'Sales'
+                            ? fertilizer.sales_start_date
+                            : fertilizer.status === 'Distribution'
+                            ? fertilizer.distribution_start_date
+                            : ''
+                        }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="btn-container">
+                    <Button class="btn-transparent textM weightS fc-container letterS">More details</Button>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <!-- <div v-if="initialized"></div>
 
         <div v-else class="fc-container">
           <Spin :spinning="true">
             <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
           </Spin>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -245,7 +308,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import importIcon from '@/utils/import-icon'
-import { Spin, Icon, Collapse, Col, Radio, Row, Select, Switch as Toggle, Pagination } from 'ant-design-vue'
+import { Spin, Icon, Collapse, Col, Radio, Row, Select, Switch as Toggle, Pagination, Button } from 'ant-design-vue'
 import { get, cloneDeep } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
@@ -258,25 +321,14 @@ const RadioButton = Radio.Button
 
 export default Vue.extend({
   components: {
-    //Toggle,
-    //Collapse,
-    // CollapsePanel,
-    Spin,
-    Icon
-    // Collapse,
-    // Col,
-    // Row
-    //Select,
-    //Pagination
+    // Spin,
+    // Icon,
+    Row,
+    Col,
+    Button
   },
-
-  //    ,
-  //    RadioGroup,
-  //    RadioButton
-
   data() {
     return {
-      isMobile: false as boolean,
       searchName: '',
       coinPicUrl: '',
       initialized: false as boolean,
@@ -298,14 +350,54 @@ export default Vue.extend({
       showSearchMenu: false as boolean,
       showFilterMenu: false as boolean,
       projectOption: 'upcoming' as string,
-      sortOption: 'all' as string
+      sortOption: 'all' as string,
+      fertilizerData: [
+        {
+          status: 'Whitelist Open',
+          picture: '/fertilizer/unq.png',
+          title: 'UNQ.club',
+          short_desc: 'Social platform for NFT asset management',
+          hard_cap: '3000K',
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_end_data: 1612000905
+        },
+        {
+          status: 'Sales',
+          picture: '/fertilizer/metaprints.png',
+          title: 'Metaprints',
+          short_desc: 'Blueprints for metaverses',
+          hard_cap: '3000K',
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          sales_start_date: 1612000905
+        },
+        {
+          status: 'Sales',
+          picture: '/fertilizer/galaxy.png',
+          title: 'Galaxy War',
+          short_desc: 'Our galatic adventure awaits',
+          hard_cap: '3000K',
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          sales_start_date: 1612000905
+        },
+        {
+          status: 'Distribution',
+          picture: '/fertilizer/meanfi.png',
+          title: 'MeanFI',
+          short_desc: 'Grow your money stash with the best prices across DeFi',
+          hard_cap: '3000K',
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          distribution_start_date: 1612000905
+        },
+      ]
     }
   },
-
   head: {
     title: 'CropperFinance'
   },
-
   computed: {
     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
@@ -325,7 +417,6 @@ export default Vue.extend({
       this.setTimer()
     }, 1000)
   },
-
   watch: {
     showCollapse: {
       handler() {
@@ -337,7 +428,6 @@ export default Vue.extend({
       deep: true
     }
   },
-
   methods: {
     importIcon,
     async getTvl() {
@@ -475,6 +565,22 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 // global stylesheet
+.btn-container {
+  background: @gradient-btn-primary;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 48px;
+  padding: 3px;
+  height: 45px;
+}
+
+.btn-transparent {
+  background: transparent;
+  border-radius: 48px;
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+
 .option-sort-collapse {
   position: absolute;
   top: 50px;
@@ -740,6 +846,80 @@ export default Vue.extend({
             }
           }
         }
+      }
+    }
+  }
+
+  .fertilizer-content {
+    .fertilizer-project {
+      background: @color-blue700;
+      border: 3px solid @color-blue500;
+      border-radius: 18px;
+
+      .project-banner {
+        position: relative;
+        border-bottom: 3px solid @color-blue500;
+        height: 190px;
+
+        .banner {
+          width: 100%;
+          height: 100%;
+          border-radius: 18px 18px 0 0;
+        }
+
+        .project-status {
+          position: absolute;
+          top: 9px;
+          left: 13px;
+          padding: 4px 8px;
+          border-radius: 6px;
+
+          &.whitelist {
+            background: @color-red600;
+          }
+
+          &.sales {
+            background: @color-purple500;
+          }
+
+          &.distribution {
+            background: @color-yellow600;
+            color: #000;
+          }
+        }
+      }
+
+      .project-details {
+        padding: 14px;
+
+        .short-desc {
+          display: block;
+          height: 48px;
+          margin-top: 4px;
+        }
+
+        .project-info {
+          margin-top: 18px;
+
+          .project-balance {
+            .label {
+              color: rgba(255, 255, 255, 0.6);
+            }
+
+            .value {
+              .coin-icon {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                margin-right: 8px;
+              }
+            }
+          }
+        }
+      }
+
+      .btn-container {
+        margin-top: 18px;
       }
     }
   }
