@@ -231,7 +231,7 @@
 
         <div class="fertilizer-content">
           <Row :gutter="[18, 28]">
-            <Col v-for="fertilizer in fertilizerData" :key="fertilizer.title" :span="6">
+            <Col v-for="fertilizer in fertilizerData" :key="fertilizer.title" :lg="6" :md="8" :sm="12" :xs="24">
               <div class="fertilizer-project">
                 <div class="project-banner">
                   <img class="banner" :src="fertilizer.picture" />
@@ -360,7 +360,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_end_data: 1612000905
+          whitelist_end_data: 1643500800000
         },
         {
           status: 'Sales',
@@ -370,7 +370,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1612000905
+          sales_start_date: 1643500800000
         },
         {
           status: 'Sales',
@@ -380,7 +380,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1612000905
+          sales_start_date: 1643500800000
         },
         {
           status: 'Distribution',
@@ -390,7 +390,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          distribution_start_date: 1612000905
+          distribution_start_date: 1643500800000
         },
       ]
     }
@@ -557,7 +557,6 @@ export default Vue.extend({
     setSortOption(option: string) {
       this.sortOption = option
       this.showFilterMenu = false
-      // this.updateFarms();
     }
   }
 })
@@ -884,7 +883,7 @@ export default Vue.extend({
 
           &.distribution {
             background: @color-yellow600;
-            color: #000;
+            color: @color-neutral900;
           }
         }
       }
