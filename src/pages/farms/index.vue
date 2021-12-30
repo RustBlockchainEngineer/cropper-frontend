@@ -200,8 +200,9 @@
               </div>
             </div>
           </div>
-          <div class="option-select-group">
-            <div class="option-select fc-container icon-cursor">
+
+          <div class="option-filter-group">
+            <div class="option-filter option-filter-fixed fc-container icon-cursor">
               <img
                 src="@/assets/icons/search.svg"
                 @click="
@@ -216,7 +217,7 @@
               class="option-search-collapse"
               :class="showSearchMenu ? 'visible' : 'hidden'"
             >
-              <div class="select-token-header fs-container">
+              <div class="collapse-item-header fs-container">
                 <label class="textL weightB">Search</label>
                 <img
                   class="icon-cursor"
@@ -228,7 +229,7 @@
                   "
                 />
               </div>
-              <div class="select-token-search">
+              <div class="collapse-item-body">
                 <input
                   ref="userInput"
                   v-model="searchName"
@@ -254,7 +255,7 @@
               </div>
             </div>
 
-            <div class="option-select option-toggle fc-container">
+            <div class="option-filter option-toggle fc-container">
               <label
                 class="toggle-label icon-cursor textS weightB"
                 :class="!searchLifeFarm ? 'active-label' : ''"
@@ -270,16 +271,15 @@
               >
             </div>
 
-            <!-- option collapse > 768px -->
             <div
-              class="option-select option-sort fc-container icon-cursor"
+              class="option-filter option-sort fc-container icon-cursor"
               @click="
                 () => {
                   this.showOptionMenu = !this.showOptionMenu;
                 }
               "
             >
-              <span class="bodyM weightS option-select-sort fc-container">
+              <span class="bodyM weightS option-filter-sort fc-container">
                 <label>Sort by:</label>
                 <span class="sort-detail">
                   {{ this.sortMethod === "liquidity" ? "Liquidity" : "APR %" }} ({{
@@ -294,16 +294,16 @@
               </span>
             </div>
 
-            <!-- option collapse < 768px -->
-            <img
-              class="option-collapse icon-cursor"
-              src="@/assets/icons/menu-collapse.svg"
-              @click="
-                () => {
-                  this.showOptionMenu = !this.showOptionMenu;
-                }
-              "
-            />
+            <div class="option-filter option-filter-collapse option-filter-fixed fc-container icon-cursor">
+              <img
+                src="@/assets/icons/filter.svg"
+                @click="
+                  () => {
+                    this.showOptionMenu = !this.showOptionMenu;
+                  }
+                "
+              />
+            </div>
 
             <div v-if="showOptionMenu" class="option-collapse-menu collapse-right">
               <div class="option-collapse-item option-toggle fc-container">
@@ -3743,7 +3743,7 @@ export default Vue.extend({
           }
 
           .option-tab {
-            margin-right: 48px;
+            margin-right: 38px;
 
             &:last-child {
               margin-right: 0;
@@ -3773,25 +3773,41 @@ export default Vue.extend({
           }
         }
 
-        .option-select-group {
+        .option-filter-group {
           position: relative;
           display: flex;
           align-items: center;
 
-          .option-select {
+          .option-filter {
             border: 2px solid @color-blue500;
             border-radius: 8px;
             padding: 0 8px;
             height: 40px;
-            margin-right: 18px;
+            margin-left: 18px;
 
             @media @max-sl-mobile {
               height: 32px;
               padding: 0 4px;
             }
 
-            &:last-child {
-              margin-right: 0;
+            &:first-child {
+              margin-left: 0;
+            }
+
+            &.option-filter-fixed {
+              width: 40px;
+
+              @media @max-sl-mobile {
+                width: 32px;
+              }
+            }
+
+            &.option-filter-collapse {
+              display: none !important;
+
+              @media @max-md-tablet {
+                display: flex !important;
+              }
             }
 
             &.option-toggle {
@@ -3806,7 +3822,7 @@ export default Vue.extend({
               }
             }
 
-            .option-select-sort {
+            .option-filter-sort {
               letter-spacing: 0.15px;
 
               label {
@@ -3853,11 +3869,11 @@ export default Vue.extend({
               opacity: 1;
             }
 
-            .select-token-header {
+            .collapse-item-header {
               margin-bottom: 10px;
             }
 
-            .select-token-search {
+            .collapse-item-body {
               input {
                 border: 2px solid @color-blue400;
                 border-radius: 8px;
