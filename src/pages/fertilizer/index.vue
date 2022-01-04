@@ -955,6 +955,10 @@ export default Vue.extend({
             display: block;
             margin-top: 4px;
             height: 48px;
+
+            @media @max-lg-tablet {
+              height: 66px;
+            }
           }
         }
         

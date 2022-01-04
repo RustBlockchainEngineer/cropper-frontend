@@ -1812,21 +1812,12 @@ export default class Pools extends Vue {
 
           .pools-table-header {
             &.scrollFixed {
-              position: fixed;
+              position: sticky;
               background: @color-blue800;
-              opacity: 0.9;
               top: 70px;
               z-index: 999;
-              width: calc(100% - 128px);
-              transition: 2s all ease-out;
-              
-              @media @max-lg-tablet {
-                width: calc(100% - 64px);
-              }
-
-              @media @max-sl-mobile {
-                width: calc(100% - 40px);
-              }
+              width: 100%;
+              transition: .3s all ease-in-out;
             }
 
             .header-column {
