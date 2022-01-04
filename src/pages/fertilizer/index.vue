@@ -960,14 +960,7 @@ export default Vue.extend({
         
         .project-info {
           margin-top: 18px;
-          height: 48px;
-
-          &.whitelist-countdown {
-            height: 114px;
-            background: @color-blue800;
-            padding: 8px;
-            border-radius: 16px;
-          }
+          height: 48px;          
 
           .project-balance {
             @media @max-lg-tablet {
@@ -985,6 +978,27 @@ export default Vue.extend({
                 border-radius: 50%;
                 margin-right: 8px;
               }              
+            }
+          }
+
+          &.whitelist-countdown {
+            height: 114px;
+            background: @color-blue800;
+            padding: 8px;
+            border-radius: 16px;
+          }
+
+          &.fs-container {
+            @media @max-lg-tablet {
+              display: inline-block !important;
+            }
+
+            .project-balance {
+              margin-bottom: 18px;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
             }
           }
         }

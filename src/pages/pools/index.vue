@@ -253,7 +253,7 @@
                 <span class="bodyM weightS option-filter-sort fc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
-                    Liquidity {{ sortLiquidityAsc ? "High > Low" : "Low > High" }}
+                    Liquidity {{ sortLiquidityAsc ? "(High > Low)" : "(Low > High)" }}
                     <img
                       class="arrow-icon"
                       :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
@@ -286,7 +286,7 @@
                     }
                   "
                 >
-                  Liquidity High > Low
+                  Liquidity (High > Low)
                 </div>
                 <div
                   class="collapse-item text-center textM weightS icon-cursor"
@@ -299,7 +299,7 @@
                     }
                   "
                 >
-                  Liquidity Low > High
+                  Liquidity (Low > High)
                 </div>
               </div>
             </div>
