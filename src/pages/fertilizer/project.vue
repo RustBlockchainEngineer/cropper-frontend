@@ -2011,9 +2011,9 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
-}
+// ::-webkit-scrollbar {
+//   display: none; /* Chrome Safari */
+// }
 
 
 @media @max-sl-mobile {

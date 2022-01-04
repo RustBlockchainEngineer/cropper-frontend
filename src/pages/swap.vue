@@ -94,57 +94,57 @@
           @onSelect="openToCoinSelect"
         />
 
-        <div v-if="wallet.connected">
-          <div class="exchange-info">
-            <div
-              v-if="fromCoin && toCoin && isWrap && fromCoinAmount"
-              class="textS weightS price-base fc-container"
-            >
-              <span>
-                1 {{ fromCoin.symbol }} = 1
-                {{ toCoin.symbol }}
-              </span>
-            </div>
-            <div
-              v-else-if="fromCoin && toCoin && !isWrap && fromCoinAmount"
-              class="textS weightS price-base fc-container"
-            >
-              <span>
-                1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
-                {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
-                {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-                <img
-                  src="@/assets/icons/swap-vertical.svg"
-                  @click="() => (hasPriceSwapped = !hasPriceSwapped)"
-                  class="swap-icon"
-                />
-              </span>
-            </div>
-            <div
-              v-else-if="
-                fromCoin &&
-                toCoin &&
-                marketAddress &&
-                market &&
-                asks &&
-                bids &&
-                fromCoinAmount
-              "
-              class="textS weightS price-base fc-container"
-            >
-              <span>
-                1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
-                {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
-                {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
-                <img
-                  src="@/assets/icons/swap-vertical.svg"
-                  @click="() => (hasPriceSwapped = !hasPriceSwapped)"
-                  class="swap-icon"
-                />
-              </span>
-            </div>
+        <div class="exchange-info">
+          <div
+            v-if="fromCoin && toCoin && isWrap && fromCoinAmount"
+            class="textS weightS price-base fc-container"
+          >
+            <span>
+              1 {{ fromCoin.symbol }} = 1
+              {{ toCoin.symbol }}
+            </span>
           </div>
-
+          <div
+            v-else-if="fromCoin && toCoin && !isWrap && fromCoinAmount"
+            class="textS weightS price-base fc-container"
+          >
+            <span>
+              1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
+              {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
+              {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
+              <img
+                src="@/assets/icons/swap-vertical.svg"
+                @click="() => (hasPriceSwapped = !hasPriceSwapped)"
+                class="swap-icon"
+              />
+            </span>
+          </div>
+          <div
+            v-else-if="
+              fromCoin &&
+              toCoin &&
+              marketAddress &&
+              market &&
+              asks &&
+              bids &&
+              fromCoinAmount
+            "
+            class="textS weightS price-base fc-container"
+          >
+            <span>
+              1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
+              {{ hasPriceSwapped ? (1 / outToPirceValue).toFixed(6) : outToPirceValue }}
+              {{ hasPriceSwapped ? fromCoin.symbol : toCoin.symbol }}
+              <img
+                src="@/assets/icons/swap-vertical.svg"
+                @click="() => (hasPriceSwapped = !hasPriceSwapped)"
+                class="swap-icon"
+              />
+            </span>
+          </div>
+        </div>
+        
+        <div v-if="wallet.connected">
           <div class="swap-actions fs-container">
             <div class="swap-status textM weightS">
               <div v-if="priceImpact <= 2" class="price-status">

@@ -2,7 +2,7 @@
   <Footer>
     <div class="footer-body">
       <div class="logo">
-        <a href="/"><img src="@/assets/icons/cropper-logo.svg" /></a>
+        <a href="/"><img src="@/assets/icons/cropper-logo-footer.svg" /></a>
       </div>
       <div class="icon_list noMobile">
         <a class="social-medium" :href="linkUrl.medium" target="_blank">
@@ -25,7 +25,7 @@
     </div>
     <div class="footer-line"></div>
     <div class="footer-refer">
-      <label class="bodyS decentralized">Decentralized 2021</label>
+      <label class="textS decentralized">Decentralized 2021</label>
     </div>
   </Footer>
 </template>
@@ -105,7 +105,7 @@ export default class Foot extends Vue {
       .social-twitter,
       .social-telegram {
         .social-icon {
-          height: 24px;
+          height: 18px;
         }
 
         .social-icon:last-child {
@@ -195,18 +195,17 @@ export default class Foot extends Vue {
   height: 1px;
   background: #fff;
   opacity: 0.2;
-  margin: 20px 0;
+  margin: 28px 0 16px 0;
 }
 
 .footer-refer {
-  color: #ccd1f1;
   position: relative;
   z-index: 2;
   text-align: center;
+  color: @color-blue200;
 
   @media @max-sl-mobile {
     text-align: left;
-    color: @color-blue200;
   }
 }
 

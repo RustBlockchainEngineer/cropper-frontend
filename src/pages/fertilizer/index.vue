@@ -968,11 +968,11 @@ export default Vue.extend({
 </style>
 
 <style lang="less">
-::-webkit-scrollbar {
-  @media @max-sl-mobile {
-    display: none; /* Chrome Safari */
-  }
-}
+// ::-webkit-scrollbar {
+//   @media @max-sl-mobile {
+//     display: none; /* Chrome Safari */
+//   }
+// }
 
 .ant-statistic-content {
   font-weight: 600;

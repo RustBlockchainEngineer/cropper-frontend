@@ -2,9 +2,13 @@
   <div class="wallet">
     <div class="wallet-btn">
       <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-if="!wallet.connected" ghost @click="openPopIn">
-        <Button class="bodyS weightB">
+        <Button class="bodyS weightB isDesktop">
           <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
           Connect wallet
+        </Button>
+        <Button class="bodyS weightB isMobile">
+          <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
+          Connect
         </Button>
       </div>
 
@@ -615,6 +619,18 @@ export default class Wallet extends Vue {
 </script>
 
 <style lang="less" scoped>
+.isDesktop {
+  @media @max-sl-mobile {
+    display: none !important;
+  }
+}
+
+.isMobile {
+  display: none !important;
+  @media @max-sl-mobile {
+    display: flex !important;
+  }
+}
 
 .wallet {
   display: flex;

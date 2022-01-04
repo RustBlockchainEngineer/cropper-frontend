@@ -202,6 +202,7 @@
               <div
                 class="option-search-collapse"
                 :class="showSearchMenu ? 'visible' : 'hidden'"
+                v-click-outside="() => { this.showSearchMenu = false }"
               >
                 <div class="collapse-item-header fs-container">
                   <label class="textL weightB">Search</label>
@@ -252,7 +253,7 @@
                 <span class="bodyM weightS option-filter-sort fc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
-                    Liquidity {{ sortLiquidityAsc ? "A -> Z" : "Z -> A" }}
+                    Liquidity {{ sortLiquidityAsc ? "High -> Low" : "Low -> High" }}
                     <img
                       class="arrow-icon"
                       :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
@@ -285,7 +286,7 @@
                     }
                   "
                 >
-                  Liquidity A -> Z
+                  Liquidity High -> Low
                 </div>
                 <div
                   class="collapse-item text-center textM weightS icon-cursor"
@@ -298,7 +299,7 @@
                     }
                   "
                 >
-                  Liquidity Z -> A
+                  Liquidity Low -> High
                 </div>
               </div>
             </div>
@@ -777,6 +778,9 @@ const RadioGroup = Radio.Group;
 const poolAdd = false;
 const RadioButton = Radio.Button;
 declare const window: any;
+const Vco = require('v-click-outside')
+Vue.use(Vco)
+
 @Component({
   head: {
     title: "Cropper Finance Pools",
@@ -2198,11 +2202,11 @@ export default class Pools extends Vue {
 </style>
 
 <style lang="less">
-::-webkit-scrollbar {
-  @media @max-lg-tablet {
-    display: none; /* Chrome Safari */
-  }
-}
+// ::-webkit-scrollbar {
+//   @media @max-lg-tablet {
+//     display: none; /* Chrome Safari */
+//   }
+// }
 
 .pool {
   // ant customize

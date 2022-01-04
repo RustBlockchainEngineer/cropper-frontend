@@ -1454,9 +1454,9 @@ h4 {
 }
 </style>
 <style lang="less">
-::-webkit-scrollbar {
-  display: none;
-}
+// ::-webkit-scrollbar {
+//   display: none;
+// }
 
 // ant customization
 .landing {
