@@ -1,5 +1,14 @@
 <template>
-  <Modal title="Base detail" :visible="show" :footer="null" :mask-closable="true" @cancel="$emit('onCancel')" centered>
+  <Modal
+    title="Base detail"
+    :visible="show"
+    :footer="null"
+    :mask-closable="true"
+    :closable="false"
+    @cancel="$emit('onCancel')"
+    centered
+  >
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
     <div class="base-container">
       <div class="base-title">
         <label class="label">Base APY</label>
@@ -12,8 +21,13 @@
           <Col span="8"> Boost </Col>
           <Col span="8"> Estimated APY </Col>
         </div>
-        <div class="base-table-body" v-for="data in lockData" :key="data.tier" @click="$emit('onSelect', data.time, data.apy)">
-          <Col span="8"> {{ data.time >= 12 ? data.time / 12 + ' year' : data.time + ' month'}} </Col>
+        <div
+          class="base-table-body"
+          v-for="data in lockData"
+          :key="data.tier"
+          @click="$emit('onSelect', data.time, data.apy)"
+        >
+          <Col span="8"> {{ data.time >= 12 ? data.time / 12 + ' year' : data.time + ' month' }} </Col>
           <Col span="8"> {{ data.boost }} x </Col>
           <Col span="8"> {{ Math.round(100 * (Math.round(estimatedapy * 100) / 100) * data.boost) / 100 }} % </Col>
         </div>
@@ -26,10 +40,7 @@
 import Vue from 'vue'
 import { Modal, Row, Col } from 'ant-design-vue'
 
-import {
-  setAnchorProvider,
-  getExtraRewardConfigs,
-} from '@/utils/crp-stake'
+import { setAnchorProvider, getExtraRewardConfigs } from '@/utils/crp-stake'
 
 Vue.use(Modal)
 
@@ -101,13 +112,12 @@ export default Vue.extend({
     }
   },
 
-  mounted(){
+  mounted() {
     setAnchorProvider(this.$web3, this.$wallet)
-    getExtraRewardConfigs().then((res : any) =>
-    {
-      res.configs.forEach((item: any, index : number) =>{
-        if(index >= this.lockData.length){
-          return;
+    getExtraRewardConfigs().then((res: any) => {
+      res.configs.forEach((item: any, index: number) => {
+        if (index >= this.lockData.length) {
+          return
         }
         this.lockData[index].minutesLock = item.duration / 60
         this.lockData[index].boost = item.extraPercentage / 100 + 1
@@ -117,7 +127,6 @@ export default Vue.extend({
 })
 </script>
 <style lang="less">
-
 .base-container {
   .base-title {
     display: flex;
@@ -130,7 +139,7 @@ export default Vue.extend({
   .base-table {
     margin-top: 20px;
     padding: 12px;
-    border: 2px solid #32476C;
+    border: 2px solid #32476c;
     box-sizing: border-box;
     border-radius: 8px;
 
@@ -148,7 +157,7 @@ export default Vue.extend({
       line-height: 14px;
       color: @color-gray;
       padding: 5px 0;
-      border-bottom: 1px solid #384D71;
+      border-bottom: 1px solid #384d71;
       cursor: pointer;
 
       &:last-child {
