@@ -3394,14 +3394,17 @@ export default Vue.extend({
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
-  max-width: 95px;
-  width: calc((100% - 24px) / 3);
+  width: 95px;
   height: auto;
   margin-bottom: 8px;
 
   @media @max-lg-tablet {
     margin-bottom: 0;
     margin-right: 8px;
+  }
+
+  @media @max-sl-mobile {
+    width: calc((100% - 24px) / 3);
   }
 
   &:last-child {
