@@ -231,9 +231,9 @@
 
         <div class="fertilizer-content">
           <Row :gutter="[18, 28]">
-            <Col v-for="fertilizer in fertilizerData" :key="fertilizer.title" 
-              :lg="fertilizer.status === 'Whitelist Open' ? 12 : 6"
-              :md="fertilizer.status === 'Whitelist Open' ? 16 : 8"
+            <Col v-for="(fertilizer, idx) in fertilizerData" :key="fertilizer.title" 
+              :lg="idx === 0 ? 12 : 6"
+              :md="idx === 0 ? 16 : 8"
               :sm="24"
             >
               <div class="fertilizer-project">
@@ -256,28 +256,54 @@
                 </div>
 
                 <div class="project-details">
-                  <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
-                  <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
+                  <Row v-if="fertilizer.status === 'Whitelist Open'" class="project-desc-whitelist fss-container">
+                    <Col :span="12" class="project-title">
+                      <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
+                      <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
+                    </Col>
                   
-                  <div class="project-info fs-container">
-                    <div class="project-balance">
-                      <span class="label textS weightS letterL">Total raised</span>
-                      <span class="value textM weightS letterS fl-container">
-                        <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                        {{ fertilizer.hard_cap }}
-                      </span>
+                    <Col :span="12" class="project-info fs-container">
+                      <div class="project-balance">
+                        <span class="label textS weightS letterL">Total raised</span>
+                        <span class="value textM weightS letterS fl-container">
+                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          {{ fertilizer.hard_cap }}
+                        </span>
+                      </div>
+                      <div class="project-balance">
+                        <span class="label textS weightS letterL">Participants</span>
+                        <span class="value textM weightS letterS fl-container">{{ fertilizer.participants }}</span>
+                      </div>
+                    </Col>
+                  </Row>
+
+                  <div v-else>
+                    <div class="project-title">
+                      <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
+                      <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
                     </div>
-                    <div class="project-balance">
-                      <span class="label textS weightS letterL">Participants</span>
-                      <span class="value textM weightS letterS fl-container">{{ fertilizer.participants }}</span>
+
+                    <div class="project-info fs-container">
+                      <div class="project-balance">
+                        <span class="label textS weightS letterL">Total raised</span>
+                        <span class="value textM weightS letterS fl-container">
+                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          {{ fertilizer.hard_cap }}
+                        </span>
+                      </div>
+                      <div class="project-balance">
+                        <span class="label textS weightS letterL">Participants</span>
+                        <span class="value textM weightS letterS fl-container">{{ fertilizer.participants }}</span>
+                      </div>
                     </div>
                   </div>
+                  
+                  <div v-if="fertilizer.status === 'Whitelist Open'" class="project-info whitelist-countdown fc-container text-center">
+                    <Countdown title="End of the whitelist in" :value="fertilizer.whitelist_end_data" format="DD:HH:mm:ss" />
+                  </div>
 
-                  <div class="project-info fl-container">
-                    <div v-if="fertilizer.status === 'Whitelist Open'" class="whitelist-countdown">
-                      <Countdown title="Endof the whitelist in" :value="fertilizer.whitelist_end_data" format="DD:HH:mm:ss" />
-                    </div>
-                    <div v-else-if="fertilizer.status === 'Sales' && currentTimestamp > fertilizer.sales_start_date" class="project-status open">
+                  <div v-else class="project-info fl-container">
+                    <div v-if="fertilizer.status === 'Sales' && currentTimestamp > fertilizer.sales_start_date" class="project-status open">
                       <span class="bodyXS weightB">Open Now</span>
                     </div>
                     <div v-else class="project-balance">
@@ -923,20 +949,21 @@ export default Vue.extend({
 
       .project-details {
         padding: 14px;
-
-        .short-desc {
-          display: block;
-          margin-top: 4px;
-          height: 48px;
+        
+        .project-title {
+          .short-desc {
+            display: block;
+            margin-top: 4px;
+            height: 48px;
+          }
         }
-
+        
         .project-info {
           margin-top: 18px;
           height: 48px;
 
-          .whitelist-countdown {
-            width: 100%;
-            height: 100%;
+          &.whitelist-countdown {
+            height: 114px;
             background: @color-blue800;
             padding: 8px;
             border-radius: 16px;
@@ -955,6 +982,13 @@ export default Vue.extend({
                 margin-right: 8px;
               }              
             }
+          }
+        }
+
+        .project-desc-whitelist {
+          .project-info {
+            margin-top: 0;
+            height: auto;
           }
         }
       }
@@ -979,5 +1013,24 @@ export default Vue.extend({
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.15px;
+}
+
+.whitelist-countdown {
+  .ant-statistic-title {
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 8px;
+  }
+
+  .ant-statistic-content {
+    font-weight: bold;
+    font-size: 25px;
+    line-height: 35px;
+    text-align: center;
+    letter-spacing: 3px;
+  }
 }
 </style>

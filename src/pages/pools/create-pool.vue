@@ -1355,7 +1355,7 @@ main {
           max-width: 615px;
 
           @media @max-sl-mobile {
-            max-width: @mobile-sm-width;
+            max-width: @mobile-sl-width;
           }
 
           label {

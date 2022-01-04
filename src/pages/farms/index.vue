@@ -216,8 +216,8 @@
 
               <div
                 class="option-search-collapse"
-                :class="showSearchMenu ? 'visible' : 'hidden'"
-                v-click-outside="() => { this.showSearchMenu = false }"
+                v-if="showSearchMenu"
+                v-click-outside="() => { this.showSearchMenu = false; }"
               >
                 <div class="collapse-item-header fs-container">
                   <label class="textL weightB">Search</label>
@@ -307,7 +307,7 @@
                 />
               </div>
 
-              <div v-if="showOptionMenu" class="option-collapse-menu collapse-right">
+              <div v-if="showOptionMenu" class="option-collapse-menu collapse-right" v-click-outside="() => { this.showOptionMenu = false; }">
                 <div class="option-collapse-item option-toggle fc-container">
                   <label
                     class="toggle-label icon-cursor textS weightB"
@@ -355,7 +355,7 @@
             </div>
           </div>
 
-          <div v-if="farm.initialized">
+          <div v-if="farm.initialized && farmLoaded">
             <div class="farm-table isDesktop">
               <Row
                 class="farm-item"
@@ -1638,7 +1638,7 @@ export default Vue.extend({
     return {
       farmProgramCreated: true,
       superOwnerAddress: FARM_INITIAL_SUPER_OWNER,
-
+      farmLoaded: false as boolean,
       farms: [] as any[],
       showFarms: [] as any[],
       searchName: "",
@@ -1681,6 +1681,7 @@ export default Vue.extend({
       showMoreMenu: [] as boolean[],
       showSearchMenu: false as boolean,
       showTabMenu: false as boolean,
+      isSearchClicking: false as boolean,
       currentShowMore: -1 as number,
       mostUsed: [
         {
@@ -2003,6 +2004,7 @@ export default Vue.extend({
 
     async updateFarms() {
       this.$accessor.token.loadTokens();
+      this.farmLoaded = false;
       console.log("updating farms ...");
       await this.updateLabelizedAmms();
       this.currentTimestamp = moment().unix();
@@ -2430,7 +2432,7 @@ export default Vue.extend({
       this.currentPage = pageNum;
       this.showFarms = this.farms;
 
-      //filter for not allowed famrs
+      // filter for not allowed farms
       this.showFarms = this.showFarms.filter(
         (farm: any) =>
           farm.farmInfo.poolInfo.is_allowed > 0 ||
@@ -2516,6 +2518,7 @@ export default Vue.extend({
       this.showFarms.forEach((element) => {
         this.showMoreMenu.push(false);
       });
+      this.farmLoaded = true
     },
 
     updateCurrentLp(newTokenAccounts: any) {
@@ -3495,6 +3498,14 @@ export default Vue.extend({
     padding: 16px 32px;
     border-bottom: 1px solid #c4c4c420;
 
+    &.option-toggle {
+      display: none !important;
+
+      @media @max-md-tablet {
+        display: flex !important;
+      }
+    }
+
     &:last-child {
       border-bottom: 0;
     }
@@ -3862,8 +3873,8 @@ export default Vue.extend({
               position: absolute;
               top: 0;
               left: -209px;
-              visibility: hidden;
-              opacity: 0;
+              // visibility: hidden;
+              // opacity: 0;
               transition: visibility 0s, opacity 0.5s linear;
               background: @color-blue700;
               border: 2px solid @color-blue500;
@@ -3872,10 +3883,10 @@ export default Vue.extend({
               z-index: 999;
               width: 250px;
 
-              &.visible {
-                visibility: visible;
-                opacity: 1;
-              }
+              // &.visible {
+              //   visibility: visible;
+              //   opacity: 1;
+              // }
 
               .collapse-item-header {
                 margin-bottom: 10px;

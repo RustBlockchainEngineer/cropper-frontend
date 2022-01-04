@@ -201,8 +201,8 @@
 
               <div
                 class="option-search-collapse"
-                :class="showSearchMenu ? 'visible' : 'hidden'"
-                v-click-outside="() => { this.showSearchMenu = false }"
+                v-if="showSearchMenu"
+                v-click-outside="() => { this.showSearchMenu = false; }"
               >
                 <div class="collapse-item-header fs-container">
                   <label class="textL weightB">Search</label>
@@ -274,7 +274,7 @@
                 />
               </div>
 
-              <div v-if="showFilterMenu" class="option-sort-collapse collapse-right">
+              <div v-if="showFilterMenu" class="option-sort-collapse collapse-right" v-click-outside="() => { this.showFilterMenu = false; }">
                 <div
                   class="collapse-item text-center textM weightS icon-cursor"
                   :class="sortLiquidityAsc ? 'active-item' : ''"
@@ -2015,8 +2015,8 @@ export default class Pools extends Vue {
               position: absolute;
               top: 0;
               left: -209px;
-              visibility: hidden;
-              opacity: 0;
+              // visibility: hidden;
+              // opacity: 0;
               transition: visibility 0s, opacity 0.5s linear;
               background: @color-blue700;
               border: 2px solid @color-blue500;
@@ -2025,10 +2025,10 @@ export default class Pools extends Vue {
               z-index: 999;
               width: 250px;
 
-              &.visible {
-                visibility: visible;
-                opacity: 1;
-              }
+              // &.visible {
+              //   visibility: visible;
+              //   opacity: 1;
+              // }
 
               .collapse-item-header {
                 margin-bottom: 10px;
