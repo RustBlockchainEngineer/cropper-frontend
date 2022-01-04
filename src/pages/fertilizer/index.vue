@@ -231,7 +231,11 @@
 
         <div class="fertilizer-content">
           <Row :gutter="[18, 28]">
-            <Col v-for="fertilizer in fertilizerData" :key="fertilizer.title" :lg="6" :md="8" :sm="12" :xs="24">
+            <Col v-for="fertilizer in fertilizerData" :key="fertilizer.title" 
+              :lg="fertilizer.status === 'Whitelist Open' ? 12 : 6"
+              :md="fertilizer.status === 'Whitelist Open' ? 16 : 8"
+              :sm="24"
+            >
               <div class="fertilizer-project">
                 <div class="project-banner">
                   <img class="banner" :src="fertilizer.picture" />
@@ -269,25 +273,39 @@
                     </div>
                   </div>
 
-                  <div class="project-info">
-                    <div class="project-balance">
-                      <span class="label textS weightS letterL">Sales starts in:</span>
-                      <span class="value textM weightS letterS fl-container">
+                  <div class="project-info fl-container">
+                    <div v-if="fertilizer.status === 'Whitelist Open'" class="whitelist-countdown">
+                      <Countdown title="Endof the whitelist in" :value="fertilizer.whitelist_end_data" format="DD:HH:mm:ss" />
+                    </div>
+                    <div v-else-if="fertilizer.status === 'Sales' && currentTimestamp > fertilizer.sales_start_date" class="project-status open">
+                      <span class="bodyXS weightB">Open Now</span>
+                    </div>
+                    <div v-else class="project-balance">
+                      <span class="label textS weightS letterL">
                         {{ 
-                          fertilizer.status === 'Whitelist Open'
-                            ? fertilizer.whitelist_end_data
-                            : fertilizer.status === 'Sales'
+                          fertilizer.status === 'Sales'
+                            ? 'Sales'
+                            : fertilizer.status === 'Distribution'
+                            ? 'Distribution'
+                            : ''
+                        }} 
+                        starts in:
+                      </span>
+                      <span class="value fl-container">
+                        <Countdown 
+                          :value="fertilizer.status === 'Sales'
                             ? fertilizer.sales_start_date
                             : fertilizer.status === 'Distribution'
                             ? fertilizer.distribution_start_date
-                            : ''
-                        }}
+                            : 0" 
+                          format="DD:HH:mm:ss" />
                       </span>
                     </div>
                   </div>
 
                   <div class="btn-container">
-                    <Button class="btn-transparent textM weightS fc-container letterS">More details</Button>
+                    <Button v-if="fertilizer.status === 'Whitelist Open'" class="btn-transparent textM weightS fc-container letterS">Subscription</Button>
+                    <Button v-else class="btn-transparent textM weightS fc-container letterS">More details</Button>
                   </div>
                 </div>
               </div>
@@ -310,7 +328,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import importIcon from '@/utils/import-icon'
-import { Spin, Icon, Collapse, Col, Radio, Row, Select, Switch as Toggle, Pagination, Button } from 'ant-design-vue'
+import { Collapse, Row, Col, Radio, Switch as Toggle, Pagination, Button, Statistic } from 'ant-design-vue'
 import { get, cloneDeep } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
@@ -320,6 +338,7 @@ import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
 const CollapsePanel = Collapse.Panel
 const RadioGroup = Radio.Group
 const RadioButton = Radio.Button
+const Countdown = Statistic.Countdown
 
 export default Vue.extend({
   components: {
@@ -327,7 +346,8 @@ export default Vue.extend({
     // Icon,
     Row,
     Col,
-    Button
+    Button,
+    Countdown
   },
   data() {
     return {
@@ -362,7 +382,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_end_data: 1643500800
+          whitelist_end_data: 1643500800000
         },
         {
           status: 'Sales',
@@ -372,7 +392,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1641280215
+          sales_start_date: 1641280215000
         },
         {
           status: 'Sales',
@@ -382,7 +402,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1643500800
+          sales_start_date: 1643500800000
         },
         {
           status: 'Distribution',
@@ -392,7 +412,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          distribution_start_date: 1643500800
+          distribution_start_date: 1643500800000
         },
       ],
       currentTimestamp: 0
@@ -420,7 +440,7 @@ export default Vue.extend({
       this.setTimer()
     }, 1000)
 
-    this.currentTimestamp = moment().unix();
+    this.currentTimestamp = moment().valueOf();
     console.log(this.currentTimestamp);
   },
   watch: {
@@ -616,6 +636,28 @@ export default Vue.extend({
     &.active-item {
       color: @color-petrol500;
     }
+  }
+}
+
+.project-status {
+  padding: 4px 8px;
+  border-radius: 6px;
+
+  &.whitelist {
+    background: @color-red600;
+  }
+
+  &.sales {
+    background: @color-purple500;
+  }
+
+  &.distribution {
+    background: @color-yellow600;
+    color: @color-neutral900;
+  }
+
+  &.open {
+    background: @color-green500;
   }
 }
 
@@ -876,21 +918,6 @@ export default Vue.extend({
           position: absolute;
           top: 9px;
           left: 13px;
-          padding: 4px 8px;
-          border-radius: 6px;
-
-          &.whitelist {
-            background: @color-red600;
-          }
-
-          &.sales {
-            background: @color-purple500;
-          }
-
-          &.distribution {
-            background: @color-yellow600;
-            color: @color-neutral900;
-          }
         }
       }
 
@@ -899,12 +926,21 @@ export default Vue.extend({
 
         .short-desc {
           display: block;
-          height: 48px;
           margin-top: 4px;
+          height: 48px;
         }
 
         .project-info {
           margin-top: 18px;
+          height: 48px;
+
+          .whitelist-countdown {
+            width: 100%;
+            height: 100%;
+            background: @color-blue800;
+            padding: 8px;
+            border-radius: 16px;
+          }
 
           .project-balance {
             .label {
@@ -917,7 +953,7 @@ export default Vue.extend({
                 height: 16px;
                 border-radius: 50%;
                 margin-right: 8px;
-              }
+              }              
             }
           }
         }
@@ -936,5 +972,12 @@ export default Vue.extend({
   @media @max-sl-mobile {
     display: none; /* Chrome Safari */
   }
+}
+
+.ant-statistic-content {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
 }
 </style>
