@@ -177,7 +177,7 @@
                 src="@/assets/icons/arrow-down-white.svg"
               />
 
-              <div v-if="showTabMenu" class="option-collapse-menu collapse-left">
+              <div v-if="showTabMenu" class="option-collapse-menu collapse-left" v-click-outside="() => { this.showTabMenu = false; }">
                 <div
                   class="option-collapse-item text-center textM weightS icon-cursor"
                   :class="searchCertifiedFarm === 'labelized' ? 'active-item' : ''"
@@ -284,9 +284,9 @@
                 <span class="bodyM weightS option-filter-sort fc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
-                    {{ this.sortMethod === "liquidity" ? "Liquidity" : "APR %" }} ({{
-                      !this.sortAsc ? "High -> Low" : "Low -> High"
-                    }})
+                    {{ this.sortMethod === "liquidity" ? "Liquidity" : "APR %" }} {{
+                      !this.sortAsc ? "High > Low" : "Low > High"
+                    }}
                     <img
                       class="arrow-icon"
                       :class="showOptionMenu ? 'arrow-up' : 'arrow-down'"
@@ -328,28 +328,28 @@
                   :class="sortMethod === 'liquidity' && !sortAsc ? 'active-item' : ''"
                   @click="setSortOption('liquidity', false)"
                 >
-                  Liquidity High -> Low
+                  Liquidity High > Low
                 </div>
                 <div
                   class="option-collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === 'liquidity' && sortAsc ? 'active-item' : ''"
                   @click="setSortOption('liquidity', true)"
                 >
-                  Liquidity Low -> High
+                  Liquidity Low > High
                 </div>
                 <div
                   class="option-collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === 'apr' && !sortAsc ? 'active-item' : ''"
                   @click="setSortOption('apr', false)"
                 >
-                  APR % High -> Low
+                  APR % High > Low
                 </div>
                 <div
                   class="option-collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === 'apr' && sortAsc ? 'active-item' : ''"
                   @click="setSortOption('apr', true)"
                 >
-                  APR % Low -> High
+                  APR % Low > High
                 </div>
               </div>
             </div>

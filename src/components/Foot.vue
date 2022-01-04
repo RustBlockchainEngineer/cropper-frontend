@@ -25,7 +25,7 @@
     </div>
     <div class="footer-line"></div>
     <div class="footer-refer">
-      <label class="textS decentralized">Decentralized 2021</label>
+      <label class="textS decentralized">Decentralized 2022</label>
     </div>
   </Footer>
 </template>

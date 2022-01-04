@@ -162,7 +162,7 @@
                 src="@/assets/icons/arrow-down-white.svg"
               />
 
-              <div v-if="showTabMenu" class="option-sort-collapse collapse-left">
+              <div v-if="showTabMenu" class="option-sort-collapse collapse-left" v-click-outside="() => { this.showTabMenu = false; }">
                 <div
                   class="collapse-item text-center textM weightS icon-cursor"
                   :class="searchCertifiedFarm === 'labelized' ? 'active-item' : ''"
@@ -253,7 +253,7 @@
                 <span class="bodyM weightS option-filter-sort fc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
-                    Liquidity {{ sortLiquidityAsc ? "High -> Low" : "Low -> High" }}
+                    Liquidity {{ sortLiquidityAsc ? "High > Low" : "Low > High" }}
                     <img
                       class="arrow-icon"
                       :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
@@ -286,7 +286,7 @@
                     }
                   "
                 >
-                  Liquidity High -> Low
+                  Liquidity High > Low
                 </div>
                 <div
                   class="collapse-item text-center textM weightS icon-cursor"
@@ -299,7 +299,7 @@
                     }
                   "
                 >
-                  Liquidity Low -> High
+                  Liquidity Low > High
                 </div>
               </div>
             </div>
@@ -1818,7 +1818,8 @@ export default class Pools extends Vue {
               top: 70px;
               z-index: 999;
               width: calc(100% - 128px);
-
+              transition: 2s all ease-out;
+              
               @media @max-lg-tablet {
                 width: calc(100% - 64px);
               }

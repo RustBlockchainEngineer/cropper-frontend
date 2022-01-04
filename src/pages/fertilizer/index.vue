@@ -970,6 +970,10 @@ export default Vue.extend({
           }
 
           .project-balance {
+            @media @max-lg-tablet {
+              height: 48px;
+            }
+
             .label {
               color: rgba(255, 255, 255, 0.6);
             }
