@@ -245,7 +245,9 @@
                       ? 'distribution'
                       : ''"
                   >
-                    <span class="bodyXS weightB">{{ fertilizer.status }}</span>
+                    <span class="bodyXS weightB">
+                      {{ fertilizer.status === 'Sales' && currentTimestamp > fertilizer.sales_start_date ? 'Open Sales' : fertilizer.status }}
+                    </span>
                   </div>
                 </div>
 
@@ -360,7 +362,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_end_data: 1643500800000
+          whitelist_end_data: 1643500800
         },
         {
           status: 'Sales',
@@ -370,7 +372,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1643500800000
+          sales_start_date: 1641280215
         },
         {
           status: 'Sales',
@@ -380,7 +382,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1643500800000
+          sales_start_date: 1643500800
         },
         {
           status: 'Distribution',
@@ -390,9 +392,10 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          distribution_start_date: 1643500800000
+          distribution_start_date: 1643500800
         },
-      ]
+      ],
+      currentTimestamp: 0
     }
   },
   head: {
@@ -416,6 +419,9 @@ export default Vue.extend({
       clearInterval(this.timer)
       this.setTimer()
     }, 1000)
+
+    this.currentTimestamp = moment().unix();
+    console.log(this.currentTimestamp);
   },
   watch: {
     showCollapse: {
