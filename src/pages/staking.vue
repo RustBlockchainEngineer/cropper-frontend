@@ -390,7 +390,7 @@ export default Vue.extend({
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
 
-          this.userStaked * Math.pow(10, TOKENS['CRP'].decimals),
+          parseFloat((new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals)).fixed()) * Math.pow(10, TOKENS['CRP'].decimals),
         ).then((txid) => {
           this.$notify.info({
             key,
