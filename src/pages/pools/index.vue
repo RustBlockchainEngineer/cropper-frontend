@@ -33,11 +33,7 @@
             <img
               class="icon-cursor close-icon"
               src="@/assets/icons/close-circle-icon.svg"
-              @click="
-                () => {
-                  this.showGuide = false;
-                }
-              "
+              @click="hideGuide"
             />
             <Row class="guide-detail">
               <Col :sm="14" :xs="24">
@@ -894,7 +890,7 @@ export default class Pools extends Vue {
   sortAPYAsc: boolean = true;
   sortCurrentAsc: boolean = true;
   activeSpinning: boolean = false;
-  showGuide: boolean = true;
+  showGuide: boolean = false;
   showFilterMenu: boolean = false;
   showSearchMenu: boolean = false;
   showTabMenu: boolean = false;
@@ -1450,6 +1446,11 @@ export default class Pools extends Vue {
   mounted() {
     this.getTvl();
     this.$accessor.token.loadTokens();
+
+    if(!window.localStorage.pool_guide){
+      this.showGuide = true;
+    }
+
     this.timer_init = setInterval(async () => {
       if (!this.poolLoaded) {
         await this.flush();
@@ -1535,6 +1536,11 @@ export default class Pools extends Vue {
     this.showPool(this.searchName, this.currentPage);
     this.loading = false;
     this.countdown = 0;
+  }
+
+  hideGuide() {
+    this.showGuide = false;
+    window.localStorage.pool_guide = true;
   }
 
   getPoolByLpMintAddress = getPoolByLpMintAddress;

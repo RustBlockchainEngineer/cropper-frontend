@@ -178,9 +178,50 @@ export default Vue.extend({
       // @ts-ignore
       this.$refs.userInput.focus()
     })
+    this.updateCommonBases()
   },
 
   methods: {
+    async updateCommonBases() {
+
+      let cur_date = new Date().getTime()
+      let need_to_update = false
+
+      if(window.localStorage.common_last_updated){
+        const last_updated = parseInt(window.localStorage.common_last_updated)
+        if(cur_date - last_updated >= 300000){
+          need_to_update = true
+        }
+      }
+      else
+      {
+        need_to_update = true
+      }
+
+      if(need_to_update){
+        console.log('update')
+        try {
+          let responseData = await fetch("https://api.cropper.finance/common/").then((res) =>
+            res.json()
+          );
+
+          window.localStorage.common = JSON.stringify(responseData)
+          window.localStorage.common_last_updated = new Date().getTime() as number
+
+          (responseData as any).forEach((element: any) => {
+              this.commonBases.push(element)
+          });
+        } catch {
+          // dummy data
+        } finally {
+        }
+      } else {
+
+        (JSON.parse(window.localStorage.common) as any).forEach((element: any) => {
+            this.commonBases.push(element)
+        });
+      }
+    },
     selectCommonToken(common: any) {
       let selectedToken = this.tokenList.find((token) => token.symbol === common.symbol)
       console.log(selectedToken)
