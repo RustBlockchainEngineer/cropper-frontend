@@ -158,7 +158,7 @@ export default class Nav extends Vue {
 }
 
 .ant-menu-horizontal {
-  line-height: 62px;
+  line-height: 60px;
   border: none;
 
   @media @max-md-tablet {
