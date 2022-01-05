@@ -43,7 +43,7 @@ export default Vue.extend({
 <style lang="less" scoped>
 .header {
   .logo {
-    height: 42px;
+    height: 47px;
 
     @media @max-md-tablet {
       height: 36px;

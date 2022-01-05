@@ -778,7 +778,7 @@ h4 {
     background: @color-blue800;
     top: 0;
     z-index: 999;
-    height: 70px;
+    height: 80px;
     opacity: 0.9;
 
     .landing-top {
