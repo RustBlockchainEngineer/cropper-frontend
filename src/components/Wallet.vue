@@ -368,7 +368,7 @@ export default class Wallet extends Vue {
         this.subWallet()
         this.$notify.success({
           message: 'Wallet connected',
-          description: `Connect to ${name}`
+          description: `Connected with ${name}`
         })
 
         LocalStorage.set('WALLET_NAME', name)
