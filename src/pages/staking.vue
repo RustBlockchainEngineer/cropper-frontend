@@ -348,7 +348,7 @@ export default Vue.extend({
 
       //@ts-ignore
       this.userStaked = Math.ceil(parseFloat((new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals)).fixed()) * 1000) / 1000
-      this.userStakedUnformated = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
+      this.userStakedUnformated = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed())
 
       const rewardAmount = estimateRewards(
           farm_state,
