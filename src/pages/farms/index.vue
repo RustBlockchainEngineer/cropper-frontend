@@ -1961,7 +1961,6 @@ export default Vue.extend({
         // nothing to do ..
       }
     },
-
     async getTvl() {
       let cur_date = new Date().getTime();
       if (window.localStorage.TVL_last_updated) {
@@ -2004,7 +2003,6 @@ export default Vue.extend({
       window.localStorage.TVL_last_updated = new Date().getTime();
       window.localStorage.TVL = this.TVL;
     },
-
     async updateFarms() {
       this.$accessor.token.loadTokens();
       this.farmLoaded = false;

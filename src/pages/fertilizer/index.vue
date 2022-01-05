@@ -22,43 +22,43 @@
             <div class="option-tab">
               <Button
                 class="textL weightS icon-cursor"
-                :class="projectOption === 'upcoming' ? 'active-tab' : ''"
+                :class="filterProject === 'upcoming' ? 'active-tab' : ''"
                 @click="
                   () => {
-                    this.projectOption = 'upcoming'
+                    this.filterProject = 'upcoming'
                   }
                 "
                 >Upcoming</Button
               >
-              <div v-if="projectOption === 'upcoming'" class="active-underline"></div>
+              <div v-if="filterProject === 'upcoming'" class="active-underline"></div>
             </div>
             <div class="option-tab">
               <Button
                 class="textL weightS icon-cursor"
-                :class="projectOption === 'preparation' ? 'active-tab' : ''"
+                :class="filterProject === 'preparation' ? 'active-tab' : ''"
                 @click="
                   () => {
-                    this.projectOption = 'preparation'
+                    this.filterProject = 'preparation'
                   }
                 "
               >
                 Preparation
               </Button>
-              <div v-if="projectOption === 'preparation'" class="active-underline"></div>
+              <div v-if="filterProject === 'preparation'" class="active-underline"></div>
             </div>
             <div class="option-tab">
               <Button
                 class="textL weightS icon-cursor"
-                :class="projectOption === 'funded' ? 'active-tab' : ''"
+                :class="filterProject === 'funded' ? 'active-tab' : ''"
                 @click="
                   () => {
-                    this.projectOption = 'funded'
+                    this.filterProject = 'funded'
                   }
                 "
               >
                 Funded
               </Button>
-              <div v-if="projectOption === 'funded'" class="active-underline"></div>
+              <div v-if="filterProject === 'funded'" class="active-underline"></div>
             </div>
           </div>
 
@@ -72,11 +72,11 @@
           >
             <label class="textL weightS icon-cursor">
               {{
-                projectOption === 'upcoming'
+                filterProject === 'upcoming'
                   ? 'Upcoming'
-                  : projectOption === 'preparation'
+                  : filterProject === 'preparation'
                   ? 'Preparation'
-                  : projectOption === 'funded'
+                  : filterProject === 'funded'
                   ? 'Funded'
                   : ''
               }}
@@ -90,10 +90,10 @@
             <div v-if="showTabMenu" class="option-sort-collapse collapse-left">
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
-                :class="projectOption === 'upcoming' ? 'active-item' : ''"
+                :class="filterProject === 'upcoming' ? 'active-item' : ''"
                 @click="
                   () => {
-                    this.projectOption = 'upcoming'
+                    this.filterProject = 'upcoming'
                   }
                 "
               >
@@ -101,10 +101,10 @@
               </div>
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
-                :class="projectOption === 'preparation' ? 'active-item' : ''"
+                :class="filterProject === 'preparation' ? 'active-item' : ''"
                 @click="
                   () => {
-                    this.projectOption = 'preparation'
+                    this.filterProject = 'preparation'
                   }
                 "
               >
@@ -112,10 +112,10 @@
               </div>
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
-                :class="projectOption === 'funded' ? 'active-item' : ''"
+                :class="filterProject === 'funded' ? 'active-item' : ''"
                 @click="
                   () => {
-                    this.projectOption = 'funded'
+                    this.filterProject = 'funded'
                   }
                 "
               >
@@ -166,13 +166,13 @@
                 <label>Sort by:</label>
                 <span class="sort-detail">
                   {{
-                    sortOption === 'all'
+                    filterSort === 'all'
                       ? 'All'
-                      : sortOption === 'whitelist'
+                      : filterSort === 'whitelist'
                       ? 'Whitelist Open'
-                      : sortOption === 'sales'
+                      : filterSort === 'sales'
                       ? 'Sales'
-                      : sortOption === 'distribution'
+                      : filterSort === 'distribution'
                       ? 'Distribution'
                       : ''
                   }}
@@ -199,29 +199,29 @@
             <div v-if="showFilterMenu" class="option-sort-collapse collapse-right">
               <div
                 class="collapse-item text-center texts weightB icon-cursor"
-                :class="sortOption === 'all' ? 'active-item' : ''"
-                @click="setSortOption('all')"
+                :class="filterSort === 'all' ? 'active-item' : ''"
+                @click="setFilterSort('all')"
               >
                 All
               </div>
               <div
                 class="collapse-item text-center texts weightB icon-cursor"
-                :class="sortOption === 'whitelist' ? 'active-item' : ''"
-                @click="setSortOption('whitelist')"
+                :class="filterSort === 'whitelist' ? 'active-item' : ''"
+                @click="setFilterSort('whitelist')"
               >
                 Whitelist Open
               </div>
               <div
                 class="collapse-item text-center texts weightB icon-cursor"
-                :class="sortOption === 'sales' ? 'active-item' : ''"
-                @click="setSortOption('sales')"
+                :class="filterSort === 'sales' ? 'active-item' : ''"
+                @click="setFilterSort('sales')"
               >
                 Sales
               </div>
               <div
                 class="collapse-item text-center texts weightB icon-cursor"
-                :class="sortOption === 'distribution' ? 'active-item' : ''"
-                @click="setSortOption('distribution')"
+                :class="filterSort === 'distribution' ? 'active-item' : ''"
+                @click="setFilterSort('distribution')"
               >
                 Distribution
               </div>
@@ -231,7 +231,7 @@
 
         <div class="fertilizer-content">
           <Row :gutter="[18, 28]">
-            <Col v-for="(fertilizer, idx) in fertilizerData" :key="fertilizer.title" 
+            <Col v-for="(fertilizer, idx) in fertilizerItems" :key="fertilizer.id" 
               :lg="idx === 0 ? 12 : 6"
               :md="idx === 0 ? 16 : 8"
               :sm="24"
@@ -247,6 +247,8 @@
                       ? 'sales'
                       : fertilizer.status === 'Distribution'
                       ? 'distribution'
+                      : fertilizer.status === 'Preparation'
+                      ? 'preparation'
                       : ''"
                   >
                     <span class="bodyXS weightB">
@@ -256,76 +258,65 @@
                 </div>
 
                 <div class="project-details">
-                  <Row v-if="fertilizer.status === 'Whitelist Open'" class="project-desc-whitelist fls-container">
-                    <Col :span="12" class="project-title">
-                      <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
-                      <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
-                    </Col>
-                  
-                    <Col :span="12" class="project-info fs-container">
-                      <div class="project-balance">
-                        <span class="label textS weightS letterL">Total raised</span>
-                        <span class="value textM weightS letterS fl-container">
-                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                          {{ fertilizer.hard_cap }}
-                        </span>
-                      </div>
-                      <div class="project-balance">
-                        <span class="label textS weightS letterL">Participants</span>
-                        <span class="value textM weightS letterS fl-container">{{ fertilizer.participants }}</span>
-                      </div>
-                    </Col>
-                  </Row>
-
-                  <div v-else>
+                  <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist fls-container' : ''">
                     <div class="project-title">
                       <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
                       <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
                     </div>
-
+                  
                     <div class="project-info fs-container">
                       <div class="project-balance">
-                        <span class="label textS weightS letterL">Total raised</span>
-                        <span class="value textM weightS letterS fl-container">
-                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                          {{ fertilizer.hard_cap }}
-                        </span>
+                        <div v-if="fertilizer.hard_cap">
+                          <span class="label textS weightS letterL">Total raised</span>
+                          <span class="value textM weightS letterS fl-container">
+                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                            {{ fertilizer.hard_cap }} USDC
+                          </span>
+                        </div>
                       </div>
                       <div class="project-balance">
-                        <span class="label textS weightS letterL">Participants</span>
-                        <span class="value textM weightS letterS fl-container">{{ fertilizer.participants }}</span>
+                        <div v-if="fertilizer.participants">
+                          <span class="label textS weightS letterL">Participants</span>
+                          <span class="value textM weightS letterS fl-container">{{ fertilizer.participants }}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                   
-                  <div v-if="fertilizer.status === 'Whitelist Open'" class="project-info whitelist-countdown fc-container text-center">
-                    <Countdown title="End of the whitelist in" :value="fertilizer.whitelist_end_data" format="DD:HH:mm:ss" />
+                  <div v-if="idx === 0" class="project-info whitelist-countdown fc-container text-center">
+                    <Countdown 
+                      :title="fertilizer.status === 'Whitelist Open' ? 'End of the whitelist in' : 'Whitelist starts in'"
+                      :value="fertilizer.status === 'Whitelist Open' ? fertilizer.whitelist_end_date : fertilizer.whitelist_start_date"
+                      format="DD:HH:mm:ss" 
+                    />
                   </div>
 
                   <div v-else class="project-info fl-container">
-                    <div v-if="fertilizer.status === 'Sales' && currentTimestamp > fertilizer.sales_start_date" class="project-status open">
-                      <span class="bodyXS weightB">Open Now</span>
-                    </div>
-                    <div v-else class="project-balance">
-                      <span class="label textS weightS letterL">
-                        {{ 
-                          fertilizer.status === 'Sales'
-                            ? 'Sales'
-                            : fertilizer.status === 'Distribution'
-                            ? 'Distribution'
-                            : ''
-                        }} 
-                        starts in:
-                      </span>
-                      <span class="value fl-container">
-                        <Countdown 
-                          :value="fertilizer.status === 'Sales'
-                            ? fertilizer.sales_start_date
-                            : fertilizer.status === 'Distribution'
-                            ? fertilizer.distribution_start_date
-                            : 0" 
-                          format="DD:HH:mm:ss" />
-                      </span>
+                    <div v-if="fertilizer.sales_start_date || fertilizer.distribution_start_date || whitelist_start_date || whitelist_end_date">
+                      <div v-if="fertilizer.status === 'Sales' && currentTimestamp > fertilizer.sales_start_date" class="project-status open">
+                        <span class="bodyXS weightB">Open Now</span>
+                      </div>
+                      <div v-else class="project-balance">
+                        <span class="label textS weightS letterL">
+                          {{ 
+                            fertilizer.status === 'Sales'
+                              ? 'Sales'
+                              : fertilizer.status === 'Distribution'
+                              ? 'Distribution'
+                              : ''
+                          }} 
+                          starts in:
+                        </span>
+                        <span class="value fl-container">
+                          <Countdown 
+                            :value="fertilizer.status === 'Sales'
+                              ? fertilizer.sales_start_date
+                              : fertilizer.status === 'Distribution'
+                              ? fertilizer.distribution_start_date
+                              : 0" 
+                            format="DD:HH:mm:ss" />
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -397,10 +388,12 @@ export default Vue.extend({
       showTabMenu: false as boolean,
       showSearchMenu: false as boolean,
       showFilterMenu: false as boolean,
-      projectOption: 'upcoming' as string,
-      sortOption: 'all' as string,
+      filterProject: 'upcoming' as string,
+      filterSort: 'all' as string,
+      fertilizerItems: [] as any[],
       fertilizerData: [
         {
+          id: 0,
           status: 'Whitelist Open',
           picture: '/fertilizer/unq.png',
           title: 'UNQ.club',
@@ -408,9 +401,10 @@ export default Vue.extend({
           hard_cap: '3000K',
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_end_data: 1643500800000
+          whitelist_end_date: 1643500800000
         },
         {
+          id: 1,
           status: 'Sales',
           picture: '/fertilizer/metaprints.png',
           title: 'Metaprints',
@@ -421,6 +415,7 @@ export default Vue.extend({
           sales_start_date: 1641280215000
         },
         {
+          id: 2,
           status: 'Sales',
           picture: '/fertilizer/galaxy.png',
           title: 'Galaxy War',
@@ -431,6 +426,7 @@ export default Vue.extend({
           sales_start_date: 1643500800000
         },
         {
+          id: 3,
           status: 'Distribution',
           picture: '/fertilizer/meanfi.png',
           title: 'MeanFI',
@@ -440,6 +436,25 @@ export default Vue.extend({
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           distribution_start_date: 1643500800000
         },
+        {
+          id: 4,
+          status: 'Preparation',
+          picture: '/fertilizer/agoric.png',
+          title: 'Agoric',
+          short_desc: 'Social platform for NFT asset management',
+          hard_cap: '3000K',
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_start_date: 1643500800000
+        },
+        {
+          id: 5,
+          status: 'Preparation',
+          picture: '/fertilizer/metaprints.png',
+          title: 'Metaprints',
+          short_desc: 'Blueprints for metaverses',
+          hard_cap: '3000K',
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        }
       ],
       currentTimestamp: 0
     }
@@ -467,7 +482,7 @@ export default Vue.extend({
     }, 1000)
 
     this.currentTimestamp = moment().valueOf();
-    console.log(this.currentTimestamp);
+    this.updateFertilizer();
   },
   watch: {
     showCollapse: {
@@ -478,10 +493,17 @@ export default Vue.extend({
         }
       },
       deep: true
-    }
+    },
+    filterProject: {
+      handler(newFilterProject: string) {
+        this.filterFertilizer(newFilterProject);
+      },
+      deep: true,
+    },
   },
   methods: {
     importIcon,
+    TokenAmount,
     async getTvl() {
       let cur_date = new Date().getTime()
       if (window.localStorage.TVL_last_updated) {
@@ -527,48 +549,6 @@ export default Vue.extend({
       this.countdown = 0
       this.setTimer()
     },
-    setTimer() {
-      this.timer = setInterval(async () => {
-        if (!this.loading) {
-          if (this.countdown < this.autoRefreshTime) {
-            this.countdown += 1
-            if (this.countdown === this.autoRefreshTime) {
-              await this.flush()
-            }
-          }
-        }
-      }, 1000)
-    },
-    reloadTimer() {
-      this.flush()
-      this.$accessor.wallet.getTokenAccounts()
-      this.activeSpinning = true
-      setTimeout(() => {
-        this.activeSpinning = false
-      }, 1000)
-    },
-    getCoinPicUrl() {
-      let token
-      if (this.mintAddress == NATIVE_SOL.mintAddress) {
-        token = NATIVE_SOL
-      } else {
-        token = Object.values(TOKENS).find((item) => item.mintAddress === this.mintAddress)
-      }
-      if (token) {
-        this.coinName = token.symbol.toLowerCase()
-        if (token.picUrl) {
-          this.coinPicUrl = token.picUrl
-        } else {
-          this.coinPicUrl = ''
-        }
-      }
-    },
-    TokenAmount,
-    goToProject(farm: any) {
-      this.$router.push({
-        path: '/fertilizer/project/?f=' + farm.slug
-      })
-    },
     async updateLabelizedAmms() {
       this.labelizedAmms = {}
       let responseData2 = {}
@@ -606,8 +586,56 @@ export default Vue.extend({
     async delay(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms))
     },
-    setSortOption(option: string) {
-      this.sortOption = option
+    setTimer() {
+      this.timer = setInterval(async () => {
+        if (!this.loading) {
+          if (this.countdown < this.autoRefreshTime) {
+            this.countdown += 1
+            if (this.countdown === this.autoRefreshTime) {
+              await this.flush()
+            }
+          }
+        }
+      }, 1000)
+    },
+    reloadTimer() {
+      this.flush()
+      this.$accessor.wallet.getTokenAccounts()
+      this.activeSpinning = true
+      setTimeout(() => {
+        this.activeSpinning = false
+      }, 1000)
+    },
+    updateFertilizer() {
+      this.filterFertilizer(this.filterProject);
+    },
+    filterFertilizer(filterProject: string) {
+      if (filterProject === 'upcoming') this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => fertilizer.status != 'Preparation');
+      else if (filterProject === 'preparation') this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => fertilizer.status === 'Preparation');
+    },
+    getCoinPicUrl() {
+      let token
+      if (this.mintAddress == NATIVE_SOL.mintAddress) {
+        token = NATIVE_SOL
+      } else {
+        token = Object.values(TOKENS).find((item) => item.mintAddress === this.mintAddress)
+      }
+      if (token) {
+        this.coinName = token.symbol.toLowerCase()
+        if (token.picUrl) {
+          this.coinPicUrl = token.picUrl
+        } else {
+          this.coinPicUrl = ''
+        }
+      }
+    },
+    goToProject(farm: any) {
+      this.$router.push({
+        path: '/fertilizer/project/?f=' + farm.slug
+      })
+    },
+    setFilterSort(option: string) {
+      this.filterSort = option
       this.showFilterMenu = false
     }
   }
@@ -682,6 +710,10 @@ export default Vue.extend({
     color: @color-neutral900;
   }
 
+  &.preparation {
+    background: @color-pink600;
+  }
+
   &.open {
     background: @color-green500;
   }
@@ -689,338 +721,388 @@ export default Vue.extend({
 
 // class stylesheet
 .fertilizer.container {
-  .fertilizer-head {
-    @media @max-sl-mobile {
-      display: block !important;
-    }
+  .card {
+    .card-body {
+      padding: 0;
 
-    .title {
-      text-align: center;
-      position: relative;
-      float: left;
-
-      @media @max-sl-mobile {
-        margin-bottom: 18px !important;
-      }
-    }
-
-    .information {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      @media @max-sl-mobile {
-        width: 100%;
-      }
-
-      .tvl-info {
-        margin-right: 18px;
-      }
-
-      .action-btn-group {
-        display: flex;
-        align-items: center;
-
-        .reload-btn {
-          background: @color-blue600;
-          border-radius: 8px;
-          padding: 6px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          @media @max-lg-tablet {
-            margin-left: 5px;
-          }
-
-          img {
-            width: 18px;
-            height: 18px;
-          }
-
-          &.active img {
-            transform: rotate(360deg);
-            transition: all 1s ease-in-out;
-          }
-        }
-      }
-    }
-  }
-
-  .fertilizer-option-bar {
-    margin: 38px 0;
-
-    @media @max-sl-mobile {
-      margin: 28px 0;
-    }
-
-    .option-tab-group {
-      display: flex;
-
-      @media @max-sl-mobile {
-        display: none;
-      }
-
-      &.option-tab-collapse {
-        display: none;
+      .fertilizer-head {
+        margin-top: 18px;
 
         @media @max-sl-mobile {
+          display: block !important;
+        }
+
+        .title {
+          text-align: center;
           position: relative;
-          display: flex;
-          align-items: center;
-          padding: 6px 10px;
-          border: 2px solid @color-blue500;
-          border-radius: 8px;
-
-          label {
-            color: @color-petrol500;
-          }
-
-          .arrow-icon {
-            margin-left: 4px;
-          }
-        }
-      }
-
-      .option-tab {
-        margin-right: 38px;
-
-        &:last-child {
-          margin-right: 0;
-        }
-
-        button {
-          background: transparent;
-          border: none;
-          outline: none;
-          padding: 0;
-          margin-bottom: 8px;
-
-          &.active-tab {
-            color: @color-petrol500;
-          }
-
-          .deposit-icon {
-            margin-right: 8px;
-          }
-        }
-
-        .active-underline {
-          height: 4px;
-          border-radius: 10px;
-          background: @color-petrol400;
-        }
-      }
-    }
-
-    .option-filter-group {
-      position: relative;
-      display: flex;
-      align-items: center;
-
-      .option-filter {
-        border: 2px solid @color-blue500;
-        border-radius: 8px;
-        padding: 0 8px;
-        height: 40px;
-        margin-left: 18px;
-
-        @media @max-sl-mobile {
-          height: 32px;
-          padding: 0 4px;
-        }
-
-        &:first-child {
-          margin-left: 0;
-        }
-
-        &.option-filter-fixed {
-          width: 40px;
+          float: left;
 
           @media @max-sl-mobile {
-            width: 32px;
+            margin-bottom: 18px !important;
           }
         }
 
-        &.option-filter-collapse {
-          display: none !important;
+        .information {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
 
-          @media @max-md-tablet {
-            display: flex !important;
-          }
-        }
-
-        &.option-sort {
-          @media @max-md-tablet {
-            display: none !important;
-          }
-        }
-
-        .option-sort-item {
-          letter-spacing: 0.15px;
-
-          label {
-            color: #eae8f1;
-            opacity: 0.5;
-            margin-right: 8px;
+          @media @max-sl-mobile {
+            width: 100%;
           }
 
-          .sort-detail {
+          .tvl-info {
+            margin-right: 18px;
+          }
+
+          .action-btn-group {
             display: flex;
             align-items: center;
 
-            .arrow-icon {
-              margin-left: 8px;
-            }
-          }
-        }
-      }
+            .reload-btn {
+              background: @color-blue600;
+              border-radius: 8px;
+              padding: 6px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
 
-      .option-search-collapse {
-        position: absolute;
-        top: 0;
-        left: -209px;
-        visibility: hidden;
-        opacity: 0;
-        transition: visibility 0s, opacity 0.5s linear;
-        background: @color-blue700;
-        border: 2px solid @color-blue500;
-        border-radius: 8px;
-        padding: 18px;
-        z-index: 999;
-        width: 250px;
+              @media @max-lg-tablet {
+                margin-left: 5px;
+              }
 
-        &.visible {
-          visibility: visible;
-          opacity: 1;
-        }
+              img {
+                width: 18px;
+                height: 18px;
+              }
 
-        .collapse-item-header {
-          margin-bottom: 10px;
-        }
-
-        .collapse-item-body {
-          input {
-            border: 2px solid @color-blue400;
-            border-radius: 8px;
-            padding: 8px 18px;
-            background-color: transparent;
-            color: #ccd1f1;
-            width: 100%;
-
-            &:active,
-            &:focus,
-            &:hover {
-              outline: 0;
-            }
-
-            &::placeholder {
-              color: #ccd1f1;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .fertilizer-content {
-    .fertilizer-project {
-      background: @color-blue700;
-      border: 3px solid @color-blue500;
-      border-radius: 18px;
-
-      .project-banner {
-        position: relative;
-        border-bottom: 3px solid @color-blue500;
-        height: 190px;
-
-        .banner {
-          width: 100%;
-          height: 100%;
-          border-radius: 18px 18px 0 0;
-        }
-
-        .project-status {
-          position: absolute;
-          top: 9px;
-          left: 13px;
-        }
-      }
-
-      .project-details {
-        padding: 14px;
-        
-        .project-title {
-          .short-desc {
-            display: block;
-            margin-top: 4px;
-            height: 48px;
-
-            @media @max-lg-tablet {
-              height: 66px;
-            }
-          }
-        }
-        
-        .project-info {
-          margin-top: 18px;
-          height: 48px;          
-
-          .project-balance {
-            @media @max-lg-tablet {
-              height: 48px;
-            }
-
-            .label {
-              color: rgba(255, 255, 255, 0.6);
-            }
-
-            .value {
-              .coin-icon {
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                margin-right: 8px;
-              }              
-            }
-          }
-
-          &.whitelist-countdown {
-            height: 114px;
-            background: @color-blue800;
-            padding: 8px;
-            border-radius: 16px;
-
-            @media @max-lg-tablet {
-              margin-top: 72px;
-            }
-          }
-
-          &.fs-container {
-            @media @max-lg-tablet {
-              display: inline-block !important;
-            }
-
-            .project-balance {
-              margin-bottom: 18px;
-
-              &:last-child {
-                margin-bottom: 0;
+              &.active img {
+                transform: rotate(360deg);
+                transition: all 1s ease-in-out;
               }
             }
           }
         }
+      }
 
-        .project-desc-whitelist {
-          .project-info {
-            margin-top: 0;
-            height: auto;
+      .fertilizer-option-bar {
+        margin: 38px 0;
+
+        @media @max-sl-mobile {
+          margin: 28px 0;
+        }
+
+        .option-tab-group {
+          display: flex;
+
+          @media @max-sl-mobile {
+            display: none;
+          }
+
+          &.option-tab-collapse {
+            display: none;
+
+            @media @max-sl-mobile {
+              position: relative;
+              display: flex;
+              align-items: center;
+              padding: 6px 10px;
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+
+              label {
+                color: @color-petrol500;
+              }
+
+              .arrow-icon {
+                margin-left: 4px;
+              }
+            }
+          }
+
+          .option-tab {
+            margin-right: 38px;
+
+            &:last-child {
+              margin-right: 0;
+            }
+
+            button {
+              background: transparent;
+              border: none;
+              outline: none;
+              padding: 0;
+              margin-bottom: 8px;
+
+              &.active-tab {
+                color: @color-petrol500;
+              }
+
+              .deposit-icon {
+                margin-right: 8px;
+              }
+            }
+
+            .active-underline {
+              height: 4px;
+              border-radius: 10px;
+              background: @color-petrol400;
+            }
+          }
+        }
+
+        .option-filter-group {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          .option-filter {
+            border: 2px solid @color-blue500;
+            border-radius: 8px;
+            padding: 0 8px;
+            height: 40px;
+            margin-left: 18px;
+
+            @media @max-sl-mobile {
+              height: 32px;
+              padding: 0 4px;
+            }
+
+            &:first-child {
+              margin-left: 0;
+            }
+
+            &.option-filter-fixed {
+              width: 40px;
+
+              @media @max-sl-mobile {
+                width: 32px;
+              }
+            }
+
+            &.option-filter-collapse {
+              display: none !important;
+
+              @media @max-md-tablet {
+                display: flex !important;
+              }
+            }
+
+            &.option-sort {
+              @media @max-md-tablet {
+                display: none !important;
+              }
+            }
+
+            .option-sort-item {
+              letter-spacing: 0.15px;
+
+              label {
+                color: #eae8f1;
+                opacity: 0.5;
+                margin-right: 8px;
+              }
+
+              .sort-detail {
+                display: flex;
+                align-items: center;
+
+                .arrow-icon {
+                  margin-left: 8px;
+                }
+              }
+            }
+          }
+
+          .option-search-collapse {
+            position: absolute;
+            top: 0;
+            left: -209px;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s linear;
+            background: @color-blue700;
+            border: 2px solid @color-blue500;
+            border-radius: 8px;
+            padding: 18px;
+            z-index: 999;
+            width: 250px;
+
+            &.visible {
+              visibility: visible;
+              opacity: 1;
+            }
+
+            .collapse-item-header {
+              margin-bottom: 10px;
+            }
+
+            .collapse-item-body {
+              input {
+                border: 2px solid @color-blue400;
+                border-radius: 8px;
+                padding: 8px 18px;
+                background-color: transparent;
+                color: #ccd1f1;
+                width: 100%;
+
+                &:active,
+                &:focus,
+                &:hover {
+                  outline: 0;
+                }
+
+                &::placeholder {
+                  color: #ccd1f1;
+                }
+              }
+            }
           }
         }
       }
 
-      .btn-container {
-        margin-top: 18px;
+      .fertilizer-content {
+        .fertilizer-project {
+          background: @color-blue700;
+          border: 3px solid @color-blue500;
+          border-radius: 18px;
+
+          .project-banner {
+            position: relative;
+            border-bottom: 3px solid @color-blue500;
+            height: 190px;
+
+            .banner {
+              width: 100%;
+              height: 100%;
+              border-radius: 18px 18px 0 0;
+            }
+
+            .project-status {
+              position: absolute;
+              top: 9px;
+              left: 13px;
+            }
+          }
+
+          .project-details {
+            padding: 14px;
+            
+            .project-title {
+              .short-desc {
+                display: block;
+                margin-top: 4px;
+                height: 48px;
+
+                @media @max-lg-tablet {
+                  height: 66px;
+                }
+
+                @media @max-sl-mobile {
+                  height: 48px;
+                }
+              }
+            }
+            
+            .project-info {
+              margin-top: 18px;
+              height: 48px;          
+
+              .project-balance {
+                @media @max-lg-tablet {
+                  height: 48px;
+                }
+
+                .label {
+                  color: rgba(255, 255, 255, 0.6);
+                }
+
+                .value {
+                  .coin-icon {
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    margin-right: 8px;
+                  }              
+                }
+              }
+
+              &.whitelist-countdown {
+                height: 114px;
+                background: @color-blue800;
+                padding: 8px;
+                border-radius: 16px;
+
+                @media @max-lg-tablet {
+                  margin-top: 72px;
+                }
+
+                @media @max-sl-mobile {
+                  margin-top: 18px;
+                }
+              }
+
+              &.fs-container {
+                @media @max-lg-tablet {
+                  display: inline-block !important;
+
+                  .project-balance {
+                    margin-bottom: 18px;
+
+                    &:last-child {
+                      margin-bottom: 0;
+                    }
+                  }
+                }
+              }
+            }
+
+            .project-desc {
+              .project-info {
+                @media @max-lg-tablet {
+                  height: 111px;
+                }
+              }
+
+              &.project-desc-whitelist {
+                @media @max-sl-mobile {
+                  display: inline-block !important;
+                }
+
+                .project-title {
+                  width: 50%;
+
+                  @media @max-lg-tablet {
+                    width: 60%;
+                  }
+
+                  @media @max-sl-mobile {
+                    width: 100%;
+                  }
+                }
+
+                .project-info {
+                  margin-top: 0;
+                  height: auto;
+                  width: 50%;
+                  
+                  @media @max-lg-tablet {
+                    width: 40%;
+                  }
+
+                  @media @max-sl-mobile {
+                    width: 100%;
+                    margin-top: 18px;
+                  }
+                }
+              }
+            }
+          }
+
+          .btn-container {
+            margin-top: 18px;
+          }
+        }
       }
     }
   }
