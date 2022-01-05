@@ -16,8 +16,6 @@
       @onCancel="() => (stakeModalShow = false)"
     />
 
-    <TierAboutModal :show="tierModalShow" @onCancel="() => (tierModalShow = false)" />
-
     <div class="card">
       <div class="card-body">
         <div class="staking-head fs-container">
@@ -189,14 +187,10 @@
                     <label class="textL weightB">Tier 1</label>
                   </div>
                   <div class="btn-container">
-                    <Button
-                      class="btn-primary textM weightS"
-                      @click="
-                        () => {
-                          this.tierModalShow = true
-                        }
-                      "
-                      >About Tiers</Button
+                    <a
+                      class="btn-primary textM weightS fc-container"
+                      href="#staking-tiers-details"
+                      >About Tiers</a
                     >
                   </div>
                 </div>
@@ -207,14 +201,10 @@
                     <label class="textL weightB">Tier 2</label>
                   </div>
                   <div class="btn-container">
-                    <Button
-                      class="btn-primary textM weightS"
-                      @click="
-                        () => {
-                          this.tierModalShow = true
-                        }
-                      "
-                      >About Tiers</Button
+                    <a
+                      class="btn-primary textM weightS fc-container"
+                      href="#staking-tiers-details"
+                      >About Tiers</a
                     >
                   </div>
                 </div>
@@ -225,14 +215,10 @@
                     <label class="textL weightB">Tier 3</label>
                   </div>
                   <div class="btn-container">
-                    <Button
-                      class="btn-primary textM weightS"
-                      @click="
-                        () => {
-                          this.tierModalShow = true
-                        }
-                      "
-                      >About Tiers</Button
+                    <a
+                      class="btn-primary textM weightS fc-container"
+                      href="#staking-tiers-details"
+                      >About Tiers</a
                     >
                   </div>
                 </div>
@@ -243,14 +229,10 @@
                     <label class="textL weightB">Tier 4</label>
                   </div>
                   <div class="btn-container">
-                    <Button
-                      class="btn-primary textM weightS"
-                      @click="
-                        () => {
-                          this.tierModalShow = true
-                        }
-                      "
-                      >About Tiers</Button
+                    <a
+                      class="btn-primary textM weightS fc-container"
+                      href="#staking-tiers-details"
+                      >About Tiers</a
                     >
                   </div>
                 </div>
@@ -261,19 +243,45 @@
                     <label class="textL weightB">Tier 5</label>
                   </div>
                   <div class="btn-container">
-                    <Button
-                      class="btn-primary textM weightS"
-                      @click="
-                        () => {
-                          this.tierModalShow = true
-                        }
-                      "
-                      >About Tiers</Button
+                    <a
+                      class="btn-primary textM weightS fc-container"
+                      href="#staking-tiers-details"
+                      >About Tiers</a
                     >
                   </div>
                 </div>
               </div>
             </Carousel>
+          </div>
+        </div>
+
+        <div class="staking-tiers-details" id="staking-tiers-details">
+          <h4 class="weightB">About Tiers</h4>
+          <div class="staking-tiers-features">
+            <Row type="flex" :gutter="32">
+              <Col :flex="1">
+                <div class="staking-tier-box"></div>
+              </Col>
+              <Col :flex="1">
+                <div class="staking-tier-box"></div>
+              </Col>
+              <Col :flex="1">
+                <div class="staking-tier-box"></div>
+              </Col>
+              <Col :flex="1">
+                <div class="staking-tier-box"></div>
+              </Col>
+              <Col :flex="1">
+                <div class="staking-tier-box"></div>
+              </Col>
+            </Row>
+          </div>
+          <div class="staking-tiers-description">
+            <span class="textM weightS">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+              <br /><br />
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+            </span>
           </div>
         </div>
       </div>
@@ -284,7 +292,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Icon, Tooltip, Button, Progress, Spin, Select, InputNumber, Carousel } from 'ant-design-vue'
+import { Icon, Tooltip, Button, Progress, Spin, Select, InputNumber, Carousel, Row, Col } from 'ant-design-vue'
 import { cloneDeep, get } from 'lodash-es'
 import { getTokenBySymbol, TokenInfo, NATIVE_SOL, TOKENS } from '@/utils/tokens'
 import { getMultipleAccounts, commitment } from '@/utils/web3'
@@ -325,13 +333,14 @@ export default Vue.extend({
     Button,
     Tooltip,
     Progress,
-    Carousel
+    Carousel,
+    Row,
+    Col
   },
   data() {
     return {
       baseModalShow: false as boolean,
       stakeModalShow: false as boolean,
-      tierModalShow: false as boolean,
       estimatedAPY: 0 as number,
       lockDuration: 0 as number,
       crpbalance: 0 as any,
@@ -955,6 +964,27 @@ export default Vue.extend({
                   margin-left: 8px;
                 }
               }
+            }
+          }
+        }
+
+        .staking-tiers-details {
+          max-width: 870px;
+          width: 100%;
+          margin: 30px auto !important;
+          background: @color-blue800;
+          border: 3px solid @color-blue500;
+          padding: 34px;
+          border-radius: 18px;
+
+          .staking-tiers-features {
+            margin: 18px 0;
+
+            .staking-tier-box {
+              width: 100%;
+              padding-top: 100%;
+              background: @color-blue-dark;
+              border-radius: 8px;
             }
           }
         }

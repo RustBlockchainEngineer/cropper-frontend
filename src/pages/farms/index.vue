@@ -619,6 +619,7 @@
                       <Button
                         v-if="wallet.connected"
                         class="btn-transparent textS weightB"
+                        id="dep"
                         :disabled="
                           !wallet.connected ||
                           !farm.farmInfo.poolInfo.is_allowed ||
@@ -1098,8 +1099,9 @@
                           "
                         >
                           <Button
-                            class="btn-transparent textS weightB"
                             v-if="wallet.connected"
+                            class="btn-transparent textS weightB"
+                            id="dep"
                             :disabled="
                               !wallet.connected ||
                               !farm.farmInfo.poolInfo.is_allowed ||
@@ -1452,8 +1454,9 @@
                         "
                       >
                         <Button
-                          class="btn-transparent textS weightB"
                           v-if="wallet.connected"
+                          class="btn-transparent textS weightB"
+                          id="dep"
                           :disabled="
                             !wallet.connected ||
                             !farm.farmInfo.poolInfo.is_allowed ||

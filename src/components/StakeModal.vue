@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="calc-yield">
-        <label class="textM weightS letterS text-center">Calculate $CRP Yield</label>
+        <span class="calc-yield-title textM weightS letterS text-center">Calculate $CRP Yield</span>
         <div class="calc-yield-group">
           <div class="calc-yield-info">
             <label class="label textS weightB">Total lock (CRP)</label>
@@ -81,6 +81,10 @@
             <label class="value textS weightS letterL">{{
               (Math.round(this.estimatedapy * 100) * boostAPY) / 100
             }}</label>
+          </div>
+          <div class="calc-yield-info current-tier">
+            <label class="label textS weightB">Tier</label>
+            <label class="value textS weightS letterL">4</label>
           </div>
           <div class="calc-yield-info">
             <label class="label textS weightB">Estimated reward (CRP) </label>
@@ -593,6 +597,10 @@ export default Vue.extend({
     padding: 12px 12px 18px 12px;
     border-radius: 18px;
 
+    .calc-yield-title {
+      display: block;
+    }
+
     .calc-yield-group {
       display: inline-grid;
       row-gap: 12px;
@@ -604,7 +612,7 @@ export default Vue.extend({
         justify-content: space-between;
         align-items: center;
 
-        &:nth-child(even) {
+        &:nth-child(2), &:nth-child(3), &:nth-child(5) {
           padding-bottom: 12px;
           border-bottom: 1px solid #384d71;
         }
@@ -617,6 +625,12 @@ export default Vue.extend({
           color: @color-blue100;
 
           &.reward-value {
+            color: #fff;
+          }
+        }
+
+        &.current-tier {
+          .label, .value {
             color: #fff;
           }
         }
