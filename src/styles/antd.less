@@ -170,24 +170,26 @@ button.ant-btn-background-ghost[disabled] {
 }
 
 .ant-pagination-item {
-  width: 48px !important;
-  height: 48px !important;
-  border: 2px solid transparent !important;
+  width: 36px !important;
+  height: 36px !important;
+  border: 1px solid transparent !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
 
   &>a {
-    color: #FFF;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 22px;
-    line-height: 48px;
-    letter-spacing: -0.05em;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: rgba(255, 255, 255, 0.7) !important;
   }
 
   &.ant-pagination-item-active {
-    background: @gradient-color-icon !important;
+    background: @gradient-color-outline !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
     background-origin: border-box !important;
-    border: 2px solid rgba(255, 255, 255, 0.14) !important;
-    border-radius: 8px;
+    border-radius: 58px;
 
     a {
       color: #fff !important

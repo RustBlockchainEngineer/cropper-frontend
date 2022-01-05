@@ -49,37 +49,27 @@
           </Button>
         </div>
         <div v-else class="wallet-info">
-          <p class="address">{{ wallet.address }}</p>
-
-          <div class="stdGradientButton">
-            <Button ghost @click="disconnect"> DISCONNECT </Button>
-          </div>
+          <p class="address textM">{{ wallet.address }}</p>
+          <Button class="btn-gradient textL weightB" @click="disconnect"> Disconnect </Button>
         </div>
       </Modal>
     </div>
     
     <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
-      <div class="select-wallet-header">
-        <div class="select-wallet-header-title">
-          <b>Connect wallet</b>
-        </div>
-        <div class="select-wallet-header-close">
-          <img src="@/assets/icons/close-icon.svg" @click="closePopIn" />
-        </div>
+      <div class="select-wallet-header fs-container">
+        <span class="textL weightB">Connect wallet</span>
+        <img class="close-icon icon-cursor" src="@/assets/icons/close-circle-icon.svg" @click="closePopIn" />
       </div>
 
       <div v-if="!wallet.connected" class="select-wallet">
-        <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
+        <Button v-for="(info, name) in wallets" :key="name" class="select-wallet-btn" @click="connect(name, info)">
           <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
           <span>{{ name }}</span>
         </Button>
       </div>
       <div v-else class="wallet-info">
-        <p class="address">{{ wallet.address }}</p>
-
-        <div class="stdGradientButton">
-          <Button ghost @click="disconnect"> DISCONNECT </Button>
-        </div>
+        <p class="address textM">{{ wallet.address }}</p>
+        <Button class="btn-gradient textL weightB" @click="disconnect"> Disconnect </Button>
       </div>
     </div>
   </div>
@@ -640,9 +630,12 @@ export default class Wallet extends Vue {
     right: 64px;
     margin-top: 70px;
     z-index: 999;
-    background: @gradient-color-wallet;
-    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
+    background: @color-blue700;
+    border: 3px solid @color-blue500;
+    box-shadow: 0 40px 70px rgba(0, 0, 0, 0.3);
+    border-radius: 18px;
+    padding: 18px;
+    width: 283px;
 
     @media @max-lg-tablet {
       right: 32px;
@@ -651,46 +644,38 @@ export default class Wallet extends Vue {
     @media @max-sl-mobile {
       right: 20px;
     }
-    
-    &::before {
-      content: ' ';
-      height: 0;
-      position: absolute;
-      width: 0;
-      right: 20px;
-      top: -20px;
-      border: 10px solid transparent;
-      border-right-color: #3238EA;
-      transform: rotate(90deg);
-    }
 
     .select-wallet {
       max-height: 460px;
       overflow-y: scroll;
-      padding: 0 24px;
+      padding: 0 6px;
 
       @media @max-lg-tablet {
-        max-height: 230px;
+        max-height: 378px;
       }
 
-      button {
-        border: none;
-        background: rgba(255, 255, 255, 0.1) !important;
-        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
-        border-radius: 14px;
+      .select-wallet-btn {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 0 30px;
+        justify-content: flex-start;
+        border: none;
+        background: transparent;
+        border-radius: 16px;
+        padding: 8px 16px;
         width: 100%;
-        height: 48px;
+        height: 45px;
         text-align: left;
-        margin-bottom: 10px;
+        margin-bottom: 18px;
 
         img {
-          height: 32px;
-          width: 32px;
+          height: 30px;
+          width: 30px;
           border-radius: 50%;
+          margin-right: 18px;
+        }
+
+        &:hover {
+          background: @color-blue500;
         }
       }
     }
@@ -700,21 +685,11 @@ export default class Wallet extends Vue {
     }
 
     .select-wallet-header {
-      padding: 0 15px 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      
-      .select-wallet-header-title {
-        font-size: 15px;
-        line-height: 19px;
-        color: #fff;
-      }
+      padding: 18px 0;
 
-      .select-wallet-header-close img{
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
+      .close-icon{
+        width: 32px;
+        height: 32px;
       }
     }
 
@@ -843,8 +818,16 @@ export default class Wallet extends Vue {
     }
 
     .wallet-info {
-      .stdGradientButton {
-        margin-top: 20px;
+      margin-top: 32px;
+
+      .btn-gradient {
+        background: @gradient-btn-primary;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 38px;
+        padding: 10px 18px;
+        margin: 18px 0;
+        height: auto;
+        border: none;
       }
     }
   }

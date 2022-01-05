@@ -256,7 +256,7 @@
                 </div>
 
                 <div class="project-details">
-                  <Row v-if="fertilizer.status === 'Whitelist Open'" class="project-desc-whitelist fss-container">
+                  <Row v-if="fertilizer.status === 'Whitelist Open'" class="project-desc-whitelist fls-container">
                     <Col :span="12" class="project-title">
                       <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
                       <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
@@ -990,6 +990,10 @@ export default Vue.extend({
             background: @color-blue800;
             padding: 8px;
             border-radius: 16px;
+
+            @media @max-lg-tablet {
+              margin-top: 72px;
+            }
           }
 
           &.fs-container {
