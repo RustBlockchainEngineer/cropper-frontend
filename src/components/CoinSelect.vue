@@ -15,14 +15,16 @@
       <input ref="userInput" v-model="keyword" class="textM" placeholder="Search name or paste address" />
       <div class="common-bases">
         <label class="textM">Common bases</label>
-        <div class="common-bases-group">
-          <div v-for="common in commonBases" :key="common.symbol" class="common-select-container icon-cursor" @click="selectCommonToken(common)">
-            <div class="common-box fc-container">
-              <CoinIcon class="coin-icon" :mint-address="common.mintAddress" />
-              {{ common.symbol }}
+        <Row class="common-bases-group" :gutter="[8, 8]">
+          <Col v-for="common in commonBases" :key="common.symbol" @click="selectCommonToken(common)" :span="6">
+            <div class="common-select-container icon-cursor">
+              <div class="common-box fc-container">
+                <CoinIcon class="coin-icon" :mint-address="common.mintAddress" />
+                {{ common.symbol }}
+              </div>
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </div>
     </div>
     <div class="select-token">
@@ -84,7 +86,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Modal, Icon } from 'ant-design-vue'
+import { Modal, Icon, Row, Col } from 'ant-design-vue'
 
 import { TOKENS, TokenInfo, NATIVE_SOL, TOKENS_TAGS } from '@/utils/tokens'
 import { cloneDeep } from 'lodash-es'
@@ -99,7 +101,9 @@ Vue.use(Modal)
 export default Vue.extend({
   components: {
     Modal,
-    Icon
+    Icon,
+    Row,
+    Col
   },
   props: {
     farmTokenASelect: {
@@ -521,18 +525,12 @@ export default Vue.extend({
     margin-bottom: 18px;
 
     .common-bases-group {
-      display: flex;
-      margin-top: 8px;
+      margin-top: 8px !important;
 
       .common-select-container {
         background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
         border-radius: 8px;
-        padding: 2px;
-        margin-right: 8px;
-
-        &:last-child {
-          margin-right: 0;
-        }
+        padding: 2px !important;
 
         .common-box {
           background: @color-blue800;
