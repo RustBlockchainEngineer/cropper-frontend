@@ -455,7 +455,11 @@
               </Row>
 
               <div class="fertilizer-funded-table-body">
-                <Row class="fertilizer-funded-table-item" v-for="fertilizer in fertilizerItems" :key="fertilizer.id">
+                <Row
+                  class="fertilizer-funded-table-item"
+                  v-for="(fertilizer, idx) in fertilizerItems"
+                  :key="fertilizer.id"
+                >
                   <Col class="state" span="6">
                     <div class="project-name fl-container">
                       <img class="logo" :src="fertilizer.picture" />
@@ -490,59 +494,35 @@
                     </div>
                   </Col>
                   <Col class="state textM weightS" span="4">
-                    {{ moment(distribution_end_date).format("MMMM Do YYYY") }}
+                    {{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}
                   </Col>
                   <Col class="state" span="1">
                     <div class="show-more">
-                      <img class="icon-cursor" src="@/assets/icons/dot3.svg" />
-                      <!-- <div
+                      <img class="icon-cursor" src="@/assets/icons/dot3.svg" @click="showMore(idx)" />
+                      <div
                         v-if="showMoreMenu[idx]"
-                        class="option-collapse-menu collapse-right"
+                        class="option-sort-collapse collapse-right"
                         v-click-outside="hideMore"
                       >
-                        <div
-                          class="option-collapse-item text-center textM weightS icon-cursor"
-                        >
-                          <a
-                            class="social-link fc-container"
-                            :href="farm.farmInfo.twitterShare"
-                            target="_blank"
-                          >
+                        <div class="collapse-item text-center textM weightS icon-cursor">
+                          <a> Stake </a>
+                        </div>
+                        <div class="collapse-item text-center textM weightS icon-cursor">
+                          <a> Swap </a>
+                        </div>
+                        <div class="collapse-item text-center textM weightS icon-cursor">
+                          <a class="social-link fc-container" href="#" target="_blank">
                             Share
                             <img class="social-icon" src="@/assets/icons/share.svg" />
                           </a>
                         </div>
-                        <div
-                          class="option-collapse-item text-center textM weightS icon-cursor"
-                        >
-                          <a
-                            class="social-link fc-container"
-                            :href="farm.farmInfo.twitterLink"
-                            target="_blank"
-                          >
+                        <div class="collapse-item text-center textM weightS icon-cursor">
+                          <a class="social-link fc-container" href="#" target="_blank">
                             Twitter
                             <img class="social-icon" src="@/assets/icons/twitter.svg" />
                           </a>
                         </div>
-                        <div
-                          class="option-collapse-item text-center textM weightS icon-cursor"
-                        >
-                          <a
-                            :disabled="
-                              !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
-                            "
-                            @click.stop="
-                              openUnstakeModal(
-                                farm.farmInfo,
-                                farm.farmInfo.lp,
-                                farm.userInfo.depositBalance
-                              )
-                            "
-                          >
-                            Withdraw
-                          </a>
-                        </div>
-                      </div> -->
+                      </div>
                     </div>
                   </Col>
                 </Row>
@@ -852,6 +832,8 @@ export default Vue.extend({
       showTabMenu: false as boolean,
       showSearchMenu: false as boolean,
       showFilterMenu: false as boolean,
+      showMoreMenu: [] as boolean[],
+      currentShowMore: -1 as number,
       sortMethod: 'subscriber' as string,
       sortSubscribersAsc: true as boolean,
       sortRaisedAsc: false as boolean,
@@ -1175,6 +1157,14 @@ export default Vue.extend({
           (fertilizer: any) => fertilizer.status === this.filterStatus.funded
         )
       }
+
+      this.showMoreMenu = []
+      this.fertilizerItems.forEach((element) => {
+        this.showMoreMenu.push(false)
+      })
+    },
+    moment() {
+      return moment()
     },
     getCoinPicUrl() {
       let token
@@ -1201,8 +1191,28 @@ export default Vue.extend({
       this.filterSort = option
       this.showFilterMenu = false
     },
-    moment() {
-      return moment();
+    showMore(idx: number) {
+      if (idx != this.currentShowMore) {
+        this.showMoreMenu = this.showMoreMenu.map((item) => {
+          return false
+        })
+      }
+      this.showMoreMenu = this.showMoreMenu.map((item, i) => {
+        if (i === idx) {
+          this.currentShowMore = idx
+          return !item
+        }
+        return item
+      })
+      console.log(this.showMoreMenu)
+    },
+    hideMore() {
+      if (this.currentShowMore != -1) {
+        this.showMoreMenu = this.showMoreMenu.map((item) => {
+          return false
+        })
+        this.currentShowMore = -1
+      }
     }
   }
 })
@@ -1255,6 +1265,16 @@ export default Vue.extend({
 
     &.active-item {
       color: @color-petrol500;
+    }
+
+    a {
+      color: #fff;
+
+      .social-icon {
+        width: 18px;
+        height: 18px;
+        margin-left: 8px;
+      }
     }
   }
 }
@@ -1783,6 +1803,17 @@ export default Vue.extend({
                     color: @color-blue800;
                     padding: 4px 8px;
                     border-radius: 4px;
+                  }
+                }
+                
+                .show-more {
+                  position: relative;
+                  width: fit-content;
+                  margin: auto;
+                  
+                  .option-sort-collapse {
+                    top: 0;
+                    right: 10px;
                   }
                 }
 
