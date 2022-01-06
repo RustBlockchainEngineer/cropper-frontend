@@ -1,12 +1,12 @@
 <template>
   <div class="coin-select">
-    <div class="label fs-container bodyXS weightB">
+    <div class="label fcb-container bodyXS weightB">
       <span>{{ label }}</span>
     </div>
     <div class="coin-input">
-      <div class="main-input fs-container">
-        <button class="select-button fc-container" @click="selectCoin">
-          <div v-if="coinName" class="coin-container fc-container">
+      <div class="main-input fcb-container">
+        <button class="select-button fcc-container" @click="selectCoin">
+          <div v-if="coinName" class="coin-container fcc-container">
             <CoinIcon :mint-address="mintAddress" />
             <span class="textS weightS" :class="disabled ? 'coin-disabled' : ''">{{ coinName }}</span>
           </div>

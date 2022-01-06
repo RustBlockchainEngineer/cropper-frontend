@@ -17,7 +17,7 @@
     />
     <div class="card">
       <div class="card-body">
-        <div class="page-head fs-container">
+        <div class="page-head fcb-container">
           <span class="title">Farm creation</span>
           <span class="buttonsd">
             <a href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm" target="_blank">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="design-farm">
-          <div class="page-head fs-container">
+          <div class="page-head fcb-container">
             <span class="title">Design your own farm</span>
           </div>
 
@@ -1738,7 +1738,7 @@ main {
     row-gap: 0;
     padding-bottom: 15px;
 
-    .fs-container {
+    .fcb-container {
       display: flex;
       justify-content: space-between;
       align-items: center;

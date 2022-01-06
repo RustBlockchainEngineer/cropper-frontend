@@ -12,29 +12,29 @@
     <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
     <div class="stake-modal-container">
       <div class="balance-form">
-        <div class="fs-container">
-          <div class="fc-container">
-            <button class="select-button fs-container">
-              <div class="coin-group fc-container">
+        <div class="fcb-container">
+          <div class="fcc-container">
+            <button class="select-button fcb-container">
+              <div class="coin-group fcc-container">
                 <CoinIcon :mint-address="CRPMintAddress" />
                 <span class="bodyM weightB">CRP</span>
               </div>
             </button>
-            <button v-if="!showHalf && crpbalance" class="input-button bodyXS weightB fc-container" @click="setMax(1)">
+            <button v-if="!showHalf && crpbalance" class="input-button bodyXS weightB fcc-container" @click="setMax(1)">
               Max
             </button>
-            <button v-if="showHalf && crpbalance" class="input-button bodyXS weightB fc-container" @click="setMax(0.5)">
+            <button v-if="showHalf && crpbalance" class="input-button bodyXS weightB fcc-container" @click="setMax(0.5)">
               Half
             </button>
           </div>
           <input type="number" :value="toStake" placeholder="0.00" />
         </div>
-        <div v-if="crpbalance" class="label fs-container bodyXS weightS">
+        <div v-if="crpbalance" class="label fcb-container bodyXS weightS">
           <span> Balance: {{ crpbalance }} </span>
           <span> ~${{ crpbalance }} </span>
         </div>
       </div>
-      <div class="tier-group fs-container">
+      <div class="tier-group fcb-container">
         <div class="tier-item text-center icon-cursor" v-for="data in lockData" :key="data.tier">
           <span
             v-if="data.min >= enddatemin"
@@ -91,7 +91,7 @@
       </div>
       <div class="calc-footer">
         <label class="lock-note textS weightB">Your total staked tokens will be locked until {{ unstakeDate }}</label>
-        <div class="btn-group fs-container">
+        <div class="btn-group fcb-container">
           <div class="btn-container">
             <Button
               class="btn-primary textM weightS icon-cursor"

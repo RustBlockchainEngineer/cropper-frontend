@@ -17,7 +17,7 @@
     />
     <div class="card">
       <div class="card-body">
-        <div class="page-head fs-container">
+        <div class="page-head fcb-container">
           <span class="title">Liquidity pool creation</span>
           <span class="buttonsd">
             <a
@@ -36,7 +36,7 @@
           </span>
         </div>
         <div class="design-pool">
-          <div class="page-head fs-container">
+          <div class="page-head fcb-container">
             <span class="title">Design your own pool</span>
           </div>
 
@@ -1189,7 +1189,7 @@ main {
     row-gap: 0;
     padding-bottom: 15px;
 
-    .fs-container {
+    .fcb-container {
       display: flex;
       justify-content: space-between;
       align-items: center;

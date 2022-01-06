@@ -18,7 +18,7 @@
         <Row class="common-bases-group" :gutter="[8, 8]">
           <Col v-for="common in commonBases" :key="common.symbol" @click="selectCommonToken(common)" :span="6">
             <div class="common-select-container icon-cursor">
-              <div class="common-box fc-container">
+              <div class="common-box fcc-container">
                 <CoinIcon class="coin-icon" :mint-address="common.mintAddress" />
                 {{ common.symbol }}
               </div>
@@ -55,7 +55,7 @@
           </div>
         </template>
       </div>
-      <div v-if="addUserCoin" class="sort fs-container">
+      <div v-if="addUserCoin" class="sort fcb-container">
         <span class="title">Create a name for this token</span>
         <Icon :type="desc ? 'arrow-up' : 'arrow-down'" @click="setDesc" />
       </div>

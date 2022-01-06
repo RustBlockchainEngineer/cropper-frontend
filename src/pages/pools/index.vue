@@ -46,7 +46,7 @@
         </div>
 
         <div class="pools-content" :class="showGuide ? 'guide-enabled' : ''">
-          <div class="pools-head fs-container">
+          <div class="pools-head fcb-container">
             <h3 class="title weightB">Liquidity Pools</h3>
             <div class="information">
               <div class="tvl-info">
@@ -72,7 +72,7 @@
             </div>
           </div>
 
-          <div class="pools-option-bar fs-container">
+          <div class="pools-option-bar fcb-container">
             <div class="option-tab-group">
               <div class="option-tab">
                 <Button
@@ -171,7 +171,7 @@
             </div>
 
             <div class="option-filter-group">
-              <div class="option-filter option-filter-fixed fc-container icon-cursor">
+              <div class="option-filter option-filter-fixed fcc-container icon-cursor">
                 <img
                   src="@/assets/icons/search.svg"
                   @click="
@@ -191,7 +191,7 @@
                   }
                 "
               >
-                <div class="collapse-item-header fs-container">
+                <div class="collapse-item-header fcb-container">
                   <label class="textL weightB">Search</label>
                   <img
                     class="icon-cursor"
@@ -214,7 +214,7 @@
                         class="shortcut-container icon-cursor"
                         @click="searchShortcut(item.symbol)"
                       >
-                        <div class="shortcut-box fc-container">
+                        <div class="shortcut-box fcc-container">
                           <CoinIcon class="coin-icon" :mint-address="item.mintAddress" />
                           {{ item.symbol }}
                         </div>
@@ -225,14 +225,14 @@
               </div>
 
               <div
-                class="option-filter option-sort fc-container icon-cursor"
+                class="option-filter option-sort fcc-container icon-cursor"
                 @click="
                   () => {
                     this.showFilterMenu = !this.showFilterMenu
                   }
                 "
               >
-                <span class="bodyM weightS option-filter-sort fc-container">
+                <span class="bodyM weightS option-filter-sort fcc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
                     Liquidity {{ sortLiquidityAsc ? '(High > Low)' : '(Low > High)' }}
@@ -245,7 +245,7 @@
                 </span>
               </div>
 
-              <div class="option-filter option-filter-collapse option-filter-fixed fc-container icon-cursor">
+              <div class="option-filter option-filter-collapse option-filter-fixed fcc-container icon-cursor">
                 <img
                   src="@/assets/icons/filter.svg"
                   @click="
@@ -516,7 +516,7 @@
               </Row>
 
               <Collapse v-model="showCollapse" accordion>
-                <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
+                <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="true">
                   <Row slot="header" class="pool-head">
                     <Col class="state" span="6">
                       <div class="lp-iconscontainer">
@@ -550,7 +550,7 @@
                     </Button>
                   </Row>
 
-                  <Row v-if="poolCollapse" class="collapse-row" :gutter="18">
+                  <Row class="collapse-row" :gutter="18">
                     <Col span="12">
                       <div class="state">
                         <span class="title textS weightS letterL">Fees (24h)</span>
@@ -596,7 +596,7 @@
             <!-- mobile version -->
             <div class="pools-table isMobile">
               <Collapse v-model="showCollapse" accordion>
-                <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
+                <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="true">
                   <Row slot="header" class="pool-head">
                     <Col class="state" :span="24">
                       <div class="lp-iconscontainer">
@@ -620,7 +620,7 @@
                     </Button>
                   </Row>
 
-                  <Row v-if="poolCollapse" class="collapse-row">
+                  <Row class="collapse-row">
                     <Col class="state current-liquidity text-center" span="24">
                       <span class="title textS weightS letterL">Your liquidity</span>
                       <span class="value textM weightS letterS">
@@ -691,7 +691,7 @@
             </div>
           </div>
 
-          <div v-else class="fc-container">
+          <div v-else class="fcc-container">
             <Spin :spinning="true">
               <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
             </Spin>
@@ -805,7 +805,7 @@ Vue.use(Vco)
   }
 })
 export default class Pools extends Vue {
-  poolCollapse: any = true
+  true: any = true
   showCollapse: any = []
   pools: any = []
   displayPoolID: any = 0
@@ -1536,10 +1536,6 @@ export default class Pools extends Vue {
   border: none;
   display: flex;
   align-items: center;
-
-  .arrow-icon {
-    margin-left: 8px;
-  }
 }
 
 .isDesktop {

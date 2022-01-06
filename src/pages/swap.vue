@@ -85,7 +85,7 @@
         />
 
         <div class="exchange-info">
-          <div v-if="fromCoin && toCoin && isWrap && fromCoinAmount" class="textS weightS price-base fc-container">
+          <div v-if="fromCoin && toCoin && isWrap && fromCoinAmount" class="textS weightS price-base fcc-container">
             <span>
               1 {{ fromCoin.symbol }} = 1
               {{ toCoin.symbol }}
@@ -93,7 +93,7 @@
           </div>
           <div
             v-else-if="fromCoin && toCoin && !isWrap && fromCoinAmount"
-            class="textS weightS price-base fc-container"
+            class="textS weightS price-base fcc-container"
           >
             <span>
               1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
@@ -108,7 +108,7 @@
           </div>
           <div
             v-else-if="fromCoin && toCoin && marketAddress && market && asks && bids && fromCoinAmount"
-            class="textS weightS price-base fc-container"
+            class="textS weightS price-base fcc-container"
           >
             <span>
               1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
@@ -124,7 +124,7 @@
         </div>
 
         <div v-if="wallet.connected">
-          <div class="swap-actions fs-container">
+          <div class="swap-actions fcb-container">
             <div class="swap-status textM weightS">
               <div v-if="priceImpact <= 2" class="price-status">
                 <img class="status-icon" src="@/assets/icons/status-ok.svg" />
@@ -140,7 +140,7 @@
               </div>
             </div>
             <div class="action-group">
-              <div class="action-btn-container fc-container icon-cursor">
+              <div class="action-btn-container fcc-container icon-cursor">
                 <div
                   @click="
                     () => {
@@ -164,7 +164,7 @@
               </div>
 
               <div
-                class="action-btn-container fc-container icon-cursor"
+                class="action-btn-container fcc-container icon-cursor"
                 :class="activeSpinning ? 'loading' : ''"
                 @click="reloadTimer"
               >

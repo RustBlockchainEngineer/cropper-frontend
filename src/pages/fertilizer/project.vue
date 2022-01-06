@@ -499,7 +499,7 @@ If the pop up for the second operation does not appear, it may have popped up be
               </Row>
             </div>
 
-            <div v-if="showFarms.length == 0 && wallet.connected" class="fc-container">
+            <div v-if="showFarms.length == 0 && wallet.connected" class="fcc-container">
               <Spin :spinning="true">
                 <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
               </Spin>
@@ -609,7 +609,7 @@ If the pop up for the second operation does not appear, it may have popped up be
                     <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
                       Connect Wallet
                     </Button>
-                    <div v-else class="fs-container">
+                    <div v-else class="fcb-container">
                       <Button
                         :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                         size="large"
@@ -697,7 +697,7 @@ If the pop up for the second operation does not appear, it may have popped up be
                     <Button v-if="!wallet.connected" size="large" ghost @click.stop="$accessor.wallet.openModal">
                       Connect Wallet
                     </Button>
-                    <div v-else class="fs-container">
+                    <div v-else class="fcb-container">
                       <Button
                         :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
                         size="large"
@@ -767,7 +767,7 @@ If the pop up for the second operation does not appear, it may have popped up be
                         <div v-if="!wallet.connected" @click="$accessor.wallet.openModal" class="btncontainer largebtn">
                           <Button size="large" ghost> Connect Wallet </Button>
                         </div>
-                        <div v-else class="fs-container">
+                        <div v-else class="fcb-container">
                           <div
                             class="btncontainer"
                             v-if="
@@ -2704,7 +2704,7 @@ export default Vue.extend({
       }
     }
 
-    .fs-container {
+    .fcb-container {
       display: inline-block;
     }
 

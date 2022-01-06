@@ -4,10 +4,10 @@
       <label class="bodyXS weightS">{{ label }}</label>
     </div>
     <div class="coin-input">
-      <div class="fs-container">
-        <div class="fc-container">
-          <button class="select-button fs-container" @click="$emit('onSelect')">
-            <div v-if="coinName" class="coin-group fc-container">
+      <div class="fcb-container">
+        <div class="fcc-container">
+          <button class="select-button fcb-container" @click="$emit('onSelect')">
+            <div v-if="coinName" class="coin-group fcc-container">
               <CoinIcon :mint-address="mintAddress" />
               <span class="bodyM weightB">{{ coinName }}</span>
             </div>
@@ -16,14 +16,14 @@
           </button>
           <button
             v-if="!disabled && !showHalf && balance"
-            class="input-button bodyXS weightB fc-container"
+            class="input-button bodyXS weightB fcc-container"
             @click="inputBalanceByPercent(1)"
           >
             Max
           </button>
           <button
             v-if="!disabled && showHalf && balance"
-            class="input-button bodyXS weightB fc-container"
+            class="input-button bodyXS weightB fcc-container"
             @click="inputBalanceByPercent(0.5)"
           >
             Half
@@ -46,7 +46,7 @@
           @focus="$emit('onFocus')"
         />
       </div>
-      <div v-if="balance && !balance.wei.isNaN()" class="label fs-container bodyXS weightS">
+      <div v-if="balance && !balance.wei.isNaN()" class="label fcb-container bodyXS weightS">
         <span> Balance: {{ balance.fixed() }} </span>
         <span> ~${{ balance.fixed() }} </span>
       </div>

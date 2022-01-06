@@ -5,7 +5,7 @@
 
     <Content>
       <!--
-      <div v-if="['swap', 'liquidity', 'farms'].includes(pageName) && showFlag" class="fc-container">
+      <div v-if="['swap', 'liquidity', 'farms'].includes(pageName) && showFlag" class="fcc-container">
         <Alert type="warning" message="IMPORTANT" show-icon>
           <div slot="description">
             You have liquidity in a legacy pool. RAY-SOL, RAY-SRM, RAY-USDC and RAY-ETH pools are upgrading from the V3

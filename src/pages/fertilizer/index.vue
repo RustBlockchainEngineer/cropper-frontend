@@ -2,7 +2,7 @@
   <div class="fertilizer container">
     <div class="card">
       <div class="card-body">
-        <div class="fertilizer-head fs-container">
+        <div class="fertilizer-head fcb-container">
           <h3 class="title weightB">Fertilizer</h3>
           <div class="information">
             <div class="tvl-info">
@@ -17,7 +17,7 @@
           </div>
         </div>
 
-        <div class="fertilizer-option-bar fs-container">
+        <div class="fertilizer-option-bar fcb-container">
           <div class="option-tab-group">
             <div class="option-tab">
               <Button
@@ -125,7 +125,7 @@
           </div>
 
           <div class="option-filter-group">
-            <div class="option-filter option-filter-fixed fc-container icon-cursor">
+            <div class="option-filter option-filter-fixed fcc-container icon-cursor">
               <img
                 src="@/assets/icons/search.svg"
                 @click="
@@ -137,7 +137,7 @@
             </div>
 
             <div class="option-search-collapse" :class="showSearchMenu ? 'visible' : 'hidden'">
-              <div class="collapse-item-header fs-container">
+              <div class="collapse-item-header fcb-container">
                 <label class="textL weightB">Search</label>
                 <img
                   class="icon-cursor"
@@ -155,14 +155,14 @@
             </div>
 
             <div
-              class="option-filter option-sort fc-container icon-cursor"
+              class="option-filter option-sort fcc-container icon-cursor"
               @click="
                 () => {
                   this.showFilterMenu = !this.showFilterMenu
                 }
               "
             >
-              <span class="option-sort-item fc-container bodyM weightS">
+              <span class="option-sort-item fcc-container bodyM weightS">
                 <label>Sort by:</label>
                 <span class="sort-detail">
                   {{
@@ -185,7 +185,7 @@
               </span>
             </div>
 
-            <div class="option-filter option-filter-collapse option-filter-fixed fc-container icon-cursor">
+            <div class="option-filter option-filter-collapse option-filter-fixed fcc-container icon-cursor">
               <img
                 src="@/assets/icons/filter.svg"
                 @click="
@@ -266,17 +266,17 @@
                 </div>
 
                 <div class="project-details">
-                  <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist fls-container' : ''">
+                  <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist ftb-container' : ''">
                     <div class="project-title">
                       <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
                       <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
                     </div>
 
-                    <div class="project-info fs-container">
+                    <div class="project-info fcb-container">
                       <div class="project-balance">
                         <div v-if="fertilizer.hard_cap">
                           <span class="label textS weightS letterL">Total raised</span>
-                          <span class="value textM weightS letterS fl-container">
+                          <span class="value textM weightS letterS fcl-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                             {{ fertilizer.hard_cap }} USDC
                           </span>
@@ -285,13 +285,13 @@
                       <div class="project-balance">
                         <div v-if="fertilizer.participants">
                           <span class="label textS weightS letterL">Participants</span>
-                          <span class="value textM weightS letterS fl-container">{{ fertilizer.participants }}</span>
+                          <span class="value textM weightS letterS fcl-container">{{ fertilizer.participants }}</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div v-if="idx === 0" class="project-info whitelist-countdown fc-container text-center">
+                  <div v-if="idx === 0" class="project-info whitelist-countdown fcc-container text-center">
                     <Countdown
                       :title="
                         fertilizer.status === filterStatus.whitelist ? 'End of the whitelist in' : 'Whitelist starts in'
@@ -305,7 +305,7 @@
                     />
                   </div>
 
-                  <div v-else class="project-info fl-container">
+                  <div v-else class="project-info fcl-container">
                     <div
                       v-if="
                         fertilizer.sales_start_date ||
@@ -333,7 +333,7 @@
                           }}
                           starts in:
                         </span>
-                        <span class="value fl-container">
+                        <span class="value fcl-container">
                           <Countdown
                             :value="
                               fertilizer.status === filterStatus.sales
@@ -352,10 +352,10 @@
                   <div class="btn-container">
                     <Button
                       v-if="fertilizer.status === filterStatus.whitelist"
-                      class="btn-transparent textM weightS fc-container letterS"
+                      class="btn-transparent textM weightS fcc-container letterS"
                       >Subscription</Button
                     >
-                    <Button v-else class="btn-transparent textM weightS fc-container letterS">More details</Button>
+                    <Button v-else class="btn-transparent textM weightS fcc-container letterS">More details</Button>
                   </div>
                 </div>
               </div>
@@ -461,7 +461,7 @@
                   :key="fertilizer.id"
                 >
                   <Col class="state" span="6">
-                    <div class="project-name fl-container">
+                    <div class="project-name fcl-container">
                       <img class="logo" :src="fertilizer.picture" />
                       <div class="title">
                         <span class="textM weightS">{{ fertilizer.title }}</span>
@@ -481,7 +481,7 @@
                     ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
                   </Col>
                   <Col class="state textM weightS" span="3">
-                    <div class="project-ath fc-container">
+                    <div class="project-ath fcc-container">
                       <Tooltip placement="bottomLeft">
                         <template slot="title">
                           <span class="textS weightS">If you invested 100$ you would have 1000$</span>
@@ -511,13 +511,13 @@
                           <a> Swap </a>
                         </div>
                         <div class="collapse-item text-center textM weightS icon-cursor">
-                          <a class="social-link fc-container" href="#" target="_blank">
+                          <a class="social-link fcc-container" href="#" target="_blank">
                             Share
                             <img class="social-icon" src="@/assets/icons/share.svg" />
                           </a>
                         </div>
                         <div class="collapse-item text-center textM weightS icon-cursor">
-                          <a class="social-link fc-container" href="#" target="_blank">
+                          <a class="social-link fcc-container" href="#" target="_blank">
                             Twitter
                             <img class="social-icon" src="@/assets/icons/twitter.svg" />
                           </a>
@@ -531,105 +531,16 @@
 
             <!-- tablet version -->
             <div class="fertilizer-funded-table isTablet">
-              <!-- <Row class="fertilizer-funded-table-header">
-                <Col class="header-column textS weightB text-left" span="6"> Project name </Col>
-                <Col class="header-column textS weightB" span="3">
-                  <div class="header-column-title" @click="sortByColumn('subscribers')">
-                    Subscribers
-                    <img
-                      v-if="sortMethod === 'subscriber'"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortSubscribersAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortSubscribersAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column textS weightB" span="4">
-                  <div class="header-column-title" @click="sortByColumn('total_raised')">
-                    Total raised
-                    <img
-                      v-if="sortMethod === 'total_raised'"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortRaisedAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortRaisedAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column textS weightB" span="3">
-                  <div class="header-column-title" @click="sortByColumn('token_price')">
-                    Token price
-                    <img
-                      v-if="sortMethod === 'token_price'"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortPriceAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortPriceAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column textS weightB" span="3">
-                  <div class="header-column-title" @click="sortByColumn('ath')">
-                    ATH Since IPO
-                    <img
-                      v-if="sortMethod === 'ath'"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortATHAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortATHAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column textS weightB" span="4">
-                  <div class="header-column-title" @click="sortByColumn('end_date')">
-                    Ended in UTC
-                    <img
-                      v-if="sortMethod === 'end_date'"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortEndAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortEndAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-              </Row> -->
-
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
                   v-for="fertilizer in fertilizerItems"
                   :key="fertilizer.id"
                   v-show="true"
-                  :show-arrow="fertilizerCollapse"
+                  :show-arrow="true"
                 >
-                  <Row slot="header" class="pool-head">
+                  <Row slot="header" class="collapse-header">
                     <Col class="state" span="8">
-                      <div class="project-name fl-container">
+                      <div class="project-name fcl-container">
                         <img class="logo" :src="fertilizer.picture" />
                         <div class="title">
                           <span class="textM weightS">{{ fertilizer.title }}</span>
@@ -638,14 +549,18 @@
                       </div>
                     </Col>
 
-                    <Col class="state textM weightS text-center" span="5">
-                      {{ fertilizer.subscribers }}
+                    <Col class="state text-center" span="5">
+                      <span class="label textS weightB">Participants</span>
+                      <span class="textM weightS">{{ fertilizer.subscribers }}</span>
                     </Col>
 
                     <Col class="state textM weightS text-center" span="5">
+                      <span class="label textS weightB">Total raised</span>
                       ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
                     </Col>
+
                     <Col class="state textM weightS text-center" span="5">
+                      <span class="label textS weightB">Token price</span>
                       ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
                     </Col>
 
@@ -658,153 +573,190 @@
                     </Button>
                   </Row>
 
-                  <Row v-if="fertilizerCollapse" class="collapse-row" :gutter="18">
-                    <Col span="12">
-                      <div class="state">
-                        <span class="title textS weightS letterL">Fees (24h)</span>
-                        <span class="value textM weightS letterS">
-                          ${{ new TokenAmount(fertilizer.fee_24h, 2, false).format() }}
-                        </span>
-                      </div>
-                      <div class="state">
-                        <span class="title textS weightS letterL">APY</span>
-                        <span class="value textM weightS letterS">
-                          {{ new TokenAmount(fertilizer.apy, 2, false).format() }}%
-                        </span>
-                      </div>
-                    </Col>
-                    <Col span="12">
-                      <div class="state current-liquidity text-center">
-                        <span class="title textS weightS letterL">Your liquidity</span>
-                        <span class="value textM weightS letterS">
-                          ${{ new TokenAmount(fertilizer.current, 2, false).format() }}
-                        </span>
-
-                        <div class="btn-group">
-                          <div class="btn-container">
-                            <Button
-                              class="btn-transparent textS weightB"
-                              @click="openPoolAddModal(data)"
-                              >Add</Button
-                            >
-                          </div>
-                          <div class="btn-container">
-                            <Button
-                              class="btn-primary textS weightB"
-                              :disabled="!wallet.connected || !fertilizer.current"
-                              @click="openUnstakeModal(data, fertilizer.lp, 1)"
-                            >
-                              Remove
-                            </Button>
+                  <Row class="collapse-row fcc-container" :gutter="18">
+                    <Col :span="12">
+                      <div class="ftb-container">
+                        <div class="state">
+                          <span class="label textS weightB">ATH Since IPO</span>
+                          <div class="project-ath fcc-container">
+                            <Tooltip placement="bottomLeft">
+                              <template slot="title">
+                                <span class="textS weightS">If you invested 100$ you would have 1000$</span>
+                              </template>
+                              <div class="info-icon">
+                                <img src="@/assets/icons/info.svg" />
+                              </div>
+                            </Tooltip>
+                            <span class="value textM weightS letterS">+{{ fertilizer.ath }}%</span>
                           </div>
                         </div>
-                      </div>
+
+                        <div class="state text-center" span="5">
+                          <span class="label textS weightB">Ended in UTC</span>
+                          <span class="textM weightS">{{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}</span>
+                        </div>
+                      </div> 
                     </Col>
+                    <Col class="btn-group" :span="12">
+                      <div class="btn-group-item fcc-container">
+                        <div class="btn-container">
+                          <Button class="btn-primary textS weightB">
+                            Stake
+                          </Button>
+                        </div>
+
+                        <div class="btn-container">
+                          <Button class="btn-primary textS weightB">
+                            Swap
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div class="btn-group-item fcc-container">
+                        <a
+                          class="social-link fcc-container bodyXS weightS icon-cursor"
+                          href="#"
+                          target="_blank"
+                        >
+                          Share
+                          <img class="social-icon" src="@/assets/icons/share.svg" />
+                        </a>
+                        <a
+                          class="social-link fcc-container bodyXS weightS icon-cursor"
+                          href="#"
+                          target="_blank"
+                        >
+                          Twitter
+                          <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                        </a>
+                      </div>
+                    </Col>    
                   </Row>
                 </CollapsePanel>
               </Collapse>
             </div>
 
             <!-- mobile version -->
-            <!-- <div class="fertilizer-funded-table isMobile">
+            <div class="fertilizer-funded-table isMobile">
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
                   v-for="fertilizer in fertilizerItems"
                   :key="fertilizer.id"
                   v-show="true"
-                  :show-arrow="fertilizerCollapse"
+                  :show-arrow="true"
                 >
-                  <Row slot="header" class="pool-head">
-                    <Col class="state" :span="24">
-                      <div class="lp-iconscontainer">
-                        <div class="icons textM weightS">
-                          <CoinIcon
-                            :mint-address="data ? fertilizer.lp.coin.mintAddress : ''"
-                          />
-                          {{ fertilizer.lp.coin.symbol }}
-                          <span>-</span>
-                          <CoinIcon :mint-address="data ? fertilizer.lp.pc.mintAddress : ''" />
-                          {{ fertilizer.lp.pc.symbol }}
+                  <Row slot="header" class="collapse-header">
+                    <Col class="state" span="23">
+                      <div class="project-name fcl-container">
+                        <img class="logo" :src="fertilizer.picture" />
+                        <div class="title">
+                          <span class="textM weightS">{{ fertilizer.title }}</span>
+                          <span class="short-desc bodXS weightS">{{ fertilizer.short_desc }}</span>
                         </div>
                       </div>
                     </Col>
 
                     <Button class="detail-btn textS weightS">
-                      Details
                       <img
                         class="arrow-icon"
-                        :class="fertilizer.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        :class="fertilizer.id != showCollapse ? 'arrow-up' : 'arrow-down'"
                         src="@/assets/icons/arrow-down-white.svg"
                       />
                     </Button>
                   </Row>
 
-                  <Row v-if="fertilizerCollapse" class="collapse-row">
-                    <Col class="state current-liquidity text-center" span="24">
-                      <span class="title textS weightS letterL">Your liquidity</span>
-                      <span class="value textM weightS letterS">
-                        ${{ new TokenAmount(fertilizer.current, 2, false).format() }}
-                      </span>
-
-                      <div class="btn-group">
-                        <div class="btn-container">
-                          <Button
-                            class="btn-transparent textS weightB"
-                            @click="openPoolAddModal(data)"
-                            >Add</Button
-                          >
+                  <Row class="collapse-row" :gutter="[18, 18]">
+                    <Col :span="24">
+                      <div class="fcb-container">
+                        <div class="state">
+                          <span class="label textS weightB">Total raised</span>
+                          <span class="textM weightS">${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}</span>
                         </div>
+
+                        <div class="state">
+                          <span class="label textS weightB">Participants</span>
+                          <span class="textM weightS">{{ fertilizer.subscribers }}</span>
+                        </div>
+                      </div> 
+                    </Col>
+
+                    <Col :span="24">
+                      <div class="fcb-container">
+                        <div class="state">
+                          <span class="label textS weightB">Token price</span>
+                          <span class="textM weightS letterS">${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}</span>
+                        </div>
+
+                        <div class="state">
+                          <span class="label textS weightB">ATH Since IPO</span>
+                          <div class="project-ath fcc-container">
+                            <Tooltip placement="bottomLeft">
+                              <template slot="title">
+                                <span class="textS weightS">If you invested 100$ you would have 1000$</span>
+                              </template>
+                              <div class="info-icon">
+                                <img src="@/assets/icons/info.svg" />
+                              </div>
+                            </Tooltip>
+                            <span class="value textM weightS letterS">+{{ fertilizer.ath }}%</span>
+                          </div>
+                        </div>
+                      </div> 
+                    </Col>
+
+                    <Col :span="24">
+                      <div class="fcb-container">
+                        <div class="state" span="5">
+                          <span class="label textS weightB">Ended in UTC</span>
+                          <span class="textM weightS">{{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}</span>
+                        </div>
+                      </div> 
+                    </Col>
+
+                    <Col class="btn-group" :span="24">
+                      <div class="btn-group-item fcc-container">
                         <div class="btn-container">
-                          <Button
-                            class="btn-primary textS weightB"
-                            :disabled="!wallet.connected || !fertilizer.current"
-                            @click="openUnstakeModal(data, fertilizer.lp, 1)"
-                          >
-                            Remove
+                          <Button class="btn-primary textS weightB">
+                            Stake
+                          </Button>
+                        </div>
+
+                        <div class="btn-container">
+                          <Button class="btn-primary textS weightB">
+                            Swap
                           </Button>
                         </div>
                       </div>
-                    </Col>
-                    <Col class="state" span="24">
-                      <span class="title textS weightS letterL">Liquidity</span>
-                      <span class="value textM weightS letterS">
-                        ${{ new TokenAmount(fertilizer.liquidity, 2, false).format() }}
-                      </span>
-                    </Col>
-                    <Col class="state" span="24">
-                      <span class="title textS weightS letterL">Volume (24h)</span>
-                      <span class="value textM weightS letterS">
-                        ${{ new TokenAmount(fertilizer.volume_24h, 2, false).format() }}
-                      </span>
-                    </Col>
-                    <Col class="state" span="24">
-                      <span class="title textS weightS letterL">Volume (7d)</span>
-                      <span class="value textM weightS letterS">
-                        ${{ new TokenAmount(fertilizer.volume_7d, 2, false).format() }}
-                      </span>
-                    </Col>
-                    <Col class="state" span="24">
-                      <span class="title textS weightS letterL">Fees (24h)</span>
-                      <span class="value textM weightS letterS">
-                        ${{ new TokenAmount(fertilizer.fee_24h, 2, false).format() }}
-                      </span>
-                    </Col>
-                    <Col class="state" span="24">
-                      <span class="title textS weightS letterL">APY</span>
-                      <span class="value textM weightS letterS">
-                        {{ new TokenAmount(fertilizer.apy, 2, false).format() }}%
-                      </span>
-                    </Col>
+
+                      <div class="btn-group-item fcc-container">
+                        <a
+                          class="social-link fcc-container bodyXS weightS icon-cursor"
+                          href="#"
+                          target="_blank"
+                        >
+                          Share
+                          <img class="social-icon" src="@/assets/icons/share.svg" />
+                        </a>
+                        <a
+                          class="social-link fcc-container bodyXS weightS icon-cursor"
+                          href="#"
+                          target="_blank"
+                        >
+                          Twitter
+                          <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                        </a>
+                      </div>
+                    </Col>    
                   </Row>
                 </CollapsePanel>
               </Collapse>
-            </div> -->
+            </div>
           </div>
         </div>
 
         <!-- <div v-if="initialized"></div>
 
-        <div v-else class="fc-container">
+        <div v-else class="fcc-container">
           <Spin :spinning="true">
             <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
           </Spin>
@@ -818,7 +770,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import importIcon from '@/utils/import-icon'
-import { Collapse, Row, Col, Radio, Switch as Toggle, Pagination, Button, Statistic, Tooltip } from 'ant-design-vue'
+import { Collapse, Row, Col, Pagination, Button, Statistic, Tooltip } from 'ant-design-vue'
 import { get, cloneDeep } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
@@ -826,8 +778,6 @@ import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
 const CollapsePanel = Collapse.Panel
-const RadioGroup = Radio.Group
-const RadioButton = Radio.Button
 const Countdown = Statistic.Countdown
 
 export default Vue.extend({
@@ -854,8 +804,7 @@ export default Vue.extend({
       poolLoaded: false,
       autoRefreshTime: 60 as number,
       countdown: 0,
-      fertilizerCollapse: true as any,
-      showCollapse: [] as any[],
+      showCollapse: [] as any,
       timer: null as any,
       loading: false as boolean,
       nbFarmsLoaded: 0 as number,
@@ -1054,7 +1003,6 @@ export default Vue.extend({
     showCollapse: {
       handler() {
         if (!this.poolType && this.showCollapse.length > 0) {
-          alert('here')
           this.showCollapse.splice(0, this.showCollapse.length)
         }
       },
@@ -1258,15 +1206,25 @@ export default Vue.extend({
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
-  height: 45px;
+  height: auto;
 }
 
 .btn-transparent {
   background: transparent;
   border-radius: 48px;
   border: none;
-  height: 100%;
+  height: auto;
   width: 100%;
+  padding: 7.5px 0;
+}
+
+.btn-primary {
+  background: @color-blue700;
+  border-radius: 48px;
+  border: none;
+  height: auto;
+  width: auto;
+  padding: 4.5px 23.5px;
 }
 
 .option-sort-collapse {
@@ -1289,7 +1247,7 @@ export default Vue.extend({
   }
 
   .collapse-item {
-    padding: 16px 32px;
+    padding: 18px 32px;
     border-bottom: 1px solid #c4c4c420;
 
     &:last-child {
@@ -1302,12 +1260,6 @@ export default Vue.extend({
 
     a {
       color: #fff;
-
-      .social-icon {
-        width: 18px;
-        height: 18px;
-        margin-left: 8px;
-      }
     }
   }
 }
@@ -1343,7 +1295,7 @@ export default Vue.extend({
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 16px;
+    margin-right: 18px;
   }
 
   .title {
@@ -1353,6 +1305,15 @@ export default Vue.extend({
       display: block;
       color: rgba(255, 255, 255, 0.7);
     }
+  }
+}
+
+.project-ath {
+  .value {
+    background: @color-petrol400;
+    color: @color-blue800;
+    padding: 4px 8px;
+    border-radius: 4px;
   }
 }
 
@@ -1372,6 +1333,16 @@ export default Vue.extend({
   }
 }
 
+.social-link {
+  color: #fff;
+
+  .social-icon {
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+  }
+}
+
 .detail-btn {
   position: absolute;
   right: 0;
@@ -1379,10 +1350,6 @@ export default Vue.extend({
   border: none;
   display: flex;
   align-items: center;
-
-  .arrow-icon {
-    margin-left: 8px;
-  }
 }
 
 .isDesktop {
@@ -1711,8 +1678,8 @@ export default Vue.extend({
 
                 .value {
                   .coin-icon {
-                    width: 16px;
-                    height: 16px;
+                    width: 18px;
+                    height: 18px;
                     border-radius: 50%;
                     margin-right: 8px;
                   }
@@ -1723,7 +1690,7 @@ export default Vue.extend({
                 height: 114px;
                 background: @color-blue800;
                 padding: 8px;
-                border-radius: 16px;
+                border-radius: 18px;
 
                 @media @max-lg-tablet {
                   margin-top: 72px;
@@ -1734,7 +1701,7 @@ export default Vue.extend({
                 }
               }
 
-              &.fs-container {
+              &.fcb-container {
                 @media @max-lg-tablet {
                   display: inline-block !important;
 
@@ -1811,7 +1778,7 @@ export default Vue.extend({
 
             .header-column {
               text-align: center;
-              padding: 16px 0;
+              padding: 18px 0;
               color: @color-neutral400;
 
               .header-column-title {
@@ -1851,15 +1818,6 @@ export default Vue.extend({
               .state {
                 text-align: center;
 
-                .project-ath {
-                  .value {
-                    background: @color-petrol400;
-                    color: @color-blue800;
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                  }
-                }
-                
                 .show-more {
                   position: relative;
                   width: fit-content;
@@ -1868,14 +1826,6 @@ export default Vue.extend({
                   .option-sort-collapse {
                     top: 0;
                     right: 10px;
-                  }
-                }
-
-                .btn-container {
-                  margin: auto auto 8px auto;
-
-                  &:last-child {
-                    margin-bottom: 0;
                   }
                 }
               }
@@ -1889,48 +1839,33 @@ export default Vue.extend({
 
 @media @max-lg-tablet {
   .fertilizer.container {
+    .state {
+      .label {
+        display: block;
+        color: @color-neutral400;
+      }
+
+      .project-ath .value {
+        margin-top: 4px;
+      }
+    }
+
     .collapse-row {
-      .state {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 8px 0;
-        border-bottom: 1px solid @color-blue600;
+      background: @color-blue800;
+      border-radius: 8px;
+      padding: 18px;
 
-        .title {
-          color: #ffffff50;
-        }
-
-        &:last-child {
-          border-bottom: 0;
-        }
-
-        &.current-liquidity {
-          display: block;
-          width: 100%;
-          flex-direction: unset;
-          float: unset;
-          flex: unset;
-          background: @color-blue800;
-          border-radius: 8px;
-          padding: 8px 18px 18px 18px;
-          border-bottom: 0;
-
-          .title {
-            display: block;
+      .btn-group {
+        .btn-group-item {
+          &:last-child {
+            margin-top: 18px;
           }
 
-          .btn-group {
-            display: flex;
-            justify-content: center;
-            margin-top: 18px;
+          .btn-container, .social-link {
+            margin-right: 18px;
 
-            .btn-container {
-              margin-right: 8px;
-
-              &:last-child {
-                margin-right: 0;
-              }
+            &:last-child {
+              margin-right: 0;
             }
           }
         }
@@ -1944,7 +1879,7 @@ export default Vue.extend({
 .fertilizer {
   .ant-statistic-content {
     font-weight: 600;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
   }
@@ -1953,7 +1888,7 @@ export default Vue.extend({
     .ant-statistic-title {
       font-weight: 600;
       font-size: 11px;
-      line-height: 16px;
+      line-height: 18px;
       text-align: center;
       color: rgba(255, 255, 255, 0.6);
       margin-bottom: 8px;
@@ -1997,7 +1932,7 @@ export default Vue.extend({
         background: transparent;
 
         .ant-collapse-content-box {
-          padding: 0 18px 18px 18px;
+          padding: 18px;
         }
       }
     }

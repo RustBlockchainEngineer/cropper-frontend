@@ -68,7 +68,7 @@
     <div class="card">
       <div class="card-body">
         <div class="farm-content">
-          <div class="farm-head fs-container">
+          <div class="farm-head fcb-container">
             <h3 class="title weightB">Farms</h3>
             <div class="information">
               <div class="tvl-info">
@@ -94,7 +94,7 @@
             </div>
           </div>
 
-          <div class="farm-option-bar fs-container">
+          <div class="farm-option-bar fcb-container">
             <div class="option-tab-group">
               <div class="option-tab">
                 <Button
@@ -193,7 +193,7 @@
             </div>
 
             <div class="option-filter-group">
-              <div class="option-filter option-filter-fixed fc-container icon-cursor">
+              <div class="option-filter option-filter-fixed fcc-container icon-cursor">
                 <img
                   src="@/assets/icons/search.svg"
                   @click="
@@ -213,7 +213,7 @@
                   }
                 "
               >
-                <div class="collapse-item-header fs-container">
+                <div class="collapse-item-header fcb-container">
                   <label class="textL weightB">Search</label>
                   <img
                     class="icon-cursor"
@@ -236,7 +236,7 @@
                         class="shortcut-container icon-cursor"
                         @click="searchShortcut(item.symbol)"
                       >
-                        <div class="shortcut-box fc-container">
+                        <div class="shortcut-box fcc-container">
                           <CoinIcon class="coin-icon" :mint-address="item.mintAddress" />
                           {{ item.symbol }}
                         </div>
@@ -246,7 +246,7 @@
                 </div>
               </div>
 
-              <div class="option-filter option-toggle fc-container">
+              <div class="option-filter option-toggle fcc-container">
                 <label
                   class="toggle-label icon-cursor textS weightB"
                   :class="!searchLifeFarm ? 'active-label' : ''"
@@ -263,14 +263,14 @@
               </div>
 
               <div
-                class="option-filter option-sort fc-container icon-cursor"
+                class="option-filter option-sort fcc-container icon-cursor"
                 @click="
                   () => {
                     this.showOptionMenu = !this.showOptionMenu
                   }
                 "
               >
-                <span class="bodyM weightS option-filter-sort fc-container">
+                <span class="bodyM weightS option-filter-sort fcc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
                     {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }}
@@ -284,7 +284,7 @@
                 </span>
               </div>
 
-              <div class="option-filter option-filter-collapse option-filter-fixed fc-container icon-cursor">
+              <div class="option-filter option-filter-collapse option-filter-fixed fcc-container icon-cursor">
                 <img
                   src="@/assets/icons/filter.svg"
                   @click="
@@ -304,7 +304,7 @@
                   }
                 "
               >
-                <div class="option-collapse-item option-toggle fc-container">
+                <div class="option-collapse-item option-toggle fcc-container">
                   <label
                     class="toggle-label icon-cursor textS weightB"
                     :class="!searchLifeFarm ? 'active-label' : ''"
@@ -354,7 +354,7 @@
           <div v-if="farm.initialized && farmLoaded">
             <div class="farm-table isDesktop">
               <Row class="farm-item" v-for="(farm, idx) in showFarms" :key="farm.farmInfo.poolId" :gutter="16">
-                <Col class="fl-container" span="6">
+                <Col class="fcl-container" span="6">
                   <div class="state">
                     <div class="lp-icons">
                       <div class="lp-icons-group">
@@ -394,7 +394,7 @@
                   </div>
                 </Col>
 
-                <Col class="fr-container" span="2">
+                <Col class="fcr-container" span="2">
                   <div class="state">
                     <div class="farm-labels">
                       <div v-if="farm.labelized" class="label labelized weightS">Labelized</div>
@@ -413,7 +413,7 @@
                   </div>
                 </Col>
 
-                <Col class="fr-container" span="3">
+                <Col class="fcr-container" span="3">
                   <div class="state">
                     <div class="title textS weightS letterL">Total Deposited</div>
                     <div
@@ -435,7 +435,7 @@
                   </div>
                 </Col>
 
-                <Col class="fr-container" span="3">
+                <Col class="fcr-container" span="3">
                   <div class="state">
                     <div class="title textS weightS letterL">
                       Total APR
@@ -481,7 +481,7 @@
                   </div>
                 </Col>
 
-                <Col class="fr-container" span="4">
+                <Col class="fcr-container" span="4">
                   <div class="state">
                     <div class="title textS weightS letterL">Pending Rewards</div>
                     <div
@@ -499,7 +499,7 @@
                   </div>
                 </Col>
 
-                <Col class="fr-container" span="3">
+                <Col class="fcr-container" span="3">
                   <div class="state">
                     <div class="title textS weightS letterL">
                       Value Deposited
@@ -555,7 +555,7 @@
                   </div>
                 </Col>
 
-                <Col class="state fs-container" span="3">
+                <Col class="state fcb-container" span="3">
                   <div class="farm-btn-group">
                     <div
                       class="btn-container"
@@ -684,13 +684,13 @@
                       v-click-outside="hideMore"
                     >
                       <div class="option-collapse-item text-center textM weightS icon-cursor">
-                        <a class="social-link fc-container" :href="farm.farmInfo.twitterShare" target="_blank">
+                        <a class="social-link fcc-container" :href="farm.farmInfo.twitterShare" target="_blank">
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
                         </a>
                       </div>
                       <div class="option-collapse-item text-center textM weightS icon-cursor">
-                        <a class="social-link fc-container" :href="farm.farmInfo.twitterLink" target="_blank">
+                        <a class="social-link fcc-container" :href="farm.farmInfo.twitterLink" target="_blank">
                           Twitter
                           <img class="social-icon" src="@/assets/icons/twitter.svg" />
                         </a>
@@ -713,7 +713,7 @@
               <Collapse v-model="showCollapse" class="farm-collapse-tablet" accordion>
                 <CollapsePanel v-for="(farm, idx) in showFarms" v-show="true" :key="farm.farmInfo.poolId">
                   <Row slot="header" class="farm-collapse-tablet-head">
-                    <Col class="farm-collapse-item fc-container" span="24">
+                    <Col class="farm-collapse-item fcc-container" span="24">
                       <Col class="state text-center" span="8">
                         <div class="lp-icons">
                           <div class="lp-icons-group">
@@ -865,7 +865,7 @@
                         </div>
                       </Col>
                       <Col class="state" span="10">
-                        <div class="title textS weightS letterL fr-container">Value Deposited</div>
+                        <div class="title textS weightS letterL fcr-container">Value Deposited</div>
                         <div
                           v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
                           class="value textM weightS letterS text-right"
@@ -884,10 +884,10 @@
                       </Col>
                     </Col>
 
-                    <Col class="farm-collapse-item fs-container" span="24">
-                      <div class="fc-container">
+                    <Col class="farm-collapse-item fcb-container" span="24">
+                      <div class="fcc-container">
                         <a
-                          class="social-link fc-container textM weightS icon-cursor"
+                          class="social-link fcc-container textM weightS icon-cursor"
                           :href="farm.farmInfo.twitterShare"
                           target="_blank"
                         >
@@ -895,7 +895,7 @@
                           <img class="social-icon" src="@/assets/icons/share.svg" />
                         </a>
                         <a
-                          class="social-link fc-container textM weightS icon-cursor"
+                          class="social-link fcc-container textM weightS icon-cursor"
                           :href="farm.farmInfo.twitterLink"
                           target="_blank"
                         >
@@ -904,7 +904,7 @@
                         </a>
                       </div>
 
-                      <div class="fc-container">
+                      <div class="fcc-container">
                         <div class="btn-container">
                           <Button
                             v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
@@ -1195,7 +1195,7 @@
                       </Col>
                     </Col>
 
-                    <Col class="farm-collapse-item fc-container" span="24">
+                    <Col class="farm-collapse-item fcc-container" span="24">
                       <div class="btn-container">
                         <Button
                           v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
@@ -1300,9 +1300,9 @@
                       </div>
                     </Col>
 
-                    <Col class="farm-collapse-item fc-container" span="24">
+                    <Col class="farm-collapse-item fcc-container" span="24">
                       <a
-                        class="social-link fc-container bodyXS weightS icon-cursor"
+                        class="social-link fcc-container bodyXS weightS icon-cursor"
                         :href="farm.farmInfo.twitterShare"
                         target="_blank"
                       >
@@ -1310,7 +1310,7 @@
                         <img class="social-icon" src="@/assets/icons/share.svg" />
                       </a>
                       <a
-                        class="social-link fc-container bodyXS weightS icon-cursor"
+                        class="social-link fcc-container bodyXS weightS icon-cursor"
                         :href="farm.farmInfo.twitterLink"
                         target="_blank"
                       >
@@ -1340,7 +1340,7 @@
             </div>
           </div>
 
-          <div v-else class="fc-container">
+          <div v-else class="fcc-container">
             <Spin :spinning="true">
               <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
             </Spin>
@@ -3485,7 +3485,7 @@ export default Vue.extend({
               margin-top: 0;
             }
 
-            .fl-container {
+            .fcl-container {
               padding: 0 !important;
             }
 

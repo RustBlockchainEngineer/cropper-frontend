@@ -18,7 +18,7 @@
 
     <div class="card">
       <div class="card-body">
-        <div class="staking-head fs-container">
+        <div class="staking-head fcb-container">
           <h3 class="title weightB">Staking</h3>
           <div class="information">
             <div class="tvl-info">
@@ -33,11 +33,11 @@
           </div>
         </div>
 
-        <div class="staking-content fs-container">
+        <div class="staking-content fcb-container">
           <div class="staking-body">
             <h4 class="weightB">$CRP Staking</h4>
             <div class="staking-progress">
-              <div class="staking-progress-label fs-container">
+              <div class="staking-progress-label fcb-container">
                 <span class="bodyXS weightB">Tier {{ currentTiers }}</span>
                 <span class="bodyXS weightB">Tier {{ nextTiers }}</span>
               </div>
@@ -45,7 +45,7 @@
             </div>
 
             <div class="staking-infos-group">
-              <div class="staking-info fs-container">
+              <div class="staking-info fcb-container">
                 <div class="label textM weightS letterS">
                   Estimated APY
                   <Tooltip placement="bottomLeft">
@@ -69,7 +69,7 @@
                 </div>
               </div>
 
-              <div class="staking-info fs-container">
+              <div class="staking-info fcb-container">
                 <div class="label textM weightS letterS">
                   Total Staked
                   <Tooltip placement="bottomLeft">
@@ -82,7 +82,7 @@
                 <div class="value textM weightB">{{ totalStaked }}</div>
               </div>
 
-              <div class="staking-info fs-container">
+              <div class="staking-info fcb-container">
                 <div class="label textM weightS letterS">
                   Total Value
                   <Tooltip placement="bottomLeft">
@@ -98,7 +98,7 @@
             </div>
 
             <div class="staking-actions-group">
-              <div class="staking-action-item fs-container">
+              <div class="staking-action-item fcb-container">
                 <div class="reward-pending">
                   <label class="label textM">Reward Pending</label>
                   <label class="value textL weightB">{{ pendingReward }}</label>
@@ -113,19 +113,19 @@
                 </div>
               </div>
 
-              <div v-if="!wallet.connected" class="btn-container btn-large fc-container">
+              <div v-if="!wallet.connected" class="btn-container btn-large fcc-container">
                 <Button class="btn-transparent textL weightB" @click="$accessor.wallet.openModal"
                   >Connect Wallet</Button
                 >
               </div>
 
               <div v-else>
-                <div v-if="userStaked > 0" class="staking-action-item fs-container">
+                <div v-if="userStaked > 0" class="staking-action-item fcb-container">
                   <div class="reward-pending">
                     <label class="label textM">CRP Staked</label>
                     <label class="value textL weightB">{{ userStaked }}</label>
                   </div>
-                  <div class="stake-btn-group fc-container">
+                  <div class="stake-btn-group fcc-container">
                     <div class="btn-container">
                       <Button
                         class="btn-primary weightS letterL"
@@ -148,7 +148,7 @@
                   </div>
                 </div>
 
-                <div v-else class="btn-container btn-large fc-container">
+                <div v-else class="btn-container btn-large fcc-container">
                   <Button
                     class="btn-transparent textL weightB"
                     @click="
@@ -163,7 +163,7 @@
             </div>
 
             <div class="staking-footer">
-              <div class="lock-tokens fs-container">
+              <div class="lock-tokens fcb-container">
                 <label class="label textS weightS letterL">
                   {{ endOfLock ? 'End of lock' : 'Lock tokens for' }}
                 </label>
@@ -171,7 +171,7 @@
                   {{ endOfLock ? endOfLock : '0 Day(s)' }}
                 </label>
               </div>
-              <div v-if="!endOfLock" class="get-crp fc-container">
+              <div v-if="!endOfLock" class="get-crp fcc-container">
                 <label class="textM weightS">Get CRP</label>
                 <img class="union-icon" src="@/assets/icons/union.svg" />
               </div>
@@ -182,52 +182,52 @@
             <div class="staking-tier-preview"></div>
             <Carousel ref="tierCarousel">
               <div class="staking-tier-item">
-                <div class="fs-container">
+                <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 1</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
+                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="fs-container">
+                <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 2</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
+                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="fs-container">
+                <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 3</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
+                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="fs-container">
+                <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 4</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
+                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="fs-container">
+                <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 5</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
+                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>

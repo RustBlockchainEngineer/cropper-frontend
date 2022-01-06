@@ -66,7 +66,7 @@
     </div>
 
     <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
-      <div class="select-wallet-header fs-container">
+      <div class="select-wallet-header fcb-container">
         <span class="textL weightB">Connect wallet</span>
         <img class="close-icon icon-cursor" src="@/assets/icons/close-circle-icon.svg" @click="closePopIn" />
       </div>

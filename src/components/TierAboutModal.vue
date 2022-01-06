@@ -13,7 +13,7 @@
 
     <Tabs defaultActiveKey="1">
       <TabPane tab="Tier 1" key="1">
-        <Row :gutter="56" class="tier-container fs-container">
+        <Row :gutter="56" class="tier-container fcb-container">
           <Col :sm="12" :xs="24" class="tier-tab">
             <span class="textM weightS">
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
@@ -31,7 +31,7 @@
         </Row>
       </TabPane>
       <TabPane tab="Tier 2" key="2">
-        <Row :gutter="56" class="tier-container fs-container">
+        <Row :gutter="56" class="tier-container fcb-container">
           <Col :sm="12" :xs="24" class="tier-tab">
             <span class="textM weightS">
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
@@ -49,7 +49,7 @@
         </Row>
       </TabPane>
       <TabPane tab="Tier 3" key="3">
-        <Row :gutter="56" class="tier-container fs-container">
+        <Row :gutter="56" class="tier-container fcb-container">
           <Col :span="12" class="tier-tab">
             <span class="textM weightS">
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
@@ -67,7 +67,7 @@
         </Row>
       </TabPane>
       <TabPane tab="Tier 4" key="4">
-        <Row :gutter="56" class="tier-container fs-container">
+        <Row :gutter="56" class="tier-container fcb-container">
           <Col :span="12" class="tier-tab">
             <span class="textM weightS">
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
@@ -85,7 +85,7 @@
         </Row>
       </TabPane>
       <TabPane tab="Tier 5" key="5">
-        <Row :gutter="56" class="tier-container fs-container">
+        <Row :gutter="56" class="tier-container fcb-container">
           <Col :span="12" class="tier-tab">
             <span class="textM weightS">
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the

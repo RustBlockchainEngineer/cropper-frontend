@@ -12,8 +12,8 @@
     <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
 
     <div class="liquidity-box">
-      <div class="fs-container">
-        <div class="fc-container">
+      <div class="fcb-container">
+        <div class="fcc-container">
           <div class="coins-container">
             <div class="coin-group textS weightS">
               <CoinIcon :mint-address="coin ? coin.coin.mintAddress : ''" />
@@ -23,10 +23,10 @@
               {{ coin.pc.symbol }}
             </div>
           </div>
-          <button v-if="!showHalf && coin.balance" class="input-button bodyXS weightB fc-container" @click="setMax(1)">
+          <button v-if="!showHalf && coin.balance" class="input-button bodyXS weightB fcc-container" @click="setMax(1)">
             Max
           </button>
-          <button v-if="showHalf && coin.balance" class="input-button bodyXS weightB fc-container" @click="setMax(0.5)">
+          <button v-if="showHalf && coin.balance" class="input-button bodyXS weightB fcc-container" @click="setMax(0.5)">
             Half
           </button>
         </div>
@@ -43,14 +43,14 @@
           spellcheck="false"
         />
       </div>
-      <div v-if="coin.balance && !coin.balance.wei.isNaN()" class="balance-info fs-container bodyXS weightS">
+      <div v-if="coin.balance && !coin.balance.wei.isNaN()" class="balance-info fcb-container bodyXS weightS">
         <span> Balance: {{ coin.balance.fixed() }} </span>
         <span> ~${{ coin.balance.fixed() }} </span>
       </div>
     </div>
     <div class="lp-breakdown text-center">
       <label class="textS weightS letterL">LP Breakdown</label>
-      <div class="lp-coins-container fc-container">
+      <div class="lp-coins-container fcc-container">
         <div class="lp-coin-box textS">
           <b>{{ coin.coin.symbol }}</b> {{ coin.balance.toEther().toFixed(coin.coin.decimals) }}
         </div>
@@ -64,7 +64,7 @@
       <label class="bodyXS weightB" v-html="text"> </label>
     </div>
 
-    <div class="btn-group fs-container">
+    <div class="btn-group fcb-container">
       <div class="btn-container">
         <Button class="btn-fill textM weightS" @click="$emit('onCancel')"> Cancel </Button>
       </div>
