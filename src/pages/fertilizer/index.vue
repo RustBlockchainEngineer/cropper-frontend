@@ -474,15 +474,23 @@
                     ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
                   </Col>
                   <Col class="state textM weightS" span="3">
-                    ${{ new TokenAmount(fertilizer.token_price, 2, false).format() }}
+                    ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
                   </Col>
                   <Col class="state textM weightS" span="3">
                     <div class="project-ath fc-container">
+                      <Tooltip placement="bottomLeft">
+                        <template slot="title">
+                          <span class="textS weightS">If you invested 100$ you would have 1000$</span>
+                        </template>
+                        <div class="info-icon">
+                          <img src="@/assets/icons/info.svg" />
+                        </div>
+                      </Tooltip>
                       <span class="value textM weightS letterS">+{{ fertilizer.ath }}%</span>
                     </div>
                   </Col>
                   <Col class="state textM weightS" span="4">
-                    {{ fertilizer.distribution_end_date }}
+                    {{ moment(distribution_end_date).format("MMMM Do YYYY") }}
                   </Col>
                   <Col class="state" span="1">
                     <div class="show-more">
@@ -800,7 +808,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import importIcon from '@/utils/import-icon'
-import { Collapse, Row, Col, Radio, Switch as Toggle, Pagination, Button, Statistic } from 'ant-design-vue'
+import { Collapse, Row, Col, Radio, Switch as Toggle, Pagination, Button, Statistic, Tooltip } from 'ant-design-vue'
 import { get, cloneDeep } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
@@ -819,7 +827,8 @@ export default Vue.extend({
     Row,
     Col,
     Button,
-    Countdown
+    Countdown,
+    Tooltip
   },
   data() {
     return {
@@ -1191,6 +1200,9 @@ export default Vue.extend({
     setFilterSort(option: string) {
       this.filterSort = option
       this.showFilterMenu = false
+    },
+    moment() {
+      return moment();
     }
   }
 })
@@ -1270,6 +1282,14 @@ export default Vue.extend({
 
   &.open {
     background: @color-green500;
+  }
+}
+
+.info-icon {
+  img {
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
   }
 }
 
@@ -1784,35 +1804,35 @@ export default Vue.extend({
 </style>
 
 <style lang="less">
-// ::-webkit-scrollbar {
-//   @media @max-sl-mobile {
-//     display: none; /* Chrome Safari */
-//   }
-// }
+.fertilizer {
+  .ant-statistic-content {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+  }
 
-.ant-statistic-content {
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0.15px;
+  .whitelist-countdown {
+    .ant-statistic-title {
+      font-weight: 600;
+      font-size: 11px;
+      line-height: 16px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 8px;
+    }
+
+    .ant-statistic-content {
+      font-weight: bold;
+      font-size: 25px;
+      line-height: 35px;
+      text-align: center;
+      letter-spacing: 3px;
+    }
+  }
 }
 
-.whitelist-countdown {
-  .ant-statistic-title {
-    font-weight: 600;
-    font-size: 11px;
-    line-height: 16px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 8px;
-  }
-
-  .ant-statistic-content {
-    font-weight: bold;
-    font-size: 25px;
-    line-height: 35px;
-    text-align: center;
-    letter-spacing: 3px;
-  }
+.ant-tooltip .ant-tooltip-inner {
+  width: 180px !important;
 }
 </style>
