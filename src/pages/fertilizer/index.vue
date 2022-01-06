@@ -87,7 +87,7 @@
               src="@/assets/icons/arrow-down-white.svg"
             />
 
-            <div v-if="showTabMenu" class="option-sort-collapse collapse-left">
+            <div v-if="showTabMenu" class="option-sort-collapse collapse-left" v-click-outside="() => { this.showTabMenu = false }">
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
                 :class="filterProject === filterStatus.upcoming ? 'active-item' : ''"
@@ -136,7 +136,7 @@
               />
             </div>
 
-            <div class="option-search-collapse" :class="showSearchMenu ? 'visible' : 'hidden'">
+            <div v-if="showSearchMenu" class="option-search-collapse" v-click-outside="() => { this.showSearchMenu = false }">
               <div class="collapse-item-header fcb-container">
                 <label class="textL weightB">Search</label>
                 <img
@@ -196,34 +196,80 @@
               />
             </div>
 
-            <div v-if="showFilterMenu" class="option-sort-collapse collapse-right">
-              <div
-                class="collapse-item text-center texts weightB icon-cursor"
-                :class="filterSort === 'all' ? 'active-item' : ''"
-                @click="setFilterSort('all')"
-              >
-                All
+            <div v-if="showFilterMenu">
+              <div v-if="filterProject != filterStatus.funded " class="option-sort-collapse collapse-right" v-click-outside="() => { this.showFilterMenu = false }">
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === 'all' ? 'active-item' : ''"
+                  @click="setFilterSort('all')"
+                >
+                  All
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === filterStatus.whitelist ? 'active-item' : ''"
+                  @click="setFilterSort(filterStatus.whitelist)"
+                >
+                  Whitelist Open
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === filterStatus.sales ? 'active-item' : ''"
+                  @click="setFilterSort(filterStatus.sales)"
+                >
+                  Sales
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === filterStatus.distribution ? 'active-item' : ''"
+                  @click="setFilterSort(filterStatus.distribution)"
+                >
+                  Distribution
+                </div>
               </div>
-              <div
-                class="collapse-item text-center texts weightB icon-cursor"
-                :class="filterSort === filterStatus.whitelist ? 'active-item' : ''"
-                @click="setFilterSort(filterStatus.whitelist)"
-              >
-                Whitelist Open
-              </div>
-              <div
-                class="collapse-item text-center texts weightB icon-cursor"
-                :class="filterSort === filterStatus.sales ? 'active-item' : ''"
-                @click="setFilterSort(filterStatus.sales)"
-              >
-                Sales
-              </div>
-              <div
-                class="collapse-item text-center texts weightB icon-cursor"
-                :class="filterSort === filterStatus.distribution ? 'active-item' : ''"
-                @click="setFilterSort(filterStatus.distribution)"
-              >
-                Distribution
+              <div v-else class="option-sort-collapse collapse-right" v-click-outside="() => { this.showFilterMenu = false }">
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === 'all' ? 'active-item' : ''"
+                  @click="setFilterSortFunded('subscribers')"
+                >
+                  Subscribers (High > Low)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === filterStatus.whitelist ? 'active-item' : ''"
+                  @click="setFilterSort(filterStatus.whitelist)"
+                >
+                  Subscribers (Low > High)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === filterStatus.sales ? 'active-item' : ''"
+                  @click="setFilterSort(filterStatus.sales)"
+                >
+                  Total raised (High > Low)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === filterStatus.distribution ? 'active-item' : ''"
+                  @click="setFilterSort(filterStatus.distribution)"
+                >
+                  Total raised (Low > High)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === filterStatus.sales ? 'active-item' : ''"
+                  @click="setFilterSort(filterStatus.sales)"
+                >
+                  ATH Since IPO (High > Low)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="filterSort === filterStatus.distribution ? 'active-item' : ''"
+                  @click="setFilterSort(filterStatus.distribution)"
+                >
+                  ATH Since IPO (Low > High)
+                </div>
               </div>
             </div>
           </div>
@@ -550,7 +596,7 @@
                     </Col>
 
                     <Col class="state text-center" span="5">
-                      <span class="label textS weightB">Participants</span>
+                      <span class="label textS weightB">Subscribers</span>
                       <span class="textM weightS">{{ fertilizer.subscribers }}</span>
                     </Col>
 
@@ -677,7 +723,7 @@
                         </div>
 
                         <div class="state">
-                          <span class="label textS weightB">Participants</span>
+                          <span class="label textS weightB">Subscribers</span>
                           <span class="textM weightS">{{ fertilizer.subscribers }}</span>
                         </div>
                       </div> 
@@ -780,6 +826,8 @@ import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
+const Vco = require('v-click-outside')
+Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
 const Countdown = Statistic.Countdown
 
@@ -807,7 +855,7 @@ export default Vue.extend({
       poolLoaded: false,
       autoRefreshTime: 60 as number,
       countdown: 0,
-      showCollapse: [] as any,
+      showCollapse: 0 as any,
       timer: null as any,
       loading: false as boolean,
       nbFarmsLoaded: 0 as number,
@@ -1238,7 +1286,7 @@ export default Vue.extend({
   border: 2px solid rgba(255, 255, 255, 0.14);
   box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
-  min-width: 180px;
+  min-width: 188px;
   z-index: 999;
 
   &.collapse-left {
@@ -1250,7 +1298,7 @@ export default Vue.extend({
   }
 
   .collapse-item {
-    padding: 18px 32px;
+    padding: 18px 0;
     border-bottom: 1px solid #c4c4c420;
 
     &:last-child {
@@ -1383,7 +1431,11 @@ export default Vue.extend({
 
 // class stylesheet
 .fertilizer.container {
-  margin: 18px 0 100px 0;
+  margin: 38px 0;
+
+  @media @max-sl-mobile {
+    margin: 28px 0;
+  }
 
   .card {
     .card-body {
@@ -1580,8 +1632,6 @@ export default Vue.extend({
             position: absolute;
             top: 0;
             left: -209px;
-            visibility: hidden;
-            opacity: 0;
             transition: visibility 0s, opacity 0.5s linear;
             background: @color-blue700;
             border: 2px solid @color-blue500;
@@ -1589,11 +1639,6 @@ export default Vue.extend({
             padding: 18px;
             z-index: 999;
             width: 250px;
-
-            &.visible {
-              visibility: visible;
-              opacity: 1;
-            }
 
             .collapse-item-header {
               margin-bottom: 10px;
@@ -1859,6 +1904,12 @@ export default Vue.extend({
       padding: 18px;
 
       .btn-group {
+        .btn-group-item {
+          &:last-child {
+            margin-top: 18px;
+          }
+        }
+
         .btn-container, .social-link {
           margin-right: 18px;
 

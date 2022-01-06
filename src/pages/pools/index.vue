@@ -1566,10 +1566,10 @@ export default class Pools extends Vue {
 
 // class stylesheet
 .pool.container {
-  margin-top: 38px;
+  margin: 38px 0;
 
   @media @max-sl-mobile {
-    margin-top: 28px;
+    margin: 28px 0;
   }
 
   .card {
@@ -1989,7 +1989,7 @@ export default class Pools extends Vue {
             border: 2px solid rgba(255, 255, 255, 0.14);
             box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
             border-radius: 8px;
-            min-width: 180px;
+            min-width: 188px;
             z-index: 999;
 
             &.collapse-left {
@@ -2001,7 +2001,7 @@ export default class Pools extends Vue {
             }
 
             .collapse-item {
-              padding: 16px 32px;
+              padding: 16px 0;
               border-bottom: 1px solid #c4c4c420;
 
               &:last-child {

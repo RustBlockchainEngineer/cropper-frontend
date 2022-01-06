@@ -338,14 +338,14 @@
                   :class="sortMethod === 'apr' && !sortAsc ? 'active-item' : ''"
                   @click="setSortOption('apr', false)"
                 >
-                  APR % High > Low
+                  APR % (High > Low)
                 </div>
                 <div
                   class="option-collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === 'apr' && sortAsc ? 'active-item' : ''"
                   @click="setSortOption('apr', true)"
                 >
-                  APR % Low > High
+                  APR % (Low > High)
                 </div>
               </div>
             </div>
@@ -3002,7 +3002,7 @@ export default Vue.extend({
   border: 2px solid rgba(255, 255, 255, 0.14);
   box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
-  min-width: 180px;
+  min-width: 188px;
   z-index: 999;
 
   &.collapse-left {
@@ -3014,7 +3014,7 @@ export default Vue.extend({
   }
 
   .option-collapse-item {
-    padding: 16px 32px;
+    padding: 16px 0;
     border-bottom: 1px solid #c4c4c420;
 
     &.option-toggle {
@@ -3160,10 +3160,10 @@ export default Vue.extend({
 
 // class stylesheet
 .farm.container {
-  margin-top: 38px;
+  margin: 38px 0;
 
   @media @max-sl-mobile {
-    margin-top: 28px;
+    margin: 28px 0;
   }
 
   .card {
