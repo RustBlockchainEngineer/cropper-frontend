@@ -530,105 +530,135 @@
             </div>
 
             <!-- tablet version -->
-            <!-- <div class="fertilizer-funded-table isTablet">
-              <Row class="fertilizer-funded-table-header">
-                <Col class="header-column textS weightB text-left" span="6"> Name </Col>
-                <Col class="header-column textS weightB" span="6">
-                  <div class="header-column-title" @click="sortByColumn('liquidity')">
-                    Liquidity
+            <div class="fertilizer-funded-table isTablet">
+              <!-- <Row class="fertilizer-funded-table-header">
+                <Col class="header-column textS weightB text-left" span="6"> Project name </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortByColumn('subscribers')">
+                    Subscribers
                     <img
-                      v-if="sortMethod === 'liquidity'"
+                      v-if="sortMethod === 'subscriber'"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortSubscribersAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortSubscribersAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="6">
-                  <div class="header-column-title" @click="sortByColumn('volh')">
-                    Volume (24hrs)
+                <Col class="header-column textS weightB" span="4">
+                  <div class="header-column-title" @click="sortByColumn('total_raised')">
+                    Total raised
                     <img
-                      v-if="sortMethod === 'volh'"
+                      v-if="sortMethod === 'total_raised'"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortRaisedAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortRaisedAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="5">
-                  <div class="header-column-title" @click="sortByColumn('vold')">
-                    Volume (7d)
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortByColumn('token_price')">
+                    Token price
                     <img
-                      v-if="sortMethod === 'vold'"
+                      v-if="sortMethod === 'token_price'"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortPriceAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortPriceAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
-              </Row>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortByColumn('ath')">
+                    ATH Since IPO
+                    <img
+                      v-if="sortMethod === 'ath'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortATHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortATHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="4">
+                  <div class="header-column-title" @click="sortByColumn('end_date')">
+                    Ended in UTC
+                    <img
+                      v-if="sortMethod === 'end_date'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortEndAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortEndAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+              </Row> -->
 
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
                   v-for="fertilizer in fertilizerItems"
                   :key="fertilizer.id"
                   v-show="true"
-                  :show-arrow="poolCollapse"
+                  :show-arrow="fertilizerCollapse"
                 >
                   <Row slot="header" class="pool-head">
-                    <Col class="state" span="6">
-                      <div class="lp-iconscontainer">
-                        <div class="icons textM weightS">
-                          <CoinIcon
-                            :mint-address="data ? fertilizer.lp.coin.mintAddress : ''"
-                          />
-                          {{ fertilizer.lp.coin.symbol }}
-                          <span>-</span>
-                          <CoinIcon :mint-address="data ? fertilizer.lp.pc.mintAddress : ''" />
-                          {{ fertilizer.lp.pc.symbol }}
+                    <Col class="state" span="8">
+                      <div class="project-name fl-container">
+                        <img class="logo" :src="fertilizer.picture" />
+                        <div class="title">
+                          <span class="textM weightS">{{ fertilizer.title }}</span>
+                          <span class="short-desc bodXS weightS">{{ fertilizer.short_desc }}</span>
                         </div>
                       </div>
                     </Col>
 
-                    <Col class="state textM weightS text-center" span="6">
-                      ${{ new TokenAmount(fertilizer.liquidity, 2, false).format() }}
+                    <Col class="state textM weightS text-center" span="5">
+                      {{ fertilizer.subscribers }}
                     </Col>
 
-                    <Col class="state textM weightS text-center" span="6">
-                      ${{ new TokenAmount(fertilizer.volume_24h, 2, false).format() }}
+                    <Col class="state textM weightS text-center" span="5">
+                      ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
                     </Col>
                     <Col class="state textM weightS text-center" span="5">
-                      ${{ new TokenAmount(fertilizer.volume_7d, 2, false).format() }}
+                      ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
                     </Col>
 
                     <Button class="detail-btn textS weightS">
                       <img
                         class="arrow-icon"
-                        :class="fertilizer.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        :class="fertilizer.id != showCollapse ? 'arrow-up' : 'arrow-down'"
                         src="@/assets/icons/arrow-down-white.svg"
                       />
                     </Button>
                   </Row>
 
-                  <Row v-if="poolCollapse" class="collapse-row" :gutter="18">
+                  <Row v-if="fertilizerCollapse" class="collapse-row" :gutter="18">
                     <Col span="12">
                       <div class="state">
                         <span class="title textS weightS letterL">Fees (24h)</span>
@@ -673,7 +703,7 @@
                   </Row>
                 </CollapsePanel>
               </Collapse>
-            </div> -->
+            </div>
 
             <!-- mobile version -->
             <!-- <div class="fertilizer-funded-table isMobile">
@@ -682,7 +712,7 @@
                   v-for="fertilizer in fertilizerItems"
                   :key="fertilizer.id"
                   v-show="true"
-                  :show-arrow="poolCollapse"
+                  :show-arrow="fertilizerCollapse"
                 >
                   <Row slot="header" class="pool-head">
                     <Col class="state" :span="24">
@@ -709,7 +739,7 @@
                     </Button>
                   </Row>
 
-                  <Row v-if="poolCollapse" class="collapse-row">
+                  <Row v-if="fertilizerCollapse" class="collapse-row">
                     <Col class="state current-liquidity text-center" span="24">
                       <span class="title textS weightS letterL">Your liquidity</span>
                       <span class="value textM weightS letterS">
@@ -808,7 +838,9 @@ export default Vue.extend({
     Col,
     Button,
     Countdown,
-    Tooltip
+    Tooltip,
+    Collapse,
+    CollapsePanel
   },
   data() {
     return {
@@ -822,6 +854,7 @@ export default Vue.extend({
       poolLoaded: false,
       autoRefreshTime: 60 as number,
       countdown: 0,
+      fertilizerCollapse: true as any,
       showCollapse: [] as any[],
       timer: null as any,
       loading: false as boolean,
@@ -1305,11 +1338,50 @@ export default Vue.extend({
   }
 }
 
+.project-name {
+  .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+
+  .title {
+    text-align: left;
+
+    .short-desc {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
 .info-icon {
   img {
     width: 12px;
     height: 12px;
     margin-right: 8px;
+  }
+}
+
+.arrow-icon {
+  transition: all 0.3s;
+
+  &.arrow-up {
+    transform: rotate(180deg);
+  }
+}
+
+.detail-btn {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+
+  .arrow-icon {
+    margin-left: 8px;
   }
 }
 
@@ -1779,24 +1851,6 @@ export default Vue.extend({
               .state {
                 text-align: center;
 
-                .project-name {
-                  .logo {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    margin-right: 16px;
-                  }
-
-                  .title {
-                    text-align: left;
-
-                    .short-desc {
-                      display: block;
-                      color: rgba(255, 255, 255, 0.7);
-                    }
-                  }
-                }
-
                 .project-ath {
                   .value {
                     background: @color-petrol400;
@@ -1832,6 +1886,58 @@ export default Vue.extend({
     }
   }
 }
+
+@media @max-lg-tablet {
+  .fertilizer.container {
+    .collapse-row {
+      .state {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid @color-blue600;
+
+        .title {
+          color: #ffffff50;
+        }
+
+        &:last-child {
+          border-bottom: 0;
+        }
+
+        &.current-liquidity {
+          display: block;
+          width: 100%;
+          flex-direction: unset;
+          float: unset;
+          flex: unset;
+          background: @color-blue800;
+          border-radius: 8px;
+          padding: 8px 18px 18px 18px;
+          border-bottom: 0;
+
+          .title {
+            display: block;
+          }
+
+          .btn-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 18px;
+
+            .btn-container {
+              margin-right: 8px;
+
+              &:last-child {
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>
 
 <style lang="less">
@@ -1859,6 +1965,41 @@ export default Vue.extend({
       line-height: 35px;
       text-align: center;
       letter-spacing: 3px;
+    }
+  }
+
+  .ant-collapse {
+    background: transparent;
+    border: none;
+
+    .ant-collapse-item {
+      position: relative;
+      background: rgba(23, 32, 88, 0.9);
+      border-radius: 8px !important;
+      margin-bottom: 8px;
+      border-bottom: 0;
+      border: 3px solid transparent;
+
+      &:hover {
+        border-color: @color-blue500;
+      }
+
+      .ant-collapse-header {
+        padding: 18px;
+
+        .ant-collapse-arrow {
+          display: none;
+        }
+      }
+
+      .ant-collapse-content {
+        border: none;
+        background: transparent;
+
+        .ant-collapse-content-box {
+          padding: 0 18px 18px 18px;
+        }
+      }
     }
   }
 }
