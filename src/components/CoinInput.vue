@@ -14,10 +14,18 @@
             <span v-else>Select a token</span>
             <img class="collapse-arrow" v-if="showArrow" src="@/assets/icons/arrow-down-white.svg" />
           </button>
-          <button v-if="!disabled && !showHalf && balance" class="input-button bodyXS weightB fc-container" @click="inputBalanceByPercent(1)"> 
+          <button
+            v-if="!disabled && !showHalf && balance"
+            class="input-button bodyXS weightB fc-container"
+            @click="inputBalanceByPercent(1)"
+          >
             Max
           </button>
-          <button v-if="!disabled && showHalf && balance" class="input-button bodyXS weightB fc-container" @click="inputBalanceByPercent(0.5)">
+          <button
+            v-if="!disabled && showHalf && balance"
+            class="input-button bodyXS weightB fc-container"
+            @click="inputBalanceByPercent(0.5)"
+          >
             Half
           </button>
         </div>
@@ -162,11 +170,11 @@ export default Vue.extend({
     .input-button {
       height: 32px;
       width: 32px;
-      border: 1px solid #6574D6;
+      border: 1px solid #6574d6;
       border-radius: 4px;
-      color: #CCD1F1;
+      color: #ccd1f1;
     }
-    
+
     .select-button {
       position: relative;
       padding: 0 10px;
@@ -190,25 +198,23 @@ export default Vue.extend({
         height: 8px;
       }
     }
-    
+
     .select-button::before {
-      content:"";
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      bottom:0;
-      border-radius:8px; 
-      padding:2px;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      padding: 2px;
       background: @gradient-btn-wallet;
       background-origin: border-box;
-      -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: destination-out; 
-      mask-composite: exclude; 
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
     }
-   
+
     input {
       width: 0;
       padding: 0;

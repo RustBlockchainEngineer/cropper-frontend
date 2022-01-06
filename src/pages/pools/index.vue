@@ -30,16 +30,10 @@
               >Learn about providing <br />
               liquidity
             </label>
-            <img
-              class="icon-cursor close-icon"
-              src="@/assets/icons/close-circle-icon.svg"
-              @click="hideGuide"
-            />
+            <img class="icon-cursor close-icon" src="@/assets/icons/close-circle-icon.svg" @click="hideGuide" />
             <Row class="guide-detail">
               <Col :sm="14" :xs="24">
-                <label class="textS weightS letterL"
-                  >Check out our v3 LP walkthrough and migration guides.</label
-                >
+                <label class="textS weightS letterL">Check out our v3 LP walkthrough and migration guides.</label>
                 <div class="learn-btn-container">
                   <Button class="learn-btn textS weightS letterL">Learn more</Button>
                 </div>
@@ -56,17 +50,11 @@
             <h3 class="title weightB">Liquidity Pools</h3>
             <div class="information">
               <div class="tvl-info">
-                <p class="textL weightS">
-                  TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
-                </p>
+                <p class="textL weightS">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
               </div>
 
               <div class="action-btn-group">
-                <div
-                  class="reload-btn icon-cursor"
-                  :class="activeSpinning ? 'active' : ''"
-                  @click="reloadTimer"
-                >
+                <div class="reload-btn icon-cursor" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
                   <img src="@/assets/icons/reload.svg" />
                 </div>
 
@@ -74,7 +62,7 @@
                   class="create-btn icon-cursor"
                   @click="
                     () => {
-                      this.createPoolModalOpening = true;
+                      this.createPoolModalOpening = true
                     }
                   "
                 >
@@ -93,10 +81,7 @@
                   @click="activeSearch('labelized')"
                   >Labelized</Button
                 >
-                <div
-                  v-if="searchCertifiedFarm === 'labelized'"
-                  class="active-underline"
-                ></div>
+                <div v-if="searchCertifiedFarm === 'labelized'" class="active-underline"></div>
               </div>
               <div class="option-tab">
                 <Button
@@ -106,10 +91,7 @@
                 >
                   Permissionless
                 </Button>
-                <div
-                  v-if="searchCertifiedFarm === 'permissionless'"
-                  class="active-underline"
-                ></div>
+                <div v-if="searchCertifiedFarm === 'permissionless'" class="active-underline"></div>
               </div>
               <div v-if="wallet.connected" class="option-tab">
                 <Button
@@ -126,10 +108,7 @@
 
                   My Deposit
                 </Button>
-                <div
-                  v-if="searchCertifiedFarm === 'deposit'"
-                  class="active-underline"
-                ></div>
+                <div v-if="searchCertifiedFarm === 'deposit'" class="active-underline"></div>
               </div>
             </div>
 
@@ -137,19 +116,19 @@
               class="option-tab-group option-tab-collapse icon-cursor"
               @click="
                 () => {
-                  this.showTabMenu = !this.showTabMenu;
+                  this.showTabMenu = !this.showTabMenu
                 }
               "
             >
               <label class="textL weightS icon-cursor">
                 {{
-                  searchCertifiedFarm === "labelized"
-                    ? "Labelized"
-                    : searchCertifiedFarm === "permissionless"
-                    ? "Permissionless"
-                    : searchCertifiedFarm === "deposit"
-                    ? "My Deposit"
-                    : ""
+                  searchCertifiedFarm === 'labelized'
+                    ? 'Labelized'
+                    : searchCertifiedFarm === 'permissionless'
+                    ? 'Permissionless'
+                    : searchCertifiedFarm === 'deposit'
+                    ? 'My Deposit'
+                    : ''
                 }}
               </label>
               <img
@@ -158,7 +137,15 @@
                 src="@/assets/icons/arrow-down-white.svg"
               />
 
-              <div v-if="showTabMenu" class="option-sort-collapse collapse-left" v-click-outside="() => { this.showTabMenu = false; }">
+              <div
+                v-if="showTabMenu"
+                class="option-sort-collapse collapse-left"
+                v-click-outside="
+                  () => {
+                    this.showTabMenu = false
+                  }
+                "
+              >
                 <div
                   class="collapse-item text-center textM weightS icon-cursor"
                   :class="searchCertifiedFarm === 'labelized' ? 'active-item' : ''"
@@ -189,7 +176,7 @@
                   src="@/assets/icons/search.svg"
                   @click="
                     () => {
-                      this.showSearchMenu = !this.showSearchMenu;
+                      this.showSearchMenu = !this.showSearchMenu
                     }
                   "
                 />
@@ -198,7 +185,11 @@
               <div
                 class="option-search-collapse"
                 v-if="showSearchMenu"
-                v-click-outside="() => { this.showSearchMenu = false; }"
+                v-click-outside="
+                  () => {
+                    this.showSearchMenu = false
+                  }
+                "
               >
                 <div class="collapse-item-header fs-container">
                   <label class="textL weightB">Search</label>
@@ -207,18 +198,13 @@
                     src="@/assets/icons/close-circle-icon.svg"
                     @click="
                       () => {
-                        this.showSearchMenu = false;
+                        this.showSearchMenu = false
                       }
                     "
                   />
                 </div>
                 <div class="collapse-item-body">
-                  <input
-                    ref="userInput"
-                    v-model="searchName"
-                    class="textM"
-                    placeholder="Search"
-                  />
+                  <input ref="userInput" v-model="searchName" class="textM" placeholder="Search" />
                   <div class="shortcut-list">
                     <label class="textS weightS">Most Used</label>
                     <div class="shortcut-group">
@@ -242,14 +228,14 @@
                 class="option-filter option-sort fc-container icon-cursor"
                 @click="
                   () => {
-                    this.showFilterMenu = !this.showFilterMenu;
+                    this.showFilterMenu = !this.showFilterMenu
                   }
                 "
               >
                 <span class="bodyM weightS option-filter-sort fc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
-                    Liquidity {{ sortLiquidityAsc ? "(High > Low)" : "(Low > High)" }}
+                    Liquidity {{ sortLiquidityAsc ? '(High > Low)' : '(Low > High)' }}
                     <img
                       class="arrow-icon"
                       :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
@@ -258,7 +244,7 @@
                   </span>
                 </span>
               </div>
-              
+
               <div class="option-filter option-filter-collapse option-filter-fixed fc-container icon-cursor">
                 <img
                   src="@/assets/icons/filter.svg"
@@ -270,15 +256,23 @@
                 />
               </div>
 
-              <div v-if="showFilterMenu" class="option-sort-collapse collapse-right" v-click-outside="() => { this.showFilterMenu = false; }">
+              <div
+                v-if="showFilterMenu"
+                class="option-sort-collapse collapse-right"
+                v-click-outside="
+                  () => {
+                    this.showFilterMenu = false
+                  }
+                "
+              >
                 <div
                   class="collapse-item text-center textM weightS icon-cursor"
                   :class="sortLiquidityAsc ? 'active-item' : ''"
                   @click="
                     () => {
-                      this.showFilterMenu = false;
-                      this.sortLiquidityAsc = false; // true -> false becuase sortbColumn function
-                      sortbyColumn('liquidity');
+                      this.showFilterMenu = false
+                      this.sortLiquidityAsc = false // true -> false becuase sortbColumn function
+                      sortbyColumn('liquidity')
                     }
                   "
                 >
@@ -289,9 +283,9 @@
                   :class="!sortLiquidityAsc ? 'active-item' : ''"
                   @click="
                     () => {
-                      this.showFilterMenu = false;
-                      this.sortLiquidityAsc = true; // false -> true becuase sortbColumn function
-                      sortbyColumn('liquidity');
+                      this.showFilterMenu = false
+                      this.sortLiquidityAsc = true // false -> true becuase sortbColumn function
+                      sortbyColumn('liquidity')
                     }
                   "
                 >
@@ -304,10 +298,7 @@
           <div v-if="poolLoaded">
             <!-- desktop version -->
             <div class="pools-table isDesktop">
-              <Row
-                class="pools-table-header"
-                :class="{ scrollFixed: scrollPosition > 200 }"
-              >
+              <Row class="pools-table-header" :class="{ scrollFixed: scrollPosition > 200 }">
                 <Col class="header-column textS weightB text-left" span="5"> Name </Col>
                 <Col class="header-column textS weightB" span="3">
                   <div class="header-column-title" @click="sortbyColumn('liquidity')">
@@ -414,11 +405,7 @@
               </Row>
 
               <div class="pools-table-body">
-                <Row
-                  class="pools-table-item"
-                  v-for="data in poolsShow"
-                  :key="data.lp_mint"
-                >
+                <Row class="pools-table-item" v-for="data in poolsShow" :key="data.lp_mint">
                   <Col class="state" span="5">
                     <div class="lp-iconscontainer">
                       <div class="icons textM weightS">
@@ -449,19 +436,13 @@
                   <Col class="state textM weightS" span="2">
                     ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
                   </Col>
-                  <Col class="state textM weightS" span="2">
-                    {{ new TokenAmount(data.apy, 2, false).format() }}%
-                  </Col>
+                  <Col class="state textM weightS" span="2"> {{ new TokenAmount(data.apy, 2, false).format() }}% </Col>
                   <Col class="state textM weightS" span="3">
                     ${{ new TokenAmount(data.current, 2, false).format() }}
                   </Col>
                   <Col class="state textM weightS" span="3">
                     <div class="btn-container">
-                      <Button
-                        class="btn-transparent textS weightB"
-                        @click="openPoolAddModal(data)"
-                        >Add</Button
-                      >
+                      <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
                     </div>
                     <div class="btn-container">
                       <Button
@@ -535,19 +516,12 @@
               </Row>
 
               <Collapse v-model="showCollapse" accordion>
-                <CollapsePanel
-                  v-for="data in poolsShow"
-                  :key="data.lp_mint"
-                  v-show="true"
-                  :show-arrow="poolCollapse"
-                >
+                <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
                   <Row slot="header" class="pool-head">
                     <Col class="state" span="6">
                       <div class="lp-iconscontainer">
                         <div class="icons textM weightS">
-                          <CoinIcon
-                            :mint-address="data ? data.lp.coin.mintAddress : ''"
-                          />
+                          <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
                           {{ data.lp.coin.symbol }}
                           <span>-</span>
                           <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
@@ -600,11 +574,7 @@
 
                         <div class="btn-group">
                           <div class="btn-container">
-                            <Button
-                              class="btn-transparent textS weightB"
-                              @click="openPoolAddModal(data)"
-                              >Add</Button
-                            >
+                            <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
                           </div>
                           <div class="btn-container">
                             <Button
@@ -626,19 +596,12 @@
             <!-- mobile version -->
             <div class="pools-table isMobile">
               <Collapse v-model="showCollapse" accordion>
-                <CollapsePanel
-                  v-for="data in poolsShow"
-                  :key="data.lp_mint"
-                  v-show="true"
-                  :show-arrow="poolCollapse"
-                >
+                <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
                   <Row slot="header" class="pool-head">
                     <Col class="state" :span="24">
                       <div class="lp-iconscontainer">
                         <div class="icons textM weightS">
-                          <CoinIcon
-                            :mint-address="data ? data.lp.coin.mintAddress : ''"
-                          />
+                          <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
                           {{ data.lp.coin.symbol }}
                           <span>-</span>
                           <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
@@ -666,11 +629,7 @@
 
                       <div class="btn-group">
                         <div class="btn-container">
-                          <Button
-                            class="btn-transparent textS weightB"
-                            @click="openPoolAddModal(data)"
-                            >Add</Button
-                          >
+                          <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
                         </div>
                         <div class="btn-container">
                           <Button
@@ -744,9 +703,9 @@
 </template>
 
 <script lang="ts">
-import { get, cloneDeep } from "lodash-es";
-import { Vue, Component, Watch } from "nuxt-property-decorator";
-import { mapState } from "vuex";
+import { get, cloneDeep } from 'lodash-es'
+import { Vue, Component, Watch } from 'nuxt-property-decorator'
+import { mapState } from 'vuex'
 import {
   Table,
   Radio,
@@ -760,37 +719,37 @@ import {
   Input,
   Icon,
   Pagination,
-  Switch as Toggle,
-} from "ant-design-vue";
-import { getPoolByLpMintAddress, getAllCropperPools } from "@/utils/pools";
-import { TokenAmount } from "@/utils/safe-math";
-import { getBigNumber } from "@/utils/layouts";
-import { addLiquidity, removeLiquidity } from "@/utils/liquidity";
-import { LiquidityPoolInfo } from "@/utils/pools";
-import { getUnixTs } from "@/utils";
-import { DEVNET_MODE } from "../../utils/ids";
-const CollapsePanel = Collapse.Panel;
-const RadioGroup = Radio.Group;
-const poolAdd = false;
-const RadioButton = Radio.Button;
-declare const window: any;
+  Switch as Toggle
+} from 'ant-design-vue'
+import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
+import { TokenAmount } from '@/utils/safe-math'
+import { getBigNumber } from '@/utils/layouts'
+import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
+import { LiquidityPoolInfo } from '@/utils/pools'
+import { getUnixTs } from '@/utils'
+import { DEVNET_MODE } from '../../utils/ids'
+const CollapsePanel = Collapse.Panel
+const RadioGroup = Radio.Group
+const poolAdd = false
+const RadioButton = Radio.Button
+declare const window: any
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 
 @Component({
   head: {
-    title: "Cropper Finance Pools",
+    title: 'Cropper Finance Pools'
   },
 
   computed: {
     ...mapState([
       // 'wallet',
-      "swap",
-      "liquidity",
-      "price",
-      "url",
-      "setting",
-    ]),
+      'swap',
+      'liquidity',
+      'price',
+      'url',
+      'setting'
+    ])
   },
 
   data() {
@@ -804,8 +763,8 @@ Vue.use(Vco)
       totalCount: 110,
       pageSize: 50,
       TVL: 0,
-      currentPage: 1,
-    };
+      currentPage: 1
+    }
   },
 
   components: {
@@ -823,377 +782,341 @@ Vue.use(Vco)
     Input,
     Icon,
     Spin,
-    Pagination,
+    Pagination
   },
   async asyncData({ $api }) {
-    window.poolsDatas = {} as any;
+    window.poolsDatas = {} as any
 
     try {
-      window.poolsDatas = await fetch("https://api.cropper.finance/pools/").then((res) =>
-        res.json()
-      );
+      window.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
     } catch {
-      window.poolsDatas = [];
+      window.poolsDatas = []
     } finally {
     }
 
     try {
-      window.labelised = await fetch("https://api.cropper.finance/pool/").then((res) =>
-        res.json()
-      );
+      window.labelised = await fetch('https://api.cropper.finance/pool/').then((res) => res.json())
     } catch {
     } finally {
     }
 
-    const pools = getAllCropperPools();
-    return { pools };
-  },
+    const pools = getAllCropperPools()
+    return { pools }
+  }
 })
 export default class Pools extends Vue {
-  poolCollapse: any = true;
-  showCollapse: any = [];
-  pools: any = [];
-  displayPoolID: any = 0;
-  poolsShow: any = [];
-  poolType: string = "RaydiumPools";
-  fromCoin: any = false;
-  staking: any = false;
-  lp: any = false;
-  TVL: any = 0;
-  unstaking: any = false;
-  wallet: any = this.$accessor.wallet;
-  lpMintAddress: any = false;
-  stakeModalOpening: any = false;
-  unstakeModalOpening: any = false;
-  createPoolModalOpening: boolean = false;
-  toCoin: any = false;
-  displayfilters: any = false;
-  poolAdd: any = false;
-  poolInf: any = false;
-  lptoken: any = false;
-  poolLoaded: any = false;
-  autoRefreshTime: number = 60;
-  countdown: number = 0;
-  timer: any = null;
-  timer_init: any = null;
-  loading: boolean = false;
-  searchName = "";
-  totalCount = 110;
-  pageSize = 50;
-  currentPage = 1;
-  searchCertifiedFarm: string = "labelized";
-  sortMethod: string = "liquidity";
-  sortLiquidityAsc: boolean = true;
-  sortVolHAsc: boolean = true;
-  sortVolDAsc: boolean = true;
-  sortFeesAsc: boolean = true;
-  sortAPYAsc: boolean = true;
-  sortCurrentAsc: boolean = true;
-  activeSpinning: boolean = false;
-  showGuide: boolean = false;
-  showFilterMenu: boolean = false;
-  showSearchMenu: boolean = false;
-  showTabMenu: boolean = false;
+  poolCollapse: any = true
+  showCollapse: any = []
+  pools: any = []
+  displayPoolID: any = 0
+  poolsShow: any = []
+  poolType: string = 'RaydiumPools'
+  fromCoin: any = false
+  staking: any = false
+  lp: any = false
+  TVL: any = 0
+  unstaking: any = false
+  wallet: any = this.$accessor.wallet
+  lpMintAddress: any = false
+  stakeModalOpening: any = false
+  unstakeModalOpening: any = false
+  createPoolModalOpening: boolean = false
+  toCoin: any = false
+  displayfilters: any = false
+  poolAdd: any = false
+  poolInf: any = false
+  lptoken: any = false
+  poolLoaded: any = false
+  autoRefreshTime: number = 60
+  countdown: number = 0
+  timer: any = null
+  timer_init: any = null
+  loading: boolean = false
+  searchName = ''
+  totalCount = 110
+  pageSize = 50
+  currentPage = 1
+  searchCertifiedFarm: string = 'labelized'
+  sortMethod: string = 'liquidity'
+  sortLiquidityAsc: boolean = true
+  sortVolHAsc: boolean = true
+  sortVolDAsc: boolean = true
+  sortFeesAsc: boolean = true
+  sortAPYAsc: boolean = true
+  sortCurrentAsc: boolean = true
+  activeSpinning: boolean = false
+  showGuide: boolean = false
+  showFilterMenu: boolean = false
+  showSearchMenu: boolean = false
+  showTabMenu: boolean = false
   mostUsed: any = [
     {
-      mintAddress: "DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz",
-      symbol: "CRP",
+      mintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz',
+      symbol: 'CRP'
     },
     {
-      mintAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-      symbol: "USDC",
-    },
-  ];
-  scrollPosition: any = null;
+      mintAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+      symbol: 'USDC'
+    }
+  ]
+  scrollPosition: any = null
 
   get liquidity() {
-    this.$accessor.wallet.getTokenAccounts();
-    return this.$accessor.liquidity;
+    this.$accessor.wallet.getTokenAccounts()
+    return this.$accessor.liquidity
   }
-  @Watch("$accessor.liquidity.initialized", { immediate: true, deep: true })
+  @Watch('$accessor.liquidity.initialized', { immediate: true, deep: true })
   refreshThePage() {
-    this.showPool(this.searchName, this.currentPage);
+    this.showPool(this.searchName, this.currentPage)
   }
-  @Watch("showCollapse", { immediate: true, deep: true }) handler() {
+  @Watch('showCollapse', { immediate: true, deep: true }) handler() {
     if (!this.poolType && this.showCollapse.length > 0) {
-      this.showCollapse.splice(0, this.showCollapse.length);
+      this.showCollapse.splice(0, this.showCollapse.length)
     }
   }
-  @Watch("$accessor.liquidity.info", { immediate: true, deep: true })
+  @Watch('$accessor.liquidity.info', { immediate: true, deep: true })
   async onLiquidityChanged() {
-    this.pools = this.poolsFormated();
-    this.showPool(this.searchName, this.currentPage);
+    this.pools = this.poolsFormated()
+    this.showPool(this.searchName, this.currentPage)
   }
 
-  @Watch("currentPage", { immediate: true, deep: true })
+  @Watch('currentPage', { immediate: true, deep: true })
   async onpageChange(newPage: number) {
-    this.showPool(this.searchName, newPage);
+    this.showPool(this.searchName, newPage)
   }
 
-  @Watch("searchName", { immediate: true, deep: true })
+  @Watch('searchName', { immediate: true, deep: true })
   async onSearchChange(newSearchName: string) {
-    this.showPool(newSearchName);
+    this.showPool(newSearchName)
   }
-  @Watch("searchCertifiedFarm", { immediate: true, deep: true })
-  selectHandler(newSearchCertifiedFarm: string = "labelized") {
-    this.pools = this.poolsFormated();
-    if (newSearchCertifiedFarm === "labelized") {
+  @Watch('searchCertifiedFarm', { immediate: true, deep: true })
+  selectHandler(newSearchCertifiedFarm: string = 'labelized') {
+    this.pools = this.poolsFormated()
+    if (newSearchCertifiedFarm === 'labelized') {
       //labelized
-      this.pools = this.pools.filter((pool: any) => pool.labelized);
-    } else if (newSearchCertifiedFarm === "permissionless") {
+      this.pools = this.pools.filter((pool: any) => pool.labelized)
+    } else if (newSearchCertifiedFarm === 'permissionless') {
       //permissionless
-      this.pools = this.pools.filter((pool: any) => !pool.labelized);
-    } else if (newSearchCertifiedFarm === "deposit") {
-      this.pools = this.pools.filter((pool: any) => pool.current > 0.01);
+      this.pools = this.pools.filter((pool: any) => !pool.labelized)
+    } else if (newSearchCertifiedFarm === 'deposit') {
+      this.pools = this.pools.filter((pool: any) => pool.current > 0.01)
     }
-    this.showPool(this.searchName, this.currentPage);
+    this.showPool(this.searchName, this.currentPage)
   }
 
   sortbyColumn(col: string) {
-    this.sortMethod = col;
-    if (this.sortMethod == "liquidity") this.sortLiquidityAsc = !this.sortLiquidityAsc;
-    else if (this.sortMethod == "volh") this.sortVolHAsc = !this.sortVolHAsc;
-    else if (this.sortMethod == "vold") this.sortVolDAsc = !this.sortVolDAsc;
-    else if (this.sortMethod == "feesh") this.sortFeesAsc = !this.sortFeesAsc;
-    else if (this.sortMethod == "apy") this.sortAPYAsc = !this.sortAPYAsc;
-    else if (this.sortMethod == "yliquidity") this.sortCurrentAsc = !this.sortCurrentAsc;
+    this.sortMethod = col
+    if (this.sortMethod == 'liquidity') this.sortLiquidityAsc = !this.sortLiquidityAsc
+    else if (this.sortMethod == 'volh') this.sortVolHAsc = !this.sortVolHAsc
+    else if (this.sortMethod == 'vold') this.sortVolDAsc = !this.sortVolDAsc
+    else if (this.sortMethod == 'feesh') this.sortFeesAsc = !this.sortFeesAsc
+    else if (this.sortMethod == 'apy') this.sortAPYAsc = !this.sortAPYAsc
+    else if (this.sortMethod == 'yliquidity') this.sortCurrentAsc = !this.sortCurrentAsc
 
-    this.showPool(this.searchName, this.currentPage);
+    this.showPool(this.searchName, this.currentPage)
   }
 
-  showPool(searchName: any = "", pageNum: any = 1) {
-    const pool = [];
+  showPool(searchName: any = '', pageNum: any = 1) {
+    const pool = []
 
-    this.pools = this.poolsFormated();
+    this.pools = this.poolsFormated()
 
-    if (this.searchCertifiedFarm === "labelized") {
+    if (this.searchCertifiedFarm === 'labelized') {
       // labelized
-      this.pools = this.pools.filter((pool: any) => pool.labelized);
-    } else if (this.searchCertifiedFarm === "permissionless") {
+      this.pools = this.pools.filter((pool: any) => pool.labelized)
+    } else if (this.searchCertifiedFarm === 'permissionless') {
       // permissionless
-      this.pools = this.pools.filter((pool: any) => !pool.labelized);
-    } else if (this.searchCertifiedFarm === "deposit") {
+      this.pools = this.pools.filter((pool: any) => !pool.labelized)
+    } else if (this.searchCertifiedFarm === 'deposit') {
       // deposit
-      this.pools = this.pools.filter((pool: any) => pool.current > 0.01);
+      this.pools = this.pools.filter((pool: any) => pool.current > 0.01)
     }
 
     // sort by column
-    if (this.sortMethod == "liquidity") {
+    if (this.sortMethod == 'liquidity') {
       if (this.sortLiquidityAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.liquidity - a.liquidity;
-        });
+          return b.liquidity - a.liquidity
+        })
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.liquidity - b.liquidity;
-        });
+          return a.liquidity - b.liquidity
+        })
       }
-    } else if (this.sortMethod == "volh") {
+    } else if (this.sortMethod == 'volh') {
       if (this.sortVolHAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.volume_24h - a.volume_24h;
-        });
+          return b.volume_24h - a.volume_24h
+        })
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.volume_24h - b.volume_24h;
-        });
+          return a.volume_24h - b.volume_24h
+        })
       }
-    } else if (this.sortMethod == "vold") {
+    } else if (this.sortMethod == 'vold') {
       if (this.sortVolDAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.volume_7d - a.volume_7d;
-        });
+          return b.volume_7d - a.volume_7d
+        })
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.volume_7d - b.volume_7d;
-        });
+          return a.volume_7d - b.volume_7d
+        })
       }
-    } else if (this.sortMethod == "feesh") {
+    } else if (this.sortMethod == 'feesh') {
       if (this.sortFeesAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.fee_24h - a.fee_24h;
-        });
+          return b.fee_24h - a.fee_24h
+        })
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.fee_24h - b.fee_24h;
-        });
+          return a.fee_24h - b.fee_24h
+        })
       }
-    } else if (this.sortMethod == "apy") {
+    } else if (this.sortMethod == 'apy') {
       if (this.sortAPYAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.apy - a.apy;
-        });
+          return b.apy - a.apy
+        })
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.apy - b.apy;
-        });
+          return a.apy - b.apy
+        })
       }
-    } else if (this.sortMethod == "yliquidity") {
+    } else if (this.sortMethod == 'yliquidity') {
       if (this.sortCurrentAsc) {
         this.pools.sort(function (a: any, b: any) {
-          return b.current - a.current;
-        });
+          return b.current - a.current
+        })
       } else {
         this.pools.sort(function (a: any, b: any) {
-          return a.current - b.current;
-        });
+          return a.current - b.current
+        })
       }
     }
 
     for (const item of this.pools) {
-      pool.push(item);
+      pool.push(item)
     }
-    this.poolsShow = pool;
+    this.poolsShow = pool
 
     if (
-      searchName != "" &&
-      this.poolsShow.filter(
-        (pool: any) =>
-          (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase()
-      ).length > 0
+      searchName != '' &&
+      this.poolsShow.filter((pool: any) => (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase())
+        .length > 0
     ) {
       this.poolsShow = this.poolsShow.filter(
-        (pool: any) =>
-          (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase()
-      );
-    } else if (searchName != "") {
+        (pool: any) => (pool.ammId as string).toLowerCase() == (searchName as string).toLowerCase()
+      )
+    } else if (searchName != '') {
       this.poolsShow = this.poolsShow.filter((pool: any) =>
-        (pool.nameSymbol as string)
-          .toLowerCase()
-          .includes((searchName as string).toLowerCase())
-      );
+        (pool.nameSymbol as string).toLowerCase().includes((searchName as string).toLowerCase())
+      )
     }
 
-    this.currentPage = pageNum;
+    this.currentPage = pageNum
 
-    this.totalCount = this.poolsShow.length;
+    this.totalCount = this.poolsShow.length
 
-    let max = this.poolsShow.length;
-    let start = (this.currentPage - 1) * this.pageSize;
-    let end =
-      this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max;
-    this.poolsShow = this.poolsShow.slice(start, end);
+    let max = this.poolsShow.length
+    let start = (this.currentPage - 1) * this.pageSize
+    let end = this.currentPage * this.pageSize < max ? this.currentPage * this.pageSize : max
+    this.poolsShow = this.poolsShow.slice(start, end)
   }
 
   async delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
   openUnstakeModal(poolInfo: any, lp: any, lpBalance: any) {
-    const coin = cloneDeep(lp);
-    coin.balance = get(this.wallet.tokenAccounts, `${coin.mintAddress}.balance`);
-    this.lp = coin;
+    const coin = cloneDeep(lp)
+    coin.balance = get(this.wallet.tokenAccounts, `${coin.mintAddress}.balance`)
+    this.lp = coin
 
-    this.poolInf = cloneDeep(poolInfo);
+    this.poolInf = cloneDeep(poolInfo)
 
-    this.unstakeModalOpening = true;
+    this.unstakeModalOpening = true
   }
 
   cancelUnstake() {
-    this.unstakeModalOpening = false;
+    this.unstakeModalOpening = false
   }
 
   cancelCreatePool() {
-    this.createPoolModalOpening = false;
+    this.createPoolModalOpening = false
   }
 
   unstake(amount: string) {
-    this.unstaking = true;
+    this.unstaking = true
 
-    const conn = this.$web3;
-    const wallet = (this as any).$wallet;
-    const coin = this.poolInf.lp.coin;
-    const pc = this.poolInf.lp.pc;
-    const lp = this.poolInf.lp;
+    const conn = this.$web3
+    const wallet = (this as any).$wallet
+    const coin = this.poolInf.lp.coin
+    const pc = this.poolInf.lp.pc
+    const lp = this.poolInf.lp
 
-    const lpAccount = get(
-      this.wallet.tokenAccounts,
-      `${this.poolInf.lp.mintAddress}.tokenAccountAddress`
-    );
-    const fromCoinAccount = get(
-      this.wallet.tokenAccounts,
-      `${coin.mintAddress}.tokenAccountAddress`
-    );
-    const toCoinAccount = get(
-      this.wallet.tokenAccounts,
-      `${pc.mintAddress}.tokenAccountAddress`
-    );
+    const lpAccount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.mintAddress}.tokenAccountAddress`)
+    const fromCoinAccount = get(this.wallet.tokenAccounts, `${coin.mintAddress}.tokenAccountAddress`)
+    const toCoinAccount = get(this.wallet.tokenAccounts, `${pc.mintAddress}.tokenAccountAddress`)
 
-    const key = getUnixTs().toString();
+    const key = getUnixTs().toString()
     this.$notify.info({
       key,
-      message: "Making transaction...",
-      description: "",
-      duration: 0,
-    });
+      message: 'Making transaction...',
+      description: '',
+      duration: 0
+    })
 
-    const poolInfo = get(this.liquidity.infos, lp.mintAddress);
+    const poolInfo = get(this.liquidity.infos, lp.mintAddress)
     //remove whole lp amount
-    removeLiquidity(
-      conn,
-      wallet,
-      poolInfo,
-      lpAccount,
-      fromCoinAccount,
-      toCoinAccount,
-      amount
-    )
+    removeLiquidity(conn, wallet, poolInfo, lpAccount, fromCoinAccount, toCoinAccount, amount)
       .then((txid) => {
         this.$notify.info({
           key,
-          message: "Transaction has been sent",
-          description: (h: any) => h("div", ["Confirmation is in progress."]),
-        });
+          message: 'Transaction has been sent',
+          description: (h: any) => h('div', ['Confirmation is in progress.'])
+        })
 
-        const description = `Remove liquidity for ${amount} LP Token`;
+        const description = `Remove liquidity for ${amount} LP Token`
 
-        this.$accessor.transaction.sub({ txid, description });
+        this.$accessor.transaction.sub({ txid, description })
       })
       .catch((error) => {
         this.$notify.error({
           key,
-          message: "Remove liquidity failed",
-          description: error.message,
-        });
+          message: 'Remove liquidity failed',
+          description: error.message
+        })
       })
       .finally(() => {
-        this.flush();
-        this.$accessor.wallet.getTokenAccounts();
-        this.unstaking = false;
-        this.unstakeModalOpening = false;
-      });
+        this.flush()
+        this.$accessor.wallet.getTokenAccounts()
+        this.unstaking = false
+        this.unstakeModalOpening = false
+      })
   }
 
   stake(fromCoinAmount: string, toCoinAmount: string, fixedCoin: string) {
-    this.staking = true;
+    this.staking = true
 
-    const conn = this.$web3;
-    const wallet = (this as any).$wallet;
+    const conn = this.$web3
+    const wallet = (this as any).$wallet
 
-    const poolInfo = get(this.liquidity.infos, this.poolInf.lp.mintAddress);
+    const poolInfo = get(this.liquidity.infos, this.poolInf.lp.mintAddress)
 
-    const lpAccount = get(
-      this.wallet.tokenAccounts,
-      `${this.poolInf.lp.mintAddress}.tokenAccountAddress`
-    );
+    const lpAccount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.mintAddress}.tokenAccountAddress`)
     // @ts-ignore
-    const fromCoinAccount = get(
-      this.wallet.tokenAccounts,
-      `${this.poolInf.lp.coin.mintAddress}.tokenAccountAddress`
-    );
+    const fromCoinAccount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.coin.mintAddress}.tokenAccountAddress`)
     // @ts-ignore
-    const toCoinAccount = get(
-      this.wallet.tokenAccounts,
-      `${this.poolInf.lp.pc.mintAddress}.tokenAccountAddress`
-    );
+    const toCoinAccount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.pc.mintAddress}.tokenAccountAddress`)
 
-    const key = getUnixTs().toString();
+    const key = getUnixTs().toString()
     this.$notify.info({
       key,
-      message: "Making transaction...",
-      description: "",
-      duration: 0,
-    });
+      message: 'Making transaction...',
+      description: '',
+      duration: 0
+    })
     addLiquidity(
       conn,
       wallet,
@@ -1210,358 +1133,332 @@ export default class Pools extends Vue {
       .then(async (txid) => {
         this.$notify.info({
           key,
-          message: "Transaction has been sent",
-          description: (h: any) => h("div", ["Confirmation is in progress."]),
-        });
+          message: 'Transaction has been sent',
+          description: (h: any) => h('div', ['Confirmation is in progress.'])
+        })
 
-        const description = `Add liquidity for ${fromCoinAmount} ${this.poolInf.lp.coin?.symbol} and ${toCoinAmount} ${this.poolInf.lp.pc?.symbol}`;
-        this.$accessor.transaction.sub({ txid, description });
+        const description = `Add liquidity for ${fromCoinAmount} ${this.poolInf.lp.coin?.symbol} and ${toCoinAmount} ${this.poolInf.lp.pc?.symbol}`
+        this.$accessor.transaction.sub({ txid, description })
 
-        let txStatus = this.$accessor.transaction.history[txid].status;
-        while (txStatus === "Pending") {
-          await this.delay(500);
-          txStatus = this.$accessor.transaction.history[txid].status;
-          await this.delay(500);
+        let txStatus = this.$accessor.transaction.history[txid].status
+        while (txStatus === 'Pending') {
+          await this.delay(500)
+          txStatus = this.$accessor.transaction.history[txid].status
+          await this.delay(500)
         }
-        if (txStatus === "Fail") {
-          console.log("add lp failed");
-          return;
+        if (txStatus === 'Fail') {
+          console.log('add lp failed')
+          return
         }
-        let amount = get(
-          this.wallet.tokenAccounts,
-          `${this.poolInf.lp.mintAddress}.balance`
-        );
+        let amount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.mintAddress}.balance`)
         //stake whole lp amount
-        amount = amount.wei.toNumber() / Math.pow(10, amount.decimals);
-        let delayTime = 0;
+        amount = amount.wei.toNumber() / Math.pow(10, amount.decimals)
+        let delayTime = 0
         while (amount <= 0 && delayTime < 10000) {
           //after 4 seconds ,it's failed
-          await this.delay(200);
-          delayTime += 200;
-          amount = get(
-            this.wallet.tokenAccounts,
-            `${this.poolInf.lp.mintAddress}.balance`
-          );
-          amount = amount.wei.toNumber() / Math.pow(10, amount.decimals);
+          await this.delay(200)
+          delayTime += 200
+          amount = get(this.wallet.tokenAccounts, `${this.poolInf.lp.mintAddress}.balance`)
+          amount = amount.wei.toNumber() / Math.pow(10, amount.decimals)
         }
         if (amount <= 0) {
-          console.log("added lp amount is 0");
-          return;
+          console.log('added lp amount is 0')
+          return
         }
       })
       .catch((error) => {
         this.$notify.error({
           key,
-          message: "Add liquidity failed",
-          description: error.message,
-        });
+          message: 'Add liquidity failed',
+          description: error.message
+        })
       })
       .finally(async () => {
-        this.flush();
-        this.$accessor.wallet.getTokenAccounts();
-        this.staking = false;
-        this.stakeModalOpening = false;
-      });
+        this.flush()
+        this.$accessor.wallet.getTokenAccounts()
+        this.staking = false
+        this.stakeModalOpening = false
+      })
   }
 
   poolsFormated() {
-    const conn = this.$web3;
-    const wallet = (this as any).$accessor.wallet;
-    const liquidity = (this as any).$accessor.liquidity;
-    const price = (this as any).$accessor.price;
+    const conn = this.$web3
+    const wallet = (this as any).$accessor.wallet
+    const liquidity = (this as any).$accessor.liquidity
+    const price = (this as any).$accessor.price
 
-    const polo: any = [];
+    const polo: any = []
 
     getAllCropperPools().forEach(function (value: any) {
-      const liquidityItem = get(liquidity.infos, value.lp_mint);
+      const liquidityItem = get(liquidity.infos, value.lp_mint)
 
       if (!liquidityItem) {
-        return;
+        return
       }
 
-      let lp = getPoolByLpMintAddress(value.lp_mint);
+      let lp = getPoolByLpMintAddress(value.lp_mint)
 
-      let newCoin = 0;
-      let newPc = 0;
+      let newCoin = 0
+      let newPc = 0
 
-      if (
-        !price.prices[liquidityItem?.coin.symbol as string] &&
-        price.prices[liquidityItem?.pc.symbol as string]
-      ) {
+      if (!price.prices[liquidityItem?.coin.symbol as string] && price.prices[liquidityItem?.pc.symbol as string]) {
         price.prices[liquidityItem?.coin.symbol as string] =
           (price.prices[liquidityItem?.pc.symbol as string] *
             getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())) /
-          getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther());
-        newCoin = 1;
+          getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())
+        newCoin = 1
       }
 
-      if (
-        !price.prices[liquidityItem?.pc.symbol as string] &&
-        price.prices[liquidityItem?.coin.symbol as string]
-      ) {
+      if (!price.prices[liquidityItem?.pc.symbol as string] && price.prices[liquidityItem?.coin.symbol as string]) {
         price.prices[liquidityItem?.pc.symbol as string] =
           (price.prices[liquidityItem?.coin.symbol as string] *
             getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther())) /
-          getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther());
-        newPc = 1;
+          getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther())
+        newPc = 1
       }
 
       const liquidityCoinValue =
         getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
-        price.prices[liquidityItem?.coin.symbol as string];
+        price.prices[liquidityItem?.coin.symbol as string]
       const liquidityPcValue =
         getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
-        price.prices[liquidityItem?.pc.symbol as string];
+        price.prices[liquidityItem?.pc.symbol as string]
 
-      let liquidityTotalValue = liquidityPcValue + liquidityCoinValue;
+      let liquidityTotalValue = liquidityPcValue + liquidityCoinValue
       if (price.prices[liquidityItem?.pc.symbol as string] == 1) {
-        liquidityTotalValue = liquidityPcValue * 2;
+        liquidityTotalValue = liquidityPcValue * 2
       }
 
-      const liquidityTotalSupply = getBigNumber(
-        (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
-      );
-      const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply;
+      const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
+      const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
 
-      value.liquidity = liquidityTotalValue;
+      value.liquidity = liquidityTotalValue
 
       if (!window.poolsDatas) {
-        window.poolsDatas = {};
+        window.poolsDatas = {}
       }
 
       if (window.poolsDatas[value.ammId]) {
-        value.volume_24h = 0;
+        value.volume_24h = 0
         if (
           window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress] &&
-          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]["1day"]
+          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['1day']
         ) {
           value.volume_24h +=
-            window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]["1day"] *
-            price.prices[liquidityItem?.coin.symbol as string];
+            window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['1day'] *
+            price.prices[liquidityItem?.coin.symbol as string]
         }
 
         if (
           window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress] &&
-          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]["1day"]
+          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['1day']
         ) {
           value.volume_24h +=
-            window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]["1day"] *
-            price.prices[liquidityItem?.pc.symbol as string];
+            window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['1day'] *
+            price.prices[liquidityItem?.pc.symbol as string]
         }
       } else {
-        value.volume_24h = 0;
+        value.volume_24h = 0
       }
 
       if (window.poolsDatas[value.ammId]) {
-        value.volume_7d = 0;
+        value.volume_7d = 0
         if (
           window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress] &&
-          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]["7day"]
+          window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['7day']
         ) {
           value.volume_7d +=
-            window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]["7day"] *
-            price.prices[liquidityItem?.coin.symbol as string];
+            window.poolsDatas[value.ammId][liquidityItem?.coin.mintAddress]['7day'] *
+            price.prices[liquidityItem?.coin.symbol as string]
         }
 
         if (
           window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress] &&
-          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]["7day"]
+          window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['7day']
         ) {
           value.volume_7d +=
-            window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]["7day"] *
-            price.prices[liquidityItem?.pc.symbol as string];
+            window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['7day'] *
+            price.prices[liquidityItem?.pc.symbol as string]
         }
       } else {
-        value.volume_7d = 0;
+        value.volume_7d = 0
       }
 
       if (window.poolsDatas[value.ammId]) {
-        value.fee_24h = value.volume_24h * 0.003;
+        value.fee_24h = value.volume_24h * 0.003
       } else {
-        value.fee_24h = 0;
+        value.fee_24h = 0
       }
 
       if (window.poolsDatas[value.ammId]) {
-        value.apy = (value.fee_24h * 365 * 100) / liquidityTotalValue;
+        value.apy = (value.fee_24h * 365 * 100) / liquidityTotalValue
       } else {
-        value.apy = 0;
+        value.apy = 0
       }
 
-      value.nameSymbol = value.coin1.symbol + " - " + value.coin2.symbol;
+      value.nameSymbol = value.coin1.symbol + ' - ' + value.coin2.symbol
 
       if (window.labelised.includes(value.ammId)) {
-        value.labelized = 1;
+        value.labelized = 1
       }
 
       if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
         if (wallet) {
-          value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`);
+          value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`)
           if (value.current) {
-            value.current =
-              (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) *
-              liquidityItemValue;
+            value.current = (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) * liquidityItemValue
           } else {
-            value.current = 0;
+            value.current = 0
           }
         } else {
-          value.current = 0;
+          value.current = 0
         }
-        polo.push(value);
+        polo.push(value)
       }
-    });
-    return polo;
+    })
+    return polo
   }
 
   openPoolAddModal(poolInfo: any) {
     if (!this.wallet.connected) {
-      this.$accessor.wallet.openModal();
+      this.$accessor.wallet.openModal()
     } else {
-      this.poolInf = cloneDeep(poolInfo);
-      const coinBalance = get(
-        this.wallet.tokenAccounts,
-        `${this.poolInf.coin1.mintAddress}.balance`
-      );
-      const pcBalance = get(
-        this.wallet.tokenAccounts,
-        `${this.poolInf.coin2.mintAddress}.balance`
-      );
-      this.poolInf.lp.coin.balance = coinBalance;
-      this.poolInf.lp.pc.balance = pcBalance;
-      this.stakeModalOpening = true;
+      this.poolInf = cloneDeep(poolInfo)
+      const coinBalance = get(this.wallet.tokenAccounts, `${this.poolInf.coin1.mintAddress}.balance`)
+      const pcBalance = get(this.wallet.tokenAccounts, `${this.poolInf.coin2.mintAddress}.balance`)
+      this.poolInf.lp.coin.balance = coinBalance
+      this.poolInf.lp.pc.balance = pcBalance
+      this.stakeModalOpening = true
     }
   }
 
   cancelPoolAdd() {
-    this.fromCoin = null;
-    this.toCoin = null;
-    this.lptoken = null;
-    this.lpMintAddress = null;
-    this.stakeModalOpening = false;
+    this.fromCoin = null
+    this.toCoin = null
+    this.lptoken = null
+    this.lpMintAddress = null
+    this.stakeModalOpening = false
   }
 
   updateScroll() {
-    this.scrollPosition = window.scrollY;
+    this.scrollPosition = window.scrollY
   }
 
   mounted() {
-    this.getTvl();
-    this.$accessor.token.loadTokens();
+    this.getTvl()
+    this.$accessor.token.loadTokens()
 
-    if(!window.localStorage.pool_guide){
-      this.showGuide = true;
+    if (!window.localStorage.pool_guide) {
+      this.showGuide = true
     }
 
     this.timer_init = setInterval(async () => {
       if (!this.poolLoaded) {
-        await this.flush();
+        await this.flush()
         if (this.pools.length > 0 || DEVNET_MODE) {
-          var hash = window.location.hash;
+          var hash = window.location.hash
           if (hash) {
-            hash = hash.substring(1);
-            this.searchName = hash;
+            hash = hash.substring(1)
+            this.searchName = hash
           } else {
-            const query = new URLSearchParams(window.location.search);
-            if (query.get("s")) this.searchName = query.get("s") as string;
+            const query = new URLSearchParams(window.location.search)
+            if (query.get('s')) this.searchName = query.get('s') as string
 
-            if (query.get("d")) this.displayPoolID = query.get("d") as string;
+            if (query.get('d')) this.displayPoolID = query.get('d') as string
           }
 
-          this.poolLoaded = true;
+          this.poolLoaded = true
         }
       }
-    }, 1000);
-    this.setTimer();
-    window.addEventListener("scroll", this.updateScroll);
+    }, 1000)
+    this.setTimer()
+    window.addEventListener('scroll', this.updateScroll)
   }
 
   setTimer() {
     this.timer = setInterval(async () => {
       if (!this.loading) {
         if (this.countdown < this.autoRefreshTime) {
-          this.countdown += 1;
+          this.countdown += 1
           if (this.countdown === this.autoRefreshTime) {
-            await this.flush();
+            await this.flush()
           }
         }
       }
-    }, 1000);
+    }, 1000)
   }
 
   async getTvl() {
-    let cur_date = new Date().getTime();
+    let cur_date = new Date().getTime()
     if (window.localStorage.TVL_last_updated) {
-      const last_updated = parseInt(window.localStorage.TVL_last_updated);
+      const last_updated = parseInt(window.localStorage.TVL_last_updated)
       if (cur_date - last_updated <= 600000) {
-        this.TVL = window.localStorage.TVL;
-        return;
+        this.TVL = window.localStorage.TVL
+        return
       }
     }
 
-    let responseData: any = [];
-    let tvl = 0;
+    let responseData: any = []
+    let tvl = 0
     try {
-      responseData = await fetch("https://api.cropper.finance/cmc/").then((res) =>
-        res.json()
-      );
+      responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
 
       Object.keys(responseData).forEach(function (key) {
         if ((responseData as any)[key as any].tvl * 1 < 2000000) {
-          tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1;
+          tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
         }
-      });
+      })
     } catch {
       // dummy data
     } finally {
     }
 
     try {
-      responseData = await fetch("https://api.cropper.finance/staking/").then((res) =>
-        res.json()
-      );
-      tvl = tvl * 1 + (responseData as any).value * 1;
+      responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
+      tvl = tvl * 1 + (responseData as any).value * 1
     } catch {
       // dummy data
     } finally {
     }
 
-    this.TVL = Math.round(tvl);
+    this.TVL = Math.round(tvl)
 
-    window.localStorage.TVL_last_updated = new Date().getTime();
-    window.localStorage.TVL = this.TVL;
+    window.localStorage.TVL_last_updated = new Date().getTime()
+    window.localStorage.TVL = this.TVL
   }
 
   async flush() {
-    this.loading = true;
-    this.pools = this.poolsFormated();
-    this.showPool(this.searchName, this.currentPage);
-    this.loading = false;
-    this.countdown = 0;
+    this.loading = true
+    this.pools = this.poolsFormated()
+    this.showPool(this.searchName, this.currentPage)
+    this.loading = false
+    this.countdown = 0
   }
 
   hideGuide() {
-    this.showGuide = false;
-    window.localStorage.pool_guide = true;
+    this.showGuide = false
+    window.localStorage.pool_guide = true
   }
 
-  getPoolByLpMintAddress = getPoolByLpMintAddress;
-  TokenAmount = TokenAmount;
+  getPoolByLpMintAddress = getPoolByLpMintAddress
+  TokenAmount = TokenAmount
 
   reloadTimer() {
-    this.activeSpinning = true;
+    this.activeSpinning = true
     setTimeout(() => {
-      this.activeSpinning = false;
-    }, 1000);
-    this.flush();
-    this.$accessor.wallet.getTokenAccounts();
+      this.activeSpinning = false
+    }, 1000)
+    this.flush()
+    this.$accessor.wallet.getTokenAccounts()
   }
 
   activeSearch(mode: string) {
-    this.searchCertifiedFarm = mode;
+    this.searchCertifiedFarm = mode
   }
 
   searchShortcut(name: string) {
-    this.searchName = name.toLowerCase();
-    this.showSearchMenu = false;
+    this.searchName = name.toLowerCase()
+    this.showSearchMenu = false
   }
 }
 </script>
@@ -1823,7 +1720,7 @@ export default class Pools extends Vue {
               top: 70px;
               z-index: 999;
               width: 100%;
-              transition: .3s all ease-in-out;
+              transition: 0.3s all ease-in-out;
             }
 
             .header-column {
@@ -2060,11 +1957,7 @@ export default class Pools extends Vue {
                     margin-top: 8px;
 
                     .shortcut-container {
-                      background: linear-gradient(
-                        97.63deg,
-                        #280c86 -29.92%,
-                        #22b5b6 103.89%
-                      );
+                      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
                       border-radius: 8px;
                       padding: 2px;
                       margin-right: 8px;

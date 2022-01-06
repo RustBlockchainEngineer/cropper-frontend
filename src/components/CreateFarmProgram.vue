@@ -1,16 +1,13 @@
 <template>
   <Modal title="Create Farm Program" :visible="true" :footer="null" :width="400" centered>
-    <div  v-if="isSuperOwner">
+    <div v-if="isSuperOwner">
       <Row :gutter="32" class="actions">
         <Col :span="24">
           <Button ghost @click="$emit('onCreate')"> Create </Button>
         </Col>
       </Row>
     </div>
-    <div  v-else>
-      This Program is not available now
-    </div>
-    
+    <div v-else>This Program is not available now</div>
   </Modal>
 </template>
 
@@ -37,12 +34,10 @@ export default Vue.extend({
   },
 
   data() {
-    return {
-    }
+    return {}
   },
-  
-  methods: {
-  }
+
+  methods: {}
 })
 </script>
 

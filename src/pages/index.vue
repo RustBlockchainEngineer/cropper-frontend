@@ -31,12 +31,15 @@
               <label class="displayL weightX"
                 >The Ultimate <br />
                 Yield Farming <br />
-                Protocol </label>
+                Protocol
+              </label>
               <p class="powered-by bodyL">Powered by Solana</p>
             </div>
             <div class="read-more">
               <div class="btn-container">
-                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline bodyM weightS">Documentation</a>
+                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline bodyM weightS"
+                  >Documentation</a
+                >
               </div>
             </div>
             <div class="social-links">
@@ -133,7 +136,8 @@
         <Col :span="22" :offset="1">
           <h2 class="weightB text-center">The Cropper Ecosystem</h2>
           <p class="bodyL text-center eco-content">
-            By farmers, for farmers. With low fees and high-impact APRs, our full line of DeFi services give you everything you need in a few clicks.
+            By farmers, for farmers. With low fees and high-impact APRs, our full line of DeFi services give you
+            everything you need in a few clicks.
           </p>
           <Row :gutter="[25, 25]" class="feature-box-group">
             <img class="stars-third-bg" src="@/assets/landing_v2/stars-third-bg.svg" />
@@ -142,9 +146,7 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-swap.svg" />
                 <h4 class="title weightB">Swap</h4>
                 <p class="bodyM content">Our smart search delivers the fairest swap instantly</p>
-                <NuxtLink to="/swap" class="bodyM now-btn weightS">
-                  Swap Now
-                </NuxtLink>
+                <NuxtLink to="/swap" class="bodyM now-btn weightS"> Swap Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
@@ -152,19 +154,17 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-farming.svg" />
                 <h4 class="title weightB">Farming</h4>
                 <p class="bodyM content">Explore a vast selection of Labelized and Permissionless Farms</p>
-                <NuxtLink to="/farms" class="bodyM now-btn weightS">
-                  Farm Now
-                </NuxtLink>
+                <NuxtLink to="/farms" class="bodyM now-btn weightS"> Farm Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing_v2/feature-staking.svg" />
                 <h4 class="title weightB">Staking</h4>
-                <p class="bodyM content">Earn rewards and gain access to exclusive opportunities with our 5 staking tiers</p>
-                <NuxtLink to="/staking" class="bodyM now-btn weightS">
-                  Stake Now
-                </NuxtLink>
+                <p class="bodyM content">
+                  Earn rewards and gain access to exclusive opportunities with our 5 staking tiers
+                </p>
+                <NuxtLink to="/staking" class="bodyM now-btn weightS"> Stake Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
@@ -172,9 +172,7 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-fertilizer.svg" />
                 <h4 class="title weightB">Fertilizer</h4>
                 <p class="bodyM content">The fertilizer launcher is currently being improved</p>
-                <NuxtLink to="/" class="bodyM now-btn weightS soon">
-                  Coming Soon!
-                </NuxtLink>
+                <NuxtLink to="/" class="bodyM now-btn weightS soon"> Coming Soon! </NuxtLink>
               </div>
             </Col>
           </Row>
@@ -220,13 +218,7 @@
                   </div>
                 </Col>
                 <Col :sm="16" :md="16" class="video-play-col">
-                  <video class="video-player"
-                    :src="currentVideo"
-                    controls
-                    autoplay
-                    loop
-                  >
-                  </video>
+                  <video class="video-player" :src="currentVideo" controls autoplay loop></video>
                 </Col>
               </Row>
             </TabPane>
@@ -250,13 +242,7 @@
                   </div>
                 </Col>
                 <Col :xs="24" :sm="24" :md="16">
-                  <video class="video-player"
-                    :src="currentVideo"
-                    controls
-                    autoplay
-                    loop
-                  >
-                  </video>
+                  <video class="video-player" :src="currentVideo" controls autoplay loop></video>
                 </Col>
               </Row>
             </TabPane>
@@ -268,7 +254,10 @@
     <section class="cropper-feed">
       <h2 class="weightB text-center">100,000 Croppers And Counting</h2>
       <p class="bodyL text-center feed-description">
-        Our community is at the heart of everything we do. The first Croppers formed as a collective of serious farmers seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the harvests that come with it.
+        Our community is at the heart of everything we do. The first Croppers formed as a collective of serious farmers
+        seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi
+        enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the
+        harvests that come with it.
       </p>
       <div class="feed-container">
         <Row>
@@ -280,7 +269,7 @@
                     <img src="@/assets/social/twitter-white.svg" />
                   </div>
                   <div class="feed-content bodyM">
-                    {{twitter.content}}
+                    {{ twitter.content }}
                   </div>
                 </div>
               </Col>
@@ -342,7 +331,7 @@
             >
               <div class="industry-card">
                 <div class="industry-card-body">
-                  <img :src="card.img" :width="card.width"/>
+                  <img :src="card.img" :width="card.width" />
                 </div>
               </div>
             </Col>
@@ -532,7 +521,7 @@ export default class Landing extends Vue {
     twitter: 'https://twitter.com/CropperFinance',
     discord: 'https://discord.com/invite/9hdP7cM3ec',
     medium: 'https://cropperfinance.medium.com/',
-    telegram: 'https://linktr.ee/cropperfinance',
+    telegram: 'https://linktr.ee/cropperfinance'
   }
   videoLinks = {
     swap: 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4',
@@ -558,7 +547,7 @@ export default class Landing extends Vue {
   changeToFarmer() {
     this.isFarmer = !this.isFarmer
   }
-  
+
   changeToIndustry(num: number) {
     switch (num) {
       case 1:
@@ -686,7 +675,7 @@ export default class Landing extends Vue {
       console.log(err)
     } finally {
       this.twitterFeeds = responseData
-      this.twitterShows = this.twitterFeeds.slice(0,3)
+      this.twitterShows = this.twitterFeeds.slice(0, 3)
     }
   }
 
@@ -695,8 +684,7 @@ export default class Landing extends Vue {
     if (activeKey === '1') {
       this.currentPlay = 1
       this.currentVideo = this.videoLinks.swap
-    }
-    else if (activeKey === '2') {
+    } else if (activeKey === '2') {
       this.currentPlay = 5
       this.currentVideo = this.videoLinks.pool
     }
@@ -733,8 +721,8 @@ export default class Landing extends Vue {
   border-radius: 48px;
   border: none;
   height: 54px;
-  -webkit-transition: background-color .7s ease-out;
-  transition: background-color .7s ease-out;
+  -webkit-transition: background-color 0.7s ease-out;
+  transition: background-color 0.7s ease-out;
 
   &:hover {
     background-image: @gradient-btn-primary-reverse;
@@ -870,7 +858,7 @@ h4 {
 
       .balance-infos {
         .tvl-value {
-          background: -webkit-linear-gradient(90deg, #22B5B6 6.07%, #280C86 134.97%);
+          background: -webkit-linear-gradient(90deg, #22b5b6 6.07%, #280c86 134.97%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
@@ -944,7 +932,7 @@ h4 {
         .social-telegram .social-icon {
           margin-right: 0;
         }
-        
+
         .social-medium,
         .social-discord,
         .social-twitter,
@@ -1281,7 +1269,7 @@ h4 {
         @media @max-md-tablet {
           bottom: 0;
         }
-        
+
         @media @max-sl-mobile {
           display: none;
         }
@@ -1323,7 +1311,7 @@ h4 {
         background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
         padding: 20px;
-        
+
         .feed-content {
           word-break: break-all;
           white-space: pre-line;
@@ -1534,7 +1522,7 @@ h4 {
         }
       }
     }
-    
+
     .ant-tabs-top-content.ant-tabs-content-animated {
       transition: margin-left 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
@@ -1585,7 +1573,7 @@ h4 {
           }
         }
       }
-      
+
       .video-play-col {
         display: flex;
         border: 3px solid #7a88b6;
@@ -1596,7 +1584,7 @@ h4 {
         @media @max-sl-mobile {
           margin-top: 20px;
         }
-        
+
         .video-player {
           border-radius: 42px;
           width: 100%;
@@ -1606,10 +1594,9 @@ h4 {
   }
 
   @media @max-md-tablet {
-    .balance-infos{
-      margin-top:40px
+    .balance-infos {
+      margin-top: 40px;
     }
   }
 }
-
 </style>

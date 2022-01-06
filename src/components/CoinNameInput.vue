@@ -8,18 +8,10 @@
         <button class="select-button fc-container" @click="selectCoin">
           <div v-if="coinName" class="coin-container fc-container">
             <CoinIcon :mint-address="mintAddress" />
-            <span class="textS weightS" :class="disabled ? 'coin-disabled' : ''">{{
-              coinName
-            }}</span>
+            <span class="textS weightS" :class="disabled ? 'coin-disabled' : ''">{{ coinName }}</span>
           </div>
-          <span v-else class="textS weightS" :class="disabled ? 'coin-disabled' : ''"
-            >Select a token</span
-          >
-          <img
-            v-if="!disabled"
-            class="arrow-icon"
-            src="@/assets/icons/arrow-down-white.svg"
-          />
+          <span v-else class="textS weightS" :class="disabled ? 'coin-disabled' : ''">Select a token</span>
+          <img v-if="!disabled" class="arrow-icon" src="@/assets/icons/arrow-down-white.svg" />
           <img v-else class="arrow-icon" src="@/assets/icons/arrow-down-grey.svg" />
         </button>
       </div>
@@ -28,77 +20,77 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { lt } from "@/utils/safe-math";
+import Vue from 'vue'
+import { lt } from '@/utils/safe-math'
 
 export default Vue.extend({
   model: {
-    prop: "value",
-    event: "onInput",
+    prop: 'value',
+    event: 'onInput'
   },
 
   props: {
     label: {
       type: String,
-      default: "From",
+      default: 'From'
     },
     coinName: {
       type: String,
-      default: "",
+      default: ''
     },
     mintAddress: {
       type: String,
-      default: "",
+      default: ''
     },
     value: {
       type: String,
-      default: "",
+      default: ''
     },
     balance: {
       type: Object,
-      default: null,
+      default: null
     },
     balanceOffset: {
       type: Number,
-      default: 0,
+      default: 0
     },
     showMax: {
       type: Boolean,
-      default: true,
+      default: true
     },
     showHalf: {
       type: Boolean,
-      default: false,
+      default: false
     },
     disabled: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   methods: {
     lt,
     focusInput() {
-      const input = this.$refs.input as HTMLInputElement;
-      input.focus();
+      const input = this.$refs.input as HTMLInputElement
+      input.focus()
     },
     inputBalanceByPercent(percent: number) {
       // error balance
-      if (!this.balance || this.balance.wei.isNaN()) return;
+      if (!this.balance || this.balance.wei.isNaN()) return
 
-      const availableBalance = Number(this.balance.toEther()) + (this.balanceOffset ?? 0);
+      const availableBalance = Number(this.balance.toEther()) + (this.balanceOffset ?? 0)
 
       // can't send negative balance
-      if (availableBalance < 0) return;
+      if (availableBalance < 0) return
 
-      const inputValue = (availableBalance * percent).toFixed(this.balance.decimals);
-      this.focusInput();
-      this.$emit("onInput", inputValue);
+      const inputValue = (availableBalance * percent).toFixed(this.balance.decimals)
+      this.focusInput()
+      this.$emit('onInput', inputValue)
     },
     selectCoin() {
-      if (this.disabled == false) this.$emit("onSelect");
-    },
-  },
-});
+      if (this.disabled == false) this.$emit('onSelect')
+    }
+  }
+})
 </script>
 
 <style lang="less" scoped>

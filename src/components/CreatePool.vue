@@ -9,11 +9,7 @@
     @cancel="$emit('onCancel')"
     centered
   >
-    <img
-      class="modal-close"
-      src="@/assets/icons/close-circle-icon.svg"
-      @click="$emit('onCancel')"
-    />
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
 
     <div class="create-pool-head fs-container">
       <div class="btn-outline">
@@ -37,9 +33,7 @@
         :farmTokenASelect="selectTokenA"
         :farmTokenBSelect="selectTokenB"
         :allowedAllFarm="$wallet.publicKey.toBase58() === allowedFarmCreator"
-        @onClose="
-          () => ((coinSelectShow = false), (selectTokenB = false), (selectTokenA = false))
-        "
+        @onClose="() => ((coinSelectShow = false), (selectTokenB = false), (selectTokenA = false))"
         @onSelect="onCoinSelect"
       />
       <AmmIdSelect
@@ -52,13 +46,7 @@
       <div class="design-pool">
         <Row>
           <Col :span="10" class="step" :class="{ 'bordered-right': !wallet.connected }">
-            <Steps
-              :current="current"
-              size="small"
-              direction="vertical"
-              style="width: auto"
-              :status="stepsStatus"
-            >
+            <Steps :current="current" size="small" direction="vertical" style="width: auto" :status="stepsStatus">
               <Step>
                 <p slot="title" style="color: #23adb4">
                   {{ stepTitleInputMarket }}
@@ -69,10 +57,7 @@
                   <div v-if="current > 1 || (current === 1 && stepsStatus !== 'error')">
                     {{ stepTitleMarketInfo }}
                   </div>
-                  <div
-                    v-else-if="current === 1 && stepsStatus === 'error'"
-                    style="color: red"
-                  >
+                  <div v-else-if="current === 1 && stepsStatus === 'error'" style="color: red">
                     {{ stepTitleMarketInfo }}
                   </div>
                   <div v-else>{{ stepTitleMarketInfo }}</div>
@@ -81,12 +66,7 @@
               <Step
                 ><template slot="title">
                   <div v-if="current > 2 && stepsStatus !== 'error'">Pool Created</div>
-                  <div
-                    v-else-if="current === 2 && stepsStatus === 'error'"
-                    style="color: red"
-                  >
-                    Pool Created
-                  </div>
+                  <div v-else-if="current === 2 && stepsStatus === 'error'" style="color: red">Pool Created</div>
                   <div v-else slot="title">Pool Created</div>
                 </template></Step
               >
@@ -95,12 +75,7 @@
 
           <Col :span="14" class="notstep" :class="{ 'bordered-left': wallet.connected }">
             <div v-if="!wallet.connected">
-              <Button
-                class="create-btn textM weightS"
-                @click="$accessor.wallet.openModal"
-              >
-                Connect wallet
-              </Button>
+              <Button class="create-btn textM weightS" @click="$accessor.wallet.openModal"> Connect wallet </Button>
             </div>
 
             <Row v-if="current === 0 && wallet.connected">
@@ -115,8 +90,8 @@
                     placeholder="Eg. 3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSr9u7ccG"
                   />
                   <div class="detailed-guide textS">
-                    <u>Note:</u> This tool is for advanced users. Before attempting to
-                    create a new liquidity pool, we suggest going through this
+                    <u>Note:</u> This tool is for advanced users. Before attempting to create a new liquidity pool, we
+                    suggest going through this
                     <a
                       href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
                       target="_blank"
@@ -127,11 +102,7 @@
                 </div>
               </Col>
               <div class="btn-container">
-                <Button
-                  v-if="!wallet.connected"
-                  class="create-btn textM weightS"
-                  @click="$accessor.wallet.openModal"
-                >
+                <Button v-if="!wallet.connected" class="create-btn textM weightS" @click="$accessor.wallet.openModal">
                   Connect wallet
                 </Button>
 
@@ -144,14 +115,14 @@
                 >
                   {{
                     !wallet.connected
-                      ? "Connect"
+                      ? 'Connect'
                       : getMarketLoading
-                      ? ""
+                      ? ''
                       : marketInputFlag
                       ? alreadyExists
-                        ? "This market already exists"
-                        : "Confirm"
-                      : "Cancel"
+                        ? 'This market already exists'
+                        : 'Confirm'
+                      : 'Cancel'
                   }}
                 </Button>
               </div>
@@ -240,8 +211,8 @@
 
                 <div class="inner-content">
                   <div class="detailed-guide textS">
-                    <u>Note:</u> This tool is for advanced users. Before attempting to
-                    create a new liquidity pool, we suggest going through this
+                    <u>Note:</u> This tool is for advanced users. Before attempting to create a new liquidity pool, we
+                    suggest going through this
                     <a
                       href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
                       target="_blank"
@@ -253,10 +224,7 @@
 
                 <div class="inner-content">
                   <div v-if="!wallet.connected" class="btn-container">
-                    <Button
-                      class="create-btn textM weightS"
-                      @click="$accessor.wallet.openModal"
-                    >
+                    <Button class="create-btn textM weightS" @click="$accessor.wallet.openModal">
                       Connect wallet
                     </Button>
                   </div>
@@ -265,18 +233,10 @@
                     <Button
                       class="create-btn textM weightS"
                       :loading="createAmmFlag"
-                      :disabled="
-                        createAmmFlag || !(inputPrice !== null && isAmountValid)
-                      "
+                      :disabled="createAmmFlag || !(inputPrice !== null && isAmountValid)"
                       @click="createKey"
                     >
-                      {{
-                        createAmmFlag
-                          ? ""
-                          : isAmountValid == false
-                          ? "Insufficient amount"
-                          : "Confirm"
-                      }}
+                      {{ createAmmFlag ? '' : isAmountValid == false ? 'Insufficient amount' : 'Confirm' }}
                     </Button>
                   </div>
                 </div>
@@ -292,15 +252,9 @@
               <Col class="lp-icons" :span="24">
                 <div class="lp-icons-group">
                   <div class="icons">
-                    <CoinIcon
-                      :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())"
-                    />
-                    <span class="textS weightS">
-                      {{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }} -
-                    </span>
-                    <CoinIcon
-                      :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())"
-                    />
+                    <CoinIcon :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())" />
+                    <span class="textS weightS"> {{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }} - </span>
+                    <CoinIcon :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())" />
                     <span class="textS weightS">
                       {{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}
                     </span>
@@ -311,11 +265,7 @@
                 <label class="created-amm-id textS">AMM ID: {{ userCreateAmmId }}</label>
               </Col>
               <div class="btn-container">
-                <Button
-                  v-if="!wallet.connected"
-                  class="create-btn textM weightS"
-                  @click="$accessor.wallet.openModal"
-                >
+                <Button v-if="!wallet.connected" class="create-btn textM weightS" @click="$accessor.wallet.openModal">
                   Connect wallet
                 </Button>
                 <NuxtLink to="/pools/" v-else>
@@ -331,47 +281,38 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "nuxt-property-decorator";
-import {
-  Modal,
-  Steps,
-  Row,
-  Col,
-  Button,
-  Tooltip,
-  Icon,
-  DatePicker,
-} from "ant-design-vue";
-import { getMarket, createAmm, clearLocal } from "@/utils/market";
-import BigNumber from "@/../node_modules/bignumber.js/bignumber";
-import { NATIVE_SOL, TokenInfo, TOKENS } from "@/utils/tokens";
-import { TokenAmount } from "@/utils/safe-math";
-import { createAssociatedId } from "@/utils/web3";
-import { PublicKey } from "@solana/web3.js";
-import { DEVNET_MODE } from "../utils/ids";
+import { Vue, Component, Watch } from 'nuxt-property-decorator'
+import { Modal, Steps, Row, Col, Button, Tooltip, Icon, DatePicker } from 'ant-design-vue'
+import { getMarket, createAmm, clearLocal } from '@/utils/market'
+import BigNumber from '@/../node_modules/bignumber.js/bignumber'
+import { NATIVE_SOL, TokenInfo, TOKENS } from '@/utils/tokens'
+import { TokenAmount } from '@/utils/safe-math'
+import { createAssociatedId } from '@/utils/web3'
+import { PublicKey } from '@solana/web3.js'
+import { DEVNET_MODE } from '../utils/ids'
 import {
   AMM_ASSOCIATED_SEED,
   FARM_PROGRAM_ID,
   LIQUIDITY_POOL_PROGRAM_ID_V4,
-  FARM_INITIAL_ALLOWED_CREATOR,
-} from "@/utils/ids";
-import { getBigNumber } from "@/utils/layouts";
-import { cloneDeep, get } from "lodash-es";
-import moment from "moment";
-import { YieldFarm } from "@/utils/farm";
+  FARM_INITIAL_ALLOWED_CREATOR
+} from '@/utils/ids'
+import { getBigNumber } from '@/utils/layouts'
+import { cloneDeep, get } from 'lodash-es'
+import moment from 'moment'
+import { YieldFarm } from '@/utils/farm'
 import {
   getPoolListByTokenMintAddresses,
   getPoolByLpMintAddress,
   getAllCropperPools,
   LIQUIDITY_POOLS,
-  LiquidityPoolInfo,
-} from "@/utils/pools";
-const Step = Steps.Step;
-declare const window: any;
+  LiquidityPoolInfo
+} from '@/utils/pools'
+const Step = Steps.Step
+declare const window: any
 
 @Component({
   head: {
-    title: "CropperFinance Create Pool",
+    title: 'CropperFinance Create Pool'
   },
   components: {
     Modal,
@@ -382,90 +323,90 @@ declare const window: any;
     Step,
     Tooltip,
     Icon,
-    DatePicker,
-  },
+    DatePicker
+  }
 })
 export default class CreatePool extends Vue {
-  rewardCoin: TokenInfo | null = null;
-  tokenA: TokenInfo | null = null;
-  tokenB: TokenInfo | null = null;
-  fromCoinAmount: string = "";
-  fixedFromCoin: boolean = true;
-  selectFromCoin: boolean = false;
-  selectTokenA: boolean = false;
-  selectTokenB: boolean = false;
-  allowedFarmCreator: string = FARM_INITIAL_ALLOWED_CREATOR;
-  coinSelectShow: boolean = false;
-  startTime: any = moment();
-  endTime: any = moment();
-  endOpen: any = false;
-  isCRPTokenPair: boolean = false;
-  ammIdSelectShow: boolean = false;
-  ammIdSelectList: any = [];
+  rewardCoin: TokenInfo | null = null
+  tokenA: TokenInfo | null = null
+  tokenB: TokenInfo | null = null
+  fromCoinAmount: string = ''
+  fixedFromCoin: boolean = true
+  selectFromCoin: boolean = false
+  selectTokenA: boolean = false
+  selectTokenB: boolean = false
+  allowedFarmCreator: string = FARM_INITIAL_ALLOWED_CREATOR
+  coinSelectShow: boolean = false
+  startTime: any = moment()
+  endTime: any = moment()
+  endOpen: any = false
+  isCRPTokenPair: boolean = false
+  ammIdSelectShow: boolean = false
+  ammIdSelectList: any = []
 
-  current: number = 0;
+  current: number = 0
 
-  marketInputFlag: boolean = true;
-  marketFlag: boolean = false;
-  inputMarket: string = ""; //'HPU7v2yCGM6sRujWEMaTPiiiX2qMb6fun3eWjTzSgSw1'//3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSw9u7tcG
-  isAmountValid: boolean = false;
-  inputQuoteValue: number | null = null;
-  inputBaseValue: number | null = null;
-  inputPrice: number | null = null;
-  marketMsg: any | null = null;
-  getMarketLoading: boolean = false;
-  marketError: null | string = null;
-  stepsStatus: string = "process";
-  marketStr: string | null = null;
-  marketPrice: number | null = null;
-  baseMintDecimals: number | null = null;
-  quoteMintDecimals: number | null = null;
-  pools: any = [];
-  alreadyExists: boolean = false;
+  marketInputFlag: boolean = true
+  marketFlag: boolean = false
+  inputMarket: string = '' //'HPU7v2yCGM6sRujWEMaTPiiiX2qMb6fun3eWjTzSgSw1'//3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSw9u7tcG
+  isAmountValid: boolean = false
+  inputQuoteValue: number | null = null
+  inputBaseValue: number | null = null
+  inputPrice: number | null = null
+  marketMsg: any | null = null
+  getMarketLoading: boolean = false
+  marketError: null | string = null
+  stepsStatus: string = 'process'
+  marketStr: string | null = null
+  marketPrice: number | null = null
+  baseMintDecimals: number | null = null
+  quoteMintDecimals: number | null = null
+  pools: any = []
+  alreadyExists: boolean = false
 
-  createAmmFlag: boolean = false;
+  createAmmFlag: boolean = false
 
-  stepTitleInputMarket: string = "Market ID";
-  stepTitleMarketInfo: string = "Price & Initial Liquidity";
-  stepTitleInit: string = "Initialize";
+  stepTitleInputMarket: string = 'Market ID'
+  stepTitleMarketInfo: string = 'Price & Initial Liquidity'
+  stepTitleInit: string = 'Initialize'
 
-  marketTickSize: number = 1;
+  marketTickSize: number = 1
 
-  userCreateAmmId: string = "";
+  userCreateAmmId: string = ''
 
-  liquidityValueChangeFlag: boolean = true;
+  liquidityValueChangeFlag: boolean = true
 
-  userLocalAmmIdList: string[] = [];
+  userLocalAmmIdList: string[] = []
 
-  expectAmmId: undefined | string;
+  expectAmmId: undefined | string
 
   get rewardPerWeek() {
-    let result = 0;
-    let initialAmount = Number.parseFloat(this.fromCoinAmount);
+    let result = 0
+    let initialAmount = Number.parseFloat(this.fromCoinAmount)
 
-    let duration = 0;
+    let duration = 0
     if (this.startTime != null && this.endTime != null) {
-      duration = this.endTime.unix() - this.startTime.unix();
+      duration = this.endTime.unix() - this.startTime.unix()
     }
     if (duration > 0) {
-      result = (initialAmount * 7 * 24 * 3600) / duration;
+      result = (initialAmount * 7 * 24 * 3600) / duration
     }
-    return result;
+    return result
   }
   get isMobile() {
-    return this.$accessor.isMobile;
+    return this.$accessor.isMobile
   }
 
   get wallet() {
-    return this.$accessor.wallet;
+    return this.$accessor.wallet
   }
 
-  @Watch("startTime")
+  @Watch('startTime')
   onStartTimeChanged(val: any) {
-    console.log("start time changed !");
+    console.log('start time changed !')
   }
 
-  @Watch("inputQuoteValue")
+  @Watch('inputQuoteValue')
   oniIputQuoteValueChanged(val: string) {
     if (
       this.inputPrice !== null &&
@@ -473,29 +414,21 @@ export default class CreatePool extends Vue {
       this.quoteMintDecimals !== null &&
       this.liquidityValueChangeFlag
     ) {
-      this.liquidityValueChangeFlag = false;
-      if (
-        val.toString().split(".").length > 1 &&
-        val.toString().split(".")[1].length > this.quoteMintDecimals
-      ) {
-        this.inputQuoteValue = parseFloat(
-          parseFloat(val).toFixed(this.quoteMintDecimals)
-        );
+      this.liquidityValueChangeFlag = false
+      if (val.toString().split('.').length > 1 && val.toString().split('.')[1].length > this.quoteMintDecimals) {
+        this.inputQuoteValue = parseFloat(parseFloat(val).toFixed(this.quoteMintDecimals))
       }
       this.inputBaseValue =
-        Math.floor(
-          ((this.inputQuoteValue ?? parseFloat(val)) / this.inputPrice) *
-            10 ** this.baseMintDecimals
-        ) /
-        10 ** this.baseMintDecimals;
-      this.validateAmount();
+        Math.floor(((this.inputQuoteValue ?? parseFloat(val)) / this.inputPrice) * 10 ** this.baseMintDecimals) /
+        10 ** this.baseMintDecimals
+      this.validateAmount()
     }
     setTimeout(() => {
-      this.liquidityValueChangeFlag = true;
-    }, 1);
+      this.liquidityValueChangeFlag = true
+    }, 1)
   }
 
-  @Watch("inputBaseValue")
+  @Watch('inputBaseValue')
   onInputBaseValueChanged(val: string) {
     if (
       this.inputPrice !== null &&
@@ -503,263 +436,233 @@ export default class CreatePool extends Vue {
       this.quoteMintDecimals !== null &&
       this.liquidityValueChangeFlag
     ) {
-      this.liquidityValueChangeFlag = false;
-      if (
-        val.toString().split(".").length > 1 &&
-        val.toString().split(".")[1].length > this.baseMintDecimals
-      ) {
-        this.inputBaseValue = parseFloat(parseFloat(val).toFixed(this.baseMintDecimals));
+      this.liquidityValueChangeFlag = false
+      if (val.toString().split('.').length > 1 && val.toString().split('.')[1].length > this.baseMintDecimals) {
+        this.inputBaseValue = parseFloat(parseFloat(val).toFixed(this.baseMintDecimals))
       }
       this.inputQuoteValue =
-        Math.floor(
-          (this.inputBaseValue ?? parseFloat(val)) *
-            this.inputPrice *
-            10 ** this.quoteMintDecimals
-        ) /
-        10 ** this.quoteMintDecimals;
-      this.validateAmount();
+        Math.floor((this.inputBaseValue ?? parseFloat(val)) * this.inputPrice * 10 ** this.quoteMintDecimals) /
+        10 ** this.quoteMintDecimals
+      this.validateAmount()
     }
     setTimeout(() => {
-      this.liquidityValueChangeFlag = true;
-    }, 1);
+      this.liquidityValueChangeFlag = true
+    }, 1)
   }
 
-  @Watch("inputPrice")
+  @Watch('inputPrice')
   onInputPriceValueChanged(val: number) {
     if (this.inputPrice) {
       if (this.inputBaseValue && this.quoteMintDecimals) {
         this.inputQuoteValue =
-          Math.floor(val * this.inputPrice * 10 ** this.quoteMintDecimals) /
-          10 ** this.quoteMintDecimals;
+          Math.floor(val * this.inputPrice * 10 ** this.quoteMintDecimals) / 10 ** this.quoteMintDecimals
       } else if (this.inputQuoteValue && this.baseMintDecimals) {
         this.inputBaseValue =
-          Math.floor((val / this.inputPrice) * 10 ** this.baseMintDecimals) /
-          10 ** this.baseMintDecimals;
+          Math.floor((val / this.inputPrice) * 10 ** this.baseMintDecimals) / 10 ** this.baseMintDecimals
       }
-      this.validateAmount();
+      this.validateAmount()
     }
   }
 
   async validateAmount() {
-    this.isAmountValid = false;
-    if (
-      this.inputBaseValue &&
-      this.inputQuoteValue &&
-      this.baseMintDecimals &&
-      this.quoteMintDecimals
-    ) {
+    this.isAmountValid = false
+    if (this.inputBaseValue && this.inputQuoteValue && this.baseMintDecimals && this.quoteMintDecimals) {
       const baseMintAddress =
         this.marketMsg.baseMintAddress.toBase58() == TOKENS.WSOL.mintAddress
           ? NATIVE_SOL.mintAddress
-          : this.marketMsg.baseMintAddress.toBase58();
+          : this.marketMsg.baseMintAddress.toBase58()
       const quoteMintAddress =
         this.marketMsg.quoteMintAddress.toBase58() == TOKENS.WSOL.mintAddress
           ? NATIVE_SOL.mintAddress
-          : this.marketMsg.quoteMintAddress.toBase58();
+          : this.marketMsg.quoteMintAddress.toBase58()
 
-      const walletBaseAmount = parseFloat(
-        get(this.wallet.tokenAccounts, `${baseMintAddress}.balance`).fixed()
-      );
-      const walletQuoteAmount = parseFloat(
-        get(this.wallet.tokenAccounts, `${quoteMintAddress}.balance`).fixed()
-      );
-      console.log(walletBaseAmount);
-      console.log(walletQuoteAmount);
+      const walletBaseAmount = parseFloat(get(this.wallet.tokenAccounts, `${baseMintAddress}.balance`).fixed())
+      const walletQuoteAmount = parseFloat(get(this.wallet.tokenAccounts, `${quoteMintAddress}.balance`).fixed())
+      console.log(walletBaseAmount)
+      console.log(walletQuoteAmount)
       if (
         this.inputBaseValue > 0 &&
         this.inputBaseValue < walletBaseAmount &&
         this.inputQuoteValue > 0 &&
         this.inputQuoteValue < walletQuoteAmount
       ) {
-        this.isAmountValid = true;
+        this.isAmountValid = true
       }
     }
   }
 
   poolsFormated() {
-    const conn = this.$web3;
-    const wallet = (this as any).$accessor.wallet;
-    const liquidity = (this as any).$accessor.liquidity;
-    const price = (this as any).$accessor.price;
+    const conn = this.$web3
+    const wallet = (this as any).$accessor.wallet
+    const liquidity = (this as any).$accessor.liquidity
+    const price = (this as any).$accessor.price
 
-    const polo: any = [];
+    const polo: any = []
 
     getAllCropperPools().forEach(function (value: any) {
-      const liquidityItem = get(liquidity.infos, value.lp_mint);
-      let lp = getPoolByLpMintAddress(value.lp_mint);
+      const liquidityItem = get(liquidity.infos, value.lp_mint)
+      let lp = getPoolByLpMintAddress(value.lp_mint)
 
       if (liquidityItem?.coin.balance) {
         const liquidityCoinValue =
           getBigNumber((liquidityItem?.coin.balance as TokenAmount).toEther()) *
-          price.prices[liquidityItem?.coin.symbol as string];
+          price.prices[liquidityItem?.coin.symbol as string]
         const liquidityPcValue =
           getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
-          price.prices[liquidityItem?.pc.symbol as string];
-        const liquidityTotalValue = liquidityPcValue + liquidityCoinValue;
+          price.prices[liquidityItem?.pc.symbol as string]
+        const liquidityTotalValue = liquidityPcValue + liquidityCoinValue
 
-        const liquidityTotalSupply = getBigNumber(
-          (liquidityItem?.lp.totalSupply as TokenAmount).toEther()
-        );
-        const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply;
+        const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
+        const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
 
-        value.liquidity = liquidityTotalValue;
+        value.liquidity = liquidityTotalValue
 
         if (!window.poolsDatas) {
-          window.poolsDatas = {};
+          window.poolsDatas = {}
         }
 
-        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]["1day"]) {
-          value.volume_24h = window.poolsDatas[value.ammId]["1day"];
+        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['1day']) {
+          value.volume_24h = window.poolsDatas[value.ammId]['1day']
         } else {
-          value.volume_24h = 0;
+          value.volume_24h = 0
         }
 
-        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]["7day"]) {
-          value.volume_7d = window.poolsDatas[value.ammId]["7day"];
+        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['7day']) {
+          value.volume_7d = window.poolsDatas[value.ammId]['7day']
         } else {
-          value.volume_7d = 0;
+          value.volume_7d = 0
         }
 
-        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]["fees"]) {
-          value.fee_24h = window.poolsDatas[value.ammId]["fees"];
+        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['fees']) {
+          value.fee_24h = window.poolsDatas[value.ammId]['fees']
         } else {
-          value.fee_24h = 0;
+          value.fee_24h = 0
         }
 
-        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]["fees"]) {
-          value.apy =
-            (window.poolsDatas[value.ammId]["fees"] * 365 * 100) / liquidityTotalValue;
+        if (window.poolsDatas[value.ammId] && window.poolsDatas[value.ammId]['fees']) {
+          value.apy = (window.poolsDatas[value.ammId]['fees'] * 365 * 100) / liquidityTotalValue
         } else {
-          value.apy = 0;
+          value.apy = 0
         }
 
-        value.current = 0;
+        value.current = 0
 
         if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
           if (wallet) {
-            value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`);
+            value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`)
             if (value.current) {
-              value.current =
-                (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) *
-                liquidityItemValue;
+              value.current = (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) * liquidityItemValue
             } else {
-              value.current = 0;
+              value.current = 0
             }
           } else {
-            value.current = 0;
+            value.current = 0
           }
         }
 
-        polo.push(value);
+        polo.push(value)
       }
-    });
+    })
 
-    return polo;
+    return polo
   }
 
-  @Watch("inputMarket")
+  @Watch('inputMarket')
   onInputMarketChanged(val: string) {
-    this.alreadyExists = false;
-    this.inputMarket = val.replace(/(^\s*)|(\s*$)/g, "");
+    this.alreadyExists = false
+    this.inputMarket = val.replace(/(^\s*)|(\s*$)/g, '')
 
     if (
       // @ts-ignore
       DEVNET_MODE != true &&
       this.pools.filter(
-        (pool: any) =>
-          (pool.serumMarket as string).toLowerCase() ==
-          (this.inputMarket as string).toLowerCase()
+        (pool: any) => (pool.serumMarket as string).toLowerCase() == (this.inputMarket as string).toLowerCase()
       ).length > 0
     ) {
-      this.alreadyExists = true;
+      this.alreadyExists = true
     }
   }
 
   mounted() {
-    const localMarket = localStorage.getItem("createMarket");
+    const localMarket = localStorage.getItem('createMarket')
     if (localMarket !== null && localMarket.length > 30) {
-      this.inputMarket = localMarket;
-      this.getMarketMsg();
+      this.inputMarket = localMarket
+      this.getMarketMsg()
     } else {
-      clearLocal();
+      clearLocal()
     }
-    this.updateLocalData();
+    this.updateLocalData()
 
     let timer = setInterval(async () => {
-      this.pools = this.poolsFormated();
+      this.pools = this.poolsFormated()
       if (this.pools.length > 0) {
-        clearInterval(timer);
+        clearInterval(timer)
       }
-    }, 1000);
+    }, 1000)
   }
   async confirmFarmInfo() {
     //EgaHTGJeDbytze85LqMStxgTJgq22yjTvYSfqoiZevSK
-    const connection = this.$web3;
-    const wallet: any = this.$wallet;
+    const connection = this.$web3
+    const wallet: any = this.$wallet
 
-    window.localStorage.pool_last_updated = undefined;
-    await this.$accessor.liquidity.requestInfos();
+    window.localStorage.pool_last_updated = undefined
+    await this.$accessor.liquidity.requestInfos()
 
     //get liquidity pool info
-    let liquidityPoolInfo: any = LIQUIDITY_POOLS.find(
-      (item) => item.ammId === this.userCreateAmmId
-    );
+    let liquidityPoolInfo: any = LIQUIDITY_POOLS.find((item) => item.ammId === this.userCreateAmmId)
 
     //check liquidity pool
     if (liquidityPoolInfo == undefined) {
       this.$notify.error({
-        key: "Liquidity",
-        message: "Finding liquidity pool",
-        description: "Can't find liquidity pool",
-      });
-      return;
+        key: 'Liquidity',
+        message: 'Finding liquidity pool',
+        description: "Can't find liquidity pool"
+      })
+      return
     }
 
     //check reward coin
     if (this.rewardCoin === null) {
       this.$notify.error({
-        key: "reward",
-        message: "Checking reward coin",
-        description: "Select reward coin, please",
-      });
-      return;
+        key: 'reward',
+        message: 'Checking reward coin',
+        description: 'Select reward coin, please'
+      })
+      return
     }
 
-    let rewardMintPubkey = new PublicKey(this.rewardCoin?.mintAddress as string);
-    let rewardDecimals: number = this.rewardCoin?.decimals as any;
-    let lpMintPubkey = new PublicKey(liquidityPoolInfo.lp.mintAddress);
-    let ammPubkey = new PublicKey(this.userCreateAmmId);
+    let rewardMintPubkey = new PublicKey(this.rewardCoin?.mintAddress as string)
+    let rewardDecimals: number = this.rewardCoin?.decimals as any
+    let lpMintPubkey = new PublicKey(liquidityPoolInfo.lp.mintAddress)
+    let ammPubkey = new PublicKey(this.userCreateAmmId)
 
-    let startTimestamp: any = this.startTime.unix();
-    let endTimestamp: any = this.endTime.unix();
+    let startTimestamp: any = this.startTime.unix()
+    let endTimestamp: any = this.endTime.unix()
 
-    let initialRewardAmount: number = Number.parseFloat(this.fromCoinAmount);
+    let initialRewardAmount: number = Number.parseFloat(this.fromCoinAmount)
     let userRewardTokenPubkey = new PublicKey(
       get(this.wallet.tokenAccounts, `${rewardMintPubkey.toBase58()}.tokenAccountAddress`)
-    );
-    let userRewardTokenBalance = get(
-      this.wallet.tokenAccounts,
-      `${rewardMintPubkey.toBase58()}.balance`
-    );
+    )
+    let userRewardTokenBalance = get(this.wallet.tokenAccounts, `${rewardMintPubkey.toBase58()}.balance`)
 
     //check if creator has some reward
     if (userRewardTokenBalance <= 0 || userRewardTokenBalance < initialRewardAmount) {
       this.$notify.error({
-        key: "Initial Balance",
-        message: "Checking Inital Reward",
-        description: "Not enough Initial Reward token balance",
-      });
-      return;
+        key: 'Initial Balance',
+        message: 'Checking Inital Reward',
+        description: 'Not enough Initial Reward token balance'
+      })
+      return
     }
 
     //check start and end
     if (startTimestamp >= endTimestamp) {
       this.$notify.error({
-        key: "Period",
-        message: "Checking period",
-        description: "end time must be late than start time",
-      });
-      return;
+        key: 'Period',
+        message: 'Checking period',
+        description: 'end time must be late than start time'
+      })
+      return
     }
     try {
       let createdFarm = await YieldFarm.createFarmWithParams(
@@ -770,214 +673,195 @@ export default class CreatePool extends Vue {
         ammPubkey,
         startTimestamp,
         endTimestamp
-      );
-      await this.delay(500);
+      )
+      await this.delay(500)
 
       // wait for the synchronization
-      let loopCount = 0;
+      let loopCount = 0
       while ((await connection.getAccountInfo(createdFarm.farmId)) === null) {
         if (loopCount > 5) {
           // allow loop for 5 times
-          break;
+          break
         }
-        loopCount++;
+        loopCount++
       }
 
-      let fetchedFarm = await YieldFarm.loadFarm(
-        connection,
-        createdFarm.farmId,
-        new PublicKey(FARM_PROGRAM_ID)
-      );
+      let fetchedFarm = await YieldFarm.loadFarm(connection, createdFarm.farmId, new PublicKey(FARM_PROGRAM_ID))
       if (fetchedFarm) {
-        await fetchedFarm.addReward(
-          wallet,
-          userRewardTokenPubkey,
-          initialRewardAmount * Math.pow(10, rewardDecimals)
-        );
-        this.current += 1;
+        await fetchedFarm.addReward(wallet, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals))
+        this.current += 1
       }
     } catch {
-      console.log("creating farm failed");
+      console.log('creating farm failed')
     }
   }
   async delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
   gotoFarms() {
-    this.$router.push({ path: `/farms` });
+    this.$router.push({ path: `/farms` })
   }
   goToFarmInfo() {
-    this.current++;
+    this.current++
   }
   useExistingAMMID() {
-    if (this.userCreateAmmId === "") {
+    if (this.userCreateAmmId === '') {
       this.$notify.error({
-        key: "AMMID",
-        message: "Using Existing Amm Id",
-        description: "Input valid AMM ID",
-      });
-      return;
+        key: 'AMMID',
+        message: 'Using Existing Amm Id',
+        description: 'Input valid AMM ID'
+      })
+      return
     }
-    this.current = 5;
+    this.current = 5
   }
   createNewAMMID() {
-    this.current++;
+    this.current++
   }
   onAmmIdSelect(liquidityInfo: LiquidityPoolInfo | undefined) {
-    this.ammIdSelectShow = false;
+    this.ammIdSelectShow = false
     if (liquidityInfo) {
-      this.userCreateAmmId = liquidityInfo.ammId;
+      this.userCreateAmmId = liquidityInfo.ammId
     }
   }
   openFromCoinSelect() {
-    this.selectFromCoin = true;
-    this.closeAllModal("coinSelectShow");
+    this.selectFromCoin = true
+    this.closeAllModal('coinSelectShow')
     setTimeout(() => {
-      this.coinSelectShow = true;
-    }, 1);
+      this.coinSelectShow = true
+    }, 1)
   }
   openTokenASelect() {
-    this.selectTokenA = true;
-    this.closeAllModal("coinSelectShow");
+    this.selectTokenA = true
+    this.closeAllModal('coinSelectShow')
     setTimeout(() => {
-      this.coinSelectShow = true;
-    }, 1);
+      this.coinSelectShow = true
+    }, 1)
   }
   openTokenBSelect() {
-    this.selectTokenB = true;
-    this.closeAllModal("coinSelectShow");
+    this.selectTokenB = true
+    this.closeAllModal('coinSelectShow')
     setTimeout(() => {
-      this.coinSelectShow = true;
-    }, 1);
+      this.coinSelectShow = true
+    }, 1)
   }
   closeAllModal(showName: string) {
-    if (showName !== "coinSelectShow") {
-      this.coinSelectShow = false;
+    if (showName !== 'coinSelectShow') {
+      this.coinSelectShow = false
     }
   }
   onCoinSelect(tokenInfo: TokenInfo) {
     if (tokenInfo !== null) {
       if (this.selectFromCoin) {
-        this.rewardCoin = cloneDeep(tokenInfo);
+        this.rewardCoin = cloneDeep(tokenInfo)
       } else if (this.selectTokenA || this.selectTokenB) {
         if (this.selectTokenA) {
-          this.tokenA = cloneDeep(tokenInfo);
-          this.rewardCoin = cloneDeep(tokenInfo);
+          this.tokenA = cloneDeep(tokenInfo)
+          this.rewardCoin = cloneDeep(tokenInfo)
           if (this.tokenB && this.tokenA.mintAddress === this.tokenB.mintAddress) {
-            this.tokenB = null;
+            this.tokenB = null
           }
         } else if (this.selectTokenB) {
-          this.tokenB = cloneDeep(tokenInfo);
+          this.tokenB = cloneDeep(tokenInfo)
           if (this.tokenA && this.tokenB.mintAddress === this.tokenA.mintAddress) {
-            this.tokenA = null;
+            this.tokenA = null
           }
         }
         if (this.tokenA && this.tokenB) {
           const liquidityListV5 = getPoolListByTokenMintAddresses(
-            this.tokenA.mintAddress === TOKENS.WSOL.mintAddress
-              ? NATIVE_SOL.mintAddress
-              : this.tokenA.mintAddress,
-            this.tokenB.mintAddress === TOKENS.WSOL.mintAddress
-              ? NATIVE_SOL.mintAddress
-              : this.tokenB.mintAddress,
+            this.tokenA.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.tokenA.mintAddress,
+            this.tokenB.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.tokenB.mintAddress,
             undefined
-          );
+          )
           if (liquidityListV5.length === 1) {
-            this.userCreateAmmId = liquidityListV5[0].ammId;
+            this.userCreateAmmId = liquidityListV5[0].ammId
           } else if (liquidityListV5.length > 1) {
             // user select amm id
-            this.coinSelectShow = false;
+            this.coinSelectShow = false
             setTimeout(() => {
-              this.ammIdSelectShow = true;
+              this.ammIdSelectShow = true
 
               // @ts-ignore
               this.ammIdSelectList = Object.values(this.$accessor.liquidity.infos).filter((item: LiquidityPoolInfo) =>
-                liquidityListV5.find(
-                  (liquidityItem) => liquidityItem.ammId === item.ammId
-                )
-              );
-            }, 1);
-            return;
+                liquidityListV5.find((liquidityItem) => liquidityItem.ammId === item.ammId)
+              )
+            }, 1)
+            return
           }
         } else {
-          this.userCreateAmmId = "";
+          this.userCreateAmmId = ''
         }
       }
     } else {
       // check coin
       if (this.rewardCoin !== null) {
-        const newFromCoin = Object.values(TOKENS).find(
-          (item) => item.mintAddress === this.rewardCoin?.mintAddress
-        );
+        const newFromCoin = Object.values(TOKENS).find((item) => item.mintAddress === this.rewardCoin?.mintAddress)
         if (newFromCoin === null || newFromCoin === undefined) {
-          this.rewardCoin = null;
+          this.rewardCoin = null
         }
       }
     }
-    this.coinSelectShow = false;
-    this.selectFromCoin = false;
-    this.selectTokenA = false;
-    this.selectTokenB = false;
+    this.coinSelectShow = false
+    this.selectFromCoin = false
+    this.selectTokenA = false
+    this.selectTokenB = false
   }
 
   disabledStartDate(startTime: any) {
-    const endTime = this.endTime;
+    const endTime = this.endTime
     if (!startTime || !endTime) {
-      return false;
+      return false
     }
-    if (startTime < moment().endOf("day")) {
-      return true;
+    if (startTime < moment().endOf('day')) {
+      return true
     }
-    return startTime.valueOf() > endTime.valueOf();
+    return startTime.valueOf() > endTime.valueOf()
   }
   disabledEndDate(endTime: any) {
-    const startTime = this.startTime;
+    const startTime = this.startTime
     if (!endTime || !startTime) {
-      return false;
+      return false
     }
-    return startTime.valueOf() >= endTime.valueOf();
+    return startTime.valueOf() >= endTime.valueOf()
   }
   handleStartOpenChange(open: any) {
     if (!open) {
-      this.endOpen = true;
+      this.endOpen = true
     }
   }
   handleEndOpenChange(open: any) {
-    this.endOpen = open;
+    this.endOpen = open
   }
   updateLocalData() {
-    if (localStorage.getItem("userCreateAMMID") !== null) {
+    if (localStorage.getItem('userCreateAMMID') !== null) {
       // @ts-ignore
-      this.userLocalAmmIdList = localStorage.getItem("userCreateAMMID").split("+++");
+      this.userLocalAmmIdList = localStorage.getItem('userCreateAMMID').split('+++')
     } else {
-      this.userLocalAmmIdList = [];
+      this.userLocalAmmIdList = []
     }
   }
 
   getNameForMint(mint: string) {
-    const mintToken = Object.values(TOKENS).find((item) => item.mintAddress === mint);
+    const mintToken = Object.values(TOKENS).find((item) => item.mintAddress === mint)
     if (mintToken) {
-      return `${mintToken.symbol}: ${mint}`;
+      return `${mintToken.symbol}: ${mint}`
     }
-    return mint;
+    return mint
   }
 
   getSymbolForMint(mint: string) {
-    const mintToken = Object.values(TOKENS).find((item) => item.mintAddress === mint);
+    const mintToken = Object.values(TOKENS).find((item) => item.mintAddress === mint)
     if (mintToken) {
-      return `${mintToken.symbol}`;
+      return `${mintToken.symbol}`
     }
-    return mint;
+    return mint
   }
 
   async getMarketMsg() {
-    this.getMarketLoading = true;
-    this.marketInputFlag = !this.marketInputFlag;
-    const { market, price, msg, baseMintDecimals, quoteMintDecimals } = await getMarket(
-      this.$web3,
-      this.inputMarket
-    );
+    this.getMarketLoading = true
+    this.marketInputFlag = !this.marketInputFlag
+    const { market, price, msg, baseMintDecimals, quoteMintDecimals } = await getMarket(this.$web3, this.inputMarket)
 
     if (this.inputMarket && market !== null) {
       this.expectAmmId = (
@@ -986,44 +870,44 @@ export default class CreatePool extends Vue {
           new PublicKey(this.inputMarket),
           AMM_ASSOCIATED_SEED
         )
-      ).toString();
+      ).toString()
     }
     if (market === null) {
-      this.marketInputFlag = !this.marketInputFlag;
-      this.stepsStatus = "error";
-      this.stepTitleInputMarket = msg;
+      this.marketInputFlag = !this.marketInputFlag
+      this.stepsStatus = 'error'
+      this.stepTitleInputMarket = msg
     } else {
-      this.stepsStatus = "process";
-      this.current = 1;
-      this.marketMsg = market;
-      this.marketPrice = price;
-      this.marketTickSize = getBigNumber(new BigNumber(market.tickSize));
-      this.baseMintDecimals = baseMintDecimals;
-      this.quoteMintDecimals = quoteMintDecimals;
-      this.marketStr = this.inputMarket;
+      this.stepsStatus = 'process'
+      this.current = 1
+      this.marketMsg = market
+      this.marketPrice = price
+      this.marketTickSize = getBigNumber(new BigNumber(market.tickSize))
+      this.baseMintDecimals = baseMintDecimals
+      this.quoteMintDecimals = quoteMintDecimals
+      this.marketStr = this.inputMarket
     }
-    this.getMarketLoading = false;
+    this.getMarketLoading = false
   }
 
   rewriteMarket() {
-    this.marketInputFlag = !this.marketInputFlag;
-    this.current = 0;
-    this.marketMsg = null;
-    this.inputMarket = "";
-    this.inputQuoteValue = 0;
-    this.inputBaseValue = 0;
-    this.inputPrice = 0;
-    this.marketError = null;
-    this.createAmmFlag = false;
-    this.userCreateAmmId = "";
-    this.stepTitleMarketInfo = "Price & Initial Liquidity";
-    this.stepTitleInit = "Initialize";
-    clearLocal();
+    this.marketInputFlag = !this.marketInputFlag
+    this.current = 0
+    this.marketMsg = null
+    this.inputMarket = ''
+    this.inputQuoteValue = 0
+    this.inputBaseValue = 0
+    this.inputPrice = 0
+    this.marketError = null
+    this.createAmmFlag = false
+    this.userCreateAmmId = ''
+    this.stepTitleMarketInfo = 'Price & Initial Liquidity'
+    this.stepTitleInit = 'Initialize'
+    clearLocal()
   }
 
   createKey() {
-    this.stepTitleMarketInfo = "Price & Initial Liquidity";
-    this.stepTitleInit = "Initialize";
+    this.stepTitleMarketInfo = 'Price & Initial Liquidity'
+    this.stepTitleInit = 'Initialize'
     if (
       this.marketMsg == null ||
       this.inputQuoteValue === null ||
@@ -1033,57 +917,48 @@ export default class CreatePool extends Vue {
       this.inputBaseValue <= 0 ||
       this.inputPrice <= 0
     ) {
-      this.stepTitleMarketInfo = "Please input coin value";
-      this.stepsStatus = "error";
-      return;
+      this.stepTitleMarketInfo = 'Please input coin value'
+      this.stepsStatus = 'error'
+      return
     } else {
-      this.stepTitleMarketInfo = "Price & Initial Liquidity";
-      this.stepsStatus = "process";
+      this.stepTitleMarketInfo = 'Price & Initial Liquidity'
+      this.stepsStatus = 'process'
     }
 
-    this.createAmmFlag = true;
+    this.createAmmFlag = true
 
-    createAmm(
-      this.$web3,
-      this.$wallet,
-      this.marketMsg,
-      this.inputBaseValue,
-      this.inputQuoteValue
-    )
+    createAmm(this.$web3, this.$wallet, this.marketMsg, this.inputBaseValue, this.inputQuoteValue)
       .then(async (data) => {
-        this.current = 2;
-        this.stepsStatus = "process";
-        this.userCreateAmmId = data;
-        if (localStorage.getItem("userCreateAMMID") !== null) {
-          localStorage.setItem(
-            "userCreateAMMID",
-            localStorage.getItem("userCreateAMMID") + "+++"
-          );
+        this.current = 2
+        this.stepsStatus = 'process'
+        this.userCreateAmmId = data
+        if (localStorage.getItem('userCreateAMMID') !== null) {
+          localStorage.setItem('userCreateAMMID', localStorage.getItem('userCreateAMMID') + '+++')
         } else {
-          localStorage.setItem("userCreateAMMID", "");
+          localStorage.setItem('userCreateAMMID', '')
         }
         localStorage.setItem(
-          "userCreateAMMID",
-          localStorage.getItem("userCreateAMMID") +
+          'userCreateAMMID',
+          localStorage.getItem('userCreateAMMID') +
             `${new Date().getTime()}---${data}---${
               this.marketMsg.address
             }---${this.marketMsg.baseMintAddress.toString()}---${this.marketMsg.quoteMintAddress.toString()}`
-        );
+        )
 
-        this.updateLocalData();
-        this.createAmmFlag = true;
-        window.localStorage.token_last_updated_ = undefined;
-        window.localStorage.market_last_updated_ = undefined;
-        window.localStorage.pool_last_updated = undefined;
-        await this.$accessor.liquidity.requestInfos();
+        this.updateLocalData()
+        this.createAmmFlag = true
+        window.localStorage.token_last_updated_ = undefined
+        window.localStorage.market_last_updated_ = undefined
+        window.localStorage.pool_last_updated = undefined
+        await this.$accessor.liquidity.requestInfos()
       })
       .catch((error) => {
-        this.stepsStatus = "error";
-        this.current = 1;
-        this.createAmmFlag = false;
-        this.stepTitleInit = error.message;
-        throw error;
-      });
+        this.stepsStatus = 'error'
+        this.current = 1
+        this.createAmmFlag = false
+        this.stepTitleInit = error.message
+        throw error
+      })
   }
 }
 </script>
@@ -1247,7 +1122,6 @@ export default class CreatePool extends Vue {
               margin-top: 8px;
             }
           }
-          
         }
 
         .pool-created {
@@ -1277,7 +1151,7 @@ export default class CreatePool extends Vue {
     }
   }
 
-  input[type="number"] {
+  input[type='number'] {
     border: unset;
     background: transparent;
     border-bottom: 1px solid #fff;
@@ -1290,7 +1164,7 @@ export default class CreatePool extends Vue {
   .ant-modal {
     max-width: @tablet-md-width;
     width: 100% !important;
-    
+
     @media @max-md-tablet {
       max-width: calc(100vw - 16px);
     }

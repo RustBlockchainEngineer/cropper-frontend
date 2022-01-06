@@ -231,7 +231,9 @@
 
         <div class="fertilizer-content">
           <Row v-if="filterProject != filterStatus.funded" :gutter="[18, 28]">
-            <Col v-for="(fertilizer, idx) in fertilizerItems" :key="fertilizer.id" 
+            <Col
+              v-for="(fertilizer, idx) in fertilizerItems"
+              :key="fertilizer.id"
               :lg="idx === 0 ? 12 : 6"
               :md="idx === 0 ? 16 : 8"
               :sm="24"
@@ -239,20 +241,26 @@
               <div class="fertilizer-project-table">
                 <div class="project-banner">
                   <img class="banner" :src="fertilizer.picture" />
-                  <div 
-                    class="project-status" 
-                    :class="fertilizer.status === filterStatus.whitelist
-                      ? 'whitelist'
-                      : fertilizer.status === filterStatus.sales
-                      ? 'sales'
-                      : fertilizer.status === filterStatus.distribution
-                      ? 'distribution'
-                      : fertilizer.status === filterStatus.preparation
-                      ? 'preparation'
-                      : ''"
+                  <div
+                    class="project-status"
+                    :class="
+                      fertilizer.status === filterStatus.whitelist
+                        ? 'whitelist'
+                        : fertilizer.status === filterStatus.sales
+                        ? 'sales'
+                        : fertilizer.status === filterStatus.distribution
+                        ? 'distribution'
+                        : fertilizer.status === filterStatus.preparation
+                        ? 'preparation'
+                        : ''
+                    "
                   >
                     <span class="bodyXS weightB">
-                      {{ fertilizer.status === filterStatus.sales && currentTimestamp > fertilizer.sales_start_date ? 'Open Sales' : fertilizer.status }}
+                      {{
+                        fertilizer.status === filterStatus.sales && currentTimestamp > fertilizer.sales_start_date
+                          ? 'Open Sales'
+                          : fertilizer.status
+                      }}
                     </span>
                   </div>
                 </div>
@@ -263,7 +271,7 @@
                       <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
                       <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
                     </div>
-                  
+
                     <div class="project-info fs-container">
                       <div class="project-balance">
                         <div v-if="fertilizer.hard_cap">
@@ -282,46 +290,71 @@
                       </div>
                     </div>
                   </div>
-                  
+
                   <div v-if="idx === 0" class="project-info whitelist-countdown fc-container text-center">
-                    <Countdown 
-                      :title="fertilizer.status === filterStatus.whitelist ? 'End of the whitelist in' : 'Whitelist starts in'"
-                      :value="fertilizer.status === filterStatus.whitelist ? fertilizer.whitelist_end_date : fertilizer.whitelist_start_date"
-                      format="DD:HH:mm:ss" 
+                    <Countdown
+                      :title="
+                        fertilizer.status === filterStatus.whitelist ? 'End of the whitelist in' : 'Whitelist starts in'
+                      "
+                      :value="
+                        fertilizer.status === filterStatus.whitelist
+                          ? fertilizer.whitelist_end_date
+                          : fertilizer.whitelist_start_date
+                      "
+                      format="DD:HH:mm:ss"
                     />
                   </div>
 
                   <div v-else class="project-info fl-container">
-                    <div v-if="fertilizer.sales_start_date || fertilizer.distribution_start_date || fertilizer.whitelist_start_date || fertilizer.whitelist_end_date">
-                      <div v-if="fertilizer.status === filterStatus.sales && currentTimestamp > fertilizer.sales_start_date" class="project-status open">
+                    <div
+                      v-if="
+                        fertilizer.sales_start_date ||
+                        fertilizer.distribution_start_date ||
+                        fertilizer.whitelist_start_date ||
+                        fertilizer.whitelist_end_date
+                      "
+                    >
+                      <div
+                        v-if="
+                          fertilizer.status === filterStatus.sales && currentTimestamp > fertilizer.sales_start_date
+                        "
+                        class="project-status open"
+                      >
                         <span class="bodyXS weightB">Open Now</span>
                       </div>
                       <div v-else class="project-balance">
                         <span class="label textS weightS letterL">
-                          {{ 
+                          {{
                             fertilizer.status === filterStatus.sales
                               ? filterStatus.sales
                               : fertilizer.status === filterStatus.distribution
                               ? filterStatus.distribution
                               : ''
-                          }} 
+                          }}
                           starts in:
                         </span>
                         <span class="value fl-container">
-                          <Countdown 
-                            :value="fertilizer.status === filterStatus.sales
-                              ? fertilizer.sales_start_date
-                              : fertilizer.status === filterStatus.distribution
-                              ? fertilizer.distribution_start_date
-                              : 0" 
-                            format="DD:HH:mm:ss" />
+                          <Countdown
+                            :value="
+                              fertilizer.status === filterStatus.sales
+                                ? fertilizer.sales_start_date
+                                : fertilizer.status === filterStatus.distribution
+                                ? fertilizer.distribution_start_date
+                                : 0
+                            "
+                            format="DD:HH:mm:ss"
+                          />
                         </span>
                       </div>
                     </div>
                   </div>
 
                   <div class="btn-container">
-                    <Button v-if="fertilizer.status === filterStatus.whitelist" class="btn-transparent textM weightS fc-container letterS">Subscription</Button>
+                    <Button
+                      v-if="fertilizer.status === filterStatus.whitelist"
+                      class="btn-transparent textM weightS fc-container letterS"
+                      >Subscription</Button
+                    >
                     <Button v-else class="btn-transparent textM weightS fc-container letterS">More details</Button>
                   </div>
                 </div>
@@ -422,11 +455,7 @@
               </Row>
 
               <div class="fertilizer-funded-table-body">
-                <Row
-                  class="fertilizer-funded-table-item"
-                  v-for="fertilizer in fertilizerItems"
-                  :key="fertilizer.id"
-                >
+                <Row class="fertilizer-funded-table-item" v-for="fertilizer in fertilizerItems" :key="fertilizer.id">
                   <Col class="state" span="6">
                     <div class="project-name fl-container">
                       <img class="logo" :src="fertilizer.picture" />
@@ -457,10 +486,7 @@
                   </Col>
                   <Col class="state" span="1">
                     <div class="show-more">
-                      <img
-                        class="icon-cursor"
-                        src="@/assets/icons/dot3.svg"
-                      />
+                      <img class="icon-cursor" src="@/assets/icons/dot3.svg" />
                       <!-- <div
                         v-if="showMoreMenu[idx]"
                         class="option-collapse-menu collapse-right"
@@ -897,7 +923,7 @@ export default Vue.extend({
           title: 'Metaprints',
           short_desc: 'Blueprints for metaverses',
           hard_cap: '3000K',
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
         },
         {
           id: 6,
@@ -931,7 +957,7 @@ export default Vue.extend({
           short_desc: 'A Complete DeFi Experience',
           subscribers: 1002,
           hard_cap: 249998,
-          token_price: 0.070,
+          token_price: 0.07,
           ath: 526.5,
           distribution_end_date: 1643500800000
         },
@@ -970,7 +996,7 @@ export default Vue.extend({
           token_price: 0.073,
           ath: 526.2,
           distribution_end_date: 1643500800000
-        },
+        }
       ],
       currentTimestamp: 0
     }
@@ -997,8 +1023,8 @@ export default Vue.extend({
       this.setTimer()
     }, 1000)
 
-    this.currentTimestamp = moment().valueOf();
-    this.updateFertilizer();
+    this.currentTimestamp = moment().valueOf()
+    this.updateFertilizer()
   },
   watch: {
     showCollapse: {
@@ -1012,10 +1038,10 @@ export default Vue.extend({
     },
     filterProject: {
       handler(newFilterProject: string) {
-        this.filterFertilizer(newFilterProject);
+        this.filterFertilizer(newFilterProject)
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     importIcon,
@@ -1123,15 +1149,22 @@ export default Vue.extend({
       }, 1000)
     },
     updateFertilizer() {
-      this.filterFertilizer(this.filterProject);
+      this.filterFertilizer(this.filterProject)
     },
     filterFertilizer(filterProject: string) {
       if (filterProject === this.filterStatus.upcoming) {
-        this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => (fertilizer.status != this.filterStatus.preparation) && (fertilizer.status != this.filterStatus.funded));
+        this.fertilizerItems = this.fertilizerData.filter(
+          (fertilizer: any) =>
+            fertilizer.status != this.filterStatus.preparation && fertilizer.status != this.filterStatus.funded
+        )
       } else if (filterProject === this.filterStatus.preparation) {
-        this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => fertilizer.status === this.filterStatus.preparation);
+        this.fertilizerItems = this.fertilizerData.filter(
+          (fertilizer: any) => fertilizer.status === this.filterStatus.preparation
+        )
       } else {
-        this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => fertilizer.status === this.filterStatus.funded);
+        this.fertilizerItems = this.fertilizerData.filter(
+          (fertilizer: any) => fertilizer.status === this.filterStatus.funded
+        )
       }
     },
     getCoinPicUrl() {
@@ -1534,7 +1567,7 @@ export default Vue.extend({
 
           .project-details {
             padding: 14px;
-            
+
             .project-title {
               .short-desc {
                 display: block;
@@ -1550,10 +1583,10 @@ export default Vue.extend({
                 }
               }
             }
-            
+
             .project-info {
               margin-top: 18px;
-              height: 48px;          
+              height: 48px;
 
               .project-balance {
                 @media @max-lg-tablet {
@@ -1570,7 +1603,7 @@ export default Vue.extend({
                     height: 16px;
                     border-radius: 50%;
                     margin-right: 8px;
-                  }              
+                  }
                 }
               }
 
@@ -1632,7 +1665,7 @@ export default Vue.extend({
                   margin-top: 0;
                   height: auto;
                   width: 50%;
-                  
+
                   @media @max-lg-tablet {
                     width: 40%;
                   }
@@ -1661,7 +1694,7 @@ export default Vue.extend({
               top: 70px;
               z-index: 999;
               width: 100%;
-              transition: .3s all ease-in-out;
+              transition: 0.3s all ease-in-out;
             }
 
             .header-column {

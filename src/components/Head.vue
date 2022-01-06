@@ -5,7 +5,7 @@
     </NuxtLink>
 
     <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
-      <Nav @onSelect="() => (navOpened = false)" />
+    <Nav @onSelect="() => (navOpened = false)" />
     <!-- </div> -->
 
     <div class="fs-container wallet-container">

@@ -10,7 +10,7 @@
     @cancel="$emit('onClose')"
     class="coin-select-modal"
   >
-    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onClose')"/>
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onClose')" />
     <div class="select-token-search">
       <input ref="userInput" v-model="keyword" class="textM" placeholder="Search name or paste address" />
       <div class="common-bases">
@@ -132,12 +132,12 @@ export default Vue.extend({
       showUserButton: {} as { [key: string]: boolean },
       commonBases: [
         {
-          mintAddress: "DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz",
-          symbol: "CRP"
+          mintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz',
+          symbol: 'CRP'
         },
         {
-          mintAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-          symbol: "USDC"
+          mintAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          symbol: 'USDC'
         }
       ] as any
     }
@@ -187,49 +187,43 @@ export default Vue.extend({
 
   methods: {
     async updateCommonBases() {
-
       let cur_date = new Date().getTime()
       let need_to_update = false
 
-      if(window.localStorage.common_last_updated){
+      if (window.localStorage.common_last_updated) {
         const last_updated = parseInt(window.localStorage.common_last_updated)
-        if(cur_date - last_updated >= 300000){
+        if (cur_date - last_updated >= 300000) {
           need_to_update = true
         }
-      }
-      else
-      {
+      } else {
         need_to_update = true
       }
 
-      if(need_to_update){
+      if (need_to_update) {
         console.log('update')
         try {
-          let responseData = await fetch("https://api.cropper.finance/common/").then((res) =>
-            res.json()
-          );
+          let responseData = await fetch('https://api.cropper.finance/common/').then((res) => res.json())
 
           window.localStorage.common = JSON.stringify(responseData)
           window.localStorage.common_last_updated = new Date().getTime() as number
 
-          (responseData as any).forEach((element: any) => {
-              this.commonBases.push(element)
-          });
+          ;(responseData as any).forEach((element: any) => {
+            this.commonBases.push(element)
+          })
         } catch {
           // dummy data
         } finally {
         }
       } else {
-
-        (JSON.parse(window.localStorage.common) as any).forEach((element: any) => {
-            this.commonBases.push(element)
-        });
+        ;(JSON.parse(window.localStorage.common) as any).forEach((element: any) => {
+          this.commonBases.push(element)
+        })
       }
     },
     selectCommonToken(common: any) {
       let selectedToken = this.tokenList.find((token) => token.symbol === common.symbol)
       console.log(selectedToken)
-      this.$emit('onSelect', selectedToken);
+      this.$emit('onSelect', selectedToken)
     },
     filteredTokenList() {
       let filteredList: TokenInfo[] = []
@@ -506,7 +500,7 @@ export default Vue.extend({
     border-radius: 8px;
     padding: 8px 18px;
     background-color: transparent;
-    color: #CCD1F1;
+    color: #ccd1f1;
     width: 100%;
 
     &:active,
@@ -516,7 +510,7 @@ export default Vue.extend({
     }
 
     &::placeholder {
-      color: #CCD1F1;
+      color: #ccd1f1;
     }
   }
 
@@ -528,7 +522,7 @@ export default Vue.extend({
       margin-top: 8px !important;
 
       .common-select-container {
-        background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
         border-radius: 8px;
         padding: 2px !important;
 
@@ -569,7 +563,7 @@ export default Vue.extend({
       padding: 12.5px 25px;
       gap: 9px;
       grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
-      border-bottom: 1px solid #0F1757;
+      border-bottom: 1px solid #0f1757;
       cursor: pointer;
 
       &:last-child {
@@ -589,7 +583,7 @@ export default Vue.extend({
         }
 
         .token-name {
-          color: #CCD1F1;
+          color: #ccd1f1;
         }
       }
       .balance {

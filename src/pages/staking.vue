@@ -187,11 +187,7 @@
                     <label class="textL weightB">Tier 1</label>
                   </div>
                   <div class="btn-container">
-                    <a
-                      class="btn-primary textM weightS fc-container"
-                      href="#staking-tiers-details"
-                      >About Tiers</a
-                    >
+                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
@@ -201,11 +197,7 @@
                     <label class="textL weightB">Tier 2</label>
                   </div>
                   <div class="btn-container">
-                    <a
-                      class="btn-primary textM weightS fc-container"
-                      href="#staking-tiers-details"
-                      >About Tiers</a
-                    >
+                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
@@ -215,11 +207,7 @@
                     <label class="textL weightB">Tier 3</label>
                   </div>
                   <div class="btn-container">
-                    <a
-                      class="btn-primary textM weightS fc-container"
-                      href="#staking-tiers-details"
-                      >About Tiers</a
-                    >
+                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
@@ -229,11 +217,7 @@
                     <label class="textL weightB">Tier 4</label>
                   </div>
                   <div class="btn-container">
-                    <a
-                      class="btn-primary textM weightS fc-container"
-                      href="#staking-tiers-details"
-                      >About Tiers</a
-                    >
+                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
@@ -243,11 +227,7 @@
                     <label class="textL weightB">Tier 5</label>
                   </div>
                   <div class="btn-container">
-                    <a
-                      class="btn-primary textM weightS fc-container"
-                      href="#staking-tiers-details"
-                      >About Tiers</a
-                    >
+                    <a class="btn-primary textM weightS fc-container" href="#staking-tiers-details">About Tiers</a>
                   </div>
                 </div>
               </div>
@@ -278,9 +258,13 @@
           </div>
           <div class="staking-tiers-description">
             <span class="textM weightS">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+              scrambled it to make a type specimen book.
               <br /><br />
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+              scrambled it to make a type specimen book.
             </span>
           </div>
         </div>
@@ -681,7 +665,7 @@ export default Vue.extend({
       this.$accessor.wallet.getTokenAccounts()
     },
     setTierCarousel(idx: number) {
-      (this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
+      ;(this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
     }
   }
 })

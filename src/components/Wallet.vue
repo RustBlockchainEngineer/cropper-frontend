@@ -1,7 +1,13 @@
 <template>
   <div class="wallet">
     <div class="wallet-btn">
-      <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-if="!wallet.connected" ghost @click="openPopIn">
+      <div
+        class="btncontainer"
+        :class="!wallet.connected ? 'unconnected' : 'connected'"
+        v-if="!wallet.connected"
+        ghost
+        @click="openPopIn"
+      >
         <Button class="bodyS weightB isDesktop">
           <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
           Connect wallet
@@ -12,7 +18,13 @@
         </Button>
       </div>
 
-      <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-else ghost @click="$accessor.wallet.openModal">
+      <div
+        class="btncontainer"
+        :class="!wallet.connected ? 'unconnected' : 'connected'"
+        v-else
+        ghost
+        @click="$accessor.wallet.openModal"
+      >
         <Button class="bodyS weightB">
           <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
           {{ wallet.address.substr(0, 4) }}
@@ -24,12 +36,10 @@
       <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
         <div class="btncontainer sonar connected" ghost>
           <Button>
-            <img src="@/assets/icons/sonar-watch.svg"/>
+            <img src="@/assets/icons/sonar-watch.svg" />
           </Button>
         </div>
-        <div class="sonar-dashboard">
-          My dashboard
-        </div>
+        <div class="sonar-dashboard">My dashboard</div>
       </a>
 
       <Modal
@@ -54,7 +64,7 @@
         </div>
       </Modal>
     </div>
-    
+
     <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
       <div class="select-wallet-header fs-container">
         <span class="textL weightB">Connect wallet</span>
@@ -101,18 +111,18 @@ import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal'
 //import { BloctoWalletAdapter } from '@solana/wallet-adapter-blocto'
 //import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie'
 import {
-    // getLedgerWallet,
-    // getPhantomWallet,
-    // getSlopeWallet,
-    // getSolflareWallet,
-    getSolletExtensionWallet,
-    // getSolletWallet,
-    // getTorusWallet,
-} from '@solana/wallet-adapter-wallets';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+  // getLedgerWallet,
+  // getPhantomWallet,
+  // getSlopeWallet,
+  // getSolflareWallet,
+  getSolletExtensionWallet
+  // getSolletWallet,
+  // getTorusWallet,
+} from '@solana/wallet-adapter-wallets'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 // import { TorusWalletAdapter } from '@solana/wallet-adapter-torus'
 const Vco = require('v-click-outside')
-const network = WalletAdapterNetwork.Devnet;
+const network = WalletAdapterNetwork.Devnet
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
@@ -138,7 +148,6 @@ interface WalletInfo {
     Icon
   }
 })
-
 export default class Wallet extends Vue {
   /* ========== DATA ========== */
   // TrustWallet ezDeFi
@@ -168,7 +177,7 @@ export default class Wallet extends Vue {
       website: '',
       chromeUrl: 'https://chrome.google.com/webstore/detail/sollet/fhmfendgdocmcbmfikdcogofphimnkno',
       getAdapter() {
-                return getSolletExtensionWallet().adapter();
+        return getSolletExtensionWallet().adapter()
       }
     },
     Ledger: {
@@ -347,7 +356,6 @@ export default class Wallet extends Vue {
 
   onConnect() {
     const { name, adapter } = this.connectingWallet
-
 
     this.$accessor.wallet.closeModal().then(() => {
       if (adapter && adapter.publicKey) {
@@ -530,7 +538,7 @@ export default class Wallet extends Vue {
           if (this.wallet.countdown < this.wallet.autoRefreshTime) {
             this.$accessor.wallet.setCountdown(this.$accessor.wallet.countdown + 1)
             if (this.wallet.countdown === this.wallet.autoRefreshTime) {
-              await this.$accessor.wallet.getTokenAccounts() 
+              await this.$accessor.wallet.getTokenAccounts()
             }
           }
         } else {
@@ -538,7 +546,7 @@ export default class Wallet extends Vue {
         }
       }
 
-      this.sonarUrl = 'https://sonar.watch/dashboard/' + this.wallet.address;
+      this.sonarUrl = 'https://sonar.watch/dashboard/' + this.wallet.address
     }, 1000)
   }
 
@@ -593,11 +601,11 @@ export default class Wallet extends Vue {
       }
     }, 1000)
   }
-  
+
   openPopIn() {
     this.popIn = true
   }
-  
+
   closePopIn() {
     this.popIn = false
   }
@@ -679,7 +687,7 @@ export default class Wallet extends Vue {
         }
       }
     }
-    
+
     .select-wallet::-webkit-scrollbar {
       display: block !important; /* Chrome Safari */
     }
@@ -687,7 +695,7 @@ export default class Wallet extends Vue {
     .select-wallet-header {
       padding: 18px 0;
 
-      .close-icon{
+      .close-icon {
         width: 32px;
         height: 32px;
       }
@@ -708,7 +716,7 @@ export default class Wallet extends Vue {
   .wallet-btn {
     display: inline-flex;
     align-items: center;
-    
+
     .btncontainer {
       background: @gradient-btn-wallet;
       background-origin: border-box;
@@ -757,7 +765,7 @@ export default class Wallet extends Vue {
       }
 
       .btncontainer.sonar {
-        margin-left:20px !important;
+        margin-left: 20px !important;
         width: 50px;
         height: 50px;
 

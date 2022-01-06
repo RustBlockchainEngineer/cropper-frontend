@@ -9,11 +9,7 @@
     centered
     @cancel="$emit('onCancel')"
   >
-    <img
-      class="modal-close"
-      src="@/assets/icons/close-circle-icon.svg"
-      @click="$emit('onCancel')"
-    />
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
 
     <div>
       <CoinInput
@@ -25,24 +21,19 @@
         @onInput="(amount) => (fromCoinAmount = amount)"
         @onFocus="
           () => {
-            fixedCoin = farmInfo.lp.coin.mintAddress;
+            fixedCoin = farmInfo.lp.coin.mintAddress
           }
         "
         @onMax="
           () => {
-            fixedCoin = farmInfo.lp.coin.mintAddress;
-            fromCoinAmount = farmInfo.lp.coin.balance
-              ? farmInfo.lp.coin.balance.fixed()
-              : '';
+            fixedCoin = farmInfo.lp.coin.mintAddress
+            fromCoinAmount = farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : ''
           }
         "
       />
 
       <div class="plus-icon-container text-center">
-        <img
-          src="@/assets/icons/plus.svg"
-          class="plus-icon icon-centered"
-        />
+        <img src="@/assets/icons/plus.svg" class="plus-icon icon-centered" />
       </div>
 
       <CoinInput
@@ -54,21 +45,18 @@
         @onInput="(amount) => (toCoinAmount = amount)"
         @onFocus="
           () => {
-            fixedCoin = farmInfo.lp.pc.mintAddress;
+            fixedCoin = farmInfo.lp.pc.mintAddress
           }
         "
         @onMax="
           () => {
-            fixedCoin = farmInfo.lp.pc.mintAddress;
-            toCoinAmount = farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '';
+            fixedCoin = farmInfo.lp.pc.mintAddress
+            toCoinAmount = farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : ''
           }
         "
       />
 
-      <LiquidityPoolInfo
-        :initialized="liquidity.initialized"
-        :pool-info="liquidity.infos[farmInfo.lp.mintAddress]"
-      />
+      <LiquidityPoolInfo :initialized="liquidity.initialized" :pool-info="liquidity.infos[farmInfo.lp.mintAddress]" />
 
       <div v-if="officialPool === false">
         <div>
@@ -83,12 +71,16 @@
 
       <div class="info-guide">
         <img src="@/assets/icons/info.svg" />
-        <label class="textS weightB">You will have to validate a second transaction to stake your LP in the farm.</label>
+        <label class="textS weightB"
+          >You will have to validate a second transaction to stake your LP in the farm.</label
+        >
       </div>
 
       <div v-if="!labelizedPermission" class="info-guide">
         <img src="@/assets/icons/info.svg" />
-        <label class="textS weightB">Cropper has not ran any due dilligence on permissionless farms. Use it at your own risks.</label>
+        <label class="textS weightB"
+          >Cropper has not ran any due dilligence on permissionless farms. Use it at your own risks.</label
+        >
       </div>
 
       <div class="btn-container">
@@ -101,45 +93,21 @@
             !farmInfo.lp.mintAddress ||
             !liquidity.initialized ||
             liquidity.loading ||
-            gt(
-              fromCoinAmount,
-              farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0'
-            ) ||
-            gt(
-              toCoinAmount,
-              farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '0'
-            ) ||
+            gt(fromCoinAmount, farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0') ||
+            gt(toCoinAmount, farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '0') ||
             suppling
           "
           :loading="suppling"
           @click="$emit('onOk', fromCoinAmount, toCoinAmount, fixedCoin)"
         >
-          <template v-if="!farmInfo.lp.coin || !farmInfo.lp.pc">
-            Select a token
-          </template>
-          <template v-else-if="!farmInfo.lp.mintAddress || !liquidity.initialized">
-            Invalid pair
-          </template>
+          <template v-if="!farmInfo.lp.coin || !farmInfo.lp.pc"> Select a token </template>
+          <template v-else-if="!farmInfo.lp.mintAddress || !liquidity.initialized"> Invalid pair </template>
           <template v-else-if="!fromCoinAmount"> Enter an amount </template>
           <template v-else-if="liquidity.loading"> Updating pool information </template>
-          <template
-            v-else-if="
-              gt(
-                fromCoinAmount,
-                farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0'
-              )
-            "
-          >
+          <template v-else-if="gt(fromCoinAmount, farmInfo.lp.coin.balance ? farmInfo.lp.coin.balance.fixed() : '0')">
             Insufficient {{ farmInfo.lp.coin.symbol }} balance
           </template>
-          <template
-            v-else-if="
-              gt(
-                toCoinAmount,
-                farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : ''
-              )
-            "
-          >
+          <template v-else-if="gt(toCoinAmount, farmInfo.lp.pc.balance ? farmInfo.lp.pc.balance.fixed() : '')">
             Insufficient {{ farmInfo.lp.pc.symbol }} balance
           </template>
           <template v-else>Supply & Stake</template>
@@ -150,88 +118,88 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Modal, Button } from "ant-design-vue";
-import { mapState } from "vuex";
-import { inputRegex, escapeRegExp } from "@/utils/regex";
-import { getOutAmount } from "@/utils/liquidity";
-import { gt } from "@/utils/safe-math";
+import Vue from 'vue'
+import { Modal, Button } from 'ant-design-vue'
+import { mapState } from 'vuex'
+import { inputRegex, escapeRegExp } from '@/utils/regex'
+import { getOutAmount } from '@/utils/liquidity'
+import { gt } from '@/utils/safe-math'
 
 // fix: Failed to resolve directive: ant-portal
-Vue.use(Modal);
+Vue.use(Modal)
 
 export default Vue.extend({
   components: {
     Modal,
-    Button,
+    Button
   },
   props: {
     title: {
       type: String,
-      default: "",
+      default: ''
     },
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     farmInfo: {
       type: Object,
-      required: true,
+      required: true
     },
     labelizedPermission: {
       type: Boolean,
-      default: false,
+      default: false
     },
     text: {
       type: String,
-      default: "",
+      default: ''
     },
     suppling: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
-      fromCoinAmount: "",
-      toCoinAmount: "",
-      fixedCoin: "",
+      fromCoinAmount: '',
+      toCoinAmount: '',
+      fixedCoin: '',
       officialPool: true,
       userCheckUnofficial: false,
       userCheckUnofficialMint: undefined as string | undefined,
-      userCheckUnofficialShow: false,
-    };
+      userCheckUnofficialShow: false
+    }
   },
   computed: {
-    ...mapState(["liquidity", "setting"]),
+    ...mapState(['liquidity', 'setting'])
   },
   watch: {
     fromCoinAmount(newAmount: string, oldAmount: string) {
       this.$nextTick(() => {
         if (!inputRegex.test(escapeRegExp(newAmount))) {
-          this.fromCoinAmount = oldAmount;
+          this.fromCoinAmount = oldAmount
         } else {
-          this.updateAmounts();
+          this.updateAmounts()
         }
-      });
+      })
     },
 
     toCoinAmount(newAmount: string, oldAmount: string) {
       this.$nextTick(() => {
         if (!inputRegex.test(escapeRegExp(newAmount))) {
-          this.toCoinAmount = oldAmount;
+          this.toCoinAmount = oldAmount
         } else {
-          this.updateAmounts();
+          this.updateAmounts()
         }
-      });
-    },
+      })
+    }
   },
 
   methods: {
     gt,
     updateAmounts() {
       if (this.farmInfo.lp.coin && this.farmInfo.lp.pc && this.farmInfo.lp.mintAddress) {
-        const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress];
+        const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress]
 
         if (this.fixedCoin === this.farmInfo.lp.coin.mintAddress) {
           const amount = getOutAmount(
@@ -240,15 +208,15 @@ export default Vue.extend({
             this.farmInfo.lp.coin.mintAddress,
             this.farmInfo.lp.pc.mintAddress,
             this.setting.slippage
-          );
+          )
 
           if (amount.isNaN() || !amount.isFinite()) {
-            this.toCoinAmount = "";
+            this.toCoinAmount = ''
           } else {
-            this.toCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals);
+            this.toCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals)
           }
         } else {
-          const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress];
+          const poolInfo = this.liquidity.infos[this.farmInfo.lp.mintAddress]
 
           const amount = getOutAmount(
             poolInfo,
@@ -256,18 +224,18 @@ export default Vue.extend({
             this.farmInfo.lp.pc.mintAddress,
             this.farmInfo.lp.coin.mintAddress,
             this.setting.slippage
-          );
+          )
 
           if (amount.isNaN() || !amount.isFinite()) {
-            this.fromCoinAmount = "";
+            this.fromCoinAmount = ''
           } else {
-            this.fromCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals);
+            this.fromCoinAmount = amount.toFixed(this.farmInfo.lp.pc.decimals)
           }
         }
       }
-    },
-  },
-});
+    }
+  }
+})
 </script>
 
 <style lang="less" scoped>

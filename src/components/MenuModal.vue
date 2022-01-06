@@ -99,7 +99,6 @@ export default class MenuModal extends Vue {
 </script>
 
 <style lang="less" scoped>
-
 .modal-close {
   left: 20px;
   top: 0;
@@ -149,11 +148,10 @@ export default class MenuModal extends Vue {
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   background: transparent;
 }
-
 </style>
 
 <style lang="less">
-.menu-modal .ant-modal {  
+.menu-modal .ant-modal {
   @media @max-md-tablet {
     width: 100% !important;
     max-width: 100%;

@@ -9,12 +9,8 @@
     @cancel="$emit('onCancel')"
     centered
   >
-    <img
-      class="modal-close"
-      src="@/assets/icons/close-circle-icon.svg"
-      @click="$emit('onCancel')"
-    />
-    
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+
     <div class="create-farm-head fs-container">
       <div class="btn-outline">
         <a
@@ -40,7 +36,7 @@
         @onClose="() => ((coinSelectShow = false), (selectTokenB = false), (selectTokenA = false))"
         @onSelect="onCoinSelect"
       />
-      
+
       <AmmIdSelect
         :show="ammIdSelectShow"
         :liquidity-list="ammIdSelectList"
@@ -48,14 +44,10 @@
         @onClose="() => (ammIdSelectShow = false)"
         @onSelect="onAmmIdSelect"
       />
-          
+
       <div class="design-farm">
         <Row>
-          <Col
-            :span="9"
-            class="step"
-            :class="{ 'bordered-right': !wallet.connected }"
-          >
+          <Col :span="9" class="step" :class="{ 'bordered-right': !wallet.connected }">
             <Steps :current="current" size="small" direction="vertical" style="width: auto" :status="stepsStatus">
               <Step
                 ><template slot="title">
@@ -65,9 +57,7 @@
               <Step>
                 <template slot="title">
                   <div v-if="current > 1 || (current === 1 && stepsStatus !== 'error')">Farm Initialization</div>
-                  <div v-else-if="current === 1 && stepsStatus === 'error'" style="color: red">
-                    Farm Initialization
-                  </div>
+                  <div v-else-if="current === 1 && stepsStatus === 'error'" style="color: red">Farm Initialization</div>
                   <div v-else>Farm Initialization</div>
                 </template></Step
               >
@@ -81,20 +71,11 @@
             </Steps>
           </Col>
 
-          <Col
-            :span="15"
-            class="notstep"
-            :class="{ 'bordered-left': wallet.connected }"
-          >
+          <Col :span="15" class="notstep" :class="{ 'bordered-left': wallet.connected }">
             <Row v-if="current === 0 && !wallet.connected">
-              <Col
-                :span="24"
-                class="step-item"
-              >
+              <Col :span="24" class="step-item">
                 <div v-if="!wallet.connected">
-                  <Button class="create-btn textM weightS" @click="$accessor.wallet.openModal">
-                    Connect wallet
-                  </Button>
+                  <Button class="create-btn textM weightS" @click="$accessor.wallet.openModal"> Connect wallet </Button>
                 </div>
               </Col>
             </Row>
@@ -133,9 +114,17 @@
                     <div class="selected-pool" v-if="showSelectedPool && ammType === 1">
                       <label class="bodyXS weightB">Selected Pool</label>
                       <div class="selected-pool-box">
-                        <div class="pool-info textM"><span><b>AMM ID: </b>{{ userCreateAmmId }}</span></div>
-                        <div v-if="userCreatePoolLiquidity" class="pool-info textM"><span><b>Pool Liquidity: </b>{{ userCreatePoolLiquidity }}</span></div>
-                        <img class="close-icon icon-cursor" src="@/assets/icons/close-icon.svg" @click="removeSelected" />
+                        <div class="pool-info textM">
+                          <span><b>AMM ID: </b>{{ userCreateAmmId }}</span>
+                        </div>
+                        <div v-if="userCreatePoolLiquidity" class="pool-info textM">
+                          <span><b>Pool Liquidity: </b>{{ userCreatePoolLiquidity }}</span>
+                        </div>
+                        <img
+                          class="close-icon icon-cursor"
+                          src="@/assets/icons/close-icon.svg"
+                          @click="removeSelected"
+                        />
                       </div>
                     </div>
                     <Radio :value="2">Create a new AMM ID</Radio>
@@ -144,51 +133,35 @@
                         https://cropper.finance/pools/create-pool/
                       </NuxtLink>
                       <div class="note-reminder textM">
-                        <em><u>Note:</u> Only USDC, USDT, SOL and CRP pairs will be eligible to farm creation.</em> 
+                        <em><u>Note:</u> Only USDC, USDT, SOL and CRP pairs will be eligible to farm creation.</em>
                       </div>
                     </div>
                   </RadioGroup>
                   <div class="info-guide textS" v-if="ammType === 1">
                     <img src="@/assets/icons/info.svg" />
                     <em>
-                      This tool is for advanced users. Before attempting to create a new farm, we suggest going through this
+                      This tool is for advanced users. Before attempting to create a new farm, we suggest going through
+                      this
                       <a
                         href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
                         target="_blank"
                       >
                         <u>detailed guide.</u></a
-                      ></em>
+                      ></em
+                    >
                   </div>
                 </div>
               </Col>
-              <Col
-                v-if="ammType === 1"
-                :span="24"
-                class="step-item"
-              >
+              <Col v-if="ammType === 1" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button
-                    class="create-btn textM weightS" 
-                    :disabled="!wallet.connected"
-                    @click="useExistingAMMID()"
-                  >
+                  <Button class="create-btn textM weightS" :disabled="!wallet.connected" @click="useExistingAMMID()">
                     Next
                   </Button>
                 </div>
               </Col>
-              <Col
-                v-if="ammType === 2"
-                :span="24"
-                class="step-item"
-              >
+              <Col v-if="ammType === 2" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button
-                    class="create-btn textM weightS" 
-                    :disabled="true"
-                    @click="createNewAMMID()"
-                  >
-                    Next
-                  </Button>
+                  <Button class="create-btn textM weightS" :disabled="true" @click="createNewAMMID()"> Next </Button>
                 </div>
               </Col>
             </Row>
@@ -243,7 +216,7 @@
                   <div class="calendar-to">
                     <img src="@/assets/icons/calendar-to.svg" />
                     <DatePicker v-model="endTime" format="DD MMMM YYYY" @openChange="handleEndOpenChange" />
-                    <img src="@/assets/icons/arrow-down.svg" :style="endOpen ? 'transform: rotate(180deg);' : ''"/>
+                    <img src="@/assets/icons/arrow-down.svg" :style="endOpen ? 'transform: rotate(180deg);' : ''" />
                   </div>
                   <!-- <div>
                     <b>Reward per week:</b>&nbsp; {{ rewardPerWeek }} &nbsp;{{
@@ -256,26 +229,17 @@
 
               <Col :span="24">
                 <div class="btn-container">
-                  <Button
-                    v-if="!wallet.connected"
-                    class="create-btn textM weightS" 
-                    @click="$accessor.wallet.openModal"
-                  >
+                  <Button v-if="!wallet.connected" class="create-btn textM weightS" @click="$accessor.wallet.openModal">
                     Connect wallet
                   </Button>
                   <Button
                     v-else-if="farm_created"
-                    class="create-btn textM weightS" 
+                    class="create-btn textM weightS"
                     :disabled="!wallet.connected"
                     @click="addRewardToFarm"
                   >
-                    
-                    <span v-if="activeSpin">
-                      Please wait &nbsp; &nbsp; 
-                    </span>
-                    <span v-else>
-                      Add rewards
-                    </span>
+                    <span v-if="activeSpin"> Please wait &nbsp; &nbsp; </span>
+                    <span v-else> Add rewards </span>
 
                     <div v-if="activeSpin" class="spinner-container">
                       <Spin :spinning="true">
@@ -286,16 +250,12 @@
 
                   <Button
                     v-else
-                    class="create-btn textM weightS" 
+                    class="create-btn textM weightS"
                     :disabled="!wallet.connected"
                     @click="confirmFarmInfo"
                   >
-                    <span v-if="activeSpin">
-                      Please wait &nbsp; &nbsp; 
-                    </span>
-                    <span v-else>
-                      Next
-                    </span>
+                    <span v-if="activeSpin"> Please wait &nbsp; &nbsp; </span>
+                    <span v-else> Next </span>
                     <div v-if="activeSpin" class="spinner-container">
                       <Spin :spinning="true">
                         <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
@@ -323,19 +283,10 @@
                   </div>
                 </div>
                 <div class="btn-container">
-                  <Button
-                    v-if="!wallet.connected"
-                    class="create-btn textM weightS" 
-                    @click="$accessor.wallet.openModal"
-                  >
+                  <Button v-if="!wallet.connected" class="create-btn textM weightS" @click="$accessor.wallet.openModal">
                     Connect wallet
                   </Button>
-                  <Button
-                    v-else
-                    class="create-btn textM weightS"
-                    :disabled="!wallet.connected"
-                    @click="gotoFarms"
-                  >
+                  <Button v-else class="create-btn textM weightS" :disabled="!wallet.connected" @click="gotoFarms">
                     View Farm
                   </Button>
                 </div>
@@ -403,7 +354,7 @@ export default class CreateFarm extends Vue {
   allowedFarmCreator: string = FARM_INITIAL_ALLOWED_CREATOR
   coinSelectShow: boolean = false
   startTime: any = moment()
-  endTime: any = moment().add(28, 'days');
+  endTime: any = moment().add(28, 'days')
   endOpen: any = false
   isCRPTokenPair: boolean = false
   ammIdSelectShow: boolean = false
@@ -456,9 +407,8 @@ export default class CreateFarm extends Vue {
     let result = 0
     let initialAmount = Number.parseFloat(this.fromCoinAmount)
 
-
-    if ((this.startTime.unix() + (14 * 86400)) > this.endTime.unix()) {
-      this.endTime = moment().set('second', (14 * 86400));
+    if (this.startTime.unix() + 14 * 86400 > this.endTime.unix()) {
+      this.endTime = moment().set('second', 14 * 86400)
     }
 
     let duration = 0
@@ -483,8 +433,6 @@ export default class CreateFarm extends Vue {
   onStartTimeChanged(val: any) {
     console.log('start time changed !')
   }
-
-
 
   @Watch('inputQuoteValue')
   oniIputQuoteValueChanged(val: string) {
@@ -580,14 +528,11 @@ export default class CreateFarm extends Vue {
     }
     this.updateLocalData()
 
-
     const query = new URLSearchParams(window.location.search)
     if (query.get('rtf')) this.rewardTokenForced = query.get('rtf') as string
-    
-
   }
 
-  async addRewardToFarm() { 
+  async addRewardToFarm() {
     this.activeSpin = true
     //EgaHTGJeDbytze85LqMStxgTJgq22yjTvYSfqoiZevSK
     const connection = this.$web3
@@ -653,25 +598,23 @@ export default class CreateFarm extends Vue {
       return
     }
 
-    if ((startTimestamp + (14 * 86400)) > endTimestamp) {
+    if (startTimestamp + 14 * 86400 > endTimestamp) {
       this.$notify.error({
         key: 'Period',
         message: 'Checking period',
-        description: 'farm can\'t be shorter than 14 days'
+        description: "farm can't be shorter than 14 days"
       })
       return
     }
     try {
-
       let fetchedFarm = await YieldFarm.loadFarm(connection, this.farmId, new PublicKey(FARM_PROGRAM_ID))
 
       if (fetchedFarm) {
         await fetchedFarm.addReward(wallet, userRewardTokenPubkey, initialRewardAmount * Math.pow(10, rewardDecimals))
         this.current += 1
       }
-
     } catch {
-      this.activeSpin = false;
+      this.activeSpin = false
       console.log('creating farm failed')
     }
   }
@@ -742,11 +685,11 @@ export default class CreateFarm extends Vue {
       return
     }
 
-    if ((startTimestamp + (14 * 86400)) > endTimestamp) {
+    if (startTimestamp + 14 * 86400 > endTimestamp) {
       this.$notify.error({
         key: 'Period',
         message: 'Checking period',
-        description: 'farm can\'t be shorter than 14 days'
+        description: "farm can't be shorter than 14 days"
       })
       return
     }
@@ -774,14 +717,13 @@ export default class CreateFarm extends Vue {
       }
 
       this.farmId = createdFarm.farmId
-      window.localStorage['owner_'+ createdFarm.farmId] = 1;
+      window.localStorage['owner_' + createdFarm.farmId] = 1
 
-      this.activeSpin = false;
-      this.farm_created = true;
-
+      this.activeSpin = false
+      this.farm_created = true
     } catch {
-      this.activeSpin = false;
-      this.farm_created = false;
+      this.activeSpin = false
+      this.farm_created = false
       console.log('creating farm failed')
     }
   }
@@ -861,7 +803,7 @@ export default class CreateFarm extends Vue {
         startTimestamp,
         endTimestamp,
 
-        userRewardTokenPubkey, 
+        userRewardTokenPubkey,
         initialRewardAmount * Math.pow(10, rewardDecimals)
       )
       await this.delay(500)
@@ -877,24 +819,23 @@ export default class CreateFarm extends Vue {
       }
 
       this.farmId = createdFarm.farmId
-      window.localStorage['owner_'+ createdFarm.farmId] = 1;
+      window.localStorage['owner_' + createdFarm.farmId] = 1
 
-      this.activeSpin = false;
-      this.farm_created = true;
-
+      this.activeSpin = false
+      this.farm_created = true
     } catch {
-      this.activeSpin = false;
-      this.farm_created = false;
+      this.activeSpin = false
+      this.farm_created = false
       console.log('creating farm failed')
     }
 
     try {
       let fetchedFarm = await YieldFarm.loadFarm(connection, this.farmId, new PublicKey(FARM_PROGRAM_ID))
-      if (!fetchedFarm){
-        console.log("can't fetch farm",this.farmId);
+      if (!fetchedFarm) {
+        console.log("can't fetch farm", this.farmId)
       }
     } catch {
-      this.activeSpin = false;
+      this.activeSpin = false
       console.log('creating farm failed')
     }
 
@@ -1006,7 +947,7 @@ export default class CreateFarm extends Vue {
 
               // @ts-ignore
               this.ammIdSelectList = Object.values(this.$accessor.liquidity.infos).filter((item: LiquidityPoolInfo) =>
-              // @ts-ignore
+                // @ts-ignore
                 liquidityListV5.find((liquidityItem) => liquidityItem.ammId === item.ammId)
               )
             }, 1)
@@ -1026,10 +967,9 @@ export default class CreateFarm extends Vue {
       }
     }
 
-    if(this.rewardTokenForced){
-      this.rewardCoin = getTokenByMintAddress(this.rewardTokenForced);
+    if (this.rewardTokenForced) {
+      this.rewardCoin = getTokenByMintAddress(this.rewardTokenForced)
     }
-
 
     this.coinSelectShow = false
     this.selectFromCoin = false
@@ -1252,7 +1192,7 @@ export default class CreateFarm extends Vue {
   .ant-modal {
     max-width: @tablet-md-width;
     width: 100% !important;
-    
+
     @media @max-md-tablet {
       max-width: calc(100vw - 16px);
     }
@@ -1364,7 +1304,7 @@ export default class CreateFarm extends Vue {
   &:last-child {
     margin-bottom: 0;
   }
-  
+
   span {
     font-weight: 600;
     font-size: 13px;
@@ -1376,7 +1316,7 @@ export default class CreateFarm extends Vue {
 
 .ant-radio-wrapper-disabled {
   .ant-radio-inner {
-    border-color: #40426C !important;
+    border-color: #40426c !important;
   }
 }
 
@@ -1389,7 +1329,7 @@ export default class CreateFarm extends Vue {
 .ant-radio {
   .ant-radio-inner {
     background: transparent;
-    border: 2px solid #40426C;
+    border: 2px solid #40426c;
     box-sizing: border-box;
     border-radius: 7px;
     width: 21px;
@@ -1463,7 +1403,7 @@ export default class CreateFarm extends Vue {
   cursor: pointer;
 
   &[disabled] {
-    color: rgba(255,255,255,0.5);
+    color: rgba(255, 255, 255, 0.5);
   }
 }
 
@@ -1534,7 +1474,7 @@ export default class CreateFarm extends Vue {
 
       &:hover {
         background: @gradient-color-icon;
-      background-origin: border-box;
+        background-origin: border-box;
       }
     }
   }
@@ -1756,7 +1696,7 @@ u {
 
         .step-item-content {
           margin-top: 18px;
-          
+
           .info-guide {
             display: flex;
             align-items: baseline;
@@ -1767,7 +1707,7 @@ u {
               height: 12px;
               margin-right: 8px;
             }
-            
+
             a {
               color: @color-petrol500;
             }
@@ -1818,7 +1758,7 @@ u {
             opacity: 0.6;
           }
         }
-        
+
         .existing-amm {
           .coin-select {
             margin-right: 18px;
@@ -1832,7 +1772,7 @@ u {
         .existing-amm,
         .selected-pool {
           margin-bottom: 18px;
-        }        
+        }
 
         .farm-created {
           margin-bottom: 18px;

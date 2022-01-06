@@ -9,11 +9,7 @@
     centered
     @cancel="$emit('onCancel')"
   >
-    <img
-      class="modal-close"
-      src="@/assets/icons/close-circle-icon.svg"
-      @click="$emit('onCancel')"
-    />
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
 
     <div class="liquidity-box">
       <div class="fs-container">
@@ -27,18 +23,10 @@
               {{ coin.pc.symbol }}
             </div>
           </div>
-          <button
-            v-if="!showHalf && coin.balance"
-            class="input-button bodyXS weightB fc-container"
-            @click="setMax(1)"
-          >
+          <button v-if="!showHalf && coin.balance" class="input-button bodyXS weightB fc-container" @click="setMax(1)">
             Max
           </button>
-          <button
-            v-if="showHalf && coin.balance"
-            class="input-button bodyXS weightB fc-container"
-            @click="setMax(0.5)"
-          >
+          <button v-if="showHalf && coin.balance" class="input-button bodyXS weightB fc-container" @click="setMax(0.5)">
             Half
           </button>
         </div>
@@ -73,26 +61,18 @@
     </div>
     <div class="info-box">
       <img class="info-icon" src="@/assets/icons/info.svg" />
-      <label class="bodyXS weightB" v-html="text">
-      </label>
+      <label class="bodyXS weightB" v-html="text"> </label>
     </div>
 
     <div class="btn-group fs-container">
       <div class="btn-container">
-        <Button class="btn-fill textM weightS" @click="$emit('onCancel')">
-          Cancel
-        </Button>
+        <Button class="btn-fill textM weightS" @click="$emit('onCancel')"> Cancel </Button>
       </div>
       <div class="btn-container">
         <Button
           class="btn-transparent textM weightS"
           :loading="loading"
-          :disabled="
-            loading ||
-            isNullOrZero(value) ||
-            !lte(value, coin.balance.toEther()) ||
-            !validateTotalSupply()
-          "
+          :disabled="loading || isNullOrZero(value) || !lte(value, coin.balance.toEther()) || !validateTotalSupply()"
           @click="$emit('onOk', value)"
         >
           Confirm
@@ -103,56 +83,56 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Modal, Button } from "ant-design-vue";
+import Vue from 'vue'
+import { Modal, Button } from 'ant-design-vue'
 
-import { inputRegex, escapeRegExp } from "@/utils/regex";
-import { lt, lte, isNullOrZero } from "@/utils/safe-math";
-import { getTotalSupply } from "@/store/liquidity";
-const MIN_LP_SUPPLY = 0.001;
+import { inputRegex, escapeRegExp } from '@/utils/regex'
+import { lt, lte, isNullOrZero } from '@/utils/safe-math'
+import { getTotalSupply } from '@/store/liquidity'
+const MIN_LP_SUPPLY = 0.001
 // fix: Failed to resolve directive: ant-portal
-Vue.use(Modal);
+Vue.use(Modal)
 
 export default Vue.extend({
   components: {
     Modal,
-    Button,
+    Button
   },
 
   props: {
     title: {
       type: String,
-      default: "",
+      default: ''
     },
     coin: {
       type: Object,
-      required: true,
+      required: true
     },
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     text: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
 
   data() {
     return {
-      value: "",
-      showHalf: false as boolean,
-    };
+      value: '',
+      showHalf: false as boolean
+    }
   },
   watch: {
     // input amount change
     value(newValue: string, oldValue: string) {
       this.$nextTick(() => {
         if (!inputRegex.test(escapeRegExp(newValue))) {
-          this.value = oldValue;
+          this.value = oldValue
         }
-      });
-    },
+      })
+    }
   },
 
   methods: {
@@ -160,42 +140,37 @@ export default Vue.extend({
     lte,
     isNullOrZero,
     validateTotalSupply() {
-      if (this.title == "Remove Liquidity") {
-        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress];
+      if (this.title == 'Remove Liquidity') {
+        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
         if (lp_info) {
-          const totalSupply = lp_info.lp.totalSupply.fixed();
-          const res = parseFloat(this.value) <= parseFloat(totalSupply) - MIN_LP_SUPPLY; //
-          return res;
+          const totalSupply = lp_info.lp.totalSupply.fixed()
+          const res = parseFloat(this.value) <= parseFloat(totalSupply) - MIN_LP_SUPPLY //
+          return res
         } else {
-          return false;
+          return false
         }
       }
-      return true;
+      return true
     },
 
     setMax(amount: number) {
-      this.showHalf = !this.showHalf;
+      this.showHalf = !this.showHalf
 
-      if (this.title == "Remove Liquidity") {
-        let self = this;
+      if (this.title == 'Remove Liquidity') {
+        let self = this
 
-        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress];
+        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
         if (lp_info) {
-          const totalSupply = lp_info.lp.totalSupply.fixed();
+          const totalSupply = lp_info.lp.totalSupply.fixed()
           self.value =
-            "" +
-            Math.min(
-              parseFloat(self.coin.balance.fixed()),
-              parseFloat(totalSupply) - MIN_LP_SUPPLY
-            ) *
-              amount;
+            '' + Math.min(parseFloat(self.coin.balance.fixed()), parseFloat(totalSupply) - MIN_LP_SUPPLY) * amount
         }
       } else {
-        this.value = this.coin.balance.fixed();
+        this.value = this.coin.balance.fixed()
       }
-    },
-  },
-});
+    }
+  }
+})
 </script>
 
 <style lang="less" scoped>

@@ -8,11 +8,7 @@
     :width="480"
     @cancel="$emit('onClose')"
   >
-    <img
-      class="modal-close"
-      src="@/assets/icons/close-circle-icon.svg"
-      @click="$emit('onCancel')"
-    />
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
 
     <div class="select-token">
       <div class="token-list">
@@ -23,14 +19,14 @@
           @click="$emit('onSelect', liquidity)"
         >
           <div class="token-info-item textM">
-            <span><b>AMM ID: </b>{{ liquidity.ammId}}</span>
+            <span><b>AMM ID: </b>{{ liquidity.ammId }}</span>
           </div>
 
           <div class="token-info-item textM">
             <span>
               <b>Pool liquidity: </b>
               {{ liquidity.coin.balance ? liquidity.coin.balance.toEther() : 0 }}
-              {{ liquidity.coin.symbol }} | 
+              {{ liquidity.coin.symbol }} |
               {{ liquidity.pc.balance ? liquidity.pc.balance.toEther() : 0 }}
               {{ liquidity.pc.symbol }}
             </span>
@@ -90,7 +86,7 @@ export default Vue.extend({
       background: @color-blue600;
       border-radius: 8px;
       margin-bottom: 8px;
-      
+
       &:last-child {
         margin-bottom: 0;
       }

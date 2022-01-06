@@ -170,7 +170,7 @@ export default class Nav extends Vue {
     height: 60px;
   }
 
-  .ant-menu-item-selected .menu-icon-group span{
+  .ant-menu-item-selected .menu-icon-group span {
     font-weight: 700 !important;
   }
 }

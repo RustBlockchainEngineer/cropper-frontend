@@ -9,11 +9,7 @@
     @cancel="$emit('onCancel')"
     centered
   >
-    <img
-      class="modal-close"
-      src="@/assets/icons/close-circle-icon.svg"
-      @click="$emit('onCancel')"
-    />
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
     <div class="stake-modal-container">
       <div class="balance-form">
         <div class="fs-container">
@@ -24,18 +20,10 @@
                 <span class="bodyM weightB">CRP</span>
               </div>
             </button>
-            <button
-              v-if="!showHalf && crpbalance"
-              class="input-button bodyXS weightB fc-container"
-              @click="setMax(1)"
-            >
+            <button v-if="!showHalf && crpbalance" class="input-button bodyXS weightB fc-container" @click="setMax(1)">
               Max
             </button>
-            <button
-              v-if="showHalf && crpbalance"
-              class="input-button bodyXS weightB fc-container"
-              @click="setMax(0.5)"
-            >
+            <button v-if="showHalf && crpbalance" class="input-button bodyXS weightB fc-container" @click="setMax(0.5)">
               Half
             </button>
           </div>
@@ -53,7 +41,7 @@
             class="textM weightB"
             :class="data.tier === tierActive ? 'tier-active' : 'tier-inactive'"
             @click="displayTiers(data.tier)"
-            >{{ data.time >= 12 ? data.time / 12 + " Y" : data.time + " M" }}</span
+            >{{ data.time >= 12 ? data.time / 12 + ' Y' : data.time + ' M' }}</span
           >
 
           <span
@@ -61,7 +49,7 @@
             class="textM weightB"
             :class="data.tier === tierActive ? 'tier-active' : 'tier-inactive'"
             style="cursor: not-allowed"
-            >{{ data.time >= 12 ? data.time / 12 + " Y" : data.time + " M" }}</span
+            >{{ data.time >= 12 ? data.time / 12 + ' Y' : data.time + ' M' }}</span
           >
 
           <span class="value-boost bodyXS weightB">{{ data.boost }}x</span>
@@ -72,9 +60,7 @@
         <div class="calc-yield-group">
           <div class="calc-yield-info">
             <label class="label textS weightB">Total lock (CRP)</label>
-            <label class="value textS weightS letterL">{{
-              this.userStaked * 1 + toStake * 1
-            }}</label>
+            <label class="value textS weightS letterL">{{ this.userStaked * 1 + toStake * 1 }}</label>
           </div>
           <div class="calc-yield-info">
             <label class="label textS weightB">Base APY (%)</label>
@@ -104,16 +90,14 @@
         </div>
       </div>
       <div class="calc-footer">
-        <label class="lock-note textS weightB"
-          >Your total staked tokens will be locked until {{ unstakeDate }}</label
-        >
+        <label class="lock-note textS weightB">Your total staked tokens will be locked until {{ unstakeDate }}</label>
         <div class="btn-group fs-container">
           <div class="btn-container">
             <Button
               class="btn-primary textM weightS icon-cursor"
               @click="
                 () => {
-                  $emit('onCancel');
+                  $emit('onCancel')
                 }
               "
               >Cancel</Button
@@ -134,14 +118,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
-import { Modal } from "ant-design-vue";
-import { cloneDeep, get } from "lodash-es";
-import { getUnixTs } from "@/utils";
-import { TOKENS } from "@/utils/tokens";
+import Vue from 'vue'
+import { mapState } from 'vuex'
+import { Modal } from 'ant-design-vue'
+import { cloneDeep, get } from 'lodash-es'
+import { getUnixTs } from '@/utils'
+import { TOKENS } from '@/utils/tokens'
 
-import moment from "moment";
+import moment from 'moment'
 
 import {
   setAnchorProvider,
@@ -160,23 +144,23 @@ import {
   estimateRewards,
   stake,
   unstake,
-  harvest,
-} from "@/utils/crp-stake";
+  harvest
+} from '@/utils/crp-stake'
 
-Vue.use(Modal);
+Vue.use(Modal)
 
 export default Vue.extend({
   components: {
-    Modal,
+    Modal
   },
   data() {
     return {
       toStake: null as any,
       tierActive: 4,
       boostAPY: 1,
-      unstakeDate: "",
+      unstakeDate: '',
       minutesLock: null as any,
-      boostText: "",
+      boostText: '',
       lockData: [
         {
           tier: 1,
@@ -186,7 +170,7 @@ export default Vue.extend({
           days: 30,
           boost: 1,
           apy: 11.1,
-          text: "Boost for 1 month locked",
+          text: 'Boost for 1 month locked'
         },
         {
           tier: 2,
@@ -196,7 +180,7 @@ export default Vue.extend({
           days: 90,
           boost: 1.1,
           apy: 12.21,
-          text: "Boost for 3 months locked",
+          text: 'Boost for 3 months locked'
         },
         {
           tier: 3,
@@ -206,7 +190,7 @@ export default Vue.extend({
           days: 180,
           boost: 1.3,
           apy: 14.43,
-          text: "Boost for 6 months locked",
+          text: 'Boost for 6 months locked'
         },
         {
           tier: 4,
@@ -216,77 +200,73 @@ export default Vue.extend({
           days: 365,
           boost: 2,
           apy: 22.19,
-          text: "Boost for 1 year locked",
-        },
+          text: 'Boost for 1 year locked'
+        }
       ],
-      CRPMintAddress: "DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz" as string,
-      showHalf: false as boolean,
-    };
+      CRPMintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz' as string,
+      showHalf: false as boolean
+    }
   },
   computed: {
-    ...mapState(["wallet", "url"]),
+    ...mapState(['wallet', 'url'])
   },
 
   mounted() {
-    setAnchorProvider(this.$web3, this.$wallet);
-    this.displayTiers(this.tierActive);
+    setAnchorProvider(this.$web3, this.$wallet)
+    this.displayTiers(this.tierActive)
     getExtraRewardConfigs().then((res: any) => {
       res.configs.forEach((item: any, index: number) => {
         if (index >= this.lockData.length) {
-          return;
+          return
         }
         // console.log(index + 1 + ` Tiers`, item.duration.toString());
 
-        this.lockData[index].minutesLock = item.duration / 60;
+        this.lockData[index].minutesLock = item.duration / 60
         // this.lockData[index].boost = item.extraPercentage / 100 + 1
 
-        var currentDate = moment();
-        this.lockData[index].min = moment(currentDate)
-          .add("days", this.lockData[index].days)
-          .unix();
-      });
-    });
+        var currentDate = moment()
+        this.lockData[index].min = moment(currentDate).add('days', this.lockData[index].days).unix()
+      })
+    })
   },
 
   methods: {
     displayTiers(tier: any) {
-      this.tierActive = tier;
-      let currentTier = this.lockData.filter(
-        (tierSearch: any) => (tierSearch.tier as string) == (tier as string)
-      );
+      this.tierActive = tier
+      let currentTier = this.lockData.filter((tierSearch: any) => (tierSearch.tier as string) == (tier as string))
 
-      this.boostAPY = currentTier[0].boost;
-      this.boostText = currentTier[0].text;
-      this.minutesLock = currentTier[0].minutesLock;
+      this.boostAPY = currentTier[0].boost
+      this.boostText = currentTier[0].text
+      this.minutesLock = currentTier[0].minutesLock
 
-      var currentDate = moment();
-      var futureMonth = moment(currentDate).add("days", currentTier[0].days);
+      var currentDate = moment()
+      var futureMonth = moment(currentDate).add('days', currentTier[0].days)
 
-      this.unstakeDate = futureMonth.format("MM/DD/YYYY");
+      this.unstakeDate = futureMonth.format('MM/DD/YYYY')
     },
     setMax(multiple: number) {
-      this.showHalf = !this.showHalf;
-      this.toStake = this.crpbalance * multiple;
+      this.showHalf = !this.showHalf
+      this.toStake = this.crpbalance * multiple
     },
 
     async stakeToken() {
-      const pools = await getAllPools();
+      const pools = await getAllPools()
 
-      console.log("Lock duration", this.minutesLock);
+      console.log('Lock duration', this.minutesLock)
 
-      const current_pool = pools[0];
-      const poolSigner = current_pool.publicKey.toString();
-      const rewardMint = current_pool.account.mint.toString();
-      const rewardPoolVault = current_pool.account.vault.toString();
-      const lock_duration = this.minutesLock * 60;
+      const current_pool = pools[0]
+      const poolSigner = current_pool.publicKey.toString()
+      const rewardMint = current_pool.account.mint.toString()
+      const rewardPoolVault = current_pool.account.vault.toString()
+      const lock_duration = this.minutesLock * 60
 
-      const key = getUnixTs().toString();
+      const key = getUnixTs().toString()
       this.$notify.info({
         key,
-        message: "Making transaction...",
-        description: "",
-        duration: 0,
-      });
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
 
       stake(
         this.$web3,
@@ -298,66 +278,66 @@ export default Vue.extend({
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
 
-        this.toStake * Math.pow(10, TOKENS["CRP"].decimals),
+        this.toStake * Math.pow(10, TOKENS['CRP'].decimals),
         lock_duration
       )
         .then((txid) => {
           this.$notify.info({
             key,
-            message: "Transaction has been sent",
+            message: 'Transaction has been sent',
             description: (h: any) =>
-              h("div", [
-                "Confirmation is in progress.  Check your transaction on ",
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
                 h(
-                  "a",
+                  'a',
                   {
-                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: "_blank" },
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
                   },
-                  "here"
-                ),
-              ]),
-          });
+                  'here'
+                )
+              ])
+          })
 
-          const description = `Staking ${this.toStake} CRP`;
+          const description = `Staking ${this.toStake} CRP`
 
-          this.$accessor.transaction.sub({ txid, description });
+          this.$accessor.transaction.sub({ txid, description })
         })
         .catch((error) => {
           this.$notify.error({
             key,
-            message: "Staking failed",
-            description: error.message,
-          });
+            message: 'Staking failed',
+            description: error.message
+          })
         })
         .finally(() => {
-          this.$accessor.wallet.getTokenAccounts();
-          this.$emit("onCancel");
-        });
-    },
+          this.$accessor.wallet.getTokenAccounts()
+          this.$emit('onCancel')
+        })
+    }
   },
   props: {
     show: {
       type: Boolean,
-      default: false,
+      default: false
     },
     crpbalance: {
       type: Number,
-      default: 0,
+      default: 0
     },
     estimatedapy: {
       type: Number,
-      default: 0,
+      default: 0
     },
     userStaked: {
       type: Number,
-      default: 0,
+      default: 0
     },
     enddatemin: {
       type: Number,
-      default: 0,
-    },
-  },
-});
+      default: 0
+    }
+  }
+})
 </script>
 
 <style lang="less" scoped>
@@ -475,7 +455,7 @@ export default Vue.extend({
     }
 
     .select-button::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
@@ -582,7 +562,8 @@ export default Vue.extend({
         justify-content: space-between;
         align-items: center;
 
-        &:nth-child(2), &:nth-child(3) {
+        &:nth-child(2),
+        &:nth-child(3) {
           padding-bottom: 12px;
           border-bottom: 1px solid #384d71;
         }
@@ -600,7 +581,8 @@ export default Vue.extend({
         }
 
         &.current-tier {
-          .label, .value {
+          .label,
+          .value {
             color: #fff;
           }
         }

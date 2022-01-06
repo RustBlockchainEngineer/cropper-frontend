@@ -99,7 +99,7 @@ export default class Foot extends Vue {
       .social-telegram .social-icon {
         margin-right: 0;
       }
-      
+
       .social-medium,
       .social-discord,
       .social-twitter,
@@ -179,7 +179,7 @@ export default class Foot extends Vue {
 
       a {
         color: #fff;
-        
+
         @media @max-sl-mobile {
           display: block;
           width: 50%;

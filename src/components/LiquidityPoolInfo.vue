@@ -12,11 +12,7 @@
         {{ getPrice(poolInfo, false).toFixed(coin.decimals) }}
         {{ coin.symbol }}
       </span>
-      <img
-        class="swap-icon"
-        src="@/assets/icons/swap-vertical.svg"
-        @click="() => (coinBasePrice = !coinBasePrice)"
-      />
+      <img class="swap-icon" src="@/assets/icons/swap-vertical.svg" @click="() => (coinBasePrice = !coinBasePrice)" />
     </div>
 
     <div class="price-info-box">
@@ -45,31 +41,31 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { getPrice } from "@/utils/liquidity";
+import Vue from 'vue'
+import { getPrice } from '@/utils/liquidity'
 
 export default Vue.extend({
   props: {
     initialized: {
       type: Boolean,
-      default: false,
+      default: false
     },
     poolInfo: {
       type: [Object || null],
-      default: null,
-    },
+      default: null
+    }
   },
 
   data() {
     return {
-      coinBasePrice: true,
-    };
+      coinBasePrice: true
+    }
   },
 
   methods: {
-    getPrice,
-  },
-});
+    getPrice
+  }
+})
 </script>
 
 <style lang="less" scoped>
