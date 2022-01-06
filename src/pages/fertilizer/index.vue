@@ -335,87 +335,87 @@
               <Row class="fertilizer-funded-table-header">
                 <Col class="header-column textS weightB text-left" span="6"> Project name </Col>
                 <Col class="header-column textS weightB" span="3">
-                  <div class="header-column-title" @click="sortbyColumn('liquidity')">
+                  <div class="header-column-title" @click="sortByColumn('subscribers')">
                     Subscribers
                     <img
-                      v-if="sortMethod === 'liquidity'"
+                      v-if="sortMethod === 'subscriber'"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortSubscribersAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column textS weightB" span="3">
-                  <div class="header-column-title" @click="sortbyColumn('volh')">
-                    Total raised
-                    <img
-                      v-if="sortMethod === 'volh'"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column textS weightB" span="3">
-                  <div class="header-column-title" @click="sortbyColumn('vold')">
-                    Token price
-                    <img
-                      v-if="sortMethod === 'vold'"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column textS weightB" span="3">
-                  <div class="header-column-title" @click="sortbyColumn('feesh')">
-                    ATH Since IPO
-                    <img
-                      v-if="sortMethod === 'feesh'"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortFeesAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortFeesAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortSubscribersAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
                 <Col class="header-column textS weightB" span="4">
-                  <div class="header-column-title" @click="sortbyColumn('apy')">
-                    Ended in UTC
+                  <div class="header-column-title" @click="sortByColumn('total_raised')">
+                    Total raised
                     <img
-                      v-if="sortMethod === 'apy'"
+                      v-if="sortMethod === 'total_raised'"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortAPYAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortRaisedAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortAPYAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortRaisedAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortByColumn('token_price')">
+                    Token price
+                    <img
+                      v-if="sortMethod === 'token_price'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortPriceAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortPriceAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortByColumn('ath')">
+                    ATH Since IPO
+                    <img
+                      v-if="sortMethod === 'ath'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortATHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortATHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="4">
+                  <div class="header-column-title" @click="sortByColumn('end_date')">
+                    Ended in UTC
+                    <img
+                      v-if="sortMethod === 'end_date'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortEndAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortEndAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
@@ -428,28 +428,88 @@
                   :key="fertilizer.id"
                 >
                   <Col class="state" span="6">
-                    {{ fertilizer.title }}
-                    {{ fertilizer.short_desc }}
+                    <div class="project-name fl-container">
+                      <img class="logo" :src="fertilizer.picture" />
+                      <div class="title">
+                        <span class="textM weightS">{{ fertilizer.title }}</span>
+                        <span class="short-desc bodXS weightS">{{ fertilizer.short_desc }}</span>
+                      </div>
+                    </div>
                   </Col>
 
                   <Col class="state textM weightS" span="3">
                     {{ fertilizer.subscribers }}
                   </Col>
 
-                  <Col class="state textM weightS" span="3">
+                  <Col class="state textM weightS" span="4">
                     ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
                   </Col>
                   <Col class="state textM weightS" span="3">
-                    ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
+                    ${{ new TokenAmount(fertilizer.token_price, 2, false).format() }}
                   </Col>
                   <Col class="state textM weightS" span="3">
-                    {{ fertilizer.ath }}
+                    <div class="project-ath fc-container">
+                      <span class="value textM weightS letterS">+{{ fertilizer.ath }}%</span>
+                    </div>
                   </Col>
                   <Col class="state textM weightS" span="4">
                     {{ fertilizer.distribution_end_date }}
                   </Col>
-                  <Col class="state" span="2">
-                    
+                  <Col class="state" span="1">
+                    <div class="show-more">
+                      <img
+                        class="icon-cursor"
+                        src="@/assets/icons/dot3.svg"
+                      />
+                      <!-- <div
+                        v-if="showMoreMenu[idx]"
+                        class="option-collapse-menu collapse-right"
+                        v-click-outside="hideMore"
+                      >
+                        <div
+                          class="option-collapse-item text-center textM weightS icon-cursor"
+                        >
+                          <a
+                            class="social-link fc-container"
+                            :href="farm.farmInfo.twitterShare"
+                            target="_blank"
+                          >
+                            Share
+                            <img class="social-icon" src="@/assets/icons/share.svg" />
+                          </a>
+                        </div>
+                        <div
+                          class="option-collapse-item text-center textM weightS icon-cursor"
+                        >
+                          <a
+                            class="social-link fc-container"
+                            :href="farm.farmInfo.twitterLink"
+                            target="_blank"
+                          >
+                            Twitter
+                            <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                          </a>
+                        </div>
+                        <div
+                          class="option-collapse-item text-center textM weightS icon-cursor"
+                        >
+                          <a
+                            :disabled="
+                              !wallet.connected || farm.userInfo.depositBalance.isNullOrZero()
+                            "
+                            @click.stop="
+                              openUnstakeModal(
+                                farm.farmInfo,
+                                farm.farmInfo.lp,
+                                farm.userInfo.depositBalance
+                              )
+                            "
+                          >
+                            Withdraw
+                          </a>
+                        </div>
+                      </div> -->
+                    </div>
                   </Col>
                 </Row>
               </div>
@@ -460,7 +520,7 @@
               <Row class="fertilizer-funded-table-header">
                 <Col class="header-column textS weightB text-left" span="6"> Name </Col>
                 <Col class="header-column textS weightB" span="6">
-                  <div class="header-column-title" @click="sortbyColumn('liquidity')">
+                  <div class="header-column-title" @click="sortByColumn('liquidity')">
                     Liquidity
                     <img
                       v-if="sortMethod === 'liquidity'"
@@ -477,7 +537,7 @@
                   </div>
                 </Col>
                 <Col class="header-column textS weightB" span="6">
-                  <div class="header-column-title" @click="sortbyColumn('volh')">
+                  <div class="header-column-title" @click="sortByColumn('volh')">
                     Volume (24hrs)
                     <img
                       v-if="sortMethod === 'volh'"
@@ -494,7 +554,7 @@
                   </div>
                 </Col>
                 <Col class="header-column textS weightB" span="5">
-                  <div class="header-column-title" @click="sortbyColumn('vold')">
+                  <div class="header-column-title" @click="sortByColumn('vold')">
                     Volume (7d)
                     <img
                       v-if="sortMethod === 'vold'"
@@ -757,6 +817,12 @@ export default Vue.extend({
       showTabMenu: false as boolean,
       showSearchMenu: false as boolean,
       showFilterMenu: false as boolean,
+      sortMethod: 'subscriber' as string,
+      sortSubscribersAsc: true as boolean,
+      sortRaisedAsc: false as boolean,
+      sortPriceAsc: false as boolean,
+      sortATHAsc: false as boolean,
+      sortEndAsc: false as boolean,
       filterStatus: {
         all: 'All',
         whitelist: 'Whitelist Open',
@@ -836,73 +902,73 @@ export default Vue.extend({
         {
           id: 6,
           status: 'Funded',
-          picture: 'fertilizer/defi.png',
+          picture: '/fertilizer/funded/defiland.png',
           title: 'DeFi Land',
           short_desc: 'Gamified Decentralized Finance',
-          subscribers: 1132,
+          subscribers: 1000,
           hard_cap: 250000,
           token_price: 0.068,
-          ath: '+526.7%',
+          ath: 526.7,
           distribution_end_date: 1643500800000
         },
         {
           id: 7,
           status: 'Funded',
-          picture: 'fertilizer/sonar.png',
+          picture: '/fertilizer/funded/sonar.png',
           title: 'Sonar Watch',
           short_desc: 'Empowering user journey on Solana DeFi',
-          subscribers: 1132,
-          hard_cap: 250000,
-          token_price: 0.068,
-          ath: '+526.7%',
+          subscribers: 1001,
+          hard_cap: 249999,
+          token_price: 0.069,
+          ath: 526.6,
           distribution_end_date: 1643500800000
         },
         {
           id: 8,
           status: 'Funded',
-          picture: 'fertilizer/goosefx.png',
+          picture: '/fertilizer/funded/goosefx.png',
           title: 'GooseFX',
           short_desc: 'A Complete DeFi Experience',
-          subscribers: 1132,
-          hard_cap: 250000,
-          token_price: 0.068,
-          ath: '+526.7%',
+          subscribers: 1002,
+          hard_cap: 249998,
+          token_price: 0.070,
+          ath: 526.5,
           distribution_end_date: 1643500800000
         },
         {
           id: 9,
           status: 'Funded',
-          picture: 'fertilizer/waggle.png',
+          picture: '/fertilizer/funded/waggle.png',
           title: 'Waggle Network',
           short_desc: 'Primary markets for everyone',
-          subscribers: 1132,
-          hard_cap: 250000,
-          token_price: 0.068,
-          ath: '+526.7%',
+          subscribers: 1003,
+          hard_cap: 249997,
+          token_price: 0.071,
+          ath: 526.4,
           distribution_end_date: 1643500800000
         },
         {
           id: 10,
           status: 'Funded',
-          picture: 'fertilizer/cryowar.png',
+          picture: '/fertilizer/funded/cryowar.png',
           title: 'Cryowar',
           short_desc: 'Next-gen blockchain multiplayer game',
-          subscribers: 1132,
-          hard_cap: 250000,
-          token_price: 0.068,
-          ath: '+526.7%',
+          subscribers: 1004,
+          hard_cap: 249996,
+          token_price: 0.071,
+          ath: 526.3,
           distribution_end_date: 1643500800000
         },
         {
           id: 11,
           status: 'Funded',
-          picture: 'fertilizer/defi.png',
+          picture: '/fertilizer/funded/cyclos.png',
           title: 'Cyclos',
           short_desc: 'Decentralized trading unleashed',
-          subscribers: 1132,
-          hard_cap: 250000,
-          token_price: 0.068,
-          ath: '+526.7%',
+          subscribers: 1005,
+          hard_cap: 249995,
+          token_price: 0.073,
+          ath: 526.2,
           distribution_end_date: 1643500800000
         },
       ],
@@ -1202,13 +1268,13 @@ export default Vue.extend({
 
 // class stylesheet
 .fertilizer.container {
+  margin: 18px 0 100px 0;
+
   .card {
     .card-body {
       padding: 0;
 
       .fertilizer-head {
-        margin-top: 18px;
-
         @media @max-sl-mobile {
           display: block !important;
         }
@@ -1639,6 +1705,33 @@ export default Vue.extend({
 
               .state {
                 text-align: center;
+
+                .project-name {
+                  .logo {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin-right: 16px;
+                  }
+
+                  .title {
+                    text-align: left;
+
+                    .short-desc {
+                      display: block;
+                      color: rgba(255, 255, 255, 0.7);
+                    }
+                  }
+                }
+
+                .project-ath {
+                  .value {
+                    background: @color-petrol400;
+                    color: @color-blue800;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                  }
+                }
 
                 .btn-container {
                   margin: auto auto 8px auto;
