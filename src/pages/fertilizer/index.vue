@@ -573,7 +573,7 @@
                     </Button>
                   </Row>
 
-                  <Row class="collapse-row fcc-container" :gutter="18">
+                  <Row class="collapse-row" :gutter="[18, 18]">
                     <Col :span="12">
                       <div class="ftb-container">
                         <div class="state">
@@ -597,8 +597,9 @@
                         </div>
                       </div> 
                     </Col>
+                    
                     <Col class="btn-group" :span="12">
-                      <div class="btn-group-item fcc-container">
+                      <div class="fcr-container">
                         <div class="btn-container">
                           <Button class="btn-primary textS weightB">
                             Stake
@@ -611,8 +612,10 @@
                           </Button>
                         </div>
                       </div>
+                    </Col>
 
-                      <div class="btn-group-item fcc-container">
+                    <Col class="btn-group" :span="24">
+                      <div class="fcc-container">
                         <a
                           class="social-link fcc-container bodyXS weightS icon-cursor"
                           href="#"
@@ -630,7 +633,7 @@
                           <img class="social-icon" src="@/assets/icons/twitter.svg" />
                         </a>
                       </div>
-                    </Col>    
+                    </Col>
                   </Row>
                 </CollapsePanel>
               </Collapse>
@@ -1856,17 +1859,11 @@ export default Vue.extend({
       padding: 18px;
 
       .btn-group {
-        .btn-group-item {
+        .btn-container, .social-link {
+          margin-right: 18px;
+
           &:last-child {
-            margin-top: 18px;
-          }
-
-          .btn-container, .social-link {
-            margin-right: 18px;
-
-            &:last-child {
-              margin-right: 0;
-            }
+            margin-right: 0;
           }
         }
       }
