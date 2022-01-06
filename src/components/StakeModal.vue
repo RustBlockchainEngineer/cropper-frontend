@@ -101,36 +101,6 @@
               CRP</label
             >
           </div>
-          <div class="calc-yield-info">
-            <label class="label textS weightB">Boost for 1 year locked</label>
-            <label class="value textS weightS letterL"
-              >{{
-                Math.round(
-                  (100000 *
-                    (this.userStaked * 1 + toStake * 1) *
-                    (Math.round(this.estimatedapy * 100) / 100) *
-                    boostAPY) /
-                    100
-                ) / 100000
-              }}
-              CRP</label
-            >
-          </div>
-          <div class="calc-yield-info">
-            <label class="label textS weightB">Total estimate reward</label>
-            <label class="value reward-value textL weightS letterL"
-              >{{
-                Math.round(
-                  (100000 *
-                    (this.userStaked * 1 + toStake * 1) *
-                    (Math.round(this.estimatedapy * 100) / 100) *
-                    boostAPY) /
-                    100
-                ) / 100000
-              }}
-              CRP</label
-            >
-          </div>
         </div>
       </div>
       <div class="calc-footer">
@@ -612,7 +582,7 @@ export default Vue.extend({
         justify-content: space-between;
         align-items: center;
 
-        &:nth-child(2), &:nth-child(3), &:nth-child(5) {
+        &:nth-child(2), &:nth-child(3) {
           padding-bottom: 12px;
           border-bottom: 1px solid #384d71;
         }

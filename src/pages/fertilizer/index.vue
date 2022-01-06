@@ -22,43 +22,43 @@
             <div class="option-tab">
               <Button
                 class="textL weightS icon-cursor"
-                :class="filterProject === 'upcoming' ? 'active-tab' : ''"
+                :class="filterProject === filterStatus.upcoming ? 'active-tab' : ''"
                 @click="
                   () => {
-                    this.filterProject = 'upcoming'
+                    this.filterProject = filterStatus.upcoming
                   }
                 "
                 >Upcoming</Button
               >
-              <div v-if="filterProject === 'upcoming'" class="active-underline"></div>
+              <div v-if="filterProject === filterStatus.upcoming" class="active-underline"></div>
             </div>
             <div class="option-tab">
               <Button
                 class="textL weightS icon-cursor"
-                :class="filterProject === 'preparation' ? 'active-tab' : ''"
+                :class="filterProject === filterStatus.preparation ? 'active-tab' : ''"
                 @click="
                   () => {
-                    this.filterProject = 'preparation'
+                    this.filterProject = filterStatus.preparation
                   }
                 "
               >
                 Preparation
               </Button>
-              <div v-if="filterProject === 'preparation'" class="active-underline"></div>
+              <div v-if="filterProject === filterStatus.preparation" class="active-underline"></div>
             </div>
             <div class="option-tab">
               <Button
                 class="textL weightS icon-cursor"
-                :class="filterProject === 'funded' ? 'active-tab' : ''"
+                :class="filterProject === filterStatus.funded ? 'active-tab' : ''"
                 @click="
                   () => {
-                    this.filterProject = 'funded'
+                    this.filterProject = filterStatus.funded
                   }
                 "
               >
                 Funded
               </Button>
-              <div v-if="filterProject === 'funded'" class="active-underline"></div>
+              <div v-if="filterProject === filterStatus.funded" class="active-underline"></div>
             </div>
           </div>
 
@@ -72,12 +72,12 @@
           >
             <label class="textL weightS icon-cursor">
               {{
-                filterProject === 'upcoming'
-                  ? 'Upcoming'
-                  : filterProject === 'preparation'
-                  ? 'Preparation'
-                  : filterProject === 'funded'
-                  ? 'Funded'
+                filterProject === filterStatus.upcoming
+                  ? filterStatus.upcoming
+                  : filterProject === filterStatus.preparation
+                  ? filterStatus.preparation
+                  : filterProject === filterStatus.funded
+                  ? filterStatus.funded
                   : ''
               }}
             </label>
@@ -90,10 +90,10 @@
             <div v-if="showTabMenu" class="option-sort-collapse collapse-left">
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
-                :class="filterProject === 'upcoming' ? 'active-item' : ''"
+                :class="filterProject === filterStatus.upcoming ? 'active-item' : ''"
                 @click="
                   () => {
-                    this.filterProject = 'upcoming'
+                    this.filterProject = filterStatus.upcoming
                   }
                 "
               >
@@ -101,10 +101,10 @@
               </div>
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
-                :class="filterProject === 'preparation' ? 'active-item' : ''"
+                :class="filterProject === filterStatus.preparation ? 'active-item' : ''"
                 @click="
                   () => {
-                    this.filterProject = 'preparation'
+                    this.filterProject = filterStatus.preparation
                   }
                 "
               >
@@ -112,10 +112,10 @@
               </div>
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
-                :class="filterProject === 'funded' ? 'active-item' : ''"
+                :class="filterProject === filterStatus.funded ? 'active-item' : ''"
                 @click="
                   () => {
-                    this.filterProject = 'funded'
+                    this.filterProject = filterStatus.funded
                   }
                 "
               >
@@ -166,14 +166,14 @@
                 <label>Sort by:</label>
                 <span class="sort-detail">
                   {{
-                    filterSort === 'all'
-                      ? 'All'
-                      : filterSort === 'whitelist'
-                      ? 'Whitelist Open'
-                      : filterSort === 'sales'
-                      ? 'Sales'
-                      : filterSort === 'distribution'
-                      ? 'Distribution'
+                    filterSort === filterStatus.all
+                      ? filterStatus.all
+                      : filterSort === filterStatus.whitelist
+                      ? filterStatus.whitelist
+                      : filterSort === filterStatus.sales
+                      ? filterStatus.sales
+                      : filterSort === filterStatus.distribution
+                      ? filterStatus.distribution
                       : ''
                   }}
                   <img
@@ -206,22 +206,22 @@
               </div>
               <div
                 class="collapse-item text-center texts weightB icon-cursor"
-                :class="filterSort === 'whitelist' ? 'active-item' : ''"
-                @click="setFilterSort('whitelist')"
+                :class="filterSort === filterStatus.whitelist ? 'active-item' : ''"
+                @click="setFilterSort(filterStatus.whitelist)"
               >
                 Whitelist Open
               </div>
               <div
                 class="collapse-item text-center texts weightB icon-cursor"
-                :class="filterSort === 'sales' ? 'active-item' : ''"
-                @click="setFilterSort('sales')"
+                :class="filterSort === filterStatus.sales ? 'active-item' : ''"
+                @click="setFilterSort(filterStatus.sales)"
               >
                 Sales
               </div>
               <div
                 class="collapse-item text-center texts weightB icon-cursor"
-                :class="filterSort === 'distribution' ? 'active-item' : ''"
-                @click="setFilterSort('distribution')"
+                :class="filterSort === filterStatus.distribution ? 'active-item' : ''"
+                @click="setFilterSort(filterStatus.distribution)"
               >
                 Distribution
               </div>
@@ -230,29 +230,29 @@
         </div>
 
         <div class="fertilizer-content">
-          <Row :gutter="[18, 28]">
+          <Row v-if="filterProject != filterStatus.funded" :gutter="[18, 28]">
             <Col v-for="(fertilizer, idx) in fertilizerItems" :key="fertilizer.id" 
               :lg="idx === 0 ? 12 : 6"
               :md="idx === 0 ? 16 : 8"
               :sm="24"
             >
-              <div class="fertilizer-project">
+              <div class="fertilizer-project-table">
                 <div class="project-banner">
                   <img class="banner" :src="fertilizer.picture" />
                   <div 
                     class="project-status" 
-                    :class="fertilizer.status === 'Whitelist Open'
+                    :class="fertilizer.status === filterStatus.whitelist
                       ? 'whitelist'
-                      : fertilizer.status === 'Sales'
+                      : fertilizer.status === filterStatus.sales
                       ? 'sales'
-                      : fertilizer.status === 'Distribution'
+                      : fertilizer.status === filterStatus.distribution
                       ? 'distribution'
-                      : fertilizer.status === 'Preparation'
+                      : fertilizer.status === filterStatus.preparation
                       ? 'preparation'
                       : ''"
                   >
                     <span class="bodyXS weightB">
-                      {{ fertilizer.status === 'Sales' && currentTimestamp > fertilizer.sales_start_date ? 'Open Sales' : fertilizer.status }}
+                      {{ fertilizer.status === filterStatus.sales && currentTimestamp > fertilizer.sales_start_date ? 'Open Sales' : fertilizer.status }}
                     </span>
                   </div>
                 </div>
@@ -285,33 +285,33 @@
                   
                   <div v-if="idx === 0" class="project-info whitelist-countdown fc-container text-center">
                     <Countdown 
-                      :title="fertilizer.status === 'Whitelist Open' ? 'End of the whitelist in' : 'Whitelist starts in'"
-                      :value="fertilizer.status === 'Whitelist Open' ? fertilizer.whitelist_end_date : fertilizer.whitelist_start_date"
+                      :title="fertilizer.status === filterStatus.whitelist ? 'End of the whitelist in' : 'Whitelist starts in'"
+                      :value="fertilizer.status === filterStatus.whitelist ? fertilizer.whitelist_end_date : fertilizer.whitelist_start_date"
                       format="DD:HH:mm:ss" 
                     />
                   </div>
 
                   <div v-else class="project-info fl-container">
-                    <div v-if="fertilizer.sales_start_date || fertilizer.distribution_start_date || whitelist_start_date || whitelist_end_date">
-                      <div v-if="fertilizer.status === 'Sales' && currentTimestamp > fertilizer.sales_start_date" class="project-status open">
+                    <div v-if="fertilizer.sales_start_date || fertilizer.distribution_start_date || fertilizer.whitelist_start_date || fertilizer.whitelist_end_date">
+                      <div v-if="fertilizer.status === filterStatus.sales && currentTimestamp > fertilizer.sales_start_date" class="project-status open">
                         <span class="bodyXS weightB">Open Now</span>
                       </div>
                       <div v-else class="project-balance">
                         <span class="label textS weightS letterL">
                           {{ 
-                            fertilizer.status === 'Sales'
-                              ? 'Sales'
-                              : fertilizer.status === 'Distribution'
-                              ? 'Distribution'
+                            fertilizer.status === filterStatus.sales
+                              ? filterStatus.sales
+                              : fertilizer.status === filterStatus.distribution
+                              ? filterStatus.distribution
                               : ''
                           }} 
                           starts in:
                         </span>
                         <span class="value fl-container">
                           <Countdown 
-                            :value="fertilizer.status === 'Sales'
+                            :value="fertilizer.status === filterStatus.sales
                               ? fertilizer.sales_start_date
-                              : fertilizer.status === 'Distribution'
+                              : fertilizer.status === filterStatus.distribution
                               ? fertilizer.distribution_start_date
                               : 0" 
                             format="DD:HH:mm:ss" />
@@ -321,14 +321,383 @@
                   </div>
 
                   <div class="btn-container">
-                    <Button v-if="fertilizer.status === 'Whitelist Open'" class="btn-transparent textM weightS fc-container letterS">Subscription</Button>
+                    <Button v-if="fertilizer.status === filterStatus.whitelist" class="btn-transparent textM weightS fc-container letterS">Subscription</Button>
                     <Button v-else class="btn-transparent textM weightS fc-container letterS">More details</Button>
                   </div>
                 </div>
               </div>
             </Col>
           </Row>
+
+          <div v-else>
+            <!-- desktop version -->
+            <div class="fertilizer-funded-table isDesktop">
+              <Row class="fertilizer-funded-table-header">
+                <Col class="header-column textS weightB text-left" span="6"> Project name </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortbyColumn('liquidity')">
+                    Subscribers
+                    <img
+                      v-if="sortMethod === 'liquidity'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortbyColumn('volh')">
+                    Total raised
+                    <img
+                      v-if="sortMethod === 'volh'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortbyColumn('vold')">
+                    Token price
+                    <img
+                      v-if="sortMethod === 'vold'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortbyColumn('feesh')">
+                    ATH Since IPO
+                    <img
+                      v-if="sortMethod === 'feesh'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortFeesAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortFeesAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="4">
+                  <div class="header-column-title" @click="sortbyColumn('apy')">
+                    Ended in UTC
+                    <img
+                      v-if="sortMethod === 'apy'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortAPYAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortAPYAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+              </Row>
+
+              <div class="fertilizer-funded-table-body">
+                <Row
+                  class="fertilizer-funded-table-item"
+                  v-for="fertilizer in fertilizerItems"
+                  :key="fertilizer.id"
+                >
+                  <Col class="state" span="6">
+                    {{ fertilizer.title }}
+                    {{ fertilizer.short_desc }}
+                  </Col>
+
+                  <Col class="state textM weightS" span="3">
+                    {{ fertilizer.subscribers }}
+                  </Col>
+
+                  <Col class="state textM weightS" span="3">
+                    ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
+                  </Col>
+                  <Col class="state textM weightS" span="3">
+                    ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
+                  </Col>
+                  <Col class="state textM weightS" span="3">
+                    {{ fertilizer.ath }}
+                  </Col>
+                  <Col class="state textM weightS" span="4">
+                    {{ fertilizer.distribution_end_date }}
+                  </Col>
+                  <Col class="state" span="2">
+                    
+                  </Col>
+                </Row>
+              </div>
+            </div>
+
+            <!-- tablet version -->
+            <!-- <div class="fertilizer-funded-table isTablet">
+              <Row class="fertilizer-funded-table-header">
+                <Col class="header-column textS weightB text-left" span="6"> Name </Col>
+                <Col class="header-column textS weightB" span="6">
+                  <div class="header-column-title" @click="sortbyColumn('liquidity')">
+                    Liquidity
+                    <img
+                      v-if="sortMethod === 'liquidity'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="6">
+                  <div class="header-column-title" @click="sortbyColumn('volh')">
+                    Volume (24hrs)
+                    <img
+                      v-if="sortMethod === 'volh'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="5">
+                  <div class="header-column-title" @click="sortbyColumn('vold')">
+                    Volume (7d)
+                    <img
+                      v-if="sortMethod === 'vold'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+              </Row>
+
+              <Collapse v-model="showCollapse" accordion>
+                <CollapsePanel
+                  v-for="fertilizer in fertilizerItems"
+                  :key="fertilizer.id"
+                  v-show="true"
+                  :show-arrow="poolCollapse"
+                >
+                  <Row slot="header" class="pool-head">
+                    <Col class="state" span="6">
+                      <div class="lp-iconscontainer">
+                        <div class="icons textM weightS">
+                          <CoinIcon
+                            :mint-address="data ? fertilizer.lp.coin.mintAddress : ''"
+                          />
+                          {{ fertilizer.lp.coin.symbol }}
+                          <span>-</span>
+                          <CoinIcon :mint-address="data ? fertilizer.lp.pc.mintAddress : ''" />
+                          {{ fertilizer.lp.pc.symbol }}
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col class="state textM weightS text-center" span="6">
+                      ${{ new TokenAmount(fertilizer.liquidity, 2, false).format() }}
+                    </Col>
+
+                    <Col class="state textM weightS text-center" span="6">
+                      ${{ new TokenAmount(fertilizer.volume_24h, 2, false).format() }}
+                    </Col>
+                    <Col class="state textM weightS text-center" span="5">
+                      ${{ new TokenAmount(fertilizer.volume_7d, 2, false).format() }}
+                    </Col>
+
+                    <Button class="detail-btn textS weightS">
+                      <img
+                        class="arrow-icon"
+                        :class="fertilizer.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        src="@/assets/icons/arrow-down-white.svg"
+                      />
+                    </Button>
+                  </Row>
+
+                  <Row v-if="poolCollapse" class="collapse-row" :gutter="18">
+                    <Col span="12">
+                      <div class="state">
+                        <span class="title textS weightS letterL">Fees (24h)</span>
+                        <span class="value textM weightS letterS">
+                          ${{ new TokenAmount(fertilizer.fee_24h, 2, false).format() }}
+                        </span>
+                      </div>
+                      <div class="state">
+                        <span class="title textS weightS letterL">APY</span>
+                        <span class="value textM weightS letterS">
+                          {{ new TokenAmount(fertilizer.apy, 2, false).format() }}%
+                        </span>
+                      </div>
+                    </Col>
+                    <Col span="12">
+                      <div class="state current-liquidity text-center">
+                        <span class="title textS weightS letterL">Your liquidity</span>
+                        <span class="value textM weightS letterS">
+                          ${{ new TokenAmount(fertilizer.current, 2, false).format() }}
+                        </span>
+
+                        <div class="btn-group">
+                          <div class="btn-container">
+                            <Button
+                              class="btn-transparent textS weightB"
+                              @click="openPoolAddModal(data)"
+                              >Add</Button
+                            >
+                          </div>
+                          <div class="btn-container">
+                            <Button
+                              class="btn-primary textS weightB"
+                              :disabled="!wallet.connected || !fertilizer.current"
+                              @click="openUnstakeModal(data, fertilizer.lp, 1)"
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </CollapsePanel>
+              </Collapse>
+            </div> -->
+
+            <!-- mobile version -->
+            <!-- <div class="fertilizer-funded-table isMobile">
+              <Collapse v-model="showCollapse" accordion>
+                <CollapsePanel
+                  v-for="fertilizer in fertilizerItems"
+                  :key="fertilizer.id"
+                  v-show="true"
+                  :show-arrow="poolCollapse"
+                >
+                  <Row slot="header" class="pool-head">
+                    <Col class="state" :span="24">
+                      <div class="lp-iconscontainer">
+                        <div class="icons textM weightS">
+                          <CoinIcon
+                            :mint-address="data ? fertilizer.lp.coin.mintAddress : ''"
+                          />
+                          {{ fertilizer.lp.coin.symbol }}
+                          <span>-</span>
+                          <CoinIcon :mint-address="data ? fertilizer.lp.pc.mintAddress : ''" />
+                          {{ fertilizer.lp.pc.symbol }}
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Button class="detail-btn textS weightS">
+                      Details
+                      <img
+                        class="arrow-icon"
+                        :class="fertilizer.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        src="@/assets/icons/arrow-down-white.svg"
+                      />
+                    </Button>
+                  </Row>
+
+                  <Row v-if="poolCollapse" class="collapse-row">
+                    <Col class="state current-liquidity text-center" span="24">
+                      <span class="title textS weightS letterL">Your liquidity</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(fertilizer.current, 2, false).format() }}
+                      </span>
+
+                      <div class="btn-group">
+                        <div class="btn-container">
+                          <Button
+                            class="btn-transparent textS weightB"
+                            @click="openPoolAddModal(data)"
+                            >Add</Button
+                          >
+                        </div>
+                        <div class="btn-container">
+                          <Button
+                            class="btn-primary textS weightB"
+                            :disabled="!wallet.connected || !fertilizer.current"
+                            @click="openUnstakeModal(data, fertilizer.lp, 1)"
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">Liquidity</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(fertilizer.liquidity, 2, false).format() }}
+                      </span>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">Volume (24h)</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(fertilizer.volume_24h, 2, false).format() }}
+                      </span>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">Volume (7d)</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(fertilizer.volume_7d, 2, false).format() }}
+                      </span>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">Fees (24h)</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(fertilizer.fee_24h, 2, false).format() }}
+                      </span>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">APY</span>
+                      <span class="value textM weightS letterS">
+                        {{ new TokenAmount(fertilizer.apy, 2, false).format() }}%
+                      </span>
+                    </Col>
+                  </Row>
+                </CollapsePanel>
+              </Collapse>
+            </div> -->
+          </div>
         </div>
+
         <!-- <div v-if="initialized"></div>
 
         <div v-else class="fc-container">
@@ -388,7 +757,16 @@ export default Vue.extend({
       showTabMenu: false as boolean,
       showSearchMenu: false as boolean,
       showFilterMenu: false as boolean,
-      filterProject: 'upcoming' as string,
+      filterStatus: {
+        all: 'All',
+        whitelist: 'Whitelist Open',
+        sales: 'Sales',
+        distribution: 'Distribution',
+        upcoming: 'Upcoming',
+        preparation: 'Preparation',
+        funded: 'Funded'
+      },
+      filterProject: 'Upcoming' as string,
       filterSort: 'all' as string,
       fertilizerItems: [] as any[],
       fertilizerData: [
@@ -454,7 +832,79 @@ export default Vue.extend({
           short_desc: 'Blueprints for metaverses',
           hard_cap: '3000K',
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        }
+        },
+        {
+          id: 6,
+          status: 'Funded',
+          picture: 'fertilizer/defi.png',
+          title: 'DeFi Land',
+          short_desc: 'Gamified Decentralized Finance',
+          subscribers: 1132,
+          hard_cap: 250000,
+          token_price: 0.068,
+          ath: '+526.7%',
+          distribution_end_date: 1643500800000
+        },
+        {
+          id: 7,
+          status: 'Funded',
+          picture: 'fertilizer/sonar.png',
+          title: 'Sonar Watch',
+          short_desc: 'Empowering user journey on Solana DeFi',
+          subscribers: 1132,
+          hard_cap: 250000,
+          token_price: 0.068,
+          ath: '+526.7%',
+          distribution_end_date: 1643500800000
+        },
+        {
+          id: 8,
+          status: 'Funded',
+          picture: 'fertilizer/goosefx.png',
+          title: 'GooseFX',
+          short_desc: 'A Complete DeFi Experience',
+          subscribers: 1132,
+          hard_cap: 250000,
+          token_price: 0.068,
+          ath: '+526.7%',
+          distribution_end_date: 1643500800000
+        },
+        {
+          id: 9,
+          status: 'Funded',
+          picture: 'fertilizer/waggle.png',
+          title: 'Waggle Network',
+          short_desc: 'Primary markets for everyone',
+          subscribers: 1132,
+          hard_cap: 250000,
+          token_price: 0.068,
+          ath: '+526.7%',
+          distribution_end_date: 1643500800000
+        },
+        {
+          id: 10,
+          status: 'Funded',
+          picture: 'fertilizer/cryowar.png',
+          title: 'Cryowar',
+          short_desc: 'Next-gen blockchain multiplayer game',
+          subscribers: 1132,
+          hard_cap: 250000,
+          token_price: 0.068,
+          ath: '+526.7%',
+          distribution_end_date: 1643500800000
+        },
+        {
+          id: 11,
+          status: 'Funded',
+          picture: 'fertilizer/defi.png',
+          title: 'Cyclos',
+          short_desc: 'Decentralized trading unleashed',
+          subscribers: 1132,
+          hard_cap: 250000,
+          token_price: 0.068,
+          ath: '+526.7%',
+          distribution_end_date: 1643500800000
+        },
       ],
       currentTimestamp: 0
     }
@@ -610,8 +1060,13 @@ export default Vue.extend({
       this.filterFertilizer(this.filterProject);
     },
     filterFertilizer(filterProject: string) {
-      if (filterProject === 'upcoming') this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => fertilizer.status != 'Preparation');
-      else if (filterProject === 'preparation') this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => fertilizer.status === 'Preparation');
+      if (filterProject === this.filterStatus.upcoming) {
+        this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => (fertilizer.status != this.filterStatus.preparation) && (fertilizer.status != this.filterStatus.funded));
+      } else if (filterProject === this.filterStatus.preparation) {
+        this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => fertilizer.status === this.filterStatus.preparation);
+      } else {
+        this.fertilizerItems = this.fertilizerData.filter((fertilizer: any) => fertilizer.status === this.filterStatus.funded);
+      }
     },
     getCoinPicUrl() {
       let token
@@ -716,6 +1171,32 @@ export default Vue.extend({
 
   &.open {
     background: @color-green500;
+  }
+}
+
+.isDesktop {
+  @media @max-lg-tablet {
+    display: none;
+  }
+}
+
+.isTablet {
+  display: none;
+
+  @media @max-lg-tablet {
+    display: unset;
+  }
+
+  @media @max-sl-mobile {
+    display: none;
+  }
+}
+
+.isMobile {
+  display: none;
+
+  @media @max-sl-mobile {
+    display: unset;
   }
 }
 
@@ -962,7 +1443,7 @@ export default Vue.extend({
       }
 
       .fertilizer-content {
-        .fertilizer-project {
+        .fertilizer-project-table {
           background: @color-blue700;
           border: 3px solid @color-blue500;
           border-radius: 18px;
@@ -1101,6 +1582,73 @@ export default Vue.extend({
 
           .btn-container {
             margin-top: 18px;
+          }
+        }
+
+        .fertilizer-funded-table {
+          width: 100%;
+
+          .fertilizer-funded-table-header {
+            &.scrollFixed {
+              position: sticky;
+              background: @color-blue800;
+              top: 70px;
+              z-index: 999;
+              width: 100%;
+              transition: .3s all ease-in-out;
+            }
+
+            .header-column {
+              text-align: center;
+              padding: 16px 0;
+              color: @color-neutral400;
+
+              .header-column-title {
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+
+                .arrow-icon {
+                  margin-left: 4px;
+                }
+
+                .sort-icon-active {
+                  color: #13ecab;
+                }
+              }
+            }
+          }
+
+          .fertilizer-funded-table-body {
+            .fertilizer-funded-table-item {
+              display: flex;
+              align-items: center;
+              background: rgba(23, 32, 88, 0.9);
+              border-radius: 8px;
+              padding: 18px;
+              margin-bottom: 8px;
+              border: 3px solid transparent;
+
+              &:hover {
+                border-color: @color-blue500;
+              }
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+
+              .state {
+                text-align: center;
+
+                .btn-container {
+                  margin: auto auto 8px auto;
+
+                  &:last-child {
+                    margin-bottom: 0;
+                  }
+                }
+              }
+            }
           }
         }
       }
