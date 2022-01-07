@@ -1030,9 +1030,10 @@ export default class Wallet extends Vue {
   }
 
   .ant-progress-text {
-    color: #fff;
     font-size: 11px;
     line-height: 16px;
+    font-weight: 400;
+    color: #fff;
     float: right;
     margin-top: 4px;
   }

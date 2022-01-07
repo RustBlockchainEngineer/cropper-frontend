@@ -1047,9 +1047,10 @@ export default Vue.extend({
   }
 
   .ant-progress-text {
-    color: #fff;
     font-size: 11px;
     line-height: 16px;
+    font-weight: 400;
+    color: #fff;
     float: right;
     margin-top: 4px;
   }
