@@ -1,6 +1,6 @@
 <template>
   <div class="wallet">
-    <div class="tier-container fcl-container">
+    <div v-if="wallet.connected" class="tier-container fcl-container">
       <div class="tier-profile">
         <img class="tier-img" src="@/assets/background/tier.png" />
       </div>
