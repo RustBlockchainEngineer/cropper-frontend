@@ -406,37 +406,18 @@ export default class Wallet extends Vue {
   }
 
   async getTiersInfo() {
-    // if (!this.$accessor.token.initialized || !this.$wallet?.connected) {
-    //   return
-    // }
-    // let crpbalanceDatas = this.wallet.tokenAccounts[TOKENS['CRP'].mintAddress]
-
-    // if (crpbalanceDatas) {
-    //   this.crpbalance = crpbalanceDatas.balance.fixed() * 1
-    // }
-
-    // const farm_state = await getFarmState()
-    // const extraRewardConfigs = await getExtraRewardConfigs()
+    if (!this.$accessor.token.initialized || !this.$wallet?.connected) {
+      return
+    }
     const pools = await getAllPools()
     const current_pool = pools[0]
     const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
 
-    // const endDateOfLock = userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()
-    // const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:mm:SS')
-    // this.endDateOfLock = endDateOfLock
-    // this.endOfLock = unlockDateString
-    // this.canUnstake = !(
-    //   (userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 >
-    //   new Date().getTime()
-    // )
-
     //@ts-ignore
     this.userStaked = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
 
-    // const rewardAmount = estimateRewards(farm_state, extraRewardConfigs, current_pool.account, userAccount)
     const tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
-    // this.$accessor.wallet.setStakingTiers(tiers_info)
-    // this.pendingReward = new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed()
+    this.$accessor.wallet.setStakingTiers(tiers_info)
 
     this.currentTiers = tiers_info.tiers
     this.nextTiers = tiers_info.tiers + 1
@@ -1004,38 +985,40 @@ export default class Wallet extends Vue {
   }
 }
 
-// ant progress
-.ant-progress {
-  background: transparent !important;
-  width: 196px;
+.wallet {
+  // ant progress
+  .ant-progress {
+    background: transparent !important;
+    width: 196px;
 
-  .ant-progress-outer {
-    display: flex;
-    margin: 0;
-    padding: 4px;
-    box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
-    border-radius: 50px;
-    height: 22px;
-    background: @color-blue800;
+    .ant-progress-outer {
+      display: flex;
+      margin: 0;
+      padding: 4px;
+      box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
+      border-radius: 50px;
+      height: 22px;
+      background: @color-blue800;
 
-    .ant-progress-inner {
-      background: transparent;
+      .ant-progress-inner {
+        background: transparent;
 
-      .ant-progress-bg {
-        background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
-        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-        border-radius: 50px 0 0 50px !important;
+        .ant-progress-bg {
+          background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+          box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+          border-radius: 50px 0 0 50px !important;
+        }
       }
     }
-  }
 
-  .ant-progress-text {
-    font-size: 11px;
-    line-height: 16px;
-    font-weight: 400;
-    color: #fff;
-    float: right;
-    margin-top: 4px;
+    .ant-progress-text {
+      font-size: 11px;
+      line-height: 16px;
+      font-weight: 400;
+      color: #fff;
+      float: right;
+      margin-top: 4px;
+    }
   }
 }
 </style>

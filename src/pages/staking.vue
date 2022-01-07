@@ -978,81 +978,83 @@ export default Vue.extend({
 }
 </style>
 <style lang="less">
-// ant carousel
-.ant-carousel {
-  .slick-dots {
-    position: relative;
-    margin-top: 28px;
-    bottom: 0;
-    height: auto;
+.staking {
+  // ant carousel
+  .ant-carousel {
+    .slick-dots {
+      position: relative;
+      margin-top: 28px;
+      bottom: 0;
+      height: auto;
 
-    li {
-      margin-left: 0;
-      margin-right: 18px;
-      width: 24px;
-      height: 24px;
-      padding: 3px;
-      background: transparent;
-      border-radius: 50%;
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      button {
-        width: 18px !important;
-        height: 18px !important;
-        padding: 4px;
-        border: 4px solid @color-blue800;
+      li {
+        margin-left: 0;
+        margin-right: 18px;
+        width: 24px;
+        height: 24px;
+        padding: 3px;
+        background: transparent;
         border-radius: 50%;
-        background: @color-petrol400;
-        opacity: 0.4;
-      }
 
-      &.slick-active {
-        background: #a1dfe5;
+        &:last-child {
+          margin-right: 0;
+        }
 
         button {
-          background: @color-petrol500;
-          opacity: 1;
+          width: 18px !important;
+          height: 18px !important;
+          padding: 4px;
+          border: 4px solid @color-blue800;
+          border-radius: 50%;
+          background: @color-petrol400;
+          opacity: 0.4;
+        }
+
+        &.slick-active {
+          background: #a1dfe5;
+
+          button {
+            background: @color-petrol500;
+            opacity: 1;
+          }
         }
       }
     }
   }
-}
 
-// ant progress
-.ant-progress {
-  background: transparent !important;
-  width: 196px;
+  // ant progress
+  .ant-progress {
+    background: transparent !important;
+    width: 100%;
 
-  .ant-progress-outer {
-    display: flex;
-    margin: 0;
-    padding: 4px;
-    box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
-    border-radius: 50px;
-    height: 22px;
-    background: @color-blue800;
+    .ant-progress-outer {
+      display: flex;
+      margin: 0;
+      padding: 4px;
+      box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
+      border-radius: 50px;
+      height: 22px;
+      background: @color-blue800;
 
-    .ant-progress-inner {
-      background: transparent;
+      .ant-progress-inner {
+        background: transparent;
 
-      .ant-progress-bg {
-        background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
-        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-        border-radius: 50px 0 0 50px !important;
+        .ant-progress-bg {
+          background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+          box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+          border-radius: 50px 0 0 50px !important;
+        }
       }
     }
-  }
 
-  .ant-progress-text {
-    font-size: 11px;
-    line-height: 16px;
-    font-weight: 400;
-    color: #fff;
-    float: right;
-    margin-top: 4px;
+    .ant-progress-text {
+      font-size: 11px;
+      line-height: 16px;
+      font-weight: 400;
+      color: #fff;
+      float: right;
+      margin-top: 4px;
+    }
   }
 }
 </style>
