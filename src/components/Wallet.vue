@@ -5,12 +5,27 @@
         <img class="tier-img" src="@/assets/background/tier.png" />
       </div>
 
-      <div class="tier-info fcl-container icon-cursor" @click="() => { this.showTierInfo = !this.showTierInfo }">
+      <div
+        class="tier-info fcl-container icon-cursor"
+        @click="
+          () => {
+            this.showTierInfo = !this.showTierInfo
+          }
+        "
+      >
         <span class="tier-id textM weightS letterS">Tier {{ currentTiers }}</span>
         <img src="@/assets/icons/arrow-down-white.svg" />
       </div>
 
-      <div v-if="showTierInfo" class="tier-info-menu" v-click-outside="() => { this.showTierInfo = false }">
+      <div
+        v-if="showTierInfo"
+        class="tier-info-menu"
+        v-click-outside="
+          () => {
+            this.showTierInfo = false
+          }
+        "
+      >
         <div class="collapse-item text-center textM weightS icon-cursor">
           <div class="tier-progress">
             <div class="tier-progress-label fcb-container">
@@ -20,12 +35,8 @@
             <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="true" />
           </div>
         </div>
-        <div class="collapse-item text-center textM weightS icon-cursor">
-          Stake CRP
-        </div>
-        <div class="collapse-item text-center textM weightS icon-cursor">
-          About Tiers
-        </div>
+        <div class="collapse-item text-center textM weightS icon-cursor">Stake CRP</div>
+        <div class="collapse-item text-center textM weightS icon-cursor">About Tiers</div>
       </div>
     </div>
 
@@ -159,7 +170,7 @@ import {
   getPoolUserAccount,
   estimateRewards,
   calculateTiers,
-  TIERS_XCRP,
+  TIERS_XCRP
 } from '@/utils/crp-stake'
 const Vco = require('v-click-outside')
 const network = WalletAdapterNetwork.Devnet
@@ -325,8 +336,8 @@ export default class Wallet extends Vue {
   // tier
   userStaked = 0 as number
   pctToNexttiers = 0 as number
-  currentTiers =  0 as number
-  nextTiers =  1 as number
+  currentTiers = 0 as number
+  nextTiers = 1 as number
 
   /* ========== COMPUTED ========== */
   get wallet() {
@@ -456,7 +467,7 @@ export default class Wallet extends Vue {
         this.subWallet()
         this.$notify.success({
           message: 'Wallet connected',
-          description: `Connected with ${name}`,
+          description: `Connected with ${name}`
           // icon: this.icon,
         })
 
@@ -467,8 +478,8 @@ export default class Wallet extends Vue {
     this.isModal = true
   }
 
-  icon(){
-    return `{{{<template><Icon type="info-circle" theme="filled" style="color: #31B79F" /></template>}}}`;
+  icon() {
+    return `{{{<template><Icon type="info-circle" theme="filled" style="color: #31B79F" /></template>}}}`
   }
 
   onDisconnect() {
@@ -724,7 +735,7 @@ export default class Wallet extends Vue {
 
     .tier-profile {
       display: flex;
-      background: linear-gradient(215.52deg, #273592 0.03%, #23ADB4 99.97%);
+      background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
       padding: 2px;
       height: 24px;
       width: 24px;

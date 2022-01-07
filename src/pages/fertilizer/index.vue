@@ -87,7 +87,15 @@
               src="@/assets/icons/arrow-down-white.svg"
             />
 
-            <div v-if="showTabMenu" class="option-sort-collapse collapse-left" v-click-outside="() => { this.showTabMenu = false }">
+            <div
+              v-if="showTabMenu"
+              class="option-sort-collapse collapse-left"
+              v-click-outside="
+                () => {
+                  this.showTabMenu = false
+                }
+              "
+            >
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
                 :class="filterProject === filterOptions.upcoming ? 'active-item' : ''"
@@ -136,7 +144,15 @@
               />
             </div>
 
-            <div v-if="showSearchMenu" class="option-search-collapse" v-click-outside="() => { this.showSearchMenu = false }">
+            <div
+              v-if="showSearchMenu"
+              class="option-search-collapse"
+              v-click-outside="
+                () => {
+                  this.showSearchMenu = false
+                }
+              "
+            >
               <div class="collapse-item-header fcb-container">
                 <label class="textL weightB">Search</label>
                 <img
@@ -217,8 +233,15 @@
               />
             </div>
 
-            <div v-if="showFilterMenu" v-click-outside="() => { this.showFilterMenu = false }">
-              <div v-if="filterProject === filterOptions.upcoming" class="option-sort-collapse collapse-right" >
+            <div
+              v-if="showFilterMenu"
+              v-click-outside="
+                () => {
+                  this.showFilterMenu = false
+                }
+              "
+            >
+              <div v-if="filterProject === filterOptions.upcoming" class="option-sort-collapse collapse-right">
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortUpcoming === filterOptions.all ? 'active-item' : ''"
@@ -251,42 +274,42 @@
               <div v-else-if="filterProject === filterOptions.funded" class="option-sort-collapse collapse-right">
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortFunded === sortOptions.subscribers && !sortAsc? 'active-item' : ''"
+                  :class="sortFunded === sortOptions.subscribers && !sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.subscribers, false)"
                 >
                   {{ sortOptions.subscribers }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortFunded === sortOptions.subscribers && sortAsc? 'active-item' : ''"
+                  :class="sortFunded === sortOptions.subscribers && sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.subscribers, true)"
                 >
                   {{ sortOptions.subscribers }} (High > Low)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortFunded === sortOptions.total_raised && !sortAsc? 'active-item' : ''"
+                  :class="sortFunded === sortOptions.total_raised && !sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.total_raised, false)"
                 >
                   {{ sortOptions.total_raised }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortFunded === sortOptions.total_raised && sortAsc? 'active-item' : ''"
+                  :class="sortFunded === sortOptions.total_raised && sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.total_raised, true)"
                 >
                   {{ sortOptions.total_raised }} (High > Low)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortFunded === sortOptions.ath && !sortAsc? 'active-item' : ''"
+                  :class="sortFunded === sortOptions.ath && !sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.ath, false)"
                 >
                   {{ sortOptions.ath }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortFunded === sortOptions.ath && sortAsc? 'active-item' : ''"
+                  :class="sortFunded === sortOptions.ath && sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.ath, true)"
                 >
                   {{ sortOptions.ath }} (High > Low)
@@ -680,42 +703,32 @@
 
                         <div class="state text-center" span="5">
                           <span class="label textS weightB">Ended in UTC</span>
-                          <span class="textM weightS">{{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}</span>
+                          <span class="textM weightS">{{
+                            moment(fertilizer.distribution_end_date).format('MMMM Do YYYY')
+                          }}</span>
                         </div>
-                      </div> 
+                      </div>
                     </Col>
-                    
+
                     <Col class="btn-group" :span="12">
                       <div class="fcr-container">
                         <div class="btn-container">
-                          <Button class="btn-primary textS weightB">
-                            Stake
-                          </Button>
+                          <Button class="btn-primary textS weightB"> Stake </Button>
                         </div>
 
                         <div class="btn-container">
-                          <Button class="btn-primary textS weightB">
-                            Swap
-                          </Button>
+                          <Button class="btn-primary textS weightB"> Swap </Button>
                         </div>
                       </div>
                     </Col>
 
                     <Col class="btn-group" :span="24">
                       <div class="fcc-container">
-                        <a
-                          class="social-link fcc-container bodyXS weightS icon-cursor"
-                          href="#"
-                          target="_blank"
-                        >
+                        <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
                         </a>
-                        <a
-                          class="social-link fcc-container bodyXS weightS icon-cursor"
-                          href="#"
-                          target="_blank"
-                        >
+                        <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
                           Twitter
                           <img class="social-icon" src="@/assets/icons/twitter.svg" />
                         </a>
@@ -760,21 +773,25 @@
                       <div class="fcb-container">
                         <div class="state">
                           <span class="label textS weightB">Total raised</span>
-                          <span class="textM weightS">${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}</span>
+                          <span class="textM weightS"
+                            >${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}</span
+                          >
                         </div>
 
                         <div class="state">
                           <span class="label textS weightB">Subscribers</span>
                           <span class="textM weightS">{{ fertilizer.subscribers }}</span>
                         </div>
-                      </div> 
+                      </div>
                     </Col>
 
                     <Col :span="24">
                       <div class="fcb-container">
                         <div class="state">
                           <span class="label textS weightB">Token price</span>
-                          <span class="textM weightS letterS">${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}</span>
+                          <span class="textM weightS letterS"
+                            >${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}</span
+                          >
                         </div>
 
                         <div class="state">
@@ -791,52 +808,42 @@
                             <span class="value textM weightS letterS">+{{ fertilizer.ath }}%</span>
                           </div>
                         </div>
-                      </div> 
+                      </div>
                     </Col>
 
                     <Col :span="24">
                       <div class="fcb-container">
                         <div class="state" span="5">
                           <span class="label textS weightB">Ended in UTC</span>
-                          <span class="textM weightS">{{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}</span>
+                          <span class="textM weightS">{{
+                            moment(fertilizer.distribution_end_date).format('MMMM Do YYYY')
+                          }}</span>
                         </div>
-                      </div> 
+                      </div>
                     </Col>
 
                     <Col class="btn-group" :span="24">
                       <div class="btn-group-item fcc-container">
                         <div class="btn-container">
-                          <Button class="btn-primary textS weightB">
-                            Stake
-                          </Button>
+                          <Button class="btn-primary textS weightB"> Stake </Button>
                         </div>
 
                         <div class="btn-container">
-                          <Button class="btn-primary textS weightB">
-                            Swap
-                          </Button>
+                          <Button class="btn-primary textS weightB"> Swap </Button>
                         </div>
                       </div>
 
                       <div class="btn-group-item fcc-container">
-                        <a
-                          class="social-link fcc-container bodyXS weightS icon-cursor"
-                          href="#"
-                          target="_blank"
-                        >
+                        <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
                         </a>
-                        <a
-                          class="social-link fcc-container bodyXS weightS icon-cursor"
-                          href="#"
-                          target="_blank"
-                        >
+                        <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
                           Twitter
                           <img class="social-icon" src="@/assets/icons/twitter.svg" />
                         </a>
                       </div>
-                    </Col>    
+                    </Col>
                   </Row>
                 </CollapsePanel>
               </Collapse>
@@ -1246,18 +1253,15 @@ export default Vue.extend({
         )
       } else if (this.sortUpcoming === this.filterOptions.whitelist) {
         this.fertilizerItems = this.fertilizerItems.filter(
-          (fertilizer: any) =>
-            fertilizer.status === this.filterOptions.whitelist
+          (fertilizer: any) => fertilizer.status === this.filterOptions.whitelist
         )
       } else if (this.sortUpcoming === this.filterOptions.sales) {
         this.fertilizerItems = this.fertilizerItems.filter(
-          (fertilizer: any) =>
-            fertilizer.status === this.filterOptions.sales
+          (fertilizer: any) => fertilizer.status === this.filterOptions.sales
         )
       } else if (this.sortUpcoming === this.filterOptions.distribution) {
         this.fertilizerItems = this.fertilizerItems.filter(
-          (fertilizer: any) =>
-            fertilizer.status === this.filterOptions.distribution
+          (fertilizer: any) => fertilizer.status === this.filterOptions.distribution
         )
       }
 
@@ -1272,7 +1276,9 @@ export default Vue.extend({
         } else if (this.sortFunded == this.sortOptions.ath) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.ath - a.ath)
         } else if (this.sortFunded == this.sortOptions.end_date) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.distribution_end_date - a.distribution_end_date)
+          this.fertilizerItems = this.fertilizerItems.sort(
+            (a: any, b: any) => b.distribution_end_date - a.distribution_end_date
+          )
         }
       } else {
         if (this.sortFunded == this.sortOptions.subscribers) {
@@ -1284,7 +1290,9 @@ export default Vue.extend({
         } else if (this.sortFunded == this.sortOptions.ath) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.ath - b.ath)
         } else if (this.sortFunded == this.sortOptions.end_date) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.distribution_end_date - b.distribution_end_date)
+          this.fertilizerItems = this.fertilizerItems.sort(
+            (a: any, b: any) => a.distribution_end_date - b.distribution_end_date
+          )
         }
       }
 
@@ -1980,7 +1988,7 @@ export default Vue.extend({
                   position: relative;
                   width: 20px;
                   margin: auto;
-                  
+
                   .option-sort-collapse {
                     top: 0;
                     right: 25px;
@@ -2020,7 +2028,8 @@ export default Vue.extend({
           }
         }
 
-        .btn-container, .social-link {
+        .btn-container,
+        .social-link {
           margin-right: 18px;
 
           &:last-child {
