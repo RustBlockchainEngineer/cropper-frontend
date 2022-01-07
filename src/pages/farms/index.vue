@@ -676,8 +676,8 @@
                       </Button>
                     </div>
                   </div>
-                  <div class="show-more">
-                    <img class="more-icon icon-cursor" src="@/assets/icons/dot3.svg" @click="showMore(idx)" />
+                  <div class="show-more icon-cursor text-center" @click="showMore(idx)">
+                    <img src="@/assets/icons/dot3.svg" />
                     <div
                       v-if="showMoreMenu[idx]"
                       class="option-collapse-menu collapse-right"
@@ -3505,11 +3505,12 @@ export default Vue.extend({
               }
 
               .show-more {
+                width: 20px;
                 position: relative;
 
                 .option-collapse-menu {
                   top: 0;
-                  right: 10px;
+                  right: 25px;
                 }
               }
             }

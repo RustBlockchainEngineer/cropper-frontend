@@ -584,8 +584,8 @@
                     {{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}
                   </Col>
                   <Col class="state" span="1">
-                    <div class="show-more">
-                      <img class="icon-cursor" src="@/assets/icons/dot3.svg" @click="showMore(idx)" />
+                    <div class="show-more icon-cursor" @click="showMore(idx)">
+                      <img src="@/assets/icons/dot3.svg" />
                       <div
                         v-if="showMoreMenu[idx]"
                         class="option-sort-collapse collapse-right"
@@ -1978,12 +1978,12 @@ export default Vue.extend({
 
                 .show-more {
                   position: relative;
-                  width: fit-content;
+                  width: 20px;
                   margin: auto;
                   
                   .option-sort-collapse {
                     top: 0;
-                    right: 10px;
+                    right: 25px;
                   }
                 }
               }
