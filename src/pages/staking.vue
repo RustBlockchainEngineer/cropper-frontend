@@ -1023,14 +1023,17 @@ export default Vue.extend({
 
 // ant progress
 .ant-progress {
-  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
-  height: 22px;
-  border-radius: 50px;
+  background: transparent !important;
+  width: 196px;
 
   .ant-progress-outer {
     display: flex;
     margin: 0;
     padding: 4px;
+    box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
+    border-radius: 50px;
+    height: 22px;
+    background: @color-blue800;
 
     .ant-progress-inner {
       background: transparent;

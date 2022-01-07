@@ -1,5 +1,34 @@
 <template>
   <div class="wallet">
+    <div class="tier-container fcl-container">
+      <div class="tier-profile">
+        <img class="tier-img" src="@/assets/background/tier.png" />
+      </div>
+
+      <div class="tier-info fcl-container icon-cursor" @click="() => { this.showTierInfo = !this.showTierInfo }">
+        <span class="tier-id textM weightS letterS">Tier 0</span>
+        <img src="@/assets/icons/arrow-down-white.svg" />
+      </div>
+
+      <div v-if="showTierInfo" class="tier-info-menu" v-click-outside="() => { this.showTierInfo = false }">
+        <div class="collapse-item text-center textM weightS icon-cursor">
+          <div class="tier-progress">
+            <div class="tier-progress-label fcb-container">
+              <span class="bodyXS weightB">Tier {{ currentTiers }}</span>
+              <span class="bodyXS weightB">Tier {{ nextTiers }}</span>
+            </div>
+            <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="true" />
+          </div>
+        </div>
+        <div class="collapse-item text-center textM weightS icon-cursor">
+          Stake CRP
+        </div>
+        <div class="collapse-item text-center textM weightS icon-cursor">
+          About Tiers
+        </div>
+      </div>
+    </div>
+
     <div class="wallet-btn">
       <div
         class="btncontainer"
@@ -87,7 +116,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { Button, Modal, Icon } from 'ant-design-vue'
+import { Button, Modal, Icon, Progress } from 'ant-design-vue'
 import {
   AccountInfo,
   Context
@@ -121,6 +150,17 @@ import {
 } from '@solana/wallet-adapter-wallets'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 // import { TorusWalletAdapter } from '@solana/wallet-adapter-torus'
+import { TokenAmount } from '@/utils/safe-math'
+import { TOKENS } from '@/utils/tokens'
+import {
+  getFarmState,
+  getExtraRewardConfigs,
+  getAllPools,
+  getPoolUserAccount,
+  estimateRewards,
+  calculateTiers,
+  TIERS_XCRP,
+} from '@/utils/crp-stake'
 const Vco = require('v-click-outside')
 const network = WalletAdapterNetwork.Devnet
 
@@ -145,7 +185,8 @@ interface WalletInfo {
   components: {
     Button,
     Modal,
-    Icon
+    Icon,
+    Progress
   }
 })
 export default class Wallet extends Vue {
@@ -276,8 +317,17 @@ export default class Wallet extends Vue {
 
   debugCount = 0
 
+  // menu
   popIn = false as boolean
   isModal = true as boolean
+  showTierInfo = false as boolean
+
+  // tier
+  userStaked = 0 as number
+  pctToNexttiers = 0 as number
+  currentTiers =  0 as number
+  nextTiers =  1 as number
+
   /* ========== COMPUTED ========== */
   get wallet() {
     return this.$accessor.wallet
@@ -329,6 +379,7 @@ export default class Wallet extends Vue {
 
   mounted() {
     this.autoConnect()
+    this.getTiersInfo()
   }
 
   beforeDestroy() {
@@ -351,6 +402,54 @@ export default class Wallet extends Vue {
       if (info) {
         this.connect(name, info)
       }
+    }
+  }
+
+  async getTiersInfo() {
+    // if (!this.$accessor.token.initialized || !this.$wallet?.connected) {
+    //   return
+    // }
+    // let crpbalanceDatas = this.wallet.tokenAccounts[TOKENS['CRP'].mintAddress]
+
+    // if (crpbalanceDatas) {
+    //   this.crpbalance = crpbalanceDatas.balance.fixed() * 1
+    // }
+
+    // const farm_state = await getFarmState()
+    // const extraRewardConfigs = await getExtraRewardConfigs()
+    const pools = await getAllPools()
+    const current_pool = pools[0]
+    const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
+
+    // const endDateOfLock = userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()
+    // const unlockDateString = moment(new Date(endDateOfLock * 1000)).format('MM/DD/YYYY HH:mm:SS')
+    // this.endDateOfLock = endDateOfLock
+    // this.endOfLock = unlockDateString
+    // this.canUnstake = !(
+    //   (userAccount.lastStakeTime.toNumber() + userAccount.lockDuration.toNumber()) * 1000 >
+    //   new Date().getTime()
+    // )
+
+    //@ts-ignore
+    this.userStaked = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
+
+    // const rewardAmount = estimateRewards(farm_state, extraRewardConfigs, current_pool.account, userAccount)
+    const tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
+    // this.$accessor.wallet.setStakingTiers(tiers_info)
+    // this.pendingReward = new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed()
+
+    this.currentTiers = tiers_info.tiers
+    this.nextTiers = tiers_info.tiers + 1
+
+    if (this.nextTiers == TIERS_XCRP.length) {
+      this.nextTiers--
+      this.currentTiers--
+      this.pctToNexttiers = 100
+    } else {
+      this.pctToNexttiers =
+        ((tiers_info.xCRP - TIERS_XCRP[this.currentTiers]) /
+          (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
+        100
     }
   }
 
@@ -638,6 +737,65 @@ export default class Wallet extends Vue {
 .wallet {
   display: flex;
 
+  .tier-container {
+    position: relative;
+    margin-right: 18px;
+
+    .tier-profile {
+      display: flex;
+      background: linear-gradient(215.52deg, #273592 0.03%, #23ADB4 99.97%);
+      padding: 2px;
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      margin-right: 4px;
+
+      .tier-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+
+    .tier-info {
+      .tier-id {
+        color: @color-blue100;
+        margin-right: 8px;
+      }
+    }
+
+    .tier-info-menu {
+      position: absolute;
+      top: 50px;
+      background: @gradient-color-primary;
+      background-origin: border-box;
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      min-width: 188px;
+      z-index: 999;
+
+      .collapse-item {
+        padding: 8px 16px;
+        border-bottom: 1px solid #c4c4c420;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+
+        a {
+          color: #fff;
+        }
+
+        .tier-progress {
+          .tier-progress-label {
+            margin-bottom: 4px;
+          }
+        }
+      }
+    }
+  }
+
   .wallet-list {
     position: absolute;
     right: 64px;
@@ -843,6 +1001,40 @@ export default class Wallet extends Vue {
         border: none;
       }
     }
+  }
+}
+
+// ant progress
+.ant-progress {
+  background: transparent !important;
+  width: 196px;
+
+  .ant-progress-outer {
+    display: flex;
+    margin: 0;
+    padding: 4px;
+    box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
+    border-radius: 50px;
+    height: 22px;
+    background: @color-blue800;
+
+    .ant-progress-inner {
+      background: transparent;
+
+      .ant-progress-bg {
+        background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+        border-radius: 50px 0 0 50px !important;
+      }
+    }
+  }
+
+  .ant-progress-text {
+    color: #fff;
+    font-size: 11px;
+    line-height: 16px;
+    float: right;
+    margin-top: 4px;
   }
 }
 </style>
