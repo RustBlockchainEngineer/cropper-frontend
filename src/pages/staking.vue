@@ -499,8 +499,6 @@ export default Vue.extend({
 
       this.currentTiers = tiers_info.tiers
       this.nextTiers = tiers_info.tiers + 1
-      
-      localStorage.setItem('currentTiers', this.currentTiers as any)
 
       if (this.nextTiers == TIERS_XCRP.length) {
         this.nextTiers--
@@ -512,8 +510,6 @@ export default Vue.extend({
             (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
           100
       }
-
-      localStorage.setItem('pctToNexttiers', this.pctToNexttiers as any)
     },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
       this.baseModalShow = false

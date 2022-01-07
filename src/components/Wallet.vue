@@ -15,7 +15,7 @@
           <div class="tier-progress">
             <div class="tier-progress-label fcb-container">
               <span class="bodyXS weightB">Tier {{ currentTiers }}</span>
-              <span class="bodyXS weightB">Tier {{ currentTiers + 1 }}</span>
+              <span class="bodyXS weightB">Tier {{ nextTiers }}</span>
             </div>
             <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="true" />
           </div>
@@ -150,6 +150,17 @@ import {
 } from '@solana/wallet-adapter-wallets'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 // import { TorusWalletAdapter } from '@solana/wallet-adapter-torus'
+import { TokenAmount } from '@/utils/safe-math'
+import { TOKENS } from '@/utils/tokens'
+import {
+  getFarmState,
+  getExtraRewardConfigs,
+  getAllPools,
+  getPoolUserAccount,
+  estimateRewards,
+  calculateTiers,
+  TIERS_XCRP,
+} from '@/utils/crp-stake'
 const Vco = require('v-click-outside')
 const network = WalletAdapterNetwork.Devnet
 
@@ -312,8 +323,10 @@ export default class Wallet extends Vue {
   showTierInfo = false as boolean
 
   // tier
-  pctToNexttiers = LocalStorage.get('pctToNexttiers')
-  currentTiers =  LocalStorage.get('currentTiers')
+  userStaked = 0 as number
+  pctToNexttiers = 0 as number
+  currentTiers =  0 as number
+  nextTiers =  1 as number
 
   /* ========== COMPUTED ========== */
   get wallet() {
@@ -366,6 +379,7 @@ export default class Wallet extends Vue {
 
   mounted() {
     this.autoConnect()
+    this.getTiersInfo()
   }
 
   beforeDestroy() {
@@ -388,6 +402,35 @@ export default class Wallet extends Vue {
       if (info) {
         this.connect(name, info)
       }
+    }
+  }
+
+  async getTiersInfo() {
+    if (!this.$accessor.token.initialized || !this.$wallet?.connected) {
+      return
+    }
+    const pools = await getAllPools()
+    const current_pool = pools[0]
+    const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
+
+    //@ts-ignore
+    this.userStaked = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
+
+    const tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
+    this.$accessor.wallet.setStakingTiers(tiers_info)
+
+    this.currentTiers = tiers_info.tiers
+    this.nextTiers = tiers_info.tiers + 1
+
+    if (this.nextTiers == TIERS_XCRP.length) {
+      this.nextTiers--
+      this.currentTiers--
+      this.pctToNexttiers = 100
+    } else {
+      this.pctToNexttiers =
+        ((tiers_info.xCRP - TIERS_XCRP[this.currentTiers]) /
+          (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
+        100
     }
   }
 
