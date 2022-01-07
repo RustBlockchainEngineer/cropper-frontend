@@ -165,17 +165,37 @@
               <span class="option-sort-item fcc-container bodyM weightS">
                 <label>Sort by:</label>
                 <span class="sort-detail">
-                  {{
-                    filterSort === filterOptions.all
-                      ? filterOptions.all
-                      : filterSort === filterOptions.whitelist
-                      ? filterOptions.whitelist
-                      : filterSort === filterOptions.sales
-                      ? filterOptions.sales
-                      : filterSort === filterOptions.distribution
-                      ? filterOptions.distribution
-                      : ''
-                  }}
+                  <span v-if="filterProject === filterOptions.upcoming">
+                    {{
+                      filterSort === filterOptions.all
+                        ? filterOptions.all
+                        : filterSort === filterOptions.whitelist
+                        ? filterOptions.whitelist
+                        : filterSort === filterOptions.sales
+                        ? filterOptions.sales
+                        : filterSort === filterOptions.distribution
+                        ? filterOptions.distribution
+                        : filterOptions.all
+                    }}
+                  </span>
+                  <span v-else-if="filterProject === filterOptions.funded">
+                    {{
+                      filterSortFunded === sortOptions.subscribers
+                        ? sortOptions.subscribers
+                        : filterSortFunded === sortOptions.total_raised
+                        ? sortOptions.total_raised
+                        : filterSortFunded === sortOptions.token_price
+                        ? sortOptions.token_price
+                        : filterSortFunded === sortOptions.ath
+                        ? sortOptions.ath
+                        : filterSortFunded === sortOptions.end_date
+                        ? sortOptions.end_date
+                        : ''
+                    }}
+                  </span>
+                  <span v-else>
+                    {{ filterOptions.preparation }}
+                  </span>
                   <img
                     class="arrow-icon"
                     :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
@@ -196,76 +216,76 @@
               />
             </div>
 
-            <div v-if="showFilterMenu">
-              <div v-if="filterProject != filterOptions.funded " class="option-sort-collapse collapse-right" v-click-outside="() => { this.showFilterMenu = false }">
+            <div v-if="showFilterMenu" v-click-outside="() => { this.showFilterMenu = false }">
+              <div v-if="filterProject === filterOptions.upcoming" class="option-sort-collapse collapse-right" >
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="filterSort === 'all' ? 'active-item' : ''"
-                  @click="setFilterSort('all')"
+                  :class="filterSort === filterOptions.all ? 'active-item' : ''"
+                  @click="sortByStatus(filterOptions.all)"
                 >
                   All
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="filterSort === filterOptions.whitelist ? 'active-item' : ''"
-                  @click="setFilterSort(filterOptions.whitelist)"
+                  @click="sortByStatus(filterOptions.whitelist)"
                 >
                   Whitelist Open
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="filterSort === filterOptions.sales ? 'active-item' : ''"
-                  @click="setFilterSort(filterOptions.sales)"
+                  @click="sortByStatus(filterOptions.sales)"
                 >
                   Sales
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="filterSort === filterOptions.distribution ? 'active-item' : ''"
-                  @click="setFilterSort(filterOptions.distribution)"
+                  @click="sortByStatus(filterOptions.distribution)"
                 >
                   Distribution
                 </div>
               </div>
-              <div v-else class="option-sort-collapse collapse-right" v-click-outside="() => { this.showFilterMenu = false }">
+              <div v-else-if="filterProject === filterOptions.funded" class="option-sort-collapse collapse-right">
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortMethod === sortOptions.subscribers && !sortAsc? 'active-item' : ''"
+                  :class="filterSortFunded === sortOptions.subscribers && !sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.subscribers, false)"
                 >
                   {{ sortOptions.subscribers }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortMethod === sortOptions.subscribers && sortAsc? 'active-item' : ''"
+                  :class="filterSortFunded === sortOptions.subscribers && sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.subscribers, true)"
                 >
                   {{ sortOptions.subscribers }} (High > Low)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortMethod === sortOptions.total_raised && !sortAsc? 'active-item' : ''"
+                  :class="filterSortFunded === sortOptions.total_raised && !sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.total_raised, false)"
                 >
                   {{ sortOptions.total_raised }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortMethod === sortOptions.total_raised && sortAsc? 'active-item' : ''"
+                  :class="filterSortFunded === sortOptions.total_raised && sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.total_raised, true)"
                 >
                   {{ sortOptions.total_raised }} (High > Low)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortMethod === sortOptions.ath && !sortAsc? 'active-item' : ''"
+                  :class="filterSortFunded === sortOptions.ath && !sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.ath, false)"
                 >
                   {{ sortOptions.ath }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
-                  :class="sortMethod === sortOptions.ath && sortAsc? 'active-item' : ''"
+                  :class="filterSortFunded === sortOptions.ath && sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.ath, true)"
                 >
                   {{ sortOptions.ath }} (High > Low)
@@ -417,16 +437,16 @@
                   <div class="header-column-title" @click="sortByColumn(sortOptions.subscribers)">
                     Subscribers
                     <img
-                      v-if="sortMethod === sortOptions.subscribers"
+                      v-if="filterSortFunded === sortOptions.subscribers"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
@@ -434,16 +454,16 @@
                   <div class="header-column-title" @click="sortByColumn(sortOptions.total_raised)">
                     Total raised
                     <img
-                      v-if="sortMethod === sortOptions.total_raised"
+                      v-if="filterSortFunded === sortOptions.total_raised"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.total_raised && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.total_raised && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.total_raised && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.total_raised && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
@@ -451,16 +471,16 @@
                   <div class="header-column-title" @click="sortByColumn(sortOptions.token_price)">
                     Token price
                     <img
-                      v-if="sortMethod === sortOptions.token_price"
+                      v-if="filterSortFunded === sortOptions.token_price"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.token_price && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.token_price && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.token_price && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.token_price && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
@@ -468,16 +488,16 @@
                   <div class="header-column-title" @click="sortByColumn(sortOptions.ath)">
                     ATH Since IPO
                     <img
-                      v-if="sortMethod === sortOptions.ath"
+                      v-if="filterSortFunded === sortOptions.ath"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.ath && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.ath && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.ath && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.ath && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
@@ -485,16 +505,16 @@
                   <div class="header-column-title" @click="sortByColumn(sortOptions.end_date)">
                     Ended in UTC
                     <img
-                      v-if="sortMethod === sortOptions.end_date"
+                      v-if="filterSortFunded === sortOptions.end_date"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.end_date && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.end_date && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortMethod === sortOptions.end_date && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="filterSortFunded === sortOptions.end_date && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
@@ -874,7 +894,7 @@ export default Vue.extend({
         ath: 'ATH Since IPO',
         end_date: 'Ended in UTC'
       },
-      sortMethod: 'Subscribers' as string,
+      filterSortFunded: 'Subscribers' as string,
       sortAsc: false as boolean,
       filterOptions: {
         all: 'All',
@@ -886,7 +906,7 @@ export default Vue.extend({
         funded: 'Funded'
       },
       filterProject: 'Upcoming' as string,
-      filterSort: 'all' as string,
+      filterSort: 'All' as string,
       fertilizerItems: [] as any[],
       fertilizerData: [
         {
@@ -1064,6 +1084,8 @@ export default Vue.extend({
     },
     filterProject: {
       handler(newFilterProject: string) {
+        this.filterSort = ''
+        this.showFilterMenu = false
         this.filterFertilizer(newFilterProject)
       },
       deep: true
@@ -1194,29 +1216,52 @@ export default Vue.extend({
         )
       }
 
+      // sort by status
+      if (this.filterSort === this.filterOptions.all) {
+        this.fertilizerItems = this.fertilizerItems.filter(
+          (fertilizer: any) =>
+            fertilizer.status != this.filterOptions.preparation && fertilizer.status != this.filterOptions.funded
+        )
+      } else if (this.filterSort === this.filterOptions.whitelist) {
+        this.fertilizerItems = this.fertilizerItems.filter(
+          (fertilizer: any) =>
+            fertilizer.status === this.filterOptions.whitelist
+        )
+      } else if (this.filterSort === this.filterOptions.sales) {
+        this.fertilizerItems = this.fertilizerItems.filter(
+          (fertilizer: any) =>
+            fertilizer.status === this.filterOptions.sales
+        )
+      } else if (this.filterSort === this.filterOptions.distribution) {
+        this.fertilizerItems = this.fertilizerItems.filter(
+          (fertilizer: any) =>
+            fertilizer.status === this.filterOptions.distribution
+        )
+      }
+
       // sort by column
       if (this.sortAsc) {
-        if (this.sortMethod == this.sortOptions.subscribers) {
+        if (this.filterSortFunded == this.sortOptions.subscribers) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.subscribers - a.subscribers)
-        } else if (this.sortMethod == this.sortOptions.total_raised) {
+        } else if (this.filterSortFunded == this.sortOptions.total_raised) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.hard_cap - a.hard_cap)
-        } else if (this.sortMethod == this.sortOptions.token_price) {
+        } else if (this.filterSortFunded == this.sortOptions.token_price) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.token_price - a.token_price)
-        } else if (this.sortMethod == this.sortOptions.ath) {
+        } else if (this.filterSortFunded == this.sortOptions.ath) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.ath - a.ath)
-        } else if (this.sortMethod == this.sortOptions.end_date) {
+        } else if (this.filterSortFunded == this.sortOptions.end_date) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.distribution_end_date - a.distribution_end_date)
         }
       } else {
-        if (this.sortMethod == this.sortOptions.subscribers) {
+        if (this.filterSortFunded == this.sortOptions.subscribers) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.subscribers - b.subscribers)
-        } else if (this.sortMethod == this.sortOptions.total_raised) {
+        } else if (this.filterSortFunded == this.sortOptions.total_raised) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.hard_cap - b.hard_cap)
-        } else if (this.sortMethod == this.sortOptions.token_price) {
+        } else if (this.filterSortFunded == this.sortOptions.token_price) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.token_price - b.token_price)
-        } else if (this.sortMethod == this.sortOptions.ath) {
+        } else if (this.filterSortFunded == this.sortOptions.ath) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.ath - b.ath)
-        } else if (this.sortMethod == this.sortOptions.end_date) {
+        } else if (this.filterSortFunded == this.sortOptions.end_date) {
           this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.distribution_end_date - b.distribution_end_date)
         }
       }
@@ -1250,18 +1295,20 @@ export default Vue.extend({
         path: '/fertilizer/project/?f=' + farm.slug
       })
     },
-    setFilterSort(option: string) {
+    sortByStatus(option: string) {
       this.filterSort = option
       this.showFilterMenu = false
+      this.filterFertilizer(this.filterProject)
     },
     sortByColumn(option: string) {
-      if (this.sortMethod === option) this.sortAsc = !this.sortAsc
-      this.sortMethod = option
+      if (this.filterSortFunded === option) this.sortAsc = !this.sortAsc
+      this.filterSortFunded = option
       this.filterFertilizer(this.filterProject)
     },
     sortByColumnMenu(option: string, asc: boolean) {
-      this.sortMethod = option
+      this.filterSortFunded = option
       this.sortAsc = asc
+      this.showFilterMenu = false
       this.filterFertilizer(this.filterProject)
     },
     showMore(idx: number) {
