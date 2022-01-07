@@ -388,7 +388,7 @@
                             1000
                         ) / 1000
                       }}
-                      {{ farm.farmInfo.lp.coin.symbol }}
+                      {{ farm.farmInfo.reward.symbol }}
                     </div>
                   </div>
                 </div>
