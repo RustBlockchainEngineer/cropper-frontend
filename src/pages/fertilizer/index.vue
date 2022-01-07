@@ -1106,7 +1106,7 @@ export default Vue.extend({
     },
     filterProject: {
       handler(newFilterProject: string) {
-        this.sortUpcoming = this.filterOptions.all
+        this.sortUpcoming = ''
         this.showFilterMenu = false
         this.filterFertilizer(newFilterProject)
       },
