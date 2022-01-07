@@ -6,7 +6,7 @@
       </div>
 
       <div class="tier-info fcl-container icon-cursor" @click="() => { this.showTierInfo = !this.showTierInfo }">
-        <span class="tier-id textM weightS letterS">Tier 0</span>
+        <span class="tier-id textM weightS letterS">Tier {{ currentTiers }}</span>
         <img src="@/assets/icons/arrow-down-white.svg" />
       </div>
 
