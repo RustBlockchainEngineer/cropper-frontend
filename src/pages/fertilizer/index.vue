@@ -233,42 +233,42 @@
                   :class="sortMethod === sortOptions.subscribers && !sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.subscribers, false)"
                 >
-                  {{ sortOptions.subscribers }} (High > Low)
+                  {{ sortOptions.subscribers }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === sortOptions.subscribers && sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.subscribers, true)"
                 >
-                  {{ sortOptions.subscribers }} (Low > High)
+                  {{ sortOptions.subscribers }} (High > Low)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === sortOptions.total_raised && !sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.total_raised, false)"
                 >
-                  {{ sortOptions.total_raised }} (High > Low)
+                  {{ sortOptions.total_raised }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === sortOptions.total_raised && sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.total_raised, true)"
                 >
-                  {{ sortOptions.total_raised }} (Low > High)
+                  {{ sortOptions.total_raised }} (High > Low)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === sortOptions.ath && !sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.ath, false)"
                 >
-                  {{ sortOptions.ath }} (High > Low)
+                  {{ sortOptions.ath }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === sortOptions.ath && sortAsc? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.ath, true)"
                 >
-                  {{ sortOptions.ath }} (Low > High)
+                  {{ sortOptions.ath }} (High > Low)
                 </div>
               </div>
             </div>

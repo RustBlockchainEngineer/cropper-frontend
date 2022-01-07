@@ -63,7 +63,7 @@
             <label class="value textS weightS letterL">{{ this.userStaked * 1 + toStake * 1 }}</label>
           </div>
           <div class="calc-yield-info">
-            <label class="label textS weightB">Base APY (%)</label>
+            <label class="label textS weightB">APY (%)</label>
             <label class="value textS weightS letterL">{{
               (Math.round(this.estimatedapy * 100) * boostAPY) / 100
             }}</label>
