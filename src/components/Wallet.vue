@@ -126,14 +126,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'nuxt-property-decorator'
+import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { Button, Modal, Icon, Progress } from 'ant-design-vue'
 import {
   AccountInfo,
   Context
   // PublicKey
 } from '@solana/web3.js'
-
 import importIcon from '@/utils/import-icon'
 import logger from '@/utils/logger'
 import { commitment } from '@/utils/web3'
@@ -402,7 +401,9 @@ export default class Wallet extends Vue {
   }
 
   /* ========== WATCH ========== */
-
+  @Watch('wallet.conneected', { immediate: true, deep: true }) handler(connected: any) {
+    this.getTiersInfo()
+  }
   /* ========== METHODS ========== */
   importIcon = importIcon
 
