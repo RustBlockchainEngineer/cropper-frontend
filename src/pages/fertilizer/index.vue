@@ -386,7 +386,7 @@
                       :title="
                         fertilizer.status === filterOptions.whitelist
                           ? 'End of the whitelist in'
-                          : fertilizer.status === filterOptions.sales
+                          : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
                           ? 'Sales starts in'
                           : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
                           ? 'End of the sales in'
@@ -399,7 +399,7 @@
                       :value="
                         fertilizer.status === filterOptions.whitelist
                           ? fertilizer.whitelist_end_date
-                          : fertilizer.status === filterOptions.sales
+                          : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
                           ? fertilizer.sales_start_date
                           : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
                           ? fertilizer.sales_end_date
@@ -958,7 +958,7 @@ export default Vue.extend({
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           sales_start_date: 1641280215000,
-          sales_end_date: 1641280215000
+          sales_end_date: 1643500800000
         },
         {
           id: 2,
@@ -1113,7 +1113,9 @@ export default Vue.extend({
     },
     filterProject: {
       handler(newFilterProject: string) {
-        this.sortUpcoming = ''
+        this.sortUpcoming = this.filterOptions.all
+        this.sortFunded = this.sortOptions.subscribers
+        this.sortAsc = false
         this.showFilterMenu = false
         this.filterFertilizer(newFilterProject)
       },
@@ -1235,6 +1237,26 @@ export default Vue.extend({
           (fertilizer: any) =>
             fertilizer.status != this.filterOptions.preparation && fertilizer.status != this.filterOptions.funded
         )
+
+        // sort by status on Upcoming projects
+        if (this.sortUpcoming === this.filterOptions.all) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) =>
+              fertilizer.status != this.filterOptions.preparation && fertilizer.status != this.filterOptions.funded
+          )
+        } else if (this.sortUpcoming === this.filterOptions.whitelist) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) => fertilizer.status === this.filterOptions.whitelist
+          )
+        } else if (this.sortUpcoming === this.filterOptions.sales) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) => fertilizer.status === this.filterOptions.sales
+          )
+        } else if (this.sortUpcoming === this.filterOptions.distribution) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) => fertilizer.status === this.filterOptions.distribution
+          )
+        }
       } else if (filterProject === this.filterOptions.preparation) {
         this.fertilizerItems = this.fertilizerData.filter(
           (fertilizer: any) => fertilizer.status === this.filterOptions.preparation
@@ -1243,56 +1265,36 @@ export default Vue.extend({
         this.fertilizerItems = this.fertilizerData.filter(
           (fertilizer: any) => fertilizer.status === this.filterOptions.funded
         )
-      }
 
-      // sort by status
-      if (this.sortUpcoming === this.filterOptions.all) {
-        this.fertilizerItems = this.fertilizerItems.filter(
-          (fertilizer: any) =>
-            fertilizer.status != this.filterOptions.preparation && fertilizer.status != this.filterOptions.funded
-        )
-      } else if (this.sortUpcoming === this.filterOptions.whitelist) {
-        this.fertilizerItems = this.fertilizerItems.filter(
-          (fertilizer: any) => fertilizer.status === this.filterOptions.whitelist
-        )
-      } else if (this.sortUpcoming === this.filterOptions.sales) {
-        this.fertilizerItems = this.fertilizerItems.filter(
-          (fertilizer: any) => fertilizer.status === this.filterOptions.sales
-        )
-      } else if (this.sortUpcoming === this.filterOptions.distribution) {
-        this.fertilizerItems = this.fertilizerItems.filter(
-          (fertilizer: any) => fertilizer.status === this.filterOptions.distribution
-        )
-      }
-
-      // sort by column
-      if (this.sortAsc) {
-        if (this.sortFunded == this.sortOptions.subscribers) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.subscribers - a.subscribers)
-        } else if (this.sortFunded == this.sortOptions.total_raised) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.hard_cap - a.hard_cap)
-        } else if (this.sortFunded == this.sortOptions.token_price) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.token_price - a.token_price)
-        } else if (this.sortFunded == this.sortOptions.ath) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.ath - a.ath)
-        } else if (this.sortFunded == this.sortOptions.end_date) {
-          this.fertilizerItems = this.fertilizerItems.sort(
-            (a: any, b: any) => b.distribution_end_date - a.distribution_end_date
-          )
-        }
-      } else {
-        if (this.sortFunded == this.sortOptions.subscribers) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.subscribers - b.subscribers)
-        } else if (this.sortFunded == this.sortOptions.total_raised) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.hard_cap - b.hard_cap)
-        } else if (this.sortFunded == this.sortOptions.token_price) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.token_price - b.token_price)
-        } else if (this.sortFunded == this.sortOptions.ath) {
-          this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.ath - b.ath)
-        } else if (this.sortFunded == this.sortOptions.end_date) {
-          this.fertilizerItems = this.fertilizerItems.sort(
-            (a: any, b: any) => a.distribution_end_date - b.distribution_end_date
-          )
+        // sort by column on Funded projects
+        if (this.sortAsc) {
+          if (this.sortFunded == this.sortOptions.subscribers) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.subscribers - a.subscribers)
+          } else if (this.sortFunded == this.sortOptions.total_raised) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.hard_cap - a.hard_cap)
+          } else if (this.sortFunded == this.sortOptions.token_price) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.token_price - a.token_price)
+          } else if (this.sortFunded == this.sortOptions.ath) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.ath - a.ath)
+          } else if (this.sortFunded == this.sortOptions.end_date) {
+            this.fertilizerItems = this.fertilizerItems.sort(
+              (a: any, b: any) => b.distribution_end_date - a.distribution_end_date
+            )
+          }
+        } else {
+          if (this.sortFunded == this.sortOptions.subscribers) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.subscribers - b.subscribers)
+          } else if (this.sortFunded == this.sortOptions.total_raised) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.hard_cap - b.hard_cap)
+          } else if (this.sortFunded == this.sortOptions.token_price) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.token_price - b.token_price)
+          } else if (this.sortFunded == this.sortOptions.ath) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.ath - b.ath)
+          } else if (this.sortFunded == this.sortOptions.end_date) {
+            this.fertilizerItems = this.fertilizerItems.sort(
+              (a: any, b: any) => a.distribution_end_date - b.distribution_end_date
+            )
+          }
         }
       }
 
