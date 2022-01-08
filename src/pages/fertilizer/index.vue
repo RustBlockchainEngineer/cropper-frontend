@@ -1111,13 +1111,19 @@ export default Vue.extend({
       },
       deep: true
     },
+    searchName: {
+      handler(newSearchName: string) {
+        this.filterFertilizer(newSearchName, this.filterProject)
+      },
+      deep: true
+    },
     filterProject: {
       handler(newFilterProject: string) {
         this.sortUpcoming = this.filterOptions.all
         this.sortFunded = this.sortOptions.subscribers
         this.sortAsc = false
         this.showFilterMenu = false
-        this.filterFertilizer(newFilterProject)
+        this.filterFertilizer(this.searchName, newFilterProject)
       },
       deep: true
     }
@@ -1228,9 +1234,9 @@ export default Vue.extend({
       }, 1000)
     },
     updateFertilizer() {
-      this.filterFertilizer(this.filterProject)
+      this.filterFertilizer(this.searchName, this.filterProject)
     },
-    filterFertilizer(filterProject: string) {
+    filterFertilizer(searchName: string, filterProject: string) {
       // filter with tabs
       if (filterProject === this.filterOptions.upcoming) {
         this.fertilizerItems = this.fertilizerData.filter(
@@ -1298,6 +1304,15 @@ export default Vue.extend({
         }
       }
 
+      // search with name
+      if (searchName != '') {
+        console.log(searchName)
+        this.fertilizerItems = this.fertilizerItems.filter(
+          (fertilizer: any) =>
+            fertilizer.title.toLowerCase().includes(searchName.toLowerCase())
+        )
+      }
+
       this.showMoreMenu = []
       this.fertilizerItems.forEach((element) => {
         this.showMoreMenu.push(false)
@@ -1330,18 +1345,18 @@ export default Vue.extend({
     sortByStatus(option: string) {
       this.sortUpcoming = option
       this.showFilterMenu = false
-      this.filterFertilizer(this.filterProject)
+      this.filterFertilizer(this.searchName, this.filterProject)
     },
     sortByColumn(option: string) {
       if (this.sortFunded === option) this.sortAsc = !this.sortAsc
       this.sortFunded = option
-      this.filterFertilizer(this.filterProject)
+      this.filterFertilizer(this.searchName, this.filterProject)
     },
     sortByColumnMenu(option: string, asc: boolean) {
       this.sortFunded = option
       this.sortAsc = asc
       this.showFilterMenu = false
-      this.filterFertilizer(this.filterProject)
+      this.filterFertilizer(this.searchName, this.filterProject)
     },
     showMore(idx: number) {
       if (idx != this.currentShowMore) {
