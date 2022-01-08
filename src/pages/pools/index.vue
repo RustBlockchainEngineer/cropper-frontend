@@ -611,7 +611,7 @@
                     </Col>
 
                     <Button class="detail-btn textS weightS">
-                      Details
+                      <span class="label textS weightS">Details</span>
                       <img
                         class="arrow-icon"
                         :class="data.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
@@ -1536,6 +1536,10 @@ export default class Pools extends Vue {
   border: none;
   display: flex;
   align-items: center;
+
+  .label {
+    margin-right: 8px;
+  }
 }
 
 .isDesktop {

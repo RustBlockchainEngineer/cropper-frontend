@@ -323,7 +323,7 @@
           <Row v-if="filterProject != filterOptions.funded" :gutter="[18, 28]">
             <Col
               v-for="(fertilizer, idx) in fertilizerItems"
-              :key="fertilizer.id"
+              :key="idx"
               :lg="idx === 0 ? 12 : 6"
               :md="idx === 0 ? 16 : 8"
               :sm="24"
@@ -568,7 +568,7 @@
                 <Row
                   class="fertilizer-funded-table-item"
                   v-for="(fertilizer, idx) in fertilizerItems"
-                  :key="fertilizer.id"
+                  :key="idx"
                 >
                   <Col class="state" span="6">
                     <div class="project-name fcl-container">
@@ -643,8 +643,8 @@
             <div class="fertilizer-funded-table isTablet">
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
-                  v-for="fertilizer in fertilizerItems"
-                  :key="fertilizer.id"
+                  v-for="(fertilizer, idx) in fertilizerItems"
+                  :key="idx"
                   v-show="true"
                   :show-arrow="true"
                 >
@@ -677,7 +677,7 @@
                     <Button class="detail-btn textS weightS">
                       <img
                         class="arrow-icon"
-                        :class="fertilizer.id != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        :class="idx != showCollapse ? 'arrow-up' : 'arrow-down'"
                         src="@/assets/icons/arrow-down-white.svg"
                       />
                     </Button>
@@ -743,8 +743,8 @@
             <div class="fertilizer-funded-table isMobile">
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
-                  v-for="fertilizer in fertilizerItems"
-                  :key="fertilizer.id"
+                  v-for="(fertilizer, idx) in fertilizerItems"
+                  :key="idx"
                   v-show="true"
                   :show-arrow="true"
                 >
@@ -762,7 +762,7 @@
                     <Button class="detail-btn textS weightS">
                       <img
                         class="arrow-icon"
-                        :class="fertilizer.id != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        :class="idx != showCollapse ? 'arrow-up' : 'arrow-down'"
                         src="@/assets/icons/arrow-down-white.svg"
                       />
                     </Button>
@@ -883,13 +883,13 @@ export default Vue.extend({
   components: {
     // Spin,
     // Icon,
+    Collapse,
+    CollapsePanel,
     Row,
     Col,
     Button,
     Countdown,
     Tooltip,
-    Collapse,
-    CollapsePanel
   },
   data() {
     return {
@@ -903,7 +903,7 @@ export default Vue.extend({
       poolLoaded: false,
       autoRefreshTime: 60 as number,
       countdown: 0,
-      showCollapse: 0 as any,
+      showCollapse: [] as any[],
       timer: null as any,
       loading: false as boolean,
       nbFarmsLoaded: 0 as number,
@@ -938,7 +938,6 @@ export default Vue.extend({
       fertilizerItems: [] as any[],
       fertilizerData: [
         {
-          id: 0,
           status: 'Whitelist Open',
           picture: '/fertilizer/unq.png',
           title: 'UNQ.club',
@@ -949,7 +948,6 @@ export default Vue.extend({
           whitelist_end_date: 1643500800000
         },
         {
-          id: 1,
           status: 'Sales',
           picture: '/fertilizer/metaprints.png',
           title: 'Metaprints',
@@ -961,7 +959,6 @@ export default Vue.extend({
           sales_end_date: 1643500800000
         },
         {
-          id: 2,
           status: 'Sales',
           picture: '/fertilizer/galaxy.png',
           title: 'Galaxy War',
@@ -972,7 +969,6 @@ export default Vue.extend({
           sales_start_date: 1643500800000
         },
         {
-          id: 3,
           status: 'Distribution',
           picture: '/fertilizer/meanfi.png',
           title: 'MeanFI',
@@ -983,7 +979,6 @@ export default Vue.extend({
           distribution_start_date: 1643500800000
         },
         {
-          id: 4,
           status: 'Preparation',
           picture: '/fertilizer/agoric.png',
           title: 'Agoric',
@@ -993,7 +988,6 @@ export default Vue.extend({
           whitelist_start_date: 1643500800000
         },
         {
-          id: 5,
           status: 'Preparation',
           picture: '/fertilizer/metaprints.png',
           title: 'Metaprints',
@@ -1002,7 +996,6 @@ export default Vue.extend({
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
         },
         {
-          id: 6,
           status: 'Funded',
           picture: '/fertilizer/funded/defiland.png',
           title: 'DeFi Land',
@@ -1014,7 +1007,6 @@ export default Vue.extend({
           distribution_end_date: 1643500800000
         },
         {
-          id: 7,
           status: 'Funded',
           picture: '/fertilizer/funded/sonar.png',
           title: 'Sonar Watch',
@@ -1026,7 +1018,6 @@ export default Vue.extend({
           distribution_end_date: 1643500800000
         },
         {
-          id: 8,
           status: 'Funded',
           picture: '/fertilizer/funded/goosefx.png',
           title: 'GooseFX',
@@ -1038,7 +1029,6 @@ export default Vue.extend({
           distribution_end_date: 1643500800000
         },
         {
-          id: 9,
           status: 'Funded',
           picture: '/fertilizer/funded/waggle.png',
           title: 'Waggle Network',
@@ -1050,7 +1040,6 @@ export default Vue.extend({
           distribution_end_date: 1643500800000
         },
         {
-          id: 10,
           status: 'Funded',
           picture: '/fertilizer/funded/cryowar.png',
           title: 'Cryowar',
@@ -1062,7 +1051,6 @@ export default Vue.extend({
           distribution_end_date: 1643500800000
         },
         {
-          id: 11,
           status: 'Funded',
           picture: '/fertilizer/funded/cyclos.png',
           title: 'Cyclos',
@@ -1105,6 +1093,7 @@ export default Vue.extend({
   watch: {
     showCollapse: {
       handler() {
+        console.log(this.showCollapse)
         if (!this.poolType && this.showCollapse.length > 0) {
           this.showCollapse.splice(0, this.showCollapse.length)
         }

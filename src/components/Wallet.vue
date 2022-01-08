@@ -48,13 +48,9 @@
         ghost
         @click="openPopIn"
       >
-        <Button class="bodyS weightB isDesktop">
+        <Button class="bodyS weightB">
           <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
-          Connect wallet
-        </Button>
-        <Button class="bodyS weightB isMobile">
-          <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
-          Connect
+          {{ windowWidth >= 768 ? 'Connect wallet' : 'Connect' }}
         </Button>
       </div>
 
@@ -173,6 +169,7 @@ import {
 } from '@/utils/crp-stake'
 const Vco = require('v-click-outside')
 const network = WalletAdapterNetwork.Devnet
+// declare const window: any
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
@@ -338,6 +335,9 @@ export default class Wallet extends Vue {
   currentTiers = 0 as number
   nextTiers = 1 as number
 
+  // window
+  windowWidth = window.innerWidth as any
+
   /* ========== COMPUTED ========== */
   get wallet() {
     return this.$accessor.wallet
@@ -390,6 +390,10 @@ export default class Wallet extends Vue {
   mounted() {
     this.autoConnect()
     this.getTiersInfo()
+
+    this.$nextTick(() => {
+        window.addEventListener('resize', this.onResize);
+    })
   }
 
   beforeDestroy() {
@@ -398,6 +402,7 @@ export default class Wallet extends Vue {
     window.clearInterval(this.liquidityTimer)
     window.clearInterval(this.farmTimer)
     window.clearInterval(this.idoTimer)
+    window.removeEventListener('resize', this.onResize); 
   }
 
   /* ========== WATCH ========== */
@@ -710,23 +715,14 @@ export default class Wallet extends Vue {
   outPopIn() {
     this.popIn = false
   }
+
+  onResize() {
+    this.windowWidth = window.innerWidth
+  }
 }
 </script>
 
 <style lang="less" scoped>
-.isDesktop {
-  @media @max-sl-mobile {
-    display: none !important;
-  }
-}
-
-.isMobile {
-  display: none !important;
-  @media @max-sl-mobile {
-    display: flex !important;
-  }
-}
-
 .wallet {
   display: flex;
 
