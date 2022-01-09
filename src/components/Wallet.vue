@@ -13,7 +13,7 @@
           }
         "
       >
-        <span class="tier-id textM weightS letterS">Tier {{ currentTiers }}</span>
+        <span class="tier-id textM weightS letterS">Tier {{wallet.tiers}}</span>
         <img src="@/assets/icons/arrow-down-white.svg" />
       </div>
 
@@ -29,8 +29,8 @@
         <div class="collapse-item text-center textM weightS icon-cursor">
           <div class="tier-progress">
             <div class="tier-progress-label fcb-container">
-              <span class="bodyXS weightB">Tier {{ currentTiers }}</span>
-              <span class="bodyXS weightB">Tier {{ nextTiers }}</span>
+              <span class="bodyXS weightB">Tier {{wallet.tiers}}</span>
+              <span class="bodyXS weightB">Tier {{(wallet.tiers + 1)}}</span>
             </div>
             <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="true" />
           </div>
@@ -603,8 +603,10 @@ export default class Wallet extends Vue {
       this.$accessor.wallet.getTokenAccounts()
       this.$accessor.farm.getStakeAccounts()
       this.$accessor.ido.requestInfos()
+      this.getTiersInfo()
     }
   }
+
 
   subWallet() {
     const wallet = this.$wallet
