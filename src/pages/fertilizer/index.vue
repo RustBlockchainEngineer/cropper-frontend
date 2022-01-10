@@ -939,20 +939,22 @@ export default Vue.extend({
       fertilizerData: [
         {
           status: 'Whitelist Open',
-          picture: '/fertilizer/unq.png',
+          picture: '/fertilizer/banner/unq.png',
           title: 'UNQ.club',
           short_desc: 'Social platform for NFT asset management',
           hard_cap: '3000K',
+          token_price: 0.071,
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           whitelist_end_date: 1643500800000
         },
         {
           status: 'Sales',
-          picture: '/fertilizer/metaprints.png',
+          picture: '/fertilizer/banner/metaprints.png',
           title: 'Metaprints',
           short_desc: 'Blueprints for metaverses',
           hard_cap: '3000K',
+          token_price: 0.071,
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           sales_start_date: 1641280215000,
@@ -960,44 +962,48 @@ export default Vue.extend({
         },
         {
           status: 'Sales',
-          picture: '/fertilizer/galaxy.png',
+          picture: '/fertilizer/banner/galaxy.png',
           title: 'Galaxy War',
           short_desc: 'Our galatic adventure awaits',
           hard_cap: '3000K',
+          token_price: 0.071,
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           sales_start_date: 1643500800000
         },
         {
           status: 'Distribution',
-          picture: '/fertilizer/meanfi.png',
+          picture: '/fertilizer/banner/meanfi.png',
           title: 'MeanFI',
           short_desc: 'Grow your money stash with the best prices across DeFi',
           hard_cap: '3000K',
+          token_price: 0.071,
           participants: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           distribution_start_date: 1643500800000
         },
         {
           status: 'Preparation',
-          picture: '/fertilizer/agoric.png',
+          picture: '/fertilizer/banner/agoric.png',
           title: 'Agoric',
           short_desc: 'Social platform for NFT asset management',
           hard_cap: '3000K',
+          token_price: 0.071,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           whitelist_start_date: 1643500800000
         },
         {
           status: 'Preparation',
-          picture: '/fertilizer/metaprints.png',
+          picture: '/fertilizer/banner/metaprints.png',
           title: 'Metaprints',
           short_desc: 'Blueprints for metaverses',
           hard_cap: '3000K',
+          token_price: 0.071,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
         },
         {
           status: 'Funded',
-          picture: '/fertilizer/funded/defiland.png',
+          picture: '/fertilizer/logo/defiland.png',
           title: 'DeFi Land',
           short_desc: 'Gamified Decentralized Finance',
           subscribers: 1000,
@@ -1008,7 +1014,7 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
-          picture: '/fertilizer/funded/sonar.png',
+          picture: '/fertilizer/logo/sonar.png',
           title: 'Sonar Watch',
           short_desc: 'Empowering user journey on Solana DeFi',
           subscribers: 1001,
@@ -1019,7 +1025,7 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
-          picture: '/fertilizer/funded/goosefx.png',
+          picture: '/fertilizer/logo/goosefx.png',
           title: 'GooseFX',
           short_desc: 'A Complete DeFi Experience',
           subscribers: 1002,
@@ -1030,7 +1036,7 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
-          picture: '/fertilizer/funded/waggle.png',
+          picture: '/fertilizer/logo/waggle.png',
           title: 'Waggle Network',
           short_desc: 'Primary markets for everyone',
           subscribers: 1003,
@@ -1041,7 +1047,7 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
-          picture: '/fertilizer/funded/cryowar.png',
+          picture: '/fertilizer/logo/cryowar.png',
           title: 'Cryowar',
           short_desc: 'Next-gen blockchain multiplayer game',
           subscribers: 1004,
@@ -1052,7 +1058,7 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
-          picture: '/fertilizer/funded/cyclos.png',
+          picture: '/fertilizer/logo/cyclos.png',
           title: 'Cyclos',
           short_desc: 'Decentralized trading unleashed',
           subscribers: 1005,
@@ -1066,7 +1072,7 @@ export default Vue.extend({
     }
   },
   head: {
-    title: 'CropperFinance'
+    title: 'CropperFinance Fertilizer'
   },
   computed: {
     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
@@ -1326,9 +1332,9 @@ export default Vue.extend({
         }
       }
     },
-    goToProject(farm: any) {
+    goToProject(fertilizer: any) {
       this.$router.push({
-        path: '/fertilizer/project/?f=' + farm.slug
+        path: '/fertilizer/project/?f=' + fertilizer.uniqueKey
       })
     },
     sortByStatus(option: string) {
@@ -2050,32 +2056,6 @@ export default Vue.extend({
 
 <style lang="less">
 .fertilizer {
-  .ant-statistic-content {
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-  }
-
-  .whitelist-countdown {
-    .ant-statistic-title {
-      font-weight: 600;
-      font-size: 11px;
-      line-height: 18px;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 8px;
-    }
-
-    .ant-statistic-content {
-      font-weight: bold;
-      font-size: 25px;
-      line-height: 35px;
-      text-align: center;
-      letter-spacing: 3px;
-    }
-  }
-
   .ant-collapse {
     background: transparent;
     border: none;
