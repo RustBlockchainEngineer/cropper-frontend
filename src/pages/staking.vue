@@ -389,7 +389,7 @@ export default Vue.extend({
     this.getUserState()
 
     this.setTimer()
-    this.setTierCarousel(this.currentTiers - 1)
+    this.setTierCarousel(this.currentTiers - 2)
   },
   methods: {
     async getTvl() {
