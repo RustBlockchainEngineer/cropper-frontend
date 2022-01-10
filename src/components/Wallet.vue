@@ -473,8 +473,18 @@ export default class Wallet extends Vue {
         this.subWallet()
         this.$notify.success({
           message: 'Wallet connected',
-          description: `Connected with ${name}`
-          // icon: this.icon,
+          description: `Connected with ${name}`,
+          // icon: (h: any) => {
+          //   return h(
+          //     'anticon',
+          //     {
+          //       props: {
+          //         type: 'info-circle',
+          //         theme: 'filled'
+          //       },
+          //     },
+          //   );
+          // },
         })
 
         LocalStorage.set('WALLET_NAME', name)
@@ -482,10 +492,6 @@ export default class Wallet extends Vue {
     })
 
     this.isModal = true
-  }
-
-  icon() {
-    return `{{{<template><Icon type="info-circle" theme="filled" style="color: #31B79F" /></template>}}}`
   }
 
   onDisconnect() {

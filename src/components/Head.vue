@@ -1,13 +1,15 @@
 <template>
   <Header class="header fcb-container">
-    <NuxtLink to="/">
-      <img class="logo" src="@/assets/icons/cropper-logo.svg" />
-    </NuxtLink>
+    <div class="nav-container fcl-container">
+      <NuxtLink to="/">
+        <img class="logo" src="@/assets/icons/cropper-logo.svg" />
+      </NuxtLink>
 
-    <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
-    <Nav @onSelect="() => (navOpened = false)" />
-    <!-- </div> -->
-
+      <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
+      <Nav @onSelect="() => (navOpened = false)" />
+      <!-- </div> -->
+    </div>
+    
     <div class="fcb-container wallet-container">
       <Wallet />
     </div>
@@ -44,7 +46,8 @@ export default Vue.extend({
 .header {
   .logo {
     height: 47px;
-
+    margin-right: 28px;
+    
     @media @max-md-tablet {
       height: 36px;
     }

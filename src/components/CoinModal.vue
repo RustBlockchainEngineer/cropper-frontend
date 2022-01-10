@@ -166,7 +166,7 @@ export default Vue.extend({
             '' + Math.min(parseFloat(self.coin.balance.fixed()), parseFloat(totalSupply) - MIN_LP_SUPPLY) * amount
         }
       } else {
-        this.value = this.coin.balance.fixed()
+        this.value = (this.coin.balance.fixed() * amount).toString()
       }
     }
   }

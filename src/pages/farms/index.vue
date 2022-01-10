@@ -274,7 +274,7 @@
                   <label>Sort by:</label>
                   <span class="sort-detail">
                     {{ this.sortMethod === 'liquidity' ? 'Liquidity' : 'APR %' }}
-                    {{ !this.sortAsc ? '(High > Low)' : '(Low > High)' }}
+                    {{ this.sortAsc ? '(High > Low)' : '(Low > High)' }}
                     <img
                       class="arrow-icon"
                       :class="showOptionMenu ? 'arrow-up' : 'arrow-down'"
@@ -324,28 +324,28 @@
                   :class="sortMethod === 'liquidity' && !sortAsc ? 'active-item' : ''"
                   @click="setSortOption('liquidity', false)"
                 >
-                  Liquidity (High > Low)
+                  Liquidity (Low > High)
                 </div>
                 <div
                   class="option-collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === 'liquidity' && sortAsc ? 'active-item' : ''"
                   @click="setSortOption('liquidity', true)"
                 >
-                  Liquidity (Low > High)
+                  Liquidity (High > Low)
                 </div>
                 <div
                   class="option-collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === 'apr' && !sortAsc ? 'active-item' : ''"
                   @click="setSortOption('apr', false)"
                 >
-                  APR % (High > Low)
+                  APR % (Low > High)
                 </div>
                 <div
                   class="option-collapse-item text-center texts weightB icon-cursor"
                   :class="sortMethod === 'apr' && sortAsc ? 'active-item' : ''"
                   @click="setSortOption('apr', true)"
                 >
-                  APR % (Low > High)
+                  APR % (High > Low)
                 </div>
               </div>
             </div>

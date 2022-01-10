@@ -530,7 +530,7 @@
                 </Col>
                 <Col class="header-column textS weightB" span="3">
                   <div class="header-column-title" @click="sortByColumn(sortOptions.ath)">
-                    ATH Since IPO
+                    ATH Since IDO
                     <img
                       v-if="sortFunded === sortOptions.ath"
                       src="@/assets/icons/arrow-down-green.svg"
@@ -687,7 +687,7 @@
                     <Col :span="12">
                       <div class="ftb-container">
                         <div class="state">
-                          <span class="label textS weightB">ATH Since IPO</span>
+                          <span class="label textS weightB">ATH Since IDO</span>
                           <div class="project-ath fcc-container">
                             <Tooltip placement="bottomLeft">
                               <template slot="title">
@@ -795,7 +795,7 @@
                         </div>
 
                         <div class="state">
-                          <span class="label textS weightB">ATH Since IPO</span>
+                          <span class="label textS weightB">ATH Since IDO</span>
                           <div class="project-ath fcc-container">
                             <Tooltip placement="bottomLeft">
                               <template slot="title">
@@ -931,7 +931,7 @@ export default Vue.extend({
         subscribers: 'Subscribers',
         total_raised: 'Total raised',
         token_price: 'Token price',
-        ath: 'ATH Since IPO',
+        ath: 'ATH Since IDO',
         end_date: 'Ended in UTC'
       },
       filterProject: 'Upcoming' as string,

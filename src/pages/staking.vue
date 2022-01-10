@@ -179,9 +179,9 @@
           </div>
 
           <div class="staking-tiers">
-            <div class="staking-tier-preview"></div>
             <Carousel ref="tierCarousel">
               <div class="staking-tier-item">
+                <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 1</label>
@@ -192,6 +192,7 @@
                 </div>
               </div>
               <div class="staking-tier-item">
+                <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 2</label>
@@ -202,6 +203,7 @@
                 </div>
               </div>
               <div class="staking-tier-item">
+                <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 3</label>
@@ -212,6 +214,7 @@
                 </div>
               </div>
               <div class="staking-tier-item">
+                <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 4</label>
@@ -222,6 +225,7 @@
                 </div>
               </div>
               <div class="staking-tier-item">
+                <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="textL weightB">Tier 5</label>
@@ -815,16 +819,16 @@ export default Vue.extend({
               max-width: 290px;
             }
 
-            .staking-tier-preview {
-              background: @color-blue-dark;
-              border-radius: 18px;
-              margin-bottom: 28px;
-              height: 277px;
-            }
-
             .staking-tier-item {
               padding: 0 4px;
 
+              .staking-tier-preview {
+                background: @color-blue-dark;
+                border-radius: 18px;
+                margin-bottom: 28px;
+                height: 277px;
+              }
+              
               .tier-info {
                 display: inline-grid;
                 row-gap: 4px;

@@ -11,7 +11,7 @@
   >
     <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
 
-    <div class="create-farm-head fs-container">
+    <div class="create-farm-head fcb-container">
       <div class="btn-outline">
         <a
           href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
