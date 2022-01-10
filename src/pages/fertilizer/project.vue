@@ -118,28 +118,28 @@
                           <span class="title textS weightS letterL">Token Price</span>
                           <div class="value fcl-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <span class="textM"><b>{{ fertilizer.token_price }}</b> USDC</span>
+                            <span class="textM"><b>{{ fertilizer.ido_info.sale_rate }}</b> USDC</span>
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title textS weightS letterL">Hard Cap</span>
                           <div class="value fcl-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <span class="textM"><b>{{ fertilizer.hard_cap }}</b> USDC</span>
+                            <span class="textM"><b>{{ fertilizer.ido_info.hard_cap }}</b> USDC</span>
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title textS weightS letterL">Pool Size</span>
                           <div class="value fcl-container">
                             <img class="coin-icon" :src="fertilizer.logo" />
-                            <span class="textM"><b>{{ fertilizer.pool_size }}</b> {{ fertilizer.token_symbol }}</span>
+                            <span class="textM"><b>{{ fertilizer.pool_size }}</b> {{ fertilizer.token_info.symbol }}</span>
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title textS weightS letterL">Type</span>
                           <div class="value fcl-container">
                             <img class="lock-icon" src="@/assets/icons/lock.svg" />
-                            <span class="textM weightS">Vested</span>
+                            <span class="textM weightS">{{ fertilizer.ido_info.sale_type }}</span>
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
@@ -169,25 +169,200 @@
                 <img class="farmer-img" src="@/assets/background/farmer.png" />
               </div>
               <div class="project-detail-item transparent">
-                <h3 class="weightS">Project Details</h3>
+                <h3 class="project-category-title weightS">Project Details</h3>
+                <Row :gutter="40">
+                  <Col :span="12">
+                    <span class="textL weightB">IDO Information</span>
+                    <div class="information">
+                      <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Hardcap</span>
+                        <span class="textM weightS letterS">{{ fertilizer.ido_info.hard_cap }}</span>
+                      </div>
+                       <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Sale rate</span>
+                        <span class="textM weightS letterS">{{ fertilizer.ido_info.sale_rate }}</span>
+                      </div>
+                      <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Sale type</span>
+                        <span class="textM weightS letterS">{{ fertilizer.ido_info.sale_type }}</span>
+                      </div>
+                      <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Open Time</span>
+                        <span class="textM weightS letterS">{{ fertilizer.ido_info.open_time }}</span>
+                      </div>
+                      <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Close Time</span>
+                        <span class="textM weightS letterS">{{ fertilizer.ido_info.close_time }}</span>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col :span="12">
+                    <span class="textL weightB">Token Information</span>
+                    <div class="information">
+                      <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Symbol</span>
+                        <span class="textM weightS letterS">{{ fertilizer.token_info.symbol }}</span>
+                      </div>
+                       <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Category</span>
+                        <span class="textM weightS letterS">{{ fertilizer.token_info.category }}</span>
+                      </div>
+                      <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Token Distribution</span>
+                        <span class="textM weightS letterS">{{ fertilizer.token_info.token_distribution }}</span>
+                      </div>
+                      <div class="information-item fcb-container">
+                        <span class="label textS weightS letterL">Blockchain</span>
+                        <span class="textM weightS letterS">{{ fertilizer.token_info.blockchain }}</span>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
               </div>
               <div class="project-detail-item transparent">
-                <h3 class="weightS">About</h3>
+                <h3 class="project-category-title weightS">About</h3>
+                <Row class="project-category-content-about" :gutter="40">
+                  <Col :span="12">
+                    <span class="textM">
+                      Discover, Collect, and Trade NFTs as a team.<br /><br />
+                      The first NFT asset management platform providing tools for collectors and investors to power the NFT space. Running cross-chain, powered by Solana.<br /><br />
+                      We bring more togetherness to the NFT space<br /><br />
+                      Create a club, act as a curator, raise funds to expand your collection, and build a community around it.
+                    </span>
+                  </Col>
+                  <Col :span="12">
+                    <img class="banner-img" :src="fertilizer.img.about" />
+                  </Col>
+                </Row>
               </div>
               <div class="project-detail-item transparent">
-                <h3 class="weightS">Features</h3>
+                <h3 class="project-category-title weightS">Features</h3>
+                <img class="project-category-banner-img" :src="fertilizer.img.features" />
+                <div>
+                  <div>
+                    <span class="textM weightS">Onwership DAOs</span>
+                    <br /><br />
+                    <span class="textM">
+                      You can’t just copy trade NFTs since they are unique and have a big social component. That’s why UNQ allows you to create Clubs - essentially, ownership DAOs that are led by an experience and dedicated collector, and community can bring additional liquidity, participation, and governance.
+                    </span>
+                  </div>
+                  <br />
+                  <div>
+                    <span class="textM weightS">Flexible structure</span>
+                    <br /><br />
+                    <span class="textM">
+                      Want to have a better asset management for you play to earn guild? We got it. Want to get buy those expensive NFTs together with a team to de-risk your invetments? Do it. Want to turn collecting into a business, or expand existing gallery business into the digital world and be able to raise funds and get access to the world of NFTs? Explore our Public clubs and social tokens.
+                    </span>
+                  </div>
+                  <br />
+                  <div>
+                    <span class="textM weightS">Cross-chain transactions</span>
+                    <br /><br />
+                    <span class="textM">
+                      NFT market is growing, and more blockchains are introducing NFT support, which makes collector’s life hard. We know that, and we want you to be able to focus on what you do best - buy and sell NFTs. That’s why we are developing a solution that will allow you to transact with NFTs across chains from a single trustless Solana-based interface.
+                    </span>
+                  </div>
+                  <br />
+                  <div>
+                    <span class="textM weightS">Token utility :</span>
+                    <br /><br />
+                    <span class="textM">
+                      -UNQ is a single token utilized across the products.
+                      <br /><br />
+                      -Transacting Universe NFTs with UNQ gives additional benefits
+                      <br /><br />
+                      -UNQ is a platform governance token in Clubs
+                      <br /><br />
+                      -Clubs can upgrade using UNQ
+                      <br /><br />
+                      -Club tokens can be only traded against UNQ
+                      <br /><br />
+                      -Rewards for content creators in Worlds are in UNQ
+                    </span>
+                  </div>
+                </div>
               </div>
               <div class="project-detail-item transparent">
-                <h3 class="weightS">Roadmap</h3>
+                <h3 class="project-category-title weightS">Roadmap</h3>
+                <img class="project-category-banner-img" :src="fertilizer.img.roadmap" />
+                <div>
+                  <span class="textM">
+                    <b>Phase 1 - </b>Inception
+                    <br /><br />
+                    <b>Phase 2 - </b>MVP development , Solana Hackathon participation (winner 3rd place)
+                    <br /><br />
+                    <b>Phase 3 - </b>Further development, Market research, Private fundraise
+                    <br /><br />
+                    <b>Phase 4 - </b>Private beta of UNQ Club and UNQ World, NFT collection - UNQ Universe, Public beta of UNQ Club
+                    <br /><br />
+                    <b>Phase 5 - </b>Release of UNQ Club, Public beta of UNQ World
+                    <br /><br />
+                    <b>Phase 6 - </b>Release of UNQ World
+                  </span>
+                </div>
               </div>
               <div class="project-detail-item transparent">
-                <h3 class="weightS">Team & Backers</h3>
+                <h3 class="project-category-title weightS">Team & Backers</h3>
+                <img class="project-category-banner-img" :src="fertilizer.img.team" />
+                <div>
+                  <span class="textM">
+                    Co-founder and CEO - Alex Migitko : Entrepreneur, 17 years in IT, of which 10 years in game development, 5 years blockchain.
+                    <br /><br />
+                    Co-founder and CTO - Uros Sosevic : Software engineer, 17 years of experience as a developer, architect and CTO;5 years of experience working with
+                    <br /><br />
+                    Co-founder and BD - Martin Kardzhilov - Crypto-native, investor, marketing expert, working for 5 years exclusively in the crypto industry.
+                    <br /><br />
+                    Backers :
+                    <br /><br />
+                    Solana Foundation, Jump Capital, GSR, Gate.io , MEXC, NGC, WWG, Chainboost, Solanium Ventures, Solar Eco Fund, ZBS, Kernel Ventuires, Basics Capital, Titans Ventures, AU21, DWeb3 Capital, WaterDrip, FBG, Everse Capital, Chain Capital, CryptoJ, Moonedge
+                  </span>
+                </div>
               </div>
               <div class="project-detail-item transparent">
-                <h3 class="weightS">Tokenomics</h3>
+                <h3 class="project-category-title weightS">Tokenomics</h3>
+                <img class="project-category-banner-img" :src="fertilizer.img.tokenomics" />
+                <div>
+                  <span class="textM">
+                    Tokenomics description *
+                    <br /><br />
+                    Team and Advisors - 20%
+                    <br /><br />
+                    Seed round - 15%
+                    <br /><br />
+                    Strategic round - 7.5%
+                    <br /><br />
+                    Public - 1.5%
+                    <br /><br />
+                    Marketing - 5%
+                    <br /><br />
+                    Liquidity - 10%
+                    <br /><br />
+                    Staking rewards - 25%
+                    <br /><br />
+                    Treasury - 16%
+                  </span>
+                </div>
               </div>
               <div class="project-detail-item transparent">
-                <h3 class="weightS">Token Distribution</h3>
+                <h3 class="project-category-title weightS">Token Distribution</h3>
+                <img class="project-category-banner-img" :src="fertilizer.img.distribution" />
+                <div>
+                  <span class="textM">
+                    Seed round - $0.02 (10M FDV), 5% TGE, 12 months cliff, 5%/ Daily over 12 months
+                    <br /><br />
+                    Strategic round - 0.04 (20m FDV), 10% TGE, 9 months cliff, 5%/ Daily over 9 months
+                    <br /><br />
+                    Public round - 0.0533 (26.7 FDV), 50% TGE, 3 months cliff / 25% / 3 months cliff/ 25%
+                    <br /><br />
+                    Team and Advisors - 2 years cliff , 3 years daily distribution
+                    <br /><br />
+                    Total supply - 500 000 000 UNQ tokens
+                    <br /><br />
+                    Initial Market cap - $700 000
+                    <br /><br />
+                    Hard cap - $3 400 000
+                  </span>
+                </div>
               </div>
             </Col>
           </Row>
@@ -217,20 +392,39 @@ export default Vue.extend({
     return {
       fertilizer: {
         status: 'Whitelist Open',
-          picture: '/fertilizer/banner/unq.png',
-          logo: '/fertilizer/logo/unq.png',
-          title: 'UNQ.club',
-          short_desc: 'Social platform for NFT asset management',
-          long_desc: 'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
-          hard_cap: '3000K',
-          pool_size: 5000,
-          participants: 100418,
-          token_price: 0.028,
-          token_symbol: "UNQ",
-          website: 'UNQ.club',
-          website_url: 'https://UNQ.club',
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_end_date: 1643500800000
+        picture: '/fertilizer/banner/unq.png',
+        logo: '/fertilizer/logo/unq.png',
+        title: 'UNQ.club',
+        short_desc: 'Social platform for NFT asset management',
+        long_desc: 'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
+        hard_cap: '3000K',
+        pool_size: 5000,
+        participants: 100418,
+        website: 'UNQ.club',
+        website_url: 'https://UNQ.club',
+        mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        whitelist_end_date: 1643500800000,
+        ido_info: {
+          hard_cap : 140000,
+          sale_rate: 0.028,
+          sale_type: 'Vested',
+          open_time: 1643500800000,
+          close_time: 1643500800000, 
+        },
+        token_info: {
+          symbol: 'UNQ',
+          category: 'NFT',
+          token_distribution: 1643500800000,
+          blockchain: 'Solana'
+        },
+        img: {
+          about: '/fertilizer/project/unq/about.png',
+          features: '/fertilizer/project/unq/features.png',
+          roadmap: '/fertilizer/project/unq/roadmap.png',
+          team: '/fertilizer/project/unq/team.png',
+          tokenomics: '/fertilizer/project/unq/tokenomics.png',
+          distribution: '/fertilizer/project/unq/distribution.png',
+        }
       },
       fertilizerData: [
         {
@@ -589,6 +783,38 @@ export default Vue.extend({
             &.transparent {
               background: transparent;
               padding: 0;
+              margin-bottom: 60px;
+
+              .project-category-title {
+                margin-bottom: 32px !important;
+              }
+
+              .project-category-content-about {
+                display: flex;
+                align-content: stretch;
+
+                .banner-img {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+
+              .project-category-banner-img {
+                border-radius: 8px;
+                margin-bottom: 40px;
+              }
+              
+              .information {
+                .information-item {
+                  margin-top: 8px;
+                  padding: 8px 0;
+                  border-bottom: 1px solid @color-blue200;
+
+                  .label {
+                    color: rgba(255, 255, 255, 0.7);
+                  }
+                }
+              }
             }
           }
         }
