@@ -389,7 +389,7 @@ export default Vue.extend({
     this.getUserState()
 
     this.setTimer()
-    this.setTierCarousel(this.currentTiers)
+    this.setTierCarousel(this.currentTiers - 1)
   },
   methods: {
     async getTvl() {
@@ -669,7 +669,7 @@ export default Vue.extend({
       this.$accessor.wallet.getTokenAccounts()
     },
     setTierCarousel(idx: number) {
-      ;(this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
+      (this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
     }
   }
 })
@@ -828,7 +828,7 @@ export default Vue.extend({
                 margin-bottom: 28px;
                 height: 277px;
               }
-              
+
               .tier-info {
                 display: inline-grid;
                 row-gap: 4px;
