@@ -37,6 +37,7 @@
                 </div>
                 <div class="project-countdown">
                   <Countdown
+                    v-if="currentStep < 3"
                     :title="
                       fertilizer.status === filterOptions.whitelist
                         ? 'End of the whitelist in'
@@ -66,13 +67,22 @@
                     format="DD:HH:mm:ss"
                   />
                 </div>
-                <div class="btn-container">
-                  <Button class="btn-transparent textM weightS">Subscribe Whitelist</Button>
+                <div class="project-progress">
+                  <div v-if="currentStep === 0" class="btn-container">
+                    <Button class="btn-transparent textM weightS">Subscribe Whitelist</Button>
+                  </div>
+                  <div v-else-if="currentStep > 0 && currentStep < 3" class="fcc-container">
+                    <img class="check-icon" src="@/assets/icons/check-white.svg" />
+                    <span class="textS weightS letterL">Following {{ fertilizer.title }} </span>
+                  </div>
+                  <div v-else class="btn-container">
+                    <Button class="btn-transparent textM weightS">Start Farming</Button>
+                  </div>
                 </div>
               </div>
               <div class="project-ido-container">
                 <div class="project-ido-process">
-                  <Steps :current="0" size="small" direction="vertical" :status="stepsStatus">
+                  <Steps :current="currentStep" size="small" direction="vertical" :status="stepsStatus">
                     <Step>
                       <template slot="title">
                         <span class="textS weightB">Preparation</span>
@@ -80,17 +90,35 @@
                     </Step>
                     <Step>
                       <template slot="title">
-                        <span class="textS weightB">Whitelist</span>
+                        <div class="fcb-container">
+                          <span class="textS weightB">Whitelist</span>
+                          <span v-if="currentStep > 1" class="status-label success textS weightB">Registered</span>
+                        </div>
+                        <span v-if="currentStep === 1" class="status-label description textS"
+                          >You can now whitelist yourself for the lottery.</span
+                        >
                       </template>
                     </Step>
                     <Step>
                       <template slot="title">
-                        <span class="textS weightB">Sales</span>
+                        <div class="fcb-container">
+                          <span class="textS weightB">Sales</span>
+                          <span v-if="currentStep > 2" class="status-label closed textS weightB">Closed</span>
+                        </div>
+                        <span v-if="currentStep === 2" class="status-label description textS"
+                          >Winners can participate in the token sale.</span
+                        >
                       </template>
                     </Step>
                     <Step>
                       <template slot="title">
-                        <span class="textS weightB">Distribution</span>
+                        <div class="fcb-container">
+                          <span class="textS weightB">Distribution</span>
+                          <span v-if="currentStep >= 3" class="status-label success textS weightB">Distributed</span>
+                        </div>
+                        <span v-if="currentStep === 3" class="status-label description textS"
+                          >The tokens get distributed to Sale participants.</span
+                        >
                       </template>
                     </Step>
                   </Steps>
@@ -167,6 +195,9 @@
                     </div>
                   </Col>
                 </Row>
+              </div>
+              <div v-if="currentStep === 1" class="project-detail-item">
+                <h4 class="weightS">Earn Social Pool tickets!</h4>
               </div>
               <div class="project-detail-item banner fcb-container">
                 <div class="project-detail-stake">
@@ -585,6 +616,7 @@ export default Vue.extend({
         funded: 'Funded'
       },
       currentTimestamp: 0,
+      currentStep: 3 as number,
       stepsStatus: 'process' as string
     }
   },
@@ -665,6 +697,19 @@ export default Vue.extend({
   }
 }
 
+.status-label {
+  &.description {
+    color: #fff;
+  }
+
+  &.success {
+    color: @color-green500;
+  }
+
+  &.closed {
+    color: @color-red500;
+  }
+}
 // class stylesheet
 .fertilizer-project.container {
   margin: 38px 0;
@@ -711,6 +756,12 @@ export default Vue.extend({
             }
             .project-countdown {
               margin: 16px 0;
+            }
+
+            .project-progress {
+              .check-icon {
+                margin-right: 8px;
+              }
             }
           }
 
@@ -888,6 +939,7 @@ export default Vue.extend({
           background-color: rgba(255, 255, 255, 0.4);
 
           .ant-steps-icon {
+            display: flex;
             top: 0;
             font-size: 13px;
             line-height: 19.5px;
@@ -898,6 +950,7 @@ export default Vue.extend({
         }
 
         .ant-steps-item-title {
+          width: 100%;
           color: rgba(255, 255, 255, 0.4);
         }
       }
