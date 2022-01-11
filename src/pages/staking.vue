@@ -287,7 +287,7 @@
         <div class="staking-tiers-details" id="staking-tiers-details">
           <span class="textL weightB">About Tiers</span>
           <div class="staking-tiers-features">
-            <Tabs v-model="activeTab" default-active-key="1">
+            <Tabs v-model="activeTab">
               <TabPane tab="Tier 1" key="1">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
@@ -463,7 +463,7 @@ export default Vue.extend({
       currentTiers: 0 as number,
       nextTiers: 1 as number,
       selectedTier: 0 as number,
-      activeTab: '0' as string
+      activeTab: '1' as string
     }
   },
   head: {
@@ -507,9 +507,9 @@ export default Vue.extend({
       this.selectedTier = this.currentTiers
       this.activeTab = this.currentTiers.toString()
     } else {
-      this.setTierCarousel(this.currentTiers - 2)
+      this.setTierCarousel(0)
       this.selectedTier = 1
-      this.activeTab = this.currentTiers.toString()
+      this.activeTab = '1'
     }
 
     this.setTimer()
@@ -642,9 +642,9 @@ export default Vue.extend({
         this.selectedTier = this.currentTiers
         this.activeTab = this.currentTiers.toString()
       } else {
-        this.setTierCarousel(this.currentTiers - 2)
+        this.setTierCarousel(0)
         this.selectedTier = 1
-        this.activeTab = this.currentTiers.toString()
+        this.activeTab = '1'
       }
     },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
@@ -801,13 +801,13 @@ export default Vue.extend({
       this.$accessor.wallet.getTokenAccounts()
     },
     getCurrentTier(from: any, to: any) {
-      this.selectedTier = to
+      this.selectedTier = to + 1
     },
     setTierCarousel(idx: number) {
-      if (idx >= 0) (this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
+      (this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
     },
     setTierTabs() {
-      this.activeTab = (this.selectedTier + 1).toString()
+      this.activeTab = this.selectedTier.toString()
     }
   }
 })
@@ -927,7 +927,7 @@ export default Vue.extend({
         }
 
         .staking-content {
-          max-width: @tablet-md-width;
+          max-width: 870px;
           min-width: 335px;
           width: 100%;
           margin: auto !important;
@@ -1100,7 +1100,7 @@ export default Vue.extend({
         }
 
         .staking-tiers-details {
-          max-width: @tablet-md-width;
+          max-width: 870px;
           min-width: 335px;
           width: 100%;
           margin: 30px auto !important;
