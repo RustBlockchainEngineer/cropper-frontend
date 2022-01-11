@@ -41,7 +41,8 @@
                 <span class="bodyXS weightB">Tier {{ currentTiers }}</span>
                 <span class="bodyXS weightB">Tier {{ nextTiers }}</span>
               </div>
-              <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="true" />
+              <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="false"/>
+              <label class="staking-progress-percent bodyXS" :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"> {{ Number(pctToNexttiers.toFixed(1)) }}% </label>
             </div>
 
             <div class="staking-infos-group">
@@ -983,6 +984,10 @@ export default Vue.extend({
               .staking-progress-label {
                 margin-bottom: 4px;
               }
+
+              .staking-progress-percent {
+                margin-top: 4px;
+              }
             }
 
             .staking-infos-group {
@@ -1222,15 +1227,6 @@ export default Vue.extend({
           border-radius: 50px 0 0 50px !important;
         }
       }
-    }
-
-    .ant-progress-text {
-      font-size: 11px;
-      line-height: 16px;
-      font-weight: 400;
-      color: #fff;
-      float: right;
-      margin-top: 4px;
     }
   }
 
