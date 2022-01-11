@@ -1718,7 +1718,7 @@ export default class Pools extends Vue {
               position: sticky;
               background: @color-blue800;
               top: 70px;
-              z-index: 999;
+              z-index: 998;
               width: 100%;
               transition: 0.3s all ease-in-out;
             }
