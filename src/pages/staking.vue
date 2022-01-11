@@ -460,8 +460,8 @@ export default Vue.extend({
       canUnstake: false as boolean,
 
       pctToNexttiers: 0 as number,
-      currentTiers: 0 as number,
-      nextTiers: 1 as number,
+      currentTiers: 4 as number,
+      nextTiers: 5 as number,
       selectedTier: 0 as number,
       activeTab: '0' as string
     }
@@ -505,11 +505,11 @@ export default Vue.extend({
     if (this.currentTiers > 1) {
       this.setTierCarousel(this.currentTiers - 1)
       this.selectedTier = this.currentTiers
-      this.setTierTabs()
+      this.activeTab = this.currentTiers.toString()
     } else {
       this.setTierCarousel(this.currentTiers - 2)
       this.selectedTier = 1
-      this.setTierTabs()
+      this.activeTab = this.currentTiers.toString()
     }
 
     this.setTimer()
@@ -640,11 +640,11 @@ export default Vue.extend({
       if (this.currentTiers > 1) {
         this.setTierCarousel(this.currentTiers - 1)
         this.selectedTier = this.currentTiers
-        this.setTierTabs()
+        this.activeTab = this.currentTiers.toString()
       } else {
         this.setTierCarousel(this.currentTiers - 2)
         this.selectedTier = 1
-        this.setTierTabs()
+        this.activeTab = this.currentTiers.toString()
       }
     },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
@@ -807,7 +807,7 @@ export default Vue.extend({
       if (idx >= 0) (this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
     },
     setTierTabs() {
-      this.activeTab = this.selectedTier.toString()
+      this.activeTab = (this.selectedTier + 1).toString()
     }
   }
 })
