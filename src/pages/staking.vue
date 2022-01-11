@@ -610,9 +610,7 @@ export default Vue.extend({
       this.$accessor.wallet.setStakingTiers(tiers_info)
       this.pendingReward = new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed()
 
-      // this.currentTiers = tiers_info.tiers
-      console.log("123455")
-      this.currentTiers = 4
+      this.currentTiers = tiers_info.tiers
       this.nextTiers = tiers_info.tiers + 1
 
       if (this.nextTiers == TIERS_XCRP.length) {
