@@ -287,7 +287,7 @@
         <div class="staking-tiers-details" id="staking-tiers-details">
           <span class="textL weightB">About Tiers</span>
           <div class="staking-tiers-features">
-            <Tabs v-model="activeTab">
+            <Tabs v-model="activeTab" default-active-key="1">
               <TabPane tab="Tier 1" key="1">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
@@ -927,7 +927,8 @@ export default Vue.extend({
         }
 
         .staking-content {
-          max-width: 870px;
+          max-width: @tablet-md-width;
+          min-width: 335px;
           width: 100%;
           margin: auto !important;
           background: @color-blue700;
@@ -1099,7 +1100,8 @@ export default Vue.extend({
         }
 
         .staking-tiers-details {
-          max-width: 870px;
+          max-width: @tablet-md-width;
+          min-width: 335px;
           width: 100%;
           margin: 30px auto !important;
           background: @color-blue700;
