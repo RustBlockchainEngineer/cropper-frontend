@@ -778,6 +778,10 @@ export default class Wallet extends Vue {
   .tier-container {
     position: relative;
     margin-right: 18px;
+    
+    @media @max-sl-mobile {
+      display: none !important;
+    }
 
     .tier-profile {
       display: flex;

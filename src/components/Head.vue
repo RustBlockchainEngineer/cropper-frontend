@@ -50,6 +50,7 @@ export default Vue.extend({
     
     @media @max-md-tablet {
       height: 36px;
+      margin-right: 18px;
     }
   }
 

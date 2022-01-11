@@ -705,25 +705,24 @@
                         </a>
                       </div>
                       <div
-                          v-if="(farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp)" 
-                          class="option-collapse-item text-center textM weightS icon-cursor">
-                        <a
-                          @click="openAddRewardModal(farm)"
-                        >
-                          Add Rewards
-                        </a>
-
+                        v-if="
+                          farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                          farm.farmInfo.poolInfo.is_allowed &&
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                        "
+                        class="option-collapse-item text-center textM weightS icon-cursor"
+                      >
+                        <a @click="openAddRewardModal(farm)"> Add Rewards </a>
                       </div>
                       <div
-                          v-if="(farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                            !farm.farmInfo.poolInfo.is_allowed &&
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp)" 
-                          class="option-collapse-item text-center textM weightS icon-cursor">
-                        <a @click="payFarmFee(farm)">
-                          Pay Farm Fees
-                        </a>
+                        v-if="
+                          farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                          !farm.farmInfo.poolInfo.is_allowed &&
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                        "
+                        class="option-collapse-item text-center textM weightS icon-cursor"
+                      >
+                        <a @click="payFarmFee(farm)"> Pay Farm Fees </a>
                       </div>
                     </div>
                   </div>

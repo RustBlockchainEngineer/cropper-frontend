@@ -460,8 +460,8 @@ export default Vue.extend({
       canUnstake: false as boolean,
 
       pctToNexttiers: 0 as number,
-      currentTiers: 4 as number,
-      nextTiers: 5 as number,
+      currentTiers: 0 as number,
+      nextTiers: 0 as number,
       selectedTier: 0 as number,
       activeTab: '0' as string
     }
