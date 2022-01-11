@@ -31,6 +31,7 @@
       :loading="unstaking"
       @onOk="unstakeAndRemove"
       @onCancel="cancelUnstake"
+      :lpbreakdown="this.unstakePoolInfo"
       text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity. <br /><br />
       If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
     />
@@ -1355,7 +1356,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { Tooltip, Collapse, Spin, Icon, Row, Col, Button, Switch as Toggle, Pagination } from 'ant-design-vue'
-import { get, cloneDeep, forIn, indexOf } from 'lodash-es'
+import { get, set, cloneDeep, forIn, indexOf } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { FarmInfo } from '@/utils/farms'
 import { deposit, withdraw } from '@/utils/stake'
@@ -1369,7 +1370,10 @@ import {
   FARM_PREFIX,
   PAY_FARM_FEE,
   REWARD_MULTIPLER,
-  YieldFarm
+  YieldFarm, 
+  getCoinBalance, 
+  getPcBalance, 
+  getTotalSupply
 } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
 import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER, FARM_VERSION } from '@/utils/ids'
@@ -1458,7 +1462,8 @@ export default Vue.extend({
         }
       ] as any,
       activeSpinning: false as boolean,
-      userMigrations: [] as any[]
+      userMigrations: [] as any[],
+      unstakePoolInfo: {} as any
     }
   },
 
@@ -1898,9 +1903,11 @@ export default Vue.extend({
 
           const duration = currentTimestamp - last_timestamp.toNumber()
 
+
           const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
           const lpTotalSupply = (liquidityItem?.lp.totalSupply as TokenAmount).wei
+          newFarmInfo.lpTotalSupply = lpTotalSupply
           const rewardPerShareCalc = rewardPerTimestamp
             .multipliedBy(duration)
             .multipliedBy(REWARD_MULTIPLER)
@@ -2616,6 +2623,19 @@ export default Vue.extend({
 
       this.lp = coin
       this.farmInfo = cloneDeep(poolInfo)
+
+
+      let ammId = this.getAmmId(poolInfo)
+      const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === ammId)
+      const totalSupply = getTotalSupply(currentPoolInfo)
+
+      const pcBalance = (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+      const coinBalance = (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+      set(this.unstakePoolInfo, 'pcBalance', pcBalance)
+      set(this.unstakePoolInfo, 'coinBalance', coinBalance)
+      set(this.unstakePoolInfo, 'totalSupply', totalSupply)
+      set(this.unstakePoolInfo, 'pcSymbol', get(currentPoolInfo, 'pc.symbol'))
+      set(this.unstakePoolInfo, 'coinSymbol', get(currentPoolInfo, 'coin.symbol'))
       this.unstakeModalOpening = true
     },
 

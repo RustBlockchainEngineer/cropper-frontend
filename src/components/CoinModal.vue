@@ -52,10 +52,10 @@
       <label class="textS weightS letterL">LP Breakdown</label>
       <div class="lp-coins-container fcc-container">
         <div class="lp-coin-box textS">
-          <b>{{ coin.coin.symbol }}</b> {{ coin.balance.toEther().toFixed(coin.coin.decimals) }}
+          <b>{{lpbreakdown.pcSymbol}}</b> {{ Math.round(lpbreakdown.pcBalance * 1000 * ( value / coin.balance.fixed() )) / 1000 }}
         </div>
         <div class="lp-coin-box textS">
-          <b>{{ coin.pc.symbol }}</b> {{ coin.balance.toEther().toFixed(coin.pc.decimals) }}
+          <b>{{lpbreakdown.coinSymbol}}</b> {{Math.round(lpbreakdown.coinBalance * 1000 * ( value / coin.balance.fixed() )) / 1000 }}
         </div>
       </div>
     </div>
@@ -115,6 +115,10 @@ export default Vue.extend({
     text: {
       type: String,
       default: ''
+    },
+    lpbreakdown: {
+      type: Object,
+      default: null
     }
   },
 
@@ -141,7 +145,7 @@ export default Vue.extend({
     isNullOrZero,
     validateTotalSupply() {
       if (this.title == 'Remove Liquidity') {
-        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
+        const lp_info = this.$accessor.liquidity.infos[this.coin.mintAddress]
         if (lp_info) {
           const totalSupply = lp_info.lp.totalSupply.fixed()
           const res = parseFloat(this.value) <= parseFloat(totalSupply) - MIN_LP_SUPPLY //
@@ -159,7 +163,7 @@ export default Vue.extend({
       if (this.title == 'Remove Liquidity') {
         let self = this
 
-        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
+        const lp_info = this.$accessor.liquidity.infos[this.coin.mintAddress]
         if (lp_info) {
           const totalSupply = lp_info.lp.totalSupply.fixed()
           self.value =
