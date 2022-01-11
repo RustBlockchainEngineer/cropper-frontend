@@ -101,7 +101,7 @@ export default Vue.extend({
   }
 
   .coin-input {
-    background: @gradient-btn-wallet;
+    background: @gradient-color04;
     background-origin: border-box;
     padding: 2px;
     border-radius: 8px;

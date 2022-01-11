@@ -1466,7 +1466,7 @@ export default class Pools extends Vue {
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background: @gradient-btn-primary;
+  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;

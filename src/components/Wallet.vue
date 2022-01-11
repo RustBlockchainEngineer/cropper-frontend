@@ -742,8 +742,8 @@ export default class Wallet extends Vue {
       display: flex;
       background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
       padding: 2px;
-      height: 24px;
-      width: 24px;
+      height: 30px;
+      width: 30px;
       border-radius: 50%;
       margin-right: 4px;
 
@@ -878,7 +878,7 @@ export default class Wallet extends Vue {
     align-items: center;
 
     .btncontainer {
-      background: @gradient-btn-wallet;
+      background: @gradient-color04;
       background-origin: border-box;
       display: flex;
       align-items: center;
@@ -989,7 +989,7 @@ export default class Wallet extends Vue {
       margin-top: 32px;
 
       .btn-gradient {
-        background: @gradient-btn-primary;
+        background: @gradient-color01;
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
         border-radius: 38px;
         padding: 10px 18px;

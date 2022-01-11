@@ -300,7 +300,7 @@ export default Vue.extend({
   margin-top: 8px;
 
   .btn-container {
-    background: @gradient-btn-primary;
+    background: @gradient-color01;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 38px;
     padding: 3px;

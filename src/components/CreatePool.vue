@@ -984,7 +984,7 @@ export default class CreatePool extends Vue {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: @gradient-btn-primary;
+  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 10px 32px;
@@ -997,7 +997,7 @@ export default class CreatePool extends Vue {
 }
 
 .btn-outline {
-  background: @gradient-btn-primary;
+  background: @gradient-color01;
   border-radius: 48px;
   padding: 3px;
   margin-right: 13px;

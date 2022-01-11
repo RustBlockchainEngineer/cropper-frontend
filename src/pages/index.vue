@@ -695,7 +695,7 @@ export default class Landing extends Vue {
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background-image: @gradient-btn-primary;
+  background-image: @gradient-color01;
   padding: 3px;
   border-radius: 48px;
   height: 54px;
@@ -705,7 +705,7 @@ export default class Landing extends Vue {
   display: flex;
 
   &:hover {
-    background-image: @gradient-btn-primary-reverse;
+    background-image: @gradient-color02;
   }
 
   @media @max-sl-mobile {
@@ -714,7 +714,7 @@ export default class Landing extends Vue {
 }
 
 .btn-fill {
-  background-image: @gradient-btn-primary;
+  background-image: @gradient-color01;
   padding: 18px 30px;
   display: flex;
   align-items: center;
@@ -725,7 +725,7 @@ export default class Landing extends Vue {
   transition: background-color 0.7s ease-out;
 
   &:hover {
-    background-image: @gradient-btn-primary-reverse;
+    background-image: @gradient-color02;
   }
 
   @media @max-sl-mobile {
