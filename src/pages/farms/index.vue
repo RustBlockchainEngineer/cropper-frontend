@@ -1391,9 +1391,9 @@ import {
   FARM_PREFIX,
   PAY_FARM_FEE,
   REWARD_MULTIPLER,
-  YieldFarm, 
-  getCoinBalance, 
-  getPcBalance, 
+  YieldFarm,
+  getCoinBalance,
+  getPcBalance,
   getTotalSupply
 } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
@@ -1923,7 +1923,6 @@ export default Vue.extend({
           }
 
           const duration = currentTimestamp - last_timestamp.toNumber()
-
 
           const rewardPerTimestamp = toBigNumber(reward_per_timestamp_or_remained_reward_amount)
           const liquidityItem = get(this.liquidity.infos, lp.mintAddress)
@@ -2645,13 +2644,18 @@ export default Vue.extend({
       this.lp = coin
       this.farmInfo = cloneDeep(poolInfo)
 
-
       let ammId = this.getAmmId(poolInfo)
       const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === ammId)
       const totalSupply = getTotalSupply(currentPoolInfo)
 
-      const pcBalance = (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
-      const coinBalance = (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+      const pcBalance = (
+        (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString())) /
+        totalSupply
+      ).toFixed(3)
+      const coinBalance = (
+        (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString())) /
+        totalSupply
+      ).toFixed(3)
       set(this.unstakePoolInfo, 'pcBalance', pcBalance)
       set(this.unstakePoolInfo, 'coinBalance', coinBalance)
       set(this.unstakePoolInfo, 'totalSupply', totalSupply)
