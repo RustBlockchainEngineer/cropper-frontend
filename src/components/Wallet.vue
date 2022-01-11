@@ -13,7 +13,7 @@
           }
         "
       >
-        <span class="tier-id textM weightS letterS">Tier {{wallet.tiers}}</span>
+        <span class="tier-id textM weightS letterS">Tier <span v-if="tierloaded">{{wallet.tiers}}</span><span v-else>&mdash;</span></span>
         <img src="@/assets/icons/arrow-down-white.svg" />
       </div>
 
@@ -26,7 +26,7 @@
           }
         "
       >
-        <div class="collapse-item text-center textM weightS icon-cursor">
+        <div class="collapse-item text-center textM weightS icon-cursor" v-if="tierloaded">
           <div class="tier-progress">
             <div class="tier-progress-label fcb-container">
               <span class="bodyXS weightB">Tier {{wallet.tiers}}</span>
@@ -167,13 +167,26 @@ import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { TokenAmount } from '@/utils/safe-math'
 import { TOKENS } from '@/utils/tokens'
 import {
+  setAnchorProvider,
+  createFarmState,
+  fundToProgram,
+  setExtraReward,
+  createExtraReward,
+  createPool,
+  changePoolAmountMultipler,
+  changeTokenPerSecond,
+  changePoolPoint,
+  getFarmStateAddress,
   getFarmState,
   getExtraRewardConfigs,
   getAllPools,
   getPoolUserAccount,
   estimateRewards,
   calculateTiers,
-  TIERS_XCRP
+  TIERS_XCRP,
+  stake,
+  unstake,
+  harvest
 } from '@/utils/crp-stake'
 const Vco = require('v-click-outside')
 const network = WalletAdapterNetwork.Devnet
@@ -327,7 +340,9 @@ export default class Wallet extends Vue {
   liquidityTimer: number | undefined = undefined
   farmTimer: number | undefined = undefined
   idoTimer: number | undefined = undefined
+  crpbalance : any = undefined
   // web3 listener
+  tierloaded : boolean = false
   walletListenerId = null as number | null
 
   debugCount = 0
@@ -431,9 +446,23 @@ export default class Wallet extends Vue {
   }
 
   async getTiersInfo() {
+
+    setAnchorProvider(this.$web3, this.$wallet)
+
     if (!this.$accessor.token.initialized || !this.$wallet?.connected) {
+      console.log(!this.$accessor.token.initialized, !this.$wallet?.connected);
       return
     }
+
+    let crpbalanceDatas = this.wallet.tokenAccounts[TOKENS['CRP'].mintAddress]
+
+    if (crpbalanceDatas) {
+      this.crpbalance = crpbalanceDatas.balance.fixed() * 1
+    }
+
+    const farm_state = await getFarmState()
+    const extraRewardConfigs = await getExtraRewardConfigs()
+
     const pools = await getAllPools()
     const current_pool = pools[0]
     const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
@@ -457,6 +486,8 @@ export default class Wallet extends Vue {
           (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
         100
     }
+
+    this.tierloaded = true
   }
 
   onConnect() {
@@ -663,7 +694,9 @@ export default class Wallet extends Vue {
           this.disconnect()
         }
       }
-
+      if(!this.tierloaded){
+        await this.getTiersInfo()
+      }
       this.sonarUrl = 'https://sonar.watch/dashboard/' + this.wallet.address
     }, 1000)
   }
