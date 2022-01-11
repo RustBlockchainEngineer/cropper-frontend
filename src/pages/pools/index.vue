@@ -1045,8 +1045,10 @@ export default class Pools extends Vue {
     this.poolInf = cloneDeep(poolInfo)
 
     this.lp = coin
+    // @ts-ignore
     this.farmInfo = cloneDeep(poolInfo)
 
+    // @ts-ignore
     const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.farmInfo.ammId)
     const totalSupply = getTotalSupply(currentPoolInfo)
 
