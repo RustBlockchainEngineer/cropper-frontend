@@ -68,10 +68,6 @@
               (Math.round(this.estimatedapy * 100) * boostAPY) / 100
             }}</label>
           </div>
-          <div class="calc-yield-info current-tier">
-            <label class="label textS weightB">Tier</label>
-            <label class="value textS weightS letterL">4</label>
-          </div>
           <div class="calc-yield-info">
             <label class="label textS weightB">Estimated reward (CRP) </label>
             <label class="value textS weightS letterL"
@@ -563,8 +559,7 @@ export default Vue.extend({
         justify-content: space-between;
         align-items: center;
 
-        &:nth-child(2),
-        &:nth-child(3) {
+        &:nth-child(2) {
           padding-bottom: 12px;
           border-bottom: 1px solid #384d71;
         }
