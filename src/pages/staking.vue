@@ -287,7 +287,7 @@
         <div class="staking-tiers-details" id="staking-tiers-details">
           <span class="textL weightB">About Tiers</span>
           <div class="staking-tiers-features">
-            <Tabs :active-key="activeTab">
+            <Tabs v-model="activeTab">
               <TabPane tab="Tier 1" key="0">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
