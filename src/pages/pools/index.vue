@@ -442,7 +442,7 @@
                   </Col>
                   <Col class="state textM weightS" span="3">
                     <div class="btn-container">
-                      <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
+                      <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)">Add</Button>
                     </div>
                     <div class="btn-container">
                       <Button
@@ -574,7 +574,7 @@
 
                         <div class="btn-group">
                           <div class="btn-container">
-                            <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
+                            <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)">Add</Button>
                           </div>
                           <div class="btn-container">
                             <Button
@@ -629,7 +629,7 @@
 
                       <div class="btn-group">
                         <div class="btn-container">
-                          <Button class="btn-transparent textS weightB" @click="openPoolAddModal(data)">Add</Button>
+                          <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)">Add</Button>
                         </div>
                         <div class="btn-container">
                           <Button

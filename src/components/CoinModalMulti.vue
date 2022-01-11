@@ -71,6 +71,7 @@
       <div class="btn-container">
         <Button
           class="textL weightB"
+          id="vadd"
           :disabled="
             !farmInfo.lp.coin ||
             !fromCoinAmount ||

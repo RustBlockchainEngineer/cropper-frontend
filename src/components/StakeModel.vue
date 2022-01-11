@@ -86,6 +86,7 @@
       <div class="btn-container">
         <Button
           class="textL weightB"
+          id="vdeposit"
           :disabled="
             !farmInfo.lp.coin ||
             !fromCoinAmount ||

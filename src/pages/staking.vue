@@ -138,6 +138,7 @@
                     <div class="btn-container">
                       <Button
                         class="btn-transparent weightS letterL"
+                        id="stake"
                         @click="
                           () => {
                             this.stakeModalShow = true
@@ -152,6 +153,7 @@
                 <div v-else class="btn-container btn-large fcc-container">
                   <Button
                     class="btn-transparent textL weightB"
+                    id="stake"
                     @click="
                       () => {
                         this.stakeModalShow = true

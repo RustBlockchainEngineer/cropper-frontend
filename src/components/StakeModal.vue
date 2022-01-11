@@ -106,6 +106,7 @@
           <div class="btn-container">
             <Button
               class="btn-transparent textM weightS icon-cursor"
+              id="vstake"
               :disabled="this.crpbalance < toStake || toStake * 1 <= 0"
               @click="stakeToken"
               >Confirm</Button
