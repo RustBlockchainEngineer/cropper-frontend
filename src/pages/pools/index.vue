@@ -17,6 +17,7 @@
       text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.<br /><br />
       If the pop up for the second operations does not appear, it may have popped up behind your browser. You an check this by minimizing your browser."
       @onOk="unstake"
+      :lpbreakdown="this.unstakePoolInfo"
       @onCancel="cancelUnstake"
     />
 
@@ -450,7 +451,7 @@
                       <Button
                         class="btn-primary textS weightB"
                         :disabled="!wallet.connected || !data.current"
-                        @click="openUnstakeModal(data, data.lp, 1)"
+                        @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
                       >
                         Remove
                       </Button>
@@ -584,7 +585,7 @@
                             <Button
                               class="btn-primary textS weightB"
                               :disabled="!wallet.connected || !data.current"
-                              @click="openUnstakeModal(data, data.lp, 1)"
+                              @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
                             >
                               Remove
                             </Button>
@@ -641,7 +642,7 @@
                           <Button
                             class="btn-primary textS weightB"
                             :disabled="!wallet.connected || !data.current"
-                            @click="openUnstakeModal(data, data.lp, 1)"
+                            @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
                           >
                             Remove
                           </Button>
@@ -709,7 +710,7 @@
 </template>
 
 <script lang="ts">
-import { get, cloneDeep } from 'lodash-es'
+import { get, set, cloneDeep } from 'lodash-es'
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
 import {
@@ -727,6 +728,13 @@ import {
   Pagination,
   Switch as Toggle
 } from 'ant-design-vue'
+
+import {
+  getCoinBalance, 
+  getPcBalance, 
+  getTotalSupply
+} from '@/utils/farm'
+
 import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
 import { getBigNumber } from '@/utils/layouts'
@@ -819,6 +827,7 @@ export default class Pools extends Vue {
   poolType: string = 'RaydiumPools'
   fromCoin: any = false
   staking: any = false
+  unstakePoolInfo: any = {}
   lp: any = false
   TVL: any = 0
   unstaking: any = false
@@ -1040,6 +1049,21 @@ export default class Pools extends Vue {
     this.lp = coin
 
     this.poolInf = cloneDeep(poolInfo)
+
+    this.lp = coin
+    this.farmInfo = cloneDeep(poolInfo)
+
+    const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.farmInfo.ammId)
+    const totalSupply = getTotalSupply(currentPoolInfo)
+
+    const pcBalance = (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+    const coinBalance = (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+
+    set(this.unstakePoolInfo, 'pcBalance', pcBalance)
+    set(this.unstakePoolInfo, 'coinBalance', coinBalance)
+    set(this.unstakePoolInfo, 'totalSupply', totalSupply)
+    set(this.unstakePoolInfo, 'pcSymbol', get(currentPoolInfo, 'pc.symbol'))
+    set(this.unstakePoolInfo, 'coinSymbol', get(currentPoolInfo, 'coin.symbol'))
 
     this.unstakeModalOpening = true
   }
@@ -1308,9 +1332,12 @@ export default class Pools extends Vue {
         value.labelized = 1
       }
 
+      value.currentUnformated = null
+
       if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
         if (wallet) {
           value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`)
+          value.currentUnformated = value.current
           if (value.current) {
             value.current = (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) * liquidityItemValue
           } else {
