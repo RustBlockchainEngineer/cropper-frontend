@@ -35,8 +35,16 @@
             <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="true" />
           </div>
         </div>
-        <div class="collapse-item text-center textM weightS icon-cursor">Stake CRP</div>
-        <div class="collapse-item text-center textM weightS icon-cursor">About Tiers</div>
+        <div class="collapse-item text-center textM weightS icon-cursor">
+          <NuxtLink to="/staking/">
+            Stake CRP
+          </NuxtLink>
+        </div>
+        <div class="collapse-item text-center textM weightS icon-cursor">
+          <NuxtLink to="/staking/#staking-tiers-details">
+            About Tiers
+          </NuxtLink>
+        </div>
       </div>
     </div>
 

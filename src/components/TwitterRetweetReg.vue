@@ -26,7 +26,7 @@
           <div :class="this.twitterA ? 'done' : 'notdone'">
             <span v-if="!this.twitterA" class="first">1</span>
             <span v-else class="span first"
-              ><img src="@/assets/icons/check-one.svg" alt=""
+              ><img src="@/assets/icons/check-green.svg" alt=""
             /></span>
             <div>
               <a href="https://twitter.com/CropperFinance" class="social-icon" target="_blank" @click="validateTwitterA()">
@@ -40,7 +40,7 @@
 
           <div :class="this.telegramA ? 'done' : 'notdone'">
             <span v-if="!this.telegramA">2</span>
-            <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+            <span v-else class="span"><img src="@/assets/icons/check-green.svg" alt="" /></span>
             <div>
               <a href="https://t.me/CropperFinance" class="social-icon" target="_blank" @click="validateTelegramA()">
                 <img src="@/assets/icons/telegram_purple.svg" width="30" height="30" />
@@ -53,7 +53,7 @@
 
           <div v-if="this.farm.links.twitter && this.farm.slug != 'cropper'" :class="this.twitterB ? 'done' : 'notdone'">
             <span v-if="!this.twitterB">3</span>
-            <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+            <span v-else class="span"><img src="@/assets/icons/check-green.svg" alt="" /></span>
             <div>
               <a :href="this.farm.links.twitter" target="_blank" class="social-icon"  @click="validateTwitterB()">
                 <img src="@/assets/icons/twitter_purple.svg" width="30" height="30" />
@@ -66,7 +66,7 @@
 
           <div v-if="this.farm.links.telegram && this.farm.slug != 'cropper'" :class="this.telegramB ? 'done' : 'notdone'">
             <span v-if="!this.telegramB ">4</span>
-            <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+            <span v-else class="span"><img src="@/assets/icons/check-green.svg" alt="" /></span>
             <div>
               <a :href="this.farm.links.telegram" target="_blank" class="social-icon"  @click="validateTelegramB()">
                 <img src="@/assets/icons/telegram_purple.svg" width="30" height="30" />
@@ -80,7 +80,7 @@
 
           <div :class="this.inputtwitter ? 'done' : 'notdone'">
             <span v-if="!this.inputtwitter">{{ this.farm.links.twitter && this.farm.slug != 'cropper' ? 5 : 3 }}</span>
-            <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+            <span v-else class="span"><img src="@/assets/icons/check-green.svg" alt="" /></span>
             <div>
               Input your twitter ID
               <div class="social-input-form">
@@ -99,7 +99,7 @@
 
           <div :class="this.inputtelegram ? 'done' : 'notdone'">
             <span v-if="!this.inputtelegram">{{ this.farm.links.twitter && this.farm.slug != 'cropper' ? 6 : 4 }}</span>
-            <span v-else class="span"><img src="@/assets/icons/check-one.svg" alt="" /></span>
+            <span v-else class="span"><img src="@/assets/icons/check-green.svg" alt="" /></span>
             <div>
               Input your telegram ID
               <div class="social-input-form">
@@ -150,7 +150,7 @@
           <div :class="this.inputretwit ? 'done big' : 'notdone big'">
             <span v-if="!this.inputretwit" class="first">1</span>
             <span v-else class="span2 first"
-              ><img src="@/assets/icons/check-one.svg" alt=""
+              ><img src="@/assets/icons/check-green.svg" alt=""
             /></span>
             <Row :gutter="24">
               <Col :span="10" class="twitter-section-left" v-html="this.farm.links.retweet_html">

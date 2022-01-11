@@ -2,7 +2,7 @@
   <div class="swap container">
     <div v-if="wsolBalance && wsolBalance.balance.fixed() > 0" class="note-unwrapped-sol">
       <div class="note-content">
-        <img class="note-icon" src="@/assets/icons/warning-icon.svg" />
+        <img class="note-icon" src="@/assets/icons/status-warning.svg" />
         <label class="textS weightS">
           You have {{ wsolBalance.balance.fixed() }} <span style="color: #23adb4">wrapped SOL</span> in your wallet.
           Click to unwrap to native SOL.

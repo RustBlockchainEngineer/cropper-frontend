@@ -41,8 +41,18 @@
                 <span class="bodyXS weightB">Tier {{ currentTiers }}</span>
                 <span class="bodyXS weightB">Tier {{ nextTiers }}</span>
               </div>
-              <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="false"/>
-              <label class="staking-progress-percent bodyXS" :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"> {{ Number(pctToNexttiers.toFixed(1)) }}% </label>
+              <Progress
+                type="line"
+                :stroke-width="14"
+                :percent="Number(pctToNexttiers.toFixed(1))"
+                :show-info="false"
+              />
+              <label
+                class="staking-progress-percent bodyXS"
+                :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"
+              >
+                {{ Number(pctToNexttiers.toFixed(1)) }}%
+              </label>
             </div>
 
             <div class="staking-infos-group">
@@ -138,6 +148,7 @@
                     <div class="btn-container">
                       <Button
                         class="btn-transparent weightS letterL"
+                        id="stake"
                         @click="
                           () => {
                             this.stakeModalShow = true
@@ -152,6 +163,7 @@
                 <div v-else class="btn-container btn-large fcc-container">
                   <Button
                     class="btn-transparent textL weightB"
+                    id="stake"
                     @click="
                       () => {
                         this.stakeModalShow = true
@@ -181,10 +193,7 @@
 
           <div class="staking-tiers">
             <Carousel ref="tierCarousel" :before-change="getCurrentTier" arrows>
-              <div
-                slot="prevArrow"
-                class="custom-slick-arrow prev-arrow"
-              >
+              <div slot="prevArrow" class="custom-slick-arrow prev-arrow">
                 <Icon type="left" />
               </div>
               <div slot="nextArrow" class="custom-slick-arrow next-arrow">
@@ -198,7 +207,12 @@
                     <label class="textL weightB">Tier 1</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details" @click="setTierTabs">About Tiers</a>
+                    <a
+                      class="btn-primary textM weightS fcc-container"
+                      href="#staking-tiers-details"
+                      @click="setTierTabs"
+                      >About Tiers</a
+                    >
                   </div>
                 </div>
               </div>
@@ -209,7 +223,12 @@
                     <label class="textL weightB">Tier 2</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details" @click="setTierTabs">About Tiers</a>
+                    <a
+                      class="btn-primary textM weightS fcc-container"
+                      href="#staking-tiers-details"
+                      @click="setTierTabs"
+                      >About Tiers</a
+                    >
                   </div>
                 </div>
               </div>
@@ -220,7 +239,12 @@
                     <label class="textL weightB">Tier 3</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details" @click="setTierTabs">About Tiers</a>
+                    <a
+                      class="btn-primary textM weightS fcc-container"
+                      href="#staking-tiers-details"
+                      @click="setTierTabs"
+                      >About Tiers</a
+                    >
                   </div>
                 </div>
               </div>
@@ -231,7 +255,12 @@
                     <label class="textL weightB">Tier 4</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details" @click="setTierTabs">About Tiers</a>
+                    <a
+                      class="btn-primary textM weightS fcc-container"
+                      href="#staking-tiers-details"
+                      @click="setTierTabs"
+                      >About Tiers</a
+                    >
                   </div>
                 </div>
               </div>
@@ -242,7 +271,12 @@
                     <label class="textL weightB">Tier 5</label>
                   </div>
                   <div class="btn-container">
-                    <a class="btn-primary textM weightS fcc-container" href="#staking-tiers-details" @click="setTierTabs">About Tiers</a>
+                    <a
+                      class="btn-primary textM weightS fcc-container"
+                      href="#staking-tiers-details"
+                      @click="setTierTabs"
+                      >About Tiers</a
+                    >
                   </div>
                 </div>
               </div>
@@ -253,18 +287,18 @@
         <div class="staking-tiers-details" id="staking-tiers-details">
           <span class="textL weightB">About Tiers</span>
           <div class="staking-tiers-features">
-            <Tabs :default-active-key="activeTab" :active-key="activeTab">
-              <TabPane tab="Tier 1" key="1">
+            <Tabs v-model="activeTab">
+              <TabPane tab="Tier 1" key="0">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
                     <span class="textM weightS">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                       <br /><br />
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                     </span>
                   </Col>
                   <Col :sm="12" :xs="24" class="staking-tier-preview">
@@ -272,17 +306,17 @@
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Tier 2" key="2">
+              <TabPane tab="Tier 2" key="1">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
                     <span class="textM weightS">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                       <br /><br />
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                     </span>
                   </Col>
                   <Col :sm="12" :xs="24" class="staking-tier-preview">
@@ -290,17 +324,17 @@
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Tier 3" key="3">
+              <TabPane tab="Tier 3" key="2">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="textM weightS">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                       <br /><br />
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                     </span>
                   </Col>
                   <Col :span="12" class="staking-tier-preview">
@@ -308,17 +342,17 @@
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Tier 4" key="4">
+              <TabPane tab="Tier 4" key="3">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="textM weightS">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                       <br /><br />
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                     </span>
                   </Col>
                   <Col :span="12" class="staking-tier-preview">
@@ -326,17 +360,17 @@
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Tier 5" key="5">
+              <TabPane tab="Tier 5" key="4">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="textM weightS">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                       <br /><br />
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                      industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                      scrambled it to make a type specimen book.
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
+                      the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                      type and scrambled it to make a type specimen book.
                     </span>
                   </Col>
                   <Col :span="12" class="staking-tier-preview">
@@ -346,36 +380,6 @@
               </TabPane>
             </Tabs>
           </div>
-          <!-- <div class="staking-tiers-features">
-            <Row type="flex" :gutter="32">
-              <Col :flex="1">
-                <div class="staking-tier-box"></div>
-              </Col>
-              <Col :flex="1">
-                <div class="staking-tier-box"></div>
-              </Col>
-              <Col :flex="1">
-                <div class="staking-tier-box"></div>
-              </Col>
-              <Col :flex="1">
-                <div class="staking-tier-box"></div>
-              </Col>
-              <Col :flex="1">
-                <div class="staking-tier-box"></div>
-              </Col>
-            </Row>
-          </div>
-          <div class="staking-tiers-description">
-            <span class="textM weightS">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book.
-              <br /><br />
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book.
-            </span>
-          </div> -->
         </div>
       </div>
     </div>
@@ -432,7 +436,7 @@ export default Vue.extend({
     Col,
     Icon,
     Tabs,
-    TabPane,
+    TabPane
   },
   data() {
     return {
@@ -459,7 +463,7 @@ export default Vue.extend({
       currentTiers: 0 as number,
       nextTiers: 1 as number,
       selectedTier: 0 as number,
-      activeTab: '1' as string
+      activeTab: '0' as string
     }
   },
   head: {
@@ -498,7 +502,7 @@ export default Vue.extend({
 
     this.getGlobalState()
     this.getUserState()
-
+    this.setTierCarousel(this.currentTiers - 2)
     this.setTimer()
   },
   methods: {
@@ -625,7 +629,6 @@ export default Vue.extend({
           100
       }
       this.selectedTier = this.currentTiers
-      this.activeTab = (this.selectedTier + 1).toString()
       this.setTierCarousel(this.currentTiers - 2)
     },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
@@ -782,14 +785,13 @@ export default Vue.extend({
       this.$accessor.wallet.getTokenAccounts()
     },
     getCurrentTier(from: any, to: any) {
-      this.selectedTier = to;
+      this.selectedTier = to
     },
     setTierCarousel(idx: number) {
-      if (idx >= 0)
-        (this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
+      if (idx >= 0) (this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
     },
     setTierTabs() {
-      this.activeTab = (this.selectedTier + 1).toString()
+      this.activeTab = this.selectedTier.toString()
     }
   }
 })

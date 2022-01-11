@@ -582,7 +582,6 @@
 
                   <Col class="state textM weightS" span="3">
                     {{ fertilizer.subscribers }}
-                    
                   </Col>
 
                   <Col class="state textM weightS" span="4">
@@ -662,8 +661,7 @@
 
                     <Col class="state text-center" span="5">
                       <span class="label textS weightB">Subscribers</span>
-                      <span class="textM weightS">{{ fertilizer.subscribers }}
-                    </span>
+                      <span class="textM weightS">{{ fertilizer.subscribers }} </span>
                     </Col>
 
                     <Col class="state textM weightS text-center" span="5">
@@ -891,7 +889,7 @@ export default Vue.extend({
     Col,
     Button,
     Countdown,
-    Tooltip,
+    Tooltip
   },
   data() {
     return {
@@ -1112,9 +1110,9 @@ export default Vue.extend({
   },
   watch: {
     showCollapse: {
-      immediate: true, 
+      immediate: true,
       handler() {
-       // console.log(this.showCollapse)
+        // console.log(this.showCollapse)
         //if (this.showCollapse.length > 0) {
         //  this.showCollapse.splice(0, this.showCollapse.length)
         //}
@@ -1317,9 +1315,8 @@ export default Vue.extend({
       // search with name
       if (searchName != '') {
         console.log(searchName)
-        this.fertilizerItems = this.fertilizerItems.filter(
-          (fertilizer: any) =>
-            fertilizer.title.toLowerCase().includes(searchName.toLowerCase())
+        this.fertilizerItems = this.fertilizerItems.filter((fertilizer: any) =>
+          fertilizer.title.toLowerCase().includes(searchName.toLowerCase())
         )
       }
 
