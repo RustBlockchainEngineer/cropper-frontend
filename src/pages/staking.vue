@@ -629,7 +629,6 @@ export default Vue.extend({
           100
       }
       this.selectedTier = this.currentTiers
-      this.activeTab = this.selectedTier.toString()
       this.setTierCarousel(this.currentTiers - 2)
     },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
