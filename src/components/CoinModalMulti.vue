@@ -219,7 +219,7 @@ export default Vue.extend({
 }
 .btn-container {
   button {
-    background: @gradient-btn-primary !important;
+    background: @gradient-color01 !important;
     background-origin: border-box !important;
     border: none;
     position: relative;

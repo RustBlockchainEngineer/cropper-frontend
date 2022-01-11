@@ -344,7 +344,7 @@ export default Vue.extend({
 // global styles
 
 .btn-container {
-  background: @gradient-btn-primary;
+  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
@@ -463,7 +463,7 @@ export default Vue.extend({
       bottom: 0;
       border-radius: 8px;
       padding: 2px;
-      background: @gradient-btn-wallet;
+      background: @gradient-color04;
       background-origin: border-box;
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: destination-out;

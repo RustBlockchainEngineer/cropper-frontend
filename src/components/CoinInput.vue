@@ -208,7 +208,7 @@ export default Vue.extend({
       bottom: 0;
       border-radius: 8px;
       padding: 2px;
-      background: @gradient-btn-wallet;
+      background: @gradient-color04;
       background-origin: border-box;
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: destination-out;

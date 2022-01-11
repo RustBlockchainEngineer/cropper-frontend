@@ -594,7 +594,7 @@ export default Vue.extend({
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background: @gradient-btn-primary;
+  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
@@ -676,7 +676,7 @@ export default Vue.extend({
       .project-content {
         .project-preview-container {
           .project-preview {
-            background: @gradient-btn-wallet;
+            background: @gradient-color04;
             border-radius: 8px;
             padding: 16px;
             margin-bottom: 16px;
@@ -800,6 +800,7 @@ export default Vue.extend({
               }
 
               .project-category-banner-img {
+                width: 100%;
                 border-radius: 8px;
                 margin-bottom: 40px;
               }

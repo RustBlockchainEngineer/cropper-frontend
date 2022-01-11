@@ -1842,7 +1842,7 @@ export default Vue.extend({
     }
 
     .note-btn {
-      background: @gradient-btn-primary;
+      background: @gradient-color01;
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
       border-radius: 48px;
       border: none;
@@ -2024,7 +2024,7 @@ export default Vue.extend({
 // global stylesheet
 .btn-container {
   button {
-    background: @gradient-btn-primary !important;
+    background: @gradient-color01 !important;
     background-origin: border-box !important;
     border: none;
     position: relative;
