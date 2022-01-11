@@ -582,6 +582,7 @@
 
                   <Col class="state textM weightS" span="3">
                     {{ fertilizer.subscribers }}
+                    
                   </Col>
 
                   <Col class="state textM weightS" span="4">
@@ -644,7 +645,7 @@
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
                   v-for="(fertilizer, idx) in fertilizerItems"
-                  :key="idx"
+                  :key="fertilizer.k2"
                   v-show="true"
                   :show-arrow="true"
                 >
@@ -661,7 +662,8 @@
 
                     <Col class="state text-center" span="5">
                       <span class="label textS weightB">Subscribers</span>
-                      <span class="textM weightS">{{ fertilizer.subscribers }}</span>
+                      <span class="textM weightS">{{ fertilizer.subscribers }}
+                    </span>
                     </Col>
 
                     <Col class="state textM weightS text-center" span="5">
@@ -744,7 +746,7 @@
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
                   v-for="(fertilizer, idx) in fertilizerItems"
-                  :key="idx"
+                  :key="fertilizer.k1"
                   v-show="true"
                   :show-arrow="true"
                 >
@@ -939,6 +941,8 @@ export default Vue.extend({
       fertilizerData: [
         {
           status: 'Whitelist Open',
+          k1: 'K0',
+          k2: 'KK0',
           picture: '/fertilizer/banner/unq.png',
           title: 'UNQ.club',
           short_desc: 'Social platform for NFT asset management',
@@ -950,6 +954,8 @@ export default Vue.extend({
         },
         {
           status: 'Sales',
+          k1: 'K1',
+          k2: 'KK1',
           picture: '/fertilizer/banner/metaprints.png',
           title: 'Metaprints',
           short_desc: 'Blueprints for metaverses',
@@ -962,6 +968,8 @@ export default Vue.extend({
         },
         {
           status: 'Sales',
+          k1: 'K2',
+          k2: 'KK2',
           picture: '/fertilizer/banner/galaxy.png',
           title: 'Galaxy War',
           short_desc: 'Our galatic adventure awaits',
@@ -973,6 +981,8 @@ export default Vue.extend({
         },
         {
           status: 'Distribution',
+          k1: 'K3',
+          k2: 'KK3',
           picture: '/fertilizer/banner/meanfi.png',
           title: 'MeanFI',
           short_desc: 'Grow your money stash with the best prices across DeFi',
@@ -984,6 +994,8 @@ export default Vue.extend({
         },
         {
           status: 'Preparation',
+          k1: 'K4',
+          k2: 'KK4',
           picture: '/fertilizer/banner/agoric.png',
           title: 'Agoric',
           short_desc: 'Social platform for NFT asset management',
@@ -994,6 +1006,8 @@ export default Vue.extend({
         },
         {
           status: 'Preparation',
+          k1: 'K5',
+          k2: 'KK5',
           picture: '/fertilizer/banner/metaprints.png',
           title: 'Metaprints',
           short_desc: 'Blueprints for metaverses',
@@ -1003,6 +1017,8 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
+          k1: 'K6',
+          k2: 'KK6',
           picture: '/fertilizer/logo/defiland.png',
           title: 'DeFi Land',
           short_desc: 'Gamified Decentralized Finance',
@@ -1014,6 +1030,8 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
+          k1: 'K7',
+          k2: 'KK7',
           picture: '/fertilizer/logo/sonar.png',
           title: 'Sonar Watch',
           short_desc: 'Empowering user journey on Solana DeFi',
@@ -1025,6 +1043,8 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
+          k1: 'K8',
+          k2: 'KK8',
           picture: '/fertilizer/logo/goosefx.png',
           title: 'GooseFX',
           short_desc: 'A Complete DeFi Experience',
@@ -1036,6 +1056,8 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
+          k1: 'K9',
+          k2: 'KK9',
           picture: '/fertilizer/logo/waggle.png',
           title: 'Waggle Network',
           short_desc: 'Primary markets for everyone',
@@ -1047,6 +1069,8 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
+          k1: 'K10',
+          k2: 'KK10',
           picture: '/fertilizer/logo/cryowar.png',
           title: 'Cryowar',
           short_desc: 'Next-gen blockchain multiplayer game',
@@ -1058,6 +1082,8 @@ export default Vue.extend({
         },
         {
           status: 'Funded',
+          k1: 'K11',
+          k2: 'KK11',
           picture: '/fertilizer/logo/cyclos.png',
           title: 'Cyclos',
           short_desc: 'Decentralized trading unleashed',
@@ -1098,11 +1124,12 @@ export default Vue.extend({
   },
   watch: {
     showCollapse: {
+      immediate: true, 
       handler() {
-        console.log(this.showCollapse)
-        if (!this.poolType && this.showCollapse.length > 0) {
-          this.showCollapse.splice(0, this.showCollapse.length)
-        }
+       // console.log(this.showCollapse)
+        //if (this.showCollapse.length > 0) {
+        //  this.showCollapse.splice(0, this.showCollapse.length)
+        //}
       },
       deep: true
     },
