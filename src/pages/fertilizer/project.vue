@@ -30,7 +30,8 @@
                         : fertilizer.status === filterOptions.preparation
                         ? 'preparation'
                         : ''
-                  ">
+                    "
+                  >
                     <span class="bodyXS weightB">{{ fertilizer.status }}</span>
                   </div>
                 </div>
@@ -118,21 +119,27 @@
                           <span class="title textS weightS letterL">Token Price</span>
                           <div class="value fcl-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <span class="textM"><b>{{ fertilizer.ido_info.sale_rate }}</b> USDC</span>
+                            <span class="textM"
+                              ><b>{{ fertilizer.ido_info.sale_rate }}</b> USDC</span
+                            >
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title textS weightS letterL">Hard Cap</span>
                           <div class="value fcl-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <span class="textM"><b>{{ fertilizer.ido_info.hard_cap }}</b> USDC</span>
+                            <span class="textM"
+                              ><b>{{ fertilizer.ido_info.hard_cap }}</b> USDC</span
+                            >
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title textS weightS letterL">Pool Size</span>
                           <div class="value fcl-container">
                             <img class="coin-icon" :src="fertilizer.logo" />
-                            <span class="textM"><b>{{ fertilizer.pool_size }}</b> {{ fertilizer.token_info.symbol }}</span>
+                            <span class="textM"
+                              ><b>{{ fertilizer.pool_size }}</b> {{ fertilizer.token_info.symbol }}</span
+                            >
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
@@ -151,7 +158,9 @@
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title textS weightS letterL">Website</span>
                           <div class="value fcl-container">
-                            <a class="website textM weightS" :href="fertilizer.website_url" target="_blank">{{ fertilizer.website }}</a>
+                            <a class="website textM weightS" :href="fertilizer.website_url" target="_blank">{{
+                              fertilizer.website
+                            }}</a>
                           </div>
                         </Col>
                       </Row>
@@ -178,7 +187,7 @@
                         <span class="label textS weightS letterL">Hardcap</span>
                         <span class="textM weightS letterS">{{ fertilizer.ido_info.hard_cap }}</span>
                       </div>
-                       <div class="information-item fcb-container">
+                      <div class="information-item fcb-container">
                         <span class="label textS weightS letterL">Sale rate</span>
                         <span class="textM weightS letterS">{{ fertilizer.ido_info.sale_rate }}</span>
                       </div>
@@ -203,7 +212,7 @@
                         <span class="label textS weightS letterL">Symbol</span>
                         <span class="textM weightS letterS">{{ fertilizer.token_info.symbol }}</span>
                       </div>
-                       <div class="information-item fcb-container">
+                      <div class="information-item fcb-container">
                         <span class="label textS weightS letterL">Category</span>
                         <span class="textM weightS letterS">{{ fertilizer.token_info.category }}</span>
                       </div>
@@ -225,9 +234,11 @@
                   <Col :span="12">
                     <span class="textM">
                       Discover, Collect, and Trade NFTs as a team.<br /><br />
-                      The first NFT asset management platform providing tools for collectors and investors to power the NFT space. Running cross-chain, powered by Solana.<br /><br />
+                      The first NFT asset management platform providing tools for collectors and investors to power the
+                      NFT space. Running cross-chain, powered by Solana.<br /><br />
                       We bring more togetherness to the NFT space<br /><br />
-                      Create a club, act as a curator, raise funds to expand your collection, and build a community around it.
+                      Create a club, act as a curator, raise funds to expand your collection, and build a community
+                      around it.
                     </span>
                   </Col>
                   <Col :span="12">
@@ -243,7 +254,9 @@
                     <span class="textM weightS">Onwership DAOs</span>
                     <br /><br />
                     <span class="textM">
-                      You can’t just copy trade NFTs since they are unique and have a big social component. That’s why UNQ allows you to create Clubs - essentially, ownership DAOs that are led by an experience and dedicated collector, and community can bring additional liquidity, participation, and governance.
+                      You can't just copy trade NFTs since they are unique and have a big social component. That's why
+                      UNQ allows you to create Clubs - essentially, ownership DAOs that are led by an experience and
+                      dedicated collector, and community can bring additional liquidity, participation, and governance.
                     </span>
                   </div>
                   <br />
@@ -251,7 +264,10 @@
                     <span class="textM weightS">Flexible structure</span>
                     <br /><br />
                     <span class="textM">
-                      Want to have a better asset management for you play to earn guild? We got it. Want to get buy those expensive NFTs together with a team to de-risk your invetments? Do it. Want to turn collecting into a business, or expand existing gallery business into the digital world and be able to raise funds and get access to the world of NFTs? Explore our Public clubs and social tokens.
+                      Want to have a better asset management for you play to earn guild? We got it. Want to get buy
+                      those expensive NFTs together with a team to de-risk your invetments? Do it. Want to turn
+                      collecting into a business, or expand existing gallery business into the digital world and be able
+                      to raise funds and get access to the world of NFTs? Explore our Public clubs and social tokens.
                     </span>
                   </div>
                   <br />
@@ -259,7 +275,10 @@
                     <span class="textM weightS">Cross-chain transactions</span>
                     <br /><br />
                     <span class="textM">
-                      NFT market is growing, and more blockchains are introducing NFT support, which makes collector’s life hard. We know that, and we want you to be able to focus on what you do best - buy and sell NFTs. That’s why we are developing a solution that will allow you to transact with NFTs across chains from a single trustless Solana-based interface.
+                      NFT market is growing, and more blockchains are introducing NFT support, which makes collector's
+                      life hard. We know that, and we want you to be able to focus on what you do best - buy and sell
+                      NFTs. That's why we are developing a solution that will allow you to transact with NFTs across
+                      chains from a single trustless Solana-based interface.
                     </span>
                   </div>
                   <br />
@@ -287,16 +306,12 @@
                 <img class="project-category-banner-img" :src="fertilizer.img.roadmap" />
                 <div>
                   <span class="textM">
-                    <b>Phase 1 - </b>Inception
-                    <br /><br />
-                    <b>Phase 2 - </b>MVP development , Solana Hackathon participation (winner 3rd place)
-                    <br /><br />
-                    <b>Phase 3 - </b>Further development, Market research, Private fundraise
-                    <br /><br />
-                    <b>Phase 4 - </b>Private beta of UNQ Club and UNQ World, NFT collection - UNQ Universe, Public beta of UNQ Club
-                    <br /><br />
-                    <b>Phase 5 - </b>Release of UNQ Club, Public beta of UNQ World
-                    <br /><br />
+                    <b>Phase 1 - </b>Inception <br /><br />
+                    <b>Phase 2 - </b>MVP development , Solana Hackathon participation (winner 3rd place) <br /><br />
+                    <b>Phase 3 - </b>Further development, Market research, Private fundraise <br /><br />
+                    <b>Phase 4 - </b>Private beta of UNQ Club and UNQ World, NFT collection - UNQ Universe, Public beta
+                    of UNQ Club <br /><br />
+                    <b>Phase 5 - </b>Release of UNQ Club, Public beta of UNQ World <br /><br />
                     <b>Phase 6 - </b>Release of UNQ World
                   </span>
                 </div>
@@ -306,15 +321,20 @@
                 <img class="project-category-banner-img" :src="fertilizer.img.team" />
                 <div>
                   <span class="textM">
-                    Co-founder and CEO - Alex Migitko : Entrepreneur, 17 years in IT, of which 10 years in game development, 5 years blockchain.
+                    Co-founder and CEO - Alex Migitko : Entrepreneur, 17 years in IT, of which 10 years in game
+                    development, 5 years blockchain.
                     <br /><br />
-                    Co-founder and CTO - Uros Sosevic : Software engineer, 17 years of experience as a developer, architect and CTO;5 years of experience working with
+                    Co-founder and CTO - Uros Sosevic : Software engineer, 17 years of experience as a developer,
+                    architect and CTO;5 years of experience working with
                     <br /><br />
-                    Co-founder and BD - Martin Kardzhilov - Crypto-native, investor, marketing expert, working for 5 years exclusively in the crypto industry.
+                    Co-founder and BD - Martin Kardzhilov - Crypto-native, investor, marketing expert, working for 5
+                    years exclusively in the crypto industry.
                     <br /><br />
                     Backers :
                     <br /><br />
-                    Solana Foundation, Jump Capital, GSR, Gate.io , MEXC, NGC, WWG, Chainboost, Solanium Ventures, Solar Eco Fund, ZBS, Kernel Ventuires, Basics Capital, Titans Ventures, AU21, DWeb3 Capital, WaterDrip, FBG, Everse Capital, Chain Capital, CryptoJ, Moonedge
+                    Solana Foundation, Jump Capital, GSR, Gate.io , MEXC, NGC, WWG, Chainboost, Solanium Ventures, Solar
+                    Eco Fund, ZBS, Kernel Ventuires, Basics Capital, Titans Ventures, AU21, DWeb3 Capital, WaterDrip,
+                    FBG, Everse Capital, Chain Capital, CryptoJ, Moonedge
                   </span>
                 </div>
               </div>
@@ -396,7 +416,8 @@ export default Vue.extend({
         logo: '/fertilizer/logo/unq.png',
         title: 'UNQ.club',
         short_desc: 'Social platform for NFT asset management',
-        long_desc: 'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
+        long_desc:
+          'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
         hard_cap: '3000K',
         pool_size: 5000,
         participants: 100418,
@@ -405,11 +426,11 @@ export default Vue.extend({
         mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
         whitelist_end_date: 1643500800000,
         ido_info: {
-          hard_cap : 140000,
+          hard_cap: 140000,
           sale_rate: 0.028,
           sale_type: 'Vested',
           open_time: 1643500800000,
-          close_time: 1643500800000, 
+          close_time: 1643500800000
         },
         token_info: {
           symbol: 'UNQ',
@@ -423,7 +444,7 @@ export default Vue.extend({
           roadmap: '/fertilizer/project/unq/roadmap.png',
           team: '/fertilizer/project/unq/team.png',
           tokenomics: '/fertilizer/project/unq/tokenomics.png',
-          distribution: '/fertilizer/project/unq/distribution.png',
+          distribution: '/fertilizer/project/unq/distribution.png'
         }
       },
       fertilizerData: [
@@ -576,8 +597,7 @@ export default Vue.extend({
     // ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
 
-  watch: {
-  },
+  watch: {},
 
   mounted() {
     this.currentTimestamp = moment().valueOf()
@@ -586,7 +606,7 @@ export default Vue.extend({
   methods: {
     moment() {
       return moment()
-    },
+    }
   }
 })
 </script>
@@ -672,7 +692,7 @@ export default Vue.extend({
           }
         }
       }
-      
+
       .project-content {
         .project-preview-container {
           .project-preview {
@@ -695,10 +715,10 @@ export default Vue.extend({
           }
 
           .project-ido-container {
-            background: linear-gradient(215.52deg, #273592 0.03%, #23ADB4 99.97%);
+            background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
             padding: 3px;
             border-radius: 8px;
-            
+
             .project-ido-process {
               height: 100%;
               width: 100%;
@@ -753,7 +773,7 @@ export default Vue.extend({
                     border-radius: 50%;
                     margin-right: 6px;
                   }
-                  
+
                   .lock-icon {
                     margin-right: 6px;
                   }
@@ -804,7 +824,7 @@ export default Vue.extend({
                 border-radius: 8px;
                 margin-bottom: 40px;
               }
-              
+
               .information {
                 .information-item {
                   margin-top: 8px;
