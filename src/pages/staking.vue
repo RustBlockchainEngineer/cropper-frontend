@@ -288,7 +288,7 @@
           <span class="textL weightB">About Tiers</span>
           <div class="staking-tiers-features">
             <Tabs v-model="activeTab">
-              <TabPane tab="Tier 1" key="0">
+              <TabPane tab="Tier 1" key="1">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
                     <span class="textM weightS">
@@ -306,7 +306,7 @@
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Tier 2" key="1">
+              <TabPane tab="Tier 2" key="2">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
                     <span class="textM weightS">
@@ -324,7 +324,7 @@
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Tier 3" key="2">
+              <TabPane tab="Tier 3" key="3">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="textM weightS">
@@ -342,7 +342,7 @@
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Tier 4" key="3">
+              <TabPane tab="Tier 4" key="4">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="textM weightS">
@@ -360,7 +360,7 @@
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab="Tier 5" key="4">
+              <TabPane tab="Tier 5" key="5">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="textM weightS">
@@ -499,10 +499,19 @@ export default Vue.extend({
   mounted() {
     this.getTvl()
     setAnchorProvider(this.$web3, this.$wallet)
-
     this.getGlobalState()
     this.getUserState()
-    this.setTierCarousel(this.currentTiers - 2)
+
+    if (this.currentTiers > 1) {
+      this.setTierCarousel(this.currentTiers - 1)
+      this.selectedTier = this.currentTiers
+      this.setTierTabs()
+    } else {
+      this.setTierCarousel(this.currentTiers - 2)
+      this.selectedTier = 1
+      this.setTierTabs()
+    }
+
     this.setTimer()
   },
   methods: {
@@ -628,8 +637,15 @@ export default Vue.extend({
             (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
           100
       }
-      this.selectedTier = this.currentTiers
-      this.setTierCarousel(this.currentTiers - 2)
+      if (this.currentTiers > 1) {
+        this.setTierCarousel(this.currentTiers - 1)
+        this.selectedTier = this.currentTiers
+        this.setTierTabs()
+      } else {
+        this.setTierCarousel(this.currentTiers - 2)
+        this.selectedTier = 1
+        this.setTierTabs()
+      }
     },
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
       this.baseModalShow = false
