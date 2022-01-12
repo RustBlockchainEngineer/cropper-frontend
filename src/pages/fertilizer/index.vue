@@ -2085,6 +2085,13 @@ export default Vue.extend({
       }
     }
   }
+
+  .project-info .project-balance .value .ant-statistic-content-value {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+  }
 }
 
 .ant-tooltip .ant-tooltip-inner {
