@@ -26,13 +26,29 @@
           }
         "
       >
-        <div class="collapse-item text-center font-medium weight-semi icon-cursor" v-if="tierloaded">
-          <div class="tier-progress">
+        <div v-if="tierloaded" class="collapse-item text-center font-medium weight-semi icon-cursor">
+          <div class="tier-progress text-left">
             <div class="tier-progress-label fcb-container">
               <span class="font-xsmall weight-bold">Tier {{wallet.tiers}}</span>
               <span class="font-xsmall weight-bold">Tier {{(wallet.tiers + 1)}}</span>
             </div>
-            <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="true" />
+            <Progress
+                type="line"
+                :stroke-width="14"
+                :percent="Number(pctToNexttiers.toFixed(1))"
+                :show-info="false"
+              />
+              <div
+                v-if="Number(pctToNexttiers.toFixed(1)) >= 5"
+                class="tier-progress-end"
+                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% + 2px)'"
+              ></div>
+              <label
+                class="tier-progress-percent font-xsmall"
+                :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"
+              >
+                {{ Number(pctToNexttiers.toFixed(1)) }}%
+              </label>
           </div>
         </div>
         <div class="collapse-item text-center font-medium weight-semi icon-cursor">
@@ -830,8 +846,23 @@ export default class Wallet extends Vue {
         }
 
         .tier-progress {
+          position: relative;
+
           .tier-progress-label {
             margin-bottom: 4px;
+          }
+
+          .tier-progress-end {
+            position: absolute;
+            width: 2px;
+            height: 14px;
+            background: @color-petrol500;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+            margin-top: -21px;
+          }
+
+          .tier-progress-percent {
+            margin-top: 4px;
           }
         }
       }

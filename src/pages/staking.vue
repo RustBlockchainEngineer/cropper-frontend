@@ -47,6 +47,11 @@
                 :percent="Number(pctToNexttiers.toFixed(1))"
                 :show-info="false"
               />
+              <div
+                v-if="Number(pctToNexttiers.toFixed(1)) >= 10"
+                class="staking-progress-end"
+                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 3px)'"
+              ></div>
               <label
                 class="staking-progress-percent font-xsmall"
                 :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"
@@ -678,7 +683,8 @@ export default Vue.extend({
       )
 
       //@ts-ignore
-      this.userStaked = Math.ceil(parseFloat((new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals)).fixed()) * 1000) / 1000
+      this.userStaked =
+        Math.ceil(parseFloat(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed()) * 1000) / 1000
       this.userStakedUnformated = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed())
 
       const rewardAmount = estimateRewards(farm_state, extraRewardConfigs, current_pool.account, userAccount)
@@ -738,8 +744,9 @@ export default Vue.extend({
         rewardPoolVault,
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
-          this.userStakedUnformated * Math.pow(10, TOKENS['CRP'].decimals),
-        ).then((txid) => {
+        this.userStakedUnformated * Math.pow(10, TOKENS['CRP'].decimals)
+      )
+        .then((txid) => {
           this.$notify.info({
             key,
             message: 'Transaction has been sent',
@@ -864,7 +871,7 @@ export default Vue.extend({
       this.selectedTier = to + 1
     },
     setTierCarousel(idx: number) {
-      (this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
+      ;(this.$refs.tierCarousel as Vue & { goTo: (idx: number) => number }).goTo(idx)
     },
     setTierTabs() {
       this.activeTab = this.selectedTier.toString()
@@ -1060,10 +1067,20 @@ export default Vue.extend({
             }
 
             .staking-progress {
+              position: relative;
               margin-top: 28px;
 
               .staking-progress-label {
                 margin-bottom: 4px;
+              }
+
+              .staking-progress-end {
+                position: absolute;
+                width: 2px;
+                height: 14px;
+                background: @color-petrol500;
+                box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+                margin-top: -21px;
               }
 
               .staking-progress-percent {
