@@ -48,7 +48,7 @@
                 :show-info="false"
               />
               <div
-                v-if="Number(pctToNexttiers.toFixed(1)) >= 10"
+                v-if="Number(pctToNexttiers.toFixed(1)) >= 5"
                 class="staking-progress-end"
                 :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 3px)'"
               ></div>
