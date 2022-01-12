@@ -71,18 +71,18 @@
         <Col :span="22" :offset="1">
           <h2 class="weightB text-center">Why Cropper?</h2>
           <div class="intro-box-group">
-            <img class="stars-second-bg" src="@/assets/landing_v2/stars-second-bg.svg" />
+            <img class="stars-second-bg" src="@/assets/landing/stars-second-bg.svg" />
 
             <div class="intro-box text-center">
-              <img class="card-img" src="@/assets/landing_v2/card-apr.svg" />
+              <img class="card-img" src="@/assets/landing/card-apr.svg" />
               <h4 class="weightB">Top Farms APR%</h4>
             </div>
             <div class="intro-box text-center">
-              <img class="card-img" src="@/assets/landing_v2/card-community.svg" />
+              <img class="card-img" src="@/assets/landing/card-community.svg" />
               <h4 class="weightB">Community Driven</h4>
             </div>
             <div class="intro-box text-center">
-              <img class="card-img" src="@/assets/landing_v2/card-swap.svg" />
+              <img class="card-img" src="@/assets/landing/card-swap.svg" />
               <h4 class="weightB">Best Swap Prices</h4>
             </div>
           </div>
@@ -91,7 +91,7 @@
     </section>
 
     <section class="why-cropper-audit">
-      <img class="landing-second-img" src="@/assets/landing_v2/landing-second-bg.svg" />
+      <img class="landing-second-img" src="@/assets/landing/landing-second-bg.svg" />
 
       <div class="audit-group">
         <Row>
@@ -107,7 +107,7 @@
                   href="https://github.com/HalbornSecurity/PublicReports/blob/master/Solana%20Program%20Audit/Cropper_Finance_Farm_Solana_Program_Security_Audit_Report_Halborn_Final.pdf"
                   target="_blank"
                 >
-                  <img class="pdf-icon" src="@/assets/landing_v2/pdf-icon.svg" />
+                  <img class="pdf-icon" src="@/assets/landing/pdf-icon.svg" />
                   Read the Audit
                 </a>
               </div>
@@ -121,7 +121,7 @@
                   href="https://github.com/HalbornSecurity/PublicReports/blob/master/Solana%20Program%20Audit/Cropper_Finance_AMM_Program_Security_Audit_Report_Halborn_Final.pdf"
                   target="_blank"
                 >
-                  <img class="pdf-icon" src="@/assets/landing_v2/pdf-icon.svg" />
+                  <img class="pdf-icon" src="@/assets/landing/pdf-icon.svg" />
                   Read the Audit
                 </a>
               </div>
@@ -140,10 +140,10 @@
             everything you need in a few clicks.
           </p>
           <Row :gutter="[25, 25]" class="feature-box-group">
-            <img class="stars-third-bg" src="@/assets/landing_v2/stars-third-bg.svg" />
+            <img class="stars-third-bg" src="@/assets/landing/stars-third-bg.svg" />
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
-                <img class="feature-img" src="@/assets/landing_v2/feature-swap.svg" />
+                <img class="feature-img" src="@/assets/landing/feature-swap.svg" />
                 <h4 class="title weightB">Swap</h4>
                 <p class="bodyM content">Our smart search delivers the fairest swap instantly</p>
                 <NuxtLink to="/swap" class="bodyM now-btn weightS"> Swap Now </NuxtLink>
@@ -151,7 +151,7 @@
             </Col>
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
-                <img class="feature-img" src="@/assets/landing_v2/feature-farming.svg" />
+                <img class="feature-img" src="@/assets/landing/feature-farming.svg" />
                 <h4 class="title weightB">Farming</h4>
                 <p class="bodyM content">Explore a vast selection of Labelized and Permissionless Farms</p>
                 <NuxtLink to="/farms" class="bodyM now-btn weightS"> Farm Now </NuxtLink>
@@ -159,7 +159,7 @@
             </Col>
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
-                <img class="feature-img" src="@/assets/landing_v2/feature-staking.svg" />
+                <img class="feature-img" src="@/assets/landing/feature-staking.svg" />
                 <h4 class="title weightB">Staking</h4>
                 <p class="bodyM content">
                   Earn rewards and gain access to exclusive opportunities with our 5 staking tiers
@@ -169,7 +169,7 @@
             </Col>
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
-                <img class="feature-img" src="@/assets/landing_v2/feature-fertilizer.svg" />
+                <img class="feature-img" src="@/assets/landing/feature-fertilizer.svg" />
                 <h4 class="title weightB">Fertilizer</h4>
                 <p class="bodyM content">The fertilizer launcher is currently being improved</p>
                 <NuxtLink to="/" class="bodyM now-btn weightS soon"> Coming Soon! </NuxtLink>
@@ -183,7 +183,7 @@
     <section class="how-works">
       <h2 class="weightB text-center">How it works</h2>
       <div class="tutorial-container">
-        <img class="landing-third-bg" src="@/assets/landing_v2/landing-third-bg.svg" />
+        <img class="landing-third-bg" src="@/assets/landing/landing-third-bg.svg" />
         <div class="tutorial-group">
           <Tabs defaultActiveKey="1" @change="switchTab">
             <TabPane tab="For Farmers" key="1">
@@ -815,7 +815,7 @@ h4 {
   .landing-body {
     margin-top: -20px;
     padding: 38px 64px 89px 64px;
-    background-image: url('@/assets/landing_v2/landing-first-bg.svg');
+    background-image: url('@/assets/landing/landing-first-bg.svg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -834,7 +834,7 @@ h4 {
     }
 
     @media @max-xs-mobile {
-      background-image: url('@/assets/landing_v2/landing-first-bg-mobile.svg');
+      background-image: url('@/assets/landing/landing-first-bg-mobile.svg');
     }
 
     .landing-content {

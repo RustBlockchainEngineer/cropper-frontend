@@ -10,6 +10,15 @@ html {
   scroll-behavior: smooth;
 }
 
+::-webkit-scrollbar-thumb {
+  background: @color-blue100;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
 @font-face {
   font-family: "Gilroy";
   font-weight: 300;
@@ -49,66 +58,8 @@ html {
   stroke: #13ECAB !important
 }
 
-::-webkit-scrollbar-thumb {
-  background: @color-blue100;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-track {
-  border-radius: 10px;
-}
-
 body {
   font-family: Gilroy, sans-serif !important;
-}
-
-.stdEmptyGradientButton {
-  background: @gradient-color-icon;
-  background-origin: border-box;
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  border-radius: 8px;
-  display: inline-block;
-  width: auto;
-  margin: 0 auto;
-
-  button {
-    background: @color-blue800 !important;
-    padding: 9px 30px;
-    display: block;
-    height: 51px;
-    line-height: unset;
-    color: #fff;
-    border-color: transparent;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    letter-spacing: -0.05em;
-  }
-}
-
-.stdGradientButton {
-  background: @gradient-color-icon;
-  background-origin: border-box;
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  border-radius: 8px;
-  display: inline-block;
-  width: auto;
-  margin: 0 auto;
-
-  button {
-    background: unset !important;
-    padding: 9px 30px;
-    display: block;
-    height: 51px;
-    line-height: unset;
-    color: #fff;
-    border-color: transparent;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    letter-spacing: -0.05em;
-    border: none;
-  }
 }
 
 .ant-progress {
@@ -132,18 +83,6 @@ body {
 a {
   color: #13ECAB;
 }
-
-// .ant-menu-horizontal>.ant-menu-submenu {
-//   @media @max-sl-mobile {
-//     display: none !important;
-//   }
-// }
-
-// .ant-menu-horizontal>.ant-menu-item {
-//   @media @max-sl-mobile {
-//     display: block !important
-//   }
-// }
 
 .ant-menu-horizontal>.ant-menu-item:hover,
 .ant-menu-horizontal>.ant-menu-submenu:hover,
