@@ -1,7 +1,7 @@
 <template>
   <div class="coin-select">
     <div class="coin-title">
-      <label class="font-body-xsmall font-weight-semi">{{ label }}</label>
+      <label class="font-xsmall weight-semi">{{ label }}</label>
     </div>
     <div class="coin-input">
       <div class="fcb-container">
@@ -9,21 +9,21 @@
           <button class="select-button fcb-container" @click="$emit('onSelect')">
             <div v-if="coinName" class="coin-group fcc-container">
               <CoinIcon :mint-address="mintAddress" />
-              <span class="font-body-medium font-weight-bold">{{ coinName }}</span>
+              <span class="font-body-medium weight-bold">{{ coinName }}</span>
             </div>
             <span v-else>Select a token</span>
             <img class="collapse-arrow" v-if="showArrow" src="@/assets/icons/arrow-down-white.svg" />
           </button>
           <button
             v-if="!disabled && !showHalf && balance"
-            class="input-button font-body-xsmall font-weight-bold fcc-container"
+            class="input-button font-xsmall weight-bold fcc-container"
             @click="inputBalanceByPercent(1)"
           >
             Max
           </button>
           <button
             v-if="!disabled && showHalf && balance"
-            class="input-button font-body-xsmall font-weight-bold fcc-container"
+            class="input-button font-xsmall weight-bold fcc-container"
             @click="inputBalanceByPercent(0.5)"
           >
             Half
@@ -46,7 +46,7 @@
           @focus="$emit('onFocus')"
         />
       </div>
-      <div v-if="balance && !balance.wei.isNaN()" class="label fcb-container font-body-xsmall font-weight-semi">
+      <div v-if="balance && !balance.wei.isNaN()" class="label fcb-container font-xsmall weight-semi">
         <span> Balance: {{ balance.fixed() }} </span>
         <span> ~${{ balance.fixed() }} </span>
       </div>

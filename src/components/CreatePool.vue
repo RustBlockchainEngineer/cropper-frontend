@@ -17,12 +17,12 @@
           href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"
           target="_blank"
         >
-          <Button class="link-btn font-text-small font-weight-semi">Detailed guide</Button>
+          <Button class="link-btn font-small weight-semi">Detailed guide</Button>
         </a>
       </div>
       <div class="btn-outline">
         <a href="https://t.me/CropperFinance" target="_blank">
-          <Button class="link-btn font-text-small font-weight-semi">Get support </Button>
+          <Button class="link-btn font-small weight-semi">Get support </Button>
         </a>
       </div>
     </div>
@@ -75,21 +75,21 @@
 
           <Col :span="14" class="notstep" :class="{ 'bordered-left': wallet.connected }">
             <div v-if="!wallet.connected">
-              <Button class="create-btn font-text-medium font-weight-semi" @click="$accessor.wallet.openModal"> Connect wallet </Button>
+              <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal"> Connect wallet </Button>
             </div>
 
             <Row v-if="current === 0 && wallet.connected">
               <Col :span="24" class="item-title">
-                <label class="font-text-large font-weight-bold">Create a new liquidity pool:</label>
+                <label class="font-large weight-bold">Create a new liquidity pool:</label>
                 <div class="inner-content">
-                  <label class="font-text-small font-weight-semi letter-spacing-large">Input market ID here</label>
+                  <label class="font-small weight-semi spacing-large">Input market ID here</label>
                   <input
                     v-model="inputMarket"
                     :disabled="!marketInputFlag"
-                    class="font-text-medium"
+                    class="font-medium"
                     placeholder="Eg. 3iCYi5bQxXN5X4omCxME1jj9D91vNpYYqzbiSr9u7ccG"
                   />
-                  <div class="detailed-guide font-text-small">
+                  <div class="detailed-guide font-small">
                     <u>Note:</u> This tool is for advanced users. Before attempting to create a new liquidity pool, we
                     suggest going through this
                     <a
@@ -102,13 +102,13 @@
                 </div>
               </Col>
               <div class="btn-container">
-                <Button v-if="!wallet.connected" class="create-btn font-text-medium font-weight-semi" @click="$accessor.wallet.openModal">
+                <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
                   Connect wallet
                 </Button>
 
                 <Button
                   v-else
-                  class="create-btn font-text-medium font-weight-semi"
+                  class="create-btn font-medium weight-semi"
                   :disabled="!wallet.connected || alreadyExists"
                   :loading="getMarketLoading"
                   @click="marketInputFlag ? getMarketMsg() : rewriteMarket()"
@@ -130,17 +130,17 @@
 
             <Row v-if="current === 1">
               <Col span="24" class="item-title">
-                <label class="font-text-large font-weight-bold">Market Information:</label>
+                <label class="font-large weight-bold">Market Information:</label>
                 <Row class="token-mint-address">
                   <Col span="24" class="mint-address-container">
-                    <label class="mint-label font-text-small font-weight-semi letter-spacing-large">Base token mint address</label>
-                    <div class="mint-address font-text-medium">
+                    <label class="mint-label font-small weight-semi spacing-large">Base token mint address</label>
+                    <div class="mint-address font-medium">
                       {{ getNameForMint(marketMsg.baseMintAddress.toBase58()) }}
                     </div>
                   </Col>
 
                   <Col span="24" class="mint-address-container">
-                    <label class="mint-label font-text-small font-weight-semi">Quote Token Mint Address</label>
+                    <label class="mint-label font-small weight-semi">Quote Token Mint Address</label>
                     <div class="mint-address">
                       {{ getNameForMint(marketMsg.quoteMintAddress.toBase58()) }}
                     </div>
@@ -150,7 +150,7 @@
 
               <div class="item-title">
                 <div class="inner-content market-input-group">
-                  <div class="market-input-info font-text-medium">
+                  <div class="market-input-info font-medium">
                     Set
                     <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b>
                     Starting Price in
@@ -161,7 +161,7 @@
                     <input
                       v-model="inputPrice"
                       type="number"
-                      class="font-text-medium"
+                      class="font-medium"
                       :disabled="createAmmFlag"
                       :step="1"
                       accuracy="2"
@@ -172,7 +172,7 @@
                 </div>
 
                 <div class="inner-content market-input-group">
-                  <div class="market-input-info font-text-medium">
+                  <div class="market-input-info font-medium">
                     <b>{{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }}</b>
                     Initial Liquidity:
                   </div>
@@ -180,7 +180,7 @@
                     <input
                       v-model="inputBaseValue"
                       type="number"
-                      class="font-text-medium"
+                      class="font-medium"
                       :disabled="createAmmFlag"
                       :step="1"
                       accuracy="2"
@@ -191,7 +191,7 @@
                 </div>
 
                 <div class="inner-content market-input-group">
-                  <div class="market-input-info font-text-medium">
+                  <div class="market-input-info font-medium">
                     <b>{{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}</b>
                     Initial Liquidity:
                   </div>
@@ -199,7 +199,7 @@
                     <input
                       v-model="inputQuoteValue"
                       type="number"
-                      class="font-text-medium"
+                      class="font-medium"
                       :disabled="createAmmFlag"
                       :step="1"
                       accuracy="2"
@@ -210,7 +210,7 @@
                 </div>
 
                 <div class="inner-content">
-                  <div class="detailed-guide font-text-small">
+                  <div class="detailed-guide font-small">
                     <u>Note:</u> This tool is for advanced users. Before attempting to create a new liquidity pool, we
                     suggest going through this
                     <a
@@ -224,14 +224,14 @@
 
                 <div class="inner-content">
                   <div v-if="!wallet.connected" class="btn-container">
-                    <Button class="create-btn font-text-medium font-weight-semi" @click="$accessor.wallet.openModal">
+                    <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
                       Connect wallet
                     </Button>
                   </div>
 
                   <div v-else class="btn-container">
                     <Button
-                      class="create-btn font-text-medium font-weight-semi"
+                      class="create-btn font-medium weight-semi"
                       :loading="createAmmFlag"
                       :disabled="createAmmFlag || !(inputPrice !== null && isAmountValid)"
                       @click="createKey"
@@ -245,7 +245,7 @@
 
             <Row v-if="current === 2">
               <Col :span="24" class="item-title">
-                <label class="pool-created font-text-large font-weight-bold">
+                <label class="pool-created font-large weight-bold">
                   Congratulations! Your pool has been successfully created!
                 </label>
               </Col>
@@ -253,23 +253,23 @@
                 <div class="lp-icons-group">
                   <div class="icons">
                     <CoinIcon :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())" />
-                    <span class="font-text-small font-weight-semi"> {{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }} - </span>
+                    <span class="font-small weight-semi"> {{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }} - </span>
                     <CoinIcon :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())" />
-                    <span class="font-text-small font-weight-semi">
+                    <span class="font-small weight-semi">
                       {{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}
                     </span>
                   </div>
                 </div>
               </Col>
               <Col class="item-title">
-                <label class="created-amm-id font-text-small">AMM ID: {{ userCreateAmmId }}</label>
+                <label class="created-amm-id font-small">AMM ID: {{ userCreateAmmId }}</label>
               </Col>
               <div class="btn-container">
-                <Button v-if="!wallet.connected" class="create-btn font-text-medium font-weight-semi" @click="$accessor.wallet.openModal">
+                <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
                   Connect wallet
                 </Button>
                 <NuxtLink to="/pools/" v-else>
-                  <Button class="create-btn font-text-medium font-weight-semi">View pool</Button>
+                  <Button class="create-btn font-medium weight-semi">View pool</Button>
                 </NuxtLink>
               </div>
             </Row>

@@ -1,6 +1,6 @@
 <template>
   <div class="coin-select">
-    <div class="label fcb-container font-body-xsmall font-weight-bold">
+    <div class="label fcb-container font-xsmall weight-bold">
       <span>{{ label }}</span>
     </div>
     <div class="coin-input">
@@ -8,9 +8,9 @@
         <button class="select-button fcc-container" @click="selectCoin">
           <div v-if="coinName" class="coin-container fcc-container">
             <CoinIcon :mint-address="mintAddress" />
-            <span class="font-text-small font-weight-semi" :class="disabled ? 'coin-disabled' : ''">{{ coinName }}</span>
+            <span class="font-small weight-semi" :class="disabled ? 'coin-disabled' : ''">{{ coinName }}</span>
           </div>
-          <span v-else class="font-text-small font-weight-semi" :class="disabled ? 'coin-disabled' : ''">Select a token</span>
+          <span v-else class="font-small weight-semi" :class="disabled ? 'coin-disabled' : ''">Select a token</span>
           <img v-if="!disabled" class="arrow-icon" src="@/assets/icons/arrow-down-white.svg" />
           <img v-else class="arrow-icon" src="@/assets/icons/arrow-down-grey.svg" />
         </button>

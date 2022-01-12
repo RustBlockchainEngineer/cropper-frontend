@@ -3,10 +3,10 @@
     <div class="card">
       <div class="card-body">
         <div class="fertilizer-head fcb-container">
-          <h3 class="title font-weight-bold">Fertilizer</h3>
+          <h3 class="title weight-bold">Fertilizer</h3>
           <div class="information">
             <div class="tvl-info">
-              <p class="font-text-large font-weight-semi">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
+              <p class="font-large weight-semi">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
             </div>
 
             <div class="action-btn-group">
@@ -21,7 +21,7 @@
           <div class="option-tab-group">
             <div class="option-tab">
               <Button
-                class="font-text-large font-weight-semi icon-cursor"
+                class="font-large weight-semi icon-cursor"
                 :class="filterProject === filterOptions.upcoming ? 'active-tab' : ''"
                 @click="
                   () => {
@@ -34,7 +34,7 @@
             </div>
             <div class="option-tab">
               <Button
-                class="font-text-large font-weight-semi icon-cursor"
+                class="font-large weight-semi icon-cursor"
                 :class="filterProject === filterOptions.funded ? 'active-tab' : ''"
                 @click="
                   () => {
@@ -56,7 +56,7 @@
               }
             "
           >
-            <label class="font-text-large font-weight-semi icon-cursor">
+            <label class="font-large weight-semi icon-cursor">
               {{
                 filterProject === filterOptions.upcoming
                   ? filterOptions.upcoming
@@ -81,7 +81,7 @@
               "
             >
               <div
-                class="collapse-item text-center font-text-medium font-weight-semi icon-cursor"
+                class="collapse-item text-center font-medium weight-semi icon-cursor"
                 :class="filterProject === filterOptions.upcoming ? 'active-item' : ''"
                 @click="
                   () => {
@@ -92,7 +92,7 @@
                 Upcoming
               </div>
               <div
-                class="collapse-item text-center font-text-medium font-weight-semi icon-cursor"
+                class="collapse-item text-center font-medium weight-semi icon-cursor"
                 :class="filterProject === filterOptions.funded ? 'active-item' : ''"
                 @click="
                   () => {
@@ -127,7 +127,7 @@
               "
             >
               <div class="collapse-item-header fcb-container">
-                <label class="font-text-large font-weight-bold">Search</label>
+                <label class="font-large weight-bold">Search</label>
                 <img
                   class="icon-cursor"
                   src="@/assets/icons/close-circle.svg"
@@ -139,7 +139,7 @@
                 />
               </div>
               <div class="collapse-item-body">
-                <input ref="userInput" v-model="searchName" class="font-text-medium" placeholder="Search" />
+                <input ref="userInput" v-model="searchName" class="font-medium" placeholder="Search" />
               </div>
             </div>
 
@@ -151,7 +151,7 @@
                 }
               "
             >
-              <span class="option-sort-item fcc-container font-body-medium font-weight-semi">
+              <span class="option-sort-item fcc-container font-body-medium weight-semi">
                 <label>Sort by:</label>
                 <span class="sort-detail">
                   <span v-if="filterProject === filterOptions.upcoming">
@@ -214,35 +214,35 @@
             >
               <div v-if="filterProject === filterOptions.upcoming" class="option-sort-collapse collapse-right">
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortUpcoming === filterOptions.all ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.all)"
                 >
                   {{ filterOptions.all }}
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortUpcoming === filterOptions.whitelist ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.whitelist)"
                 >
                   {{ filterOptions.whitelist }}
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortUpcoming === filterOptions.sales ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.sales)"
                 >
                   {{ filterOptions.sales }}
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortUpcoming === filterOptions.distribution ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.distribution)"
                 >
                   {{ filterOptions.distribution }}
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortUpcoming === filterOptions.preparation ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.preparation)"
                 >
@@ -251,42 +251,42 @@
               </div>
               <div v-else-if="filterProject === filterOptions.funded" class="option-sort-collapse collapse-right">
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortFunded === sortOptions.subscribers && !sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.subscribers, false)"
                 >
                   {{ sortOptions.subscribers }} (Low > High)
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortFunded === sortOptions.subscribers && sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.subscribers, true)"
                 >
                   {{ sortOptions.subscribers }} (High > Low)
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortFunded === sortOptions.total_raised && !sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.total_raised, false)"
                 >
                   {{ sortOptions.total_raised }} (Low > High)
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortFunded === sortOptions.total_raised && sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.total_raised, true)"
                 >
                   {{ sortOptions.total_raised }} (High > Low)
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortFunded === sortOptions.ath && !sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.ath, false)"
                 >
                   {{ sortOptions.ath }} (Low > High)
                 </div>
                 <div
-                  class="collapse-item text-center texts font-weight-bold icon-cursor"
+                  class="collapse-item text-center texts weight-bold icon-cursor"
                   :class="sortFunded === sortOptions.ath && sortAsc ? 'active-item' : ''"
                   @click="sortByColumnMenu(sortOptions.ath, true)"
                 >
@@ -323,7 +323,7 @@
                         : ''
                     "
                   >
-                    <span class="font-body-xsmall font-weight-bold">
+                    <span class="font-xsmall weight-bold">
                       {{
                         fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
                           ? 'Open Sales'
@@ -336,15 +336,15 @@
                 <div class="project-details">
                   <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist ftb-container' : ''">
                     <div class="project-title">
-                      <h4 class="font-weight-bold letter-spacing-medium">{{ fertilizer.title }}</h4>
-                      <span class="short-desc font-text-medium font-weight-semi letter-spacing-small">{{ fertilizer.short_desc }}</span>
+                      <h4 class="weight-bold spacing-medium">{{ fertilizer.title }}</h4>
+                      <span class="short-desc font-medium weight-semi spacing-small">{{ fertilizer.short_desc }}</span>
                     </div>
 
                     <div class="project-info fcb-container">
                       <div class="project-balance">
                         <div v-if="fertilizer.hard_cap">
-                          <span class="label font-text-small font-weight-semi letter-spacing-large">Total raised</span>
-                          <span class="value font-text-medium font-weight-semi letter-spacing-small fcl-container">
+                          <span class="label font-small weight-semi spacing-large">Total raised</span>
+                          <span class="value font-medium weight-semi spacing-small fcl-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                             {{ fertilizer.hard_cap }} USDC
                           </span>
@@ -352,8 +352,8 @@
                       </div>
                       <div class="project-balance">
                         <div v-if="fertilizer.participants">
-                          <span class="label font-text-small font-weight-semi letter-spacing-large">Participants</span>
-                          <span class="value font-text-medium font-weight-semi letter-spacing-small fcl-container">{{ fertilizer.participants }}</span>
+                          <span class="label font-small weight-semi spacing-large">Participants</span>
+                          <span class="value font-medium weight-semi spacing-small fcl-container">{{ fertilizer.participants }}</span>
                         </div>
                       </div>
                     </div>
@@ -408,10 +408,10 @@
                         "
                         class="project-status open"
                       >
-                        <span class="font-body-xsmall font-weight-bold">Open Now</span>
+                        <span class="font-xsmall weight-bold">Open Now</span>
                       </div>
                       <div v-else class="project-balance">
-                        <span class="label font-text-small font-weight-semi letter-spacing-large">
+                        <span class="label font-small weight-semi spacing-large">
                           {{
                             fertilizer.status === filterOptions.preparation
                               ? 'Whitelist starts in'
@@ -447,10 +447,10 @@
                   <div class="btn-container">
                     <Button
                       v-if="fertilizer.status === filterOptions.whitelist"
-                      class="btn-transparent font-text-medium font-weight-semi fcc-container letter-spacing-small"
+                      class="btn-transparent font-medium weight-semi fcc-container spacing-small"
                       >Subscription</Button
                     >
-                    <Button v-else class="btn-transparent font-text-medium font-weight-semi fcc-container letter-spacing-small">More details</Button>
+                    <Button v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small">More details</Button>
                   </div>
                 </div>
               </div>
@@ -461,8 +461,8 @@
             <!-- desktop version -->
             <div class="fertilizer-funded-table isDesktop">
               <Row class="fertilizer-funded-table-header">
-                <Col class="header-column font-text-small font-weight-bold text-left" span="6"> Project name </Col>
-                <Col class="header-column font-text-small font-weight-bold" span="3">
+                <Col class="header-column font-small weight-bold text-left" span="6"> Project name </Col>
+                <Col class="header-column font-small weight-bold" span="3">
                   <div class="header-column-title" @click="sortByColumn(sortOptions.subscribers)">
                     Subscribers
                     <img
@@ -479,7 +479,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column font-text-small font-weight-bold" span="4">
+                <Col class="header-column font-small weight-bold" span="4">
                   <div class="header-column-title" @click="sortByColumn(sortOptions.total_raised)">
                     Total raised
                     <img
@@ -496,7 +496,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column font-text-small font-weight-bold" span="3">
+                <Col class="header-column font-small weight-bold" span="3">
                   <div class="header-column-title" @click="sortByColumn(sortOptions.token_price)">
                     Token price
                     <img
@@ -513,7 +513,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column font-text-small font-weight-bold" span="3">
+                <Col class="header-column font-small weight-bold" span="3">
                   <div class="header-column-title" @click="sortByColumn(sortOptions.ath)">
                     ATH Since IDO
                     <img
@@ -530,7 +530,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column font-text-small font-weight-bold" span="4">
+                <Col class="header-column font-small weight-bold" span="4">
                   <div class="header-column-title" @click="sortByColumn(sortOptions.end_date)">
                     Ended in UTC
                     <img
@@ -559,36 +559,36 @@
                     <div class="project-name fcl-container">
                       <img class="logo" :src="fertilizer.picture" />
                       <div class="title">
-                        <span class="font-text-medium font-weight-semi">{{ fertilizer.title }}</span>
-                        <span class="short-desc bodXS font-weight-semi">{{ fertilizer.short_desc }}</span>
+                        <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
+                        <span class="short-desc bodXS weight-semi">{{ fertilizer.short_desc }}</span>
                       </div>
                     </div>
                   </Col>
 
-                  <Col class="state font-text-medium font-weight-semi" span="3">
+                  <Col class="state font-medium weight-semi" span="3">
                     {{ fertilizer.subscribers }}
                   </Col>
 
-                  <Col class="state font-text-medium font-weight-semi" span="4">
+                  <Col class="state font-medium weight-semi" span="4">
                     ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
                   </Col>
-                  <Col class="state font-text-medium font-weight-semi" span="3">
+                  <Col class="state font-medium weight-semi" span="3">
                     ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
                   </Col>
-                  <Col class="state font-text-medium font-weight-semi" span="3">
+                  <Col class="state font-medium weight-semi" span="3">
                     <div class="project-ath fcc-container">
                       <Tooltip placement="bottomLeft">
                         <template slot="title">
-                          <span class="font-text-small font-weight-semi">If you invested 100$ you would have 1000$</span>
+                          <span class="font-small weight-semi">If you invested 100$ you would have 1000$</span>
                         </template>
                         <div class="info-icon">
                           <img src="@/assets/icons/info.svg" />
                         </div>
                       </Tooltip>
-                      <span class="value font-text-medium font-weight-semi letter-spacing-small">+{{ fertilizer.ath }}%</span>
+                      <span class="value font-medium weight-semi spacing-small">+{{ fertilizer.ath }}%</span>
                     </div>
                   </Col>
-                  <Col class="state font-text-medium font-weight-semi" span="4">
+                  <Col class="state font-medium weight-semi" span="4">
                     {{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}
                   </Col>
                   <Col class="state" span="1">
@@ -599,19 +599,19 @@
                         class="option-sort-collapse collapse-right"
                         v-click-outside="hideMore"
                       >
-                        <div class="collapse-item text-center font-text-medium font-weight-semi icon-cursor">
+                        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
                           <a> Stake </a>
                         </div>
-                        <div class="collapse-item text-center font-text-medium font-weight-semi icon-cursor">
+                        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
                           <a> Swap </a>
                         </div>
-                        <div class="collapse-item text-center font-text-medium font-weight-semi icon-cursor">
+                        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
                           <a class="social-link fcc-container" href="#" target="_blank">
                             Share
                             <img class="social-icon" src="@/assets/icons/share.svg" />
                           </a>
                         </div>
-                        <div class="collapse-item text-center font-text-medium font-weight-semi icon-cursor">
+                        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
                           <a class="social-link fcc-container" href="#" target="_blank">
                             Twitter
                             <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
@@ -638,28 +638,28 @@
                       <div class="project-name fcl-container">
                         <img class="logo" :src="fertilizer.picture" />
                         <div class="title">
-                          <span class="font-text-medium font-weight-semi">{{ fertilizer.title }}</span>
-                          <span class="short-desc bodXS font-weight-semi">{{ fertilizer.short_desc }}</span>
+                          <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
+                          <span class="short-desc bodXS weight-semi">{{ fertilizer.short_desc }}</span>
                         </div>
                       </div>
                     </Col>
 
                     <Col class="state text-center" span="5">
-                      <span class="label font-text-small font-weight-bold">Subscribers</span>
-                      <span class="font-text-medium font-weight-semi">{{ fertilizer.subscribers }} </span>
+                      <span class="label font-small weight-bold">Subscribers</span>
+                      <span class="font-medium weight-semi">{{ fertilizer.subscribers }} </span>
                     </Col>
 
-                    <Col class="state font-text-medium font-weight-semi text-center" span="5">
-                      <span class="label font-text-small font-weight-bold">Total raised</span>
+                    <Col class="state font-medium weight-semi text-center" span="5">
+                      <span class="label font-small weight-bold">Total raised</span>
                       ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
                     </Col>
 
-                    <Col class="state font-text-medium font-weight-semi text-center" span="5">
-                      <span class="label font-text-small font-weight-bold">Token price</span>
+                    <Col class="state font-medium weight-semi text-center" span="5">
+                      <span class="label font-small weight-bold">Token price</span>
                       ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
                     </Col>
 
-                    <Button class="detail-btn font-text-small font-weight-semi">
+                    <Button class="detail-btn font-small weight-semi">
                       <img
                         class="arrow-icon"
                         :class="idx != showCollapse ? 'arrow-up' : 'arrow-down'"
@@ -672,23 +672,23 @@
                     <Col :span="12">
                       <div class="ftb-container">
                         <div class="state">
-                          <span class="label font-text-small font-weight-bold">ATH Since IDO</span>
+                          <span class="label font-small weight-bold">ATH Since IDO</span>
                           <div class="project-ath fcc-container">
                             <Tooltip placement="bottomLeft">
                               <template slot="title">
-                                <span class="font-text-small font-weight-semi">If you invested 100$ you would have 1000$</span>
+                                <span class="font-small weight-semi">If you invested 100$ you would have 1000$</span>
                               </template>
                               <div class="info-icon">
                                 <img src="@/assets/icons/info.svg" />
                               </div>
                             </Tooltip>
-                            <span class="value font-text-medium font-weight-semi letter-spacing-small">+{{ fertilizer.ath }}%</span>
+                            <span class="value font-medium weight-semi spacing-small">+{{ fertilizer.ath }}%</span>
                           </div>
                         </div>
 
                         <div class="state text-center" span="5">
-                          <span class="label font-text-small font-weight-bold">Ended in UTC</span>
-                          <span class="font-text-medium font-weight-semi">{{
+                          <span class="label font-small weight-bold">Ended in UTC</span>
+                          <span class="font-medium weight-semi">{{
                             moment(fertilizer.distribution_end_date).format('MMMM Do YYYY')
                           }}</span>
                         </div>
@@ -698,22 +698,22 @@
                     <Col class="btn-group" :span="12">
                       <div class="fcr-container">
                         <div class="btn-container">
-                          <Button class="btn-primary font-text-small font-weight-bold"> Stake </Button>
+                          <Button class="btn-primary font-small weight-bold"> Stake </Button>
                         </div>
 
                         <div class="btn-container">
-                          <Button class="btn-primary font-text-small font-weight-bold"> Swap </Button>
+                          <Button class="btn-primary font-small weight-bold"> Swap </Button>
                         </div>
                       </div>
                     </Col>
 
                     <Col class="btn-group" :span="24">
                       <div class="fcc-container">
-                        <a class="social-link fcc-container font-body-xsmall font-weight-semi icon-cursor" href="#" target="_blank">
+                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
                         </a>
-                        <a class="social-link fcc-container font-body-xsmall font-weight-semi icon-cursor" href="#" target="_blank">
+                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
                           Twitter
                           <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                         </a>
@@ -738,13 +738,13 @@
                       <div class="project-name fcl-container">
                         <img class="logo" :src="fertilizer.picture" />
                         <div class="title">
-                          <span class="font-text-medium font-weight-semi">{{ fertilizer.title }}</span>
-                          <span class="short-desc bodXS font-weight-semi">{{ fertilizer.short_desc }}</span>
+                          <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
+                          <span class="short-desc bodXS weight-semi">{{ fertilizer.short_desc }}</span>
                         </div>
                       </div>
                     </Col>
 
-                    <Button class="detail-btn font-text-small font-weight-semi">
+                    <Button class="detail-btn font-small weight-semi">
                       <img
                         class="arrow-icon"
                         :class="idx != showCollapse ? 'arrow-up' : 'arrow-down'"
@@ -757,15 +757,15 @@
                     <Col :span="24">
                       <div class="fcb-container">
                         <div class="state">
-                          <span class="label font-text-small font-weight-bold">Total raised</span>
-                          <span class="font-text-medium font-weight-semi"
+                          <span class="label font-small weight-bold">Total raised</span>
+                          <span class="font-medium weight-semi"
                             >${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}</span
                           >
                         </div>
 
                         <div class="state">
-                          <span class="label font-text-small font-weight-bold">Subscribers</span>
-                          <span class="font-text-medium font-weight-semi">{{ fertilizer.subscribers }}</span>
+                          <span class="label font-small weight-bold">Subscribers</span>
+                          <span class="font-medium weight-semi">{{ fertilizer.subscribers }}</span>
                         </div>
                       </div>
                     </Col>
@@ -773,24 +773,24 @@
                     <Col :span="24">
                       <div class="fcb-container">
                         <div class="state">
-                          <span class="label font-text-small font-weight-bold">Token price</span>
-                          <span class="font-text-medium font-weight-semi letter-spacing-small"
+                          <span class="label font-small weight-bold">Token price</span>
+                          <span class="font-medium weight-semi spacing-small"
                             >${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}</span
                           >
                         </div>
 
                         <div class="state">
-                          <span class="label font-text-small font-weight-bold">ATH Since IDO</span>
+                          <span class="label font-small weight-bold">ATH Since IDO</span>
                           <div class="project-ath fcc-container">
                             <Tooltip placement="bottomLeft">
                               <template slot="title">
-                                <span class="font-text-small font-weight-semi">If you invested 100$ you would have 1000$</span>
+                                <span class="font-small weight-semi">If you invested 100$ you would have 1000$</span>
                               </template>
                               <div class="info-icon">
                                 <img src="@/assets/icons/info.svg" />
                               </div>
                             </Tooltip>
-                            <span class="value font-text-medium font-weight-semi letter-spacing-small">+{{ fertilizer.ath }}%</span>
+                            <span class="value font-medium weight-semi spacing-small">+{{ fertilizer.ath }}%</span>
                           </div>
                         </div>
                       </div>
@@ -799,8 +799,8 @@
                     <Col :span="24">
                       <div class="fcb-container">
                         <div class="state" span="5">
-                          <span class="label font-text-small font-weight-bold">Ended in UTC</span>
-                          <span class="font-text-medium font-weight-semi">{{
+                          <span class="label font-small weight-bold">Ended in UTC</span>
+                          <span class="font-medium weight-semi">{{
                             moment(fertilizer.distribution_end_date).format('MMMM Do YYYY')
                           }}</span>
                         </div>
@@ -810,20 +810,20 @@
                     <Col class="btn-group" :span="24">
                       <div class="btn-group-item fcc-container">
                         <div class="btn-container">
-                          <Button class="btn-primary font-text-small font-weight-bold"> Stake </Button>
+                          <Button class="btn-primary font-small weight-bold"> Stake </Button>
                         </div>
 
                         <div class="btn-container">
-                          <Button class="btn-primary font-text-small font-weight-bold"> Swap </Button>
+                          <Button class="btn-primary font-small weight-bold"> Swap </Button>
                         </div>
                       </div>
 
                       <div class="btn-group-item fcc-container">
-                        <a class="social-link fcc-container font-body-xsmall font-weight-semi icon-cursor" href="#" target="_blank">
+                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
                         </a>
-                        <a class="social-link fcc-container font-body-xsmall font-weight-semi icon-cursor" href="#" target="_blank">
+                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
                           Twitter
                           <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                         </a>

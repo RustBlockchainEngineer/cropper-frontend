@@ -33,7 +33,7 @@
       />
 
       <div class="plus-icon-container text-center">
-        <img src="@/assets/icons/plus.svg" class="plus-icon icon-centered" />
+        <img src="@/assets/icons/plus.svg" class="plus-icon margin-auto" />
       </div>
 
       <CoinInput
@@ -70,7 +70,7 @@
 
       <div class="btn-container">
         <Button
-          class="font-text-large font-weight-bold"
+          class="font-large weight-bold"
           id="vadd"
           :disabled="
             !farmInfo.lp.coin ||

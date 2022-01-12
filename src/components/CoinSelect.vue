@@ -12,9 +12,9 @@
   >
     <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onClose')" />
     <div class="select-token-search">
-      <input ref="userInput" v-model="keyword" class="font-text-medium" placeholder="Search name or paste address" />
+      <input ref="userInput" v-model="keyword" class="font-medium" placeholder="Search name or paste address" />
       <div class="common-bases">
-        <label class="font-text-medium">Common bases</label>
+        <label class="font-medium">Common bases</label>
         <Row class="common-bases-group" :gutter="[8, 8]">
           <Col v-for="common in commonBases" :key="common.symbol" @click="selectCommonToken(common)" :span="6">
             <div class="common-select-container icon-cursor">
@@ -40,8 +40,8 @@
           >
             <CoinIcon :mint-address="token.mintAddress" />
             <div class="token-group">
-              <span class="token-symbol font-text-small font-weight-semi">{{ token.symbol }}</span>
-              <span class="token-name font-body-xsmall">{{ token.name }}</span>
+              <span class="token-symbol font-small weight-semi">{{ token.symbol }}</span>
+              <span class="token-name font-xsmall">{{ token.name }}</span>
             </div>
             <div class="balance">
               <div v-if="wallet.loading">

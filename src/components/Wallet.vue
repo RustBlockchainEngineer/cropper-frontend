@@ -13,7 +13,7 @@
           }
         "
       >
-        <span class="tier-id font-text-medium font-weight-semi letter-spacing-small">Tier <span v-if="tierloaded">{{wallet.tiers}}</span><span v-else>&mdash;</span></span>
+        <span class="tier-id font-medium weight-semi spacing-small">Tier <span v-if="tierloaded">{{wallet.tiers}}</span><span v-else>&mdash;</span></span>
         <img src="@/assets/icons/arrow-down-white.svg" />
       </div>
 
@@ -26,21 +26,21 @@
           }
         "
       >
-        <div class="collapse-item text-center font-text-medium font-weight-semi icon-cursor" v-if="tierloaded">
+        <div class="collapse-item text-center font-medium weight-semi icon-cursor" v-if="tierloaded">
           <div class="tier-progress">
             <div class="tier-progress-label fcb-container">
-              <span class="font-body-xsmall font-weight-bold">Tier {{wallet.tiers}}</span>
-              <span class="font-body-xsmall font-weight-bold">Tier {{(wallet.tiers + 1)}}</span>
+              <span class="font-xsmall weight-bold">Tier {{wallet.tiers}}</span>
+              <span class="font-xsmall weight-bold">Tier {{(wallet.tiers + 1)}}</span>
             </div>
             <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="true" />
           </div>
         </div>
-        <div class="collapse-item text-center font-text-medium font-weight-semi icon-cursor">
+        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
           <NuxtLink to="/staking/">
             Stake CRP
           </NuxtLink>
         </div>
-        <div class="collapse-item text-center font-text-medium font-weight-semi icon-cursor">
+        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
           <NuxtLink to="/staking/#staking-tiers-details">
             About Tiers
           </NuxtLink>
@@ -56,7 +56,7 @@
         ghost
         @click="openPopIn"
       >
-        <Button class="font-body-small font-weight-bold">
+        <Button class="font-body-small weight-bold">
           <img src="@/assets/icons/wallet.svg" style="margin-right: 10px" />
           {{ windowWidth >= 768 ? 'Connect wallet' : 'Connect' }}
         </Button>
@@ -69,7 +69,7 @@
         ghost
         @click="$accessor.wallet.openModal"
       >
-        <Button class="font-body-small font-weight-bold">
+        <Button class="font-body-small weight-bold">
           <img src="@/assets/icons/wallet.svg" style="margin-right: 10px" />
           {{ wallet.address.substr(0, 4) }}
           ...
@@ -103,15 +103,15 @@
           </Button>
         </div>
         <div v-else class="wallet-info">
-          <p class="address font-text-medium">{{ wallet.address }}</p>
-          <Button class="btn-gradient font-text-large font-weight-bold" @click="disconnect"> Disconnect </Button>
+          <p class="address font-medium">{{ wallet.address }}</p>
+          <Button class="btn-gradient font-large weight-bold" @click="disconnect"> Disconnect </Button>
         </div>
       </Modal>
     </div>
 
     <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
       <div class="select-wallet-header fcb-container">
-        <span class="font-text-large font-weight-bold">Connect wallet</span>
+        <span class="font-large weight-bold">Connect wallet</span>
         <img class="close-icon icon-cursor" src="@/assets/icons/close-circle.svg" @click="closePopIn" />
       </div>
 
@@ -122,8 +122,8 @@
         </Button>
       </div>
       <div v-else class="wallet-info">
-        <p class="address font-text-medium">{{ wallet.address }}</p>
-        <Button class="btn-gradient font-text-large font-weight-bold" @click="disconnect"> Disconnect </Button>
+        <p class="address font-medium">{{ wallet.address }}</p>
+        <Button class="btn-gradient font-large weight-bold" @click="disconnect"> Disconnect </Button>
       </div>
     </div>
   </div>

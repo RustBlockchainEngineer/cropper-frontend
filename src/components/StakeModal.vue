@@ -17,19 +17,19 @@
             <button class="select-button fcb-container">
               <div class="coin-group fcc-container">
                 <CoinIcon :mint-address="CRPMintAddress" />
-                <span class="font-body-medium font-weight-bold">CRP</span>
+                <span class="font-body-medium weight-bold">CRP</span>
               </div>
             </button>
-            <button v-if="!showHalf && crpbalance" class="input-button font-body-xsmall font-weight-bold fcc-container" @click="setMax(1)">
+            <button v-if="!showHalf && crpbalance" class="input-button font-xsmall weight-bold fcc-container" @click="setMax(1)">
               Max
             </button>
-            <button v-if="showHalf && crpbalance" class="input-button font-body-xsmall font-weight-bold fcc-container" @click="setMax(0.5)">
+            <button v-if="showHalf && crpbalance" class="input-button font-xsmall weight-bold fcc-container" @click="setMax(0.5)">
               Half
             </button>
           </div>
           <input type="number" :value="toStake" placeholder="0.00" />
         </div>
-        <div v-if="crpbalance" class="label fcb-container font-body-xsmall font-weight-semi">
+        <div v-if="crpbalance" class="label fcb-container font-xsmall weight-semi">
           <span> Balance: {{ crpbalance }} </span>
           <span> ~${{ crpbalance }} </span>
         </div>
@@ -38,7 +38,7 @@
         <div class="tier-item text-center icon-cursor" v-for="data in lockData" :key="data.tier">
           <span
             v-if="data.min >= enddatemin"
-            class="font-text-medium font-weight-bold"
+            class="font-medium weight-bold"
             :class="data.tier === tierActive ? 'tier-active' : 'tier-inactive'"
             @click="displayTiers(data.tier)"
             >{{ data.time >= 12 ? data.time / 12 + ' Y' : data.time + ' M' }}</span
@@ -46,31 +46,31 @@
 
           <span
             v-else
-            class="font-text-medium font-weight-bold"
+            class="font-medium weight-bold"
             :class="data.tier === tierActive ? 'tier-active' : 'tier-inactive'"
             style="cursor: not-allowed"
             >{{ data.time >= 12 ? data.time / 12 + ' Y' : data.time + ' M' }}</span
           >
 
-          <span class="value-boost font-body-xsmall font-weight-bold">{{ data.boost }}x</span>
+          <span class="value-boost font-xsmall weight-bold">{{ data.boost }}x</span>
         </div>
       </div>
       <div class="calc-yield">
-        <span class="calc-yield-title font-text-medium font-weight-semi letter-spacing-small text-center">Calculate $CRP Yield</span>
+        <span class="calc-yield-title font-medium weight-semi spacing-small text-center">Calculate $CRP Yield</span>
         <div class="calc-yield-group">
           <div class="calc-yield-info">
-            <label class="label font-text-small font-weight-bold">Total lock (CRP)</label>
-            <label class="value font-text-small font-weight-semi letter-spacing-large">{{ this.userStaked * 1 + toStake * 1 }}</label>
+            <label class="label font-small weight-bold">Total lock (CRP)</label>
+            <label class="value font-small weight-semi spacing-large">{{ this.userStaked * 1 + toStake * 1 }}</label>
           </div>
           <div class="calc-yield-info">
-            <label class="label font-text-small font-weight-bold">APY (%)</label>
-            <label class="value font-text-small font-weight-semi letter-spacing-large">{{
+            <label class="label font-small weight-bold">APY (%)</label>
+            <label class="value font-small weight-semi spacing-large">{{
               (Math.round(this.estimatedapy * 100) * boostAPY) / 100
             }}</label>
           </div>
           <div class="calc-yield-info">
-            <label class="label font-text-small font-weight-bold">Estimated reward (CRP) </label>
-            <label class="value font-text-small font-weight-semi letter-spacing-large"
+            <label class="label font-small weight-bold">Estimated reward (CRP) </label>
+            <label class="value font-small weight-semi spacing-large"
               >{{
                 Math.round(
                   (100000 *
@@ -86,11 +86,11 @@
         </div>
       </div>
       <div class="calc-footer">
-        <label class="lock-note font-text-small font-weight-bold">Your total staked tokens will be locked until {{ unstakeDate }}</label>
+        <label class="lock-note font-small weight-bold">Your total staked tokens will be locked until {{ unstakeDate }}</label>
         <div class="btn-group fcb-container">
           <div class="btn-container">
             <Button
-              class="btn-primary font-text-medium font-weight-semi icon-cursor"
+              class="btn-primary font-medium weight-semi icon-cursor"
               @click="
                 () => {
                   $emit('onCancel')
@@ -101,7 +101,7 @@
           </div>
           <div class="btn-container">
             <Button
-              class="btn-transparent font-text-medium font-weight-semi icon-cursor"
+              class="btn-transparent font-medium weight-semi icon-cursor"
               id="vstake"
               :disabled="this.crpbalance < toStake || toStake * 1 <= 0"
               @click="stakeToken"

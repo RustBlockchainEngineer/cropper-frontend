@@ -17,12 +17,12 @@
           href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
           target="_blank"
         >
-          <Button class="link-btn font-text-small font-weight-semi">Detailed guide</Button>
+          <Button class="link-btn font-small weight-semi">Detailed guide</Button>
         </a>
       </div>
       <div class="btn-outline">
         <a href="https://t.me/CropperFinance" target="_blank">
-          <Button class="link-btn font-text-small font-weight-semi">Get support </Button>
+          <Button class="link-btn font-small weight-semi">Get support </Button>
         </a>
       </div>
     </div>
@@ -75,14 +75,14 @@
             <Row v-if="current === 0 && !wallet.connected">
               <Col :span="24" class="step-item">
                 <div v-if="!wallet.connected">
-                  <Button class="create-btn font-text-medium font-weight-semi" @click="$accessor.wallet.openModal"> Connect wallet </Button>
+                  <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal"> Connect wallet </Button>
                 </div>
               </Col>
             </Row>
 
             <Row v-if="current === 0 && wallet.connected">
               <Col :span="24" class="step-item">
-                <label class="font-text-large font-weight-bold">Farm Type:</label>
+                <label class="font-large weight-bold">Farm Type:</label>
                 <div class="step-item-content">
                   <RadioGroup v-model="farmType" @change="selectFarm">
                     <Radio :value="1">Single yield farm</Radio>
@@ -91,7 +91,7 @@
                 </div>
               </Col>
               <Col :span="24" class="step-item">
-                <label class="font-text-large font-weight-bold">Token pairing and AMM ID:</label>
+                <label class="font-large weight-bold">Token pairing and AMM ID:</label>
                 <div class="step-item-content">
                   <RadioGroup v-model="ammType" @change="selectAMM">
                     <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
@@ -112,12 +112,12 @@
                       />
                     </div>
                     <div class="selected-pool" v-if="showSelectedPool && ammType === 1">
-                      <label class="font-body-xsmall font-weight-bold">Selected Pool</label>
+                      <label class="font-xsmall weight-bold">Selected Pool</label>
                       <div class="selected-pool-box">
-                        <div class="pool-info font-text-medium">
+                        <div class="pool-info font-medium">
                           <span><b>AMM ID: </b>{{ userCreateAmmId }}</span>
                         </div>
-                        <div v-if="userCreatePoolLiquidity" class="pool-info font-text-medium">
+                        <div v-if="userCreatePoolLiquidity" class="pool-info font-medium">
                           <span><b>Pool Liquidity: </b>{{ userCreatePoolLiquidity }}</span>
                         </div>
                         <img
@@ -129,15 +129,15 @@
                     </div>
                     <Radio :value="2">Create a new AMM ID</Radio>
                     <div class="create-amm" v-if="ammType != 1">
-                      <NuxtLink to="/pools/create-pool" class="link-pool font-text-small">
+                      <NuxtLink to="/pools/create-pool" class="link-pool font-small">
                         https://cropper.finance/pools/create-pool/
                       </NuxtLink>
-                      <div class="note-reminder font-text-medium">
+                      <div class="note-reminder font-medium">
                         <em><u>Note:</u> Only USDC, USDT, SOL and CRP pairs will be eligible to farm creation.</em>
                       </div>
                     </div>
                   </RadioGroup>
-                  <div class="info-guide font-text-small" v-if="ammType === 1">
+                  <div class="info-guide font-small" v-if="ammType === 1">
                     <img src="@/assets/icons/info.svg" />
                     <em>
                       This tool is for advanced users. Before attempting to create a new farm, we suggest going through
@@ -154,14 +154,14 @@
               </Col>
               <Col v-if="ammType === 1" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button class="create-btn font-text-medium font-weight-semi" :disabled="!wallet.connected" @click="useExistingAMMID()">
+                  <Button class="create-btn font-medium weight-semi" :disabled="!wallet.connected" @click="useExistingAMMID()">
                     Next
                   </Button>
                 </div>
               </Col>
               <Col v-if="ammType === 2" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button class="create-btn font-text-medium font-weight-semi" :disabled="true" @click="createNewAMMID()"> Next </Button>
+                  <Button class="create-btn font-medium weight-semi" :disabled="true" @click="createNewAMMID()"> Next </Button>
                 </div>
               </Col>
             </Row>
@@ -169,7 +169,7 @@
             <!-- Create Farm -->
             <Row v-if="current === 1">
               <Col :span="24" class="step-item">
-                <label class="font-text-large font-weight-bold">Reward emission:</label>
+                <label class="font-large weight-bold">Reward emission:</label>
                 <div class="step-item-content">
                   <CoinInput
                     v-model="fromCoinAmount"
@@ -195,14 +195,14 @@
                   />
 
                   <div class="note">
-                    <span class="font-body-xsmall font-weight-bold">
+                    <span class="font-xsmall weight-bold">
                       Note: you will be able to add rewards into your farm whenever you want.
                     </span>
                   </div>
                 </div>
               </Col>
               <Col :span="24" class="step-item">
-                <label class="font-text-large font-weight-bold">Farm duration:</label>
+                <label class="font-large weight-bold">Farm duration:</label>
                 <div class="step-item-content">
                   <div class="calendar-from">
                     <img src="@/assets/icons/calendar-from.svg" />
@@ -229,12 +229,12 @@
 
               <Col :span="24">
                 <div class="btn-container">
-                  <Button v-if="!wallet.connected" class="create-btn font-text-medium font-weight-semi" @click="$accessor.wallet.openModal">
+                  <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
                     Connect wallet
                   </Button>
                   <Button
                     v-else-if="farm_created"
-                    class="create-btn font-text-medium font-weight-semi"
+                    class="create-btn font-medium weight-semi"
                     :disabled="!wallet.connected"
                     @click="addRewardToFarm"
                   >
@@ -250,7 +250,7 @@
 
                   <Button
                     v-else
-                    class="create-btn font-text-medium font-weight-semi"
+                    class="create-btn font-medium weight-semi"
                     :disabled="!wallet.connected"
                     @click="confirmFarmInfo"
                   >
@@ -270,23 +270,23 @@
             <Row v-if="current === 2">
               <Col :span="24" class="step-item">
                 <div v-if="!isCRPTokenPair" class="farm-created">
-                  <label class="font-text-large font-weight-bold">Congratulations! Your farm has been successfully created!</label>
+                  <label class="font-large weight-bold">Congratulations! Your farm has been successfully created!</label>
                 </div>
                 <div class="lp-icons">
                   <div class="lp-icons-group">
                     <div class="icons">
                       <CoinIcon :mint-address="tokenA.mintAddress" />
-                      <span class="font-text-small font-weight-semi">{{ tokenA.symbol }} - </span>
+                      <span class="font-small weight-semi">{{ tokenA.symbol }} - </span>
                       <CoinIcon :mint-address="tokenB.mintAddress" />
-                      <span class="font-text-small font-weight-semi">{{ tokenB.symbol }}</span>
+                      <span class="font-small weight-semi">{{ tokenB.symbol }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="btn-container">
-                  <Button v-if="!wallet.connected" class="create-btn font-text-medium font-weight-semi" @click="$accessor.wallet.openModal">
+                  <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
                     Connect wallet
                   </Button>
-                  <Button v-else class="create-btn font-text-medium font-weight-semi" :disabled="!wallet.connected" @click="gotoFarms">
+                  <Button v-else class="create-btn font-medium weight-semi" :disabled="!wallet.connected" @click="gotoFarms">
                     View Farm
                   </Button>
                 </div>

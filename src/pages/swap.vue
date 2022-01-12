@@ -3,12 +3,12 @@
     <div v-if="wsolBalance && wsolBalance.balance.fixed() > 0" class="note-unwrapped-sol">
       <div class="note-content">
         <img class="note-icon" src="@/assets/icons/status-warning.svg" />
-        <label class="font-text-small font-weight-semi">
+        <label class="font-small weight-semi">
           You have {{ wsolBalance.balance.fixed() }} <span style="color: #23adb4">wrapped SOL</span> in your wallet.
           Click to unwrap to native SOL.
         </label>
       </div>
-      <Button class="note-btn font-text-small font-weight-semi" @click="unwrap">Unwrap SOL</Button>
+      <Button class="note-btn font-small weight-semi" @click="unwrap">Unwrap SOL</Button>
     </div>
 
     <CoinSelect v-if="coinSelectShow" @onClose="() => (coinSelectShow = false)" @onSelect="onCoinSelect" />
@@ -34,7 +34,7 @@
 
     <div class="card">
       <div class="card-body">
-        <h4 class="font-weight-bold page-title">Swap</h4>
+        <h4 class="weight-bold page-title">Swap</h4>
 
         <CoinInput
           v-model="fromCoinAmount"
@@ -59,7 +59,7 @@
           @onSelect="openFromCoinSelect"
         />
 
-        <img src="@/assets/icons/swap-horizontal.svg" @click="changeCoinPosition" class="icon-cursor icon-centered" />
+        <img src="@/assets/icons/swap-horizontal.svg" @click="changeCoinPosition" class="icon-cursor margin-auto" />
 
         <CoinInput
           v-model="toCoinAmount"
@@ -85,7 +85,7 @@
         />
 
         <div class="exchange-info">
-          <div v-if="fromCoin && toCoin && isWrap && fromCoinAmount" class="font-text-small font-weight-semi price-base fcc-container">
+          <div v-if="fromCoin && toCoin && isWrap && fromCoinAmount" class="font-small weight-semi price-base fcc-container">
             <span>
               1 {{ fromCoin.symbol }} = 1
               {{ toCoin.symbol }}
@@ -93,7 +93,7 @@
           </div>
           <div
             v-else-if="fromCoin && toCoin && !isWrap && fromCoinAmount"
-            class="font-text-small font-weight-semi price-base fcc-container"
+            class="font-small weight-semi price-base fcc-container"
           >
             <span>
               1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
@@ -108,7 +108,7 @@
           </div>
           <div
             v-else-if="fromCoin && toCoin && marketAddress && market && asks && bids && fromCoinAmount"
-            class="font-text-small font-weight-semi price-base fcc-container"
+            class="font-small weight-semi price-base fcc-container"
           >
             <span>
               1 {{ hasPriceSwapped ? toCoin.symbol : fromCoin.symbol }} =
@@ -125,18 +125,18 @@
 
         <div v-if="wallet.connected">
           <div class="swap-actions fcb-container">
-            <div class="swap-status font-text-medium font-weight-semi">
+            <div class="swap-status font-medium weight-semi">
               <div v-if="priceImpact <= 2" class="price-status">
                 <img class="status-icon" src="@/assets/icons/status-ok.svg" />
-                <label class="font-text-medium font-weight-semi price-impact-green">Fair Price</label>
+                <label class="font-medium weight-semi price-impact-green">Fair Price</label>
               </div>
               <div v-else-if="priceImpact > 2 && priceImpact <= 5" class="price-status">
                 <img class="status-icon" src="@/assets/icons/status-warning.svg" />
-                <label class="font-text-medium font-weight-semi price-impact-orange">Price impact Warning</label>
+                <label class="font-medium weight-semi price-impact-orange">Price impact Warning</label>
               </div>
               <div v-else-if="priceImpact > 5" class="price-status">
                 <img class="status-icon" src="@/assets/icons/status-error.svg" />
-                <label class="font-text-medium font-weight-semi price-impact-red">Price impact Warning</label>
+                <label class="font-medium weight-semi price-impact-red">Price impact Warning</label>
               </div>
             </div>
             <div class="action-group">
@@ -177,7 +177,7 @@
           <div class="price-info">
             <div class="info-box">
               <span class="name">
-                <label class="font-text-small font-weight-bold">Pathway</label>
+                <label class="font-small weight-bold">Pathway</label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title">
                     This trade routes though the following tokens to give you the best price
@@ -190,21 +190,21 @@
                 <div class="coin-box-container">
                   <div class="coin-box">
                     <CoinIcon :mint-address="fromCoin.mintAddress" />
-                    <span class="font-text-small font-weight-semi">{{ fromCoin.symbol }}</span>
+                    <span class="font-small weight-semi">{{ fromCoin.symbol }}</span>
                   </div>
                 </div>
                 <img class="fst" src="@/assets/icons/arrow-right.svg" />
                 <div v-if="midTokenSymbol" class="coin-box-container">
                   <div class="coin-box">
                     <CoinIcon :mint-address="midTokenMint" />
-                    <span class="font-text-small font-weight-semi">{{ midTokenSymbol }}</span>
+                    <span class="font-small weight-semi">{{ midTokenSymbol }}</span>
                   </div>
                 </div>
                 <img v-if="midTokenSymbol" class="fst" src="@/assets/icons/arrow-right.svg" />
                 <div class="coin-box-container">
                   <div class="coin-box">
                     <CoinIcon :mint-address="toCoin.mintAddress" />
-                    <span class="font-text-small font-weight-semi">{{ toCoin.symbol }}</span>
+                    <span class="font-small weight-semi">{{ toCoin.symbol }}</span>
                   </div>
                 </div>
               </span>
@@ -212,7 +212,7 @@
 
             <div v-if="priceImpact" class="info-box">
               <span class="name">
-                <label class="font-text-small font-weight-bold"> Price Impact </label>
+                <label class="font-small weight-bold"> Price Impact </label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title">
                     The difference between the market price and estimated price due to trade size
@@ -221,20 +221,20 @@
                 </Tooltip>
               </span>
               <span class="value">
-                <label class="font-text-small font-weight-bold"> {{ priceImpact.toFixed(2) }}% </label>
+                <label class="font-small weight-bold"> {{ priceImpact.toFixed(2) }}% </label>
               </span>
             </div>
 
             <div v-if="fromCoin && toCoin && fromCoinAmount && toCoinWithSlippage" class="info-box">
               <span class="name">
-                <label class="font-text-small font-weight-bold">Minimum Received</label>
+                <label class="font-small weight-bold">Minimum Received</label>
                 <Tooltip placement="bottomLeft">
                   <template slot="title"> The least amount of tokens you will receive for this trade </template>
                   <img src="@/assets/icons/info.svg" class="tooltip-icon icon-cursor" />
                 </Tooltip>
               </span>
               <span class="value">
-                <label class="font-text-small font-weight-bold"> {{ toCoinWithSlippage }} {{ toCoin.symbol }} </label>
+                <label class="font-small weight-bold"> {{ toCoinWithSlippage }} {{ toCoin.symbol }} </label>
               </span>
             </div>
           </div>
@@ -252,12 +252,12 @@
         </div> -->
 
         <div v-if="!wallet.connected" class="btn-container">
-          <Button class="font-text-large font-weight-bold" ghost @click="$accessor.wallet.openModal"> Connect wallet </Button>
+          <Button class="font-large weight-bold" ghost @click="$accessor.wallet.openModal"> Connect wallet </Button>
         </div>
 
         <div v-else-if="!(officialPool || (!officialPool && userCheckUnofficial))" class="btn-container">
           <Button
-            class="font-text-large font-weight-bold"
+            class="font-large weight-bold"
             ghost
             @click="
               () => {
@@ -273,7 +273,7 @@
 
         <div v-else class="btn-container">
           <Button
-            class="font-text-large font-weight-bold"
+            class="font-large weight-bold"
             :disabled="
               !fromCoin ||
               !fromCoinAmount ||
