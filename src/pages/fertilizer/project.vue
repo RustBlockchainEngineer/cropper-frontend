@@ -72,7 +72,7 @@
                     <Button class="btn-transparent textM weightS">Subscribe Whitelist</Button>
                   </div>
                   <div v-else-if="currentStep > 0 && currentStep < 3" class="fcc-container">
-                    <img class="check-icon" src="@/assets/icons/check-white.svg" />
+                    <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
                     <span class="textS weightS letterL">Following {{ fertilizer.title }} </span>
                   </div>
                   <div v-else class="btn-container">
@@ -205,21 +205,26 @@
                   <div class="ticket-tasks">
                     <span class="textM weightB">Earn tickets by completing these tasks:</span>
                     <div class="ticket-task-status-group fcb-container">
-                      <div class="ticket-task-status ft-container">
-                        <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
-                        <div>
-                          <span class="textM weightB">Telegram task</span>
-                          <br />
-                          <span class="bodyXS weightS">0/2 Task completed</span>
+                      <div class="ticket-task-status-card fcb-container">
+                        <div class="ticket-task-status ft-container">
+                          <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
+                          <div>
+                            <span class="textM weightB">Telegram task</span>
+                            <br />
+                            <span class="bodyXS weightS">0/2 Task completed</span>
+                          </div>
                         </div>
                       </div>
-                      <div class="ticket-task-status ft-container">
-                        <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
-                        <div>
-                          <span class="textM weightB">Twitter task</span>
-                          <br />
-                          <span class="bodyXS weightS">0/3 Task completed</span>
+                      <div class="ticket-task-status-card fcb-container" :class="'active'">
+                        <div class="ticket-task-status ft-container">
+                          <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
+                          <div>
+                            <span class="textM weightB">Twitter task</span>
+                            <br />
+                            <span class="bodyXS weightS">3/3 Task completed</span>
+                          </div>
                         </div>
+                        <img class="check-icon" src="@/assets/icons/check-white.svg" />
                       </div>
                     </div>
                     <span class="textM weightB">Share your affilliated link to earn tickets:</span>
@@ -907,16 +912,21 @@ export default Vue.extend({
                 .ticket-task-status-group {
                   margin: 24px 0;
 
-                  .ticket-task-status {
+                  .ticket-task-status-card {
                     background: @color-blue400;
                     width: calc((100% - 24px) / 2);
                     padding: 16px;
                     border-radius: 8px;
 
-                    .ticket-social-icon {
-                      width: 24px;
-                      opacity: 0.5;
-                      margin-right: 24px;
+                    &.active {
+                      background: @color-green500;
+                    }
+                    .ticket-task-status {
+                      .ticket-social-icon {
+                        width: 24px;
+                        opacity: 0.5;
+                        margin-right: 24px;
+                      }
                     }
                   }
                 }
