@@ -34,7 +34,6 @@
       :lpbreakdown="this.unstakePoolInfo"
       text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity. <br /><br />
       If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
-
     />
 
     <CoinModal
@@ -632,30 +631,6 @@
                       </Button>
                     </div>
 
-                    <!-- <div
-                      class="owner"
-                      v-if="
-                        farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                        farm.farmInfo.poolInfo.is_allowed &&
-                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                      "
-                    >
-                      <br />
-                      <hr />
-                      <br />
-
-                      <div
-                        class="btncontainer isDesktop"
-                        v-if="
-                          farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
-                          farm.farmInfo.poolInfo.is_allowed &&
-                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
-                        "
-                      >
-                        <Button size="large" ghost @click="openAddRewardModal(farm)"> Add Rewards </Button>
-                      </div>
-                    </div> -->
-
                     <div class="btn-container">
                       <!-- Harvest & Withdraw -->
                       <Button
@@ -926,114 +901,141 @@
                         </a>
                       </div>
 
-                      <div class="fcc-container">
-                        <div class="btn-container">
-                          <Button
-                            v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
-                            class="btn-primary textS weightB"
-                            :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                            @click.stop="
-                              openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)
-                            "
-                          >
-                            Harvest
-                          </Button>
+                      <div>
+                        <div class="fcc-container">
+                          <div class="btn-container">
+                            <Button
+                              v-if="farm.farmInfo.poolInfo.end_timestamp < currentTimestamp"
+                              class="btn-primary textS weightB"
+                              :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                              @click.stop="
+                                openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)
+                              "
+                            >
+                              Harvest
+                            </Button>
 
-                          <Button
-                            v-else
-                            class="btn-primary textS weightB"
-                            :disabled="
-                              !wallet.connected || harvesting[idx] || farm.userInfo.pendingReward.isNullOrZero()
+                            <Button
+                              v-else
+                              class="btn-primary textS weightB"
+                              :disabled="
+                                !wallet.connected || harvesting[idx] || farm.userInfo.pendingReward.isNullOrZero()
+                              "
+                              :loading="harvesting[idx]"
+                              @click="harvest(farm.farmInfo, idx)"
+                            >
+                              Harvest
+                            </Button>
+                          </div>
+
+                          <div class="btn-container" v-if="farm.farmInfo.poolInfo.end_timestamp > currentTimestamp">
+                            <Button
+                              class="btn-primary textS weightB"
+                              :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
+                              @click.stop="
+                                openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)
+                              "
+                            >
+                              Withdraw
+                            </Button>
+                          </div>
+
+                          <div
+                            class="btn-container"
+                            v-if="
+                              currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                              farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
                             "
-                            :loading="harvesting[idx]"
-                            @click="harvest(farm.farmInfo, idx)"
                           >
-                            Harvest
-                          </Button>
+                            <Button
+                              v-if="wallet.connected"
+                              class="btn-transparent textS weightB"
+                              id="dep"
+                              :disabled="
+                                !wallet.connected ||
+                                !farm.farmInfo.poolInfo.is_allowed ||
+                                farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                                farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                              "
+                              @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
+                            >
+                              {{
+                                !farm.farmInfo.poolInfo.is_allowed
+                                  ? 'Not Allowed'
+                                  : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                                  ? 'Ended'
+                                  : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                                  ? 'Unstarted'
+                                  : 'Deposit'
+                              }}
+                            </Button>
+
+                            <Button v-else class="btn-transparent textS weightB" @click="$accessor.wallet.openModal">
+                              {{
+                                !farm.farmInfo.poolInfo.is_allowed
+                                  ? 'Not Allowed'
+                                  : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                                  ? 'Ended'
+                                  : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                                  ? 'Unstarted'
+                                  : 'Deposit'
+                              }}
+                            </Button>
+                          </div>
+
+                          <div
+                            class="btn-container"
+                            v-if="
+                              currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
+                              farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
+                              farm.farmInfo.currentLPtokens > 0.001
+                            "
+                          >
+                            <Button
+                              class="btn-transparent textS weightB"
+                              :disabled="
+                                !farm.farmInfo.poolInfo.is_allowed ||
+                                farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
+                                farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                              "
+                              @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
+                            >
+                              {{
+                                !farm.farmInfo.poolInfo.is_allowed
+                                  ? 'Not Allowed'
+                                  : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
+                                  ? 'Ended'
+                                  : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                                  ? 'Unstarted'
+                                  : 'Deposit LP'
+                              }}
+                            </Button>
+                          </div>
                         </div>
 
-                        <div class="btn-container" v-if="farm.farmInfo.poolInfo.end_timestamp > currentTimestamp">
-                          <Button
-                            class="btn-primary textS weightB"
-                            :disabled="!wallet.connected || farm.userInfo.depositBalance.isNullOrZero()"
-                            @click.stop="
-                              openUnstakeModal(farm.farmInfo, farm.farmInfo.lp, farm.userInfo.depositBalance)
+                        <div class="fcc-container" style="margin-top: 8px">
+                          <div
+                            v-if="
+                              farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                              farm.farmInfo.poolInfo.is_allowed &&
+                              currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
                             "
+                            class="btn-container"
                           >
-                            Withdraw
-                          </Button>
-                        </div>
-
-                        <div
-                          class="btn-container"
-                          v-if="
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                            farm.farmInfo.poolInfo.start_timestamp < currentTimestamp
-                          "
-                        >
-                          <Button
-                            v-if="wallet.connected"
-                            class="btn-transparent textS weightB"
-                            id="dep"
-                            :disabled="
-                              !wallet.connected ||
-                              !farm.farmInfo.poolInfo.is_allowed ||
-                              farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
+                            <Button class="btn-primary textS weightB" @click="openAddRewardModal(farm)">
+                              Add Rewards
+                            </Button>
+                          </div>
+                          <div
+                            v-if="
+                              farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                              !farm.farmInfo.poolInfo.is_allowed &&
+                              currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
                             "
-                            @click="openStakeModal(farm.labelized, farm.farmInfo, farm.farmInfo.lp)"
+                            class="btn-container"
                           >
-                            {{
-                              !farm.farmInfo.poolInfo.is_allowed
-                                ? 'Not Allowed'
-                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                                ? 'Ended'
-                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                                ? 'Unstarted'
-                                : 'Deposit'
-                            }}
-                          </Button>
-
-                          <Button v-else class="btn-transparent textS weightB" @click="$accessor.wallet.openModal">
-                            {{
-                              !farm.farmInfo.poolInfo.is_allowed
-                                ? 'Not Allowed'
-                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                                ? 'Ended'
-                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                                ? 'Unstarted'
-                                : 'Deposit'
-                            }}
-                          </Button>
-                        </div>
-
-                        <div
-                          class="btn-container"
-                          v-if="
-                            currentTimestamp < farm.farmInfo.poolInfo.end_timestamp &&
-                            farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
-                            farm.farmInfo.currentLPtokens > 0.001
-                          "
-                        >
-                          <Button
-                            class="btn-transparent textS weightB"
-                            :disabled="
-                              !farm.farmInfo.poolInfo.is_allowed ||
-                              farm.farmInfo.poolInfo.end_timestamp < currentTimestamp ||
-                              farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                            "
-                            @click="openStakeModalLP(farm.farmInfo, farm.farmInfo.lp)"
-                          >
-                            {{
-                              !farm.farmInfo.poolInfo.is_allowed
-                                ? 'Not Allowed'
-                                : currentTimestamp > farm.farmInfo.poolInfo.end_timestamp
-                                ? 'Ended'
-                                : farm.farmInfo.poolInfo.start_timestamp > currentTimestamp
-                                ? 'Unstarted'
-                                : 'Deposit LP'
-                            }}
-                          </Button>
+                            <Button class="btn-primary textS weightB" @click="payFarmFee(farm)"> Pay Farm Fees </Button>
+                          </div>
                         </div>
                       </div>
                     </Col>
@@ -1322,6 +1324,38 @@
                       </div>
                     </Col>
 
+                    <Col
+                      v-if="
+                        farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                        currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                      "
+                      class="farm-collapse-item fcc-container"
+                      span="24"
+                    >
+                      <div
+                        v-if="
+                          farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                          farm.farmInfo.poolInfo.is_allowed &&
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                        "
+                        class="btn-container"
+                      >
+                        <Button class="btn-primary textS weightB" @click="openAddRewardModal(farm)">
+                          Add Rewards
+                        </Button>
+                      </div>
+                      <div
+                        v-if="
+                          farm.farmInfo.poolInfo.owner.toBase58() == wallet.address &&
+                          !farm.farmInfo.poolInfo.is_allowed &&
+                          currentTimestamp < farm.farmInfo.poolInfo.end_timestamp
+                        "
+                        class="btn-container"
+                      >
+                        <Button class="btn-primary textS weightB" @click="payFarmFee(farm)"> Pay Farm Fees </Button>
+                      </div>
+                    </Col>
+
                     <Col class="farm-collapse-item fcc-container" span="24">
                       <a
                         class="social-link fcc-container bodyXS weightS icon-cursor"
@@ -1341,6 +1375,7 @@
                       </a>
                     </Col>
                   </Row>
+
                   <div class="btn-hide-collapse" @click="hideCollapse">
                     <img class="btn-hide-collapse-icon" src="@/assets/icons/arrow-down-blue.svg" />
                   </div>
@@ -2964,7 +2999,7 @@ export default Vue.extend({
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
-  width: 95px;
+  width: 100px;
   height: auto;
   margin-bottom: 8px;
 
@@ -2974,7 +3009,7 @@ export default Vue.extend({
   }
 
   @media @max-sl-mobile {
-    width: calc((100% - 24px) / 3);
+    width: calc((100% - 24px) / 2);
   }
 
   &:last-child {
