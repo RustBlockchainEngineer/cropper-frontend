@@ -28,23 +28,9 @@
                     this.filterProject = filterOptions.upcoming
                   }
                 "
-                >Upcoming</Button
+                >Upcoming projects</Button
               >
               <div v-if="filterProject === filterOptions.upcoming" class="active-underline"></div>
-            </div>
-            <div class="option-tab">
-              <Button
-                class="textL weightS icon-cursor"
-                :class="filterProject === filterOptions.preparation ? 'active-tab' : ''"
-                @click="
-                  () => {
-                    this.filterProject = filterOptions.preparation
-                  }
-                "
-              >
-                Preparation
-              </Button>
-              <div v-if="filterProject === filterOptions.preparation" class="active-underline"></div>
             </div>
             <div class="option-tab">
               <Button
@@ -56,7 +42,7 @@
                   }
                 "
               >
-                Funded
+                Funded projects
               </Button>
               <div v-if="filterProject === filterOptions.funded" class="active-underline"></div>
             </div>
@@ -74,8 +60,6 @@
               {{
                 filterProject === filterOptions.upcoming
                   ? filterOptions.upcoming
-                  : filterProject === filterOptions.preparation
-                  ? filterOptions.preparation
                   : filterProject === filterOptions.funded
                   ? filterOptions.funded
                   : ''
@@ -106,17 +90,6 @@
                 "
               >
                 Upcoming
-              </div>
-              <div
-                class="collapse-item text-center textM weightS icon-cursor"
-                :class="filterProject === filterOptions.preparation ? 'active-item' : ''"
-                @click="
-                  () => {
-                    this.filterProject = filterOptions.preparation
-                  }
-                "
-              >
-                Preparation
               </div>
               <div
                 class="collapse-item text-center textM weightS icon-cursor"
@@ -191,10 +164,12 @@
                         ? filterOptions.sales
                         : sortUpcoming === filterOptions.distribution
                         ? filterOptions.distribution
+                        : sortUpcoming === filterOptions.preparation
+                        ? filterOptions.preparation
                         : filterOptions.all
                     }}
                   </span>
-                  <span v-else-if="filterProject === filterOptions.funded">
+                  <span v-else>
                     {{
                       sortFunded === sortOptions.subscribers
                         ? sortOptions.subscribers
@@ -209,11 +184,7 @@
                         : ''
                     }}
                   </span>
-                  <span v-else>
-                    {{ filterOptions.preparation }}
-                  </span>
                   <img
-                    v-if="filterProject != filterOptions.preparation"
                     class="arrow-icon"
                     :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
                     src="@/assets/icons/arrow-down-white.svg"
@@ -247,28 +218,35 @@
                   :class="sortUpcoming === filterOptions.all ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.all)"
                 >
-                  All
+                  {{ filterOptions.all }}
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortUpcoming === filterOptions.whitelist ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.whitelist)"
                 >
-                  Whitelist Open
+                  {{ filterOptions.whitelist }}
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortUpcoming === filterOptions.sales ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.sales)"
                 >
-                  Sales
+                  {{ filterOptions.sales }}
                 </div>
                 <div
                   class="collapse-item text-center texts weightB icon-cursor"
                   :class="sortUpcoming === filterOptions.distribution ? 'active-item' : ''"
                   @click="sortByStatus(filterOptions.distribution)"
                 >
-                  Distribution
+                  {{ filterOptions.distribution }}
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortUpcoming === filterOptions.preparation ? 'active-item' : ''"
+                  @click="sortByStatus(filterOptions.preparation)"
+                >
+                  {{ filterOptions.preparation }}
                 </div>
               </div>
               <div v-else-if="filterProject === filterOptions.funded" class="option-sort-collapse collapse-right">
@@ -435,22 +413,29 @@
                       <div v-else class="project-balance">
                         <span class="label textS weightS letterL">
                           {{
-                            fertilizer.status === filterOptions.sales
-                              ? filterOptions.sales
+                            fertilizer.status === filterOptions.preparation
+                              ? 'Whitelist starts in'
+                              : fertilizer.status === filterOptions.whitelist
+                              ? 'Whitelist ends in'
+                              : fertilizer.status === filterOptions.sales
+                              ? 'Sales starts in'
                               : fertilizer.status === filterOptions.distribution
-                              ? filterOptions.distribution
+                              ? 'Distribution starts in'
                               : ''
                           }}
-                          starts in:
                         </span>
                         <span class="value fcl-container">
                           <Countdown
                             :value="
-                              fertilizer.status === filterOptions.sales
-                                ? fertilizer.sales_start_date
-                                : fertilizer.status === filterOptions.distribution
-                                ? fertilizer.distribution_start_date
-                                : 0
+                              fertilizer.status === filterOptions.preparation
+                              ? fertilizer.whitelist_start_date
+                              : fertilizer.status === filterOptions.whitelist
+                              ? fertilizer.whitelist_end_date
+                              : fertilizer.status === filterOptions.sales
+                              ? fertilizer.sales_start_date
+                              : fertilizer.status === filterOptions.distribution
+                              ? fertilizer.distribution_start_date
+                              : 0
                             "
                             format="DD:HH:mm:ss"
                           />
@@ -1248,15 +1233,13 @@ export default Vue.extend({
       // filter with tabs
       if (filterProject === this.filterOptions.upcoming) {
         this.fertilizerItems = this.fertilizerData.filter(
-          (fertilizer: any) =>
-            fertilizer.status != this.filterOptions.preparation && fertilizer.status != this.filterOptions.funded
+          (fertilizer: any) => fertilizer.status != this.filterOptions.funded
         )
 
         // sort by status on Upcoming projects
         if (this.sortUpcoming === this.filterOptions.all) {
           this.fertilizerItems = this.fertilizerItems.filter(
-            (fertilizer: any) =>
-              fertilizer.status != this.filterOptions.preparation && fertilizer.status != this.filterOptions.funded
+            (fertilizer: any) => fertilizer.status != this.filterOptions.funded
           )
         } else if (this.sortUpcoming === this.filterOptions.whitelist) {
           this.fertilizerItems = this.fertilizerItems.filter(
@@ -1270,11 +1253,11 @@ export default Vue.extend({
           this.fertilizerItems = this.fertilizerItems.filter(
             (fertilizer: any) => fertilizer.status === this.filterOptions.distribution
           )
+        } else if (this.sortUpcoming === this.filterOptions.preparation) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) => fertilizer.status === this.filterOptions.preparation
+          )
         }
-      } else if (filterProject === this.filterOptions.preparation) {
-        this.fertilizerItems = this.fertilizerData.filter(
-          (fertilizer: any) => fertilizer.status === this.filterOptions.preparation
-        )
       } else {
         this.fertilizerItems = this.fertilizerData.filter(
           (fertilizer: any) => fertilizer.status === this.filterOptions.funded
