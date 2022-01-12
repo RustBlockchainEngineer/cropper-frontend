@@ -1,7 +1,5 @@
 <template>
   <div class="pool container">
-    <img class="planet-left" src="@/assets/Green Planet 1.png" />
-
     <CoinModalMulti
       v-if="stakeModalOpening"
       title="Add Liquidity"
@@ -16,374 +14,695 @@
       title="Remove Liquidity"
       :coin="lp"
       :loading="unstaking"
+      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity.<br /><br />
+      If the pop up for the second operations does not appear, it may have popped up behind your browser. You an check this by minimizing your browser."
       @onOk="unstake"
+      :lpbreakdown="this.unstakePoolInfo"
       @onCancel="cancelUnstake"
     />
 
+    <CreatePool v-if="createPoolModalOpening" @onCancel="cancelCreatePool" />
+
     <div class="card">
       <div class="card-body">
-        <div class="page-head fs-container">
-          <span class="title noMobile">
-            Liquidity Pools
-            <NuxtLink to="/pools/create-pool/" class="create-btn-desktop">
-              <div class="create-plus-btn">+ Create pool</div>
-            </NuxtLink>
-          </span>
-          <span class="title noDesktop">
-            Pools
-            <NuxtLink to="/pools/create-pool/" class="create-btn-mobile">
-              <div class="create-plus-btn">
-                <img src="@/assets/icons/plus-icon-10.svg" />
-              </div>
-            </NuxtLink>
-          </span>
-          <span class="information">
-            <div class="my-info">
-              <p>TVL : <b>${{TVL.toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}}</b></p>
-              <!-- <p>Your deposit: <b>28,009 $</b></p> -->
-            </div>
-
-            <!-- {{ autoRefreshTime - countdown }} -->
-            <div class="reload-btn" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
-              <img src="@/assets/icons/loading.svg" />
-            </div>
-          </span>
-        </div>
-
-        <div class="page-content">
-          <!-- Filter bar for desktop -->
-          <Row class="tool-bar noMobile">
-            <Col span="5" class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
-                <Icon slot="prefix" type="search" />
-              </Input>
-            </Col>
-            <Col span="6" class="tool-option">
-              <div class="toggle">
-                <label
-                  class="label"
-                  :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('labelized')">
-                  Labelized
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon labelized">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-                <Toggle v-model="searchCertifiedFarm" />
-                <label
-                  class="label"
-                  :class="searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('permissionless')"
-                  >Permissionless
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-              </div>
-            </Col>
-            <Col span="5" class="tool-option"> </Col>
-            <Col span="4" class="tool-option"> </Col>
-            <Col span="4" class="tool-option">
-              <div class="toggle deposit-toggle">
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected" />
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">My deposit</label>
-              </div>
-            </Col>
-          </Row>
-
-          <!-- Filter bar for mobile -->
-
-          <Row class="tool-bar noDesktop">
-            <Col span="12" class="tool-option">
-              <Input v-model="searchName" size="large" class="input-search" placeholder="Search by name">
-                <Icon slot="prefix" type="search" />
-              </Input>
-            </Col>
-            <Col span="12" class="tool-option">
-              <div class="toggle deposit-toggle">
-                <Toggle v-model="stakedOnly" :disabled="!wallet.connected"/>
-                <label class="label" :class="stakedOnly ? 'active-label' : ''" @click="activeSearch('deposit')">Deposited</label>
-              </div>
-            </Col>
-          </Row>
-          <Row class="tool-bar noDesktop">
-            <Col span="24" class="tool-option">
-              <div class="toggle">
-                <label
-                  class="label"
-                  :class="!searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('labelized')">
-                  Labelized
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Labelized:</b> Cropper labelized this pool after running due diligence on its team and project.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon labelized">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-                <Toggle v-model="searchCertifiedFarm" />
-                <label
-                  class="label"
-                  :class="searchCertifiedFarm ? 'active-label' : ''"
-                  @click="activeSearch('permissionless')"
-                  >Permissionless
-                  <Tooltip placement="bottom">
-                    <template slot="title">
-                      <div>
-                        <div class="tooltip-text">
-                          <b>Permissionless:</b> This project created its pool without any review from the Cropper Team.
-                        </div>
-                      </div>
-                    </template>
-                    <div class="info-icon">
-                      <img src="@/assets/icons/info-icon.svg" width="12" height="12" />
-                    </div>
-                  </Tooltip>
-                </label>
-              </div>
-            </Col>
-          </Row>
-        </div>
-        <div v-if="poolLoaded" class="noMobile pools-table">
-          <Row class="pools-table-header">
-            <Col class="header-column" span="5"> Name </Col>
-            <Col class="header-column" span="2">
-              <div class="header-column-title" @click="sortbyColumn('liquidity')">
-                Liquidity
-                <Icon
-                  v-if="sortLiquidityAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''"
-                />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'liquidity' ? 'sort-icon-active' : ''" />
-              </div>
-            </Col>
-            <Col class="header-column" span="3">
-              <div class="header-column-title" @click="sortbyColumn('volh')">
-                Volume (24hrs)
-                <Icon v-if="sortVolHAsc" type="arrow-down" :class="sortMethod === 'volh' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'volh' ? 'sort-icon-active' : ''" />
-              </div>
-            </Col>
-            <Col class="header-column" span="3">
-              <div class="header-column-title" @click="sortbyColumn('vold')">
-                Volume (7d)
-                <Icon v-if="sortVolDAsc" type="arrow-down" :class="sortMethod === 'vold' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'vold' ? 'sort-icon-active' : ''" />
-              </div>
-            </Col>
-            <Col class="header-column" span="3">
-              <div class="header-column-title" @click="sortbyColumn('feesh')">
-                Fees (24 hrs)
-                <Icon v-if="sortFeesAsc" type="arrow-down" :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'feesh' ? 'sort-icon-active' : ''" />
-              </div>
-            </Col>
-            <Col class="header-column" span="2">
-              <div class="header-column-title" @click="sortbyColumn('apy')">
-                APY
-                <Icon v-if="sortAPYAsc" type="arrow-down" :class="sortMethod === 'apy' ? 'sort-icon-active' : ''" />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'apy' ? 'sort-icon-active' : ''" />
-              </div>
-            </Col>
-            <Col class="header-column" span="3">
-              <div class="header-column-title" @click="sortbyColumn('yliquidity')">
-                Your Liquidity
-                <Icon
-                  v-if="sortCurrentAsc"
-                  type="arrow-down"
-                  :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''"
-                />
-                <Icon v-else type="arrow-up" :class="sortMethod === 'yliquidity' ? 'sort-icon-active' : ''" />
-              </div>
-            </Col>
-            <Col class="header-column" span="3"> Add / Remove </Col>
-          </Row>
-
-          <div class="pools-table-body">
-            <Row class="pools-table-item" v-for="data in poolsShow" :key="data.lp_mint">
-              <Col span="5">
-                <div class="lp-iconscontainer">
-                  <div class="icons">
-                    <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
-                    {{ data.lp.coin.symbol }}
-                    <span>-</span>
-                    <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
-                    {{ data.lp.pc.symbol }}
-                  </div>
-
-                  <div v-if="displayPoolID">
-                    AMMID : {{ data.ammId }}<br />
-                    SerumMarket : {{ data.serumMarket }}
-                  </div>
+        <div v-if="showGuide" class="guide-card">
+          <div class="guide-content">
+            <label class="textL weightB"
+              >Learn about providing <br />
+              liquidity
+            </label>
+            <img class="icon-cursor close-icon" src="@/assets/icons/close-circle-icon.svg" @click="hideGuide" />
+            <Row class="guide-detail">
+              <Col :sm="14" :xs="24">
+                <label class="textS weightS letterL">Check out our v3 LP walkthrough and migration guides.</label>
+                <div class="learn-btn-container">
+                  <Button class="learn-btn textS weightS letterL">Learn more</Button>
                 </div>
               </Col>
-
-              <Col class="state" span="2"> ${{ new TokenAmount(data.liquidity, 2, false).format() }} </Col>
-
-              <Col class="state" span="3"> ${{ new TokenAmount(data.volume_24h, 2, false).format() }} </Col>
-              <Col class="state" span="3"> ${{ new TokenAmount(data.volume_7d, 2, false).format() }} </Col>
-              <Col class="state" span="3"> ${{ new TokenAmount(data.fee_24h, 2, false).format() }} </Col>
-              <Col class="state" span="2"> {{ new TokenAmount(data.apy, 2, false).format() }}% </Col>
-              <Col class="state" span="3"> ${{ new TokenAmount(data.current, 2, false).format() }} </Col>
-              <Col class="state" span="3">
-                <div class="btncontainer small plus-btn">
-                  <Button size="small" ghost @click="openPoolAddModal(data)">
-                    <Icon type="plus" />
-                  </Button>
-                </div>
-
-                &nbsp;
-
-                <div class="btncontainer small minus-btn">
-                  <Button
-                    size="small"
-                    class="minus"
-                    ghost
-                    :disabled="!wallet.connected || !data.current"
-                    @click="openUnstakeModal(data, data.lp, 1)"
-                  >
-                    <Icon type="minus" />
-                  </Button>
-                </div>
+              <Col :sm="10" :xs="0">
+                <img src="@/assets/background/guide.svg" />
               </Col>
             </Row>
           </div>
-
-          <div class="pagination-container">
-            <div class="pagination-body">
-              <Pagination
-                v-if="totalCount > pageSize"
-                :total="totalCount"
-                :pageSize="pageSize"
-                :defaultCurrent="1"
-                v-model="currentPage"
-              >
-              </Pagination>
-            </div>
-          </div>
         </div>
 
-        <div v-if="poolLoaded" class="noDesktop">
-          <Collapse v-model="showCollapse" expand-icon-position="right" class="pools-table-mobile">
-            <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="poolCollapse">
-              <Row slot="header" class="pool-head">
-                <Col class="lp-icons" :span="24">
-                  <div class="icons">
-                    <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
-                    {{ data.lp.coin.symbol }}
-                    <span>-</span>
-                    <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
-                    {{ data.lp.pc.symbol }}
-                  </div>
-                </Col>
+        <div class="pools-content" :class="showGuide ? 'guide-enabled' : ''">
+          <div class="pools-head fcb-container">
+            <h3 class="title weightB">Liquidity Pools</h3>
+            <div class="information">
+              <div class="tvl-info">
+                <p class="textL weightS">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
+              </div>
 
-                <div class="detailButton">
-                  <button>Details</button>
+              <div class="action-btn-group">
+                <div class="reload-btn icon-cursor" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
+                  <img src="@/assets/icons/reload.svg" />
                 </div>
-              </Row>
 
-              <Row v-if="poolCollapse" class="collapse-row">
-                <Col class="state" span="24">
-                  <div class="value">
-                    <span class="labmobile">Liquidity</span>
-                    ${{ new TokenAmount(data.liquidity, 2, false).format() }}
-                  </div>
-                </Col>
-                <Col class="state" span="24">
-                  <div class="value">
-                    <span class="labmobile">24h / Volume</span>
-                    ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
-                  </div>
-                </Col>
-                <Col class="state" span="24">
-                  <div class="value">
-                    <span class="labmobile">7d / Volume</span>
-                    ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
-                  </div>
-                </Col>
-                <Col class="state" span="24">
-                  <div class="value">
-                    <span class="labmobile">24h / Fees</span>
-                    ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
-                  </div>
-                </Col>
-                <Col class="state" span="24">
-                  <div class="value">
-                    <span class="labmobile">APY</span>
-                    {{ new TokenAmount(data.apy, 2, false).format() }}%
-                  </div>
-                </Col>
-                <Col class="current-liquidity" span="24">
-                  <div class="liquidity-content">Your liquidity</div>
-                  <div class="liquidity-value">${{ new TokenAmount(data.current, 2, false).format() }}</div>
-                  <div class="btncontainer small plus-btn">
-                    <Button size="small" ghost @click="openPoolAddModal(data)">
-                      <Icon type="plus" />
-                    </Button>
-                  </div>
-
-                  &nbsp;
-
-                  <div class="btncontainer small minus-btn">
-                    <Button
-                      size="small"
-                      class="minus"
-                      ghost
-                      :disabled="!wallet.connected || !data.current"
-                      @click="openUnstakeModal(data, data.lp, 1)"
-                    >
-                      <Icon type="minus" />
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-            </CollapsePanel>
-          </Collapse>
-
-          <div class="pagination-container">
-            <div class="pagination-body">
-              <Pagination
-                v-if="totalCount > pageSize"
-                :total="totalCount"
-                :pageSize="pageSize"
-                :defaultCurrent="1"
-                v-model="currentPage"
-              >
-              </Pagination>
+                <a
+                  class="create-btn icon-cursor"
+                  @click="
+                    () => {
+                      this.createPoolModalOpening = true
+                    }
+                  "
+                >
+                  <div class="create-plus-btn textS weightS">+ Create pool</div>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div v-else class="fc-container">
-          <Spin :spinning="true">
-            <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
-          </Spin>
+          <div class="pools-option-bar fcb-container">
+            <div class="option-tab-group">
+              <div class="option-tab">
+                <Button
+                  class="textL weightS"
+                  :class="searchCertifiedFarm === 'labelized' ? 'active-tab' : ''"
+                  @click="activeSearch('labelized')"
+                  >Labelized</Button
+                >
+                <div v-if="searchCertifiedFarm === 'labelized'" class="active-underline"></div>
+              </div>
+              <div class="option-tab">
+                <Button
+                  class="textL weightS"
+                  :class="searchCertifiedFarm === 'permissionless' ? 'active-tab' : ''"
+                  @click="activeSearch('permissionless')"
+                >
+                  Permissionless
+                </Button>
+                <div v-if="searchCertifiedFarm === 'permissionless'" class="active-underline"></div>
+              </div>
+              <div v-if="wallet.connected" class="option-tab">
+                <Button
+                  class="textL weightS"
+                  :class="searchCertifiedFarm === 'deposit' ? 'active-tab' : ''"
+                  @click="activeSearch('deposit')"
+                >
+                  <img
+                    v-if="searchCertifiedFarm === 'deposit'"
+                    class="deposit-icon"
+                    src="@/assets/icons/deposit-green.svg"
+                  />
+                  <img v-else class="deposit-icon" src="@/assets/icons/deposit.svg" />
+
+                  My Deposit
+                </Button>
+                <div v-if="searchCertifiedFarm === 'deposit'" class="active-underline"></div>
+              </div>
+            </div>
+
+            <div
+              class="option-tab-group option-tab-collapse icon-cursor"
+              @click="
+                () => {
+                  this.showTabMenu = !this.showTabMenu
+                }
+              "
+            >
+              <label class="textL weightS icon-cursor">
+                {{
+                  searchCertifiedFarm === 'labelized'
+                    ? 'Labelized'
+                    : searchCertifiedFarm === 'permissionless'
+                    ? 'Permissionless'
+                    : searchCertifiedFarm === 'deposit'
+                    ? 'My Deposit'
+                    : ''
+                }}
+              </label>
+              <img
+                class="arrow-icon"
+                :class="showTabMenu ? 'arrow-up' : 'arrow-down'"
+                src="@/assets/icons/arrow-down-white.svg"
+              />
+
+              <div
+                v-if="showTabMenu"
+                class="option-sort-collapse collapse-left"
+                v-click-outside="
+                  () => {
+                    this.showTabMenu = false
+                  }
+                "
+              >
+                <div
+                  class="collapse-item text-center textM weightS icon-cursor"
+                  :class="searchCertifiedFarm === 'labelized' ? 'active-item' : ''"
+                  @click="activeSearch('labelized')"
+                >
+                  Labelized
+                </div>
+                <div
+                  class="collapse-item text-center textM weightS icon-cursor"
+                  :class="searchCertifiedFarm === 'permissionless' ? 'active-item' : ''"
+                  @click="activeSearch('permissionless')"
+                >
+                  Permissionless
+                </div>
+                <div
+                  class="collapse-item text-center textM weightS icon-cursor"
+                  :class="searchCertifiedFarm === 'deposit' ? 'active-item' : ''"
+                  @click="activeSearch('deposit')"
+                >
+                  My Deposit
+                </div>
+              </div>
+            </div>
+
+            <div class="option-filter-group">
+              <div class="option-filter option-filter-fixed fcc-container icon-cursor">
+                <img
+                  src="@/assets/icons/search.svg"
+                  @click="
+                    () => {
+                      this.showSearchMenu = !this.showSearchMenu
+                    }
+                  "
+                />
+              </div>
+
+              <div
+                class="option-search-collapse"
+                v-if="showSearchMenu"
+                v-click-outside="
+                  () => {
+                    this.showSearchMenu = false
+                  }
+                "
+              >
+                <div class="collapse-item-header fcb-container">
+                  <label class="textL weightB">Search</label>
+                  <img
+                    class="icon-cursor"
+                    src="@/assets/icons/close-circle-icon.svg"
+                    @click="
+                      () => {
+                        this.showSearchMenu = false
+                      }
+                    "
+                  />
+                </div>
+                <div class="collapse-item-body">
+                  <input ref="userInput" v-model="searchName" class="textM" placeholder="Search" />
+                  <div class="shortcut-list">
+                    <label class="textS weightS">Most Used</label>
+                    <div class="shortcut-group">
+                      <div
+                        v-for="item in mostUsed"
+                        :key="item.symbol"
+                        class="shortcut-container icon-cursor"
+                        @click="searchShortcut(item.symbol)"
+                      >
+                        <div class="shortcut-box fcc-container">
+                          <CoinIcon class="coin-icon" :mint-address="item.mintAddress" />
+                          {{ item.symbol }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="option-filter option-sort fcc-container icon-cursor"
+                @click="
+                  () => {
+                    this.showFilterMenu = !this.showFilterMenu
+                  }
+                "
+              >
+                <span class="bodyM weightS option-filter-sort fcc-container">
+                  <label>Sort by:</label>
+                  <span class="sort-detail">
+                    Liquidity {{ sortLiquidityAsc ? '(High > Low)' : '(Low > High)' }}
+                    <img
+                      class="arrow-icon"
+                      :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
+                      src="@/assets/icons/arrow-down-white.svg"
+                    />
+                  </span>
+                </span>
+              </div>
+
+              <div class="option-filter option-filter-collapse option-filter-fixed fcc-container icon-cursor">
+                <img
+                  src="@/assets/icons/filter.svg"
+                  @click="
+                    () => {
+                      this.showFilterMenu = !this.showFilterMenu
+                    }
+                  "
+                />
+              </div>
+
+              <div
+                v-if="showFilterMenu"
+                class="option-sort-collapse collapse-right"
+                v-click-outside="
+                  () => {
+                    this.showFilterMenu = false
+                  }
+                "
+              >
+                <div
+                  class="collapse-item text-center textM weightS icon-cursor"
+                  :class="sortLiquidityAsc ? 'active-item' : ''"
+                  @click="
+                    () => {
+                      this.showFilterMenu = false
+                      this.sortLiquidityAsc = false // true -> false becuase sortbColumn function
+                      sortbyColumn('liquidity')
+                    }
+                  "
+                >
+                  Liquidity (High > Low)
+                </div>
+                <div
+                  class="collapse-item text-center textM weightS icon-cursor"
+                  :class="!sortLiquidityAsc ? 'active-item' : ''"
+                  @click="
+                    () => {
+                      this.showFilterMenu = false
+                      this.sortLiquidityAsc = true // false -> true becuase sortbColumn function
+                      sortbyColumn('liquidity')
+                    }
+                  "
+                >
+                  Liquidity (Low > High)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="poolLoaded">
+            <!-- desktop version -->
+            <div class="pools-table isDesktop">
+              <Row class="pools-table-header" :class="{ scrollFixed: scrollPosition > 200 }">
+                <Col class="header-column textS weightB text-left" span="5"> Name </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortbyColumn('liquidity')">
+                    Liquidity
+                    <img
+                      v-if="sortMethod === 'liquidity'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortbyColumn('volh')">
+                    Volume (24hrs)
+                    <img
+                      v-if="sortMethod === 'volh'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortbyColumn('vold')">
+                    Volume (7d)
+                    <img
+                      v-if="sortMethod === 'vold'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="2">
+                  <div class="header-column-title" @click="sortbyColumn('feesh')">
+                    Fees (24 hrs)
+                    <img
+                      v-if="sortMethod === 'feesh'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortFeesAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortFeesAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="2">
+                  <div class="header-column-title" @click="sortbyColumn('apy')">
+                    APY
+                    <img
+                      v-if="sortMethod === 'apy'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortAPYAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortAPYAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortbyColumn('yliquidity')">
+                    Your Liquidity
+                    <img
+                      v-if="sortMethod === 'yliquidity'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortCurrentAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortCurrentAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+              </Row>
+
+              <div class="pools-table-body">
+                <Row class="pools-table-item" v-for="data in poolsShow" :key="data.lp_mint">
+                  <Col class="state" span="5">
+                    <div class="lp-iconscontainer">
+                      <div class="icons textM weightS">
+                        <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
+                        {{ data.lp.coin.symbol }}
+                        <span>-</span>
+                        <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
+                        {{ data.lp.pc.symbol }}
+                      </div>
+
+                      <div v-if="displayPoolID">
+                        AMMID : {{ data.ammId }}<br />
+                        SerumMarket : {{ data.serumMarket }}
+                      </div>
+                    </div>
+                  </Col>
+
+                  <Col class="state textM weightS" span="3">
+                    ${{ new TokenAmount(data.liquidity, 2, false).format() }}
+                  </Col>
+
+                  <Col class="state textM weightS" span="3">
+                    ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
+                  </Col>
+                  <Col class="state textM weightS" span="3">
+                    ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
+                  </Col>
+                  <Col class="state textM weightS" span="2">
+                    ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
+                  </Col>
+                  <Col class="state textM weightS" span="2"> {{ new TokenAmount(data.apy, 2, false).format() }}% </Col>
+                  <Col class="state textM weightS" span="3">
+                    ${{ new TokenAmount(data.current, 2, false).format() }}
+                  </Col>
+                  <Col class="state textM weightS" span="3">
+                    <div class="btn-container">
+                      <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)"
+                        >Add</Button
+                      >
+                    </div>
+                    <div class="btn-container">
+                      <Button
+                        class="btn-primary textS weightB"
+                        :disabled="!wallet.connected || !data.current"
+                        @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+
+            <!-- tablet version -->
+            <div class="pools-table isTablet">
+              <Row class="pools-table-header">
+                <Col class="header-column textS weightB text-left" span="6"> Name </Col>
+                <Col class="header-column textS weightB" span="6">
+                  <div class="header-column-title" @click="sortbyColumn('liquidity')">
+                    Liquidity
+                    <img
+                      v-if="sortMethod === 'liquidity'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortLiquidityAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="6">
+                  <div class="header-column-title" @click="sortbyColumn('volh')">
+                    Volume (24hrs)
+                    <img
+                      v-if="sortMethod === 'volh'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortVolHAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="5">
+                  <div class="header-column-title" @click="sortbyColumn('vold')">
+                    Volume (7d)
+                    <img
+                      v-if="sortMethod === 'vold'"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortVolDAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+              </Row>
+
+              <Collapse v-model="showCollapse" accordion>
+                <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="true">
+                  <Row slot="header" class="pool-head">
+                    <Col class="state" span="6">
+                      <div class="lp-iconscontainer">
+                        <div class="icons textM weightS">
+                          <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
+                          {{ data.lp.coin.symbol }}
+                          <span>-</span>
+                          <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
+                          {{ data.lp.pc.symbol }}
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col class="state textM weightS text-center" span="6">
+                      ${{ new TokenAmount(data.liquidity, 2, false).format() }}
+                    </Col>
+
+                    <Col class="state textM weightS text-center" span="6">
+                      ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
+                    </Col>
+                    <Col class="state textM weightS text-center" span="5">
+                      ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
+                    </Col>
+
+                    <Button class="detail-btn textS weightS">
+                      <img
+                        class="arrow-icon"
+                        :class="data.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        src="@/assets/icons/arrow-down-white.svg"
+                      />
+                    </Button>
+                  </Row>
+
+                  <Row class="collapse-row" :gutter="18">
+                    <Col span="12">
+                      <div class="state">
+                        <span class="title textS weightS letterL">Fees (24h)</span>
+                        <span class="value textM weightS letterS">
+                          ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
+                        </span>
+                      </div>
+                      <div class="state">
+                        <span class="title textS weightS letterL">APY</span>
+                        <span class="value textM weightS letterS">
+                          {{ new TokenAmount(data.apy, 2, false).format() }}%
+                        </span>
+                      </div>
+                    </Col>
+                    <Col span="12">
+                      <div class="state current-liquidity text-center">
+                        <span class="title textS weightS letterL">Your liquidity</span>
+                        <span class="value textM weightS letterS">
+                          ${{ new TokenAmount(data.current, 2, false).format() }}
+                        </span>
+
+                        <div class="btn-group">
+                          <div class="btn-container">
+                            <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)"
+                              >Add</Button
+                            >
+                          </div>
+                          <div class="btn-container">
+                            <Button
+                              class="btn-primary textS weightB"
+                              :disabled="!wallet.connected || !data.current"
+                              @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </CollapsePanel>
+              </Collapse>
+            </div>
+
+            <!-- mobile version -->
+            <div class="pools-table isMobile">
+              <Collapse v-model="showCollapse" accordion>
+                <CollapsePanel v-for="data in poolsShow" :key="data.lp_mint" v-show="true" :show-arrow="true">
+                  <Row slot="header" class="pool-head">
+                    <Col class="state" :span="24">
+                      <div class="lp-iconscontainer">
+                        <div class="icons textM weightS">
+                          <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
+                          {{ data.lp.coin.symbol }}
+                          <span>-</span>
+                          <CoinIcon :mint-address="data ? data.lp.pc.mintAddress : ''" />
+                          {{ data.lp.pc.symbol }}
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Button class="detail-btn textS weightS">
+                      <span class="label textS weightS">Details</span>
+                      <img
+                        class="arrow-icon"
+                        :class="data.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        src="@/assets/icons/arrow-down-white.svg"
+                      />
+                    </Button>
+                  </Row>
+
+                  <Row class="collapse-row">
+                    <Col class="state current-liquidity text-center" span="24">
+                      <span class="title textS weightS letterL">Your liquidity</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(data.current, 2, false).format() }}
+                      </span>
+
+                      <div class="btn-group">
+                        <div class="btn-container">
+                          <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)"
+                            >Add</Button
+                          >
+                        </div>
+                        <div class="btn-container">
+                          <Button
+                            class="btn-primary textS weightB"
+                            :disabled="!wallet.connected || !data.current"
+                            @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">Liquidity</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(data.liquidity, 2, false).format() }}
+                      </span>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">Volume (24h)</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
+                      </span>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">Volume (7d)</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
+                      </span>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">Fees (24h)</span>
+                      <span class="value textM weightS letterS">
+                        ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
+                      </span>
+                    </Col>
+                    <Col class="state" span="24">
+                      <span class="title textS weightS letterL">APY</span>
+                      <span class="value textM weightS letterS">
+                        {{ new TokenAmount(data.apy, 2, false).format() }}%
+                      </span>
+                    </Col>
+                  </Row>
+                </CollapsePanel>
+              </Collapse>
+            </div>
+
+            <div class="pagination-container">
+              <div class="pagination-body">
+                <Pagination
+                  v-if="totalCount > pageSize"
+                  :total="totalCount"
+                  :pageSize="pageSize"
+                  :defaultCurrent="1"
+                  v-model="currentPage"
+                >
+                </Pagination>
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="fcc-container">
+            <Spin :spinning="true">
+              <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
+            </Spin>
+          </div>
         </div>
       </div>
     </div>
@@ -391,7 +710,7 @@
 </template>
 
 <script lang="ts">
-import { get, cloneDeep } from 'lodash-es'
+import { get, set, cloneDeep } from 'lodash-es'
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { mapState } from 'vuex'
 import {
@@ -409,6 +728,13 @@ import {
   Pagination,
   Switch as Toggle
 } from 'ant-design-vue'
+
+import {
+  getCoinBalance, 
+  getPcBalance, 
+  getTotalSupply
+} from '@/utils/farm'
+
 import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
 import { getBigNumber } from '@/utils/layouts'
@@ -421,6 +747,9 @@ const RadioGroup = Radio.Group
 const poolAdd = false
 const RadioButton = Radio.Button
 declare const window: any
+const Vco = require('v-click-outside')
+Vue.use(Vco)
+
 @Component({
   head: {
     title: 'Cropper Finance Pools'
@@ -447,7 +776,7 @@ declare const window: any
       poolAdd: false,
       totalCount: 110,
       pageSize: 50,
-      TVL : 0,
+      TVL: 0,
       currentPage: 1
     }
   },
@@ -470,9 +799,6 @@ declare const window: any
     Pagination
   },
   async asyncData({ $api }) {
-
-
-
     window.poolsDatas = {} as any
 
     try {
@@ -493,7 +819,7 @@ declare const window: any
   }
 })
 export default class Pools extends Vue {
-  poolCollapse: any = true
+  true: any = true
   showCollapse: any = []
   pools: any = []
   displayPoolID: any = 0
@@ -501,6 +827,7 @@ export default class Pools extends Vue {
   poolType: string = 'RaydiumPools'
   fromCoin: any = false
   staking: any = false
+  unstakePoolInfo: any = {}
   lp: any = false
   TVL: any = 0
   unstaking: any = false
@@ -508,6 +835,7 @@ export default class Pools extends Vue {
   lpMintAddress: any = false
   stakeModalOpening: any = false
   unstakeModalOpening: any = false
+  createPoolModalOpening: boolean = false
   toCoin: any = false
   displayfilters: any = false
   poolAdd: any = false
@@ -519,21 +847,34 @@ export default class Pools extends Vue {
   timer: any = null
   timer_init: any = null
   loading: boolean = false
-  stakedOnly: boolean = false
-  searchButton = true
   searchName = ''
   totalCount = 110
   pageSize = 50
   currentPage = 1
-  searchCertifiedFarm: boolean = false
+  searchCertifiedFarm: string = 'labelized'
   sortMethod: string = 'liquidity'
   sortLiquidityAsc: boolean = true
-  sortVolHAsc: boolean = false
-  sortVolDAsc: boolean = false
-  sortFeesAsc: boolean = false
-  sortAPYAsc: boolean = false
-  sortCurrentAsc: boolean = false
+  sortVolHAsc: boolean = true
+  sortVolDAsc: boolean = true
+  sortFeesAsc: boolean = true
+  sortAPYAsc: boolean = true
+  sortCurrentAsc: boolean = true
   activeSpinning: boolean = false
+  showGuide: boolean = false
+  showFilterMenu: boolean = false
+  showSearchMenu: boolean = false
+  showTabMenu: boolean = false
+  mostUsed: any = [
+    {
+      mintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz',
+      symbol: 'CRP'
+    },
+    {
+      mintAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+      symbol: 'USDC'
+    }
+  ]
+  scrollPosition: any = null
 
   get liquidity() {
     this.$accessor.wallet.getTokenAccounts()
@@ -541,7 +882,7 @@ export default class Pools extends Vue {
   }
   @Watch('$accessor.liquidity.initialized', { immediate: true, deep: true })
   refreshThePage() {
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    this.showPool(this.searchName, this.currentPage)
   }
   @Watch('showCollapse', { immediate: true, deep: true }) handler() {
     if (!this.poolType && this.showCollapse.length > 0) {
@@ -551,89 +892,59 @@ export default class Pools extends Vue {
   @Watch('$accessor.liquidity.info', { immediate: true, deep: true })
   async onLiquidityChanged() {
     this.pools = this.poolsFormated()
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    this.showPool(this.searchName, this.currentPage)
   }
 
   @Watch('currentPage', { immediate: true, deep: true })
   async onpageChange(newPage: number) {
-    this.showPool(this.searchName, this.stakedOnly, newPage)
-  }
-
-  @Watch('stakedOnly', { immediate: true, deep: true })
-  async onStckChange(newStakedOnly: any) {
-    this.showPool(this.searchName, newStakedOnly)
+    this.showPool(this.searchName, newPage)
   }
 
   @Watch('searchName', { immediate: true, deep: true })
   async onSearchChange(newSearchName: string) {
-    this.showPool(newSearchName, this.stakedOnly)
+    this.showPool(newSearchName)
   }
   @Watch('searchCertifiedFarm', { immediate: true, deep: true })
-  selectHandler(newSearchCertifiedFarm: boolean = false) {
+  selectHandler(newSearchCertifiedFarm: string = 'labelized') {
     this.pools = this.poolsFormated()
-    if (!newSearchCertifiedFarm) {
+    if (newSearchCertifiedFarm === 'labelized') {
       //labelized
       this.pools = this.pools.filter((pool: any) => pool.labelized)
-    } else if (newSearchCertifiedFarm) {
+    } else if (newSearchCertifiedFarm === 'permissionless') {
       //permissionless
       this.pools = this.pools.filter((pool: any) => !pool.labelized)
+    } else if (newSearchCertifiedFarm === 'deposit') {
+      this.pools = this.pools.filter((pool: any) => pool.current > 0.01)
     }
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    this.showPool(this.searchName, this.currentPage)
   }
 
   sortbyColumn(col: string) {
     this.sortMethod = col
-    if (this.sortMethod == 'liquidity') {
-      if (this.sortLiquidityAsc) {
-        this.sortLiquidityAsc = false
-      } else {
-        this.sortLiquidityAsc = true
-      }
-    } else if (this.sortMethod == 'volh') {
-      if (this.sortVolHAsc) {
-        this.sortVolHAsc = false
-      } else {
-        this.sortVolHAsc = true
-      }
-    } else if (this.sortMethod == 'vold') {
-      if (this.sortVolDAsc) {
-        this.sortVolDAsc = false
-      } else {
-        this.sortVolDAsc = true
-      }
-    } else if (this.sortMethod == 'feesh') {
-      if (this.sortFeesAsc) {
-        this.sortFeesAsc = false
-      } else {
-        this.sortFeesAsc = true
-      }
-    } else if (this.sortMethod == 'apy') {
-      if (this.sortAPYAsc) {
-        this.sortAPYAsc = false
-      } else {
-        this.sortAPYAsc = true
-      }
-    } else if (this.sortMethod == 'yliquidity') {
-      if (this.sortCurrentAsc) {
-        this.sortCurrentAsc = false
-      } else {
-        this.sortCurrentAsc = true
-      }
-    }
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    if (this.sortMethod == 'liquidity') this.sortLiquidityAsc = !this.sortLiquidityAsc
+    else if (this.sortMethod == 'volh') this.sortVolHAsc = !this.sortVolHAsc
+    else if (this.sortMethod == 'vold') this.sortVolDAsc = !this.sortVolDAsc
+    else if (this.sortMethod == 'feesh') this.sortFeesAsc = !this.sortFeesAsc
+    else if (this.sortMethod == 'apy') this.sortAPYAsc = !this.sortAPYAsc
+    else if (this.sortMethod == 'yliquidity') this.sortCurrentAsc = !this.sortCurrentAsc
+
+    this.showPool(this.searchName, this.currentPage)
   }
 
-  showPool(searchName: any = '', stakedOnly: boolean = false, pageNum: any = 1) {
+  showPool(searchName: any = '', pageNum: any = 1) {
     const pool = []
 
     this.pools = this.poolsFormated()
 
-    if (!this.searchCertifiedFarm) {
-      //labelized
+    if (this.searchCertifiedFarm === 'labelized') {
+      // labelized
       this.pools = this.pools.filter((pool: any) => pool.labelized)
-    } else if (this.searchCertifiedFarm) {
-      //permissionless
+    } else if (this.searchCertifiedFarm === 'permissionless') {
+      // permissionless
       this.pools = this.pools.filter((pool: any) => !pool.labelized)
+    } else if (this.searchCertifiedFarm === 'deposit') {
+      // deposit
+      this.pools = this.pools.filter((pool: any) => pool.current > 0.01)
     }
 
     // sort by column
@@ -718,10 +1029,6 @@ export default class Pools extends Vue {
       )
     }
 
-    if (stakedOnly) {
-      this.poolsShow = this.poolsShow.filter((pool: any) => pool.current > 0.01)
-    }
-
     this.currentPage = pageNum
 
     this.totalCount = this.poolsShow.length
@@ -743,11 +1050,32 @@ export default class Pools extends Vue {
 
     this.poolInf = cloneDeep(poolInfo)
 
+    this.lp = coin
+    // @ts-ignore
+    this.farmInfo = cloneDeep(poolInfo)
+
+    // @ts-ignore
+    const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.farmInfo.ammId)
+    const totalSupply = getTotalSupply(currentPoolInfo)
+
+    const pcBalance = (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+    const coinBalance = (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+
+    set(this.unstakePoolInfo, 'pcBalance', pcBalance)
+    set(this.unstakePoolInfo, 'coinBalance', coinBalance)
+    set(this.unstakePoolInfo, 'totalSupply', totalSupply)
+    set(this.unstakePoolInfo, 'pcSymbol', get(currentPoolInfo, 'pc.symbol'))
+    set(this.unstakePoolInfo, 'coinSymbol', get(currentPoolInfo, 'coin.symbol'))
+
     this.unstakeModalOpening = true
   }
 
   cancelUnstake() {
     this.unstakeModalOpening = false
+  }
+
+  cancelCreatePool() {
+    this.createPoolModalOpening = false
   }
 
   unstake(amount: string) {
@@ -928,11 +1256,10 @@ export default class Pools extends Vue {
         getBigNumber((liquidityItem?.pc.balance as TokenAmount).toEther()) *
         price.prices[liquidityItem?.pc.symbol as string]
 
-      let liquidityTotalValue = liquidityPcValue + liquidityCoinValue;
-      if(price.prices[liquidityItem?.pc.symbol as string] == 1){
-         liquidityTotalValue = liquidityPcValue * 2
+      let liquidityTotalValue = liquidityPcValue + liquidityCoinValue
+      if (price.prices[liquidityItem?.pc.symbol as string] == 1) {
+        liquidityTotalValue = liquidityPcValue * 2
       }
-
 
       const liquidityTotalSupply = getBigNumber((liquidityItem?.lp.totalSupply as TokenAmount).toEther())
       const liquidityItemValue = liquidityTotalValue / liquidityTotalSupply
@@ -962,7 +1289,6 @@ export default class Pools extends Vue {
             window.poolsDatas[value.ammId][liquidityItem?.pc.mintAddress]['1day'] *
             price.prices[liquidityItem?.pc.symbol as string]
         }
-
       } else {
         value.volume_24h = 0
       }
@@ -1008,9 +1334,12 @@ export default class Pools extends Vue {
         value.labelized = 1
       }
 
+      value.currentUnformated = null
+
       if (liquidityPcValue != 0 && liquidityCoinValue != 0) {
         if (wallet) {
           value.current = get(wallet.tokenAccounts, `${value.lp_mint}.balance`)
+          value.currentUnformated = value.current
           if (value.current) {
             value.current = (value.current.wei.toNumber() / Math.pow(10, value.current.decimals)) * liquidityItemValue
           } else {
@@ -1021,7 +1350,6 @@ export default class Pools extends Vue {
         }
         polo.push(value)
       }
-
     })
     return polo
   }
@@ -1047,13 +1375,22 @@ export default class Pools extends Vue {
     this.stakeModalOpening = false
   }
 
+  updateScroll() {
+    this.scrollPosition = window.scrollY
+  }
+
   mounted() {
-    this.getTvl();
+    this.getTvl()
     this.$accessor.token.loadTokens()
+
+    if (!window.localStorage.pool_guide) {
+      this.showGuide = true
+    }
+
     this.timer_init = setInterval(async () => {
       if (!this.poolLoaded) {
         await this.flush()
-        if (this.pools.length > 0) {
+        if (this.pools.length > 0 || DEVNET_MODE) {
           var hash = window.location.hash
           if (hash) {
             hash = hash.substring(1)
@@ -1070,11 +1407,10 @@ export default class Pools extends Vue {
       }
     }, 1000)
     this.setTimer()
+    window.addEventListener('scroll', this.updateScroll)
   }
 
   setTimer() {
-
-
     this.timer = setInterval(async () => {
       if (!this.loading) {
         if (this.countdown < this.autoRefreshTime) {
@@ -1087,55 +1423,56 @@ export default class Pools extends Vue {
     }, 1000)
   }
 
-  async getTvl(){
+  async getTvl() {
+    let cur_date = new Date().getTime()
+    if (window.localStorage.TVL_last_updated) {
+      const last_updated = parseInt(window.localStorage.TVL_last_updated)
+      if (cur_date - last_updated <= 600000) {
+        this.TVL = window.localStorage.TVL
+        return
+      }
+    }
 
+    let responseData: any = []
+    let tvl = 0
+    try {
+      responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
 
-      let cur_date = new Date().getTime()
-      if(window.localStorage.TVL_last_updated){
-        const last_updated = parseInt(window.localStorage.TVL_last_updated)
-        if(cur_date - last_updated <= 600000){
-          this.TVL = window.localStorage.TVL
-          return
+      Object.keys(responseData).forEach(function (key) {
+        if ((responseData as any)[key as any].tvl * 1 < 2000000) {
+          tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
         }
-      }
+      })
+    } catch {
+      // dummy data
+    } finally {
+    }
 
-      let responseData:any = []
-      let tvl = 0;
-      try {
-        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-        
-        Object.keys(responseData).forEach(function (key) {
-          if(((responseData as any)[key as any].tvl * 1) < 2000000){
-            tvl = (tvl * 1) + ((responseData as any)[key as any].tvl * 1);
-          }
-        })
-      } catch {
-        // dummy data
-      } finally {
+    try {
+      responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
+      tvl = tvl * 1 + (responseData as any).value * 1
+    } catch {
+      // dummy data
+    } finally {
+    }
 
-      }
+    this.TVL = Math.round(tvl)
 
-      try {
-        responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
-        tvl = (tvl * 1) + ((responseData as any).value * 1)
-      } catch {
-        // dummy data
-      } finally {
-
-      }
-
-      this.TVL = Math.round(tvl);
-
-      window.localStorage.TVL_last_updated = new Date().getTime()
-      window.localStorage.TVL = this.TVL
+    window.localStorage.TVL_last_updated = new Date().getTime()
+    window.localStorage.TVL = this.TVL
   }
 
   async flush() {
     this.loading = true
     this.pools = this.poolsFormated()
-    this.showPool(this.searchName, this.stakedOnly, this.currentPage)
+    this.showPool(this.searchName, this.currentPage)
     this.loading = false
     this.countdown = 0
+  }
+
+  hideGuide() {
+    this.showGuide = false
+    window.localStorage.pool_guide = true
   }
 
   getPoolByLpMintAddress = getPoolByLpMintAddress
@@ -1151,333 +1488,568 @@ export default class Pools extends Vue {
   }
 
   activeSearch(mode: string) {
-    if (mode === 'labelized') this.searchCertifiedFarm = false
-    else if (mode === 'permissionless') this.searchCertifiedFarm = true
-    else if (mode === 'deposit' && this.wallet.connected) this.stakedOnly = !this.stakedOnly
+    this.searchCertifiedFarm = mode
+  }
+
+  searchShortcut(name: string) {
+    this.searchName = name.toLowerCase()
+    this.showSearchMenu = false
   }
 }
 </script>
 
 <style lang="less" scoped>
-.ant-layout,
-.ant-layout-content {
-  background: @color-bg !important;
+// global stylesheet
+.btn-container {
+  background: @gradient-color01;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 48px;
+  padding: 3px;
+  width: 95px;
+  height: auto;
 }
 
-section {
-  background: @color-bg !important;
-}
-
-.pool.container {
-  max-width: 1350px;
+.btn-transparent {
+  background: transparent;
+  padding: 4.5px 0;
+  border-radius: 48px;
+  border: none;
   width: 100%;
-  background: @color-bg;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 15px;
+}
+
+.btn-primary {
+  background: rgba(23, 32, 88, 0.9);
+  padding: 4.5px 0;
+  border-radius: 48px;
+  border: none;
+  width: 100%;
+  color: #fff;
+
+  &:disabled {
+    background: rgba(23, 32, 88, 0.9);
+  }
+}
+
+.lp-iconscontainer {
+  background: @gradient-color-outline;
+  background-origin: border-box;
+  padding: 2px;
+  border-radius: 8px;
+  width: fit-content;
+
+  .icons {
+    position: relative;
+    display: block !important;
+    border-radius: 8px;
+    padding: 7px 10px;
+    white-space: nowrap;
+    background: @color-blue800;
+    text-align: center;
+    height: 100%;
+    width: fit-content;
+
+    img {
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.arrow-icon {
+  transition: all 0.3s;
+
+  &.arrow-up {
+    transform: rotate(180deg);
+  }
+}
+
+.detail-btn {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+
+  .label {
+    margin-right: 8px;
+  }
+}
+
+.isDesktop {
+  @media @max-lg-tablet {
+    display: none;
+  }
+}
+
+.isTablet {
+  display: none;
 
   @media @max-lg-tablet {
-    margin-top: 0;
+    display: unset;
   }
 
-  .planet-left {
-    position: absolute;
-    left: 0;
-    top: 35%;
+  @media @max-sl-mobile {
+    display: none;
+  }
+}
 
-    @media @max-lg-tablet {
-      display: none;
-    }
+.isMobile {
+  display: none;
+
+  @media @max-sl-mobile {
+    display: unset;
+  }
+}
+
+// class stylesheet
+.pool.container {
+  margin: 38px 0;
+
+  @media @max-sl-mobile {
+    margin: 28px 0;
   }
 
   .card {
     .card-body {
+      position: relative;
       padding: 0;
-      
-      .page-head {
-        margin-top: 10px;
 
-        .title {
-          text-align: center;
-          position: relative;
-          float: left;
+      .guide-card {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: calc(100% - 40px);
+        max-width: 420px;
+        padding: 18px;
+        background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+        border-radius: 18px;
+        z-index: 999;
 
-          a {
-            position: absolute;
-
-            &.create-btn-desktop {
-              top: 20px;
-              right: -90px;
-              
-              .create-plus-btn {
-                font-weight: 400;
-                background: @color-outline;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                align-items: center;
-                display: flex;
-                justify-content: center;
-                color: white;
-                padding: 3px 7px;
-                border-radius: 4px;
-                font-size: 10px;
-                line-height: 12px;
-
-                @media @max-lg-tablet {
-                  display: none;
-                }
-              }
-            }
-
-            &.create-btn-mobile {
-              top: 5px;
-              right: -25px;
-
-              .create-plus-btn {
-                font-weight: 400;
-                background: @color-outline;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 18px;
-                border-radius: 8px;
-                width: 18px;
-                height: 18px;
-                display: none;
-
-                @media @max-lg-tablet {
-                  display: flex;
-                }
-              }
-            }
-          }
+        @media @max-sl-mobile {
+          bottom: 20px;
+          right: unset;
         }
 
-        .information {
-          display: flex;
-          align-items: center;
-          text-align: right;
+        .guide-content {
+          position: relative;
 
-          .my-info {
-            font-size: 15px;
-            line-height: 18px;
+          .guide-detail {
+            margin-top: 8px;
 
-            @media @max-lg-tablet {
-              font-size: 12px;
-              line-height: 15px;
+            .learn-btn-container {
+              height: 45px;
+              background: linear-gradient(190.83deg, #23a7b2 -119.02%, #273a93 86.38%);
+              padding: 2px;
+              border-radius: 48px;
+              margin-top: 18px;
+              width: fit-content;
+
+              .learn-btn {
+                height: 100%;
+                background: linear-gradient(97.75deg, #280c86 -29.89%, #22b5b6 150.53%);
+                border-radius: 48px;
+                padding: 10.5px 23px;
+                border: none;
+              }
             }
           }
 
-          .reload-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 15px;
-            background: @gradient-color-primary;
-            background-origin: border-box;
-            margin-left: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-
-            @media @max-lg-tablet {
-              margin-left: 5px;
-            }
-
-            img {
-              width: 18px;
-              height: 18px;
-            }
-
-            &.active img {
-              transform: rotate(360deg);
-              transition: all 1s ease-in-out;
-            }
+          .close-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
           }
         }
       }
 
-      .page-content {
-        .tool-bar {
-          height: 64px;
-          border-radius: 14px;
-          border: 4px solid @color-outline;
-          width: 100%;
+      .pools-content {
+        &.guide-enabled {
+          @media @max-sl-mobile {
+            opacity: 0.7;
+          }
+        }
 
-          @media @max-lg-tablet {
-            margin-bottom: 5px;
-            height: 54px;
+        .pools-head {
+          @media @max-sl-mobile {
+            display: block !important;
+          }
 
-            &:last-child {
-              margin-bottom: 0;
+          .title {
+            text-align: center;
+            position: relative;
+            float: left;
+
+            @media @max-sl-mobile {
+              margin-bottom: 18px !important;
             }
           }
 
-          .tool-option {
-            height: 100%;
-            display: inline-block;
-            border-right: 4px solid @color-outline;
-            position: relative;
+          .information {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-            &:last-child {
-              border-right: none !important;
-            }
-
-            .input-search {
-              height: 100%;
-              position: absolute;
+            @media @max-sl-mobile {
               width: 100%;
             }
 
-            .toggle {
-              position: absolute;
-              width: 100%;
-              height: 100%;
+            .tvl-info {
+              margin-right: 18px;
+            }
+
+            .action-btn-group {
               display: flex;
               align-items: center;
-              justify-content: space-evenly;
 
-              .label {
-                opacity: 0.5;
-                font-size: 16px;
-                color: #fff;
-                cursor: pointer;
-                position: relative;
+              .reload-btn {
+                background: @color-blue600;
+                border-radius: 8px;
+                padding: 6px;
+                margin-right: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
 
-                .info-icon {
-                  margin: 0;
-                  position: absolute;
-                  top: -5px;
-                  right: -20px;
+                @media @max-lg-tablet {
+                  margin-left: 5px;
+                }
+
+                img {
+                  width: 18px;
+                  height: 18px;
+                }
+
+                &.active img {
+                  transform: rotate(360deg);
+                  transition: all 1s ease-in-out;
+                }
+              }
+
+              .create-btn {
+                top: 20px;
+                right: -90px;
+
+                .create-plus-btn {
+                  background: @color-blue600;
+                  border-radius: 8px;
+                  padding: 6px;
                   display: flex;
                   align-items: center;
-                  width: fit-content;
+                  justify-content: center;
+                  color: white;
+                }
+              }
+            }
+          }
+        }
 
-                  &.labelized {
-                    left: -20px;
+        .pools-table {
+          width: 100%;
+
+          .pools-table-header {
+            &.scrollFixed {
+              position: sticky;
+              background: @color-blue800;
+              top: 70px;
+              z-index: 998;
+              width: 100%;
+              transition: 0.3s all ease-in-out;
+            }
+
+            .header-column {
+              text-align: center;
+              padding: 16px 0;
+              color: @color-neutral400;
+
+              .header-column-title {
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+
+                .arrow-icon {
+                  margin-left: 4px;
+                }
+
+                .sort-icon-active {
+                  color: #13ecab;
+                }
+              }
+            }
+          }
+
+          .pools-table-body {
+            .pools-table-item {
+              display: flex;
+              align-items: center;
+              background: rgba(23, 32, 88, 0.9);
+              border-radius: 8px;
+              padding: 18px;
+              margin-bottom: 8px;
+              border: 3px solid transparent;
+
+              &:hover {
+                border-color: @color-blue500;
+              }
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+
+              .state {
+                text-align: center;
+
+                .btn-container {
+                  margin: auto auto 8px auto;
+
+                  &:last-child {
+                    margin-bottom: 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .pools-option-bar {
+          margin: 38px 0;
+
+          @media @max-sl-mobile {
+            margin: 28px 0;
+          }
+
+          .option-tab-group {
+            display: flex;
+
+            @media @max-sl-mobile {
+              display: none;
+            }
+
+            &.option-tab-collapse {
+              display: none;
+
+              @media @max-sl-mobile {
+                position: relative;
+                display: flex;
+                align-items: center;
+                padding: 6px 10px;
+                border: 2px solid @color-blue500;
+                border-radius: 8px;
+
+                label {
+                  color: @color-petrol500;
+                }
+
+                .arrow-icon {
+                  margin-left: 4px;
+                }
+              }
+            }
+
+            .option-tab {
+              margin-right: 38px;
+
+              &:last-child {
+                margin-right: 0;
+              }
+
+              button {
+                background: transparent;
+                border: none;
+                outline: none;
+                padding: 0;
+                margin-bottom: 8px;
+
+                &.active-tab {
+                  color: @color-petrol500;
+                }
+
+                .deposit-icon {
+                  margin-right: 8px;
+                }
+              }
+
+              .active-underline {
+                height: 4px;
+                border-radius: 10px;
+                background: @color-petrol400;
+              }
+            }
+          }
+
+          .option-filter-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            .option-filter {
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+              padding: 0 8px;
+              margin-left: 18px;
+              height: 40px;
+
+              @media @max-sl-mobile {
+                height: 32px;
+                padding: 0 4px;
+              }
+
+              &:first-child {
+                margin-left: 0;
+              }
+
+              &.option-filter-fixed {
+                width: 40px;
+
+                @media @max-sl-mobile {
+                  width: 32px;
+                }
+              }
+
+              &.option-filter-collapse {
+                display: none !important;
+
+                @media @max-md-tablet {
+                  display: flex !important;
+                }
+              }
+
+              &.option-sort {
+                @media @max-md-tablet {
+                  display: none !important;
+                }
+              }
+
+              .option-filter-sort {
+                letter-spacing: 0.15px;
+
+                label {
+                  color: #eae8f1;
+                  opacity: 0.5;
+                  margin-right: 8px;
+                }
+
+                .sort-detail {
+                  display: flex;
+                  align-items: center;
+
+                  .arrow-icon {
+                    margin-left: 8px;
+                  }
+                }
+              }
+            }
+
+            .option-search-collapse {
+              position: absolute;
+              top: 0;
+              left: -209px;
+              // visibility: hidden;
+              // opacity: 0;
+              transition: visibility 0s, opacity 0.5s linear;
+              background: @color-blue700;
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+              padding: 18px;
+              z-index: 999;
+              width: 250px;
+
+              // &.visible {
+              //   visibility: visible;
+              //   opacity: 1;
+              // }
+
+              .collapse-item-header {
+                margin-bottom: 10px;
+              }
+
+              .collapse-item-body {
+                input {
+                  border: 2px solid @color-blue400;
+                  border-radius: 8px;
+                  padding: 8px 18px;
+                  background-color: transparent;
+                  color: #ccd1f1;
+                  width: 100%;
+
+                  &:active,
+                  &:focus,
+                  &:hover {
+                    outline: 0;
+                  }
+
+                  &::placeholder {
+                    color: #ccd1f1;
                   }
                 }
 
-                &.active-label {
-                  font-weight: 700;
-                  opacity: 1;
+                .shortcut-list {
+                  margin-top: 8px;
+
+                  .shortcut-group {
+                    display: flex;
+                    margin-top: 8px;
+
+                    .shortcut-container {
+                      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+                      border-radius: 8px;
+                      padding: 2px;
+                      margin-right: 8px;
+
+                      &:last-child {
+                        margin-right: 0;
+                      }
+
+                      .shortcut-box {
+                        background: @color-blue800;
+                        border-radius: 8px;
+                        padding: 8px;
+
+                        .coin-icon {
+                          width: 12px;
+                          height: 12px;
+                          margin-right: 4px;
+                          border-radius: 50%;
+                        }
+                      }
+                    }
+                  }
                 }
-              }
-
-              &.deposit-toggle {
-                .ant-switch {
-                  background-color: @color-disable !important;
-                }
-                .ant-switch-checked {
-                  background-color: #fff !important;
-                }
-              }
-            }
-
-            .sort-by {
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: space-evenly;
-
-              .label {
-                font-size: 16px;
-                opacity: 0.5;
-
-                &.active-label {
-                  font-weight: 700;
-                  opacity: 1;
-                }
-
-                .sort-up,
-                .sort-down {
-                  margin-right: 5px;
-                  transition: 0.5s;
-                }
-
-                .sort-down {
-                  transform: rotate(180deg);
-                }
-              }
-
-              .collapse-down,
-              .collapse-up {
-                cursor: pointer;
-                transition: 0.5s;
-              }
-
-              .collapse-down {
-                transform: rotate(180deg);
               }
             }
           }
-        }
-      }
 
-      .pools-table {
-        .pools-table-header {
-          .header-column {
-            font-size: 18px;
-            line-height: 21px;
-            color: rgba(255, 255, 255, 0.5);
-            text-align: center;
-            padding: 16px 0;
+          .option-sort-collapse {
+            position: absolute;
+            top: 50px;
+            background: @gradient-color-primary;
+            background-origin: border-box;
+            border: 2px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            min-width: 188px;
+            z-index: 999;
 
-            .header-column-title {
-              cursor: pointer;
-              display: flex;
-
-              i {
-                color: white;
-                margin-left: 10px;
-                display: flex;
-                align-items: center;
-              }
-
-              .sort-icon-active {
-                color: #13ecab;
-              }
-            }
-          }
-        }
-
-        .pools-table-body {
-          .pools-table-item {
-            padding: 16px 0;
-            border-top: 1px solid hsla(0, 0%, 100%, 0.2);
-            display: flex;
-            align-items: center;
-
-            .lp-iconscontainer {
-              background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-              background-origin: border-box;
-              padding: 2px;
-              border-radius: 8px;
-              width: 100%;
-
-              .icons {
-                display: block !important;
-                border-radius: 8px;
-                font-weight: normal;
-                padding: 14px 20px;
-                font-size: 18px;
-                line-height: 20px;
-                white-space: nowrap;
-                position: relative;
-                background: @color-bg;
-                text-align: center;
-                width: 100%;
-
-                img {
-                  border-radius: 50%;
-                  width: 24px;
-                  height: 24px;
-                }
-              }
+            &.collapse-left {
+              left: 0;
             }
 
-            .state {
-              text-align: center;
+            &.collapse-right {
+              right: 0;
+            }
+
+            .collapse-item {
+              padding: 16px 0;
+              border-bottom: 1px solid #c4c4c420;
+
+              &:last-child {
+                border-bottom: 0;
+              }
+
+              &.active-item {
+                color: @color-petrol500;
+              }
             }
           }
         }
@@ -1495,615 +2067,105 @@ section {
       display: inline-block;
     }
   }
-
-  h6 {
-    margin-bottom: 0;
-  }
-
-  .action {
-    display: grid;
-    grid-gap: 4px;
-  }
-}
-
-.radioButtonStyle {
-  width: 50%;
-  text-align: center;
-}
-
-.noDesktop {
-  display: none;
 }
 
 @media @max-lg-tablet {
-  body .pool.container {
-    .card-body {
-      overflow-x: unset !important;
-    }
-
-    .ant-collapse-content {
-      background-color: @color-bg;
-      border-top: none !important;
-    }
-
-    thead.ant-table-thead {
-      display: none !important;
-    }
-
-    .details {
-      float: right;
-    }
-
-    .openButton {
-      background: @gradient-color-icon;
-      background-origin: border-box;
-      display: inline-block;
-      padding: 2px;
-      border-radius: 23px;
-
-      button {
-        height: 42px;
-        padding: 11px 24px;
-        color: #fff;
-        font-size: 14px;
-        letter-spacing: -0.05em;
-        background: @color-bg;
-        border-radius: 22px;
-        border: transparent;
-        cursor: pointer;
-
-        img {
-          margin-left: 5px;
-          transform: rotate(0);
-          transition: transform 0.3s;
-        }
-      }
-    }
-
-    .openButton-active > button > img {
-      transform: rotate(180deg);
-    }
-
-    .detailButton {
-      position: absolute;
-      right: 0;
-      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%) !important;
-      background-origin: border-box !important;
-      display: inline-block;
-      padding: 1px;
-      border-radius: 23px;
-
-      button {
-        height: 42px;
-        padding: 11px 40px 11px 24px;
-        color: #fff;
-        font-size: 14px;
-        letter-spacing: -0.05em;
-        background: #16164a;
-        border-radius: 22px;
-        border: transparent;
-      }
-    }
-
-    .bgl {
-      background: #16164a !important;
-      margin-top: -17px;
-      padding-bottom: 10px;
-      margin-bottom: -16px;
-    }
-
-    .buttonsd {
-      display: block;
-      background: #00033c;
-    }
-
-    .noMobile {
-      display: none;
-    }
-
-    .noDesktop {
-      display: inline-block;
-    }
-
-    .largeserach input {
-      height: 47px !important;
-    }
-
-    .ant-collapse,
-    .ant-collapse > .ant-collapse-item {
-      position: relative;
-      border-bottom: 1px solid @color-bg;
-    }
-
-    .pool-head.table-head {
-      display: none;
-    }
-
-    .labmobile {
-      float: left;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 21px;
-      color: #fff;
-      opacity: 0.5;
-      display: block;
-    }
-
+  .pool.container {
     .pool-head {
-      min-width: 100%;
-      padding-top: 25px !important;
-      padding-bottom: 25px !important;
       display: flex;
       align-items: center;
+    }
 
-      .lp-icons {
-        display: block !important;
-        width: 100%;
-        flex-direction: unset;
-        float: unset;
-        flex: unset;
-        font-size: 15px;
-        line-height: 18px;
-
-        .icons {
-          display: flex;
-          align-items: center;
-
-          img {
-            margin-top: -4px;
-            margin-right: 10px;
-          }
-
-          span {
-            margin: 0 10px;
-          }
-        }
-
-        .lp-icons-group {
-          background: transparent;
-          .icons {
-            padding: 0;
-            background-color: transparent;
-          }
-        }
-      }
-
+    .collapse-row {
       .state {
-        text-align: right;
-        display: none;
-        margin-top: 11px;
-        .ant-col-12 {
-          width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid @color-blue600;
+
+        .title {
+          color: #ffffff50;
         }
-      }
-    }
 
-    .collapse-row .lp-icons,
-    .collapse-row .state {
-      padding: 0 10px;
-      display: block;
-      width: 100%;
-      flex-direction: unset;
-      float: unset;
-      flex: unset;
-      text-align: right;
-      font-size: 18px;
-      margin-bottom: 6px;
-      .lp-icons-group {
-        background: transparent;
-        .icons {
-          padding: 0;
-          background-color: transparent;
+        &:last-child {
+          border-bottom: 0;
         }
-      }
-    }
 
-    .collapse-row .current-liquidity {
-      display: block;
-      width: 100%;
-      flex-direction: unset;
-      float: unset;
-      flex: unset;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 6px;
-      background: @color-bg;
-      border-radius: 14px;
-      padding: 18px 0;
-
-      .liquidity-content {
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 17px;
-        color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 15px;
-      }
-
-      .liquidity-value {
-        font-size: 26px;
-        line-height: 32px;
-        color: #fff;
-        margin-bottom: 15px;
-      }
-    }
-
-    .anticon.anticon-right {
-      display: none !important;
-    }
-
-    .ant-collapse.ant-collapse-icon-position-right {
-      max-width: 100%;
-      background: #16164a;
-      border-radius: 10px;
-      border: none;
-
-      .ant-collapse-header .ant-collapse-arrow {
-        right: 30px !important;
-        z-index: 2;
-      }
-    }
-
-    .reward-col {
-      margin-bottom: 30px;
-    }
-
-    .ant-collapse-content-box {
-      background: #16164a !important;
-      .collapse-row {
-        display: block;
-        align-items: unset;
-        .ant-col.ant-col-4,
-        .ant-col.ant-col-8 {
-          width: 100%;
+        &.current-liquidity {
           display: block;
+          width: 100%;
           flex-direction: unset;
           float: unset;
           flex: unset;
+          background: @color-blue800;
+          border-radius: 8px;
+          padding: 8px 18px 18px 18px;
+          border-bottom: 0;
+
+          .title {
+            display: block;
+          }
+
+          .btn-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 18px;
+
+            .btn-container {
+              margin-right: 8px;
+
+              &:last-child {
+                margin-right: 0;
+              }
+            }
+          }
         }
       }
     }
-
-    .start,
-    .harvest {
-      background: @color-bg;
-      border-radius: 14px;
-      .reward .token {
-        font-size: 26px;
-        line-height: 31px;
-      }
-    }
-
-    .btncontainer {
-      display: inline-block !important;
-    }
-
-    .start .btncontainer:not(.largebtn) {
-      width: calc(50% - 20px);
-      margin-left: 5px;
-      margin-right: 5px;
-      margin-bottom: 10px;
-    }
-
-    .start .btncontainer:not(.largebtn):last-of-type {
-      width: calc(100% - 30px);
-      margin-left: 5px;
-      margin-right: 5px;
-    }
   }
-}
-
-// global used styles
-p {
-  margin-bottom: 0;
 }
 </style>
 
 <style lang="less">
-::-webkit-scrollbar {
-  @media @max-lg-tablet {
-    display: none; /* Chrome Safari */
-  }
-}
+// ::-webkit-scrollbar {
+//   @media @max-lg-tablet {
+//     display: none; /* Chrome Safari */
+//   }
+// }
 
-.addliq .btnContainer {
-  background: transparent !important;
-  display: inline-block !important;
-
-  button {
-    background: @gradient-color-icon !important;
-    background-origin: border-box !important;
-    border: 2px solid rgba(255, 255, 255, 0.14) !important;
-    border-radius: 8px;
-  }
-}
-
-.pool.container {
-  .ant-collapse-header {
-    @media @max-lg-tablet {
-      padding-right: 16px !important;
-    }
-    .ant-collapse-arrow {
-      @media @max-lg-tablet {
-        right: 30px !important;
-        z-index: 2;
-      }
-    }
-  }
-  .ant-collapse-content {
-    @media @max-lg-tablet {
-      background-color: #16164a;
-      border-top: none !important;
-    }
-  }
-
-  .card .card-body .buttons i {
-    margin-right: 0;
-  }
-
-  .card-body {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .ant-table-thead > tr > th {
-    border-bottom: unset !important;
-    border-spacing: 0;
-  }
-
-  td {
-    background: @color-bg !important;
-    border-bottom: unset !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
-    padding: 5px 16px;
-  }
-
-  .lp-iconscontainer {
-    background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-    background-origin: border-box;
-    padding: 2px;
-    border-radius: 8px;
-    width: 270px;
-
-    .icons {
-      display: block !important;
-      border-radius: 8px;
-      font-weight: normal;
-      padding: 14px 20px;
-      font-size: 18px;
-      line-height: 20px;
-      white-space: nowrap;
-      position: relative;
-      background: @color-bg;
-      text-align: center;
-      width: 100%;
-
-      img {
-        position: relative;
-        top: -1px;
-      }
-    }
-  }
-
-  table {
-    border-collapse: separate;
-  }
-
-  .create {
-    padding: 8px 18px;
-    background: @gradient-color-icon;
-    background-origin: border-box;
-    border: 2px solid rgba(255, 255, 255, 0.14);
-    border-radius: 8px;
-
-    button {
-      background: unset !important;
-      color: #fff;
-      border-color: transparent;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 42px;
-      letter-spacing: -0.05em;
-
-      @media @max-lg-tablet {
-        font-size: 14px;
-        line-height: 24px;
-        padding: 0;
-      }
-    }
-  }
-
-  .ant-table-column-title {
-    font-size: 18px;
-    line-height: 21px;
-    color: #fff;
-    opacity: 0.5;
-  }
-
-  .ant-table-pagination.ant-pagination {
-    text-align: center;
-    float: none;
-    margin-top: 40px;
-  }
-
-  .count-down-group {
-    background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-    background-origin: border-box;
-    height: 60px;
-    border-radius: 63px;
-    position: relative;
-    padding: 2px;
-  }
-
-  .count-down {
-    background-color: @color-bg;
-    border-radius: 63px;
-    height: 100%;
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 3px 3px 20px;
-    font-size: 26px;
-    font-weight: 400;
-    line-height: 42px;
-    position: relative;
-
-    .ant-progress {
-      margin-left: 15px;
-    }
-
-    .reload-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 25px;
-      background: @gradient-color-icon;
-      background-origin: border-box;
-      margin-left: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-
-      .anticon {
-        font-size: 16px !important;
-        color: white !important;
-      }
-    }
-  }
-
-  .btncontainer {
-    background: @color-bg !important;
-    padding: 0 !important;
-    border-radius: 5px !important;
-    display: inline-block;
-    width: unset;
-
-    &.small {
-      background: @gradient-color-icon !important;
-      background-origin: border-box !important;
-      border: 2px solid rgba(255, 255, 255, 0.14) !important;
-      border-radius: 8px;
-      width: 48px !important;
-      height: 48px !important;
-
-      button {
-        border: none !important;
-        font-size: 17px;
-        line-height: 50px;
-        font-weight: 800;
-        background: transparent !important;
-        width: 100% !important;
-        height: 100% !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .anticon {
-          font-size: 16px;
-          color: white;
-        }
-      }
-
-      &.minus-btn {
-        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%) !important;
-        background-origin: border-box !important;
-        padding: 2px !important;
-        border-radius: 8px !important;
-        border: none !important;
-
-        button[disabled] {
-          border-radius: 8px;
-          background: @color-bg !important;
-        }
-      }
-    }
-
-    .ant-btn:hover,
-    .ant-btn:focus {
-      border-color: unset;
-      border: unset;
-    }
-
-    .minus.ant-btn:hover,
-    .minus.ant-btn:focus {
-      color: #f00 !important;
-    }
-  }
-
-  label {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 19px;
-    color: #fff;
-  }
-}
-.ant-table-thead > tr > th.ant-table-column-sort {
-  background: transparent;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  color: #fff;
-  background: #1c274f;
-  border: 1px solid #d9d9d9;
-  box-shadow: none;
-  border-left-width: 0;
-}
-.ant-radio-button-wrapper {
-  color: #aaa;
-  background: transparent;
-  // border: 1px solid #d9d9d9;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
-  border: 1px solid #d9d9d9;
-  box-shadow: none;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
-  border: 1px solid #d9d9d9;
-}
-.search-btn {
-  background: transparent !important;
-  border: none !important;
-}
-
-.ant-table-placeholder {
-  background: unset !important;
-  border-top: unset !important;
-  border-bottom: unset !important;
-  color: rgba(255, 255, 255, 0.1);
-}
-
-// ant customization
 .pool {
-  .page-content {
-    .tool-bar {
-      .tool-option {
-        .input-search {
-          .ant-input-prefix {
-            left: 10%;
-            font-size: 20px;
-            color: white;
-          }
+  // ant customize
+  .ant-collapse {
+    background: transparent;
+    border: none;
 
-          .ant-input {
-            padding: 0 10% 0 25%;
-            height: 100% !important;
-            border: none;
-            border-radius: 14px;
+    .ant-collapse-item {
+      position: relative;
+      background: rgba(23, 32, 88, 0.9);
+      border-radius: 8px !important;
+      margin-bottom: 8px;
+      border-bottom: 0;
+      border: 3px solid transparent;
 
-            @media @max-lg-tablet {
-              font-size: 14px;
-              line-height: 17px;
-            }
+      &:hover {
+        border-color: @color-blue500;
+      }
 
-            &::placeholder {
-              color: white;
-              opacity: 0.5;
-            }
+      .ant-collapse-header {
+        padding: 18px;
 
-            &:focus {
-              box-shadow: none;
-            }
-          }
+        .ant-collapse-arrow {
+          display: none;
+        }
+      }
+
+      .ant-collapse-content {
+        border: none;
+        background: transparent;
+
+        .ant-collapse-content-box {
+          padding: 0 18px 18px 18px;
         }
       }
     }

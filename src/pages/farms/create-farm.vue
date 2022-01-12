@@ -17,7 +17,7 @@
     />
     <div class="card">
       <div class="card-body">
-        <div class="page-head fs-container">
+        <div class="page-head fcb-container">
           <span class="title">Farm creation</span>
           <span class="buttonsd">
             <a href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm" target="_blank">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="design-farm">
-          <div class="page-head fs-container">
+          <div class="page-head fcb-container">
             <span class="title">Design your own farm</span>
           </div>
 
@@ -1328,7 +1328,7 @@ export default class CreateFarm extends Vue {
           font-size: 20px;
           font-weight: 600;
           line-height: 25px;
-          color: @color-bg;
+          color: @color-blue800;
         }
       }
 
@@ -1623,7 +1623,7 @@ export default class CreateFarm extends Vue {
 
 <style lang="less" scoped>
 main {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -1738,7 +1738,7 @@ main {
     row-gap: 0;
     padding-bottom: 15px;
 
-    .fs-container {
+    .fcb-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -2078,7 +2078,7 @@ main {
 
           .icons {
             height: 47px;
-            background-color: @color-bg;
+            background-color: @color-blue800;
             border-radius: 8px;
             align-items: center;
             padding: 0 20px;
@@ -2109,9 +2109,6 @@ main {
   background-color: rgba(0, 0, 0, 0.9471) !important;
 }
 
-.ant-layout {
-  background: @color-bg !important;
-}
 .msgClass div {
   line-height: 30px;
 }

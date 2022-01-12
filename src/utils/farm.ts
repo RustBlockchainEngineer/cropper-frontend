@@ -82,6 +82,20 @@ export const UserInfoAccountLayout = struct([
 ]);
 
 
+
+export function getPcBalance(poolInfo: any) {
+  return parseFloat(new TokenAmount(poolInfo.pc.balance.wei, poolInfo.pc.decimals).toEther().toString())
+}
+
+export function getCoinBalance(poolInfo: any) {
+  return parseFloat(new TokenAmount(poolInfo.coin.balance.wei, poolInfo.coin.decimals).toEther().toString())
+}
+
+export function getTotalSupply(poolInfo: any) {
+  return parseFloat(new TokenAmount(poolInfo.lp.totalSupply.wei, poolInfo.lp.totalSupply.decimals).toEther().toString())
+}
+
+
 /**
  * Yield Farm class
  */

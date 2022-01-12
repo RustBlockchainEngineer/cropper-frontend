@@ -4,7 +4,8 @@
       <div class="card-body">
         <div>
           An error occurred during the staking process.<br /><br />
-          Currently, your liquidity is in the liquidity pool and you will receive fees on swaps but no reward from the farm.<br />
+          Currently, your liquidity is in the liquidity pool and you will receive fees on swaps but no reward from the
+          farm.<br />
           If you wish to unstake your LP, please go to pool tab.
         </div>
       </div>
@@ -31,7 +32,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Modal,  Button, Row, Col } from 'ant-design-vue'
+import { Modal, Button, Row, Col } from 'ant-design-vue'
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
@@ -44,17 +45,13 @@ export default Vue.extend({
     //Col
   },
   data() {
-    return {
-    }
+    return {}
   },
-  methods: {
-    
-  }
+  methods: {}
 })
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
 .actions {
   margin-top: 10px;
 

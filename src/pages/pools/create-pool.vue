@@ -17,7 +17,7 @@
     />
     <div class="card">
       <div class="card-body">
-        <div class="page-head fs-container">
+        <div class="page-head fcb-container">
           <span class="title">Liquidity pool creation</span>
           <span class="buttonsd">
             <a
@@ -36,7 +36,7 @@
           </span>
         </div>
         <div class="design-pool">
-          <div class="page-head fs-container">
+          <div class="page-head fcb-container">
             <span class="title">Design your own pool</span>
           </div>
 
@@ -1052,7 +1052,7 @@ export default class CreatePool extends Vue {
           font-size: 20px;
           font-weight: 600;
           line-height: 25px;
-          color: @color-bg;
+          color: @color-blue800;
         }
       }
 
@@ -1068,7 +1068,7 @@ export default class CreatePool extends Vue {
 
 <style lang="less" scoped>
 main {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -1189,7 +1189,7 @@ main {
     row-gap: 0;
     padding-bottom: 15px;
 
-    .fs-container {
+    .fcb-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1355,7 +1355,7 @@ main {
           max-width: 615px;
 
           @media @max-sl-mobile {
-            max-width: @mobile-sm-width;
+            max-width: @mobile-sl-width;
           }
 
           label {
@@ -1605,7 +1605,7 @@ main {
 
           .icons {
             height: 47px;
-            background-color: @color-bg;
+            background-color: @color-blue800;
             border-radius: 8px;
             align-items: center;
             padding: 0 20px;
@@ -1634,9 +1634,5 @@ main {
 
 .coin-select .coin-input button:hover {
   background-color: rgba(0, 0, 0, 0.9471) !important;
-}
-
-.ant-layout {
-  background: @color-bg !important;
 }
 </style>

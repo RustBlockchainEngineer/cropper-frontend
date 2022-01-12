@@ -50,7 +50,7 @@
     "@solana/wallet-adapter-torus": "^0.6.2",
     "@solana/wallet-adapter-wallets": "^0.11.3",
     "@solana/web3.js": "^1.25.0",
-    "ant-design-vue": "^1.7.3",
+    "ant-design-vue": "^1.7.8",
     "bignumber.js": "^9.0.1",
     "bs58": "^4.0.1",
     "core-js": "^3.8.3",

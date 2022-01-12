@@ -4,26 +4,29 @@
     :visible="show"
     :footer="null"
     :mask-closable="false"
+    :closable="false"
+    :width="480"
     @cancel="$emit('onClose')"
   >
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+
     <div class="select-token">
       <div class="token-list">
         <div
           v-for="liquidity in liquidityList"
           :key="liquidity.ammId"
-          class="token-info"
+          class="token-info icon-cursor"
           @click="$emit('onSelect', liquidity)"
         >
-          <div>
-            AMM ID:
-            <span>{{ liquidity.ammId}}</span>
+          <div class="token-info-item textM">
+            <span><b>AMM ID: </b>{{ liquidity.ammId }}</span>
           </div>
 
-          <div>
-            Pool liquidity:
+          <div class="token-info-item textM">
             <span>
+              <b>Pool liquidity: </b>
               {{ liquidity.coin.balance ? liquidity.coin.balance.toEther() : 0 }}
-              {{ liquidity.coin.symbol }} | 
+              {{ liquidity.coin.symbol }} |
               {{ liquidity.pc.balance ? liquidity.pc.balance.toEther() : 0 }}
               {{ liquidity.pc.symbol }}
             </span>
@@ -66,12 +69,11 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .select-token {
   display: grid;
   grid-auto-rows: auto;
-  row-gap: 14px;
+  row-gap: 8px;
+  margin: 18px 0;
 
   .token-list {
     max-height: 60vh;
@@ -80,45 +82,34 @@ export default Vue.extend({
     will-change: transform;
 
     .token-info {
-      width: 100%;
-      padding: 17px 0;
-      cursor: pointer;
-      opacity: 1;
-      font-size: 18px;
-      line-height: 22px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      text-align: center;
-      border-radius: 6px;
-      margin-bottom: 6px;
+      padding: 8px;
+      background: @color-blue600;
+      border-radius: 8px;
+      margin-bottom: 8px;
 
-      @media @max-sl-mobile {
-        padding: 10px;
-        text-align: left;
-        font-size: 15px;
-        line-height: 18px;
+      &:last-child {
+        margin-bottom: 0;
       }
 
-      div:nth-child(1) {
-        margin-bottom: 12px;
+      .token-info-item {
+        color: @color-blue100;
+        margin-bottom: 8px;
+        word-break: break-word;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
 
       &:hover,
       &:active {
-        background: rgb(107, 128, 185);
+        background: @color-blue300;
       }
 
-      span {
-        @media @max-sl-mobile {
-          display: block;
-        }
+      &[disabled] {
+        cursor: not-allowed;
+        opacity: 0.5;
       }
-    }
-
-    .token-info[disabled] {
-      cursor: not-allowed;
-      // pointer-events: none;
-      opacity: 0.5;
     }
   }
 }

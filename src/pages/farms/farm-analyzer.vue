@@ -2,7 +2,7 @@
   <div class="container" :class="'user-list'">
     <div class="card">
       <div class="card-body" style="grid-row-gap: 0; row-gap: 0; padding-bottom: 15px">
-        <div class="page-head fs-container">
+        <div class="page-head fcb-container">
           <span class="title">Farm Analyzer</span>
         </div>
         
@@ -82,7 +82,7 @@ export default class CreateFarm extends Vue {
 </script>
 <style lang="less" scoped>
 main {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -162,10 +162,6 @@ div {
 .item-msg-mobile {
   padding-left: 10px;
 }
-.ant-layout {
-  background: @color-bg !important;
-}
-
 .ant-col {
   margin-bottom: 10px;
 }

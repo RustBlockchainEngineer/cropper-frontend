@@ -4,58 +4,112 @@
     :visible="show"
     :footer="null"
     :mask-closable="true"
+    :closable="false"
+    :width="420"
     @cancel="$emit('onCancel')"
     centered
   >
-    <div class="stake-container">
-      <Row class="balance-form">
-        <div class="value-balance">Balance {{ this.crpbalance }}</div>
-        <div class="input-form">
-          <input type="number" 
-          v-model="toStake" placeholder="Input amount"/>
-          <Button class="btn-max" 
-          @click="setMax">MAX</Button>
-          <span class="symbol">CRP</span>
-        </div>
-        <div class="value-total">Total: <span>{{ this.userStaked }}</span></div>
-      </Row>
-      <Row>
-        <Col class="tier-group" span="6" v-for="data in lockData" :key="data.tier">
-
-          <span v-if="( data.min >= enddatemin )" :class="(data.tier === tierActive) ? 'tier-active' : 'tier-inactive'" @click="displayTiers(data.tier)">{{
-            data.time >= 12 ? data.time / 12 + 'Y' : data.time + 'M'
-          }}</span>
-
-          <span  v-else :class="(data.tier === tierActive) ? 'tier-active' : 'tier-inactive'" style="cursor:not-allowed;">{{
-            data.time >= 12 ? data.time / 12 + 'Y' : data.time + 'M'
-          }}</span>
-
-          {{ data.boost }}x
-        </Col>
-      </Row>
-      <Row class="calc-box">
-        <Col span="24" class="calc-info">
-          <label class="label">Total lock (CRP)</label>
-          <label class="value">{{ this.userStaked * 1 + toStake * 1 }}</label>
-        </Col>
-        <Col span="24" class="calc-info">
-          <label class="label">APY (%)</label>
-          <label class="value">{{ Math.round(this.estimatedapy * 100) * boostAPY / 100 }}</label>
-        </Col>
-        <Col span="24" class="calc-info">
-          <label class="label">Estimate reward / year</label>
-          <label class="reward-value">{{ Math.round(100000 * (this.userStaked * 1 + toStake * 1) * (Math.round(this.estimatedapy * 100) /100) * boostAPY / 100) / 100000  }} CRP</label>
-        </Col>
-      </Row>
-      <Row class="calc-footer">
-        <p class="red">Your total staked tokens will be locked until {{ unstakeDate }}</p>
-        <div class="cc-btn-group">
-          <div class="btn-container">
-            <Button class="btn-outline" @click="() => {$emit('onCancel')}">Cancel</Button>
+    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <div class="stake-modal-container">
+      <div class="balance-form">
+        <div class="fcb-container">
+          <div class="fcc-container">
+            <button class="select-button fcb-container">
+              <div class="coin-group fcc-container">
+                <CoinIcon :mint-address="CRPMintAddress" />
+                <span class="bodyM weightB">CRP</span>
+              </div>
+            </button>
+            <button v-if="!showHalf && crpbalance" class="input-button bodyXS weightB fcc-container" @click="setMax(1)">
+              Max
+            </button>
+            <button v-if="showHalf && crpbalance" class="input-button bodyXS weightB fcc-container" @click="setMax(0.5)">
+              Half
+            </button>
           </div>
-          <Button class="btn-primary" :disabled="this.crpbalance < toStake || toStake * 1 <= 0" @click="stakeToken">Confirm</Button>
+          <input type="number" :value="toStake" placeholder="0.00" />
         </div>
-      </Row>
+        <div v-if="crpbalance" class="label fcb-container bodyXS weightS">
+          <span> Balance: {{ crpbalance }} </span>
+          <span> ~${{ crpbalance }} </span>
+        </div>
+      </div>
+      <div class="tier-group fcb-container">
+        <div class="tier-item text-center icon-cursor" v-for="data in lockData" :key="data.tier">
+          <span
+            v-if="data.min >= enddatemin"
+            class="textM weightB"
+            :class="data.tier === tierActive ? 'tier-active' : 'tier-inactive'"
+            @click="displayTiers(data.tier)"
+            >{{ data.time >= 12 ? data.time / 12 + ' Y' : data.time + ' M' }}</span
+          >
+
+          <span
+            v-else
+            class="textM weightB"
+            :class="data.tier === tierActive ? 'tier-active' : 'tier-inactive'"
+            style="cursor: not-allowed"
+            >{{ data.time >= 12 ? data.time / 12 + ' Y' : data.time + ' M' }}</span
+          >
+
+          <span class="value-boost bodyXS weightB">{{ data.boost }}x</span>
+        </div>
+      </div>
+      <div class="calc-yield">
+        <span class="calc-yield-title textM weightS letterS text-center">Calculate $CRP Yield</span>
+        <div class="calc-yield-group">
+          <div class="calc-yield-info">
+            <label class="label textS weightB">Total lock (CRP)</label>
+            <label class="value textS weightS letterL">{{ this.userStaked * 1 + toStake * 1 }}</label>
+          </div>
+          <div class="calc-yield-info">
+            <label class="label textS weightB">APY (%)</label>
+            <label class="value textS weightS letterL">{{
+              (Math.round(this.estimatedapy * 100) * boostAPY) / 100
+            }}</label>
+          </div>
+          <div class="calc-yield-info">
+            <label class="label textS weightB">Estimated reward (CRP) </label>
+            <label class="value textS weightS letterL"
+              >{{
+                Math.round(
+                  (100000 *
+                    (this.userStaked * 1 + toStake * 1) *
+                    (Math.round(this.estimatedapy * 100) / 100) *
+                    boostAPY) /
+                    100
+                ) / 100000
+              }}
+              CRP</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="calc-footer">
+        <label class="lock-note textS weightB">Your total staked tokens will be locked until {{ unstakeDate }}</label>
+        <div class="btn-group fcb-container">
+          <div class="btn-container">
+            <Button
+              class="btn-primary textM weightS icon-cursor"
+              @click="
+                () => {
+                  $emit('onCancel')
+                }
+              "
+              >Cancel</Button
+            >
+          </div>
+          <div class="btn-container">
+            <Button
+              class="btn-transparent textM weightS icon-cursor"
+              id="vstake"
+              :disabled="this.crpbalance < toStake || toStake * 1 <= 0"
+              @click="stakeToken"
+              >Confirm</Button
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </Modal>
 </template>
@@ -63,7 +117,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Modal, Row, Col } from 'ant-design-vue'
+import { Modal } from 'ant-design-vue'
 import { cloneDeep, get } from 'lodash-es'
 import { getUnixTs } from '@/utils'
 import { TOKENS } from '@/utils/tokens'
@@ -72,47 +126,38 @@ import moment from 'moment'
 
 import {
   setAnchorProvider,
-
-  createFarmState, 
+  createFarmState,
   fundToProgram,
-
   setExtraReward,
   createExtraReward,
-  
   createPool,
   changePoolAmountMultipler,
   changeTokenPerSecond,
   changePoolPoint,
-
   getFarmState,
   getExtraRewardConfigs,
   getAllPools,
   getPoolUserAccount,
   estimateRewards,
-
   stake,
   unstake,
-  harvest,
+  harvest
 } from '@/utils/crp-stake'
-
-
 
 Vue.use(Modal)
 
 export default Vue.extend({
   components: {
-    Modal,
-    Row,
-    Col
+    Modal
   },
   data() {
     return {
-      toStake : null as any,
-      tierActive : 4,
-      boostAPY : 1,
-      unstakeDate : '',
-      minutesLock :  null as any,
-      boostText : '',
+      toStake: null as any,
+      tierActive: 4,
+      boostAPY: 1,
+      unstakeDate: '',
+      minutesLock: null as any,
+      boostText: '',
       lockData: [
         {
           tier: 1,
@@ -154,7 +199,9 @@ export default Vue.extend({
           apy: 22.19,
           text: 'Boost for 1 year locked'
         }
-      ]
+      ],
+      CRPMintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz' as string,
+      showHalf: false as boolean
     }
   },
   computed: {
@@ -164,51 +211,45 @@ export default Vue.extend({
   mounted() {
     setAnchorProvider(this.$web3, this.$wallet)
     this.displayTiers(this.tierActive)
-    getExtraRewardConfigs().then((res : any) =>
-    {
-      res.configs.forEach((item: any, index : number) =>{
-        if(index >= this.lockData.length){
-          return;
+    getExtraRewardConfigs().then((res: any) => {
+      res.configs.forEach((item: any, index: number) => {
+        if (index >= this.lockData.length) {
+          return
         }
         // console.log(index + 1 + ` Tiers`, item.duration.toString());
 
         this.lockData[index].minutesLock = item.duration / 60
         this.lockData[index].boost = item.extraPercentage / (100 * 1000 * 1000 * 1000) + 1
 
-        var currentDate = moment();
-        this.lockData[index].min = moment(currentDate).add('days',this.lockData[index].days).unix()
+        var currentDate = moment()
+        this.lockData[index].min = moment(currentDate).add('days', this.lockData[index].days).unix()
       })
     })
   },
 
   methods: {
     displayTiers(tier: any) {
-      this.tierActive = tier;
-      let currentTier = this.lockData.filter(
-          (tierSearch: any) => (tierSearch.tier as string) == (tier as string)
-        )
+      this.tierActive = tier
+      let currentTier = this.lockData.filter((tierSearch: any) => (tierSearch.tier as string) == (tier as string))
 
-      this.boostAPY = currentTier[0].boost;
-      this.boostText = currentTier[0].text;
-      this.minutesLock = currentTier[0].minutesLock;
+      this.boostAPY = currentTier[0].boost
+      this.boostText = currentTier[0].text
+      this.minutesLock = currentTier[0].minutesLock
 
-      var currentDate = moment();
-      var futureMonth = moment(currentDate).add('days',currentTier[0].days);
+      var currentDate = moment()
+      var futureMonth = moment(currentDate).add('days', currentTier[0].days)
 
       this.unstakeDate = futureMonth.format('MM/DD/YYYY')
-
-
     },
-    setMax() 
-    {
-      this.toStake  = this.crpbalance 
-      
+    setMax(multiple: number) {
+      this.showHalf = !this.showHalf
+      this.toStake = this.crpbalance * multiple
     },
 
-    async stakeToken(){
+    async stakeToken() {
       const pools = await getAllPools()
 
-      console.log("Lock duration", this.minutesLock);
+      console.log('Lock duration', this.minutesLock)
 
       const current_pool = pools[0]
       const poolSigner = current_pool.publicKey.toString()
@@ -224,10 +265,8 @@ export default Vue.extend({
         duration: 0
       })
 
-
-
       stake(
-        this.$web3, 
+        this.$web3,
         this.$wallet,
 
         poolSigner,
@@ -235,48 +274,43 @@ export default Vue.extend({
         rewardPoolVault,
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
-        
-        this.toStake *  Math.pow(10, TOKENS['CRP'].decimals),
+
+        this.toStake * Math.pow(10, TOKENS['CRP'].decimals),
         lock_duration
-      ).then((txid) => {
+      )
+        .then((txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
 
-        this.$notify.info({
-          key,
-          message: 'Transaction has been sent',
-          description: (h: any) =>
-            h('div', [
-              'Confirmation is in progress.  Check your transaction on ',
-              h(
-                'a',
-                {
-                  attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
-                },
-                'here'
-              )
-            ])
+          const description = `Staking ${this.toStake} CRP`
+
+          this.$accessor.transaction.sub({ txid, description })
         })
-            
-      const description = `Staking ${this.toStake} CRP`
-
-      this.$accessor.transaction.sub({ txid, description })
-    })
-    .catch((error) => {
-      this.$notify.error({
-        key,
-        message: 'Staking failed',
-        description: error.message
-      })
-    })
-    .finally(() => {
-      this.$accessor.wallet.getTokenAccounts()
-      this.$emit('onCancel');
-
-    });
-
-
-
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Staking failed',
+            description: error.message
+          })
+        })
+        .finally(() => {
+          this.$accessor.wallet.getTokenAccounts()
+          this.$emit('onCancel')
+        })
     }
-
   },
   props: {
     show: {
@@ -295,219 +329,272 @@ export default Vue.extend({
       type: Number,
       default: 0
     },
-    enddatemin:{
+    enddatemin: {
       type: Number,
       default: 0
     }
   }
 })
 </script>
-<style lang="less">
+
+<style lang="less" scoped>
 // global styles
 
 .btn-container {
-  background: @gradient-color-primary;
-  padding: 2px;
-  border-radius: 8px;
+  background: @gradient-color01;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 48px;
+  padding: 3px;
+  width: 150px;
+  height: auto;
+  margin-bottom: 8px;
 
-  .btn-outline {
-    height: 100%;
+  @media @max-lg-tablet {
+    margin-bottom: 0;
+    margin-right: 8px;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+
+  &.btn-large {
     width: 100%;
-    border: none;
-    background: @color-bg-dark;
-    color: #fff;
-    border-radius: 6px;
-    cursor: pointer;
+    height: 50px;
   }
 }
 
-.btn-primary {
-  background: @gradient-color-social;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
+.btn-transparent {
+  background: transparent;
+  padding: 10px 0;
+  border-radius: 48px;
   border: none;
-  cursor: pointer;
+  width: 100%;
+  height: auto;
+}
+
+.btn-primary {
+  background: @color-blue700;
+  padding: 10px 0;
+  border-radius: 48px;
+  border: none;
+  width: 100%;
+  height: auto;
+  color: #fff;
 
   &:disabled {
-        opacity: 0.5;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  @media @max-lg-tablet {
+    background: @color-blue800;
+
+    &:hover {
+      background: @color-blue800;
+    }
   }
 }
 
 // class styles
+.stake-modal-container {
+  margin-top: 18px;
 
-.stake-container {
-
-  p.red {
-    color: #f00 !important;
-  }
   .balance-form {
-    margin-bottom: 30px;
+    background: rgba(226, 227, 236, 0.1);
+    border-radius: 18px;
+    padding: 12px;
 
-    .value-balance {
+    button {
+      border: none;
+      background-color: transparent;
       font-weight: 600;
-      font-size: 12px;
-      line-height: 7px;
-      color: rgba(255, 255, 255, 0.8);
-      width: 100%;
-      text-align: right;
+      font-size: 14px;
+      line-height: 22px;
+      border-radius: 4px;
+      white-space: nowrap;
+      cursor: pointer;
+
+      &:active,
+      &:focus,
+      &:hover {
+        outline: 0;
+      }
+
+      &:hover {
+        background-color: @modal-header-bg;
+      }
     }
 
-    .input-form {
-      display: flex;
-      align-items: center;
-      padding: 12px;
-      border: 2px solid @color-light-blue;
+    .input-button {
+      height: 32px;
+      width: 32px;
+      border: 1px solid #6574d6;
+      border-radius: 4px;
+      color: #ccd1f1;
+    }
+
+    .select-button {
+      position: relative;
+      padding: 0 10px;
+      background: @color-blue800;
       border-radius: 8px;
-      margin: 10px 0;
+      width: auto;
+      margin-right: 8px;
+      height: 32px;
 
-      input {
-        color: #fff;
-        background: transparent;
-        border: none;
-        outline: none;
-        width: 100%;
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 22px;
-
-        &::-webkit-outer-spin-button,
-        &::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-      }
-      
-      .btn-max {
-        background: @color-light-blue;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        font-weight: 800;
-        font-size: 8px;
-        line-height: 7px;
-        padding: 4px;
-      }
-
-      .symbol {
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 22px;
-        color: #fff;
-        margin-left: 12px;
+      .coin-group img {
+        width: 15px;
+        height: 15px;
+        margin-right: 4px;
+        border-radius: 50%;
       }
     }
 
-    .value-total {
+    .select-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      padding: 2px;
+      background: @gradient-color04;
+      background-origin: border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+    }
+
+    input {
+      width: 0;
+      padding: 0;
+      border: none;
+      background-color: transparent;
+      flex: 1 1 auto;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
       font-weight: 600;
-      font-size: 12px;
-      line-height: 7px;
-      color: rgba(255, 255, 255, 0.8);
-      width: 100%;
-      text-align: left;
-      
-      span {
-        font-weight: 800;
-        color: @color-light-blue;
+      font-size: 25px;
+      line-height: 35px;
+      letter-spacing: 0.25px;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
       }
+
+      &:active,
+      &:focus,
+      &:hover {
+        outline: 0;
+      }
+    }
+
+    input[disabled] {
+      cursor: not-allowed;
+    }
+
+    .label {
+      margin-top: 10px;
+      color: @color-blue200;
     }
   }
 
   .tier-group {
-    display: inline-grid;
-    text-align: center;
-    font-size: 12px;
-    line-height: 14px;
-    color: @color-gray;
-    cursor: pointer;
+    margin-top: 28px;
 
-    .tier-inactive,
-    .tier-active {
-      padding: 10px 0;
-      width: 80%;
-      background: #32476c;
-      border-radius: 20px;
-      margin: 10px auto;
-      font-weight: bold;
-      font-size: 18px;
-      line-height: 22px;
-      letter-spacing: 0.1em;
-      color: #6d7583;
-    }
+    .tier-item {
+      display: inline-grid;
+      row-gap: 4px;
+      width: 100%;
+      margin-right: 18px;
 
-    .tier-active {
-      background: @color-light-blue;
-      color: #fff;
-    }
-  }
-
-  .calc-box {
-    margin-top: 30px;
-    padding: 12px 25px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-
-    .calc-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      &:nth-child(odd) {
-        padding: 15px 0;
+      &:last-child {
+        margin-right: 0;
       }
 
-      &:nth-child(even) {
-        padding-bottom: 15px;
-        border-bottom: 1px solid #384d71;
+      .tier-inactive,
+      .tier-active {
+        padding: 10px 0;
+        background: @color-blue800;
+        border-radius: 20px;
+        color: rgba(255, 255, 255, 0.2);
       }
 
-      .label {
-        font-size: 12px;
-        line-height: 15px;
-        color: rgba(255, 255, 255, 0.5);
-      }
-
-      .value {
-        font-size: 14px;
-        line-height: 17px;
+      .tier-active {
+        background: @color-light-blue;
         color: #fff;
       }
 
-      .reward-value {
-        font-weight: bold;
-        font-size: 20px;
-        line-height: 25px;
+      .value-boost {
+        color: @color-blue200;
+      }
+    }
+  }
+
+  .calc-yield {
+    margin-top: 28px;
+    background: @color-blue800;
+    padding: 12px 12px 18px 12px;
+    border-radius: 18px;
+
+    .calc-yield-title {
+      display: block;
+    }
+
+    .calc-yield-group {
+      display: inline-grid;
+      row-gap: 12px;
+      margin-top: 12px;
+      width: 100%;
+
+      .calc-yield-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &:nth-child(2) {
+          padding-bottom: 12px;
+          border-bottom: 1px solid #384d71;
+        }
+
+        .label {
+          color: @color-blue200;
+        }
+
+        .value {
+          color: @color-blue100;
+
+          &.reward-value {
+            color: #fff;
+          }
+        }
+
+        &.current-tier {
+          .label,
+          .value {
+            color: #fff;
+          }
+        }
       }
     }
   }
 
   .calc-footer {
-    margin-top: 15px;
-    text-align: center;
+    margin-top: 28px;
 
-    p {
-      font-weight: 600;
-      font-size: 12px;
-      line-height: 12px;
-      color: rgba(255, 255, 255, 0.8);
+    .lock-note {
+      color: @color-blue100;
     }
 
-    .cc-btn-group {
-      margin-top: 30px;
-      display: flex;
-      justify-content: center;
-
-      .btn-container,
-      .btn-primary {
-        width: 120px;
-        height: 42px;
-        font-weight: 600;
-        font-size: 12px;
-        line-height: 14px;
-      }
-
-      .btn-container {
-        margin-right: 15px;
-      }
+    .btn-group {
+      margin-top: 28px;
     }
   }
 }

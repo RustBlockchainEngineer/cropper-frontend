@@ -57,7 +57,7 @@ const TOKENBASE_MAIN: Tokens = {
 const TOKENBASE_DEVNET: Tokens = {
   CRP: {
     symbol: 'CRP',
-    name: 'CRP',
+    name: 'Cropper',
     mintAddress: 'GGaUYeET8HXK34H2D1ieh4YYQPhkWcfWBZ4rdp6iCZtG',
     decimals: 6,
     tags:['cropper']
@@ -73,7 +73,7 @@ const TOKENBASE_DEVNET: Tokens = {
 
   USDC: {
     symbol: 'USDC',
-    name: 'USDC',
+    name: 'USDC Coin',
     mintAddress: '6MBRfPbzejwVpADXq3LCotZetje3N16m5Yn7LCs2ffU4',
     decimals: 9,
     tags:['cropper']
@@ -87,7 +87,7 @@ const TOKENBASE_DEVNET: Tokens = {
   },
   ETH: {
     symbol: 'ETH',
-    name: 'ETH',
+    name: 'Ethereum',
     mintAddress: 'G4UK7D15rHE85Q8HLKQ9BBafd2n2sUCkCRWwvWtBfuPe',
     decimals: 9,
     tags:['cropper']

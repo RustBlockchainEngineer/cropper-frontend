@@ -31,12 +31,15 @@
               <label class="displayL weightX"
                 >The Ultimate <br />
                 Yield Farming <br />
-                Protocol </label>
+                Protocol
+              </label>
               <p class="powered-by bodyL">Powered by Solana</p>
             </div>
             <div class="read-more">
               <div class="btn-container">
-                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline bodyM weightS">Documentation</a>
+                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline bodyM weightS"
+                  >Documentation</a
+                >
               </div>
             </div>
             <div class="social-links">
@@ -133,7 +136,8 @@
         <Col :span="22" :offset="1">
           <h2 class="weightB text-center">The Cropper Ecosystem</h2>
           <p class="bodyL text-center eco-content">
-            By farmers, for farmers. With low fees and high-impact APRs, our full line of DeFi services give you everything you need in a few clicks.
+            By farmers, for farmers. With low fees and high-impact APRs, our full line of DeFi services give you
+            everything you need in a few clicks.
           </p>
           <Row :gutter="[25, 25]" class="feature-box-group">
             <img class="stars-third-bg" src="@/assets/landing_v2/stars-third-bg.svg" />
@@ -142,9 +146,7 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-swap.svg" />
                 <h4 class="title weightB">Swap</h4>
                 <p class="bodyM content">Our smart search delivers the fairest swap instantly</p>
-                <NuxtLink to="/swap" class="bodyM now-btn weightS">
-                  Swap Now
-                </NuxtLink>
+                <NuxtLink to="/swap" class="bodyM now-btn weightS"> Swap Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
@@ -152,19 +154,17 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-farming.svg" />
                 <h4 class="title weightB">Farming</h4>
                 <p class="bodyM content">Explore a vast selection of Labelized and Permissionless Farms</p>
-                <NuxtLink to="/farms" class="bodyM now-btn weightS">
-                  Farm Now
-                </NuxtLink>
+                <NuxtLink to="/farms" class="bodyM now-btn weightS"> Farm Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing_v2/feature-staking.svg" />
                 <h4 class="title weightB">Staking</h4>
-                <p class="bodyM content">Earn rewards and gain access to exclusive opportunities with our 5 staking tiers</p>
-                <NuxtLink to="/staking" class="bodyM now-btn weightS">
-                  Stake Now
-                </NuxtLink>
+                <p class="bodyM content">
+                  Earn rewards and gain access to exclusive opportunities with our 5 staking tiers
+                </p>
+                <NuxtLink to="/staking" class="bodyM now-btn weightS"> Stake Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
@@ -172,9 +172,7 @@
                 <img class="feature-img" src="@/assets/landing_v2/feature-fertilizer.svg" />
                 <h4 class="title weightB">Fertilizer</h4>
                 <p class="bodyM content">The fertilizer launcher is currently being improved</p>
-                <NuxtLink to="/" class="bodyM now-btn weightS soon">
-                  Coming Soon!
-                </NuxtLink>
+                <NuxtLink to="/" class="bodyM now-btn weightS soon"> Coming Soon! </NuxtLink>
               </div>
             </Col>
           </Row>
@@ -220,13 +218,7 @@
                   </div>
                 </Col>
                 <Col :sm="16" :md="16" class="video-play-col">
-                  <video class="video-player"
-                    :src="currentVideo"
-                    controls
-                    autoplay
-                    loop
-                  >
-                  </video>
+                  <video class="video-player" :src="currentVideo" controls autoplay loop></video>
                 </Col>
               </Row>
             </TabPane>
@@ -249,14 +241,8 @@
                     >
                   </div>
                 </Col>
-                <Col :sm="16" :md="16" class="video-play-col">
-                  <video class="video-player"
-                    :src="currentVideo"
-                    controls
-                    autoplay
-                    loop
-                  >
-                  </video>
+                <Col :xs="24" :sm="24" :md="16">
+                  <video class="video-player" :src="currentVideo" controls autoplay loop></video>
                 </Col>
               </Row>
             </TabPane>
@@ -268,7 +254,10 @@
     <section class="cropper-feed">
       <h2 class="weightB text-center">100,000 Croppers And Counting</h2>
       <p class="bodyL text-center feed-description">
-        The first Croppers formed as a collective of serious farmers seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the harvests that come with it.
+        Our community is at the heart of everything we do. The first Croppers formed as a collective of serious farmers
+        seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi
+        enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the
+        harvests that come with it.
       </p>
       <div class="feed-container">
         <Row>
@@ -280,7 +269,7 @@
                     <img src="@/assets/social/twitter-white.svg" />
                   </div>
                   <div class="feed-content bodyM">
-                    {{twitter.content}}
+                    {{ twitter.content }}
                   </div>
                 </div>
               </Col>
@@ -342,7 +331,7 @@
             >
               <div class="industry-card">
                 <div class="industry-card-body">
-                  <img :src="card.img" :width="card.width"/>
+                  <img :src="card.img" :width="card.width" />
                 </div>
               </div>
             </Col>
@@ -532,7 +521,7 @@ export default class Landing extends Vue {
     twitter: 'https://twitter.com/CropperFinance',
     discord: 'https://discord.com/invite/9hdP7cM3ec',
     medium: 'https://cropperfinance.medium.com/',
-    telegram: 'https://linktr.ee/cropperfinance',
+    telegram: 'https://linktr.ee/cropperfinance'
   }
   videoLinks = {
     swap: 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4',
@@ -557,7 +546,7 @@ export default class Landing extends Vue {
   changeToFarmer() {
     this.isFarmer = !this.isFarmer
   }
-  
+
   changeToIndustry(num: number) {
     switch (num) {
       case 1:
@@ -675,7 +664,7 @@ export default class Landing extends Vue {
       console.log(err)
     } finally {
       this.twitterFeeds = responseData
-      this.twitterShows = this.twitterFeeds.slice(0,3)
+      this.twitterShows = this.twitterFeeds.slice(0, 3)
     }
   }
 
@@ -684,8 +673,7 @@ export default class Landing extends Vue {
     if (activeKey === '1') {
       this.currentPlay = 1
       this.currentVideo = this.videoLinks.swap
-    }
-    else if (activeKey === '2') {
+    } else if (activeKey === '2') {
       this.currentPlay = 5
       this.currentVideo = this.videoLinks.pool
     }
@@ -696,7 +684,7 @@ export default class Landing extends Vue {
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background-image: @gradient-btn-primary;
+  background-image: @gradient-color01;
   padding: 3px;
   border-radius: 48px;
   height: 54px;
@@ -706,7 +694,7 @@ export default class Landing extends Vue {
   display: flex;
 
   &:hover {
-    background-image: @gradient-btn-primary-reverse;
+    background-image: @gradient-color02;
   }
 
   @media @max-sl-mobile {
@@ -715,18 +703,18 @@ export default class Landing extends Vue {
 }
 
 .btn-fill {
-  background-image: @gradient-btn-primary;
+  background-image: @gradient-color01;
   padding: 18px 30px;
   display: flex;
   align-items: center;
   border-radius: 48px;
   border: none;
   height: 54px;
-  -webkit-transition: background-color .7s ease-out;
-  transition: background-color .7s ease-out;
+  -webkit-transition: background-color 0.7s ease-out;
+  transition: background-color 0.7s ease-out;
 
   &:hover {
-    background-image: @gradient-btn-primary-reverse;
+    background-image: @gradient-color02;
   }
 
   @media @max-sl-mobile {
@@ -741,8 +729,22 @@ export default class Landing extends Vue {
   display: flex;
   align-items: center;
   border-radius: 48px;
-  background: @color-bg;
+  background: @color-blue800;
   border: none;
+}
+
+h2 {
+  @media @max-sl-mobile {
+    font-size: 31px !important;
+    line-height: 37.2px !important;
+  }
+}
+
+h4 {
+  @media @max-sl-mobile {
+    font-size: 20px !important;
+    line-height: 30px !important;
+  }
 }
 
 // class stylesheet
@@ -750,13 +752,14 @@ export default class Landing extends Vue {
   .landing-header {
     position: fixed;
     width: 100%;
-    background: #000539;
+    background: @color-blue800;
     top: 0;
     z-index: 999;
-    padding: 10px;
+    height: 80px;
     opacity: 0.9;
 
     .landing-top {
+      height: 100%;
       padding-left: 64px;
       padding-right: 64px;
 
@@ -844,7 +847,7 @@ export default class Landing extends Vue {
 
       .balance-infos {
         .tvl-value {
-          background: -webkit-linear-gradient(90deg, #22B5B6 6.07%, #280C86 134.97%);
+          background: -webkit-linear-gradient(90deg, #22b5b6 6.07%, #280c86 134.97%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
@@ -918,7 +921,7 @@ export default class Landing extends Vue {
         .social-telegram .social-icon {
           margin-right: 0;
         }
-        
+
         .social-medium,
         .social-discord,
         .social-twitter,
@@ -1075,7 +1078,7 @@ export default class Landing extends Vue {
 
           &:hover {
             mix-blend-mode: normal;
-            border: 4px solid #23ADB4;
+            border: 4px solid @color-petrol500;
           }
 
           @media @max-lg-tablet {
@@ -1204,7 +1207,7 @@ export default class Landing extends Vue {
           color: #fff;
           position: absolute;
           bottom: 50px;
-          background: #23ADB4;
+          background: @color-petrol500;
           border-radius: 48px;
           padding: 8px 0;
           width: calc(100% - 72px);
@@ -1228,7 +1231,7 @@ export default class Landing extends Vue {
 
         &:hover {
           padding-top: 0;
-          border: 4px solid #23ADB4;
+          border: 4px solid @color-petrol500;
 
           .now-btn {
             display: block;
@@ -1255,7 +1258,7 @@ export default class Landing extends Vue {
         @media @max-md-tablet {
           bottom: 0;
         }
-        
+
         @media @max-sl-mobile {
           display: none;
         }
@@ -1297,7 +1300,7 @@ export default class Landing extends Vue {
         background: linear-gradient(115.9deg, #22b5b6 -40.58%, #280c86 95.48%);
         border-radius: 22px;
         padding: 20px;
-        
+
         .feed-content {
           word-break: break-all;
           white-space: pre-line;
@@ -1415,7 +1418,7 @@ export default class Landing extends Vue {
           .industry-card-body {
             width: 100%;
             height: 100%;
-            background: #000539;
+            background: @color-blue800;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -1428,160 +1431,161 @@ export default class Landing extends Vue {
 }
 </style>
 <style lang="less">
-::-webkit-scrollbar {
-  display: none;
-}
+// ::-webkit-scrollbar {
+//   display: none;
+// }
 
 // ant customization
-.ant-row {
-  @media @max-lg-tablet {
-    .ant-col-22 {
-      width: 100%;
-    }
-    .ant-col-offset-1 {
-      margin-left: 0;
-    }
-  }
-
-  @media @max-sl-mobile {
-    .ant-col-22 {
-      width: 100%;
-    }
-    .ant-col-offset-1 {
-      margin-left: 0;
-    }
-  }
-}
-
-.ant-tabs {
-  .ant-tabs-bar {
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    padding: 0 calc(64px + 4.166666666666667%);
-    margin: 0 0 48px 0;
-
+.landing {
+  .ant-row {
     @media @max-lg-tablet {
-      padding: 0 32px;
-      margin: 0 0 32px 0;
-    }
-
-    @media @max-md-tablet {
-      padding: 0 32px;
-      margin: 0 0 16px 0;
-    }
-
-    @media @max-sl-mobile {
-      padding: 0 20px;
-      margin-bottom: 20px;
-    }
-
-    .ant-tabs-nav {
-      .ant-tabs-tab {
-        font-weight: 600;
-        font-size: 25px;
-        line-height: 37px;
-        letter-spacing: 0.25px;
-        padding-bottom: 20px;
-        margin-right: 65px;
-
-        @media @max-sl-mobile {
-          font-size: 20px;
-          line-height: 30px;
-        }
-
-        &:last-child {
-          margin-right: 0;
-        }
-
-        &:active,
-        &:hover {
-          color: #23adb4;
-        }
-      }
-
-      .ant-tabs-tab-active {
-        color: #23adb4;
-      }
-
-      .ant-tabs-ink-bar {
-        background: #23adb4;
-      }
-    }
-  }
-  
-  .ant-tabs-top-content.ant-tabs-content-animated {
-    transition: margin-left 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
-  }
-
-  .ant-tabs-top-content > .ant-tabs-tabpane {
-    padding: 0 calc(64px + 4.166666666666667%);
-
-    @media @max-lg-tablet {
-      padding: 0 32px;
-    }
-
-    @media @max-sl-mobile {
-      padding: 0 20px;
-    }
-
-    .play-list {
-      padding-top: 28px;
-
-      .play-list-btn {
-        margin-bottom: 18px;
-        padding: 15px 0 15px 19px;
-        background: @color-bg;
-        border-radius: 8px;
-        border: 3px solid @color-bg;
-        color: #fff;
-        height: auto;
+      .ant-col-22 {
         width: 100%;
-        max-width: 292px;
-        text-align: unset;
-
-        @media @max-lg-tablet {
-          padding: 15px 10px;
-        }
-
-        @media @max-md-tablet {
-          padding: 15px 5px;
-        }
-
-        &:hover,
-        &.active {
-          background: #1F2A75;
-          border: 3px solid #82d4dc;
-          box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        &:last-child {
-          margin-bottom: 0;
-        }
+      }
+      .ant-col-offset-1 {
+        margin-left: 0;
       }
     }
-    
-    .video-play-col {
-      display: flex;
-      border: 3px solid #7a88b6;
-      border-radius: 42px;
-      background: @color-bg;
-      padding: 0 !important;
+
+    @media @max-sl-mobile {
+      .ant-col-22 {
+        width: 100%;
+      }
+      .ant-col-offset-1 {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .ant-tabs {
+    .ant-tabs-bar {
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      padding: 0 calc(64px + 4.166666666666667%);
+      margin: 0 0 48px 0;
+
+      @media @max-lg-tablet {
+        padding: 0 32px;
+        margin: 0 0 32px 0;
+      }
+
+      @media @max-md-tablet {
+        padding: 0 32px;
+        margin: 0 0 16px 0;
+      }
 
       @media @max-sl-mobile {
-        margin-top: 20px;
+        padding: 0 20px;
+        margin-bottom: 20px;
       }
-      
-      .video-player {
+
+      .ant-tabs-nav {
+        .ant-tabs-tab {
+          font-weight: 600;
+          font-size: 25px;
+          line-height: 37px;
+          letter-spacing: 0.25px;
+          padding-bottom: 20px;
+          margin-right: 65px;
+
+          @media @max-sl-mobile {
+            font-size: 20px;
+            line-height: 30px;
+          }
+
+          &:last-child {
+            margin-right: 0;
+          }
+
+          &:active,
+          &:hover {
+            color: @color-petrol500;
+          }
+        }
+
+        .ant-tabs-tab-active {
+          color: @color-petrol500;
+        }
+
+        .ant-tabs-ink-bar {
+          background: @color-petrol500;
+        }
+      }
+    }
+
+    .ant-tabs-top-content.ant-tabs-content-animated {
+      transition: margin-left 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    .ant-tabs-top-content > .ant-tabs-tabpane {
+      padding: 0 calc(64px + 4.166666666666667%);
+
+      @media @max-lg-tablet {
+        padding: 0 32px;
+      }
+
+      @media @max-sl-mobile {
+        padding: 0 20px;
+      }
+
+      .play-list {
+        padding-top: 28px;
+
+        .play-list-btn {
+          margin-bottom: 18px;
+          padding: 15px 0 15px 19px;
+          background: @color-blue800;
+          border-radius: 8px;
+          border: 3px solid @color-blue800;
+          color: #fff;
+          height: auto;
+          width: 100%;
+          max-width: 292px;
+          text-align: unset;
+
+          @media @max-lg-tablet {
+            padding: 15px 10px;
+          }
+
+          @media @max-md-tablet {
+            padding: 15px 5px;
+          }
+
+          &:hover,
+          &.active {
+            background: @color-blue600;
+            border: 3px solid @color-petrol400;
+            box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      .video-play-col {
+        display: flex;
+        border: 3px solid #7a88b6;
         border-radius: 42px;
-        width: 100%;
+        background: @color-blue800;
+        padding: 0 !important;
+
+        @media @max-sl-mobile {
+          margin-top: 20px;
+        }
+
+        .video-player {
+          border-radius: 42px;
+          width: 100%;
+        }
       }
     }
   }
-}
 
-@media @max-md-tablet {
-  .balance-infos{
-    margin-top:40px
+  @media @max-md-tablet {
+    .balance-infos {
+      margin-top: 40px;
+    }
   }
 }
-
 </style>

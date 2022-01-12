@@ -50,6 +50,68 @@
 @radio-button-bg: #1c274f;
 @radio-button-checked-bg: #f1f1f2;
 
+// color foundation
+@color-neutral50: #E2E3EC;
+@color-neutral100: #CCCDD5;
+@color-neutral200: #B8B9C0;
+@color-neutral300: #A5A6AC;
+@color-neutral400: #929399;
+@color-neutral500: #808186;
+@color-neutral600: #6F6F74;
+@color-neutral700: #5D5E62;
+@color-neutral800: #4B4C4F;
+@color-neutral900: #38383A;
+
+@color-petrol50: #F7FCFD;
+@color-petrol100: #E0F4F6;
+@color-petrol200: #C1E9ED;
+@color-petrol300: #A1DFE5;
+@color-petrol400: #82D4DC;
+@color-petrol500: #23ADB4;
+@color-petrol600: #1C8A90;
+@color-petrol700: #15686C;
+@color-petrol800: #0E4548;
+@color-petrol900: #072324;
+@color-petrol1000: #020909;
+
+@color-blue50: #F2F3FC;
+@color-blue100: #CCD1F1;
+@color-blue200: #98A2E4;
+@color-blue300: #6574D6;
+@color-blue400: #3548C5;
+@color-blue500: #273592;
+@color-blue600: #1F2A75;
+@color-blue700: #172058;
+@color-blue800: #000539;
+@color-blue900: #080B1D;
+@color-blue1000: #020307;
+@color-blue-dark: #0B2E6A;
+
+@color-green300: #F2FCF8;
+@color-green400: #BED8D0;
+@color-green500: #31B79F;
+@color-green600: #196956;
+
+@color-yellow300: #FFFCF4;
+@color-yellow400: #FFE29A;
+@color-yellow500: #FFCD4E;
+@color-yellow600: #FFBA00;
+
+@color-red300: #FFF0ED;
+@color-red400: #FDA095;
+@color-red500: #FC5744;
+@color-red600: #F03306;
+
+@color-pink300: #FFECF2;
+@color-pink400: #F1A6BC;
+@color-pink500: #CC5075;
+@color-pink600: #9D2246;
+
+@color-purple300: #F8F0FA;
+@color-purple400: #D9BDDF;
+@color-purple500: #A262AC;
+@color-purple600: #693F73;
+
 // color
 @color-outline: #273D94;
 
@@ -59,43 +121,37 @@
 @color-fertilizer: #3990F5;
 @color-staking: #274195;
 
-@color-bg: #000539;
-@color-bg-dark: #0B2E6A;
 @color-modal-dark: #06204D;
 @color-disable: #80829C;
 @color-gray: #CDD2DB;
 @color-light-blue: #23ADB4;
 
-@color-labelized: #724CEE;
+@color-labelized: @color-blue300;
 @color-permissionless:#C75D4A;
 @color-dual: #1EB8F1;;
 @color-new: #13ECAB;
 @color-ended: #EF745D;
 
-//gradient
-@gradient-color-labelized: linear-gradient(90deg, #342074 6.7%, #0B2E6A 26.23%);
-@gradient-color-labelized-brighter: linear-gradient(90deg, #503D91 6.7%, #1E3A68 25.41%);
-@gradient-color-permissionless: linear-gradient(90deg, #50251D 6.7%, #0B2E6A 26.65%);
-@gradient-color-permissionless-brighter: linear-gradient(90deg, #73514A 6.7%, #1E3A69 27.48%);
-@gradient-color-fill: linear-gradient(97.63deg, #273893 -29.92%, #26559B -11.8%, #2CCAD9 103.89%);
+// gradient color
+@gradient-color01: linear-gradient(90deg, #273592 0%, #23ADB4 100%);
+@gradient-color02: linear-gradient(103.7deg, #23ADB4 0%, #273592 100%);
+@gradient-color03: linear-gradient(215.52deg, #273592 0.03%, #23ADB4 99.97%);
+@gradient-color04: linear-gradient(302.66deg, #273592 0.08%, #23ADB4 100%);
+@gradient-color05: linear-gradient(35.6deg, #273592 -0.06%, #23ADB4 100%);
+@gradient-color06: linear-gradient(149.5deg, #273592 -0.05%, #23ADB4 100%);
+@gradient-color-blue: linear-gradient(90deg, #273592 0%, rgba(39, 53, 146, 0) 100%);
+@gradient-color-petrol: linear-gradient(90deg, #23ADB4 0%, rgba(35, 173, 180, 0) 100%);
+@gradient-color-bg: linear-gradient(180deg, rgba(23, 32, 88, 0) 5.6%, #172058 9.64%);
 @gradient-color-outline: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
 @gradient-color-icon: linear-gradient(315deg, #21BDB8 0%, #280684 100%);
 @gradient-color-primary: linear-gradient(190.83deg, #23A7B2 -119.02%, #273A93 86.38%);
-@gradient-color-wallet: linear-gradient(175.44deg, #3238EA 3.7%, #3137E7 6.44%, #171B7D 116.76%);
-@gradient-color-disable: linear-gradient(0deg, #818282, #818282);
-@gradient-color-social: linear-gradient(98.9deg, #2764A3 0%, #2CC2D5 98.75%);
-@gradient-color-harvest: linear-gradient(97.75deg, #280C86 -29.89%, #22B5B6 150.53%);
-
-//gradient button
-@gradient-btn-primary: linear-gradient(90deg, #273592 0%, #23ADB4 100%);
-@gradient-btn-primary-reverse: linear-gradient(103.7deg, #23ADB4 0%, #273592 100%);
 
 // mobile
 @desktop-xl-width: 1440px;
 @tablet-lg-width: 1024px;
 @tablet-md-width: 768px;
-@mobile-sm-width: 700px;
-@mobile-s-width: 435px;
+@mobile-sl-width: 767px;
+@mobile-sm-width: 435px;
 @mobile-xs-width: 375px;
 
 // media
@@ -103,6 +159,6 @@
 @max-xl-desktop: ~"(max-width: 1440px)";
 @max-lg-tablet: ~"(max-width: 1024px)";
 @max-md-tablet: ~"(max-width: 768px)";
-@max-sl-mobile: ~"(max-width: 700px)";
+@max-sl-mobile: ~"(max-width: 767px)";
 @max-sm-mobile: ~"(max-width: 435px)";
 @max-xs-mobile: ~"(max-width: 375px)";

@@ -1,18 +1,18 @@
 <template>
   <div class="coin-select">
-    <div class="label fs-container" :class="disabled ? 'disabled' : '' ">
+    <div class="label fcb-container bodyXS weightB">
       <span>{{ label }}</span>
     </div>
     <div class="coin-input">
-      <div class="main-input fs-container">
-        <button class="select-button fc-container" @click="selectCoin">
-          <div v-if="coinName" class="fc-container">
+      <div class="main-input fcb-container">
+        <button class="select-button fcc-container" @click="selectCoin">
+          <div v-if="coinName" class="coin-container fcc-container">
             <CoinIcon :mint-address="mintAddress" />
-            <span :class="disabled ? 'coin-disabled' : '' ">{{ coinName }}</span>
+            <span class="textS weightS" :class="disabled ? 'coin-disabled' : ''">{{ coinName }}</span>
           </div>
-          <span v-else :class="disabled ? 'coin-disabled' : '' ">Select a token</span>
-          <img v-if="!disabled" src="@/assets/icons/arrow-down.svg" />
-          <img v-else src="@/assets/icons/arrow-down-grey.svg" />
+          <span v-else class="textS weightS" :class="disabled ? 'coin-disabled' : ''">Select a token</span>
+          <img v-if="!disabled" class="arrow-icon" src="@/assets/icons/arrow-down-white.svg" />
+          <img v-else class="arrow-icon" src="@/assets/icons/arrow-down-grey.svg" />
         </button>
       </div>
     </div>
@@ -94,35 +94,22 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .coin-select {
-  display: flex;
-  align-items: center;
-  
   .label {
-    margin-right: 15px;
-    font-size: 15px !important;
-    line-height: 18px;
-    color: #fff;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.5);
   }
 
-  .label.disabled {
-    color: #40426C;
-  }
-  
   .coin-input {
-    background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+    background: @gradient-color04;
     background-origin: border-box;
     padding: 2px;
     border-radius: 8px;
+    width: fit-content;
 
     button {
       border: none;
-      background-color: @color-bg;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 22px;
+      background-color: @color-blue800;
       border-radius: 8px;
       white-space: nowrap;
       cursor: pointer;
@@ -137,45 +124,27 @@ export default Vue.extend({
         background-color: @modal-header-bg;
       }
     }
-    .select-button {
-      padding: 10px 18px;
-      line-height: 24px;
-      width: 130px;
 
-      .anticon {
-        margin-left: 4px;
-        font-size: 8px;
-      }
-      
-      img {
-        width: 11px;
+    .select-button {
+      padding: 6px;
+
+      .arrow-icon {
+        width: 9px;
         height: 6px;
-        margin-left: 10px;
+        margin-left: 4px;
       }
 
       .coin-disabled {
-        color: #40426C;
+        color: rgba(255, 255, 255, 0.5);
       }
 
-      .fc-container {
+      .coin-container {
         img {
-          height: 18px;
-          width: 18px;
-          margin-left: 0;
-        }
-
-        span {
-          margin-left: 7px;
-          font-size: 18px;
-          line-height: 22px;
-          font-weight: 400;
+          height: 12px;
+          width: 12px;
+          margin-right: 4px;
         }
       }
-    }
-
-    .shortcut-btns {
-      display: flex;
-      justify-content: space-between;
     }
   }
 }

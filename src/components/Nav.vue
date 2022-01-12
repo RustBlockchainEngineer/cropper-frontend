@@ -1,25 +1,21 @@
 <template>
-  <Menu
-    v-model="currentRoute"
-    :mode="'horizontal'"
-    :theme="'light'"
-    @click="changeRoute"
-  >
-    <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()" :class="name === banURL ? 'disable' : ''">
-      <a v-if="extra" :href="url[name]" target="_blank">
-        {{ name.replace('-', ' ') }}
-      </a>
-      <div v-else>
-        <div class="menu-icon-group">
-          <div class="menu-icon" :class="name.replace('-', ' ')"></div>
-          <span> {{ name.replace('-', ' ') }} </span>
+  <div class="menu">
+    <Menu v-model="currentRoute" :mode="'horizontal'" :theme="'light'" @click="changeRoute">
+      <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()" :class="name === banURL ? 'disable' : ''">
+        <a v-if="extra" :href="url[name]" target="_blank">
+          {{ name.replace('-', ' ') }}
+        </a>
+        <div v-else class="menu-icon-group">
+          <span class="bodyM weightS"> {{ name.replace('-', ' ') }} </span>
         </div>
-      </div>
-      <div v-if="name === banURL" class="soon">
-        Soon
-      </div>
-    </MenuItem>
-  </Menu>
+        <div v-if="name === banURL" class="soon">Soon</div>
+      </MenuItem>
+    </Menu>
+    <div class="collapse-menu">
+      <img class="menu-icon" src="@/assets/icons/menu.svg" @click="() => (menuVisibility = true)" />
+      <MenuModal :show="menuVisibility" @onCancel="() => (menuVisibility = false)"></MenuModal>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -43,14 +39,14 @@ export default class Nav extends Vue {
     pools: false,
     farms: false,
     staking: false,
-    fertilizer: false,
+    fertilizer: false
     // fusion: false,
     //stakingTest: false,
     // migrate: false
     // info: false
   }
-
   banURL = 'fertilizer'
+  menuVisibility = false
 
   get isMobile() {
     return this.$accessor.isMobile
@@ -68,7 +64,7 @@ export default class Nav extends Vue {
 
   changeRoute({ key }: { key: string }): void {
     const { from, to, ammId } = this.$route.query
-    if(key != this.banURL) {
+    if (key != this.banURL) {
       if (['swap', 'liquidity'].includes(key) && (ammId || (from && to))) {
         // if (ammId) {
         //   this.$router.push({
@@ -77,7 +73,7 @@ export default class Nav extends Vue {
         //       ammId
         //     }
         //   })
-        // } else 
+        // } else
         if (from && to) {
           this.$router.push({
             path: `/${key}/`,
@@ -94,15 +90,27 @@ export default class Nav extends Vue {
       }
       // to close menu on mobile mode
       this.$emit('onSelect')
-    }
-    else {
-      console.log(this.banURL + 'will be soon!');
+    } else {
+      console.log(this.banURL + 'will be soon!')
     }
   }
 }
 </script>
 
 <style lang="less">
+.menu {
+  .collapse-menu {
+    display: none;
+
+    @media @max-md-tablet {
+      display: block;
+    }
+
+    .menu-icon {
+      cursor: pointer;
+    }
+  }
+}
 
 .menu-icon-group {
   display: inline-flex;
@@ -114,121 +122,56 @@ export default class Nav extends Vue {
   }
 }
 
-.menu-icon {
-  width: 12px;
-  height: 12px;
-  border-radius: 4px;
-  margin-right: 10px;
-}
-
-.ant-menu-item {
-  .soon {
-    display: none;
-    width: fit-content;
-    margin: auto;
-    padding: 5px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    border-radius: 6px;
-    font-size: 14px;
-    line-height: 17px;
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  &.disable {
-    &:hover, &:active {
-      color: unset !important;
-    }
-
-    &:hover .menu-icon-group{
-      opacity: 0.5;
-    }
-
-    &:hover .soon {
-      display: block;
-    }
-
-    @media @max-lg-tablet {
-      display: none;
-    }
-  }
-
-  .pools {
-    border: 2px solid @color-pools;
-  }
-
-  &.ant-menu-item-selected .pools {
-    background: @color-pools;
-  }
-
-  .farms {
-    border: 2px solid @color-farms;
-  }
-
-  &.ant-menu-item-selected .farms {
-    background: @color-farms;
-  }
-
-  .swap {
-    border: 2px solid @color-swap;
-  }
-
-  &.ant-menu-item-selected .swap {
-    background: @color-swap;
-  }
-
-  .fertilizer {
-    border: 2px solid @color-fertilizer;
-  }
-
-  &.ant-menu-item-selected .fertilizer {
-    background: @color-fertilizer;
-  }
-
-  .staking {
-    border: 2px solid @color-staking;
-  }
-
-  &.ant-menu-item-selected .staking {
-    background: @color-staking;
-  }
-  .stakingTest {
-    border: 2px solid #480469;
-  }
-  &.ant-menu-item-selected .stakingTest {
-    background: #480469;
-  }
-}
-
 .ant-menu {
   text-transform: capitalize;
+  background: transparent;
+
+  .ant-menu-item {
+    .soon {
+      display: none;
+      width: fit-content;
+      margin: auto;
+      padding: 5px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 17px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    &.disable {
+      &:hover,
+      &:active {
+        color: unset !important;
+      }
+
+      &:hover .menu-icon-group {
+        opacity: 0.5;
+      }
+
+      &:hover .soon {
+        display: block;
+      }
+    }
+  }
 }
 
 .ant-menu-horizontal {
-  line-height: 62px;
-  border-bottom: none;
+  line-height: 60px;
+  border: none;
 
-  @media @max-lg-tablet {
-    display: flex;
-    border-top: 1px solid rgba(255,255,255,0.3);
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-    margin-top: 10px;
-    justify-content: space-between;
+  @media @max-md-tablet {
+    display: none;
   }
 
   .ant-menu-item {
-    border-bottom: none;
-    font-size: 16px;
-    font-weight: 400;
+    border: none;
     height: 60px;
-
-    @media @max-sm-mobile {
-      font-size: 12px;
-    }
   }
 
-  .ant-menu-item-selected {
-    font-weight: 600;
+  .ant-menu-item-selected .menu-icon-group span {
+    font-weight: 700 !important;
   }
 }
 
@@ -240,7 +183,7 @@ export default class Nav extends Vue {
 .ant-menu-horizontal > .ant-menu-submenu-open,
 .ant-menu-horizontal > .ant-menu-item-selected,
 .ant-menu-horizontal > .ant-menu-submenu-selected {
-  border-bottom: none;
+  border: none;
 }
 
 @media @max-lg-tablet {

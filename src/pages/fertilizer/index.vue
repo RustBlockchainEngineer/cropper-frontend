@@ -1,193 +1,863 @@
 <template>
-  <div class="fertilizer cont">
-    <img class="planet-left" src="@/assets/Green Planet 1.png" />
+  <div class="fertilizer container">
     <div class="card">
       <div class="card-body">
-        <div class="page-head fs-container">
-          <span class="title">Fertilizer Beta</span>
-          <a href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/apply-for-fertilizer" target="_blank">
-            <div class="create">
-              <Button size="large" ghost> + &nbsp; Apply </Button>
+        <div class="fertilizer-head fcb-container">
+          <h3 class="title weightB">Fertilizer</h3>
+          <div class="information">
+            <div class="tvl-info">
+              <p class="textL weightS">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
             </div>
-          </a>
 
-          <div class="buttons">
-            <div class="count-down-group">
-              <div class="count-down">
-                <span v-if="autoRefreshTime - countdown < 10">0</span>
-                {{ autoRefreshTime - countdown }}
-                <div
-                  class="reload-btn"
+            <div class="action-btn-group">
+              <div class="reload-btn icon-cursor" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
+                <img src="@/assets/icons/reload.svg" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fertilizer-option-bar fcb-container">
+          <div class="option-tab-group">
+            <div class="option-tab">
+              <Button
+                class="textL weightS icon-cursor"
+                :class="filterProject === filterOptions.upcoming ? 'active-tab' : ''"
+                @click="
+                  () => {
+                    this.filterProject = filterOptions.upcoming
+                  }
+                "
+                >Upcoming</Button
+              >
+              <div v-if="filterProject === filterOptions.upcoming" class="active-underline"></div>
+            </div>
+            <div class="option-tab">
+              <Button
+                class="textL weightS icon-cursor"
+                :class="filterProject === filterOptions.preparation ? 'active-tab' : ''"
+                @click="
+                  () => {
+                    this.filterProject = filterOptions.preparation
+                  }
+                "
+              >
+                Preparation
+              </Button>
+              <div v-if="filterProject === filterOptions.preparation" class="active-underline"></div>
+            </div>
+            <div class="option-tab">
+              <Button
+                class="textL weightS icon-cursor"
+                :class="filterProject === filterOptions.funded ? 'active-tab' : ''"
+                @click="
+                  () => {
+                    this.filterProject = filterOptions.funded
+                  }
+                "
+              >
+                Funded
+              </Button>
+              <div v-if="filterProject === filterOptions.funded" class="active-underline"></div>
+            </div>
+          </div>
+
+          <div
+            class="option-tab-group option-tab-collapse icon-cursor"
+            @click="
+              () => {
+                this.showTabMenu = !this.showTabMenu
+              }
+            "
+          >
+            <label class="textL weightS icon-cursor">
+              {{
+                filterProject === filterOptions.upcoming
+                  ? filterOptions.upcoming
+                  : filterProject === filterOptions.preparation
+                  ? filterOptions.preparation
+                  : filterProject === filterOptions.funded
+                  ? filterOptions.funded
+                  : ''
+              }}
+            </label>
+            <img
+              class="arrow-icon"
+              :class="showTabMenu ? 'arrow-up' : 'arrow-down'"
+              src="@/assets/icons/arrow-down-white.svg"
+            />
+
+            <div
+              v-if="showTabMenu"
+              class="option-sort-collapse collapse-left"
+              v-click-outside="
+                () => {
+                  this.showTabMenu = false
+                }
+              "
+            >
+              <div
+                class="collapse-item text-center textM weightS icon-cursor"
+                :class="filterProject === filterOptions.upcoming ? 'active-item' : ''"
+                @click="
+                  () => {
+                    this.filterProject = filterOptions.upcoming
+                  }
+                "
+              >
+                Upcoming
+              </div>
+              <div
+                class="collapse-item text-center textM weightS icon-cursor"
+                :class="filterProject === filterOptions.preparation ? 'active-item' : ''"
+                @click="
+                  () => {
+                    this.filterProject = filterOptions.preparation
+                  }
+                "
+              >
+                Preparation
+              </div>
+              <div
+                class="collapse-item text-center textM weightS icon-cursor"
+                :class="filterProject === filterOptions.funded ? 'active-item' : ''"
+                @click="
+                  () => {
+                    this.filterProject = filterOptions.funded
+                  }
+                "
+              >
+                Funded
+              </div>
+            </div>
+          </div>
+
+          <div class="option-filter-group">
+            <div class="option-filter option-filter-fixed fcc-container icon-cursor">
+              <img
+                src="@/assets/icons/search.svg"
+                @click="
+                  () => {
+                    this.showSearchMenu = !this.showSearchMenu
+                  }
+                "
+              />
+            </div>
+
+            <div
+              v-if="showSearchMenu"
+              class="option-search-collapse"
+              v-click-outside="
+                () => {
+                  this.showSearchMenu = false
+                }
+              "
+            >
+              <div class="collapse-item-header fcb-container">
+                <label class="textL weightB">Search</label>
+                <img
+                  class="icon-cursor"
+                  src="@/assets/icons/close-circle-icon.svg"
                   @click="
                     () => {
-                      flush()
-                      $accessor.wallet.getTokenAccounts()
+                      this.showSearchMenu = false
                     }
                   "
+                />
+              </div>
+              <div class="collapse-item-body">
+                <input ref="userInput" v-model="searchName" class="textM" placeholder="Search" />
+              </div>
+            </div>
+
+            <div
+              class="option-filter option-sort fcc-container icon-cursor"
+              @click="
+                () => {
+                  this.showFilterMenu = !this.showFilterMenu
+                }
+              "
+            >
+              <span class="option-sort-item fcc-container bodyM weightS">
+                <label>Sort by:</label>
+                <span class="sort-detail">
+                  <span v-if="filterProject === filterOptions.upcoming">
+                    {{
+                      sortUpcoming === filterOptions.all
+                        ? filterOptions.all
+                        : sortUpcoming === filterOptions.whitelist
+                        ? filterOptions.whitelist
+                        : sortUpcoming === filterOptions.sales
+                        ? filterOptions.sales
+                        : sortUpcoming === filterOptions.distribution
+                        ? filterOptions.distribution
+                        : filterOptions.all
+                    }}
+                  </span>
+                  <span v-else-if="filterProject === filterOptions.funded">
+                    {{
+                      sortFunded === sortOptions.subscribers
+                        ? sortOptions.subscribers
+                        : sortFunded === sortOptions.total_raised
+                        ? sortOptions.total_raised
+                        : sortFunded === sortOptions.token_price
+                        ? sortOptions.token_price
+                        : sortFunded === sortOptions.ath
+                        ? sortOptions.ath
+                        : sortFunded === sortOptions.end_date
+                        ? sortOptions.end_date
+                        : ''
+                    }}
+                  </span>
+                  <span v-else>
+                    {{ filterOptions.preparation }}
+                  </span>
+                  <img
+                    v-if="filterProject != filterOptions.preparation"
+                    class="arrow-icon"
+                    :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
+                    src="@/assets/icons/arrow-down-white.svg"
+                  />
+                </span>
+              </span>
+            </div>
+
+            <div class="option-filter option-filter-collapse option-filter-fixed fcc-container icon-cursor">
+              <img
+                src="@/assets/icons/filter.svg"
+                @click="
+                  () => {
+                    this.showFilterMenu = !this.showFilterMenu
+                  }
+                "
+              />
+            </div>
+
+            <div
+              v-if="showFilterMenu"
+              v-click-outside="
+                () => {
+                  this.showFilterMenu = false
+                }
+              "
+            >
+              <div v-if="filterProject === filterOptions.upcoming" class="option-sort-collapse collapse-right">
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortUpcoming === filterOptions.all ? 'active-item' : ''"
+                  @click="sortByStatus(filterOptions.all)"
                 >
-                  <img src="@/assets/icons/loading.svg" />
+                  All
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortUpcoming === filterOptions.whitelist ? 'active-item' : ''"
+                  @click="sortByStatus(filterOptions.whitelist)"
+                >
+                  Whitelist Open
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortUpcoming === filterOptions.sales ? 'active-item' : ''"
+                  @click="sortByStatus(filterOptions.sales)"
+                >
+                  Sales
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortUpcoming === filterOptions.distribution ? 'active-item' : ''"
+                  @click="sortByStatus(filterOptions.distribution)"
+                >
+                  Distribution
+                </div>
+              </div>
+              <div v-else-if="filterProject === filterOptions.funded" class="option-sort-collapse collapse-right">
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortFunded === sortOptions.subscribers && !sortAsc ? 'active-item' : ''"
+                  @click="sortByColumnMenu(sortOptions.subscribers, false)"
+                >
+                  {{ sortOptions.subscribers }} (Low > High)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortFunded === sortOptions.subscribers && sortAsc ? 'active-item' : ''"
+                  @click="sortByColumnMenu(sortOptions.subscribers, true)"
+                >
+                  {{ sortOptions.subscribers }} (High > Low)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortFunded === sortOptions.total_raised && !sortAsc ? 'active-item' : ''"
+                  @click="sortByColumnMenu(sortOptions.total_raised, false)"
+                >
+                  {{ sortOptions.total_raised }} (Low > High)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortFunded === sortOptions.total_raised && sortAsc ? 'active-item' : ''"
+                  @click="sortByColumnMenu(sortOptions.total_raised, true)"
+                >
+                  {{ sortOptions.total_raised }} (High > Low)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortFunded === sortOptions.ath && !sortAsc ? 'active-item' : ''"
+                  @click="sortByColumnMenu(sortOptions.ath, false)"
+                >
+                  {{ sortOptions.ath }} (Low > High)
+                </div>
+                <div
+                  class="collapse-item text-center texts weightB icon-cursor"
+                  :class="sortFunded === sortOptions.ath && sortAsc ? 'active-item' : ''"
+                  @click="sortByColumnMenu(sortOptions.ath, true)"
+                >
+                  {{ sortOptions.ath }} (High > Low)
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="list pc-list" v-if="initialized">
-          <Row class="farm-head table-head">
-            <Col class="lp-icons" :span="isMobile ? 9 : 6">
-              <div class="title">Farm name</div>
-            </Col>
-            <Col class="state" :span="isMobile ? 6 : 4">
-              <div class="title">Status</div>
-            </Col>
-            <Col class="state" :span="isMobile ? 9 : 5">
-              <div class="title">Project website</div>
-            </Col>
-            <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">Airdrop event</div>
-            </Col>
-            <Col class="state" :span="isMobile ? 5 : 3">
-              <div class="title">Farm duration</div>
-            </Col>
-            <Col class="state" :span="isMobile ? 6 : 3">
-              <div class="title">Followers</div>
+        <div class="fertilizer-content">
+          <Row v-if="filterProject != filterOptions.funded" :gutter="[18, 28]">
+            <Col
+              v-for="(fertilizer, idx) in fertilizerItems"
+              :key="fertilizer.key"
+              :lg="idx === 0 ? 12 : 6"
+              :md="idx === 0 ? 16 : 8"
+              :sm="24"
+            >
+              <div class="fertilizer-project-table">
+                <div class="project-banner">
+                  <img class="banner" :src="fertilizer.picture" />
+                  <div
+                    class="project-status"
+                    :class="
+                      fertilizer.status === filterOptions.whitelist
+                        ? 'whitelist'
+                        : fertilizer.status === filterOptions.sales
+                        ? 'sales'
+                        : fertilizer.status === filterOptions.distribution
+                        ? 'distribution'
+                        : fertilizer.status === filterOptions.preparation
+                        ? 'preparation'
+                        : ''
+                    "
+                  >
+                    <span class="bodyXS weightB">
+                      {{
+                        fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
+                          ? 'Open Sales'
+                          : fertilizer.status
+                      }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="project-details">
+                  <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist ftb-container' : ''">
+                    <div class="project-title">
+                      <h4 class="weightB letterM">{{ fertilizer.title }}</h4>
+                      <span class="short-desc textM weightS letterS">{{ fertilizer.short_desc }}</span>
+                    </div>
+
+                    <div class="project-info fcb-container">
+                      <div class="project-balance">
+                        <div v-if="fertilizer.hard_cap">
+                          <span class="label textS weightS letterL">Total raised</span>
+                          <span class="value textM weightS letterS fcl-container">
+                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                            {{ fertilizer.hard_cap }} USDC
+                          </span>
+                        </div>
+                      </div>
+                      <div class="project-balance">
+                        <div v-if="fertilizer.participants">
+                          <span class="label textS weightS letterL">Participants</span>
+                          <span class="value textM weightS letterS fcl-container">{{ fertilizer.participants }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div v-if="idx === 0" class="project-info whitelist-countdown fcc-container text-center">
+                    <Countdown
+                      :title="
+                        fertilizer.status === filterOptions.whitelist
+                          ? 'End of the whitelist in'
+                          : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
+                          ? 'Sales starts in'
+                          : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
+                          ? 'End of the sales in'
+                          : fertilizer.status === filterOptions.distribution
+                          ? 'Distribution starts in'
+                          : fertilizer.status === filterOptions.preparation
+                          ? 'Whitelist starts in'
+                          : ''
+                      "
+                      :value="
+                        fertilizer.status === filterOptions.whitelist
+                          ? fertilizer.whitelist_end_date
+                          : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
+                          ? fertilizer.sales_start_date
+                          : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
+                          ? fertilizer.sales_end_date
+                          : fertilizer.status === filterOptions.distribution
+                          ? fertilizer.distribution_start_date
+                          : fertilizer.status === filterOptions.preparation
+                          ? fertilizer.whitelist_start_date
+                          : ''
+                      "
+                      format="DD:HH:mm:ss"
+                    />
+                  </div>
+
+                  <div v-else class="project-info fcl-container">
+                    <div
+                      v-if="
+                        fertilizer.sales_start_date ||
+                        fertilizer.sales_end_date ||
+                        fertilizer.distribution_start_date ||
+                        fertilizer.distribution_end_date ||
+                        fertilizer.whitelist_start_date ||
+                        fertilizer.whitelist_end_date
+                      "
+                    >
+                      <div
+                        v-if="
+                          fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
+                        "
+                        class="project-status open"
+                      >
+                        <span class="bodyXS weightB">Open Now</span>
+                      </div>
+                      <div v-else class="project-balance">
+                        <span class="label textS weightS letterL">
+                          {{
+                            fertilizer.status === filterOptions.sales
+                              ? filterOptions.sales
+                              : fertilizer.status === filterOptions.distribution
+                              ? filterOptions.distribution
+                              : ''
+                          }}
+                          starts in:
+                        </span>
+                        <span class="value fcl-container">
+                          <Countdown
+                            :value="
+                              fertilizer.status === filterOptions.sales
+                                ? fertilizer.sales_start_date
+                                : fertilizer.status === filterOptions.distribution
+                                ? fertilizer.distribution_start_date
+                                : 0
+                            "
+                            format="DD:HH:mm:ss"
+                          />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="btn-container">
+                    <Button
+                      v-if="fertilizer.status === filterOptions.whitelist"
+                      class="btn-transparent textM weightS fcc-container letterS"
+                      >Subscription</Button
+                    >
+                    <Button v-else class="btn-transparent textM weightS fcc-container letterS">More details</Button>
+                  </div>
+                </div>
+              </div>
             </Col>
           </Row>
 
-          <Collapse v-model="showCollapse" expand-icon-position="right">
-            <CollapsePanel v-for="farm in labelizedAmms" v-show="true" :key="farm.slug" :show-arrow="poolType">
-              <Row slot="header" class="farm-head" :class="isMobile ? 'is-mobile' : ''" :gutter="0">
-                <Col class="lp-icons" :span="isMobile ? 9 : 6">
-                  <div class="lp-icons-group">
-                    <div class="icons">
-                      <CoinIcon :mint-address="farm.tokenA.mint" />
-                      <span>{{ farm.tokenA.symbol }}</span>
-                      <div>-</div>
-                      <CoinIcon :mint-address="farm.tokenB.mint" />
-                      <span>{{ farm.tokenB.symbol }}</span>
+          <div v-else>
+            <!-- desktop version -->
+            <div class="fertilizer-funded-table isDesktop">
+              <Row class="fertilizer-funded-table-header">
+                <Col class="header-column textS weightB text-left" span="6"> Project name </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortByColumn(sortOptions.subscribers)">
+                    Subscribers
+                    <img
+                      v-if="sortFunded === sortOptions.subscribers"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="4">
+                  <div class="header-column-title" @click="sortByColumn(sortOptions.total_raised)">
+                    Total raised
+                    <img
+                      v-if="sortFunded === sortOptions.total_raised"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.total_raised && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.total_raised && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortByColumn(sortOptions.token_price)">
+                    Token price
+                    <img
+                      v-if="sortFunded === sortOptions.token_price"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.token_price && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.token_price && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="3">
+                  <div class="header-column-title" @click="sortByColumn(sortOptions.ath)">
+                    ATH Since IDO
+                    <img
+                      v-if="sortFunded === sortOptions.ath"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.ath && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.ath && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+                <Col class="header-column textS weightB" span="4">
+                  <div class="header-column-title" @click="sortByColumn(sortOptions.end_date)">
+                    Ended in UTC
+                    <img
+                      v-if="sortFunded === sortOptions.end_date"
+                      src="@/assets/icons/arrow-down-green.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.end_date && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/icons/arrow-down-white.svg"
+                      class="arrow-icon"
+                      :class="sortFunded === sortOptions.end_date && sortAsc ? 'arrow-down' : 'arrow-up'"
+                    />
+                  </div>
+                </Col>
+              </Row>
+
+              <div class="fertilizer-funded-table-body">
+                <Row
+                  class="fertilizer-funded-table-item"
+                  v-for="(fertilizer, idx) in fertilizerItems"
+                  :key="fertilizer.key"
+                >
+                  <Col class="state" span="6">
+                    <div class="project-name fcl-container">
+                      <img class="logo" :src="fertilizer.picture" />
+                      <div class="title">
+                        <span class="textM weightS">{{ fertilizer.title }}</span>
+                        <span class="short-desc bodXS weightS">{{ fertilizer.short_desc }}</span>
+                      </div>
                     </div>
-                  </div>
-                </Col>
+                  </Col>
 
-                <Col class="state" :span="isMobile ? 6 : 4"> 
-                  <div class="label" :style="'background-color: ' + farm.current_status.color"> {{farm.current_status.label}} 
-                  </div>
-                </Col>
+                  <Col class="state textM weightS" span="3">
+                    {{ fertilizer.subscribers }}
+                  </Col>
 
-                <Col v-if="!isMobile" class="state" :span="isMobile ? 6 : 5">
-                  <a :href="farm.website.url" target="_blank">{{ farm.website.display }}</a>
-                </Col>
+                  <Col class="state textM weightS" span="4">
+                    ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
+                  </Col>
+                  <Col class="state textM weightS" span="3">
+                    ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
+                  </Col>
+                  <Col class="state textM weightS" span="3">
+                    <div class="project-ath fcc-container">
+                      <Tooltip placement="bottomLeft">
+                        <template slot="title">
+                          <span class="textS weightS">If you invested 100$ you would have 1000$</span>
+                        </template>
+                        <div class="info-icon">
+                          <img src="@/assets/icons/info.svg" />
+                        </div>
+                      </Tooltip>
+                      <span class="value textM weightS letterS">+{{ fertilizer.ath }}%</span>
+                    </div>
+                  </Col>
+                  <Col class="state textM weightS" span="4">
+                    {{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}
+                  </Col>
+                  <Col class="state" span="1">
+                    <div class="show-more icon-cursor" @click="showMore(idx)">
+                      <img src="@/assets/icons/dot3.svg" />
+                      <div
+                        v-if="showMoreMenu[idx]"
+                        class="option-sort-collapse collapse-right"
+                        v-click-outside="hideMore"
+                      >
+                        <div class="collapse-item text-center textM weightS icon-cursor">
+                          <a> Stake </a>
+                        </div>
+                        <div class="collapse-item text-center textM weightS icon-cursor">
+                          <a> Swap </a>
+                        </div>
+                        <div class="collapse-item text-center textM weightS icon-cursor">
+                          <a class="social-link fcc-container" href="#" target="_blank">
+                            Share
+                            <img class="social-icon" src="@/assets/icons/share.svg" />
+                          </a>
+                        </div>
+                        <div class="collapse-item text-center textM weightS icon-cursor">
+                          <a class="social-link fcc-container" href="#" target="_blank">
+                            Twitter
+                            <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+            </div>
 
-                <Col class="state" :span="isMobile ? 6 : 3"> {{ farm.airdrop.amount }} ${{ farm.airdrop.symbol }} </Col>
+            <!-- tablet version -->
+            <div class="fertilizer-funded-table isTablet">
+              <Collapse v-model="showCollapse" accordion>
+                <CollapsePanel
+                  v-for="(fertilizer, idx) in fertilizerItems"
+                  :key="fertilizer.key"
+                  v-show="true"
+                  :show-arrow="true"
+                >
+                  <Row slot="header" class="collapse-header">
+                    <Col class="state" span="8">
+                      <div class="project-name fcl-container">
+                        <img class="logo" :src="fertilizer.picture" />
+                        <div class="title">
+                          <span class="textM weightS">{{ fertilizer.title }}</span>
+                          <span class="short-desc bodXS weightS">{{ fertilizer.short_desc }}</span>
+                        </div>
+                      </div>
+                    </Col>
 
-                <Col v-if="!isMobile" class="state" :span="3">
-                  {{ farm.duration }}
-                </Col>
+                    <Col class="state text-center" span="5">
+                      <span class="label textS weightB">Subscribers</span>
+                      <span class="textM weightS">{{ fertilizer.subscribers }} </span>
+                    </Col>
 
-                <Col v-if="!isMobile" class="state" :span="3">
-                  {{ farm.followers }}
-                </Col>
-              </Row>
+                    <Col class="state textM weightS text-center" span="5">
+                      <span class="label textS weightB">Total raised</span>
+                      ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
+                    </Col>
 
-              <Row v-if="poolType" :class="isMobile ? 'is-mobile' : '' + 'collapse-row'" :gutter="48">
-                <Col :span="!isMobile ? 14 : 10">
-                  <div class="banner">
-                    <img :src="farm.links.banner" class="large" alt=""/>
-                  </div>
-                </Col>
+                    <Col class="state textM weightS text-center" span="5">
+                      <span class="label textS weightB">Token price</span>
+                      ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
+                    </Col>
 
-                <Col :span="!isMobile ? 10 : 10">
-                  <div class="title">
-                    {{ farm.title }}
-                    <a v-show="farm.links.banner" :href="farm.website.url" target="_blank">
-                      <img class="social-icon" src="@/assets/icons/link_grey.svg"/>
-                    </a>
-                    <a v-show="farm.links.twitter" :href="farm.links.twitter" target="_blank">
-                      <img class="social-icon" src="@/assets/icons/twitter_grey.svg"/>
-                    </a>
-                    <a v-show="farm.links.telegram" :href="farm.links.telegram" target="_blank">
-                      <img class="social-icon" src="@/assets/icons/telegram_grey.svg"/>
-                    </a>
-                  </div>
-                  <div class="tags-group">
-                    <div v-for="tag in farm.tags" :key="tag.label" class="tag label" :style="'background-color: ' + tag.color">{{tag.label}}</div>
-                  </div>
-                  <div class="desc">{{ farm.desc }}</div>
+                    <Button class="detail-btn textS weightS">
+                      <img
+                        class="arrow-icon"
+                        :class="idx != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        src="@/assets/icons/arrow-down-white.svg"
+                      />
+                    </Button>
+                  </Row>
 
-                </Col>
-              </Row>
-            </CollapsePanel>
-          </Collapse>
+                  <Row class="collapse-row" :gutter="[18, 18]">
+                    <Col :span="12">
+                      <div class="ftb-container">
+                        <div class="state">
+                          <span class="label textS weightB">ATH Since IDO</span>
+                          <div class="project-ath fcc-container">
+                            <Tooltip placement="bottomLeft">
+                              <template slot="title">
+                                <span class="textS weightS">If you invested 100$ you would have 1000$</span>
+                              </template>
+                              <div class="info-icon">
+                                <img src="@/assets/icons/info.svg" />
+                              </div>
+                            </Tooltip>
+                            <span class="value textM weightS letterS">+{{ fertilizer.ath }}%</span>
+                          </div>
+                        </div>
+
+                        <div class="state text-center" span="5">
+                          <span class="label textS weightB">Ended in UTC</span>
+                          <span class="textM weightS">{{
+                            moment(fertilizer.distribution_end_date).format('MMMM Do YYYY')
+                          }}</span>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col class="btn-group" :span="12">
+                      <div class="fcr-container">
+                        <div class="btn-container">
+                          <Button class="btn-primary textS weightB"> Stake </Button>
+                        </div>
+
+                        <div class="btn-container">
+                          <Button class="btn-primary textS weightB"> Swap </Button>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col class="btn-group" :span="24">
+                      <div class="fcc-container">
+                        <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
+                          Share
+                          <img class="social-icon" src="@/assets/icons/share.svg" />
+                        </a>
+                        <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
+                          Twitter
+                          <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                        </a>
+                      </div>
+                    </Col>
+                  </Row>
+                </CollapsePanel>
+              </Collapse>
+            </div>
+
+            <!-- mobile version -->
+            <div class="fertilizer-funded-table isMobile">
+              <Collapse v-model="showCollapse" accordion>
+                <CollapsePanel
+                  v-for="(fertilizer, idx) in fertilizerItems"
+                  :key="fertilizer.key"
+                  v-show="true"
+                  :show-arrow="true"
+                >
+                  <Row slot="header" class="collapse-header">
+                    <Col class="state" span="23">
+                      <div class="project-name fcl-container">
+                        <img class="logo" :src="fertilizer.picture" />
+                        <div class="title">
+                          <span class="textM weightS">{{ fertilizer.title }}</span>
+                          <span class="short-desc bodXS weightS">{{ fertilizer.short_desc }}</span>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Button class="detail-btn textS weightS">
+                      <img
+                        class="arrow-icon"
+                        :class="idx != showCollapse ? 'arrow-up' : 'arrow-down'"
+                        src="@/assets/icons/arrow-down-white.svg"
+                      />
+                    </Button>
+                  </Row>
+
+                  <Row class="collapse-row" :gutter="[18, 18]">
+                    <Col :span="24">
+                      <div class="fcb-container">
+                        <div class="state">
+                          <span class="label textS weightB">Total raised</span>
+                          <span class="textM weightS"
+                            >${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}</span
+                          >
+                        </div>
+
+                        <div class="state">
+                          <span class="label textS weightB">Subscribers</span>
+                          <span class="textM weightS">{{ fertilizer.subscribers }}</span>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col :span="24">
+                      <div class="fcb-container">
+                        <div class="state">
+                          <span class="label textS weightB">Token price</span>
+                          <span class="textM weightS letterS"
+                            >${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}</span
+                          >
+                        </div>
+
+                        <div class="state">
+                          <span class="label textS weightB">ATH Since IDO</span>
+                          <div class="project-ath fcc-container">
+                            <Tooltip placement="bottomLeft">
+                              <template slot="title">
+                                <span class="textS weightS">If you invested 100$ you would have 1000$</span>
+                              </template>
+                              <div class="info-icon">
+                                <img src="@/assets/icons/info.svg" />
+                              </div>
+                            </Tooltip>
+                            <span class="value textM weightS letterS">+{{ fertilizer.ath }}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col :span="24">
+                      <div class="fcb-container">
+                        <div class="state" span="5">
+                          <span class="label textS weightB">Ended in UTC</span>
+                          <span class="textM weightS">{{
+                            moment(fertilizer.distribution_end_date).format('MMMM Do YYYY')
+                          }}</span>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col class="btn-group" :span="24">
+                      <div class="btn-group-item fcc-container">
+                        <div class="btn-container">
+                          <Button class="btn-primary textS weightB"> Stake </Button>
+                        </div>
+
+                        <div class="btn-container">
+                          <Button class="btn-primary textS weightB"> Swap </Button>
+                        </div>
+                      </div>
+
+                      <div class="btn-group-item fcc-container">
+                        <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
+                          Share
+                          <img class="social-icon" src="@/assets/icons/share.svg" />
+                        </a>
+                        <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
+                          Twitter
+                          <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                        </a>
+                      </div>
+                    </Col>
+                  </Row>
+                </CollapsePanel>
+              </Collapse>
+            </div>
+          </div>
         </div>
 
-        <!-- Mobile list -->
-        <div class="list mobile-list" v-if="initialized">
-          <Collapse v-model="showCollapse" expand-icon-position="right">
-            <CollapsePanel v-for="farm in labelizedAmms" v-show="true" :key="farm.slug" :show-arrow="poolType">
-              <Row slot="header" class="farm-head">
-                <Col :span="24">
-                  <div class="title"> {{ farm.title }} </div>
+        <!-- <div v-if="initialized"></div>
 
-                  <div class="detailButton">
-                    <button>Details</button>
-                  </div>
-                </Col>
-              </Row>
-              <Row class="farm-head">
-                <Col :span="24">
-                  <div class="followerscount">
-                    <span>{{ farm.followers }} </span> Followers
-                  </div>
-                  <div class="tags-group">
-                    <div v-for="tag in farm.tags" :key="tag.label" class="tag label" :style="'background-color: ' + tag.color">{{tag.label}}</div>
-                  </div>
-                </Col>
-              </Row>
-              <Row class="farm-head">
-                <Col class="lp-icons" :span="24">
-                  <div class="lp-icons-group">
-                    <div class="icons">
-                      <CoinIcon :mint-address="farm.tokenA.mint" />
-                      <span>{{ farm.tokenA.symbol }}</span>
-                      <div>-</div>
-                      <CoinIcon :mint-address="farm.tokenB.mint" />
-                      <span>{{ farm.tokenB.symbol }}</span>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-              <Row class="farm-head">
-                <Col class="state" :span="12">
-                  <div class="title">Farm duration</div>
-                </Col>
-                <Col class="state" :span="12">
-                  {{ farm.duration }}
-                </Col>
-              </Row>
-              <Row class="farm-head">
-                <Col class="state" :span="12">
-                  <div class="title">Airdrop event</div>
-                </Col>
-                <Col class="state" :span="12"> {{ farm.airdrop.amount }} ${{ farm.airdrop.symbol }} </Col>
-              </Row>
-              <Row class="farm-head">
-                <Col class="state" :span="12">
-                  <div class="title">Status</div>
-                </Col>
-                <Col class="state" :span="12">
-                  <div class="label" :style="'background-color: ' + farm.current_status.color">
-                    {{ farm.current_status.label }}
-                  </div>
-                </Col>
-              </Row>
-            </CollapsePanel>
-          </Collapse>
-        </div>
-        <div v-else class="fc-container">
+        <div v-else class="fcc-container">
           <Spin :spinning="true">
             <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
           </Spin>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -197,38 +867,32 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import importIcon from '@/utils/import-icon'
-import { Spin, Icon, Collapse, Col, Radio, Row, Select, Switch as Toggle, Pagination } from 'ant-design-vue'
+import { Collapse, Row, Col, Pagination, Button, Statistic, Tooltip } from 'ant-design-vue'
 import { get, cloneDeep } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
+const Vco = require('v-click-outside')
+Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
-const RadioGroup = Radio.Group
-const RadioButton = Radio.Button
+const Countdown = Statistic.Countdown
 
 export default Vue.extend({
   components: {
-    //Toggle,
-    //Collapse,
-    CollapsePanel,
-    Spin,
-    Icon,
+    // Spin,
+    // Icon,
     Collapse,
+    CollapsePanel,
+    Row,
     Col,
-    Row
-    //Select,
-    //Pagination
+    Button,
+    Countdown,
+    Tooltip
   },
-
-  //    ,
-  //    RadioGroup,
-  //    RadioButton
-
   data() {
     return {
-      isMobile: false,
       searchName: '',
       coinPicUrl: '',
       initialized: false as boolean,
@@ -243,18 +907,190 @@ export default Vue.extend({
       timer: null as any,
       loading: false as boolean,
       nbFarmsLoaded: 0 as number,
-      poolType: true as boolean
+      poolType: true as boolean,
+      TVL: 0,
+      activeSpinning: false as boolean,
+      showTabMenu: false as boolean,
+      showSearchMenu: false as boolean,
+      showFilterMenu: false as boolean,
+      showMoreMenu: [] as boolean[],
+      currentShowMore: -1 as number,
+      sortUpcoming: 'All' as string,
+      sortFunded: 'Subscribers' as string,
+      sortAsc: false as boolean,
+      filterOptions: {
+        all: 'All',
+        whitelist: 'Whitelist Open',
+        sales: 'Sales',
+        distribution: 'Distribution',
+        upcoming: 'Upcoming',
+        preparation: 'Preparation',
+        funded: 'Funded'
+      },
+      sortOptions: {
+        subscribers: 'Subscribers',
+        total_raised: 'Total raised',
+        token_price: 'Token price',
+        ath: 'ATH Since IDO',
+        end_date: 'Ended in UTC'
+      },
+      filterProject: 'Upcoming' as string,
+      fertilizerItems: [] as any[],
+      fertilizerData: [
+        {
+          status: 'Whitelist Open',
+          key: 'k0',
+          picture: '/fertilizer/banner/unq.png',
+          title: 'UNQ.club',
+          short_desc: 'Social platform for NFT asset management',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_end_date: 1643500800000
+        },
+        {
+          status: 'Sales',
+          key: 'k1',
+          picture: '/fertilizer/banner/metaprints.png',
+          title: 'Metaprints',
+          short_desc: 'Blueprints for metaverses',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          sales_start_date: 1641280215000,
+          sales_end_date: 1643500800000
+        },
+        {
+          status: 'Sales',
+          key: 'k2',
+          picture: '/fertilizer/banner/galaxy.png',
+          title: 'Galaxy War',
+          short_desc: 'Our galatic adventure awaits',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          sales_start_date: 1643500800000
+        },
+        {
+          status: 'Distribution',
+          key: 'k3',
+          picture: '/fertilizer/banner/meanfi.png',
+          title: 'MeanFI',
+          short_desc: 'Grow your money stash with the best prices across DeFi',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          distribution_start_date: 1643500800000
+        },
+        {
+          status: 'Preparation',
+          key: 'k4',
+          picture: '/fertilizer/banner/agoric.png',
+          title: 'Agoric',
+          short_desc: 'Social platform for NFT asset management',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_start_date: 1643500800000
+        },
+        {
+          status: 'Preparation',
+          key: 'k5',
+          picture: '/fertilizer/banner/metaprints.png',
+          title: 'Metaprints',
+          short_desc: 'Blueprints for metaverses',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+        },
+        {
+          status: 'Funded',
+          key: 'k6',
+          picture: '/fertilizer/logo/defiland.png',
+          title: 'DeFi Land',
+          short_desc: 'Gamified Decentralized Finance',
+          subscribers: 1000,
+          hard_cap: 250000,
+          token_price: 0.068,
+          ath: 526.7,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k7',
+          picture: '/fertilizer/logo/sonar.png',
+          title: 'Sonar Watch',
+          short_desc: 'Empowering user journey on Solana DeFi',
+          subscribers: 1001,
+          hard_cap: 249999,
+          token_price: 0.069,
+          ath: 526.6,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k8',
+          picture: '/fertilizer/logo/goosefx.png',
+          title: 'GooseFX',
+          short_desc: 'A Complete DeFi Experience',
+          subscribers: 1002,
+          hard_cap: 249998,
+          token_price: 0.07,
+          ath: 526.5,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k9',
+          picture: '/fertilizer/logo/waggle.png',
+          title: 'Waggle Network',
+          short_desc: 'Primary markets for everyone',
+          subscribers: 1003,
+          hard_cap: 249997,
+          token_price: 0.071,
+          ath: 526.4,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k10',
+          picture: '/fertilizer/logo/cryowar.png',
+          title: 'Cryowar',
+          short_desc: 'Next-gen blockchain multiplayer game',
+          subscribers: 1004,
+          hard_cap: 249996,
+          token_price: 0.071,
+          ath: 526.3,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k11',
+          picture: '/fertilizer/logo/cyclos.png',
+          title: 'Cyclos',
+          short_desc: 'Decentralized trading unleashed',
+          subscribers: 1005,
+          hard_cap: 249995,
+          token_price: 0.073,
+          ath: 526.2,
+          distribution_end_date: 1643500800000
+        }
+      ],
+      currentTimestamp: 0
     }
   },
-
   head: {
-    title: 'CropperFinance'
+    title: 'CropperFinance Fertilizer'
   },
-
   computed: {
     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
   async mounted() {
+    this.getTvl()
     this.$accessor.token.loadTokens()
     await this.updateLabelizedAmms()
 
@@ -268,65 +1104,85 @@ export default Vue.extend({
       clearInterval(this.timer)
       this.setTimer()
     }, 1000)
-  },
 
+    this.currentTimestamp = moment().valueOf()
+    this.updateFertilizer()
+  },
   watch: {
     showCollapse: {
+      immediate: true,
       handler() {
-        if (!this.poolType && this.showCollapse.length > 0) {
-          alert('here')
-          this.showCollapse.splice(0, this.showCollapse.length)
-        }
+        // console.log(this.showCollapse)
+        //if (this.showCollapse.length > 0) {
+        //  this.showCollapse.splice(0, this.showCollapse.length)
+        //}
+      },
+      deep: true
+    },
+    searchName: {
+      handler(newSearchName: string) {
+        this.filterFertilizer(newSearchName, this.filterProject)
+      },
+      deep: true
+    },
+    filterProject: {
+      handler(newFilterProject: string) {
+        this.sortUpcoming = this.filterOptions.all
+        this.sortFunded = this.sortOptions.subscribers
+        this.sortAsc = false
+        this.showFilterMenu = false
+        this.filterFertilizer(this.searchName, newFilterProject)
       },
       deep: true
     }
   },
-
   methods: {
     importIcon,
+    TokenAmount,
+    async getTvl() {
+      let cur_date = new Date().getTime()
+      if (window.localStorage.TVL_last_updated) {
+        const last_updated = parseInt(window.localStorage.TVL_last_updated)
+        if (cur_date - last_updated <= 600000) {
+          this.TVL = window.localStorage.TVL
+          return
+        }
+      }
 
+      let responseData: any = []
+      let tvl = 0
+      try {
+        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
+
+        Object.keys(responseData).forEach(function (key) {
+          if ((responseData as any)[key as any].tvl * 1 < 2000000) {
+            tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
+          }
+        })
+      } catch {
+        // dummy data
+      } finally {
+      }
+
+      try {
+        responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
+        tvl = tvl * 1 + (responseData as any).value * 1
+      } catch {
+        // dummy data
+      } finally {
+      }
+
+      this.TVL = Math.round(tvl)
+
+      window.localStorage.TVL_last_updated = new Date().getTime()
+      window.localStorage.TVL = this.TVL
+    },
     async flush() {
       await this.updateLabelizedAmms()
       clearInterval(this.timer)
       this.poolLoaded = true
       this.countdown = 0
       this.setTimer()
-    },
-
-    setTimer() {
-      this.timer = setInterval(async () => {
-        if (!this.loading) {
-          if (this.countdown < this.autoRefreshTime) {
-            this.countdown += 1
-            if (this.countdown === this.autoRefreshTime) {
-              await this.flush()
-            }
-          }
-        }
-      }, 1000)
-    },
-
-    getCoinPicUrl() {
-      let token
-      if (this.mintAddress == NATIVE_SOL.mintAddress) {
-        token = NATIVE_SOL
-      } else {
-        token = Object.values(TOKENS).find((item) => item.mintAddress === this.mintAddress)
-      }
-      if (token) {
-        this.coinName = token.symbol.toLowerCase()
-        if (token.picUrl) {
-          this.coinPicUrl = token.picUrl
-        } else {
-          this.coinPicUrl = ''
-        }
-      }
-    },
-    TokenAmount,
-    goToProject(farm: any) {
-      this.$router.push({
-        path: '/fertilizer/project/?f=' + farm.slug
-      })
     },
     async updateLabelizedAmms() {
       this.labelizedAmms = {}
@@ -362,581 +1218,893 @@ export default Vue.extend({
         })
       }
     },
-
     async delay(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms))
+    },
+    setTimer() {
+      this.timer = setInterval(async () => {
+        if (!this.loading) {
+          if (this.countdown < this.autoRefreshTime) {
+            this.countdown += 1
+            if (this.countdown === this.autoRefreshTime) {
+              await this.flush()
+            }
+          }
+        }
+      }, 1000)
+    },
+    reloadTimer() {
+      this.flush()
+      this.$accessor.wallet.getTokenAccounts()
+      this.activeSpinning = true
+      setTimeout(() => {
+        this.activeSpinning = false
+      }, 1000)
+    },
+    updateFertilizer() {
+      this.filterFertilizer(this.searchName, this.filterProject)
+    },
+    filterFertilizer(searchName: string, filterProject: string) {
+      // filter with tabs
+      if (filterProject === this.filterOptions.upcoming) {
+        this.fertilizerItems = this.fertilizerData.filter(
+          (fertilizer: any) =>
+            fertilizer.status != this.filterOptions.preparation && fertilizer.status != this.filterOptions.funded
+        )
+
+        // sort by status on Upcoming projects
+        if (this.sortUpcoming === this.filterOptions.all) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) =>
+              fertilizer.status != this.filterOptions.preparation && fertilizer.status != this.filterOptions.funded
+          )
+        } else if (this.sortUpcoming === this.filterOptions.whitelist) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) => fertilizer.status === this.filterOptions.whitelist
+          )
+        } else if (this.sortUpcoming === this.filterOptions.sales) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) => fertilizer.status === this.filterOptions.sales
+          )
+        } else if (this.sortUpcoming === this.filterOptions.distribution) {
+          this.fertilizerItems = this.fertilizerItems.filter(
+            (fertilizer: any) => fertilizer.status === this.filterOptions.distribution
+          )
+        }
+      } else if (filterProject === this.filterOptions.preparation) {
+        this.fertilizerItems = this.fertilizerData.filter(
+          (fertilizer: any) => fertilizer.status === this.filterOptions.preparation
+        )
+      } else {
+        this.fertilizerItems = this.fertilizerData.filter(
+          (fertilizer: any) => fertilizer.status === this.filterOptions.funded
+        )
+
+        // sort by column on Funded projects
+        if (this.sortAsc) {
+          if (this.sortFunded == this.sortOptions.subscribers) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.subscribers - a.subscribers)
+          } else if (this.sortFunded == this.sortOptions.total_raised) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.hard_cap - a.hard_cap)
+          } else if (this.sortFunded == this.sortOptions.token_price) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.token_price - a.token_price)
+          } else if (this.sortFunded == this.sortOptions.ath) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.ath - a.ath)
+          } else if (this.sortFunded == this.sortOptions.end_date) {
+            this.fertilizerItems = this.fertilizerItems.sort(
+              (a: any, b: any) => b.distribution_end_date - a.distribution_end_date
+            )
+          }
+        } else {
+          if (this.sortFunded == this.sortOptions.subscribers) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.subscribers - b.subscribers)
+          } else if (this.sortFunded == this.sortOptions.total_raised) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.hard_cap - b.hard_cap)
+          } else if (this.sortFunded == this.sortOptions.token_price) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.token_price - b.token_price)
+          } else if (this.sortFunded == this.sortOptions.ath) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.ath - b.ath)
+          } else if (this.sortFunded == this.sortOptions.end_date) {
+            this.fertilizerItems = this.fertilizerItems.sort(
+              (a: any, b: any) => a.distribution_end_date - b.distribution_end_date
+            )
+          }
+        }
+      }
+
+      // search with name
+      if (searchName != '') {
+        console.log(searchName)
+        this.fertilizerItems = this.fertilizerItems.filter((fertilizer: any) =>
+          fertilizer.title.toLowerCase().includes(searchName.toLowerCase())
+        )
+      }
+
+      this.showMoreMenu = []
+      this.fertilizerItems.forEach((element) => {
+        this.showMoreMenu.push(false)
+      })
+    },
+    moment() {
+      return moment()
+    },
+    getCoinPicUrl() {
+      let token
+      if (this.mintAddress == NATIVE_SOL.mintAddress) {
+        token = NATIVE_SOL
+      } else {
+        token = Object.values(TOKENS).find((item) => item.mintAddress === this.mintAddress)
+      }
+      if (token) {
+        this.coinName = token.symbol.toLowerCase()
+        if (token.picUrl) {
+          this.coinPicUrl = token.picUrl
+        } else {
+          this.coinPicUrl = ''
+        }
+      }
+    },
+    goToProject(fertilizer: any) {
+      this.$router.push({
+        path: '/fertilizer/project/?f=' + fertilizer.uniqueKey
+      })
+    },
+    sortByStatus(option: string) {
+      this.sortUpcoming = option
+      this.showFilterMenu = false
+      this.filterFertilizer(this.searchName, this.filterProject)
+    },
+    sortByColumn(option: string) {
+      if (this.sortFunded === option) this.sortAsc = !this.sortAsc
+      this.sortFunded = option
+      this.filterFertilizer(this.searchName, this.filterProject)
+    },
+    sortByColumnMenu(option: string, asc: boolean) {
+      this.sortFunded = option
+      this.sortAsc = asc
+      this.showFilterMenu = false
+      this.filterFertilizer(this.searchName, this.filterProject)
+    },
+    showMore(idx: number) {
+      if (idx != this.currentShowMore) {
+        this.showMoreMenu = this.showMoreMenu.map((item) => {
+          return false
+        })
+      }
+      this.showMoreMenu = this.showMoreMenu.map((item, i) => {
+        if (i === idx) {
+          this.currentShowMore = idx
+          return !item
+        }
+        return item
+      })
+      console.log(this.showMoreMenu)
+    },
+    hideMore() {
+      if (this.currentShowMore != -1) {
+        this.showMoreMenu = this.showMoreMenu.map((item) => {
+          return false
+        })
+        this.currentShowMore = -1
+      }
     }
   }
 })
 </script>
 
 <style lang="less" scoped>
-@import '../../styles/variables';
-
-.card-body {
-  padding: 0;
-  margin: 0;
-}
-.radioButtonStyle {
-  width: 50%;
-  text-align: center;
+// global stylesheet
+.btn-container {
+  background: @gradient-color01;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 48px;
+  padding: 3px;
+  height: auto;
 }
 
-.btncontainer {
-  background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
+.btn-transparent {
+  background: transparent;
+  border-radius: 48px;
+  border: none;
+  height: auto;
+  width: 100%;
+  padding: 7.5px 0;
+}
+
+.btn-primary {
+  background: @color-blue700;
+  border-radius: 48px;
+  border: none;
+  height: auto;
+  width: auto;
+  padding: 4.5px 23.5px;
+}
+
+.option-sort-collapse {
+  position: absolute;
+  top: 50px;
+  background: @gradient-color-primary;
   background-origin: border-box;
-  display: inline-block;
-  width: unset;
-  text-align: center;
-  position: relative;
-  max-width: 400px;
-  margin: 10px auto;
-  padding: 2px;
-  border-radius: 30px;
-  max-height: 65px;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  min-width: 188px;
+  z-index: 999;
 
-  button {
-    background: @color-bg !important;
-    position: relative;
-    border-radius: 30px;
-    border-color: transparent;
+  &.collapse-left {
+    left: 0;
+  }
+
+  &.collapse-right {
+    right: 0;
+  }
+
+  .collapse-item {
+    padding: 18px 0;
+    border-bottom: 1px solid #c4c4c420;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &.active-item {
+      color: @color-petrol500;
+    }
+
+    a {
+      color: #fff;
+    }
   }
 }
 
-.fertilizer {
-  .list {
-    text-align: center;
+.project-status {
+  padding: 4px 8px;
+  border-radius: 6px;
+
+  &.whitelist {
+    background: @color-red600;
   }
 
-  .pc-list {
-    @media @max-sl-mobile {
-      display: none;
-    }
+  &.sales {
+    background: @color-purple500;
   }
 
-  .mobile-list {
-    display: none;
+  &.distribution {
+    background: @color-yellow600;
+    color: @color-neutral900;
+  }
 
-    @media @max-sl-mobile {
+  &.preparation {
+    background: @color-pink600;
+  }
+
+  &.open {
+    background: @color-green500;
+  }
+}
+
+.project-name {
+  .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 18px;
+  }
+
+  .title {
+    text-align: left;
+
+    .short-desc {
       display: block;
+      color: rgba(255, 255, 255, 0.7);
     }
+  }
+}
 
-    .ant-collapse .ant-collapse-item {
-      background: #0e1046;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-sizing: border-box;
-      border-radius: 14px;
-      padding: 10px;
-      margin-bottom: 20px;
+.project-ath {
+  .value {
+    background: @color-petrol400;
+    color: @color-blue800;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+}
 
-      .ant-collapse-content .farm-head .btncontainer {
+.info-icon {
+  img {
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+  }
+}
+
+.arrow-icon {
+  transition: all 0.3s;
+
+  &.arrow-up {
+    transform: rotate(180deg);
+  }
+}
+
+.social-link {
+  color: #fff;
+
+  .social-icon {
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+  }
+}
+
+.detail-btn {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.isDesktop {
+  @media @max-lg-tablet {
+    display: none;
+  }
+}
+
+.isTablet {
+  display: none;
+
+  @media @max-lg-tablet {
+    display: unset;
+  }
+
+  @media @max-sl-mobile {
+    display: none;
+  }
+}
+
+.isMobile {
+  display: none;
+
+  @media @max-sl-mobile {
+    display: unset;
+  }
+}
+
+// class stylesheet
+.fertilizer.container {
+  margin: 38px 0;
+
+  @media @max-sl-mobile {
+    margin: 28px 0;
+  }
+
+  .card {
+    .card-body {
+      padding: 0;
+
+      .fertilizer-head {
         @media @max-sl-mobile {
-          height: 44px;
-          width: 105px;
+          display: block !important;
         }
 
-        button {
-            @media @max-sl-mobile {
-            height: 40px;
-            font-size: 14px;
+        .title {
+          text-align: center;
+          position: relative;
+          float: left;
+
+          @media @max-sl-mobile {
+            margin-bottom: 18px !important;
           }
         }
-      }
 
-      .ant-collapse-header {
-        .farm-head {
-          .ant-col {
+        .information {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          @media @max-sl-mobile {
+            width: 100%;
+          }
+
+          .tvl-info {
+            margin-right: 18px;
+          }
+
+          .action-btn-group {
             display: flex;
             align-items: center;
-          }
 
-          .title {
-            font-size: 25px;
-            font-style: normal;
-            font-weight: 700;
-            line-height: 31px;
-            letter-spacing: 0;
-            text-align: left;
-          }
-          
-          .detailButton {
-            background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%) !important;
-            background-origin: border-box;
-            display: inline-block;
-            padding: 1px;
-            border-radius: 23px;
-            position: absolute;
-            right: 0;
+            .reload-btn {
+              background: @color-blue600;
+              border-radius: 8px;
+              padding: 6px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
 
-            button {
-              height: 42px;
-              padding: 11px 32px 11px 24px;
-              color: #fff;
-              font-size: 14px;
-              letter-spacing: -0.05em;
-              background: #16164A;
-              border-radius: 22px;
-              border: transparent;
+              @media @max-lg-tablet {
+                margin-left: 5px;
+              }
+
+              img {
+                width: 18px;
+                height: 18px;
+              }
+
+              &.active img {
+                transform: rotate(360deg);
+                transition: all 1s ease-in-out;
+              }
             }
           }
         }
       }
 
-      .ant-collapse-content {
-        .farm-head {
-          .followerscount {
-            text-align: left;
-            font-weight: normal;
-            font-size: 18px;
-            line-height: 22px;
+      .fertilizer-option-bar {
+        margin: 38px 0;
 
-            span {
-              font-weight: normal;
-              font-size: 25px;
-              line-height: 30px;
-              color: #00dbb9;
+        @media @max-sl-mobile {
+          margin: 28px 0;
+        }
+
+        .option-tab-group {
+          display: flex;
+
+          @media @max-sl-mobile {
+            display: none;
+          }
+
+          &.option-tab-collapse {
+            display: none;
+
+            @media @max-sl-mobile {
+              position: relative;
+              display: flex;
+              align-items: center;
+              padding: 6px 10px;
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+
+              label {
+                color: @color-petrol500;
+              }
+
+              .arrow-icon {
+                margin-left: 4px;
+              }
             }
           }
 
-          .tags-group {
-            margin-bottom: 0 !important;
+          .option-tab {
+            margin-right: 38px;
+
+            &:last-child {
+              margin-right: 0;
+            }
+
+            button {
+              background: transparent;
+              border: none;
+              outline: none;
+              padding: 0;
+              margin-bottom: 8px;
+
+              &.active-tab {
+                color: @color-petrol500;
+              }
+
+              .deposit-icon {
+                margin-right: 8px;
+              }
+            }
+
+            .active-underline {
+              height: 4px;
+              border-radius: 10px;
+              background: @color-petrol400;
+            }
           }
+        }
 
-          .lp-icons {
-            justify-content: center;
-          }
+        .option-filter-group {
+          position: relative;
+          display: flex;
+          align-items: center;
 
-          .state:nth-child(1) {
-            justify-content: flex-start;
+          .option-filter {
+            border: 2px solid @color-blue500;
+            border-radius: 8px;
+            padding: 0 8px;
+            height: 40px;
+            margin-left: 18px;
 
-            .title {
-              font-size: 14px;
-              line-height: 17px;
+            @media @max-sl-mobile {
+              height: 32px;
+              padding: 0 4px;
+            }
+
+            &:first-child {
+              margin-left: 0;
+            }
+
+            &.option-filter-fixed {
+              width: 40px;
+
+              @media @max-sl-mobile {
+                width: 32px;
+              }
+            }
+
+            &.option-filter-collapse {
+              display: none !important;
+
+              @media @max-md-tablet {
+                display: flex !important;
+              }
+            }
+
+            &.option-sort {
+              @media @max-md-tablet {
+                display: none !important;
+              }
+            }
+
+            .option-sort-item {
+              letter-spacing: 0.15px;
+
+              label {
+                color: #eae8f1;
+                opacity: 0.5;
+                margin-right: 8px;
+              }
+
+              .sort-detail {
+                display: flex;
+                align-items: center;
+
+                .arrow-icon {
+                  margin-left: 8px;
+                }
+              }
             }
           }
 
-          .state:nth-child(2) {
-            justify-content: flex-end;
-            font-size: 16px;
-            font-weight: 600;
+          .option-search-collapse {
+            position: absolute;
+            top: 0;
+            left: -209px;
+            transition: visibility 0s, opacity 0.5s linear;
+            background: @color-blue700;
+            border: 2px solid @color-blue500;
+            border-radius: 8px;
+            padding: 18px;
+            z-index: 999;
+            width: 250px;
+
+            .collapse-item-header {
+              margin-bottom: 10px;
+            }
+
+            .collapse-item-body {
+              input {
+                border: 2px solid @color-blue400;
+                border-radius: 8px;
+                padding: 8px 18px;
+                background-color: transparent;
+                color: #ccd1f1;
+                width: 100%;
+
+                &:active,
+                &:focus,
+                &:hover {
+                  outline: 0;
+                }
+
+                &::placeholder {
+                  color: #ccd1f1;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .fertilizer-content {
+        .fertilizer-project-table {
+          background: @color-blue700;
+          border: 3px solid @color-blue500;
+          border-radius: 18px;
+
+          .project-banner {
+            position: relative;
+            border-bottom: 3px solid @color-blue500;
+            height: 190px;
+
+            .banner {
+              width: 100%;
+              height: 100%;
+              border-radius: 18px 18px 0 0;
+            }
+
+            .project-status {
+              position: absolute;
+              top: 9px;
+              left: 13px;
+            }
+          }
+
+          .project-details {
+            padding: 14px;
+
+            .project-title {
+              .short-desc {
+                display: block;
+                margin-top: 4px;
+                height: 48px;
+
+                @media @max-lg-tablet {
+                  height: 66px;
+                }
+
+                @media @max-sl-mobile {
+                  height: 48px;
+                }
+              }
+            }
+
+            .project-info {
+              margin-top: 18px;
+              height: 48px;
+
+              .project-balance {
+                @media @max-lg-tablet {
+                  height: 48px;
+                }
+
+                .label {
+                  color: rgba(255, 255, 255, 0.6);
+                }
+
+                .value {
+                  .coin-icon {
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    margin-right: 8px;
+                  }
+                }
+              }
+
+              &.whitelist-countdown {
+                height: 114px;
+                background: @color-blue800;
+                padding: 8px;
+                border-radius: 18px;
+
+                @media @max-lg-tablet {
+                  margin-top: 72px;
+                }
+
+                @media @max-sl-mobile {
+                  margin-top: 18px;
+                }
+              }
+
+              &.fcb-container {
+                @media @max-lg-tablet {
+                  display: inline-block !important;
+
+                  .project-balance {
+                    margin-bottom: 18px;
+
+                    &:last-child {
+                      margin-bottom: 0;
+                    }
+                  }
+                }
+              }
+            }
+
+            .project-desc {
+              .project-info {
+                @media @max-lg-tablet {
+                  height: 111px;
+                }
+              }
+
+              &.project-desc-whitelist {
+                @media @max-sl-mobile {
+                  display: inline-block !important;
+                }
+
+                .project-title {
+                  width: 50%;
+
+                  @media @max-lg-tablet {
+                    width: 60%;
+                  }
+
+                  @media @max-sl-mobile {
+                    width: 100%;
+                  }
+                }
+
+                .project-info {
+                  margin-top: 0;
+                  height: auto;
+                  width: 50%;
+
+                  @media @max-lg-tablet {
+                    width: 40%;
+                  }
+
+                  @media @max-sl-mobile {
+                    width: 100%;
+                    margin-top: 18px;
+                  }
+                }
+              }
+            }
+          }
+
+          .btn-container {
+            margin-top: 18px;
+          }
+        }
+
+        .fertilizer-funded-table {
+          width: 100%;
+
+          .fertilizer-funded-table-header {
+            &.scrollFixed {
+              position: sticky;
+              background: @color-blue800;
+              top: 70px;
+              z-index: 999;
+              width: 100%;
+              transition: 0.3s all ease-in-out;
+            }
+
+            .header-column {
+              text-align: center;
+              padding: 18px 0;
+              color: @color-neutral400;
+
+              .header-column-title {
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+
+                .arrow-icon {
+                  margin-left: 4px;
+                }
+
+                .sort-icon-active {
+                  color: #13ecab;
+                }
+              }
+            }
+          }
+
+          .fertilizer-funded-table-body {
+            .fertilizer-funded-table-item {
+              display: flex;
+              align-items: center;
+              background: rgba(23, 32, 88, 0.9);
+              border-radius: 8px;
+              padding: 18px;
+              margin-bottom: 8px;
+              border: 3px solid transparent;
+
+              &:hover {
+                border-color: @color-blue500;
+              }
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+
+              .state {
+                text-align: center;
+
+                .show-more {
+                  position: relative;
+                  width: 20px;
+                  margin: auto;
+
+                  .option-sort-collapse {
+                    top: 0;
+                    right: 25px;
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   }
-  
-  .ant-collapse {
-    background-color: @color-bg !important;
-  }
-
-  .pf-record .pf-record-content {
-    padding: 0;
-  }
 }
 
-@media @max-sl-mobile {
-  .fertilizer.cont {
-    max-width: 95%;
+@media @max-lg-tablet {
+  .fertilizer.container {
+    .state {
+      .label {
+        display: block;
+        color: @color-neutral400;
+      }
+
+      .project-ath .value {
+        margin-top: 4px;
+      }
+    }
+
+    .collapse-row {
+      background: @color-blue800;
+      border-radius: 8px;
+      padding: 18px;
+
+      .btn-group {
+        .btn-group-item {
+          &:last-child {
+            margin-top: 18px;
+          }
+        }
+
+        .btn-container,
+        .social-link {
+          margin-right: 18px;
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
   }
 }
 </style>
 
 <style lang="less">
-@import '../../styles/variables';
-
-::-webkit-scrollbar {
-  @media @max-sl-mobile {
-    display: none; /* Chrome Safari */
-  }
-}
-
-.ant-alert-warning {
-  width: 500px;
-  margin-top: 30px;
-  background-color: transparent;
-  border: 1px solid #85858d;
-
-  .anticon-close {
-    color: #fff;
-  }
-}
-
-.fertilizer.cont {
-  max-width: 1350px;
-  width: 100%;
-  background: @color-bg;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 15px;
-  margin-left: auto;
-  margin-right: auto;
-
-  .planet-left {
-    position: absolute;
-    left: 0;
-    top: 35%;
-
-    @media @max-sl-mobile {
-      display: none;
-    }
-  }
-
-  .card-body {
-    max-width: 1302px;
-    margin: 0 auto;
-  }
-
+.fertilizer {
   .ant-collapse {
-    border: unset !important;
-  }
+    background: transparent;
+    border: none;
 
-  .ant-collapse-arrow {
-    z-index: 2;
-  }
+    .ant-collapse-item {
+      position: relative;
+      background: rgba(23, 32, 88, 0.9);
+      border-radius: 8px !important;
+      margin-bottom: 8px;
+      border-bottom: 0;
+      border: 3px solid transparent;
 
-  .ant-collapse > .ant-collapse-item {
-    border-bottom: 1px solid rgba(255,255,255,0.12549) !important;
-
-    .label{
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 17px;
-      padding: 6px 7px 4px 7px;
-    }
-
-    .banner img{
-      width: 100%;
-      height: 262px;
-    }
-  }
-
-  .state {
-    font-size: 18px;
-    line-height: 22px;
-  }
-
-  .state a {
-    color: #5ba5fb;
-    text-decoration: underline;
-  }
-
-  .count-down-group {
-    background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-    background-origin: border-box;
-    height: 60px;
-    border-radius: 63px;
-    position: relative;
-    padding: 2px;
-  }
-
-  .count-down {
-    background-color: @color-bg;
-    border-radius: 63px;
-    height: 100%;
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 3px 3px 20px;
-    font-size: 26px;
-    font-weight: 400;
-    line-height: 42px;
-    position: relative;
-
-    .ant-progress {
-      margin-left: 15px;
-    }
-
-    .reload-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 25px;
-      background: @gradient-color-icon;
-      background-origin: border-box;
-      margin-left: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-
-      .anticon {
-        font-size: 16px !important;
-        color: white !important;
-        margin-right: 0 !important;
-        top: 0 !important;
+      &:hover {
+        border-color: @color-blue500;
       }
 
-      .anticon:hover {
-        background-color: transparent !important;
-      }
-    }
-  }
+      .ant-collapse-header {
+        padding: 18px;
 
-  .create {
-    background: @gradient-color-icon;
-    background-origin: border-box;
-    border: 2px solid rgba(255, 255, 255, 0.14);
-    border-radius: 8px;
-
-    button {
-      background: unset !important;
-      color: #fff;
-      border-color: transparent;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 42px;
-      letter-spacing: -0.05em;
-      height: 60px;
-      width: 163px;
-      cursor: pointer;
-    }
-  }
-
-  .page-head {
-    margin-top: 10px;
-
-    @media @max-sl-mobile {
-      display: none;
-    }
-  }
-
-  .ant-collapse-header {
-    padding: 0 !important;
-
-    @media @max-sl-mobile {
-      margin-bottom: 10px;
-    }
-  }
-
-  .ant-collapse-content {
-    background-color: @color-bg;
-    border-top: 1px solid #1c274f;
-
-    .ant-collapse-content-box .ant-row{
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .ant-collapse-content-active {
-    background: #0e1046;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-sizing: border-box;
-    border-radius: 14px;
-
-    .title {
-      font-size: 25px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 31px;
-      letter-spacing: 0;
-      text-align: left;
-
-      .social-icon {
-        color: #8C8DA7;
-        margin-left: 16px;
-      }
-    }
-
-    .tags-group {
-      display: flex;
-      align-items: center;
-      margin: 15px 0;
-
-      .tag {
-        margin-right: 16px;
-      }
-    }
-
-    .desc {
-      font-size: 20px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 24px;
-      letter-spacing: 0;
-      text-align: left;
-    }
-
-    .btncontainer {
-      background: @gradient-color-icon;
-      background-origin: border-box;
-      border: 2px solid rgba(255, 255, 255, 0.14);
-      border-radius: 8px;
-      color: #fff;
-      height: 60px;
-      width: 163px;
-      line-height: 60px;
-      margin-top: 40px;
-      display: flex;
-      align-items: center;
-
-      button {
-        font-style: normal;
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 42px;
-        text-align: center;
-        letter-spacing: -0.05em;
-        color: #fff;
-        background: transparent !important;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-  }
-
-  .page-head a {
-    z-index: 2;
-    background: @color-bg;
-    float: right;
-
-    .btncontainer {
-      display: inline-block;
-    }
-  }
-
-  .page-head .buttons {
-    float: right;
-  }
-
-  .page-head .title {
-    &::after {
-      font-style: italic;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 22px;
-      color: #fff;
-    }
-  }
-
-  .table-head {
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-  }
-
-  .farm-head {
-    display: flex;
-    align-items: center;
-    padding: 30px 5px !important;
-
-    @media @max-sl-mobile {
-      padding: 10px 5px !important;
-    }
-
-    .ant-collapse-header {
-      padding: 0 !important;
-
-      .farm-head {
-        padding: 30px 5px !important;
-      }
-    }
-
-    .lp-icons {
-      .lp-icons-group {
-        height: 51px;
-        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
-        background-origin: border-box;
-        border-radius: 8px;
-        padding: 2px;
-
-        .icons {
-          height: 47px;
-          background-color: @color-bg;
-          border-radius: 8px;
-          align-items: center;
-          padding: 0 20px;
-
-          div {
-            margin: 0 12px;
-          }
-
-          span {
-            margin-left: 12px;
-            font-weight: 400;
-            font-size: 18px;
-            line-height: 21px;
-          }
+        .ant-collapse-arrow {
+          display: none;
         }
       }
 
-      .title {
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 21px;
-        color: #fff;
-        opacity: 0.5;
-      }
-    }
+      .ant-collapse-content {
+        border: none;
+        background: transparent;
 
-    .state {
-      display: flex;
-      text-align: left;
-
-      .title {
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 21px;
-        color: #fff;
-        opacity: 0.5;
-      }
-
-      .value {
-        font-size: 18px;
-        line-height: 21.19px;
-        font-weight: 400;
+        .ant-collapse-content-box {
+          padding: 18px;
+        }
       }
     }
   }
-
-  .farm-head.is-mobile {
-    padding: 24px 16px !important;
-  }
 }
 
-main {
-  background-color: @color-bg;
-  background-image: unset;
-  background-size: cover;
-  background-position: center bottom;
-}
-
-.ant-table-thead > tr > th.ant-table-column-sort {
-  background: transparent;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  color: #fff;
-  background: #1c274f;
-  border: 1px solid #d9d9d9;
-  box-shadow: none;
-  border-left-width: 0;
-}
-.ant-radio-button-wrapper {
-  color: #aaa;
-  background: transparent;
-  // border: 1px solid #d9d9d9;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
-  border: 1px solid #d9d9d9;
-  box-shadow: none;
-}
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
-  border: 1px solid #d9d9d9;
-}
-.input-search {
-  border-radius: 5px;
-}
-.pf-arrow {
-  text-align: right;
-}
-.pf-record {
-  background-color: @color-bg;
-  border-bottom: 1px solid #d9d9d9;
-
-  .pf-record-content {
-    padding: 36px 32px 56px 32px;
-  }
+.ant-tooltip .ant-tooltip-inner {
+  width: 180px !important;
 }
 </style>

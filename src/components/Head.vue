@@ -1,14 +1,16 @@
 <template>
-  <Header class="header fs-container">
-    <NuxtLink to="/">
-      <img class="logo" src="@/assets/icons/cropper-logo.svg" />
-    </NuxtLink>
+  <Header class="header fcb-container">
+    <div class="nav-container fcl-container">
+      <NuxtLink to="/">
+        <img class="logo" src="@/assets/icons/cropper-logo.svg" />
+      </NuxtLink>
 
-    <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
+      <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
       <Nav @onSelect="() => (navOpened = false)" />
-    <!-- </div> -->
-
-    <div class="fs-container wallet-container">
+      <!-- </div> -->
+    </div>
+    
+    <div class="fcb-container wallet-container">
       <Wallet />
     </div>
   </Header>
@@ -41,16 +43,14 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .header {
-  margin-top: 40px;
-  
   .logo {
-    height: 55px;
-
-    @media @max-lg-tablet {
-      height: 30px;
+    height: 47px;
+    margin-right: 28px;
+    
+    @media @max-md-tablet {
+      height: 36px;
+      margin-right: 18px;
     }
   }
 
@@ -127,24 +127,24 @@ export default Vue.extend({
   }
 }
 
-@media @max-lg-tablet {
-  .header {
-    margin: 10px 20px 80px 20px;
-    padding: 0 !important;
-    display: block;
+// @media @max-md-tablet {
+//   .header {
+//     margin: 10px 20px 80px 20px;
+//     padding: 0 !important;
+//     display: block;
 
-    .logo {
-      height: 32px;
-    }
+//     .logo {
+//       height: 32px;
+//     }
 
-    .nav-button {
-      display: none;
-    }
-  }
+//     .nav-button {
+//       display: none;
+//     }
+//   }
 
-  .wallet-container {
-    float: right;
-    margin-top: -140px;
-  }
-}
+//   .wallet-container {
+//     float: right;
+//     margin-top: -140px;
+//   }
+// }
 </style>

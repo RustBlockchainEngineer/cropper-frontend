@@ -87,8 +87,6 @@ export default class Setting extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .slippage {
   display: flex;
   flex-direction: column;
@@ -103,10 +101,10 @@ export default class Setting extends Vue {
     margin: 10px auto;
     padding: 2px;
     border-radius: 30px;
-    transition: ease all .3s;
+    transition: ease all 0.3s;
 
-    button{
-      background:@color-bg !important;
+    button {
+      background: @color-blue800 !important;
       position: relative;
       border-radius: 30px;
       border-color: transparent;
@@ -114,13 +112,11 @@ export default class Setting extends Vue {
 
     &.active,
     &:hover,
-    &:focus{
+    &:focus {
       background: linear-gradient(91.9deg, rgba(19, 236, 171, 0.8) -8.51%, rgba(200, 52, 247, 0.8) 110.83%);
       background-origin: border-box;
     }
-
   }
-
 
   .field {
     &.row {
@@ -180,8 +176,6 @@ export default class Setting extends Vue {
 </style>
 
 <style lang="less">
-@import '../styles/variables';
-
 .has-error {
   input {
     border-color: #f5222d;

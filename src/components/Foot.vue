@@ -2,7 +2,7 @@
   <Footer>
     <div class="footer-body">
       <div class="logo">
-        <a href="/"><img src="@/assets/icons/cropper-logo.svg" /></a>
+        <a href="/"><img src="@/assets/icons/cropper-logo-footer.svg" /></a>
       </div>
       <div class="icon_list noMobile">
         <a class="social-medium" :href="linkUrl.medium" target="_blank">
@@ -22,51 +22,10 @@
           <img class="social-icon" src="@/assets/social/telegram-gradient.svg" />
         </a>
       </div>
-      <!-- <div class="icon_list noDesktop">
-        <a :href="linkUrl.medium" target="_blank" class="bodyM weightS"> Medium </a>
-        <a :href="linkUrl.discord" target="_blank" class="bodyM weightS"> Discord </a>
-        <a :href="linkUrl.twitter" target="_blank" class="bodyM weightS"> Twitter </a>
-        <a
-          class="telegramButton bodyM weightS"
-          :class="displayfilters ? 'telegramButton-active' : ''"
-          @click="
-            () => {
-              if (displayfilters == true) {
-                displayfilters = false
-              } else {
-                displayfilters = true
-              }
-            }
-          "
-        >
-          Telegram
-          <img src="@/assets/icons/arrow-down.svg" />
-        </a>
-      </div> -->
     </div>
-    <!-- <div class="telegram noDesktop" v-if="displayfilters" :class="displayfilters ? 'visible' : ''">
-      <div class="telegram-group">
-        <a :href="linkUrl.telegram_en" target="_blank" class="bodyM"> Telegram(EN) </a>
-        <a :href="linkUrl.telegram_cn" target="_blank" class="bodyM"> Telegram(CN) </a>
-        <a :href="linkUrl.telegram_kr" target="_blank" class="bodyM"> Telegram(KR) </a>
-        <a :href="linkUrl.telegram_jp" target="_blank" class="bodyM"> Telegram(JP) </a>
-        <a :href="linkUrl.telegram_es" target="_blank" class="bodyM"> Telegram(ES) </a>
-        <a :href="linkUrl.telegram_tr" target="_blank" class="bodyM"> Telegram(TR) </a>
-        <a :href="linkUrl.telegram_vn" target="_blank" class="bodyM"> Telegram(VN) </a>
-        <a :href="linkUrl.telegram_ru" target="_blank" class="bodyM"> Telegram(RU) </a>
-        <a :href="linkUrl.telegram_fr" target="_blank" class="bodyM"> Telegram(FR) </a>
-        <a :href="linkUrl.telegram_br" target="_blank" class="bodyM"> Telegram(BR) </a>
-        <a :href="linkUrl.telegram_in" target="_blank" class="bodyM"> Telegram(IN) </a>
-        <a :href="linkUrl.telegram_it" target="_blank" class="bodyM"> Telegram(IT) </a>
-      </div>
-    </div> -->
     <div class="footer-line"></div>
     <div class="footer-refer">
-      <label class="bodyS decentralized">Decentralized 2021</label>
-      <!-- <div class="refer-list">
-        <label class="bodyS weightS">Terms & Conditions</label>
-        <label class="bodyS weightS">Privacy Policy</label>
-      </div> -->
+      <label class="textS decentralized">Decentralized 2022</label>
     </div>
   </Footer>
 </template>
@@ -140,13 +99,13 @@ export default class Foot extends Vue {
       .social-telegram .social-icon {
         margin-right: 0;
       }
-      
+
       .social-medium,
       .social-discord,
       .social-twitter,
       .social-telegram {
         .social-icon {
-          height: 24px;
+          height: 18px;
         }
 
         .social-icon:last-child {
@@ -220,7 +179,7 @@ export default class Foot extends Vue {
 
       a {
         color: #fff;
-        
+
         @media @max-sl-mobile {
           display: block;
           width: 50%;
@@ -236,45 +195,23 @@ export default class Foot extends Vue {
   height: 1px;
   background: #fff;
   opacity: 0.2;
-  margin: 20px 0;
+  margin: 28px 0 16px 0;
 }
 
 .footer-refer {
-  color: #ccd1f1;
   position: relative;
   z-index: 2;
   text-align: center;
+  color: @color-blue200;
 
   @media @max-sl-mobile {
     text-align: left;
-    color: #98a2e4;
   }
-
-  // .refer-list {
-  //   label {
-  //     margin-right: 38px;
-
-  //     @media @max-sl-mobile {
-  //       margin-right: 0;
-  //       margin-bottom: 20px;
-  //       display: block;
-  //     }
-
-  //     &:last-child {
-  //       margin-right: 0;
-
-  //       @media @max-sl-mobile {
-  //         margin-bottom: 0;
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 // ant customization
 .ant-layout-footer {
   @media @max-sl-mobile {
-    margin: auto;
     padding: 22px !important;
   }
 }

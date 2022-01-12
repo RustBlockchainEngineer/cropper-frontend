@@ -5,7 +5,29 @@
 }
 
 .ant-layout {
-  background: @color-bg !important;
+  background: @color-blue800 !important;
+  background-image: url('@/assets/background/background.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: top !important;
+  background-size: 100% auto !important;
+  margin-top: -21px;
+
+  @media @max-sl-mobile {
+    background-image: none !important;
+  }
+}
+
+.ant-layout-header {
+  position: fixed;
+  width: 100%;
+  background: @color-blue800 !important;
+  top: 0;
+  z-index: 999;
+  height: 80px !important;
+}
+
+.ant-layout-footer {
+  background: transparent !important;
 }
 
 .ant-switch::after {
@@ -39,37 +61,30 @@
 }
 
 .ant-notification-notice {
-  background: #1a1d50 !important;
-  border-radius: 14px !important;
-  font-family: "Gilroy", sans-serif;
+  background: @color-blue500 !important;
+  border-radius: 8px !important;
 
   .ant-notification-notice-message {
-    color: #fff;
-    font-family: "Gilroy", sans-serif;
-    font-size: 18px;
-    line-height: 22px;
+    font-weight: 600;
+    font-size: 16px !important;
+    line-height: 24px;
+    letter-spacing: 0.15px;
   }
 
   .ant-notification-notice-description {
-    color: #FFF;
-    font-family: "Gilroy", sans-serif;
-    font-size: 18px;
-    line-height: 22px;
-    opacity: 0.5;
+    font-size: 13px !important;
+    line-height: 19px;
   }
 
-  .ant-notification-notice-close {
-    color: #fff;
+  .ant-notification-close-icon {
+    color: #fff !important;
+    font-size: 11px;
   }
 }
 
 button.ant-btn-background-ghost {
   border-color: @primary-color;
   background: rgba(90, 196, 190, 0.1);
-}
-
-.ant-tooltip-inner {
-  padding: 16px !important;
 }
 
 button.ant-btn-background-ghost[disabled] {
@@ -94,7 +109,7 @@ button.ant-btn-background-ghost[disabled] {
 .ant-calendar,
 .ant-input,
 .ant-select-selection {
-  background: @color-bg !important;
+  background: @color-blue600 !important;
 }
 
 .ant-select-dropdown {
@@ -148,28 +163,66 @@ button.ant-btn-background-ghost[disabled] {
 }
 
 .ant-pagination-item {
-  width: 48px !important;
-  height: 48px !important;
-  border: 2px solid transparent !important;
+  width: 36px !important;
+  height: 36px !important;
+  border: 1px solid transparent !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
 
   &>a {
-    color: #FFF;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 22px;
-    line-height: 48px;
-    letter-spacing: -0.05em;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: rgba(255, 255, 255, 0.7) !important;
   }
 
   &.ant-pagination-item-active {
-    background: @gradient-color-icon !important;
+    background: @gradient-color-outline !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
     background-origin: border-box !important;
-    border: 2px solid rgba(255, 255, 255, 0.14) !important;
-    border-radius: 8px;
+    border-radius: 58px;
 
     a {
       color: #fff !important
     }
   }
+}
 
+// Defined by L
+
+// ant statistic
+.ant-statistic {
+  .ant-statistic-title {
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 18px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 8px;
+  }
+  
+  .ant-statistic-content {
+    font-family: Gilroy, sans-serif !important;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    text-align: center;
+    
+    .ant-statistic-content-value {
+      font-weight: bold;
+      font-size: 25px;
+      line-height: 35px;
+      text-align: center;
+      letter-spacing: 3px;
+    }
+  
+    .ant-statistic-content-suffix {
+      font-weight: normal;
+      font-size: 11px;
+      line-height: 16px;
+    }
+  }
 }
