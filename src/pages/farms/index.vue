@@ -34,6 +34,7 @@
       :lpbreakdown="this.unstakePoolInfo"
       text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity. <br /><br />
       If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
+
     />
 
     <CoinModal
@@ -389,7 +390,7 @@
                               1000
                           ) / 1000
                         }}
-                        {{ farm.farmInfo.lp.coin.symbol }}
+                        {{ farm.farmInfo.reward.symbol }}
                       </div>
                     </div>
                   </div>
@@ -880,7 +881,7 @@
                                   ).toEther() * 1000
                                 ) / 1000
                               }}
-                              {{ farm.farmInfo.lp.coin.symbol }}
+                              {{ farm.farmInfo.reward.symbol }}
                             </div>
                           </div>
                         </div>
@@ -1191,7 +1192,7 @@
                                   ).toEther() * 1000
                                 ) / 1000
                               }}
-                              {{ farm.farmInfo.lp.coin.symbol }}
+                              {{ farm.farmInfo.reward.symbol }}
                             </div>
                           </div>
                         </div>
@@ -1378,7 +1379,7 @@ import { mapState } from 'vuex'
 import { Tooltip, Collapse, Spin, Icon, Row, Col, Button, Switch as Toggle, Pagination } from 'ant-design-vue'
 import { get, set, cloneDeep, forIn, indexOf } from 'lodash-es'
 import { TokenAmount } from '@/utils/safe-math'
-import { FarmInfo } from '@/utils/farms'
+import { FarmInfo, getCoinBalance, getPcBalance, getTotalSupply } from '@/utils/farms'
 import { deposit, withdraw } from '@/utils/stake'
 import { getUnixTs } from '@/utils'
 import { getBigNumber, toBigNumber } from '@/utils/layouts'
@@ -2061,6 +2062,8 @@ export default Vue.extend({
             ;(newFarmInfo as any).twitterLink = 'https://twitter.com/Ternoa_'
           } else if (newFarmInfo.lp.coin.symbol == 'SAMO') {
             ;(newFarmInfo as any).twitterLink = 'https://twitter.com/samoyedcoin'
+          } else if (newFarmInfo.lp.coin.symbol == 'XVC') {
+            ;(newFarmInfo as any).twitterLink = 'https://twitter.com/Xverseofficial'
           }
 
           ;(newFarmInfo as any).twitterShare = `http://twitter.com/share?text=I am now farming ${
@@ -2660,6 +2663,7 @@ export default Vue.extend({
       set(this.unstakePoolInfo, 'totalSupply', totalSupply)
       set(this.unstakePoolInfo, 'pcSymbol', get(currentPoolInfo, 'pc.symbol'))
       set(this.unstakePoolInfo, 'coinSymbol', get(currentPoolInfo, 'coin.symbol'))
+
       this.unstakeModalOpening = true
     },
 

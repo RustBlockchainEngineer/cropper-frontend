@@ -120,7 +120,7 @@ export default Vue.extend({
           return
         }
         this.lockData[index].minutesLock = item.duration / 60
-        this.lockData[index].boost = item.extraPercentage / 100 + 1
+        this.lockData[index].boost = (item.extraPercentage / (100 * 1000 * 1000 * 1000)) + 1
       })
     })
   }

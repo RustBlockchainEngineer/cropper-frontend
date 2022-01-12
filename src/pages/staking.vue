@@ -449,6 +449,7 @@ export default Vue.extend({
 
       totalStaked: '0' as string,
       userStaked: 0 as number,
+      userStakedUnformated: 0 as number,
       pendingReward: '0' as string,
       totalStakedPrice: '0' as string,
       TVL: 0 as number,
@@ -617,7 +618,8 @@ export default Vue.extend({
       )
 
       //@ts-ignore
-      this.userStaked = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
+      this.userStaked = Math.ceil(parseFloat((new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals)).fixed()) * 1000) / 1000
+      this.userStakedUnformated = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed())
 
       const rewardAmount = estimateRewards(farm_state, extraRewardConfigs, current_pool.account, userAccount)
       const tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
@@ -676,10 +678,8 @@ export default Vue.extend({
         rewardPoolVault,
 
         get(this.wallet.tokenAccounts, `${rewardMint}.tokenAccountAddress`),
-
-        this.userStaked * Math.pow(10, TOKENS['CRP'].decimals)
-      )
-        .then((txid) => {
+          this.userStakedUnformated * Math.pow(10, TOKENS['CRP'].decimals),
+        ).then((txid) => {
           this.$notify.info({
             key,
             message: 'Transaction has been sent',
