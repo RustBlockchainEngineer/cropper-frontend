@@ -2,7 +2,7 @@
   <Footer>
     <div class="footer-body">
       <div class="logo">
-        <a href="/"><img src="@/assets/icons/cropper-logo-footer.svg" /></a>
+        <a href="/"><img src="@/assets/icons/cropper-logo.svg" /></a>
       </div>
       <div class="icon_list noMobile">
         <a class="social-medium" :href="linkUrl.medium" target="_blank">
@@ -86,6 +86,10 @@ export default class Foot extends Vue {
   }
 
   .logo {
+    img {
+      height: 35px;
+    }
+    
     @media @max-sl-mobile {
       margin-bottom: 30px;
     }
