@@ -848,6 +848,7 @@ h4 {
       .balance-infos {
         .tvl-value {
           background: -webkit-linear-gradient(90deg, #22b5b6 6.07%, #280c86 134.97%);
+          background-clip: text;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
