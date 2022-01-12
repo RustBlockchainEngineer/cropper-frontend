@@ -198,6 +198,69 @@
               </div>
               <div v-if="currentStep === 1" class="project-detail-item">
                 <h4 class="weightS">Earn Social Pool tickets!</h4>
+                <span class="textM">
+                  A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra allocation by performing various social tasks.
+                </span>
+                <div class="ticket-tasks-group ftb-container">
+                  <div class="ticket-tasks">
+                    <span class="textM weightB">Earn tickets by completing these tasks:</span>
+                    <div class="ticket-task-status-group fcb-container">
+                      <div class="ticket-task-status ft-container">
+                        <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
+                        <div>
+                          <span class="textM weightB">Telegram task</span>
+                          <br />
+                          <span class="bodyXS weightS">0/2 Task completed</span>
+                        </div>
+                      </div>
+                      <div class="ticket-task-status ft-container">
+                        <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
+                        <div>
+                          <span class="textM weightB">Twitter task</span>
+                          <br />
+                          <span class="bodyXS weightS">0/3 Task completed</span>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="textM weightB">Share your affilliated link to earn tickets:</span>
+                    <div class="ticket-share-group fcb-container">
+                      <input type="text" class="ticket-share-link textM" :value="affiliatedLink" />
+                      <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" />
+                    </div>
+                    <div class="ticket-btn-group fcb-container">
+                      <div class="share-btn btn-container">
+                        <Button class="btn-primary textS weightS letterL">Share on Telegram</Button>
+                      </div>
+                      <div class="share-btn btn-container">
+                        <Button class="btn-primary textS weightS letterL">Share on Twitter</Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ticket-preview">
+                    <div class="ticket-earned">
+                      <span class="textM weightB">You are now registered for the {{ fertilizer.title }} whitelist as:</span>
+                      <div class="ticket-earned-status fcl-container">
+                        <img class="referral-icon" src="@/assets/icons/referral.svg" />
+                        <div>
+                          <span class="textM weightS letterS">
+                            <label class="textL">0</label>
+                            Earned Tickets
+                          </span>
+                          <br />
+                          <span class="bodyXS">0 Social / 0 Referrals</span>
+                        </div>
+                      </div>
+                      <div class="fcb-container">
+                        <span class="textS weightS letterL">Verification</span>
+                        <span class="textS text-upper">Unverified</span>
+                      </div>
+                    </div>
+                    <div class="ticket-referral">
+                      <span class="textM weightS letterS">Add referral link to win a ticket:</span>
+                      <input type="text" class="ticket-referral-link textS weightS" :value="referralLink" />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="project-detail-item banner fcb-container">
                 <div class="project-detail-stake">
@@ -617,7 +680,9 @@ export default Vue.extend({
       },
       currentTimestamp: 0,
       currentStep: 1 as number,
-      stepsStatus: 'process' as string
+      stepsStatus: 'process' as string,
+      affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
+      referralLink: 'http://' as string
     }
   },
 
@@ -827,6 +892,96 @@ export default Vue.extend({
 
                   .lock-icon {
                     margin-right: 6px;
+                  }
+                }
+              }
+            }
+
+            .ticket-tasks-group {
+              margin-top: 32px;
+
+              .ticket-tasks {
+                width: calc(100% - 326px - 48px);
+                margin-right: 48px;
+
+                .ticket-task-status-group {
+                  margin: 24px 0;
+
+                  .ticket-task-status {
+                    background: @color-blue400;
+                    width: calc((100% - 24px) / 2);
+                    padding: 16px;
+                    border-radius: 8px;
+
+                    .ticket-social-icon {
+                      width: 24px;
+                      opacity: 0.5;
+                      margin-right: 24px;
+                    }
+                  }
+                }
+
+                .ticket-share-group {
+                  margin: 8px 0 24px 0;
+                  padding: 0 8px;
+                  background: rgba(226, 227, 236, 0.1);
+                  border-radius: 12px;
+
+                  .ticket-share-link {
+                    background: transparent;
+                    outline: none;
+                    border: none;
+                    width: 100%;
+                    padding: 10px;
+                  }
+
+                  .copy-icon {
+                    margin: 0 10px;
+                  }
+                }
+
+                .ticket-btn-group {
+                  .share-btn {
+                    width: calc((100% - 24px) / 2);
+                    
+                   .btn-primary {
+                     width: 100%;
+                     padding: 10px 0;
+                   }
+                  }
+                }
+              }
+
+              .ticket-preview {
+                width: 326px;
+                height: 100%;
+                background: @color-blue800;
+                border-radius: 8px;
+                padding: 16px;
+
+                .ticket-earned {
+                  margin-bottom: 28px;
+
+                  .ticket-earned-status {
+                    background: @gradient-color03;
+                    padding: 16px;
+                    margin: 16px 0;
+                    border-radius: 8px;
+
+                    .referral-icon {
+                      margin-right: 24px;
+                    }
+                  }
+                }
+
+                .ticket-referral {
+                  .ticket-referral-link {
+                    background: rgba(226, 227, 236, 0.1);
+                    border-radius: 12px;
+                    outline: none;
+                    border: none;
+                    margin-top: 8px;
+                    padding: 10px;
                   }
                 }
               }

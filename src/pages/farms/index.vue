@@ -669,7 +669,7 @@
                       <div class="option-collapse-item text-center textM weightS icon-cursor">
                         <a class="social-link fcc-container" :href="farm.farmInfo.twitterLink" target="_blank">
                           Twitter
-                          <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                          <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                         </a>
                       </div>
                       <div class="option-collapse-item text-center textM weightS icon-cursor">
@@ -897,7 +897,7 @@
                           target="_blank"
                         >
                           Twitter
-                          <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                          <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                         </a>
                       </div>
 
@@ -1371,7 +1371,7 @@
                         target="_blank"
                       >
                         Twitter
-                        <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                        <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                       </a>
                     </Col>
                   </Row>

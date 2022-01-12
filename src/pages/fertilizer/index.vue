@@ -614,7 +614,7 @@
                         <div class="collapse-item text-center textM weightS icon-cursor">
                           <a class="social-link fcc-container" href="#" target="_blank">
                             Twitter
-                            <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                            <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                           </a>
                         </div>
                       </div>
@@ -715,7 +715,7 @@
                         </a>
                         <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
                           Twitter
-                          <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                          <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                         </a>
                       </div>
                     </Col>
@@ -825,7 +825,7 @@
                         </a>
                         <a class="social-link fcc-container bodyXS weightS icon-cursor" href="#" target="_blank">
                           Twitter
-                          <img class="social-icon" src="@/assets/icons/twitter.svg" />
+                          <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                         </a>
                       </div>
                     </Col>
