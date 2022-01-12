@@ -70,7 +70,7 @@
 
       <div class="btn-container">
         <Button
-          class="textL weightB"
+          class="font-text-large font-weight-bold"
           id="vadd"
           :disabled="
             !farmInfo.lp.coin ||

@@ -19,10 +19,10 @@
     <div class="card">
       <div class="card-body">
         <div class="staking-head fcb-container">
-          <h3 class="title weightB">Staking</h3>
+          <h3 class="title font-weight-bold">Staking</h3>
           <div class="information">
             <div class="tvl-info">
-              <p class="textL weightS">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
+              <p class="font-text-large font-weight-semi">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
             </div>
 
             <div class="action-btn-group">
@@ -35,11 +35,11 @@
 
         <div class="staking-content fcb-container">
           <div class="staking-body">
-            <h4 class="weightB">$CRP Staking</h4>
+            <h4 class="font-weight-bold">$CRP Staking</h4>
             <div class="staking-progress">
               <div class="staking-progress-label fcb-container">
-                <span class="bodyXS weightB">Tier {{ currentTiers }}</span>
-                <span class="bodyXS weightB">Tier {{ nextTiers }}</span>
+                <span class="font-body-xsmall font-weight-bold">Tier {{ currentTiers }}</span>
+                <span class="font-body-xsmall font-weight-bold">Tier {{ nextTiers }}</span>
               </div>
               <Progress
                 type="line"
@@ -48,7 +48,7 @@
                 :show-info="false"
               />
               <label
-                class="staking-progress-percent bodyXS"
+                class="staking-progress-percent font-body-xsmall"
                 :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"
               >
                 {{ Number(pctToNexttiers.toFixed(1)) }}%
@@ -57,7 +57,7 @@
 
             <div class="staking-infos-group">
               <div class="staking-info fcb-container">
-                <div class="label textM weightS letterS">
+                <div class="label font-text-medium font-weight-semi letter-spacing-small">
                   Estimated APY
                   <Tooltip placement="bottomLeft">
                     <template slot="title">
@@ -66,7 +66,7 @@
                     <img class="tooltip-icon" src="@/assets/icons/info.svg" />
                   </Tooltip>
                 </div>
-                <div class="value textM weightB">
+                <div class="value font-text-medium font-weight-bold">
                   {{ Math.round(estimatedAPY * 2 * 100) / 100 }} %
                   <img
                     class="calc-icon icon-cursor"
@@ -81,7 +81,7 @@
               </div>
 
               <div class="staking-info fcb-container">
-                <div class="label textM weightS letterS">
+                <div class="label font-text-medium font-weight-semi letter-spacing-small">
                   Total Staked
                   <Tooltip placement="bottomLeft">
                     <template slot="title">
@@ -90,11 +90,11 @@
                     <img class="tooltip-icon" src="@/assets/icons/info.svg" />
                   </Tooltip>
                 </div>
-                <div class="value textM weightB">{{ totalStaked }}</div>
+                <div class="value font-text-medium font-weight-bold">{{ totalStaked }}</div>
               </div>
 
               <div class="staking-info fcb-container">
-                <div class="label textM weightS letterS">
+                <div class="label font-text-medium font-weight-semi letter-spacing-small">
                   Total Value
                   <Tooltip placement="bottomLeft">
                     <template slot="title">
@@ -104,19 +104,19 @@
                   </Tooltip>
                 </div>
 
-                <div class="value textM weightB">{{ totalStakedPrice }}</div>
+                <div class="value font-text-medium font-weight-bold">{{ totalStakedPrice }}</div>
               </div>
             </div>
 
             <div class="staking-actions-group">
               <div class="staking-action-item fcb-container">
                 <div class="reward-pending">
-                  <label class="label textM">Reward Pending</label>
-                  <label class="value textL weightB">{{ pendingReward }}</label>
+                  <label class="label font-text-medium">Reward Pending</label>
+                  <label class="value font-text-large font-weight-bold">{{ pendingReward }}</label>
                 </div>
                 <div class="btn-container">
                   <Button
-                    class="btn-primary weightS letterL"
+                    class="btn-primary font-weight-semi letter-spacing-large"
                     :disabled="!wallet.connected || pendingReward == 0"
                     @click="harvestReward"
                     >Harvest</Button
@@ -125,7 +125,7 @@
               </div>
 
               <div v-if="!wallet.connected" class="btn-container btn-large fcc-container">
-                <Button class="btn-transparent textL weightB" @click="$accessor.wallet.openModal"
+                <Button class="btn-transparent font-text-large font-weight-bold" @click="$accessor.wallet.openModal"
                   >Connect Wallet</Button
                 >
               </div>
@@ -133,13 +133,13 @@
               <div v-else>
                 <div v-if="userStaked > 0" class="staking-action-item fcb-container">
                   <div class="reward-pending">
-                    <label class="label textM">CRP Staked</label>
-                    <label class="value textL weightB">{{ userStaked }}</label>
+                    <label class="label font-text-medium">CRP Staked</label>
+                    <label class="value font-text-large font-weight-bold">{{ userStaked }}</label>
                   </div>
                   <div class="stake-btn-group fcc-container">
                     <div class="btn-container">
                       <Button
-                        class="btn-primary weightS letterL"
+                        class="btn-primary font-weight-semi letter-spacing-large"
                         :disabled="!wallet.connected || userStaked == 0 || canUnstake == false"
                         @click="unstakeToken"
                         >Unstake</Button
@@ -147,7 +147,7 @@
                     </div>
                     <div class="btn-container">
                       <Button
-                        class="btn-transparent weightS letterL"
+                        class="btn-transparent font-weight-semi letter-spacing-large"
                         id="stake"
                         @click="
                           () => {
@@ -162,7 +162,7 @@
 
                 <div v-else class="btn-container btn-large fcc-container">
                   <Button
-                    class="btn-transparent textL weightB"
+                    class="btn-transparent font-text-large font-weight-bold"
                     id="stake"
                     @click="
                       () => {
@@ -177,15 +177,15 @@
 
             <div class="staking-footer">
               <div class="lock-tokens fcb-container">
-                <label class="label textS weightS letterL">
+                <label class="label font-text-small font-weight-semi letter-spacing-large">
                   {{ endOfLock ? 'End of lock' : 'Lock tokens for' }}
                 </label>
-                <label class="value textS weightS letterL">
+                <label class="value font-text-small font-weight-semi letter-spacing-large">
                   {{ endOfLock ? endOfLock : '0 Day(s)' }}
                 </label>
               </div>
               <div v-if="!endOfLock" class="get-crp fcc-container">
-                <label class="textM weightS">Get CRP</label>
+                <label class="font-text-medium font-weight-semi">Get CRP</label>
                 <img class="union-icon" src="@/assets/icons/union.svg" />
               </div>
             </div>
@@ -204,11 +204,11 @@
                 <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
-                    <label class="textL weightB">Tier 1</label>
+                    <label class="font-text-large font-weight-bold">Tier 1</label>
                   </div>
                   <div class="btn-container">
                     <a
-                      class="btn-primary textM weightS fcc-container"
+                      class="btn-primary font-text-medium font-weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
@@ -220,11 +220,11 @@
                 <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
-                    <label class="textL weightB">Tier 2</label>
+                    <label class="font-text-large font-weight-bold">Tier 2</label>
                   </div>
                   <div class="btn-container">
                     <a
-                      class="btn-primary textM weightS fcc-container"
+                      class="btn-primary font-text-medium font-weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
@@ -236,11 +236,11 @@
                 <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
-                    <label class="textL weightB">Tier 3</label>
+                    <label class="font-text-large font-weight-bold">Tier 3</label>
                   </div>
                   <div class="btn-container">
                     <a
-                      class="btn-primary textM weightS fcc-container"
+                      class="btn-primary font-text-medium font-weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
@@ -252,11 +252,11 @@
                 <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
-                    <label class="textL weightB">Tier 4</label>
+                    <label class="font-text-large font-weight-bold">Tier 4</label>
                   </div>
                   <div class="btn-container">
                     <a
-                      class="btn-primary textM weightS fcc-container"
+                      class="btn-primary font-text-medium font-weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
@@ -268,11 +268,11 @@
                 <div class="staking-tier-preview"></div>
                 <div class="fcb-container">
                   <div class="tier-info">
-                    <label class="textL weightB">Tier 5</label>
+                    <label class="font-text-large font-weight-bold">Tier 5</label>
                   </div>
                   <div class="btn-container">
                     <a
-                      class="btn-primary textM weightS fcc-container"
+                      class="btn-primary font-text-medium font-weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
@@ -285,13 +285,13 @@
         </div>
 
         <div class="staking-tiers-details" id="staking-tiers-details">
-          <span class="textL weightB">About Tiers</span>
+          <span class="font-text-large font-weight-bold">About Tiers</span>
           <div class="staking-tiers-features">
             <Tabs v-model="activeTab">
               <TabPane tab="Tier 1" key="1">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
-                    <span class="textM weightS">
+                    <span class="font-text-medium font-weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
                       the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
                       type and scrambled it to make a type specimen book.
@@ -309,7 +309,7 @@
               <TabPane tab="Tier 2" key="2">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
-                    <span class="textM weightS">
+                    <span class="font-text-medium font-weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
                       the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
                       type and scrambled it to make a type specimen book.
@@ -327,7 +327,7 @@
               <TabPane tab="Tier 3" key="3">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
-                    <span class="textM weightS">
+                    <span class="font-text-medium font-weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
                       the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
                       type and scrambled it to make a type specimen book.
@@ -345,7 +345,7 @@
               <TabPane tab="Tier 4" key="4">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
-                    <span class="textM weightS">
+                    <span class="font-text-medium font-weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
                       the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
                       type and scrambled it to make a type specimen book.
@@ -363,7 +363,7 @@
               <TabPane tab="Tier 5" key="5">
                 <Row :gutter="56" class="staking-tier-container fcb-container">
                   <Col :span="12" class="staking-tier-tab">
-                    <span class="textM weightS">
+                    <span class="font-text-medium font-weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
                       the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
                       type and scrambled it to make a type specimen book.

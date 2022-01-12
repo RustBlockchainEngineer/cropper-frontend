@@ -17,7 +17,7 @@
             {{ name.replace('-', ' ') }}
           </a>
           <div v-else class="menu-icon-group">
-            <span class="textM weightS"> {{ name.replace('-', ' ') }} </span>
+            <span class="font-text-medium font-weight-semi"> {{ name.replace('-', ' ') }} </span>
           </div>
           <div v-if="name === banURL" class="soon">Soon</div>
         </MenuItem>

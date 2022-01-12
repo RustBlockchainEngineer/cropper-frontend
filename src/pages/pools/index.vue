@@ -27,16 +27,16 @@
       <div class="card-body">
         <div v-if="showGuide" class="guide-card">
           <div class="guide-content">
-            <label class="textL weightB"
+            <label class="font-text-large font-weight-bold"
               >Learn about providing <br />
               liquidity
             </label>
             <img class="icon-cursor close-icon" src="@/assets/icons/close-circle.svg" @click="hideGuide" />
             <Row class="guide-detail">
               <Col :sm="14" :xs="24">
-                <label class="textS weightS letterL">Check out our v3 LP walkthrough and migration guides.</label>
+                <label class="font-text-small font-weight-semi letter-spacing-large">Check out our v3 LP walkthrough and migration guides.</label>
                 <div class="learn-btn-container">
-                  <Button class="learn-btn textS weightS letterL">Learn more</Button>
+                  <Button class="learn-btn font-text-small font-weight-semi letter-spacing-large">Learn more</Button>
                 </div>
               </Col>
               <Col :sm="10" :xs="0">
@@ -48,10 +48,10 @@
 
         <div class="pools-content" :class="showGuide ? 'guide-enabled' : ''">
           <div class="pools-head fcb-container">
-            <h3 class="title weightB">Liquidity Pools</h3>
+            <h3 class="title font-weight-bold">Liquidity Pools</h3>
             <div class="information">
               <div class="tvl-info">
-                <p class="textL weightS">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
+                <p class="font-text-large font-weight-semi">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
               </div>
 
               <div class="action-btn-group">
@@ -67,7 +67,7 @@
                     }
                   "
                 >
-                  <div class="create-plus-btn textS weightS">+ Create pool</div>
+                  <div class="create-plus-btn font-text-small font-weight-semi">+ Create pool</div>
                 </a>
               </div>
             </div>
@@ -77,7 +77,7 @@
             <div class="option-tab-group">
               <div class="option-tab">
                 <Button
-                  class="textL weightS"
+                  class="font-text-large font-weight-semi"
                   :class="searchCertifiedFarm === 'labelized' ? 'active-tab' : ''"
                   @click="activeSearch('labelized')"
                   >Labelized</Button
@@ -86,7 +86,7 @@
               </div>
               <div class="option-tab">
                 <Button
-                  class="textL weightS"
+                  class="font-text-large font-weight-semi"
                   :class="searchCertifiedFarm === 'permissionless' ? 'active-tab' : ''"
                   @click="activeSearch('permissionless')"
                 >
@@ -96,7 +96,7 @@
               </div>
               <div v-if="wallet.connected" class="option-tab">
                 <Button
-                  class="textL weightS"
+                  class="font-text-large font-weight-semi"
                   :class="searchCertifiedFarm === 'deposit' ? 'active-tab' : ''"
                   @click="activeSearch('deposit')"
                 >
@@ -121,7 +121,7 @@
                 }
               "
             >
-              <label class="textL weightS icon-cursor">
+              <label class="font-text-large font-weight-semi icon-cursor">
                 {{
                   searchCertifiedFarm === 'labelized'
                     ? 'Labelized'
@@ -148,21 +148,21 @@
                 "
               >
                 <div
-                  class="collapse-item text-center textM weightS icon-cursor"
+                  class="collapse-item text-center font-text-medium font-weight-semi icon-cursor"
                   :class="searchCertifiedFarm === 'labelized' ? 'active-item' : ''"
                   @click="activeSearch('labelized')"
                 >
                   Labelized
                 </div>
                 <div
-                  class="collapse-item text-center textM weightS icon-cursor"
+                  class="collapse-item text-center font-text-medium font-weight-semi icon-cursor"
                   :class="searchCertifiedFarm === 'permissionless' ? 'active-item' : ''"
                   @click="activeSearch('permissionless')"
                 >
                   Permissionless
                 </div>
                 <div
-                  class="collapse-item text-center textM weightS icon-cursor"
+                  class="collapse-item text-center font-text-medium font-weight-semi icon-cursor"
                   :class="searchCertifiedFarm === 'deposit' ? 'active-item' : ''"
                   @click="activeSearch('deposit')"
                 >
@@ -193,7 +193,7 @@
                 "
               >
                 <div class="collapse-item-header fcb-container">
-                  <label class="textL weightB">Search</label>
+                  <label class="font-text-large font-weight-bold">Search</label>
                   <img
                     class="icon-cursor"
                     src="@/assets/icons/close-circle.svg"
@@ -205,9 +205,9 @@
                   />
                 </div>
                 <div class="collapse-item-body">
-                  <input ref="userInput" v-model="searchName" class="textM" placeholder="Search" />
+                  <input ref="userInput" v-model="searchName" class="font-text-medium" placeholder="Search" />
                   <div class="shortcut-list">
-                    <label class="textS weightS">Most Used</label>
+                    <label class="font-text-small font-weight-semi">Most Used</label>
                     <div class="shortcut-group">
                       <div
                         v-for="item in mostUsed"
@@ -233,7 +233,7 @@
                   }
                 "
               >
-                <span class="bodyM weightS option-filter-sort fcc-container">
+                <span class="font-body-medium font-weight-semi option-filter-sort fcc-container">
                   <label>Sort by:</label>
                   <span class="sort-detail">
                     Liquidity {{ sortLiquidityAsc ? '(High > Low)' : '(Low > High)' }}
@@ -267,7 +267,7 @@
                 "
               >
                 <div
-                  class="collapse-item text-center textM weightS icon-cursor"
+                  class="collapse-item text-center font-text-medium font-weight-semi icon-cursor"
                   :class="sortLiquidityAsc ? 'active-item' : ''"
                   @click="
                     () => {
@@ -280,7 +280,7 @@
                   Liquidity (High > Low)
                 </div>
                 <div
-                  class="collapse-item text-center textM weightS icon-cursor"
+                  class="collapse-item text-center font-text-medium font-weight-semi icon-cursor"
                   :class="!sortLiquidityAsc ? 'active-item' : ''"
                   @click="
                     () => {
@@ -300,8 +300,8 @@
             <!-- desktop version -->
             <div class="pools-table isDesktop">
               <Row class="pools-table-header" :class="{ scrollFixed: scrollPosition > 200 }">
-                <Col class="header-column textS weightB text-left" span="5"> Name </Col>
-                <Col class="header-column textS weightB" span="3">
+                <Col class="header-column font-text-small font-weight-bold text-left" span="5"> Name </Col>
+                <Col class="header-column font-text-small font-weight-bold" span="3">
                   <div class="header-column-title" @click="sortbyColumn('liquidity')">
                     Liquidity
                     <img
@@ -318,7 +318,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="3">
+                <Col class="header-column font-text-small font-weight-bold" span="3">
                   <div class="header-column-title" @click="sortbyColumn('volh')">
                     Volume (24hrs)
                     <img
@@ -335,7 +335,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="3">
+                <Col class="header-column font-text-small font-weight-bold" span="3">
                   <div class="header-column-title" @click="sortbyColumn('vold')">
                     Volume (7d)
                     <img
@@ -352,7 +352,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="2">
+                <Col class="header-column font-text-small font-weight-bold" span="2">
                   <div class="header-column-title" @click="sortbyColumn('feesh')">
                     Fees (24 hrs)
                     <img
@@ -369,7 +369,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="2">
+                <Col class="header-column font-text-small font-weight-bold" span="2">
                   <div class="header-column-title" @click="sortbyColumn('apy')">
                     APY
                     <img
@@ -386,7 +386,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="3">
+                <Col class="header-column font-text-small font-weight-bold" span="3">
                   <div class="header-column-title" @click="sortbyColumn('yliquidity')">
                     Your Liquidity
                     <img
@@ -409,7 +409,7 @@
                 <Row class="pools-table-item" v-for="data in poolsShow" :key="data.lp_mint">
                   <Col class="state" span="5">
                     <div class="lp-iconscontainer">
-                      <div class="icons textM weightS">
+                      <div class="icons font-text-medium font-weight-semi">
                         <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
                         {{ data.lp.coin.symbol }}
                         <span>-</span>
@@ -424,32 +424,32 @@
                     </div>
                   </Col>
 
-                  <Col class="state textM weightS" span="3">
+                  <Col class="state font-text-medium font-weight-semi" span="3">
                     ${{ new TokenAmount(data.liquidity, 2, false).format() }}
                   </Col>
 
-                  <Col class="state textM weightS" span="3">
+                  <Col class="state font-text-medium font-weight-semi" span="3">
                     ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
                   </Col>
-                  <Col class="state textM weightS" span="3">
+                  <Col class="state font-text-medium font-weight-semi" span="3">
                     ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
                   </Col>
-                  <Col class="state textM weightS" span="2">
+                  <Col class="state font-text-medium font-weight-semi" span="2">
                     ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
                   </Col>
-                  <Col class="state textM weightS" span="2"> {{ new TokenAmount(data.apy, 2, false).format() }}% </Col>
-                  <Col class="state textM weightS" span="3">
+                  <Col class="state font-text-medium font-weight-semi" span="2"> {{ new TokenAmount(data.apy, 2, false).format() }}% </Col>
+                  <Col class="state font-text-medium font-weight-semi" span="3">
                     ${{ new TokenAmount(data.current, 2, false).format() }}
                   </Col>
-                  <Col class="state textM weightS" span="3">
+                  <Col class="state font-text-medium font-weight-semi" span="3">
                     <div class="btn-container">
-                      <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)"
+                      <Button class="btn-transparent font-text-small font-weight-bold" id="addp" @click="openPoolAddModal(data)"
                         >Add</Button
                       >
                     </div>
                     <div class="btn-container">
                       <Button
-                        class="btn-primary textS weightB"
+                        class="btn-primary font-text-small font-weight-bold"
                         :disabled="!wallet.connected || !data.current"
                         @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
                       >
@@ -464,8 +464,8 @@
             <!-- tablet version -->
             <div class="pools-table isTablet">
               <Row class="pools-table-header">
-                <Col class="header-column textS weightB text-left" span="6"> Name </Col>
-                <Col class="header-column textS weightB" span="6">
+                <Col class="header-column font-text-small font-weight-bold text-left" span="6"> Name </Col>
+                <Col class="header-column font-text-small font-weight-bold" span="6">
                   <div class="header-column-title" @click="sortbyColumn('liquidity')">
                     Liquidity
                     <img
@@ -482,7 +482,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="6">
+                <Col class="header-column font-text-small font-weight-bold" span="6">
                   <div class="header-column-title" @click="sortbyColumn('volh')">
                     Volume (24hrs)
                     <img
@@ -499,7 +499,7 @@
                     />
                   </div>
                 </Col>
-                <Col class="header-column textS weightB" span="5">
+                <Col class="header-column font-text-small font-weight-bold" span="5">
                   <div class="header-column-title" @click="sortbyColumn('vold')">
                     Volume (7d)
                     <img
@@ -523,7 +523,7 @@
                   <Row slot="header" class="pool-head">
                     <Col class="state" span="6">
                       <div class="lp-iconscontainer">
-                        <div class="icons textM weightS">
+                        <div class="icons font-text-medium font-weight-semi">
                           <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
                           {{ data.lp.coin.symbol }}
                           <span>-</span>
@@ -533,18 +533,18 @@
                       </div>
                     </Col>
 
-                    <Col class="state textM weightS text-center" span="6">
+                    <Col class="state font-text-medium font-weight-semi text-center" span="6">
                       ${{ new TokenAmount(data.liquidity, 2, false).format() }}
                     </Col>
 
-                    <Col class="state textM weightS text-center" span="6">
+                    <Col class="state font-text-medium font-weight-semi text-center" span="6">
                       ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
                     </Col>
-                    <Col class="state textM weightS text-center" span="5">
+                    <Col class="state font-text-medium font-weight-semi text-center" span="5">
                       ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
                     </Col>
 
-                    <Button class="detail-btn textS weightS">
+                    <Button class="detail-btn font-text-small font-weight-semi">
                       <img
                         class="arrow-icon"
                         :class="data.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
@@ -556,34 +556,34 @@
                   <Row class="collapse-row" :gutter="18">
                     <Col span="12">
                       <div class="state">
-                        <span class="title textS weightS letterL">Fees (24h)</span>
-                        <span class="value textM weightS letterS">
+                        <span class="title font-text-small font-weight-semi letter-spacing-large">Fees (24h)</span>
+                        <span class="value font-text-medium font-weight-semi letter-spacing-small">
                           ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
                         </span>
                       </div>
                       <div class="state">
-                        <span class="title textS weightS letterL">APY</span>
-                        <span class="value textM weightS letterS">
+                        <span class="title font-text-small font-weight-semi letter-spacing-large">APY</span>
+                        <span class="value font-text-medium font-weight-semi letter-spacing-small">
                           {{ new TokenAmount(data.apy, 2, false).format() }}%
                         </span>
                       </div>
                     </Col>
                     <Col span="12">
                       <div class="state current-liquidity text-center">
-                        <span class="title textS weightS letterL">Your liquidity</span>
-                        <span class="value textM weightS letterS">
+                        <span class="title font-text-small font-weight-semi letter-spacing-large">Your liquidity</span>
+                        <span class="value font-text-medium font-weight-semi letter-spacing-small">
                           ${{ new TokenAmount(data.current, 2, false).format() }}
                         </span>
 
                         <div class="btn-group">
                           <div class="btn-container">
-                            <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)"
+                            <Button class="btn-transparent font-text-small font-weight-bold" id="addp" @click="openPoolAddModal(data)"
                               >Add</Button
                             >
                           </div>
                           <div class="btn-container">
                             <Button
-                              class="btn-primary textS weightB"
+                              class="btn-primary font-text-small font-weight-bold"
                               :disabled="!wallet.connected || !data.current"
                               @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
                             >
@@ -605,7 +605,7 @@
                   <Row slot="header" class="pool-head">
                     <Col class="state" :span="24">
                       <div class="lp-iconscontainer">
-                        <div class="icons textM weightS">
+                        <div class="icons font-text-medium font-weight-semi">
                           <CoinIcon :mint-address="data ? data.lp.coin.mintAddress : ''" />
                           {{ data.lp.coin.symbol }}
                           <span>-</span>
@@ -615,8 +615,8 @@
                       </div>
                     </Col>
 
-                    <Button class="detail-btn textS weightS">
-                      <span class="label textS weightS">Details</span>
+                    <Button class="detail-btn font-text-small font-weight-semi">
+                      <span class="label font-text-small font-weight-semi">Details</span>
                       <img
                         class="arrow-icon"
                         :class="data.lp_mint != showCollapse ? 'arrow-up' : 'arrow-down'"
@@ -627,20 +627,20 @@
 
                   <Row class="collapse-row">
                     <Col class="state current-liquidity text-center" span="24">
-                      <span class="title textS weightS letterL">Your liquidity</span>
-                      <span class="value textM weightS letterS">
+                      <span class="title font-text-small font-weight-semi letter-spacing-large">Your liquidity</span>
+                      <span class="value font-text-medium font-weight-semi letter-spacing-small">
                         ${{ new TokenAmount(data.current, 2, false).format() }}
                       </span>
 
                       <div class="btn-group">
                         <div class="btn-container">
-                          <Button class="btn-transparent textS weightB" id="addp" @click="openPoolAddModal(data)"
+                          <Button class="btn-transparent font-text-small font-weight-bold" id="addp" @click="openPoolAddModal(data)"
                             >Add</Button
                           >
                         </div>
                         <div class="btn-container">
                           <Button
-                            class="btn-primary textS weightB"
+                            class="btn-primary font-text-small font-weight-bold"
                             :disabled="!wallet.connected || !data.current"
                             @click="openUnstakeModal(data, data.lp, data.currentUnformated)"
                           >
@@ -650,32 +650,32 @@
                       </div>
                     </Col>
                     <Col class="state" span="24">
-                      <span class="title textS weightS letterL">Liquidity</span>
-                      <span class="value textM weightS letterS">
+                      <span class="title font-text-small font-weight-semi letter-spacing-large">Liquidity</span>
+                      <span class="value font-text-medium font-weight-semi letter-spacing-small">
                         ${{ new TokenAmount(data.liquidity, 2, false).format() }}
                       </span>
                     </Col>
                     <Col class="state" span="24">
-                      <span class="title textS weightS letterL">Volume (24h)</span>
-                      <span class="value textM weightS letterS">
+                      <span class="title font-text-small font-weight-semi letter-spacing-large">Volume (24h)</span>
+                      <span class="value font-text-medium font-weight-semi letter-spacing-small">
                         ${{ new TokenAmount(data.volume_24h, 2, false).format() }}
                       </span>
                     </Col>
                     <Col class="state" span="24">
-                      <span class="title textS weightS letterL">Volume (7d)</span>
-                      <span class="value textM weightS letterS">
+                      <span class="title font-text-small font-weight-semi letter-spacing-large">Volume (7d)</span>
+                      <span class="value font-text-medium font-weight-semi letter-spacing-small">
                         ${{ new TokenAmount(data.volume_7d, 2, false).format() }}
                       </span>
                     </Col>
                     <Col class="state" span="24">
-                      <span class="title textS weightS letterL">Fees (24h)</span>
-                      <span class="value textM weightS letterS">
+                      <span class="title font-text-small font-weight-semi letter-spacing-large">Fees (24h)</span>
+                      <span class="value font-text-medium font-weight-semi letter-spacing-small">
                         ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
                       </span>
                     </Col>
                     <Col class="state" span="24">
-                      <span class="title textS weightS letterL">APY</span>
-                      <span class="value textM weightS letterS">
+                      <span class="title font-text-small font-weight-semi letter-spacing-large">APY</span>
+                      <span class="value font-text-medium font-weight-semi letter-spacing-small">
                         {{ new TokenAmount(data.apy, 2, false).format() }}%
                       </span>
                     </Col>

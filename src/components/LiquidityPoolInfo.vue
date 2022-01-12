@@ -1,7 +1,7 @@
 <template>
   <div v-if="initialized && poolInfo" class="pool-info">
     {{ void ((coin = poolInfo.coin), (pc = poolInfo.pc), (lp = poolInfo.lp)) }}
-    <div class="price-base fcc-container textS weightS">
+    <div class="price-base fcc-container font-text-small font-weight-semi">
       <span v-if="coinBasePrice">
         1 {{ coin.symbol }} ≈
         {{ getPrice(poolInfo).toFixed(pc.decimals) }}
@@ -17,7 +17,7 @@
 
     <div class="price-info-box">
       <div class="price-info fcb-container">
-        <span class="name textS weightB">Pool liquidity</span>
+        <span class="name font-text-small font-weight-bold">Pool liquidity</span>
         <div class="text-right">
           <span class="value">
             {{ coin.balance.format() }}
@@ -31,7 +31,7 @@
       </div>
 
       <div class="price-info fcb-container">
-        <span class="name textS weightB">LP supply</span>
+        <span class="name font-text-small font-weight-bold">LP supply</span>
         <span class="value">
           {{ lp.totalSupply.format() }}
         </span>

@@ -18,11 +18,11 @@
           class="token-info icon-cursor"
           @click="$emit('onSelect', liquidity)"
         >
-          <div class="token-info-item textM">
+          <div class="token-info-item font-text-medium">
             <span><b>AMM ID: </b>{{ liquidity.ammId }}</span>
           </div>
 
-          <div class="token-info-item textM">
+          <div class="token-info-item font-text-medium">
             <span>
               <b>Pool liquidity: </b>
               {{ liquidity.coin.balance ? liquidity.coin.balance.toEther() : 0 }}

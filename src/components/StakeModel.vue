@@ -71,21 +71,21 @@
 
       <div class="info-guide">
         <img src="@/assets/icons/info.svg" />
-        <label class="textS weightB"
+        <label class="font-text-small font-weight-bold"
           >You will have to validate a second transaction to stake your LP in the farm.</label
         >
       </div>
 
       <div v-if="!labelizedPermission" class="info-guide">
         <img src="@/assets/icons/info.svg" />
-        <label class="textS weightB"
+        <label class="font-text-small font-weight-bold"
           >Cropper has not ran any due dilligence on permissionless farms. Use it at your own risks.</label
         >
       </div>
 
       <div class="btn-container">
         <Button
-          class="textL weightB"
+          class="font-text-large font-weight-bold"
           id="vdeposit"
           :disabled="
             !farmInfo.lp.coin ||

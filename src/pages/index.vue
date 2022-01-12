@@ -5,10 +5,10 @@
         <img class="cropper-logo" src="@/assets/icons/cropper-logo.svg" />
         <div class="lunch-btn-group">
           <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-container doc-btn">
-            <Button class="btn-outline weightS">Documentation</Button>
+            <Button class="btn-outline font-weight-semi">Documentation</Button>
           </a>
           <NuxtLink to="/swap/">
-            <Button class="btn-fill weightS">Launch App</Button>
+            <Button class="btn-fill font-weight-semi">Launch App</Button>
           </NuxtLink>
         </div>
       </div>
@@ -19,25 +19,25 @@
         <Row :gutter="20">
           <Col :span="22" :offset="1">
             <div class="balance-infos">
-              <h2 class="weightS tvl-value">TVL {{ TVL }}$</h2>
+              <h2 class="font-weight-semi tvl-value">TVL {{ TVL }}$</h2>
               <div class="token-infos">
                 <img src="@/assets/icons/cropper.svg" />
-                <label class="bodyM weightS"><u>CRP Token</u></label>
-                <label class="bodyM weightS">Price: {{ CRPPrice }}$</label>
-                <label class="bodyM weightS">Market Cap: {{ marketCap }}$</label>
+                <label class="font-body-medium font-weight-semi"><u>CRP Token</u></label>
+                <label class="font-body-medium font-weight-semi">Price: {{ CRPPrice }}$</label>
+                <label class="font-body-medium font-weight-semi">Market Cap: {{ marketCap }}$</label>
               </div>
             </div>
             <div class="cropper-content">
-              <label class="displayL weightX"
+              <label class="display-large letter-spacing-xbold"
                 >The Ultimate <br />
                 Yield Farming <br />
                 Protocol
               </label>
-              <p class="powered-by bodyL">Powered by Solana</p>
+              <p class="powered-by font-body-large">Powered by Solana</p>
             </div>
             <div class="read-more">
               <div class="btn-container">
-                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline bodyM weightS"
+                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline font-body-medium font-weight-semi"
                   >Documentation</a
                 >
               </div>
@@ -69,21 +69,21 @@
     <section class="why-cropper" id="why-cropper">
       <Row>
         <Col :span="22" :offset="1">
-          <h2 class="weightB text-center">Why Cropper?</h2>
+          <h2 class="font-weight-bold text-center">Why Cropper?</h2>
           <div class="intro-box-group">
             <img class="stars-second-bg" src="@/assets/landing/stars-second-bg.svg" />
 
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing/card-apr.svg" />
-              <h4 class="weightB">Top Farms APR%</h4>
+              <h4 class="font-weight-bold">Top Farms APR%</h4>
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing/card-community.svg" />
-              <h4 class="weightB">Community Driven</h4>
+              <h4 class="font-weight-bold">Community Driven</h4>
             </div>
             <div class="intro-box text-center">
               <img class="card-img" src="@/assets/landing/card-swap.svg" />
-              <h4 class="weightB">Best Swap Prices</h4>
+              <h4 class="font-weight-bold">Best Swap Prices</h4>
             </div>
           </div>
         </Col>
@@ -98,12 +98,12 @@
           <Col :span="22" :offset="1">
             <div class="audit-box-group">
               <div class="audit-box">
-                <h2 class="weightS">
+                <h2 class="font-weight-semi">
                   Farm Program <br />
                   Security Audit
                 </h2>
                 <a
-                  class="read-pdf bodyL"
+                  class="read-pdf font-body-large"
                   href="https://github.com/HalbornSecurity/PublicReports/blob/master/Solana%20Program%20Audit/Cropper_Finance_Farm_Solana_Program_Security_Audit_Report_Halborn_Final.pdf"
                   target="_blank"
                 >
@@ -112,12 +112,12 @@
                 </a>
               </div>
               <div class="audit-box">
-                <h2 class="weightS">
+                <h2 class="font-weight-semi">
                   AMM Program <br />
                   Security Audit
                 </h2>
                 <a
-                  class="read-pdf bodyL"
+                  class="read-pdf font-body-large"
                   href="https://github.com/HalbornSecurity/PublicReports/blob/master/Solana%20Program%20Audit/Cropper_Finance_AMM_Program_Security_Audit_Report_Halborn_Final.pdf"
                   target="_blank"
                 >
@@ -134,8 +134,8 @@
     <section class="features-headline">
       <Row>
         <Col :span="22" :offset="1">
-          <h2 class="weightB text-center">The Cropper Ecosystem</h2>
-          <p class="bodyL text-center eco-content">
+          <h2 class="font-weight-bold text-center">The Cropper Ecosystem</h2>
+          <p class="font-body-large text-center eco-content">
             By farmers, for farmers. With low fees and high-impact APRs, our full line of DeFi services give you
             everything you need in a few clicks.
           </p>
@@ -144,35 +144,35 @@
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing/feature-swap.svg" />
-                <h4 class="title weightB">Swap</h4>
-                <p class="bodyM content">Our smart search delivers the fairest swap instantly</p>
-                <NuxtLink to="/swap" class="bodyM now-btn weightS"> Swap Now </NuxtLink>
+                <h4 class="title font-weight-bold">Swap</h4>
+                <p class="font-body-medium content">Our smart search delivers the fairest swap instantly</p>
+                <NuxtLink to="/swap" class="font-body-medium now-btn font-weight-semi"> Swap Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing/feature-farming.svg" />
-                <h4 class="title weightB">Farming</h4>
-                <p class="bodyM content">Explore a vast selection of Labelized and Permissionless Farms</p>
-                <NuxtLink to="/farms" class="bodyM now-btn weightS"> Farm Now </NuxtLink>
+                <h4 class="title font-weight-bold">Farming</h4>
+                <p class="font-body-medium content">Explore a vast selection of Labelized and Permissionless Farms</p>
+                <NuxtLink to="/farms" class="font-body-medium now-btn font-weight-semi"> Farm Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing/feature-staking.svg" />
-                <h4 class="title weightB">Staking</h4>
-                <p class="bodyM content">
+                <h4 class="title font-weight-bold">Staking</h4>
+                <p class="font-body-medium content">
                   Earn rewards and gain access to exclusive opportunities with our 5 staking tiers
                 </p>
-                <NuxtLink to="/staking" class="bodyM now-btn weightS"> Stake Now </NuxtLink>
+                <NuxtLink to="/staking" class="font-body-medium now-btn font-weight-semi"> Stake Now </NuxtLink>
               </div>
             </Col>
             <Col :xs="12" :sm="12" :md="6">
               <div class="feature-box">
                 <img class="feature-img" src="@/assets/landing/feature-fertilizer.svg" />
-                <h4 class="title weightB">Fertilizer</h4>
-                <p class="bodyM content">The fertilizer launcher is currently being improved</p>
-                <NuxtLink to="/" class="bodyM now-btn weightS soon"> Coming Soon! </NuxtLink>
+                <h4 class="title font-weight-bold">Fertilizer</h4>
+                <p class="font-body-medium content">The fertilizer launcher is currently being improved</p>
+                <NuxtLink to="/" class="font-body-medium now-btn font-weight-semi soon"> Coming Soon! </NuxtLink>
               </div>
             </Col>
           </Row>
@@ -181,7 +181,7 @@
     </section>
 
     <section class="how-works">
-      <h2 class="weightB text-center">How it works</h2>
+      <h2 class="font-weight-bold text-center">How it works</h2>
       <div class="tutorial-container">
         <img class="landing-third-bg" src="@/assets/landing/landing-third-bg.svg" />
         <div class="tutorial-group">
@@ -189,28 +189,28 @@
             <TabPane tab="For Farmers" key="1">
               <Row :gutter="20">
                 <Col :sm="8" :md="8" class="play-list-col">
-                  <p class="bodyL weightB">Prepare to harvest</p>
+                  <p class="font-body-large font-weight-bold">Prepare to harvest</p>
                   <div class="play-list">
                     <Button
-                      class="play-list-btn bodyM weightS"
+                      class="play-list-btn font-body-medium font-weight-semi"
                       @click="selectVideo(1)"
                       :class="currentPlay === 1 ? 'active' : ''"
                       >1. Buy the token you want to</Button
                     >
                     <Button
-                      class="play-list-btn bodyM weightS"
+                      class="play-list-btn font-body-medium font-weight-semi"
                       @click="selectVideo(2)"
                       :class="currentPlay === 2 ? 'active' : ''"
                       >2. Stake liquidity</Button
                     >
                     <Button
-                      class="play-list-btn bodyM weightS"
+                      class="play-list-btn font-body-medium font-weight-semi"
                       @click="selectVideo(3)"
                       :class="currentPlay === 3 ? 'active' : ''"
                       >3. Harvest rewards</Button
                     >
                     <Button
-                      class="play-list-btn bodyM weightS"
+                      class="play-list-btn font-body-medium font-weight-semi"
                       @click="selectVideo(4)"
                       :class="currentPlay === 4 ? 'active' : ''"
                       >4. Unstake liquidity</Button
@@ -225,16 +225,16 @@
             <TabPane tab="For SPL Builders" key="2">
               <Row :gutter="20">
                 <Col :xs="24" :sm="24" :md="8">
-                  <p class="bodyL weightB">Launch your own farm</p>
+                  <p class="font-body-large font-weight-bold">Launch your own farm</p>
                   <div class="play-list">
                     <Button
-                      class="play-list-btn bodyM weightS"
+                      class="play-list-btn font-body-medium font-weight-semi"
                       @click="selectVideo(5)"
                       :class="currentPlay === 5 ? 'active' : ''"
                       >1. Set up Pool</Button
                     >
                     <Button
-                      class="play-list-btn bodyM weightS"
+                      class="play-list-btn font-body-medium font-weight-semi"
                       @click="selectVideo(6)"
                       :class="currentPlay === 6 ? 'active' : ''"
                       >2. Launch Farm</Button
@@ -252,8 +252,8 @@
     </section>
 
     <section class="cropper-feed">
-      <h2 class="weightB text-center">100,000 Croppers And Counting</h2>
-      <p class="bodyL text-center feed-description">
+      <h2 class="font-weight-bold text-center">100,000 Croppers And Counting</h2>
+      <p class="font-body-large text-center feed-description">
         Our community is at the heart of everything we do. The first Croppers formed as a collective of serious farmers
         seeking access and decentralization of yield farming. Today, the Cropper Community is comprised of DeFi
         enthusiasts of all walks of the chain. Together, we pursue universal access to yield farming, and all the
@@ -268,7 +268,7 @@
                   <div class="feed-logo">
                     <img src="@/assets/icons/twitter-white.svg" />
                   </div>
-                  <div class="feed-content bodyM">
+                  <div class="feed-content font-body-medium">
                     {{ twitter.content }}
                   </div>
                 </div>
@@ -278,41 +278,41 @@
         </Row>
         <div class="feed-link">
           <a :href="socialLinks.twitter" target="_blank" class="btn-container join-btn-container">
-            <Button class="btn-outline bodyM weightS join-btn">Join the Croppers</Button>
+            <Button class="btn-outline font-body-medium font-weight-semi join-btn">Join the Croppers</Button>
           </a>
         </div>
       </div>
     </section>
 
     <section class="surrounded-by">
-      <h2 class="weightB text-center">
+      <h2 class="font-weight-bold text-center">
         Surrounded by the best <br />
         in the Industry
       </h2>
       <div class="category-group text-center">
         <Button
-          class="category-btn bodyL weightS"
+          class="category-btn font-body-large font-weight-semi"
           :class="currentCategory === 'backedBy' ? 'active' : ''"
           @click="selectCategory('backedBy')"
         >
           Backed by
         </Button>
         <Button
-          class="category-btn bodyL weightS"
+          class="category-btn font-body-large font-weight-semi"
           :class="currentCategory === 'advisors' ? 'active' : ''"
           @click="selectCategory('advisors')"
         >
           Advisors
         </Button>
         <Button
-          class="category-btn bodyL weightS"
+          class="category-btn font-body-large font-weight-semi"
           :class="currentCategory === 'partners' ? 'active' : ''"
           @click="selectCategory('partners')"
         >
           Partners
         </Button>
         <Button
-          class="category-btn bodyL weightS"
+          class="category-btn font-body-large font-weight-semi"
           :class="currentCategory === 'poweredBy' ? 'active' : ''"
           @click="selectCategory('poweredBy')"
         >

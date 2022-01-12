@@ -15,7 +15,7 @@
       <div class="fcb-container">
         <div class="fcc-container">
           <div class="coins-container">
-            <div class="coin-group textS weightS">
+            <div class="coin-group font-text-small font-weight-semi">
               <CoinIcon :mint-address="coin ? coin.coin.mintAddress : ''" />
               {{ coin.coin.symbol }}
               <span class="from-to">-</span>
@@ -23,10 +23,10 @@
               {{ coin.pc.symbol }}
             </div>
           </div>
-          <button v-if="!showHalf && coin.balance" class="input-button bodyXS weightB fcc-container" @click="setMax(1)">
+          <button v-if="!showHalf && coin.balance" class="input-button font-body-xsmall font-weight-bold fcc-container" @click="setMax(1)">
             Max
           </button>
-          <button v-if="showHalf && coin.balance" class="input-button bodyXS weightB fcc-container" @click="setMax(0.5)">
+          <button v-if="showHalf && coin.balance" class="input-button font-body-xsmall font-weight-bold fcc-container" @click="setMax(0.5)">
             Half
           </button>
         </div>
@@ -43,34 +43,34 @@
           spellcheck="false"
         />
       </div>
-      <div v-if="coin.balance && !coin.balance.wei.isNaN()" class="balance-info fcb-container bodyXS weightS">
+      <div v-if="coin.balance && !coin.balance.wei.isNaN()" class="balance-info fcb-container font-body-xsmall font-weight-semi">
         <span> Balance: {{ coin.balance.fixed() }} </span>
         <span> ~${{ coin.balance.fixed() }} </span>
       </div>
     </div>
     <div class="lp-breakdown text-center">
-      <label class="textS weightS letterL">LP Breakdown</label>
+      <label class="font-text-small font-weight-semi letter-spacing-large">LP Breakdown</label>
       <div class="lp-coins-container fcc-container">
-        <div class="lp-coin-box textS">
+        <div class="lp-coin-box font-text-small">
           <b>{{lpbreakdown.pcSymbol}}</b> {{ Math.round(lpbreakdown.pcBalance * 1000 * ( value / coin.balance.fixed() )) / 1000 }}
         </div>
-        <div class="lp-coin-box textS">
+        <div class="lp-coin-box font-text-small">
           <b>{{lpbreakdown.coinSymbol}}</b> {{Math.round(lpbreakdown.coinBalance * 1000 * ( value / coin.balance.fixed() )) / 1000 }}
         </div>
       </div>
     </div>
     <div class="info-box">
       <img class="info-icon" src="@/assets/icons/info.svg" />
-      <label class="bodyXS weightB" v-html="text"> </label>
+      <label class="font-body-xsmall font-weight-bold" v-html="text"> </label>
     </div>
 
     <div class="btn-group fcb-container">
       <div class="btn-container">
-        <Button class="btn-fill textM weightS" @click="$emit('onCancel')"> Cancel </Button>
+        <Button class="btn-fill font-text-medium font-weight-semi" @click="$emit('onCancel')"> Cancel </Button>
       </div>
       <div class="btn-container">
         <Button
-          class="btn-transparent textM weightS"
+          class="btn-transparent font-text-medium font-weight-semi"
           :loading="loading"
           :disabled="loading || isNullOrZero(value) || !lte(value, coin.balance.toEther()) || !validateTotalSupply()"
           @click="$emit('onOk', value)"
