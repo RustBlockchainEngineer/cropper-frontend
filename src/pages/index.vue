@@ -44,23 +44,23 @@
             </div>
             <div class="social-links">
               <a class="social-medium" :href="socialLinks.medium" target="_blank">
-                <img class="social-icon" src="@/assets/social/medium-blue.svg" />
-                <img class="social-icon" src="@/assets/social/medium-gradient.svg" />
+                <img class="social-icon" src="@/assets/icons/medium-blue.svg" />
+                <img class="social-icon" src="@/assets/icons/medium-gradient.svg" />
               </a>
               <a class="social-discord" :href="socialLinks.discord" target="_blank">
-                <img class="social-icon" src="@/assets/social/discord-blue.svg" />
-                <img class="social-icon" src="@/assets/social/discord-gradient.svg" />
+                <img class="social-icon" src="@/assets/icons/discord-blue.svg" />
+                <img class="social-icon" src="@/assets/icons/discord-gradient.svg" />
               </a>
               <a class="social-twitter" :href="socialLinks.twitter" target="_blank">
-                <img class="social-icon" src="@/assets/social/twitter-blue.svg" />
-                <img class="social-icon" src="@/assets/social/twitter-gradient.svg" />
+                <img class="social-icon" src="@/assets/icons/twitter-blue.svg" />
+                <img class="social-icon" src="@/assets/icons/twitter-gradient.svg" />
               </a>
               <a class="social-telegram" :href="socialLinks.telegram" target="_blank">
-                <img class="social-icon" src="@/assets/social/telegram-blue.svg" />
-                <img class="social-icon" src="@/assets/social/telegram-gradient.svg" />
+                <img class="social-icon" src="@/assets/icons/telegram-blue.svg" />
+                <img class="social-icon" src="@/assets/icons/telegram-gradient.svg" />
               </a>
             </div>
-            <a href="#why-cropper"><img class="move-next-section" src="@/assets/icons/transparent-arrow.svg" /></a>
+            <a href="#why-cropper"><img class="move-next-section" src="@/assets/icons/arrow-down-transparent.svg" /></a>
           </Col>
         </Row>
       </div>
@@ -107,7 +107,7 @@
                   href="https://github.com/HalbornSecurity/PublicReports/blob/master/Solana%20Program%20Audit/Cropper_Finance_Farm_Solana_Program_Security_Audit_Report_Halborn_Final.pdf"
                   target="_blank"
                 >
-                  <img class="pdf-icon" src="@/assets/landing/pdf-icon.svg" />
+                  <img class="pdf-icon" src="@/assets/icons/pdf.svg" />
                   Read the Audit
                 </a>
               </div>
@@ -121,7 +121,7 @@
                   href="https://github.com/HalbornSecurity/PublicReports/blob/master/Solana%20Program%20Audit/Cropper_Finance_AMM_Program_Security_Audit_Report_Halborn_Final.pdf"
                   target="_blank"
                 >
-                  <img class="pdf-icon" src="@/assets/landing/pdf-icon.svg" />
+                  <img class="pdf-icon" src="@/assets/icons/pdf.svg" />
                   Read the Audit
                 </a>
               </div>
@@ -266,7 +266,7 @@
               <Col v-for="twitter in twitterShows" :key="twitter.id" :xs="24" :sm="24" :md="8">
                 <div class="feed-twitter">
                   <div class="feed-logo">
-                    <img src="@/assets/social/twitter-white.svg" />
+                    <img src="@/assets/icons/twitter-white.svg" />
                   </div>
                   <div class="feed-content bodyM">
                     {{ twitter.content }}

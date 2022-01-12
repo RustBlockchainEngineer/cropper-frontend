@@ -218,7 +218,7 @@
                   <label class="textL weightB">Search</label>
                   <img
                     class="icon-cursor"
-                    src="@/assets/icons/close-circle-icon.svg"
+                    src="@/assets/icons/close-circle.svg"
                     @click="
                       () => {
                         this.showSearchMenu = false
@@ -371,7 +371,7 @@
                     <div class="farm-infos">
                       <div class="farm-info-group bodyXS">
                         <div class="farm-info-img">
-                          <img src="@/assets/icons/time-icon.svg" />
+                          <img src="@/assets/icons/sandglass.svg" />
                         </div>
                         from
                         {{ new Date(farm.farmInfo.poolInfo.start_timestamp * 1e3).toLocaleDateString('en-US') }}
@@ -380,7 +380,7 @@
                       </div>
                       <div class="farm-info-group bodyXS">
                         <div class="farm-info-img">
-                          <img src="@/assets/icons/reward-icon.svg" />
+                          <img src="@/assets/icons/reward.svg" />
                         </div>
                         Remaining rewards
                         {{
@@ -475,8 +475,8 @@
                       -
                     </div>
                     <div v-else class="value textM weightS letterS">
-                      <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
-                      <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
+                      <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire.svg" />
+                      <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire.svg" />
                       {{ Math.round(farm.farmInfo.apr * 100) / 100 }}%
                     </div>
                   </div>
@@ -799,8 +799,8 @@
                           -
                         </div>
                         <div v-else class="value textM weightS letterS">
-                          <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
-                          <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
+                          <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire.svg" />
+                          <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire.svg" />
                           {{ Math.round(farm.farmInfo.apr * 100) / 100 }}%
                         </div>
                       </Col>
@@ -834,7 +834,7 @@
                         <div class="farm-infos">
                           <div class="farm-info-group bodyXS">
                             <div class="farm-info-img">
-                              <img src="@/assets/icons/time-icon.svg" />
+                              <img src="@/assets/icons/sandglass.svg" />
                             </div>
                             from
                             {{ new Date(farm.farmInfo.poolInfo.start_timestamp * 1e3).toLocaleDateString('en-US') }}
@@ -845,7 +845,7 @@
                           <div>
                             <div class="farm-info-group bodyXS">
                               <div class="farm-info-img">
-                                <img src="@/assets/icons/reward-icon.svg" />
+                                <img src="@/assets/icons/reward.svg" />
                               </div>
                               Remaining rewards
                               {{
@@ -1137,8 +1137,8 @@
                           -
                         </div>
                         <div v-else class="value textM weightS letterS">
-                          <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire-icon.svg" />
-                          <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire-icon.svg" />
+                          <img v-if="farm.farmInfo.apr > 300" src="@/assets/icons/fire.svg" />
+                          <img v-if="farm.farmInfo.apr > 1000" src="@/assets/icons/fire.svg" />
                           {{ Math.round(farm.farmInfo.apr * 100) / 100 }}%
                         </div>
                       </Col>
@@ -1172,7 +1172,7 @@
                         <div class="farm-infos">
                           <div class="farm-info-group bodyXS">
                             <div class="farm-info-img">
-                              <img src="@/assets/icons/time-icon.svg" />
+                              <img src="@/assets/icons/sandglass.svg" />
                             </div>
                             from
                             {{ new Date(farm.farmInfo.poolInfo.start_timestamp * 1e3).toLocaleDateString('en-US') }}
@@ -1183,7 +1183,7 @@
                           <div>
                             <div class="farm-info-group bodyXS">
                               <div class="farm-info-img">
-                                <img src="@/assets/icons/reward-icon.svg" />
+                                <img src="@/assets/icons/reward.svg" />
                               </div>
                               Remaining rewards
                               {{

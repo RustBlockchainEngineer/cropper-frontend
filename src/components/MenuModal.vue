@@ -9,7 +9,7 @@
     @cancel="$emit('onCancel')"
     centered
   >
-    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
     <div class="menu-container">
       <Menu v-model="currentRoute" :mode="'vertical'" :theme="'light'" @click="changeRoute">
         <MenuItem v-for="(extra, name) in navs" :key="name.toLowerCase()" :class="name === banURL ? 'disable' : ''">

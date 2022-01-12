@@ -616,7 +616,7 @@ export default Vue.extend({
         funded: 'Funded'
       },
       currentTimestamp: 0,
-      currentStep: 0 as number,
+      currentStep: 1 as number,
       stepsStatus: 'process' as string
     }
   },

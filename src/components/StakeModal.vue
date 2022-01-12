@@ -9,7 +9,7 @@
     @cancel="$emit('onCancel')"
     centered
   >
-    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
     <div class="stake-modal-container">
       <div class="balance-form">
         <div class="fcb-container">

@@ -9,7 +9,7 @@
     centered
     @cancel="$emit('onCancel')"
   >
-    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
 
     <div class="liquidity-box">
       <div class="fcb-container">

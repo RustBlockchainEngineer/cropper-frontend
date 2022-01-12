@@ -148,7 +148,7 @@
                     }
                   "
                 >
-                  <img class="setting-icon" src="@/assets/icons/setting-icon.svg" />
+                  <img class="setting-icon" src="@/assets/icons/setting.svg" />
                 </div>
                 <div v-if="showSlippage" class="slippage-container">
                   <input

@@ -9,7 +9,7 @@
     @cancel="$emit('onCancel')"
     centered
   >
-    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
 
     <div class="create-farm-head fcb-container">
       <div class="btn-outline">
@@ -122,7 +122,7 @@
                         </div>
                         <img
                           class="close-icon icon-cursor"
-                          src="@/assets/icons/close-icon.svg"
+                          src="@/assets/icons/close.svg"
                           @click="removeSelected"
                         />
                       </div>

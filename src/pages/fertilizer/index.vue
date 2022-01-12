@@ -130,7 +130,7 @@
                 <label class="textL weightB">Search</label>
                 <img
                   class="icon-cursor"
-                  src="@/assets/icons/close-circle-icon.svg"
+                  src="@/assets/icons/close-circle.svg"
                   @click="
                     () => {
                       this.showSearchMenu = false

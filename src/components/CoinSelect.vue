@@ -10,7 +10,7 @@
     @cancel="$emit('onClose')"
     class="coin-select-modal"
   >
-    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onClose')" />
+    <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onClose')" />
     <div class="select-token-search">
       <input ref="userInput" v-model="keyword" class="textM" placeholder="Search name or paste address" />
       <div class="common-bases">

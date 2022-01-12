@@ -133,7 +133,7 @@
                         <div class="selected-pool-box">
                           <div class="pool-info">AMM ID: <span>{{ userCreateAmmId }}</span></div>
                           <div v-if="userCreatePoolLiquidity" class="pool-info">Pool Liquidity: <span>{{ userCreatePoolLiquidity }}</span></div>
-                          <img src="@/assets/icons/close-icon.svg" @click="removeSelected" />
+                          <img src="@/assets/icons/close.svg" @click="removeSelected" />
                         </div>
                       </div>
                       <Radio :value="2">Create a new AMM ID</Radio>
@@ -147,7 +147,7 @@
                       </Row>
                     </RadioGroup>
                     <div class="info-guide">
-                      <img src="@/assets/icons/info-icon.svg" />
+                      <img src="@/assets/icons/info.svg" />
                       <em>
                         This tool is for advanced users. Before attempting to create a new farm, we suggest going through this
                         <a
@@ -266,7 +266,7 @@
                     </div>
                     <div class="amm-id"><b>AMM ID:</b>&nbsp;{{ userCreateAmmId }}</div>
                     <div class="info-guide">
-                      <img src="@/assets/icons/info-icon.svg" />
+                      <img src="@/assets/icons/info.svg" />
                       <em>
                         You will have to <b>validate 2 transactions.</b>
                       </em>

@@ -30,7 +30,7 @@
             /></span>
             <div>
               <a href="https://twitter.com/CropperFinance" class="social-icon" target="_blank" @click="validateTwitterA()">
-                <img src="@/assets/icons/twitter_purple.svg" width="30" height="30" />
+                <img src="@/assets/icons/twitter-purple.svg" width="30" height="30" />
               </a>
               <a href="https://twitter.com/CropperFinance" target="_blank" style="color:#c6c6c6" @click="validateTwitterA()">
               Follow <b>CropperFinance on Twitter</b>
@@ -43,7 +43,7 @@
             <span v-else class="span"><img src="@/assets/icons/check-green.svg" alt="" /></span>
             <div>
               <a href="https://t.me/CropperFinance" class="social-icon" target="_blank" @click="validateTelegramA()">
-                <img src="@/assets/icons/telegram_purple.svg" width="30" height="30" />
+                <img src="@/assets/icons/telegram-purple.svg" width="30" height="30" />
               </a>
               <a href="https://t.me/CropperFinance" style="color:#c6c6c6" target="_blank" @click="validateTelegramA()">
               Join <b>CropperFinance on Telegram</b> 
@@ -56,7 +56,7 @@
             <span v-else class="span"><img src="@/assets/icons/check-green.svg" alt="" /></span>
             <div>
               <a :href="this.farm.links.twitter" target="_blank" class="social-icon"  @click="validateTwitterB()">
-                <img src="@/assets/icons/twitter_purple.svg" width="30" height="30" />
+                <img src="@/assets/icons/twitter-purple.svg" width="30" height="30" />
               </a>
               <a :href="this.farm.links.twitter" target="_blank" style="color:#c6c6c6"   @click="validateTwitterB()">
               Follow <b>{{ this.farm.shortname }} on Twitter</b> 
@@ -69,7 +69,7 @@
             <span v-else class="span"><img src="@/assets/icons/check-green.svg" alt="" /></span>
             <div>
               <a :href="this.farm.links.telegram" target="_blank" class="social-icon"  @click="validateTelegramB()">
-                <img src="@/assets/icons/telegram_purple.svg" width="30" height="30" />
+                <img src="@/assets/icons/telegram-purple.svg" width="30" height="30" />
               </a>
 
               <a :href="this.farm.links.telegram" target="_blank" style="color:#c6c6c6"  @click="validateTelegramB()">

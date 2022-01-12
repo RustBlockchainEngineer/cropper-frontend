@@ -6,20 +6,20 @@
       </div>
       <div class="icon_list noMobile">
         <a class="social-medium" :href="linkUrl.medium" target="_blank">
-          <img class="social-icon" src="@/assets/social/medium-blue.svg" />
-          <img class="social-icon" src="@/assets/social/medium-gradient.svg" />
+          <img class="social-icon" src="@/assets/icons/medium-blue.svg" />
+          <img class="social-icon" src="@/assets/icons/medium-gradient.svg" />
         </a>
         <a class="social-discord" :href="linkUrl.discord" target="_blank">
-          <img class="social-icon" src="@/assets/social/discord-blue.svg" />
-          <img class="social-icon" src="@/assets/social/discord-gradient.svg" />
+          <img class="social-icon" src="@/assets/icons/discord-blue.svg" />
+          <img class="social-icon" src="@/assets/icons/discord-gradient.svg" />
         </a>
         <a class="social-twitter" :href="linkUrl.twitter" target="_blank">
-          <img class="social-icon" src="@/assets/social/twitter-blue.svg" />
-          <img class="social-icon" src="@/assets/social/twitter-gradient.svg" />
+          <img class="social-icon" src="@/assets/icons/twitter-blue.svg" />
+          <img class="social-icon" src="@/assets/icons/twitter-gradient.svg" />
         </a>
         <a class="social-telegram" :href="linkUrl.telegram" target="_blank">
-          <img class="social-icon" src="@/assets/social/telegram-blue.svg" />
-          <img class="social-icon" src="@/assets/social/telegram-gradient.svg" />
+          <img class="social-icon" src="@/assets/icons/telegram-blue.svg" />
+          <img class="social-icon" src="@/assets/icons/telegram-gradient.svg" />
         </a>
       </div>
     </div>

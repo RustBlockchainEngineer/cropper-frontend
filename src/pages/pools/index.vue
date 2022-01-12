@@ -31,7 +31,7 @@
               >Learn about providing <br />
               liquidity
             </label>
-            <img class="icon-cursor close-icon" src="@/assets/icons/close-circle-icon.svg" @click="hideGuide" />
+            <img class="icon-cursor close-icon" src="@/assets/icons/close-circle.svg" @click="hideGuide" />
             <Row class="guide-detail">
               <Col :sm="14" :xs="24">
                 <label class="textS weightS letterL">Check out our v3 LP walkthrough and migration guides.</label>
@@ -196,7 +196,7 @@
                   <label class="textL weightB">Search</label>
                   <img
                     class="icon-cursor"
-                    src="@/assets/icons/close-circle-icon.svg"
+                    src="@/assets/icons/close-circle.svg"
                     @click="
                       () => {
                         this.showSearchMenu = false

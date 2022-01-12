@@ -8,7 +8,7 @@
     :width="480"
     @cancel="$emit('onClose')"
   >
-    <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$emit('onCancel')" />
+    <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
 
     <div class="select-token">
       <div class="token-list">

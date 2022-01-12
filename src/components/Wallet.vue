@@ -57,7 +57,7 @@
         @click="openPopIn"
       >
         <Button class="bodyS weightB">
-          <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
+          <img src="@/assets/icons/wallet.svg" style="margin-right: 10px" />
           {{ windowWidth >= 768 ? 'Connect wallet' : 'Connect' }}
         </Button>
       </div>
@@ -70,7 +70,7 @@
         @click="$accessor.wallet.openModal"
       >
         <Button class="bodyS weightB">
-          <img src="@/assets/icons/wallet-icon.svg" style="margin-right: 10px" />
+          <img src="@/assets/icons/wallet.svg" style="margin-right: 10px" />
           {{ wallet.address.substr(0, 4) }}
           ...
           {{ wallet.address.substr(wallet.address.length - 4, 4) }}
@@ -95,7 +95,7 @@
         centered
         @cancel="$accessor.wallet.closeModal"
       >
-        <img class="modal-close" src="@/assets/icons/close-circle-icon.svg" @click="$accessor.wallet.closeModal" />
+        <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$accessor.wallet.closeModal" />
         <div v-if="!wallet.connected" class="select-wallet">
           <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
             <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
@@ -112,7 +112,7 @@
     <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
       <div class="select-wallet-header fcb-container">
         <span class="textL weightB">Connect wallet</span>
-        <img class="close-icon icon-cursor" src="@/assets/icons/close-circle-icon.svg" @click="closePopIn" />
+        <img class="close-icon icon-cursor" src="@/assets/icons/close-circle.svg" @click="closePopIn" />
       </div>
 
       <div v-if="!wallet.connected" class="select-wallet">
