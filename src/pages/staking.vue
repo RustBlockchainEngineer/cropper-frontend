@@ -201,7 +201,13 @@
               </div>
 
               <div class="staking-tier-item">
-                <div class="staking-tier-preview"></div>
+                <div class="staking-tier-preview fcc-container">
+                  <div class="tier-text">
+                    <span class="font-large">Tier 1</span>
+                    <br />
+                    <span class="font-large weight-bold text-upper">Soon</span>
+                  </div>
+                </div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="font-large weight-bold">Tier 1</label>
@@ -217,7 +223,13 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview"></div>
+                <div class="staking-tier-preview fcc-container">
+                  <div class="tier-text">
+                    <span class="font-large">Tier 2</span>
+                    <br />
+                    <span class="font-large weight-bold text-upper">Soon</span>
+                  </div>
+                </div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="font-large weight-bold">Tier 2</label>
@@ -233,7 +245,13 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview"></div>
+                <div class="staking-tier-preview fcc-container">
+                  <div class="tier-text">
+                    <span class="font-large">Tier 3</span>
+                    <br />
+                    <span class="font-large weight-bold text-upper">Soon</span>
+                  </div>
+                </div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="font-large weight-bold">Tier 3</label>
@@ -249,7 +267,13 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview"></div>
+                <div class="staking-tier-preview fcc-container">
+                  <div class="tier-text">
+                    <span class="font-large">Tier 4</span>
+                    <br />
+                    <span class="font-large weight-bold text-upper">Soon</span>
+                  </div>
+                </div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="font-large weight-bold">Tier 4</label>
@@ -265,7 +289,13 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview"></div>
+                <div class="staking-tier-preview fcc-container">
+                  <div class="tier-text">
+                    <span class="font-large">Tier 5</span>
+                    <br />
+                    <span class="font-large weight-bold text-upper">Soon</span>
+                  </div>
+                </div>
                 <div class="fcb-container">
                   <div class="tier-info">
                     <label class="font-large weight-bold">Tier 5</label>
@@ -302,7 +332,13 @@
                     </span>
                   </Col>
                   <Col :sm="12" :xs="24" class="staking-tier-preview">
-                    <div class="staking-tier-item-box"></div>
+                    <div class="staking-tier-item-box fcc-container">
+                      <div class="tier-text">
+                        <span class="font-large">Tier 1</span>
+                        <br />
+                        <span class="font-large weight-bold text-upper">Soon</span>
+                      </div>
+                    </div>
                   </Col>
                 </Row>
               </TabPane>
@@ -320,7 +356,13 @@
                     </span>
                   </Col>
                   <Col :sm="12" :xs="24" class="staking-tier-preview">
-                    <div class="staking-tier-item-box"></div>
+                    <div class="staking-tier-item-box fcc-container">
+                      <div class="tier-text">
+                        <span class="font-large">Tier 2</span>
+                        <br />
+                        <span class="font-large weight-bold text-upper">Soon</span>
+                      </div>
+                    </div>
                   </Col>
                 </Row>
               </TabPane>
@@ -338,7 +380,13 @@
                     </span>
                   </Col>
                   <Col :span="12" class="staking-tier-preview">
-                    <div class="staking-tier-item-box"></div>
+                    <div class="staking-tier-item-box fcc-container">
+                      <div class="tier-text">
+                        <span class="font-large">Tier 3</span>
+                        <br />
+                        <span class="font-large weight-bold text-upper">Soon</span>
+                      </div>
+                    </div>
                   </Col>
                 </Row>
               </TabPane>
@@ -356,7 +404,13 @@
                     </span>
                   </Col>
                   <Col :span="12" class="staking-tier-preview">
-                    <div class="staking-tier-item-box"></div>
+                    <div class="staking-tier-item-box fcc-container">
+                      <div class="tier-text">
+                        <span class="font-large">Tier 4</span>
+                        <br />
+                        <span class="font-large weight-bold text-upper">Soon</span>
+                      </div>
+                    </div>
                   </Col>
                 </Row>
               </TabPane>
@@ -374,7 +428,13 @@
                     </span>
                   </Col>
                   <Col :span="12" class="staking-tier-preview">
-                    <div class="staking-tier-item-box"></div>
+                    <div class="staking-tier-item-box fcc-container">
+                      <div class="tier-text">
+                        <span class="font-large">Tier 5</span>
+                        <br />
+                        <span class="font-large weight-bold text-upper">Soon</span>
+                      </div>
+                    </div>
                   </Col>
                 </Row>
               </TabPane>
@@ -962,10 +1022,12 @@ export default Vue.extend({
               padding: 0 4px;
 
               .staking-tier-preview {
-                background: @color-blue-dark;
-                border-radius: 18px;
-                margin-bottom: 28px;
+                background: url('@/assets/background/tier-blur.png');
+                background-size: cover;
                 height: 277px;
+                margin-bottom: 28px;
+                border-radius: 18px;
+                border: 5px solid @color-blue-dark;
               }
 
               .tier-info {
@@ -1138,8 +1200,10 @@ export default Vue.extend({
                 }
 
                 .staking-tier-item-box {
-                  background: #0b2e6a;
+                  background: url('@/assets/background/tier-blur.png');
+                  background-size: cover;
                   border-radius: 18px;
+                  border: 5px solid @color-blue-dark;
                   width: 100%;
                   height: 300px;
                 }
