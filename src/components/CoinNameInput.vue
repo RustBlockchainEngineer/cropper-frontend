@@ -1,10 +1,10 @@
 <template>
   <div class="coin-select">
-    <div class="label fcb-container font-xsmall weight-bold">
+    <div class="label fcsb-container font-xsmall weight-bold">
       <span>{{ label }}</span>
     </div>
     <div class="coin-input">
-      <div class="main-input fcb-container">
+      <div class="main-input fcsb-container">
         <button class="select-button fcc-container" @click="selectCoin">
           <div v-if="coinName" class="coin-container fcc-container">
             <CoinIcon :mint-address="mintAddress" />

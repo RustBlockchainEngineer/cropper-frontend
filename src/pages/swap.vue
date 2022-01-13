@@ -124,7 +124,7 @@
         </div>
 
         <div v-if="wallet.connected">
-          <div class="swap-actions fcb-container">
+          <div class="swap-actions fcsb-container">
             <div class="swap-status font-medium weight-semi">
               <div v-if="priceImpact <= 2" class="price-status">
                 <img class="status-icon" src="@/assets/icons/status-ok.svg" />

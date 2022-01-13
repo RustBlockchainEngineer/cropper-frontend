@@ -55,7 +55,7 @@
           </div>
         </template>
       </div>
-      <div v-if="addUserCoin" class="sort fcb-container">
+      <div v-if="addUserCoin" class="sort fcsb-container">
         <span class="title">Create a name for this token</span>
         <Icon :type="desc ? 'arrow-up' : 'arrow-down'" @click="setDesc" />
       </div>

@@ -12,7 +12,7 @@
     <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
 
     <div class="liquidity-box">
-      <div class="fcb-container">
+      <div class="fcsb-container">
         <div class="fcc-container">
           <div class="coins-container">
             <div class="coin-group font-small weight-semi">
@@ -43,7 +43,7 @@
           spellcheck="false"
         />
       </div>
-      <div v-if="coin.balance && !coin.balance.wei.isNaN()" class="balance-info fcb-container font-xsmall weight-semi">
+      <div v-if="coin.balance && !coin.balance.wei.isNaN()" class="balance-info fcsb-container font-xsmall weight-semi">
         <span> Balance: {{ coin.balance.fixed() }} </span>
         <span> ~${{ coin.balance.fixed() }} </span>
       </div>
@@ -64,7 +64,7 @@
       <label class="font-xsmall weight-bold" v-html="text"> </label>
     </div>
 
-    <div class="btn-group fcb-container">
+    <div class="btn-group fcsb-container">
       <div class="btn-container">
         <Button class="btn-fill font-medium weight-semi" @click="$emit('onCancel')"> Cancel </Button>
       </div>

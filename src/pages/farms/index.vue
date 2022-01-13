@@ -69,7 +69,7 @@
     <div class="card">
       <div class="card-body">
         <div class="farm-content">
-          <div class="farm-head fcb-container">
+          <div class="farm-head fcsb-container">
             <h3 class="title weight-bold">Farms</h3>
             <div class="information">
               <div class="tvl-info">
@@ -95,7 +95,7 @@
             </div>
           </div>
 
-          <div class="farm-option-bar fcb-container">
+          <div class="farm-option-bar fcsb-container">
             <div class="option-tab-group">
               <div class="option-tab">
                 <Button
@@ -214,7 +214,7 @@
                   }
                 "
               >
-                <div class="collapse-item-header fcb-container">
+                <div class="collapse-item-header fcsb-container">
                   <label class="font-large weight-bold">Search</label>
                   <img
                     class="icon-cursor"
@@ -355,7 +355,7 @@
           <div v-if="farm.initialized && farmLoaded">
             <div class="farm-table isDesktop">
               <Row class="farm-item" v-for="(farm, idx) in showFarms" :key="farm.farmInfo.poolId" :gutter="16">
-                <Col class="fcl-container" span="6">
+                <Col class="fcs-container" span="6">
                   <div class="state">
                     <div class="lp-icons">
                       <div class="lp-icons-group">
@@ -395,7 +395,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="2">
+                <Col class="fce-container" span="2">
                   <div class="state">
                     <div class="farm-labels">
                       <div v-if="farm.labelized" class="label labelized weight-semi">Labelized</div>
@@ -414,7 +414,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="3">
+                <Col class="fce-container" span="3">
                   <div class="state">
                     <div class="title font-small weight-semi spacing-large">Total Deposited</div>
                     <div
@@ -436,7 +436,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="3">
+                <Col class="fce-container" span="3">
                   <div class="state">
                     <div class="title font-small weight-semi spacing-large">
                       Total APR
@@ -482,7 +482,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="4">
+                <Col class="fce-container" span="4">
                   <div class="state">
                     <div class="title font-small weight-semi spacing-large">Pending Rewards</div>
                     <div
@@ -500,7 +500,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="3">
+                <Col class="fce-container" span="3">
                   <div class="state">
                     <div class="title font-small weight-semi spacing-large">
                       Value Deposited
@@ -556,7 +556,7 @@
                   </div>
                 </Col>
 
-                <Col class="state fcb-container" span="3">
+                <Col class="state fcsb-container" span="3">
                   <div class="farm-btn-group">
                     <div
                       class="btn-container"
@@ -862,7 +862,7 @@
                         </div>
                       </Col>
                       <Col class="state" span="10">
-                        <div class="title font-small weight-semi spacing-large fcr-container">Value Deposited</div>
+                        <div class="title font-small weight-semi spacing-large fce-container">Value Deposited</div>
                         <div
                           v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
                           class="value font-medium weight-semi spacing-small text-right"
@@ -881,7 +881,7 @@
                       </Col>
                     </Col>
 
-                    <Col class="farm-collapse-item fcb-container" span="24">
+                    <Col class="farm-collapse-item fcsb-container" span="24">
                       <div class="fcc-container">
                         <a
                           class="social-link fcc-container font-medium weight-semi icon-cursor"
@@ -3570,7 +3570,7 @@ export default Vue.extend({
               margin-top: 0;
             }
 
-            .fcl-container {
+            .fcs-container {
               padding: 0 !important;
             }
 

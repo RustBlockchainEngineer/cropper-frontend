@@ -1,12 +1,12 @@
 <template>
   <div class="wallet">
-    <div v-if="wallet.connected" class="tier-container fcl-container">
+    <div v-if="wallet.connected" class="tier-container fcs-container">
       <div class="tier-profile">
         <img class="tier-img" src="@/assets/background/tier-blur.png" />
       </div>
 
       <div
-        class="tier-info fcl-container icon-cursor"
+        class="tier-info fcs-container icon-cursor"
         @click="
           () => {
             this.showTierInfo = !this.showTierInfo
@@ -31,7 +31,7 @@
       >
         <div v-if="tierloaded" class="collapse-item text-center font-medium weight-semi icon-cursor">
           <div class="tier-progress text-left">
-            <div class="tier-progress-label fcb-container">
+            <div class="tier-progress-label fcsb-container">
               <span class="font-xsmall weight-bold">Tier {{ wallet.tiers }}</span>
               <span class="font-xsmall weight-bold">Tier {{ wallet.tiers + 1 }}</span>
             </div>
@@ -126,7 +126,7 @@
     </div>
 
     <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
-      <div class="select-wallet-header fcb-container">
+      <div class="select-wallet-header fcsb-container">
         <span class="font-large weight-bold">Connect wallet</span>
         <img class="close-icon icon-cursor" src="@/assets/icons/close-circle.svg" @click="closePopIn" />
       </div>

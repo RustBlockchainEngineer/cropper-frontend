@@ -11,7 +11,7 @@
   >
     <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
 
-    <div class="create-pool-head fcb-container">
+    <div class="create-pool-head fcsb-container">
       <div class="btn-outline">
         <a
           href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-pool"

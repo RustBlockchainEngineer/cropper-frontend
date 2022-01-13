@@ -2,7 +2,7 @@
   <div class="container" :class="'user-list'">
     <div class="card">
       <div class="card-body" style="grid-row-gap: 0; row-gap: 0; padding-bottom: 15px">
-        <div class="page-head fcb-container">
+        <div class="page-head fcsb-container">
           <span class="title">User List</span>
         </div>
         

@@ -2,7 +2,7 @@
   <div class="fertilizer container">
     <div class="card">
       <div class="card-body">
-        <div class="fertilizer-head fcb-container">
+        <div class="fertilizer-head fcsb-container">
           <h3 class="title weight-bold">Fertilizer</h3>
           <div class="information">
             <div class="tvl-info">
@@ -17,7 +17,7 @@
           </div>
         </div>
 
-        <div class="fertilizer-option-bar fcb-container">
+        <div class="fertilizer-option-bar fcsb-container">
           <div class="option-tab-group">
             <div class="option-tab">
               <Button
@@ -126,7 +126,7 @@
                 }
               "
             >
-              <div class="collapse-item-header fcb-container">
+              <div class="collapse-item-header fcsb-container">
                 <label class="font-large weight-bold">Search</label>
                 <img
                   class="icon-cursor"
@@ -334,17 +334,17 @@
                 </div>
 
                 <div class="project-details">
-                  <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist ftb-container' : ''">
+                  <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist fssb-container' : ''">
                     <div class="project-title">
                       <h4 class="weight-bold spacing-medium">{{ fertilizer.title }}</h4>
                       <span class="short-desc font-medium weight-semi spacing-small">{{ fertilizer.short_desc }}</span>
                     </div>
 
-                    <!-- <div class="project-info fcb-container">
+                    <!-- <div class="project-info fcsb-container">
                       <div class="project-balance">
                         <div v-if="fertilizer.hard_cap">
                           <span class="label font-small weight-semi spacing-large">Total raised</span>
-                          <span class="value font-medium weight-semi spacing-small fcl-container">
+                          <span class="value font-medium weight-semi spacing-small fcs-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                             {{ fertilizer.hard_cap }} USDC
                           </span>
@@ -353,7 +353,7 @@
                       <div class="project-balance">
                         <div v-if="fertilizer.participants">
                           <span class="label font-small weight-semi spacing-large">Participants</span>
-                          <span class="value font-medium weight-semi spacing-small fcl-container">{{ fertilizer.participants }}</span>
+                          <span class="value font-medium weight-semi spacing-small fcs-container">{{ fertilizer.participants }}</span>
                         </div>
                       </div>
                     </div> -->
@@ -391,7 +391,7 @@
                     />
                   </div>
 
-                  <div v-else class="project-info fcl-container">
+                  <div v-else class="project-info fcs-container">
                     <div
                       v-if="
                         fertilizer.sales_start_date ||
@@ -424,7 +424,7 @@
                               : ''
                           }}
                         </span>
-                        <span class="value fcl-container">
+                        <span class="value fcs-container">
                           <Countdown
                             :value="
                               fertilizer.status === filterOptions.preparation
@@ -556,7 +556,7 @@
                   :key="fertilizer.key"
                 >
                   <Col class="state" span="6">
-                    <div class="project-name fcl-container">
+                    <div class="project-name fcs-container">
                       <img class="logo" :src="fertilizer.picture" />
                       <div class="title">
                         <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
@@ -635,7 +635,7 @@
                 >
                   <Row slot="header" class="collapse-header">
                     <Col class="state" span="8">
-                      <div class="project-name fcl-container">
+                      <div class="project-name fcs-container">
                         <img class="logo" :src="fertilizer.picture" />
                         <div class="title">
                           <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
@@ -670,7 +670,7 @@
 
                   <Row class="collapse-row" :gutter="[18, 18]">
                     <Col :span="12">
-                      <div class="ftb-container">
+                      <div class="fssb-container">
                         <div class="state">
                           <span class="label font-small weight-bold">ATH Since IDO</span>
                           <div class="project-ath fcc-container">
@@ -696,7 +696,7 @@
                     </Col>
 
                     <Col class="btn-group" :span="12">
-                      <div class="fcr-container">
+                      <div class="fce-container">
                         <div class="btn-container">
                           <Button class="btn-primary font-small weight-bold"> Stake </Button>
                         </div>
@@ -735,7 +735,7 @@
                 >
                   <Row slot="header" class="collapse-header">
                     <Col class="state" span="23">
-                      <div class="project-name fcl-container">
+                      <div class="project-name fcs-container">
                         <img class="logo" :src="fertilizer.picture" />
                         <div class="title">
                           <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
@@ -755,7 +755,7 @@
 
                   <Row class="collapse-row" :gutter="[18, 18]">
                     <Col :span="24">
-                      <div class="fcb-container">
+                      <div class="fcsb-container">
                         <div class="state">
                           <span class="label font-small weight-bold">Total raised</span>
                           <span class="font-medium weight-semi"
@@ -771,7 +771,7 @@
                     </Col>
 
                     <Col :span="24">
-                      <div class="fcb-container">
+                      <div class="fcsb-container">
                         <div class="state">
                           <span class="label font-small weight-bold">Token price</span>
                           <span class="font-medium weight-semi spacing-small"
@@ -797,7 +797,7 @@
                     </Col>
 
                     <Col :span="24">
-                      <div class="fcb-container">
+                      <div class="fcsb-container">
                         <div class="state" span="5">
                           <span class="label font-small weight-bold">Ended in UTC</span>
                           <span class="font-medium weight-semi">{{
@@ -1883,7 +1883,7 @@ export default Vue.extend({
                 }
               }
 
-              &.fcb-container {
+              &.fcsb-container {
                 @media @max-lg-tablet {
                   display: inline-block !important;
 

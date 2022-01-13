@@ -47,7 +47,7 @@
         </div>
 
         <div class="pools-content" :class="showGuide ? 'guide-enabled' : ''">
-          <div class="pools-head fcb-container">
+          <div class="pools-head fcsb-container">
             <h3 class="title weight-bold">Liquidity Pools</h3>
             <div class="information">
               <div class="tvl-info">
@@ -73,7 +73,7 @@
             </div>
           </div>
 
-          <div class="pools-option-bar fcb-container">
+          <div class="pools-option-bar fcsb-container">
             <div class="option-tab-group">
               <div class="option-tab">
                 <Button
@@ -192,7 +192,7 @@
                   }
                 "
               >
-                <div class="collapse-item-header fcb-container">
+                <div class="collapse-item-header fcsb-container">
                   <label class="font-large weight-bold">Search</label>
                   <img
                     class="icon-cursor"

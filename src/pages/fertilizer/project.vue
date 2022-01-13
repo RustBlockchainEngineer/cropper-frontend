@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-body">
         <section class="project-header">
-          <div class="back-to-list icon-cursor fcl-container">
+          <div class="back-to-list icon-cursor fcs-container">
             <img class="back-icon" src="@/assets/icons/back.svg" />
             <span class="back-label font-medium weight-bold">Go back</span>
           </div>
@@ -13,8 +13,8 @@
           <Row :gutter="20">
             <Col :span="6" class="project-preview-container">
               <div class="project-preview">
-                <div class="project-overview fcb-container">
-                  <div class="project-title fcl-container">
+                <div class="project-overview fcsb-container">
+                  <div class="project-title fcs-container">
                     <img class="project-logo" :src="fertilizer.logo" />
                     <span class="font-large weight-bold">{{ fertilizer.title }}</span>
                   </div>
@@ -92,7 +92,7 @@
                     </Step>
                     <Step>
                       <template slot="title">
-                        <div class="fcb-container">
+                        <div class="fcsb-container">
                           <span class="font-small weight-bold">Whitelist</span>
                           <span v-if="currentStep > 1" class="status-label success font-small weight-bold"
                             >Registered</span
@@ -105,7 +105,7 @@
                     </Step>
                     <Step>
                       <template slot="title">
-                        <div class="fcb-container">
+                        <div class="fcsb-container">
                           <span class="font-small weight-bold">Sales</span>
                           <span v-if="currentStep > 2" class="status-label closed font-small weight-bold"
                             >Closed</span
@@ -118,7 +118,7 @@
                     </Step>
                     <Step>
                       <template slot="title">
-                        <div class="fcb-container">
+                        <div class="fcsb-container">
                           <span class="font-small weight-bold">Distribution</span>
                           <span v-if="currentStep >= 3" class="status-label success font-small weight-bold"
                             >Distributed</span
@@ -138,7 +138,7 @@
                 <Row :gutter="24">
                   <Col :span="10">
                     <div class="project-detail-desc">
-                      <div class="project-title fcl-container">
+                      <div class="project-title fcs-container">
                         <img class="project-logo" :src="fertilizer.logo" />
                         <h4 class="weight-bold spacing-medium">{{ fertilizer.title }}</h4>
                       </div>
@@ -153,7 +153,7 @@
                       <Row :gutter="[28, 40]">
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title font-small weight-semi spacing-large">Token Price</span>
-                          <div class="value fcl-container">
+                          <div class="value fcs-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                             <span class="font-medium"
                               ><b>{{ fertilizer.ido_info.sale_rate }}</b> USDC</span
@@ -162,7 +162,7 @@
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title font-small weight-semi spacing-large">Hard Cap</span>
-                          <div class="value fcl-container">
+                          <div class="value fcs-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                             <span class="font-medium"
                               ><b>{{ fertilizer.ido_info.hard_cap }}</b> USDC</span
@@ -171,7 +171,7 @@
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title font-small weight-semi spacing-large">Pool Size</span>
-                          <div class="value fcl-container">
+                          <div class="value fcs-container">
                             <img class="coin-icon" :src="fertilizer.logo" />
                             <span class="font-medium"
                               ><b>{{ fertilizer.pool_size }}</b> {{ fertilizer.token_info.symbol }}</span
@@ -180,20 +180,20 @@
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title font-small weight-semi spacing-large">Type</span>
-                          <div class="value fcl-container">
+                          <div class="value fcs-container">
                             <img class="lock-icon" src="@/assets/icons/lock.svg" />
                             <span class="font-medium weight-semi">{{ fertilizer.ido_info.sale_type }}</span>
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title font-small weight-semi spacing-large">Participants</span>
-                          <div class="value fcl-container">
+                          <div class="value fcs-container">
                             <span class="font-medium weight-semi">{{ fertilizer.participants }}</span>
                           </div>
                         </Col>
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title font-small weight-semi spacing-large">Website</span>
-                          <div class="value fcl-container">
+                          <div class="value fcs-container">
                             <a
                               class="website font-medium weight-semi"
                               :href="fertilizer.website_url"
@@ -213,12 +213,12 @@
                   A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
                   allocation by performing various social tasks.
                 </span>
-                <div class="ticket-tasks-group ftb-container">
+                <div class="ticket-tasks-group fssb-container">
                   <div class="ticket-tasks">
                     <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
-                    <div class="ticket-task-status-group fcb-container">
-                      <div class="ticket-task-status-card fcb-container">
-                        <div class="ticket-task-status ft-container">
+                    <div class="ticket-task-status-group fcsb-container">
+                      <div class="ticket-task-status-card fcsb-container">
+                        <div class="ticket-task-status fs-container">
                           <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
                           <div>
                             <span class="font-medium weight-bold">Telegram task</span>
@@ -227,8 +227,8 @@
                           </div>
                         </div>
                       </div>
-                      <div class="ticket-task-status-card fcb-container" :class="'active'">
-                        <div class="ticket-task-status ft-container">
+                      <div class="ticket-task-status-card fcsb-container" :class="'active'">
+                        <div class="ticket-task-status fs-container">
                           <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
                           <div>
                             <span class="font-medium weight-bold">Twitter task</span>
@@ -240,11 +240,11 @@
                       </div>
                     </div>
                     <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
-                    <div class="ticket-share-group fcb-container">
+                    <div class="ticket-share-group fcsb-container">
                       <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" />
                       <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" />
                     </div>
-                    <div class="ticket-btn-group fcb-container">
+                    <div class="ticket-btn-group fcsb-container">
                       <div class="share-btn btn-container">
                         <Button class="btn-primary font-small weight-semi spacing-large"
                           >Share on Telegram</Button
@@ -262,7 +262,7 @@
                       <span class="font-medium weight-bold"
                         >You are now registered for the {{ fertilizer.title }} whitelist as:</span
                       >
-                      <div class="ticket-earned-status fcl-container">
+                      <div class="ticket-earned-status fcs-container">
                         <img class="referral-icon" src="@/assets/icons/referral.svg" />
                         <div>
                           <span class="font-medium weight-semi spacing-small">
@@ -273,7 +273,7 @@
                           <span class="font-xsmall">0 Social / 0 Referrals</span>
                         </div>
                       </div>
-                      <div class="fcb-container">
+                      <div class="fcsb-container">
                         <span class="font-small weight-semi spacing-large">Verification</span>
                         <span class="font-small text-upper">Unverified</span>
                       </div>
@@ -322,7 +322,7 @@
                   </div>
                 </div>
               </div>
-              <div class="project-detail-item banner fcb-container">
+              <div class="project-detail-item banner fcsb-container">
                 <div class="project-detail-stake">
                   <h4 class="weight-semi">Develop your Tier to have more allocation</h4>
                   <div class="btn-container">
@@ -337,31 +337,31 @@
                   <Col :span="12">
                     <span class="font-large weight-bold">IDO Information</span>
                     <div class="information">
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Hardcap</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.ido_info.hard_cap
                         }}</span>
                       </div>
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Sale rate</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.ido_info.sale_rate
                         }}</span>
                       </div>
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Sale type</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.ido_info.sale_type
                         }}</span>
                       </div>
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Open Time</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.ido_info.open_time
                         }}</span>
                       </div>
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Close Time</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.ido_info.close_time
@@ -372,19 +372,19 @@
                   <Col :span="12">
                     <span class="font-large weight-bold">Token Information</span>
                     <div class="information">
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Symbol</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.token_info.symbol
                         }}</span>
                       </div>
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Category</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.token_info.category
                         }}</span>
                       </div>
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large"
                           >Token Distribution</span
                         >
@@ -392,7 +392,7 @@
                           fertilizer.token_info.token_distribution
                         }}</span>
                       </div>
-                      <div class="information-item fcb-container">
+                      <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Blockchain</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.token_info.blockchain

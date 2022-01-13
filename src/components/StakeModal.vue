@@ -12,9 +12,9 @@
     <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
     <div class="stake-modal-container">
       <div class="balance-form">
-        <div class="fcb-container">
+        <div class="fcsb-container">
           <div class="fcc-container">
-            <button class="select-button fcb-container">
+            <button class="select-button fcsb-container">
               <div class="coin-group fcc-container">
                 <CoinIcon :mint-address="CRPMintAddress" />
                 <span class="font-body-medium weight-bold">CRP</span>
@@ -29,12 +29,12 @@
           </div>
           <input type="number" :value="toStake" placeholder="0.00" />
         </div>
-        <div v-if="crpbalance" class="label fcb-container font-xsmall weight-semi">
+        <div v-if="crpbalance" class="label fcsb-container font-xsmall weight-semi">
           <span> Balance: {{ crpbalance }} </span>
           <span> ~${{ crpbalance }} </span>
         </div>
       </div>
-      <div class="tier-group fcb-container">
+      <div class="tier-group fcsb-container">
         <div class="tier-item text-center icon-cursor" v-for="data in lockData" :key="data.tier">
           <span
             v-if="data.min >= enddatemin"
@@ -87,7 +87,7 @@
       </div>
       <div class="calc-footer">
         <label class="lock-note font-small weight-bold">Your total staked tokens will be locked until {{ unstakeDate }}</label>
-        <div class="btn-group fcb-container">
+        <div class="btn-group fcsb-container">
           <div class="btn-container">
             <Button
               class="btn-primary font-medium weight-semi icon-cursor"

@@ -1,6 +1,6 @@
 <template>
-  <Header class="header fcb-container">
-    <div class="nav-container fcl-container">
+  <Header class="header fcsb-container">
+    <div class="nav-container fcs-container">
       <NuxtLink class="logo-container" to="/">
         <img class="logo" src="@/assets/icons/cropper-logo.svg" />
       </NuxtLink>
@@ -8,7 +8,7 @@
       <Nav @onSelect="() => (navOpened = false)" />
     </div>
     
-    <div class="fcb-container wallet-container">
+    <div class="fcsb-container wallet-container">
       <Wallet />
     </div>
   </Header>

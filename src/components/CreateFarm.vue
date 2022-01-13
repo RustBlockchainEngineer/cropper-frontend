@@ -11,7 +11,7 @@
   >
     <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
 
-    <div class="create-farm-head fcb-container">
+    <div class="create-farm-head fcsb-container">
       <div class="btn-outline">
         <a
           href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
@@ -95,7 +95,7 @@
                 <div class="step-item-content">
                   <RadioGroup v-model="ammType" @change="selectAMM">
                     <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
-                    <div class="existing-amm fl-container">
+                    <div class="existing-amm fs-container">
                       <CoinNameInput
                         :label="'Token A'"
                         :mint-address="tokenA ? tokenA.mintAddress : ''"
@@ -198,8 +198,13 @@
                     <span class="font-xsmall weight-bold">
                       Note: you will be able to add rewards into your farm whenever you want.
                       <br />
-                      Please note that all rewards provided are final and unused rewards cannot be recovered upon completion of the farm.
                     </span>
+                    <div class="note-highlight fb-container">
+                      <img class="info-icon" src="@/assets/icons/info.svg" />
+                      <span class="note-highlight-content font-xsmall weight-bold">
+                        Please note that all rewards provided are final and unused rewards cannot be recovered upon completion of the farm.
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Col>
@@ -1744,6 +1749,16 @@ u {
 
             span {
               color: rgba(255, 255, 255, 0.5);
+            }
+
+            .note-highlight {
+              .info-icon {
+                margin-right: 8px;
+              }
+
+              .note-highlight-content {
+                color: hsl(0deg 81% 62%);
+              }
             }
           }
         }
