@@ -105,7 +105,7 @@
             </div>
           </div>
 
-          <div class="option-filter-group">
+          <!-- <div class="option-filter-group">
             <div class="option-filter option-filter-fixed fcc-container icon-cursor">
               <img
                 src="@/assets/icons/search.svg"
@@ -294,7 +294,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="fertilizer-content">

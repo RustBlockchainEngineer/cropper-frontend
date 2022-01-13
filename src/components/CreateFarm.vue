@@ -197,6 +197,8 @@
                   <div class="note">
                     <span class="font-xsmall weight-bold">
                       Note: you will be able to add rewards into your farm whenever you want.
+                      <br />
+                      Please note that all rewards provided are final and unused rewards cannot be recovered upon completion of the farm.
                     </span>
                   </div>
                 </div>
