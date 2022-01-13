@@ -35,7 +35,7 @@
 
         <div class="staking-content fcb-container">
           <div class="staking-body">
-            <h4 class="weight-bold">$CRP Staking</h4>
+            <h4 class="weight-bold">sCRP Staking</h4>
             <div class="staking-progress">
               <div class="staking-progress-label fcb-container">
                 <span class="font-xsmall weight-bold">Tier {{ currentTiers }}</span>
@@ -57,7 +57,7 @@
                   class="staking-progress-percent font-xsmall"
                   :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
                 >
-                  {{ Number(pctToNexttiers.toFixed(1)) }}%
+                  {{ tierValue }} sCRP
                 </label>
               </div>
             </div>
@@ -216,17 +216,16 @@
                   </div>
                 </div>
                 <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 1</label>
-                  </div>
-                  <div class="btn-container">
+                  <label class="font-large weight-bold">Tier 1</label>
+                  <label class="font-large weight-bold">200 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -238,17 +237,16 @@
                   </div>
                 </div>
                 <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 2</label>
-                  </div>
-                  <div class="btn-container">
+                  <label class="font-large weight-bold">Tier 2</label>
+                  <label class="font-large weight-bold">2000 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -260,17 +258,16 @@
                   </div>
                 </div>
                 <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 3</label>
-                  </div>
-                  <div class="btn-container">
+                  <label class="font-large weight-bold">Tier 3</label>
+                  <label class="font-large weight-bold">10,000 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -282,17 +279,16 @@
                   </div>
                 </div>
                 <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 4</label>
-                  </div>
-                  <div class="btn-container">
+                  <label class="font-large weight-bold">Tier 4</label>
+                  <label class="font-large weight-bold">20,000 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -304,24 +300,23 @@
                   </div>
                 </div>
                 <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 5</label>
-                  </div>
-                  <div class="btn-container">
+                  <label class="font-large weight-bold">Tier 5</label>
+                  <label class="font-large weight-bold">100,000 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </Carousel>
           </div>
         </div>
 
-        <div class="staking-tiers-details" id="staking-tiers-details">
+        <!-- <div class="staking-tiers-details" id="staking-tiers-details">
           <span class="font-large weight-bold">About Tiers</span>
           <div class="staking-tiers-features">
             <Tabs v-model="activeTab">
@@ -447,7 +442,7 @@
               </TabPane>
             </Tabs>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -499,11 +494,11 @@ export default Vue.extend({
     Tooltip,
     Progress,
     Carousel,
-    Row,
-    Col,
+    // Row,
+    // Col,
     Icon,
-    Tabs,
-    TabPane
+    // Tabs,
+    // TabPane
   },
   data() {
     return {
@@ -528,6 +523,7 @@ export default Vue.extend({
       canUnstake: false as boolean,
 
       pctToNexttiers: 0 as number,
+      tierValue: 0 as number,
       currentTiers: 0 as number,
       nextTiers: 1 as number,
       selectedTier: 0 as number,
@@ -701,7 +697,9 @@ export default Vue.extend({
         this.nextTiers--
         this.currentTiers--
         this.pctToNexttiers = 100
+        this.tierValue = TIERS_XCRP[this.nextTiers]
       } else {
+        this.tierValue = tiers_info.xCRP
         this.pctToNexttiers =
           ((tiers_info.xCRP - TIERS_XCRP[this.currentTiers]) /
             (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
@@ -1037,11 +1035,6 @@ export default Vue.extend({
                 margin-bottom: 28px;
                 border-radius: 18px;
                 border: 5px solid @color-blue-dark;
-              }
-
-              .tier-info {
-                display: inline-grid;
-                row-gap: 4px;
               }
 
               .btn-container {
