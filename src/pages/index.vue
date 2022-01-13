@@ -13,8 +13,11 @@
         </div>
       </div>
     </section>
-
     <section class="landing-body">
+      <video class="landing-video" autoplay loop>
+        <source :src="videoLinks.landing" type="video/mp4">
+      </video>
+
       <div class="landing-content">
         <Row :gutter="20">
           <Col :span="22" :offset="1">
@@ -524,6 +527,7 @@ export default class Landing extends Vue {
     telegram: 'https://linktr.ee/cropperfinance'
   }
   videoLinks = {
+    landing: 'https://cropper.finance/distant/industry/Landing.mp4',
     swap: 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4',
     stake: 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4',
     harvest: 'https://cropper.finance/distant/industry/HarvestvideoforGIF.mp4',
@@ -811,18 +815,10 @@ h4 {
       }
     }
   }
-
+  
   .landing-body {
     margin-top: -20px;
     padding: 38px 64px 89px 64px;
-    background-image: url('@/assets/landing/landing-first-bg.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-
-    @media @min-xl-desktop {
-      height: calc(100vw * 902 / 1440);
-    }
 
     @media @max-lg-tablet {
       padding-left: 32px;
@@ -833,8 +829,16 @@ h4 {
       padding: 20px 20px 0 20px;
     }
 
-    @media @max-xs-mobile {
-      background-image: url('@/assets/landing/landing-first-bg-mobile.svg');
+    .landing-video {
+      position: absolute; 
+      left: 0;
+      top: 0;
+      min-width: 100%; 
+      min-height: 100%;
+      width: auto; 
+      height: auto; 
+      background-size: cover;
+      overflow: hidden;
     }
 
     .landing-content {
