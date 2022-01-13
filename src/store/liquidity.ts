@@ -117,8 +117,6 @@ async function getSerumMarkets(conn:any){
     markets = JSON.parse(window.localStorage.markets)
   }
 
-  console.log(JSON.stringify(markets));
-
 
   return markets
 }
