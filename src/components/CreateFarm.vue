@@ -1291,7 +1291,6 @@ export default class CreateFarm extends Vue {
           font-size: 20px;
           line-height: 24px;
           color: rgba(255, 255, 255, 0.3);
-          margin-top: 6px;
         }
       }
     }
