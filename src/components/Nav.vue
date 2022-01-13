@@ -45,7 +45,7 @@ export default class Nav extends Vue {
     // migrate: false
     // info: false
   }
-  banURL = ''
+  banURL = 'fertilizer'
   menuVisibility = false
 
   get isMobile() {
