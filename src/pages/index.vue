@@ -14,7 +14,7 @@
       </div>
     </section>
     <section class="landing-body">
-      <video class="landing-video" autoplay loop>
+      <video class="landing-video" autoplay muted loop preload="auto">
         <source :src="videoLinks.landing" type="video/mp4">
       </video>
 
