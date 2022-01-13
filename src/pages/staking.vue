@@ -35,7 +35,7 @@
 
         <div class="staking-content fcb-container">
           <div class="staking-body">
-            <h4 class="weight-bold">sCRP Staking</h4>
+            <h4 class="weight-bold">CRP Staking</h4>
             <div class="staking-progress">
               <div class="staking-progress-label fcb-container">
                 <span class="font-xsmall weight-bold">Tier {{ currentTiers }}</span>
