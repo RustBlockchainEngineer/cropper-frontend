@@ -346,7 +346,10 @@ import { getTokenBySymbol, TokenInfo, NATIVE_SOL, TOKENS } from '@/utils/tokens'
 import { inputRegex, escapeRegExp } from '@/utils/regex'
 import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
-import { SERUM_PROGRAM_ID_V3, ENDPOINT_CRP, ENDPOINT_RAY, ENDPOINT_SRM } from '@/utils/ids'
+import { SERUM_PROGRAM_ID_V3, ENDPOINT_CRP, ENDPOINT_SRM, ENDPOINT_JUP } from '@/utils/ids'
+
+import { Jupiter } from '@pngfi/jupiter-core';
+
 import {
   getOutAmount,
   getSwapOutAmount,
@@ -376,10 +379,8 @@ import {
   LiquidityPoolInfo
 } from '@/utils/pools'
 
-const ENDPOINT_MULTI_CRP = 'Two-Step Swap with CRP'
-const ENDPOINT_MULTI_USDC = 'Two-Step Swap with USDC'
-const ENDPOINT_MULTI_CRP_MIXED = 'Mixed two-Step Swap with CRP '
-const ENDPOINT_MULTI_USDC_MIXED = 'Mixed Two-Step Swap with USDC'
+const ENDPOINT_MULTI = 'Two-Step Swap'
+const middleTokens = ['CRP', 'USDC', 'USDT', 'WSOL']
 
 export default Vue.extend({
   components: {
@@ -464,7 +465,8 @@ export default Vue.extend({
       activeSpinning: false as boolean,
       showInformations: false as boolean,
       showSlippage: false as boolean,
-      showPercentage: false as boolean
+      showPercentage: false as boolean,
+      jupiter: {} as any
     }
   },
   head: {
@@ -484,7 +486,7 @@ export default Vue.extend({
       })
     },
     'wallet.tokenAccounts': {
-      handler(newTokenAccounts: any) {
+      async handler(newTokenAccounts: any) {
         this.updateCoinInfo(newTokenAccounts)
         this.findMarket()
         if (this.mainAmmId) {
@@ -495,6 +497,15 @@ export default Vue.extend({
         }
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
         this.wsolBalance = this.wallet.tokenAccounts[TOKENS.WSOL.mintAddress]
+
+        this.jupiter =  await Jupiter.load({
+          connection: this.$web3,
+          cluster: 'mainnet-beta',
+          user: this.wallet.publicKey, // or public key
+          // platformFeeAndAccounts:  NO_PLATFORM_FEE,
+          // routeCacheDuration: CACHE_DURATION_MS 
+        });
+
         this.flush()
       },
       deep: true
@@ -581,7 +592,7 @@ export default Vue.extend({
       deep: true
     }
   },
-  mounted() {
+  async mounted() {
     this.getTvl()
     this.$accessor.token.loadTokens()
     this.$accessor.wallet.getTokenAccounts()
@@ -593,6 +604,7 @@ export default Vue.extend({
 
     this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP')
     this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC')
+
   },
   methods: {
     gt,
@@ -844,7 +856,7 @@ export default Vue.extend({
         )
       )
     },
-    findMarket() {
+    async findMarket() {
       this.available_dex = []
       this.lpMintAddress = ''
       this.initialized = true
@@ -876,58 +888,44 @@ export default Vue.extend({
               this.available_dex.push(ENDPOINT_CRP)
             }
 
-            //two-step swap with CRP
-            const lpList_crp_1 = getCropperPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
-              TOKENS.CRP.mintAddress,
-              undefined
-            )
-            const lpList_crp_2 = getCropperPoolListByTokenMintAddresses(
-              TOKENS.CRP.mintAddress,
-              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
-              undefined
-            )
-            if (lpList_crp_1.length > 0 && lpList_crp_2.length > 0) {
-              this.available_dex.push(ENDPOINT_MULTI_CRP)
+            //two-step swap with cropper pools
+            for(let i = 0; i < middleTokens.length; i ++)
+            {
+              const midSymbol = middleTokens[i];
+              const lpList_1 = getCropperPoolListByTokenMintAddresses(
+                this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
+                  ? NATIVE_SOL.mintAddress
+                  : this.fromCoin.mintAddress,
+                TOKENS[midSymbol].mintAddress,
+                undefined
+              )
+              const lpList_2 = getCropperPoolListByTokenMintAddresses(
+                TOKENS[midSymbol].mintAddress,
+                this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
+                undefined
+              )
+              if (lpList_1.length > 0 && lpList_2.length > 0) {
+                this.available_dex.push(ENDPOINT_MULTI)
+                break;
+              }
             }
 
-            //two-step swap with USDC
-            const lpList_usdc_1 = getCropperPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
-              TOKENS.USDC.mintAddress,
-              undefined
-            )
-            const lpList_usdc_2 = getCropperPoolListByTokenMintAddresses(
-              TOKENS.USDC.mintAddress,
-              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
-              undefined
-            )
-
-            if (lpList_usdc_1.length > 0 && lpList_usdc_2.length > 0) {
-              this.available_dex.push(ENDPOINT_MULTI_USDC)
+            if(this.available_dex.length){
+              break;
             }
 
-            if (this.available_dex.length > 0) {
-              break
-            }
-
-            // mono-step swap using raydium
-            const rayLPList = getRaydiumPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
-              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
-              typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
+            const routes = await this.jupiter.computeRoutes(
+              new PublicKey(this.fromCoin.mintAddress), // Mint address of the input token
+              new PublicKey(this.toCoin.mintAddress), // Mint address of the output token
+              '0.0001', // raw input amount of tokens
+              '100', // The slippage in % terms
+              true // cached=true => will use cache if not older than routeCacheDuration
             )
 
-            if (rayLPList.length > 0) {
-              this.available_dex.push(ENDPOINT_RAY)
-              break
+            if(routes.length){
+              this.available_dex.push(ENDPOINT_JUP)
             }
+
 
             // mono-step swap using serum market
             let marketAddress = ''
@@ -962,42 +960,6 @@ export default Vue.extend({
                   this.available_dex.push(ENDPOINT_SRM)
                 }
               )
-            }
-
-            //two-step swap with CRP
-            const lpList_crp_11 = getPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
-              TOKENS.CRP.mintAddress,
-              undefined
-            )
-            const lpList_crp_12 = getPoolListByTokenMintAddresses(
-              TOKENS.CRP.mintAddress,
-              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
-              undefined
-            )
-            if (lpList_crp_11.length > 0 && lpList_crp_12.length > 0) {
-              this.available_dex.push(ENDPOINT_MULTI_CRP_MIXED)
-              break
-            }
-
-            //two-step swap with USDC
-            const lpList_usdc_11 = getPoolListByTokenMintAddresses(
-              this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
-                ? NATIVE_SOL.mintAddress
-                : this.fromCoin.mintAddress,
-              TOKENS.USDC.mintAddress,
-              undefined
-            )
-            const lpList_usdc_12 = getPoolListByTokenMintAddresses(
-              TOKENS.USDC.mintAddress,
-              this.toCoin.mintAddress === TOKENS.WSOL.mintAddress ? NATIVE_SOL.mintAddress : this.toCoin.mintAddress,
-              undefined
-            )
-            if (lpList_usdc_11.length > 0 && lpList_usdc_12.length > 0) {
-              this.available_dex.push(ENDPOINT_MULTI_USDC_MIXED)
-              break
             }
           } while (false)
         }
@@ -1052,6 +1014,7 @@ export default Vue.extend({
           this.best_dex_type = 'Unknown'
         }
         if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
+          console.log(this.available_dex)
           if (this.isWrap) {
             // wrap & unwrap
             this.toCoinAmount = this.fromCoinAmount
@@ -1077,7 +1040,7 @@ export default Vue.extend({
                 const out = new TokenAmount(amountOut, this.toCoin.decimals, false)
                 // @ts-ignore
                 const outWithSlippage = new TokenAmount(amountOutWithSlippage, this.toCoin.decimals, false)
-
+                console.log('SRM', outWithSlippage.fixed())
                 if (!out.isNullOrZero()) {
                   // @ts-ignore
                   if (!toCoinWithSlippage || toCoinWithSlippage.wei.isLessThan(outWithSlippage.wei)) {
@@ -1098,9 +1061,9 @@ export default Vue.extend({
                   }
                 }
               }
-            } else if (dex_type == ENDPOINT_CRP || dex_type == ENDPOINT_RAY) {
+            } else if (dex_type == ENDPOINT_CRP) {
               // @ts-ignore
-              const poolInfo = (dex_type == ENDPOINT_CRP ? findBestCropperLP : findBestLP)(
+              const poolInfo = findBestCropperLP(
                 this.$accessor.liquidity.infos,
                 this.fromCoin!.mintAddress,
                 this.toCoin!.mintAddress,
@@ -1119,6 +1082,7 @@ export default Vue.extend({
                 this.fromCoinAmount,
                 this.setting.slippage
               )
+              console.log('CRP', amountOut.fixed())
               if (!amountOut.isNullOrZero()) {
                 if (max_coinAmount < parseFloat(amountOut.fixed())) {
                   max_coinAmount = parseFloat(amountOut.fixed())
@@ -1138,142 +1102,78 @@ export default Vue.extend({
                   this.mainAmmId = poolInfo.ammId
                 }
               }
-            } else if (dex_type == ENDPOINT_MULTI_CRP || dex_type == ENDPOINT_MULTI_CRP_MIXED) {
-              let midTokenMint = TOKENS.CRP.mintAddress
-              this.midTokenMint = midTokenMint
-              // @ts-ignore
-              const fromPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
-                this.$accessor.liquidity.infos,
-                this.fromCoin!.mintAddress,
-                midTokenMint,
-                this.fromCoinAmount,
-                this.setting.slippage
-              )
+            } else if (dex_type == ENDPOINT_MULTI) {
+              for(let i = 0; i < middleTokens.length; i ++)
+              {
+                const midTokenSymbol = middleTokens[i];
 
-              if (!fromPoolInfo) return
-
-              let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
-                fromPoolInfo,
+                let midTokenMint = TOKENS[midTokenSymbol].mintAddress
                 // @ts-ignore
-                this.fromCoin!.mintAddress,
-                midTokenMint,
-                this.fromCoinAmount,
-                this.setting.slippage
-              )
+                const fromPoolInfo = findBestCropperLP(
+                  this.$accessor.liquidity.infos,
+                  this.fromCoin!.mintAddress,
+                  midTokenMint,
+                  this.fromCoinAmount,
+                  this.setting.slippage
+                )
 
-              // @ts-ignore
-              const toPoolInfo = (dex_type == ENDPOINT_MULTI_CRP ? findBestCropperLP : findBestLP)(
-                this.$accessor.liquidity.infos,
-                midTokenMint,
-                this.toCoin!.mintAddress,
-                amountOut.fixed(),
-                this.setting.slippage
-              )
+                if (!fromPoolInfo) continue;
 
-              if (!toPoolInfo) return
+                let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
+                  fromPoolInfo,
+                  // @ts-ignore
+                  this.fromCoin!.mintAddress,
+                  midTokenMint,
+                  this.fromCoinAmount,
+                  this.setting.slippage
+                )
 
-              let final = getSwapOutAmount(
-                toPoolInfo,
-                midTokenMint,
                 // @ts-ignore
-                this.toCoin.mintAddress,
-                amountOut.fixed(),
-                this.setting.slippage
-              )
+                const toPoolInfo = findBestCropperLP(
+                  this.$accessor.liquidity.infos,
+                  midTokenMint,
+                  this.toCoin!.mintAddress,
+                  amountOut.fixed(),
+                  this.setting.slippage
+                )
 
-              if (!final.amountOut.isNullOrZero()) {
-                if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
-                  max_coinAmount = parseFloat(final.amountOut.fixed())
-                  this.toCoinAmount = final.amountOut.fixed()
-                  this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
-                  this.midAmountWithSlippage = amountOutWithSlippage.fixed()
-                  this.midAmount = amountOut.fixed()
-                  this.outToPirceValue = +new TokenAmount(
-                    parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
-                    // @ts-ignore
-                    this.toCoin.decimals,
-                    false
-                  ).fixed()
+                if (!toPoolInfo) continue;
 
-                  this.priceImpact = final.priceImpact
-                  this.endpoint = ENDPOINT_MULTI_CRP
+                let final = getSwapOutAmount(
+                  toPoolInfo,
+                  midTokenMint,
+                  // @ts-ignore
+                  this.toCoin.mintAddress,
+                  amountOut.fixed(),
+                  this.setting.slippage
+                )
 
-                  this.best_dex_type = 'multi'
-                  this.midTokenSymbol = 'CRP'
+                if (!final.amountOut.isNullOrZero()) {
+                  if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
+                    max_coinAmount = parseFloat(final.amountOut.fixed())
+                    this.toCoinAmount = final.amountOut.fixed()
+                    this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
+                    this.midAmountWithSlippage = amountOutWithSlippage.fixed()
+                    this.midAmount = amountOut.fixed()
+                    this.outToPirceValue = +new TokenAmount(
+                      parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
+                      // @ts-ignore
+                      this.toCoin.decimals,
+                      false
+                    ).fixed()
 
-                  this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
-                  this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
-                  this.mainAmmId = fromPoolInfo.ammId
-                  this.extAmmId = toPoolInfo.ammId
-                }
-              }
-            } else if (dex_type == ENDPOINT_MULTI_USDC || dex_type == ENDPOINT_MULTI_USDC_MIXED) {
-              let midTokenMint = TOKENS.USDC.mintAddress
-              this.midTokenMint = midTokenMint
+                    this.priceImpact = final.priceImpact
+                    this.endpoint = ENDPOINT_MULTI
 
-              // @ts-ignore
-              const fromPoolInfo = (dex_type == ENDPOINT_MULTI_USDC ? findBestCropperLP : findBestLP)(
-                this.$accessor.liquidity.infos,
-                this.fromCoin!.mintAddress,
-                midTokenMint,
-                this.fromCoinAmount,
-                this.setting.slippage
-              )
+                    this.best_dex_type = 'multi'
+                    this.midTokenSymbol = midTokenSymbol
+                    this.midTokenMint = midTokenMint
 
-              if (!fromPoolInfo) return
-
-              let { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
-                fromPoolInfo,
-                // @ts-ignore
-                this.fromCoin.mintAddress,
-                midTokenMint,
-                this.fromCoinAmount,
-                this.setting.slippage
-              )
-
-              // @ts-ignore
-              const toPoolInfo = (dex_type == ENDPOINT_MULTI_USDC ? findBestCropperLP : findBestLP)(
-                this.$accessor.liquidity.infos,
-                midTokenMint,
-                this.toCoin!.mintAddress,
-                amountOut.fixed(),
-                this.setting.slippage
-              )
-
-              if (!toPoolInfo) return
-
-              let final = getSwapOutAmount(
-                toPoolInfo,
-                midTokenMint,
-                // @ts-ignore
-                this.toCoin.mintAddress,
-                amountOut.fixed(),
-                this.setting.slippage
-              )
-
-              if (!final.amountOut.isNullOrZero()) {
-                if (max_coinAmount < parseFloat(final.amountOut.fixed())) {
-                  max_coinAmount = parseFloat(final.amountOut.fixed())
-                  this.toCoinAmount = final.amountOut.fixed()
-                  this.toCoinWithSlippage = final.amountOutWithSlippage.fixed()
-                  this.midAmountWithSlippage = amountOutWithSlippage.fixed()
-                  this.outToPirceValue = +new TokenAmount(
-                    parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
-                    // @ts-ignore
-                    this.toCoin.decimals,
-                    false
-                  ).fixed()
-                  this.priceImpact = final.priceImpact
-                  this.endpoint = ENDPOINT_MULTI_USDC
-
-                  this.best_dex_type = 'multi'
-                  this.midTokenSymbol = 'USDC'
-
-                  this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
-                  this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
-
-                  this.mainAmmId = fromPoolInfo.ammId
-                  this.extAmmId = toPoolInfo.ammId
+                    this.sub_endpoint_1 = getPoolLocation(fromPoolInfo.version)
+                    this.sub_endpoint_2 = getPoolLocation(toPoolInfo.version)
+                    this.mainAmmId = fromPoolInfo.ammId
+                    this.extAmmId = toPoolInfo.ammId
+                  }
                 }
               }
             }
@@ -1438,7 +1338,7 @@ export default Vue.extend({
             this.swaping = false
             this.flush()
           })
-      } else if (this.endpoint === ENDPOINT_CRP || this.endpoint === ENDPOINT_RAY) {
+      } else if (this.endpoint === ENDPOINT_CRP) {
         const poolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.mainAmmId)
         swap(
           this.$web3,
@@ -1490,7 +1390,7 @@ export default Vue.extend({
             this.swaping = false
             this.flush()
           })
-      } else if (this.endpoint === ENDPOINT_MULTI_CRP || this.endpoint === ENDPOINT_MULTI_USDC) {
+      } else if (this.endpoint === ENDPOINT_MULTI) {
         if (this.needCreateTokens() || this.needWrapSol()) {
           let fromMint = this.fromCoin?.mintAddress
           let midMint = this.midTokenMint
@@ -1553,7 +1453,6 @@ export default Vue.extend({
             (p: any) => p.ammId === this.mainAmmId
           )
           const toPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.extAmmId)
-          const midTokenSymbol = this.endpoint === ENDPOINT_MULTI_CRP ? TOKENS.CRP.symbol : TOKENS.USDC.symbol
 
           let fromMint = this.fromCoin?.mintAddress
           let midMint = this.midTokenMint

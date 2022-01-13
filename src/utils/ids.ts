@@ -9,6 +9,7 @@ export const MARKET_UPDATE_INTERVAL = 12 * 60 * 60 * 1000
 export const ENDPOINT_SRM = 'Serum Dex'
 export const ENDPOINT_CRP = 'CropperFinance Pool'
 export const ENDPOINT_RAY = 'Raydium Pool'
+export const ENDPOINT_JUP = 'Jupiter Aggregator'
 
 export const DEVNET_MODE = false;
 

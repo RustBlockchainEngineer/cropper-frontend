@@ -22,7 +22,7 @@ import {
   LP_UPDATE_INTERVAL,
   MARKET_UPDATE_INTERVAL,
   DEVNET_MODE} from '@/utils/ids'
-import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
+import { MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { NATIVE_SOL, TOKENS } from '@/utils/tokens'
 
 const AUTO_REFRESH_TIME = 60
@@ -92,11 +92,11 @@ async function getSerumMarkets(conn:any){
   {
     let marketAll = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
       {
-        dataSize: _MARKET_STATE_LAYOUT_V2.span
+        dataSize: MARKET_STATE_LAYOUT_V2.span
       }
     ])
     marketAll.forEach((item: any) => {
-      const market = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
+      const market = MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
       markets[item.publicKey] = {
         asks : market.asks.toString(),
         bids : market.bids.toString(),
@@ -447,7 +447,7 @@ export const actions = actionTree(
 
         await getCropperPools(conn);
 
-        await getRaydiumPools(conn);
+        // await getRaydiumPools(conn);
 
         if(!DEVNET_MODE)
         { 
@@ -459,17 +459,17 @@ export const actions = actionTree(
       }
 
 
-        let ammSet: any = {};
+      let ammSet: any = {};
 
-        LIQUIDITY_POOLS.forEach((pool) => {
-          ammSet[pool.ammId] = pool.ammId
-        })
+      LIQUIDITY_POOLS.forEach((pool) => {
+        ammSet[pool.ammId] = pool.ammId
+      })
 
-        fixedpools.forEach((pool:LiquidityPoolInfo)=>{
-          if(!ammSet[pool.ammId] && !DEVNET_MODE){
-            LIQUIDITY_POOLS.push(pool)
-          }
-        })
+      fixedpools.forEach((pool:LiquidityPoolInfo)=>{
+        if(!ammSet[pool.ammId] && !DEVNET_MODE){
+          LIQUIDITY_POOLS.push(pool)
+        }
+      })
         
 
       const liquidityPools = {} as any
