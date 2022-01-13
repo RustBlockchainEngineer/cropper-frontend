@@ -302,7 +302,7 @@
             <Col
               v-for="(fertilizer, idx) in fertilizerItems"
               :key="fertilizer.key"
-              :lg="idx === 0 ? 12 : 6"
+              :lg="idx === 0 ? 6 : 6"
               :md="idx === 0 ? 16 : 8"
               :sm="24"
             >
