@@ -1489,6 +1489,7 @@ export default class Pools extends Vue {
 
   activeSearch(mode: string) {
     this.searchCertifiedFarm = mode
+    this.searchName = ''
   }
 
   searchShortcut(name: string) {

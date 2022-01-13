@@ -2931,6 +2931,7 @@ export default Vue.extend({
       else if (mode === 'open') this.searchLifeFarm = false
       else if (mode === 'ended') this.searchLifeFarm = true
       else if (mode === 'deposit') this.searchCertifiedFarm = 'deposit'
+      this.searchName = ''
     },
     hideCollapse() {
       this.showCollapse = []
