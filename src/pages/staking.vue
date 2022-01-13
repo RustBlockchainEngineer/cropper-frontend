@@ -47,17 +47,19 @@
                 :percent="Number(pctToNexttiers.toFixed(1))"
                 :show-info="false"
               />
-              <div
-                v-if="Number(pctToNexttiers.toFixed(1)) >= 5"
-                class="staking-progress-end"
-                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 3px)'"
-              ></div>
-              <label
-                class="staking-progress-percent font-xsmall"
-                :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"
-              >
-                {{ Number(pctToNexttiers.toFixed(1)) }}%
-              </label>
+              <div class="staking-progress-info-container">
+                <div
+                  v-if="Number(pctToNexttiers.toFixed(1)) > 1"
+                  class="staking-progress-end"
+                  :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
+                ></div>
+                <label
+                  class="staking-progress-percent font-xsmall"
+                  :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
+                >
+                  {{ Number(pctToNexttiers.toFixed(1)) }}%
+                </label>
+              </div>
             </div>
 
             <div class="staking-infos-group">
@@ -529,7 +531,7 @@ export default Vue.extend({
       currentTiers: 0 as number,
       nextTiers: 1 as number,
       selectedTier: 0 as number,
-      activeTab: '1' as string
+      activeTab: '1' as string,
     }
   },
   head: {
@@ -1067,24 +1069,23 @@ export default Vue.extend({
             }
 
             .staking-progress {
-              position: relative;
               margin-top: 28px;
 
               .staking-progress-label {
                 margin-bottom: 4px;
               }
 
-              .staking-progress-end {
-                position: absolute;
-                width: 2px;
-                height: 14px;
-                background: @color-petrol500;
-                box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-                margin-top: -21px;
-              }
+              .staking-progress-info-container {
+                position: relative;
+                padding: 0 4px;
 
-              .staking-progress-percent {
-                margin-top: 4px;
+                .staking-progress-end {
+                  width: 2px;
+                  height: 14px;
+                  background: @color-petrol500;
+                  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+                  margin: -21px 0 4px 0;
+                }
               }
             }
 
@@ -1321,6 +1322,7 @@ export default Vue.extend({
 
       .ant-progress-inner {
         background: transparent;
+        border-radius: none;
 
         .ant-progress-bg {
           background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);

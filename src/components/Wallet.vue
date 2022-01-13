@@ -13,7 +13,10 @@
           }
         "
       >
-        <span class="tier-id font-medium weight-semi spacing-small">Tier <span v-if="tierloaded">{{wallet.tiers}}</span><span v-else>&mdash;</span></span>
+        <span class="tier-id font-medium weight-semi spacing-small"
+          >Tier <span v-if="tierloaded">{{ wallet.tiers }}</span
+          ><span v-else>&mdash;</span></span
+        >
         <img src="@/assets/icons/arrow-down-white.svg" />
       </div>
 
@@ -29,37 +32,34 @@
         <div v-if="tierloaded" class="collapse-item text-center font-medium weight-semi icon-cursor">
           <div class="tier-progress text-left">
             <div class="tier-progress-label fcb-container">
-              <span class="font-xsmall weight-bold">Tier {{wallet.tiers}}</span>
-              <span class="font-xsmall weight-bold">Tier {{(wallet.tiers + 1)}}</span>
+              <span class="font-xsmall weight-bold">Tier {{ wallet.tiers }}</span>
+              <span class="font-xsmall weight-bold">Tier {{ wallet.tiers + 1 }}</span>
             </div>
             <Progress
-                type="line"
-                :stroke-width="14"
-                :percent="Number(pctToNexttiers.toFixed(1))"
-                :show-info="false"
-              />
+              type="line"
+              :stroke-width="14"
+              :percent="Number(pctToNexttiers.toFixed(1))"
+              :show-info="false"
+            />
+            <div class="tier-progress-info-container">
               <div
-                v-if="Number(pctToNexttiers.toFixed(1)) >= 5"
                 class="tier-progress-end"
-                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% + 2px)'"
+                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
               ></div>
               <label
                 class="tier-progress-percent font-xsmall"
-                :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"
+                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
               >
                 {{ Number(pctToNexttiers.toFixed(1)) }}%
               </label>
+            </div>
           </div>
         </div>
         <div class="collapse-item text-center font-medium weight-semi icon-cursor">
-          <NuxtLink to="/staking/">
-            Stake CRP
-          </NuxtLink>
+          <NuxtLink to="/staking/"> Stake CRP </NuxtLink>
         </div>
         <div class="collapse-item text-center font-medium weight-semi icon-cursor">
-          <NuxtLink to="/staking/#staking-tiers-details">
-            About Tiers
-          </NuxtLink>
+          <NuxtLink to="/staking/#staking-tiers-details"> About Tiers </NuxtLink>
         </div>
       </div>
     </div>
@@ -356,9 +356,9 @@ export default class Wallet extends Vue {
   liquidityTimer: number | undefined = undefined
   farmTimer: number | undefined = undefined
   idoTimer: number | undefined = undefined
-  crpbalance : any = undefined
+  crpbalance: any = undefined
   // web3 listener
-  tierloaded : boolean = false
+  tierloaded: boolean = false
   walletListenerId = null as number | null
 
   debugCount = 0
@@ -431,7 +431,7 @@ export default class Wallet extends Vue {
     this.getTiersInfo()
 
     this.$nextTick(() => {
-        window.addEventListener('resize', this.onResize);
+      window.addEventListener('resize', this.onResize)
     })
   }
 
@@ -441,7 +441,7 @@ export default class Wallet extends Vue {
     window.clearInterval(this.liquidityTimer)
     window.clearInterval(this.farmTimer)
     window.clearInterval(this.idoTimer)
-    window.removeEventListener('resize', this.onResize); 
+    window.removeEventListener('resize', this.onResize)
   }
 
   /* ========== WATCH ========== */
@@ -462,7 +462,6 @@ export default class Wallet extends Vue {
   }
 
   async getTiersInfo() {
-
     setAnchorProvider(this.$web3, this.$wallet)
 
     if (!this.$accessor.token.initialized || !this.$wallet?.connected) {
@@ -476,11 +475,11 @@ export default class Wallet extends Vue {
     }
 
     let tiers_info = {
-      'tiers' : 0,
-      'xCRP' : 0
+      tiers: 0,
+      xCRP: 0
     }
 
-    try{
+    try {
       const farm_state = await getFarmState()
       const extraRewardConfigs = await getExtraRewardConfigs()
 
@@ -492,9 +491,7 @@ export default class Wallet extends Vue {
       this.userStaked = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
 
       tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
-
-    } catch {
-    }
+    } catch {}
 
     this.$accessor.wallet.setStakingTiers(tiers_info)
 
@@ -538,7 +535,7 @@ export default class Wallet extends Vue {
         this.subWallet()
         this.$notify.success({
           message: 'Wallet connected',
-          description: `Connected with ${name}`,
+          description: `Connected with ${name}`
           // icon: (h: any) => {
           //   return h(
           //     'anticon',
@@ -678,7 +675,6 @@ export default class Wallet extends Vue {
     }
   }
 
-
   subWallet() {
     const wallet = this.$wallet
     if (wallet && wallet.publicKey) {
@@ -720,7 +716,7 @@ export default class Wallet extends Vue {
           this.disconnect()
         }
       }
-      if(!this.tierloaded){
+      if (!this.tierloaded) {
         await this.getTiersInfo()
       }
       this.sonarUrl = 'https://sonar.watch/dashboard/' + this.wallet.address
@@ -804,7 +800,7 @@ export default class Wallet extends Vue {
   .tier-container {
     position: relative;
     margin-right: 18px;
-    
+
     @media @max-sl-mobile {
       display: none !important;
     }
@@ -862,17 +858,17 @@ export default class Wallet extends Vue {
             margin-bottom: 4px;
           }
 
-          .tier-progress-end {
-            position: absolute;
-            width: 2px;
-            height: 14px;
-            background: @color-petrol500;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-            margin-top: -21px;
-          }
+          .tier-progress-info-container {
+            position: relative;
+            padding: 0 4px;
 
-          .tier-progress-percent {
-            margin-top: 4px;
+            .tier-progress-end {
+              width: 2px;
+              height: 14px;
+              background: @color-petrol500;
+              box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+              margin: -22px 0 4px 0;
+            }
           }
         }
       }
