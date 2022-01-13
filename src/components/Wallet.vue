@@ -50,7 +50,7 @@
                 class="tier-progress-percent font-xsmall"
                 :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
               >
-                {{ Number(pctToNexttiers.toFixed(1)) }}%
+                {{ userTier }} sCRP
               </label>
             </div>
           </div>
@@ -58,9 +58,9 @@
         <div class="collapse-item text-center font-medium weight-semi icon-cursor">
           <NuxtLink to="/staking/"> Stake CRP </NuxtLink>
         </div>
-        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
+        <!-- <div class="collapse-item text-center font-medium weight-semi icon-cursor">
           <NuxtLink to="/staking/#staking-tiers-details"> About Tiers </NuxtLink>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -371,6 +371,7 @@ export default class Wallet extends Vue {
   // tier
   userStaked = 0 as number
   pctToNexttiers = 0 as number
+  userTier = 0 as number
   currentTiers = 0 as number
   nextTiers = 1 as number
 
@@ -503,7 +504,9 @@ export default class Wallet extends Vue {
       this.nextTiers--
       this.currentTiers--
       this.pctToNexttiers = 100
+      this.userTier = TIERS_XCRP[this.nextTiers]
     } else {
+      this.userTier = tiers_info.xCRP
       this.pctToNexttiers =
         ((tiers_info.xCRP - TIERS_XCRP[this.currentTiers]) /
           (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
@@ -867,7 +870,7 @@ export default class Wallet extends Vue {
               height: 14px;
               background: @color-petrol500;
               box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-              margin: -22px 0 4px 0;
+              margin: -20px 0 4px 0;
             }
           }
         }
