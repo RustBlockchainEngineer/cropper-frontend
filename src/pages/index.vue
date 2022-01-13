@@ -527,7 +527,7 @@ export default class Landing extends Vue {
     telegram: 'https://linktr.ee/cropperfinance'
   }
   videoLinks = {
-    landing: 'https://cropper.finance/distant/industry/Landing.mp4',
+    landing: 'https://cropper.finance/distant/landing/Landing.mp4',
     swap: 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4',
     stake: 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4',
     harvest: 'https://cropper.finance/distant/industry/HarvestvideoforGIF.mp4',
