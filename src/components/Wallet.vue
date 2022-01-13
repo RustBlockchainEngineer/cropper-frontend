@@ -466,7 +466,6 @@ export default class Wallet extends Vue {
     setAnchorProvider(this.$web3, this.$wallet)
 
     if (!this.$accessor.token.initialized || !this.$wallet?.connected) {
-      console.log(!this.$accessor.token.initialized, !this.$wallet?.connected);
       return
     }
 
@@ -476,20 +475,31 @@ export default class Wallet extends Vue {
       this.crpbalance = crpbalanceDatas.balance.fixed() * 1
     }
 
-    const farm_state = await getFarmState()
-    const extraRewardConfigs = await getExtraRewardConfigs()
+    let tiers_info = {
+      'tiers' : 0,
+      'xCRP' : 0
+    }
 
-    const pools = await getAllPools()
-    const current_pool = pools[0]
-    const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
+    try{
+      const farm_state = await getFarmState()
+      const extraRewardConfigs = await getExtraRewardConfigs()
 
-    //@ts-ignore
-    this.userStaked = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
 
-    const tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
+      //@ts-ignore
+      this.userStaked = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
+
+      tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
+
+    } catch {
+    }
+
     this.$accessor.wallet.setStakingTiers(tiers_info)
 
     this.currentTiers = tiers_info.tiers
+
     this.nextTiers = tiers_info.tiers + 1
 
     if (this.nextTiers == TIERS_XCRP.length) {
