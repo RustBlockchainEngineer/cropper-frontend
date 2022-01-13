@@ -1598,6 +1598,7 @@ export default Vue.extend({
     if (hash) {
       hash = hash.substring(1)
       this.searchName = hash
+      this.initBasedSearch = 1
     } else {
       const query = new URLSearchParams(window.location.search)
       if (query.get('s')) {
@@ -1731,7 +1732,7 @@ export default Vue.extend({
 
       if (this.initBasedSearch == 1 && this.searchName.length > 10) {
         if (!this.labelizedAmms[this.searchName]) {
-          this.searchCertifiedFarm = 'labelized'
+          this.searchCertifiedFarm = 'permissionless'
         }
       }
 
