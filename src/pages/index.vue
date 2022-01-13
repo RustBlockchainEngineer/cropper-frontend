@@ -15,7 +15,7 @@
     </section>
     <section class="landing-body">
       <video class="landing-video" autoplay muted loop preload="auto">
-        <source :src="videoLinks.landing" type="video/mp4">
+        <source :src="videoLinks.landing" type="video/mp4" />
       </video>
 
       <div class="landing-content">
@@ -40,7 +40,10 @@
             </div>
             <div class="read-more">
               <div class="btn-container">
-                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline font-body-medium weight-semi"
+                <a
+                  href="https://docs.cropper.finance/cropperfinance/"
+                  target="_blank"
+                  class="btn-outline font-body-medium weight-semi"
                   >Documentation</a
                 >
               </div>
@@ -653,7 +656,6 @@ export default class Landing extends Vue {
 
     this.TVL = Math.round(tvl)
 
-
     window.localStorage.TVL_last_updated = new Date().getTime()
     window.localStorage.TVL = this.TVL
 
@@ -815,7 +817,7 @@ h4 {
       }
     }
   }
-  
+
   .landing-body {
     margin-top: -20px;
     padding: 38px 64px 89px 64px;
@@ -830,13 +832,13 @@ h4 {
     }
 
     .landing-video {
-      position: absolute; 
+      position: absolute;
       right: 0;
       top: 0;
-      min-width: 100%; 
+      min-width: 100%;
       min-height: 100%;
-      width: auto; 
-      height: auto; 
+      width: auto;
+      height: auto;
       background-size: cover;
       overflow: hidden;
     }

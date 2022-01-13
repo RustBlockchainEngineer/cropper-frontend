@@ -206,7 +206,6 @@ export default Vue.extend({
 
           window.localStorage.common = JSON.stringify(responseData)
           window.localStorage.common_last_updated = new Date().getTime() as number
-
           ;(responseData as any).forEach((element: any) => {
             this.commonBases.push(element)
           })

@@ -85,7 +85,10 @@
         />
 
         <div class="exchange-info">
-          <div v-if="fromCoin && toCoin && isWrap && fromCoinAmount" class="font-small weight-semi price-base fcc-container">
+          <div
+            v-if="fromCoin && toCoin && isWrap && fromCoinAmount"
+            class="font-small weight-semi price-base fcc-container"
+          >
             <span>
               1 {{ fromCoin.symbol }} = 1
               {{ toCoin.symbol }}

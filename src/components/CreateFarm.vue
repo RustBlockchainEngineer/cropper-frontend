@@ -75,7 +75,9 @@
             <Row v-if="current === 0 && !wallet.connected">
               <Col :span="24" class="step-item">
                 <div v-if="!wallet.connected">
-                  <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal"> Connect wallet </Button>
+                  <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                    Connect wallet
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -120,11 +122,7 @@
                         <div v-if="userCreatePoolLiquidity" class="pool-info font-medium">
                           <span><b>Pool Liquidity: </b>{{ userCreatePoolLiquidity }}</span>
                         </div>
-                        <img
-                          class="close-icon icon-cursor"
-                          src="@/assets/icons/close.svg"
-                          @click="removeSelected"
-                        />
+                        <img class="close-icon icon-cursor" src="@/assets/icons/close.svg" @click="removeSelected" />
                       </div>
                     </div>
                     <Radio :value="2">Create a new AMM ID</Radio>
@@ -154,14 +152,20 @@
               </Col>
               <Col v-if="ammType === 1" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button class="create-btn font-medium weight-semi" :disabled="!wallet.connected" @click="useExistingAMMID()">
+                  <Button
+                    class="create-btn font-medium weight-semi"
+                    :disabled="!wallet.connected"
+                    @click="useExistingAMMID()"
+                  >
                     Next
                   </Button>
                 </div>
               </Col>
               <Col v-if="ammType === 2" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button class="create-btn font-medium weight-semi" :disabled="true" @click="createNewAMMID()"> Next </Button>
+                  <Button class="create-btn font-medium weight-semi" :disabled="true" @click="createNewAMMID()">
+                    Next
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -202,7 +206,8 @@
                     <div class="note-highlight fb-container">
                       <img class="info-icon" src="@/assets/icons/info.svg" />
                       <span class="note-highlight-content font-xsmall weight-bold">
-                        Please note that all rewards provided are final and unused rewards cannot be recovered upon completion of the farm.
+                        Please note that all rewards provided are final and unused rewards cannot be recovered upon
+                        completion of the farm.
                       </span>
                     </div>
                   </div>
@@ -236,7 +241,11 @@
 
               <Col :span="24">
                 <div class="btn-container">
-                  <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                  <Button
+                    v-if="!wallet.connected"
+                    class="create-btn font-medium weight-semi"
+                    @click="$accessor.wallet.openModal"
+                  >
                     Connect wallet
                   </Button>
                   <Button
@@ -277,7 +286,9 @@
             <Row v-if="current === 2">
               <Col :span="24" class="step-item">
                 <div v-if="!isCRPTokenPair" class="farm-created">
-                  <label class="font-large weight-bold">Congratulations! Your farm has been successfully created!</label>
+                  <label class="font-large weight-bold"
+                    >Congratulations! Your farm has been successfully created!</label
+                  >
                 </div>
                 <div class="lp-icons">
                   <div class="lp-icons-group">
@@ -290,10 +301,19 @@
                   </div>
                 </div>
                 <div class="btn-container">
-                  <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                  <Button
+                    v-if="!wallet.connected"
+                    class="create-btn font-medium weight-semi"
+                    @click="$accessor.wallet.openModal"
+                  >
                     Connect wallet
                   </Button>
-                  <Button v-else class="create-btn font-medium weight-semi" :disabled="!wallet.connected" @click="gotoFarms">
+                  <Button
+                    v-else
+                    class="create-btn font-medium weight-semi"
+                    :disabled="!wallet.connected"
+                    @click="gotoFarms"
+                  >
                     View Farm
                   </Button>
                 </div>

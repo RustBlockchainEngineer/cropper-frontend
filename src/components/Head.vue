@@ -7,7 +7,7 @@
 
       <Nav @onSelect="() => (navOpened = false)" />
     </div>
-    
+
     <div class="fcsb-container wallet-container">
       <Wallet />
     </div>
@@ -47,13 +47,13 @@ export default Vue.extend({
 
     .logo {
       height: 47px;
-      
+
       @media @max-md-tablet {
         height: 36px;
       }
     }
   }
-  
+
   .nav-button {
     display: inline-block;
     vertical-align: middle;

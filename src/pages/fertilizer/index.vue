@@ -709,11 +709,19 @@
 
                     <Col class="btn-group" :span="24">
                       <div class="fcc-container">
-                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
+                        <a
+                          class="social-link fcc-container font-xsmall weight-semi icon-cursor"
+                          href="#"
+                          target="_blank"
+                        >
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
                         </a>
-                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
+                        <a
+                          class="social-link fcc-container font-xsmall weight-semi icon-cursor"
+                          href="#"
+                          target="_blank"
+                        >
                           Twitter
                           <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                         </a>
@@ -819,11 +827,19 @@
                       </div>
 
                       <div class="btn-group-item fcc-container">
-                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
+                        <a
+                          class="social-link fcc-container font-xsmall weight-semi icon-cursor"
+                          href="#"
+                          target="_blank"
+                        >
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
                         </a>
-                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
+                        <a
+                          class="social-link fcc-container font-xsmall weight-semi icon-cursor"
+                          href="#"
+                          target="_blank"
+                        >
                           Twitter
                           <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
                         </a>
@@ -1001,7 +1017,7 @@ export default Vue.extend({
           hard_cap: '3000K',
           token_price: 0.071,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-        },
+        }
         // {
         //   status: 'Funded',
         //   key: 'k7',
@@ -1108,7 +1124,7 @@ export default Vue.extend({
       immediate: true,
       handler() {
         if (this.showCollapse.length > 0) {
-         this.showCollapse.splice(0, this.showCollapse.length)
+          this.showCollapse.splice(0, this.showCollapse.length)
         }
       },
       deep: true

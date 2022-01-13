@@ -20,10 +20,18 @@
                 <span class="font-body-medium weight-bold">CRP</span>
               </div>
             </button>
-            <button v-if="!showHalf && crpbalance" class="input-button font-xsmall weight-bold fcc-container" @click="setMax(1)">
+            <button
+              v-if="!showHalf && crpbalance"
+              class="input-button font-xsmall weight-bold fcc-container"
+              @click="setMax(1)"
+            >
               Max
             </button>
-            <button v-if="showHalf && crpbalance" class="input-button font-xsmall weight-bold fcc-container" @click="setMax(0.5)">
+            <button
+              v-if="showHalf && crpbalance"
+              class="input-button font-xsmall weight-bold fcc-container"
+              @click="setMax(0.5)"
+            >
               Half
             </button>
           </div>
@@ -86,7 +94,9 @@
         </div>
       </div>
       <div class="calc-footer">
-        <label class="lock-note font-small weight-bold">Your total staked tokens will be locked until {{ unstakeDate }}</label>
+        <label class="lock-note font-small weight-bold"
+          >Your total staked tokens will be locked until {{ unstakeDate }}</label
+        >
         <div class="btn-group fcsb-container">
           <div class="btn-container">
             <Button
@@ -462,6 +472,7 @@ export default Vue.extend({
       padding: 2px;
       background: @gradient-color04;
       background-origin: border-box;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: destination-out;
       mask-composite: exclude;
