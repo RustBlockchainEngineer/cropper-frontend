@@ -1157,7 +1157,7 @@ h4 {
         padding-left: 36px;
         padding-right: 36px;
         height: 472px;
-        padding-top: 50px;
+        padding-top: 30px;
         border: 4px solid transparent;
         background-origin: border-box;
         text-align: center;
@@ -1200,7 +1200,7 @@ h4 {
           margin-bottom: 60px !important;
           text-align: left;
           word-break: break-all;
-          
+
           @media @max-sl-mobile {
             margin-bottom: 18px !important;
           }
