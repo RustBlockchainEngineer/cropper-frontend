@@ -1,12 +1,12 @@
 @import './variables.less';
 
+html {
+  scroll-behavior: smooth;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   background: @color-blue500;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -67,16 +67,6 @@ body {
 
 .flex {
   display: flex;
-}
-
-.farm .btncontainer {
-  position: relative
-}
-
-@media @max-sl-mobile {
-  .farm .btncontainer {
-    display: none !important
-  }
 }
 
 a {
@@ -181,18 +171,6 @@ a {
   }
 }
 
-.ant-layout-header,
-.ant-layout-footer {
-  padding: 10px 64px !important;
-
-  @media @max-lg-tablet {
-    padding: 10px 32px !important;
-  }
-
-  @media @max-sl-mobile {
-    padding: 24px 20px !important;
-  }
-}
 
 .nofooter .ant-modal-footer {
   display: none !important
@@ -228,6 +206,18 @@ a {
 }
 
 // Defined by Lionel
+.ant-layout-header,
+.ant-layout-footer {
+  padding: 10px 64px !important;
+
+  @media @max-lg-tablet {
+    padding: 10px 32px !important;
+  }
+
+  @media @max-sl-mobile {
+    padding: 24px 20px !important;
+  }
+}
 
 .container {
   margin: 0 auto;
@@ -246,6 +236,7 @@ a {
   }
 }
 
+// flex
 .fcs-container {
   display: flex !important;
   align-items: center;
