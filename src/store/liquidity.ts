@@ -411,7 +411,7 @@ export const actions = actionTree(
       let need_to_update = false
       let cur_date = new Date().getTime()
 
-      const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+      const isSafari = false// /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
 
 
       if(window.localStorage.pool_last_updated_v2 && !DEVNET_MODE){

@@ -624,6 +624,16 @@
                       Withdraw
                     </Button>
                   </div>
+                  <div v-if="farm.farmInfo.poolId === removeRewardsFarmAddress" class="btn-container btn-container-outline">
+                    <Button
+                      size="large"
+                      ghost
+                      :disabled="!wallet.connected"
+                      @click.stop="removeRewards(farm)"
+                    >
+                      Remove Rewards
+                    </Button>
+                  </div>
                   <div
                     class="owner"
                     v-if="
@@ -994,7 +1004,7 @@ import {
   YieldFarm
 } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
-import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER, FARM_VERSION } from '@/utils/ids'
+import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER, FARM_VERSION, REMOVE_REWARDS_FARM_ADDRESS } from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
@@ -1029,6 +1039,7 @@ export default Vue.extend({
 
       farmProgramCreated: true,
       superOwnerAddress: FARM_INITIAL_SUPER_OWNER,
+      removeRewardsFarmAddress: REMOVE_REWARDS_FARM_ADDRESS,
 
       farms: [] as any[],
       showFarms: [] as any[],
@@ -1348,6 +1359,8 @@ export default Vue.extend({
     },
 
     async updateFarms() {
+      this.checkIfFarmProgramExist()
+
       this.$accessor.token.loadTokens()
       console.log('updating farms ...')
       await this.updateLabelizedAmms()
@@ -2246,7 +2259,54 @@ export default Vue.extend({
       this.farmInfo = cloneDeep(poolInfo)
       this.unstakeModalOpening = true
     },
+    removeRewards(farm: any) {
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
 
+      const rewardAccount = get(this.wallet.tokenAccounts, `${farm.farmInfo.reward.mintAddress}.tokenAccountAddress`)
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+      YieldFarm.removeRewards(conn, wallet, farm.farmInfo, rewardAccount)
+        .then(async (txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
+
+          const description = `Remove Rewards`
+          this.$accessor.transaction.sub({ txid, description })
+
+          
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Remove Rewards failed',
+            description: error.message
+          })
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
+        })
+        .finally(() => {})
+    },
     unstakeAndRemove(amount: string) {
       this.unstaking = true
 
