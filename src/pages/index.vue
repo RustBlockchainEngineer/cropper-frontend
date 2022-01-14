@@ -1199,7 +1199,8 @@ h4 {
           margin-top: 5px;
           margin-bottom: 60px !important;
           text-align: left;
-
+          word-break: break-all;
+          
           @media @max-sl-mobile {
             margin-bottom: 18px !important;
           }
