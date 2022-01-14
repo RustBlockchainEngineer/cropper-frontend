@@ -2,30 +2,28 @@
   <div class="container" :class="'user-list'">
     <div class="card">
       <div class="card-body" style="grid-row-gap: 0; row-gap: 0; padding-bottom: 15px">
-        <div class="page-head fs-container">
+        <div class="page-head fcsb-container">
           <span class="title">Farm Analyzer</span>
         </div>
-        
+
         <Input v-model="farmId" size="large" class="input-search" placeholder="input farm id">
-            <Icon slot="prefix" type="search" />
+          <Icon slot="prefix" type="search" />
         </Input>
-        <Button size="large" ghost @click="searchFarm">
-            Analyzer
-        </Button>
+        <Button size="large" ghost @click="searchFarm"> Analyzer </Button>
 
         <div v-if="farmFound">
-            name : {{foundFarm.name}}<br />
-            lp token name : {{foundFarm.lp.symbol}}<br />
-            lp token decimals : {{foundFarm.lp.decimals}}<br />
-            lp token balance : {{foundFarm.lp.balance.wei.toNumber() / Math.pow(10,foundFarm.lp.decimals)}}<br />
-            reward token name : {{foundFarm.reward.symbol}}<br />
-            reward token decimals : {{foundFarm.reward.decimals}}<br />
-            reward token balance : {{foundFarm.reward.balance.wei.toNumber() / Math.pow(10,foundFarm.reward.decimals)}}<br />
-            start time : {{getDateTime(foundFarm.poolInfo.start_timestamp.toNumber())}}<br />
-            end time : {{getDateTime(foundFarm.poolInfo.end_timestamp.toNumber())}}<br />
-            last updated time : {{getDateTime(foundFarm.poolInfo.last_timestamp.toNumber())}}<br />
+          name : {{ foundFarm.name }}<br />
+          lp token name : {{ foundFarm.lp.symbol }}<br />
+          lp token decimals : {{ foundFarm.lp.decimals }}<br />
+          lp token balance : {{ foundFarm.lp.balance.wei.toNumber() / Math.pow(10, foundFarm.lp.decimals) }}<br />
+          reward token name : {{ foundFarm.reward.symbol }}<br />
+          reward token decimals : {{ foundFarm.reward.decimals }}<br />
+          reward token balance : {{ foundFarm.reward.balance.wei.toNumber() / Math.pow(10, foundFarm.reward.decimals)
+          }}<br />
+          start time : {{ getDateTime(foundFarm.poolInfo.start_timestamp.toNumber()) }}<br />
+          end time : {{ getDateTime(foundFarm.poolInfo.end_timestamp.toNumber()) }}<br />
+          last updated time : {{ getDateTime(foundFarm.poolInfo.last_timestamp.toNumber()) }}<br />
         </div>
-         
       </div>
     </div>
   </div>
@@ -55,34 +53,30 @@ const Step = Steps.Step
 export default class CreateFarm extends Vue {
   userInfos: any = []
 
-  farmId: string = ""
+  farmId: string = ''
   foundFarm: any = undefined
-  farmFound:boolean = false;
-  mounted() {
-    
-  }
+  farmFound: boolean = false
+  mounted() {}
 
   async searchFarm() {
     for (const [poolId, farmInfo] of Object.entries(this.$accessor.farm.infos)) {
-        if(poolId === this.farmId){
-            this.foundFarm = farmInfo;
-            this.farmFound = true;
-            return;
-        }
+      if (poolId === this.farmId) {
+        this.foundFarm = farmInfo
+        this.farmFound = true
+        return
+      }
     }
-    this.farmFound = false;
-
-            
+    this.farmFound = false
   }
-  getDateTime(timestamp:number){
-      var d = new Date(timestamp * 1000);
-      return d.toString();
+  getDateTime(timestamp: number) {
+    var d = new Date(timestamp * 1000)
+    return d.toString()
   }
 }
 </script>
 <style lang="less" scoped>
 main {
-  background-color: @color-bg;
+  background-color: @color-blue800;
   background-image: unset;
   background-size: cover;
   background-position: center bottom;
@@ -162,10 +156,6 @@ div {
 .item-msg-mobile {
   padding-left: 10px;
 }
-.ant-layout {
-  background: @color-bg !important;
-}
-
 .ant-col {
   margin-bottom: 10px;
 }

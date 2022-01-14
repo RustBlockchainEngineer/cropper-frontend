@@ -1,7 +1,7 @@
 <template>
   <div v-if="initialized && poolInfo" class="pool-info">
     {{ void ((coin = poolInfo.coin), (pc = poolInfo.pc), (lp = poolInfo.lp)) }}
-    <div class="price-base fc-container">
+    <div class="price-base fcc-container font-small weight-semi">
       <span v-if="coinBasePrice">
         1 {{ coin.symbol }} ≈
         {{ getPrice(poolInfo).toFixed(pc.decimals) }}
@@ -12,28 +12,30 @@
         {{ getPrice(poolInfo, false).toFixed(coin.decimals) }}
         {{ coin.symbol }}
       </span>
-      <img class="anticon-swap" src="@/assets/icons/swap-icon.svg" @click="() => (coinBasePrice = !coinBasePrice)" />
+      <img class="swap-icon" src="@/assets/icons/swap-vertical.svg" @click="() => (coinBasePrice = !coinBasePrice)" />
     </div>
 
-    <div class="fs-container">
-      <span class="name">Pool liquidity</span>
-      <div class="info">
-        <span>
-          {{ coin.balance.format() }}
-          {{ coin.symbol }}
-        </span>
-        <span>
-          {{ pc.balance.format() }}
-          {{ pc.symbol }}
+    <div class="price-info-box">
+      <div class="price-info fcsb-container">
+        <span class="name font-small weight-bold">Pool liquidity</span>
+        <div class="text-right">
+          <span class="value">
+            {{ coin.balance.format() }}
+            <b>{{ coin.symbol }}</b>
+          </span>
+          <span class="value">
+            {{ pc.balance.format() }}
+            <b>{{ pc.symbol }}</b>
+          </span>
+        </div>
+      </div>
+
+      <div class="price-info fcsb-container">
+        <span class="name font-small weight-bold">LP supply</span>
+        <span class="value">
+          {{ lp.totalSupply.format() }}
         </span>
       </div>
-    </div>
-
-    <div class="fs-container">
-      <span class="name">LP supply</span>
-      <span>
-        {{ lp.totalSupply.format() }}
-      </span>
     </div>
   </div>
 </template>
@@ -67,40 +69,39 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .pool-info {
-  display: grid;
-  grid-auto-rows: auto;
-  row-gap: 8px;
-  padding: 0 12px;
-  font-size: 15px;
-  line-height: 21px;
-  color: rgba(255,255,255,0.5);
-
-  @media @max-b-mobile {
-    font-size: 14px;
-    line-height: 15px;
-  }
-
-  .info {
-    display: grid;
-    text-align: right;
-  }
-
   .price-base {
-    font-size: 15px;
-    line-height: 21px;
-    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.5px;
+    color: @color-blue200;
+    margin-top: 8px;
 
-    @media @max-b-mobile {
-      font-size: 12px;
-      line-height: 15px;
-    }
-
-    .anticon-swap {
+    .swap-icon {
       margin-left: 10px;
       cursor: pointer;
+    }
+  }
+
+  .price-info-box {
+    margin: 8px 0;
+    background: @color-blue800;
+    border-radius: 18px;
+    padding: 12px;
+
+    .name {
+      color: @color-blue200;
+    }
+
+    .price-info {
+      margin-bottom: 18px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .value {
+        display: block;
+        color: @color-blue100;
+      }
     }
   }
 }

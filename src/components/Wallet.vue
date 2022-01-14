@@ -1,16 +1,87 @@
 <template>
   <div class="wallet">
+    <div v-if="wallet.connected" class="tier-container fcs-container">
+      <div class="tier-profile">
+        <img class="tier-img" src="@/assets/background/tier-blur.png" />
+      </div>
+
+      <div
+        class="tier-info fcs-container icon-cursor"
+        @click="
+          () => {
+            this.showTierInfo = !this.showTierInfo
+          }
+        "
+      >
+        <span class="tier-id font-medium weight-semi spacing-small"
+          >Tier <span v-if="tierloaded">{{ wallet.tiers }}</span
+          ><span v-else>&mdash;</span></span
+        >
+        <img src="@/assets/icons/arrow-down-white.svg" />
+      </div>
+
+      <div
+        v-if="showTierInfo"
+        class="tier-info-menu"
+        v-click-outside="
+          () => {
+            this.showTierInfo = false
+          }
+        "
+      >
+        <div v-if="tierloaded" class="collapse-item text-center font-medium weight-semi icon-cursor">
+          <div class="tier-progress text-left">
+            <div class="tier-progress-label fcsb-container">
+              <span class="font-xsmall weight-bold">Tier {{ wallet.tiers }}</span>
+              <span class="font-xsmall weight-bold">Tier {{ wallet.tiers + 1 }}</span>
+            </div>
+            <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="false" />
+            <div class="tier-progress-info-container">
+              <div
+                class="tier-progress-end"
+                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
+              ></div>
+              <label
+                class="tier-progress-percent font-xsmall"
+                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
+              >
+                {{ userTier }} sCRP
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
+          <NuxtLink to="/staking/"> Stake CRP </NuxtLink>
+        </div>
+        <!-- <div class="collapse-item text-center font-medium weight-semi icon-cursor">
+          <NuxtLink to="/staking/#staking-tiers-details"> About Tiers </NuxtLink>
+        </div> -->
+      </div>
+    </div>
+
     <div class="wallet-btn">
-      <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-if="!wallet.connected" ghost @click="openPopIn">
-        <Button>
-          <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
-          Connect wallet
+      <div
+        class="btncontainer"
+        :class="!wallet.connected ? 'unconnected' : 'connected'"
+        v-if="!wallet.connected"
+        ghost
+        @click="openPopIn"
+      >
+        <Button class="font-body-small weight-bold">
+          <img src="@/assets/icons/wallet.svg" style="margin-right: 10px" />
+          {{ windowWidth >= 768 ? 'Connect wallet' : 'Connect' }}
         </Button>
       </div>
 
-      <div class="btncontainer" :class="!wallet.connected ? 'unconnected' : 'connected'" v-else ghost @click="$accessor.wallet.openModal">
-        <Button>
-          <img src="@/assets/icons/wallet.svg" style="margin: 0 10px" />
+      <div
+        class="btncontainer"
+        :class="!wallet.connected ? 'unconnected' : 'connected'"
+        v-else
+        ghost
+        @click="$accessor.wallet.openModal"
+      >
+        <Button class="font-body-small weight-bold">
+          <img src="@/assets/icons/wallet.svg" style="margin-right: 10px" />
           {{ wallet.address.substr(0, 4) }}
           ...
           {{ wallet.address.substr(wallet.address.length - 4, 4) }}
@@ -20,21 +91,22 @@
       <a v-if="wallet.connected" :href="this.sonarUrl" target="_blank" class="sonar-container">
         <div class="btncontainer sonar connected" ghost>
           <Button>
-            <img src="@/assets/icons/sonar-watch.svg"/>
+            <img src="@/assets/icons/sonar-watch.svg" />
           </Button>
         </div>
-        <div class="sonar-dashboard">
-          My dashboard
-        </div>
+        <div class="sonar-dashboard">My dashboard</div>
       </a>
 
       <Modal
         :title="!wallet.connected ? 'Connect to a wallet' : 'Your wallet'"
         :visible="wallet.modalShow && isModal"
         :footer="null"
+        :closable="false"
+        class="connect-modal"
         centered
         @cancel="$accessor.wallet.closeModal"
       >
+        <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$accessor.wallet.closeModal" />
         <div v-if="!wallet.connected" class="select-wallet">
           <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
             <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
@@ -42,51 +114,40 @@
           </Button>
         </div>
         <div v-else class="wallet-info">
-          <p class="address">{{ wallet.address }}</p>
-
-          <div class="stdGradientButton">
-            <Button ghost @click="disconnect"> DISCONNECT </Button>
-          </div>
+          <p class="address font-medium">{{ wallet.address }}</p>
+          <Button class="btn-gradient font-large weight-bold" @click="disconnect"> Disconnect </Button>
         </div>
       </Modal>
     </div>
-    
+
     <div v-if="!wallet.connected && popIn" class="wallet-list" v-click-outside="outPopIn">
-      <div class="select-wallet-header">
-        <div class="select-wallet-header-title">
-          <b>Connect wallet</b>
-        </div>
-        <div class="select-wallet-header-close">
-          <img src="@/assets/icons/close-icon.svg" @click="closePopIn" />
-        </div>
+      <div class="select-wallet-header fcsb-container">
+        <span class="font-large weight-bold">Connect wallet</span>
+        <img class="close-icon icon-cursor" src="@/assets/icons/close-circle.svg" @click="closePopIn" />
       </div>
 
       <div v-if="!wallet.connected" class="select-wallet">
-        <Button v-for="(info, name) in wallets" :key="name" ghost @click="connect(name, info)">
+        <Button v-for="(info, name) in wallets" :key="name" class="select-wallet-btn" @click="connect(name, info)">
           <img :src="importIcon(`/wallets/${name.replace(' ', '-').toLowerCase()}.png`)" />
           <span>{{ name }}</span>
         </Button>
       </div>
       <div v-else class="wallet-info">
-        <p class="address">{{ wallet.address }}</p>
-
-        <div class="stdGradientButton">
-          <Button ghost @click="disconnect"> DISCONNECT </Button>
-        </div>
+        <p class="address font-medium">{{ wallet.address }}</p>
+        <Button class="btn-gradient font-large weight-bold" @click="disconnect"> Disconnect </Button>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'nuxt-property-decorator'
-import { Button, Modal, Icon } from 'ant-design-vue'
+import { Vue, Component, Watch } from 'nuxt-property-decorator'
+import { Button, Modal, Icon, Progress } from 'ant-design-vue'
 import {
   AccountInfo,
   Context
   // PublicKey
 } from '@solana/web3.js'
-
 import importIcon from '@/utils/import-icon'
 import logger from '@/utils/logger'
 import { commitment } from '@/utils/web3'
@@ -104,18 +165,43 @@ import { SafePalWalletAdapter } from '@solana/wallet-adapter-safepal'
 //import { BloctoWalletAdapter } from '@solana/wallet-adapter-blocto'
 //import { BitpieWalletAdapter } from '@solana/wallet-adapter-bitpie'
 import {
-    // getLedgerWallet,
-    // getPhantomWallet,
-    // getSlopeWallet,
-    // getSolflareWallet,
-    getSolletExtensionWallet,
-    // getSolletWallet,
-    // getTorusWallet,
-} from '@solana/wallet-adapter-wallets';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+  // getLedgerWallet,
+  // getPhantomWallet,
+  // getSlopeWallet,
+  // getSolflareWallet,
+  getSolletExtensionWallet
+  // getSolletWallet,
+  // getTorusWallet,
+} from '@solana/wallet-adapter-wallets'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 // import { TorusWalletAdapter } from '@solana/wallet-adapter-torus'
+import { TokenAmount } from '@/utils/safe-math'
+import { TOKENS } from '@/utils/tokens'
+import {
+  setAnchorProvider,
+  createFarmState,
+  fundToProgram,
+  setExtraReward,
+  createExtraReward,
+  createPool,
+  changePoolAmountMultipler,
+  changeTokenPerSecond,
+  changePoolPoint,
+  getFarmStateAddress,
+  getFarmState,
+  getExtraRewardConfigs,
+  getAllPools,
+  getPoolUserAccount,
+  estimateRewards,
+  calculateTiers,
+  TIERS_XCRP,
+  stake,
+  unstake,
+  harvest
+} from '@/utils/crp-stake'
 const Vco = require('v-click-outside')
-const network = WalletAdapterNetwork.Devnet;
+const network = WalletAdapterNetwork.Devnet
+// declare const window: any
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
@@ -138,10 +224,10 @@ interface WalletInfo {
   components: {
     Button,
     Modal,
-    Icon
+    Icon,
+    Progress
   }
 })
-
 export default class Wallet extends Vue {
   /* ========== DATA ========== */
   // TrustWallet ezDeFi
@@ -171,7 +257,7 @@ export default class Wallet extends Vue {
       website: '',
       chromeUrl: 'https://chrome.google.com/webstore/detail/sollet/fhmfendgdocmcbmfikdcogofphimnkno',
       getAdapter() {
-                return getSolletExtensionWallet().adapter();
+        return getSolletExtensionWallet().adapter()
       }
     },
     Ledger: {
@@ -265,13 +351,28 @@ export default class Wallet extends Vue {
   liquidityTimer: number | undefined = undefined
   farmTimer: number | undefined = undefined
   idoTimer: number | undefined = undefined
+  crpbalance: any = undefined
   // web3 listener
+  tierloaded: boolean = false
   walletListenerId = null as number | null
 
   debugCount = 0
 
+  // menu
   popIn = false as boolean
   isModal = true as boolean
+  showTierInfo = false as boolean
+
+  // tier
+  userStaked = 0 as number
+  pctToNexttiers = 0 as number
+  userTier = 0 as number
+  currentTiers = 0 as number
+  nextTiers = 1 as number
+
+  // window
+  windowWidth = window.innerWidth as any
+
   /* ========== COMPUTED ========== */
   get wallet() {
     return this.$accessor.wallet
@@ -323,6 +424,11 @@ export default class Wallet extends Vue {
 
   mounted() {
     this.autoConnect()
+    this.getTiersInfo()
+
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize)
+    })
   }
 
   beforeDestroy() {
@@ -331,10 +437,13 @@ export default class Wallet extends Vue {
     window.clearInterval(this.liquidityTimer)
     window.clearInterval(this.farmTimer)
     window.clearInterval(this.idoTimer)
+    window.removeEventListener('resize', this.onResize)
   }
 
   /* ========== WATCH ========== */
-
+  @Watch('wallet.conneected', { immediate: true, deep: true }) handler(connected: any) {
+    this.getTiersInfo()
+  }
   /* ========== METHODS ========== */
   importIcon = importIcon
 
@@ -348,9 +457,62 @@ export default class Wallet extends Vue {
     }
   }
 
+  async getTiersInfo() {
+    setAnchorProvider(this.$web3, this.$wallet)
+
+    if (!this.$accessor.token.initialized || !this.$wallet?.connected) {
+      return
+    }
+
+    let crpbalanceDatas = this.wallet.tokenAccounts[TOKENS['CRP'].mintAddress]
+
+    if (crpbalanceDatas) {
+      this.crpbalance = crpbalanceDatas.balance.fixed() * 1
+    }
+
+    let tiers_info = {
+      tiers: 0,
+      xCRP: 0
+    }
+
+    try {
+      const farm_state = await getFarmState()
+      const extraRewardConfigs = await getExtraRewardConfigs()
+
+      const pools = await getAllPools()
+      const current_pool = pools[0]
+      const userAccount = await getPoolUserAccount(this.$wallet, current_pool.publicKey)
+
+      //@ts-ignore
+      this.userStaked = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed(3))
+
+      tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
+    } catch {}
+
+    this.$accessor.wallet.setStakingTiers(tiers_info)
+
+    this.currentTiers = tiers_info.tiers
+
+    this.nextTiers = tiers_info.tiers + 1
+
+    if (this.nextTiers == TIERS_XCRP.length) {
+      this.nextTiers--
+      this.currentTiers--
+      this.pctToNexttiers = 100
+      this.userTier = TIERS_XCRP[this.nextTiers]
+    } else {
+      this.userTier = tiers_info.xCRP
+      this.pctToNexttiers =
+        ((tiers_info.xCRP - TIERS_XCRP[this.currentTiers]) /
+          (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
+        100
+    }
+
+    this.tierloaded = true
+  }
+
   onConnect() {
     const { name, adapter } = this.connectingWallet
-
 
     this.$accessor.wallet.closeModal().then(() => {
       if (adapter && adapter.publicKey) {
@@ -371,7 +533,18 @@ export default class Wallet extends Vue {
         this.subWallet()
         this.$notify.success({
           message: 'Wallet connected',
-          description: `Connect to ${name}`
+          description: `Connected with ${name}`
+          // icon: (h: any) => {
+          //   return h(
+          //     'anticon',
+          //     {
+          //       props: {
+          //         type: 'info-circle',
+          //         theme: 'filled'
+          //       },
+          //     },
+          //   );
+          // },
         })
 
         LocalStorage.set('WALLET_NAME', name)
@@ -496,6 +669,7 @@ export default class Wallet extends Vue {
       this.$accessor.wallet.getTokenAccounts()
       this.$accessor.farm.getStakeAccounts()
       this.$accessor.ido.requestInfos()
+      this.getTiersInfo()
     }
   }
 
@@ -533,15 +707,17 @@ export default class Wallet extends Vue {
           if (this.wallet.countdown < this.wallet.autoRefreshTime) {
             this.$accessor.wallet.setCountdown(this.$accessor.wallet.countdown + 1)
             if (this.wallet.countdown === this.wallet.autoRefreshTime) {
-              await this.$accessor.wallet.getTokenAccounts() 
+              await this.$accessor.wallet.getTokenAccounts()
             }
           }
         } else {
           this.disconnect()
         }
       }
-
-      this.sonarUrl = 'https://sonar.watch/dashboard/' + this.wallet.address;
+      if (!this.tierloaded) {
+        await this.getTiersInfo()
+      }
+      this.sonarUrl = 'https://sonar.watch/dashboard/' + this.wallet.address
     }, 1000)
   }
 
@@ -596,11 +772,11 @@ export default class Wallet extends Vue {
       }
     }, 1000)
   }
-  
+
   openPopIn() {
     this.popIn = true
   }
-  
+
   closePopIn() {
     this.popIn = false
   }
@@ -608,255 +784,336 @@ export default class Wallet extends Vue {
   outPopIn() {
     this.popIn = false
   }
+
+  onResize() {
+    this.windowWidth = window.innerWidth
+  }
 }
 </script>
 
-<style lang="less">
-@import '../styles/variables';
-
-.btncontainer {
-  background: @gradient-color-primary;
-  background-origin: border-box;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  margin: auto;
-  padding: 3px;
-  border-radius: 63px;
-  height: 50px;
-
-  button {
-    background: transparent;
-    position: relative;
-    border-radius: 63px;
-    height: 100%;
-    width: 100%;
-    border-color: transparent;
-    border: none;
-    color: white !important;
-  }
-
-  @media @max-t-mobile {
-    height: 46px;
-    top: 5px;
-  }
-}
-
-.ant-modal-body {
-  .select-wallet {
-    button {
-      border: none;
-      background: rgba(255, 255, 255, 0.1) !important;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      width: 100%;
-      height: 48px;
-      text-align: left;
-      margin-bottom: 10px;
-
-      img {
-        height: 32px;
-        width: 32px;
-        border-radius: 50%;
-      }
-    }
-  }
-}
-
-.wallet-btn {
-  display: inline-flex;
-  align-items: center;
-}
-
-.wallet-list::before {
-  content: ' ';
-  height: 0;
-  position: absolute;
-  width: 0;
-  right: 20px;
-  top: -20px;
-  border: 10px solid transparent;
-  border-right-color: #3238EA;
-  transform: rotate(90deg);
-}
-
-.wallet-list {
-  position: absolute;
-  right: 100px;
-  margin-top: 10px;
-  z-index: 999;
-  background: @gradient-color-wallet;
-  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-
-  @media @max-t-mobile {
-    right: 20px;
-  }
-  
-  .select-wallet {
-    max-height: 460px;
-    overflow-y: scroll;
-    padding: 0 24px;
-
-    @media @max-t-mobile {
-      max-height: 230px;
-    }
-
-    button {
-      border: none;
-      background: rgba(255, 255, 255, 0.1) !important;
-      box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      width: 100%;
-      height: 48px;
-      text-align: left;
-      margin-bottom: 10px;
-
-      img {
-        height: 32px;
-        width: 32px;
-        border-radius: 50%;
-      }
-    }
-  }
-  
-  .select-wallet::-webkit-scrollbar {
-    display: block !important; /* Chrome Safari */
-  }
-
-  .select-wallet-header {
-    padding: 0 15px 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-    .select-wallet-header-title {
-      font-size: 15px;
-      line-height: 19px;
-      color: #fff;
-    }
-
-    .select-wallet-header-close img{
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
-  }
-}
-
-.btncontainer.unconnected button{
-  background: @color-bg;
-}
-
-.btncontainer.connected button{
-  &:hover, &:focus {
-    background: @color-bg;
-  }
-}
-.btncontainer.unconnected button:hover,
-.btncontainer.unconnected button:focus
-{
-  background: transparent;
-}
-
-</style>
-
 <style lang="less" scoped>
-.wallet-info {
-  text-align: center;
-}
+.wallet {
+  display: flex;
 
-.wallet-info .address {
-  border-radius: 7px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  font-size: 17px;
-}
+  .tier-container {
+    position: relative;
+    margin-right: 18px;
 
-.sonar-container {
-  .sonar-dashboard {
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid #fff;
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 14px;
-    line-height: 17px;
-    font-weight: 400;
-    color: #fff;
-    position: absolute;
-    right: 65px;
-    margin-top: 10px;
-    display: none;
-  }
-
-  .btncontainer.sonar {
-    margin-left:20px !important;
-    width: 50px;
-    height: 50px;
-
-    @media @max-t-mobile {
-      margin-left: 10px !important;
-      width: 46px;
-      height: 46px;
+    @media @max-sl-mobile {
+      display: none !important;
     }
 
-    &:hover ~ .sonar-dashboard {
-      display: block;
-    }
-
-    button {
+    .tier-profile {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+      padding: 2px;
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      margin-right: 4px;
 
-      img {
-        height: 26px;
+      .tier-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
       }
     }
-  }
 
-  @media @max-t-mobile {
-    display: none;
-  }
-}
-
-
-.tx-history-panel {
-  display: none;
-  h2 {
-    margin-top: 32px;
-    text-align: left;
-  }
-  .tx-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .extra-info {
-      font-size: 0.9em;
-      opacity: 0.8;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-
-      a {
-        font-size: 1.2em;
-      }
-
-      .icon {
+    .tier-info {
+      .tier-id {
+        color: @color-blue100;
         margin-right: 8px;
       }
     }
-    .extra-info.time {
-      flex-shrink: 0;
+
+    .tier-info-menu {
+      position: absolute;
+      top: 50px;
+      background: @gradient-color-primary;
+      background-origin: border-box;
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      min-width: 188px;
+      z-index: 999;
+
+      .collapse-item {
+        padding: 8px 16px;
+        border-bottom: 1px solid #c4c4c420;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+
+        a {
+          color: #fff;
+        }
+
+        .tier-progress {
+          position: relative;
+
+          .tier-progress-label {
+            margin-bottom: 4px;
+          }
+
+          .tier-progress-info-container {
+            position: relative;
+            padding: 0 4px;
+
+            .tier-progress-end {
+              width: 2px;
+              height: 14px;
+              background: @color-petrol500;
+              box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+              margin: -20px 0 4px 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .wallet-list {
+    position: absolute;
+    right: 64px;
+    margin-top: 70px;
+    z-index: 999;
+    background: @color-blue700;
+    border: 3px solid @color-blue500;
+    box-shadow: 0 40px 70px rgba(0, 0, 0, 0.3);
+    border-radius: 18px;
+    padding: 18px;
+    width: 283px;
+
+    @media @max-lg-tablet {
+      right: 32px;
+    }
+
+    @media @max-sl-mobile {
+      right: 20px;
+    }
+
+    .select-wallet {
+      max-height: 460px;
+      overflow-y: scroll;
+      padding: 0 6px;
+
+      @media @max-lg-tablet {
+        max-height: 378px;
+      }
+
+      .select-wallet-btn {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        border: none;
+        background: transparent;
+        border-radius: 16px;
+        padding: 8px 16px;
+        width: 100%;
+        height: 45px;
+        text-align: left;
+        margin-bottom: 18px;
+
+        img {
+          height: 30px;
+          width: 30px;
+          border-radius: 50%;
+          margin-right: 18px;
+        }
+
+        &:hover {
+          background: @color-blue500;
+        }
+      }
+    }
+
+    .select-wallet::-webkit-scrollbar {
+      display: block !important; /* Chrome Safari */
+    }
+
+    .select-wallet-header {
+      padding: 18px 0;
+
+      .close-icon {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .wallet-info {
+      text-align: center;
+    }
+
+    .wallet-info .address {
+      border-radius: 7px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      font-size: 17px;
+    }
+  }
+
+  .wallet-btn {
+    display: inline-flex;
+    align-items: center;
+
+    .btncontainer {
+      background: @gradient-color04;
+      background-origin: border-box;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      margin: auto;
+      padding: 3px;
+      border-radius: 48px;
+      height: 45px;
+
+      button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: @color-blue800;
+        border-radius: 48px;
+        border: none;
+        height: 100%;
+        width: 100%;
+        color: white !important;
+        padding: 0 10px;
+      }
+
+      @media @max-md-tablet {
+        height: 32px;
+      }
+    }
+
+    .sonar-container {
+      .sonar-dashboard {
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid #fff;
+        border-radius: 6px;
+        padding: 5px 10px;
+        font-size: 14px;
+        line-height: 17px;
+        font-weight: 400;
+        color: #fff;
+        position: absolute;
+        right: 32px;
+        margin-top: 10px;
+        display: none;
+      }
+
+      .btncontainer.sonar {
+        margin-left: 20px !important;
+        width: 50px;
+        height: 50px;
+
+        @media @max-lg-tablet {
+          margin-left: 10px !important;
+          width: 46px;
+          height: 46px;
+        }
+
+        &:hover ~ .sonar-dashboard {
+          display: block;
+        }
+
+        button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          img {
+            height: 26px;
+          }
+        }
+      }
+
+      @media @max-lg-tablet {
+        display: none;
+      }
+    }
+  }
+}
+</style>
+
+<style lang="less">
+.connect-modal {
+  .ant-modal-body {
+    text-align: center;
+
+    .select-wallet {
+      button {
+        border: none;
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+        width: 100%;
+        height: 48px;
+        text-align: left;
+        margin-bottom: 10px;
+
+        img {
+          height: 32px;
+          width: 32px;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .wallet-info {
+      margin-top: 32px;
+
+      .btn-gradient {
+        background: @gradient-color01;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 38px;
+        padding: 10px 18px;
+        margin: 18px 0;
+        height: auto;
+        border: none;
+      }
+    }
+  }
+}
+
+.wallet {
+  // ant progress
+  .ant-progress {
+    background: transparent !important;
+    width: 196px;
+
+    .ant-progress-outer {
+      display: flex;
+      margin: 0;
+      padding: 4px;
+      box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
+      border-radius: 50px;
+      height: 22px;
+      background: @color-blue800;
+
+      .ant-progress-inner {
+        background: transparent;
+
+        .ant-progress-bg {
+          background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+          box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+          border-radius: 50px 0 0 50px !important;
+        }
+      }
+    }
+
+    .ant-progress-text {
+      font-size: 11px;
+      line-height: 16px;
+      font-weight: 400;
+      color: #fff;
+      float: right;
+      margin-top: 4px;
     }
   }
 }

@@ -24,7 +24,10 @@ export const state = () => ({
   address: '',
 
   tokenAccounts: {},
-  auxiliaryTokenAccounts: [] as Array<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }>
+  auxiliaryTokenAccounts: [] as Array<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }>,
+
+  xCRPAmount: 0,
+  tiers: 0,
 })
 
 export const getters = getterTree(state, {})
@@ -37,6 +40,11 @@ export const mutations = mutationTree(state, {
   setConnected(state, address: string) {
     state.connected = true
     state.address = address
+  },
+
+  setStakingTiers(state, data:any) {
+    state.xCRPAmount = data.xCRP;
+    state.tiers = data.tiers;
   },
 
   setDisconnected(state) {

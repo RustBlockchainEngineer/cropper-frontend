@@ -61,6 +61,13 @@ export const actions = actionTree(
           prices[value['symbol']] = value['price']
         }
       );
+
+
+
+      const stake = await fetch('https://api.cropper.finance/staking/').then((res) => res.json());
+
+      prices['CRP'] = stake['price']
+
       //for hongbo's test
       if(DEVNET_MODE){
         prices["CRP"]=0.32

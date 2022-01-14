@@ -1,11 +1,34 @@
 <template>
   <div class="coin-select">
-    <div class="label fs-container">
-      <span>{{ label }}</span>
-      <span v-if="balance && !balance.wei.isNaN()"> Balance: {{ balance.fixed() }} </span>
+    <div class="coin-title">
+      <label class="font-xsmall weight-semi">{{ label }}</label>
     </div>
     <div class="coin-input">
-      <div class="main-input fs-container">
+      <div class="fcsb-container">
+        <div class="fcc-container">
+          <button class="select-button fcsb-container" @click="$emit('onSelect')">
+            <div v-if="coinName" class="coin-group fcc-container">
+              <CoinIcon :mint-address="mintAddress" />
+              <span class="font-body-medium weight-bold">{{ coinName }}</span>
+            </div>
+            <span v-else>Select a token</span>
+            <img class="collapse-arrow" v-if="showArrow" src="@/assets/icons/arrow-down-white.svg" />
+          </button>
+          <button
+            v-if="!disabled && !showHalf && balance"
+            class="input-button font-xsmall weight-bold fcc-container"
+            @click="inputBalanceByPercent(1)"
+          >
+            Max
+          </button>
+          <button
+            v-if="!disabled && showHalf && balance"
+            class="input-button font-xsmall weight-bold fcc-container"
+            @click="inputBalanceByPercent(0.5)"
+          >
+            Half
+          </button>
+        </div>
         <input
           ref="input"
           :value="value"
@@ -22,66 +45,33 @@
           @input="$emit('onInput', $event.target.value)"
           @focus="$emit('onFocus')"
         />
-        <div class="rangeGroup">
-          <button v-if="!disabled && balance" class="input-button" @click="inputBalanceByPercent(1)"> 
-            <!-- v-if="!disabled && showHalf && balance" -->
-            max.
-          </button>
-          <button v-if="!disabled && balance" class="input-button" @click="inputBalanceByPercent(0.5)">half</button>
-          <!-- v-if="!disabled && balance" -->
-        </div>
-        <button class="select-button fc-container" @click="$emit('onSelect')">
-          <div v-if="coinName" class="fc-container">
-            <CoinIcon :mint-address="mintAddress" />
-            <span>{{ coinName }}</span>
-          </div>
-          <span v-else>Select a token</span>
-          <Icon v-if="showArrow" type="down" />
-        </button>
       </div>
-      <!-- <input // Maybe it will use soon or later
-        v-if="!disabled && balance"
-        ref="range"
-        :value="value"
-        class="input-range"
-        type="range"
-        min="0"
-        :max="balance ? balance.toEther() : ''"
-        step="any"
-        @change="$emit('onInput', $event.target.value)"
-        @mousedown="focusInput()"
-      />
-      <div v-if="!disabled && balance" class="shortcut-btns">
-        <button class="input-button" @click="inputBalanceByPercent(0)">0</button>
-        <button class="input-button" @click="inputBalanceByPercent(0.25)">25%</button>
-        <button class="input-button" @click="inputBalanceByPercent(0.5)">50%</button>
-        <button class="input-button" @click="inputBalanceByPercent(0.75)">75%</button>
-        <button class="input-button" @click="inputBalanceByPercent(1)">MAX</button>
-      </div> -->
+      <div v-if="balance && !balance.wei.isNaN()" class="label fcsb-container font-xsmall weight-semi">
+        <span> Balance: {{ balance.fixed() }} </span>
+        <span> ~${{ balance.fixed() }} </span>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { Icon } from 'ant-design-vue'
-
 import { lt } from '@/utils/safe-math'
 
 export default Vue.extend({
-  components: {
-    Icon
+  data() {
+    return {
+      showHalf: false as boolean
+    }
   },
-
   model: {
     prop: 'value',
     event: 'onInput'
   },
-
   props: {
     label: {
       type: String,
-      default: 'From'
+      default: ''
     },
     coinName: {
       type: String,
@@ -107,10 +97,6 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
-    showHalf: {
-      type: Boolean,
-      default: false
-    },
     showArrow: {
       type: Boolean,
       default: false
@@ -127,6 +113,8 @@ export default Vue.extend({
       input.focus()
     },
     inputBalanceByPercent(percent: number) {
+      this.showHalf = !this.showHalf
+
       // error balance
       if (!this.balance || this.balance.wei.isNaN()) return
 
@@ -144,58 +132,19 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-
 .coin-select {
-  border-radius: 13px;
+  .coin-title {
+    margin-bottom: 8px;
 
-  .label {
-    font-size: 18px;
-    line-height: 14px;
-    color: rgba(255,255,255,0.5);
-    padding-left: 10px;
-
-    @media @max-b-mobile {
-      font-size: 12px !important;
-      line-height: 15px;
+    label {
+      color: rgba(255, 255, 255, 0.5);
     }
-  }
-
-  input {
-    width: 0;
-    padding: 0;
-    border: none;
-    background-color: transparent;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 24px;
-    flex: 1 1 auto;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    @media @max-b-mobile {
-      font-size: 15px;
-      line-height: 18px;
-    }
-
-    &:active,
-    &:focus,
-    &:hover {
-      outline: 0;
-    }
-  }
-
-  input[disabled] {
-    cursor: not-allowed;
   }
 
   .coin-input {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    margin: 10px 0 12px 0;
-    padding: 0.75rem 0.75rem 0.75rem 1rem;
+    background: rgba(226, 227, 236, 0.1);
+    border-radius: 18px;
+    padding: 12px;
 
     button {
       border: none;
@@ -218,80 +167,85 @@ export default Vue.extend({
       }
     }
 
-    .rangeGroup {
-      display: block;
-      width: min-content;
-    }
-
-    .input-range {
-      width: 100%;
-      // &::-webkit-slider-runnable-track {
-      //   background: #ddd;
-      // }
-      // &::-webkit-slider-thumb {
-      //   background: dodgerblue;
-      //   width: 4px;
-      //   height: 4px;
-      //   border-radius: 50%;
-      // }
-    }
     .input-button {
-      height: 20px;
-      width: 42px;
-      margin: 2px;
-      padding: 0 4px;
-      font-size: 0.9em;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-sizing: border-box;
-      border-radius: 6px;
-      color: rgba(255, 255, 255, 0.6) !important;
-      align-items: center;
-      justify-content: center;
-      display: flex;
+      height: 32px;
+      width: 32px;
+      border: 1px solid #6574d6;
+      border-radius: 4px;
+      color: #ccd1f1;
     }
-    
+
     .select-button {
-      padding: 0.5rem;
-      line-height: 24px;
-      margin-left: 2px;
-      background: @color-bg;
-      border-radius: 8px;
-      width: 140px;
       position: relative;
+      padding: 0 10px;
+      background: @color-blue800;
+      border-radius: 8px;
+      width: auto;
+      min-width: 100px;
+      height: 32px;
+      margin-right: 10px;
 
-      .anticon {
-        margin-left: 7px;
-      }
-
-      img {
+      .coin-group img {
+        width: 14px;
+        height: 14px;
         margin-right: 5px;
-        height: 24px;
-        width: 24px;
+      }
+
+      .collapse-arrow {
+        // position: absolute;
+        margin-left: 4px;
+        width: 14px;
+        height: 8px;
       }
     }
-    
+
     .select-button::before {
-      content:"";
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      bottom:0;
-      border-radius:8px; 
-      padding:2px;
-      background: linear-gradient(97.63deg, #280C86 -29.92%, #22B5B6 103.89%);
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      padding: 2px;
+      background: @gradient-color04;
       background-origin: border-box;
-      -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: destination-out; 
-      mask-composite: exclude; 
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
     }
 
-    .shortcut-btns {
-      display: flex;
-      justify-content: space-between;
+    input {
+      width: 0;
+      padding: 0;
+      border: none;
+      background-color: transparent;
+      flex: 1 1 auto;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
+      font-weight: 600;
+      font-size: 25px;
+      line-height: 35px;
+      letter-spacing: 0.25px;
+
+      &:active,
+      &:focus,
+      &:hover {
+        outline: 0;
+      }
+    }
+
+    input[disabled] {
+      cursor: not-allowed;
+    }
+
+    .label {
+      margin-top: 8px;
+      color: @color-blue200;
     }
   }
 }

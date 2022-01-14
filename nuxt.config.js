@@ -85,27 +85,27 @@ export default {
       display: "standalone",
       icons: [
         {
-          src: "/favicon.ico",
+          src: "/webapp.png",
           sizes: "64x64 32x32 24x24 16x16",
-          type: "image/x-icon"
+          type: "image/png"
         },
         {
-          src: "/apple-icon-72x72.png",
+          src: "/webapp.png",
           sizes: "72x72",
           type: "image/png"
         },
         {
-          src: "/apple-icon-152x152.png",
+          src: "/webapp.png",
           sizes: "152x152",
           type: "image/png"
         },
         {
-          src: "/logo192.png",
+          src: "/webapp.png",
           type: "image/png",
           sizes: "192x192"
         },
         {
-          src: "/logo512.png",
+          src: "/webapp.png",
           type: "image/png",
           sizes: "512x512"
         }

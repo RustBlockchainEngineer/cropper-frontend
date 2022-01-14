@@ -1,11 +1,11 @@
 <template>
-  <Layout>
+  <Layout :class="pageName === 'fertilizer-project' ? 'fertilizer-project' : ''">
     <Head />
     <Setting />
 
     <Content>
       <!--
-      <div v-if="['swap', 'liquidity', 'farms'].includes(pageName) && showFlag" class="fc-container">
+      <div v-if="['swap', 'liquidity', 'farms'].includes(pageName) && showFlag" class="fcc-container">
         <Alert type="warning" message="IMPORTANT" show-icon>
           <div slot="description">
             You have liquidity in a legacy pool. RAY-SOL, RAY-SRM, RAY-USDC and RAY-ETH pools are upgrading from the V3
@@ -95,28 +95,3 @@ export default class Default extends Vue {
   }
 }
 </script>
-
-<style lang="less">
-.ant-layout-content {
-  min-height: calc(100vh - 64px - 82px);
-}
-
-// footer {
-//   width: 100%;
-//   height: 100px;
-//   position: absolute;
-//   bottom: 0;
-//   left: 0;
-//   background: #333;
-// }
-.ant-alert-warning {
-  width: 500px;
-  margin-top: 30px;
-  background-color: transparent;
-  border: 1px solid #85858d;
-
-  .anticon-close {
-    color: #fff;
-  }
-}
-</style>

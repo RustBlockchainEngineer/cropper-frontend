@@ -193,7 +193,10 @@ export function getLpListByTokenMintAddresses(
 }
 
 export function canWrap(fromMintAddress: string, toMintAddress: string): boolean {
-  return fromMintAddress === TOKENS.WUSDT.mintAddress && toMintAddress === TOKENS.USDT.mintAddress
+  if(TOKENS.WUSDT && TOKENS.WUSDT.mintAddress){
+    return fromMintAddress === TOKENS.WUSDT.mintAddress && toMintAddress === TOKENS.USDT.mintAddress
+  }
+  return false;
 }
 
 

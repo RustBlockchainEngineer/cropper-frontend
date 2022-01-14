@@ -1,11 +1,33 @@
 <template>
-  <Modal class="nofooter" v-if="!showSelectSourceFlag" title="Select a token" :visible="true" @cancel="$emit('onClose')">
-    <div class="select-token">
-      <input ref="userInput" v-model="keyword" placeholder="Search name or mint address" />
-      <div v-if="!addUserCoin" class="sort fs-container">
-        <span class="title">Token name</span>
-        <Icon :type="desc ? 'arrow-up' : 'arrow-down'" @click="setDesc" />
+  <Modal
+    v-if="!showSelectSourceFlag"
+    :closable="false"
+    :visible="true"
+    :footer="null"
+    :width="380"
+    :mask-closable="true"
+    title="Select a token"
+    @cancel="$emit('onClose')"
+    class="coin-select-modal"
+  >
+    <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onClose')" />
+    <div class="select-token-search">
+      <input ref="userInput" v-model="keyword" class="font-medium" placeholder="Search name or paste address" />
+      <div class="common-bases">
+        <label class="font-medium">Common bases</label>
+        <Row class="common-bases-group" :gutter="[8, 8]">
+          <Col v-for="common in commonBases" :key="common.symbol" @click="selectCommonToken(common)" :span="6">
+            <div class="common-select-container icon-cursor">
+              <div class="common-box fcc-container">
+                <CoinIcon class="coin-icon" :mint-address="common.mintAddress" />
+                {{ common.symbol }}
+              </div>
+            </div>
+          </Col>
+        </Row>
       </div>
+    </div>
+    <div class="select-token">
       <div v-if="!addUserCoin" class="token-list">
         <template v-for="token of filteredTokenList()">
           <div
@@ -17,10 +39,10 @@
             @mouseleave="tokenMove(token)"
           >
             <CoinIcon :mint-address="token.mintAddress" />
-            <div>
-              <span>{{ token.symbol }}</span>
+            <div class="token-group">
+              <span class="token-symbol font-small weight-semi">{{ token.symbol }}</span>
+              <span class="token-name font-xsmall">{{ token.name }}</span>
             </div>
-            <span></span>
             <div class="balance">
               <div v-if="wallet.loading">
                 <Icon type="loading" />
@@ -33,7 +55,7 @@
           </div>
         </template>
       </div>
-      <div v-if="addUserCoin" class="sort fs-container">
+      <div v-if="addUserCoin" class="sort fcsb-container">
         <span class="title">Create a name for this token</span>
         <Icon :type="desc ? 'arrow-up' : 'arrow-down'" @click="setDesc" />
       </div>
@@ -64,14 +86,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Modal, Icon } from 'ant-design-vue'
+import { Modal, Icon, Row, Col } from 'ant-design-vue'
 
 import { TOKENS, TokenInfo, NATIVE_SOL, TOKENS_TAGS } from '@/utils/tokens'
 import { cloneDeep } from 'lodash-es'
 import { PublicKey } from '@solana/web3.js'
 // import { getFilteredProgramAccounts } from '@/utils/web3'
 import { MINT_LAYOUT } from '@/utils/layouts'
-import { ALLOWED_TOKENB_LIST, LOCKED_TOKENA_LIST} from '@/utils/farm'
+import { ALLOWED_TOKENB_LIST, LOCKED_TOKENA_LIST } from '@/utils/farm'
 
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
@@ -79,7 +101,9 @@ Vue.use(Modal)
 export default Vue.extend({
   components: {
     Modal,
-    Icon
+    Icon,
+    Row,
+    Col
   },
   props: {
     farmTokenASelect: {
@@ -103,12 +127,19 @@ export default Vue.extend({
       desc: false,
       addUserCoin: false,
       addUserCoinToken: null as any | null,
-
       userInputCoinName: undefined,
       showSelectSourceFlag: false,
       showUserButton: {} as { [key: string]: boolean },
-      
-      
+      commonBases: [
+        {
+          mintAddress: 'DubwWZNWiNGMMeeQHPnMATNj77YZPZSAz2WVR5WjLJqz',
+          symbol: 'CRP'
+        },
+        {
+          mintAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          symbol: 'USDC'
+        }
+      ] as any
     }
   },
 
@@ -151,32 +182,68 @@ export default Vue.extend({
       // @ts-ignore
       this.$refs.userInput.focus()
     })
+    this.updateCommonBases()
   },
 
   methods: {
-    filteredTokenList(){
-      let filteredList:TokenInfo[] = [];
-      if(this.farmTokenASelect && !this.allowedAllFarm){
-        filteredList = this.tokenList.filter((token)=>{
-          if(LOCKED_TOKENA_LIST.includes(token.symbol)){
-            return false;
-          }
-          else{
-            return true;
-          }
+    async updateCommonBases() {
+      let cur_date = new Date().getTime()
+      let need_to_update = false
+
+      if (window.localStorage.common_last_updated) {
+        const last_updated = parseInt(window.localStorage.common_last_updated)
+        if (cur_date - last_updated >= 300000) {
+          need_to_update = true
+        }
+      } else {
+        need_to_update = true
+      }
+
+      if (need_to_update) {
+        console.log('update')
+        try {
+          let responseData = await fetch('https://api.cropper.finance/common/').then((res) => res.json())
+
+          window.localStorage.common = JSON.stringify(responseData)
+          window.localStorage.common_last_updated = new Date().getTime() as number
+          ;(responseData as any).forEach((element: any) => {
+            this.commonBases.push(element)
+          })
+        } catch {
+          // dummy data
+        } finally {
+        }
+      } else {
+        ;(JSON.parse(window.localStorage.common) as any).forEach((element: any) => {
+          this.commonBases.push(element)
         })
       }
-      else if(this.farmTokenBSelect){
-        filteredList = this.tokenList.filter((token)=>{
-          if(ALLOWED_TOKENB_LIST.includes(token.symbol)){
-            return true;
+    },
+    selectCommonToken(common: any) {
+      let selectedToken = this.tokenList.find((token) => token.symbol === common.symbol)
+      console.log(selectedToken)
+      this.$emit('onSelect', selectedToken)
+    },
+    filteredTokenList() {
+      let filteredList: TokenInfo[] = []
+      if (this.farmTokenASelect && !this.allowedAllFarm) {
+        filteredList = this.tokenList.filter((token) => {
+          if (LOCKED_TOKENA_LIST.includes(token.symbol)) {
+            return false
+          } else {
+            return true
           }
         })
+      } else if (this.farmTokenBSelect) {
+        filteredList = this.tokenList.filter((token) => {
+          if (ALLOWED_TOKENB_LIST.includes(token.symbol)) {
+            return true
+          }
+        })
+      } else {
+        filteredList = this.tokenList
       }
-      else {
-        filteredList = this.tokenList;
-      }
-      return filteredList;
+      return filteredList
     },
     tokenHover(token: any) {
       this.$set(this.showUserButton, token.symbol + token.mintAddress, true)
@@ -422,70 +489,89 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
-.source-manager {
-  text-align: center;
-  background: transparent;
-  border: none;
-  width: 100%;
-}
-.source-manager:hover {
-  color: #5ac4be;
+.select-token-header {
+  margin-bottom: 10px;
 }
 
-.nodisplay{
-  display:none !important
-}
-
-.select-token {
-  display: grid;
-  grid-auto-rows: auto;
-  row-gap: 14px;
-
+.select-token-search {
   input {
-    border: 4px solid #16164A;
-    border-radius: 14px;
-    padding: 16px;
+    border: 1px solid @color-blue300;
+    border-radius: 8px;
+    padding: 8px 18px;
     background-color: transparent;
-    font-size: 18px;
-    color: @text-color;
+    color: #ccd1f1;
+    width: 100%;
 
     &:active,
     &:focus,
     &:hover {
       outline: 0;
     }
-  }
 
-  .sort {
-    .title {
-      font-size: 14px;
-      line-height: 36px;
-      font-weight: 400;
-    }
-
-    @media @max-b-mobile {
-      display: none;
+    &::placeholder {
+      color: #ccd1f1;
     }
   }
+
+  .common-bases {
+    margin-top: 8px;
+    margin-bottom: 18px;
+
+    .common-bases-group {
+      margin-top: 8px !important;
+
+      .common-select-container {
+        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+        border-radius: 8px;
+        padding: 2px !important;
+
+        .common-box {
+          background: @color-blue800;
+          border-radius: 8px;
+          padding: 8px;
+
+          .coin-icon {
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.select-token {
+  display: grid;
+  grid-auto-rows: auto;
+  row-gap: 14px;
+  background: @color-blue800;
+  margin: 0 -18px;
 
   .token-list {
     max-height: 50vh;
-    padding-right: 10px;
     overflow: auto;
     direction: ltr;
     will-change: transform;
 
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
     .token-info {
       display: grid;
       justify-content: space-between;
       align-items: center;
-      height: 56px;
-      padding: 4px 0;
-      gap: 16px;
+      padding: 12.5px 25px;
+      gap: 9px;
       grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
+      border-bottom: 1px solid #0f1757;
       cursor: pointer;
-      opacity: 1;
+
+      &:last-child {
+        border-bottom: none;
+      }
 
       img {
         border-radius: 50%;
@@ -493,6 +579,16 @@ export default Vue.extend({
         width: 24px;
       }
 
+      .token-group {
+        .token-symbol {
+          display: block;
+          letter-spacing: 0.5px;
+        }
+
+        .token-name {
+          color: #ccd1f1;
+        }
+      }
       .balance {
         justify-self: flex-end;
         width: fit-content;

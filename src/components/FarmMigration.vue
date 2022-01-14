@@ -2,10 +2,10 @@
   <Modal :title="title" :visible="true" :footer="null" :width="400" centered @cancel="$emit('onCancel')">
     <div class="card">
       <div class="card-body">
-      <div v-for="migrationFarm in migrationFarms" :key="migrationFarm.oldFarmId">
-        {{migrationFarm.oldFarmId}} -> {{migrationFarm.newFarmId}} {{migrationFarm.depositBalance}}
-        <Button ghost @click="$emit('onMigrate', migrationFarm)"> Migrate </Button>
-      </div>
+        <div v-for="migrationFarm in migrationFarms" :key="migrationFarm.oldFarmId">
+          {{ migrationFarm.oldFarmId }} -> {{ migrationFarm.newFarmId }} {{ migrationFarm.depositBalance }}
+          <Button ghost @click="$emit('onMigrate', migrationFarm)"> Migrate </Button>
+        </div>
       </div>
     </div>
   </Modal>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Modal,  Button,/*Icon*/ } from 'ant-design-vue'
+import { Modal, Button /*Icon*/ } from 'ant-design-vue'
 import { mapState } from 'vuex'
 import { gt } from '@/utils/safe-math'
 
@@ -31,36 +31,34 @@ export default Vue.extend({
       type: String,
       default: ''
     },
-    migrationFarms:{
+    migrationFarms: {
       type: Array,
       required: true
-    },
+    }
   },
   data() {
     return {
-        fixedCoin: '',
+      fixedCoin: ''
     }
   },
-    computed: {
-        ...mapState([ 'liquidity','setting'])
-    },
+  computed: {
+    ...mapState(['liquidity', 'setting'])
+  },
 
   methods: {
-    gt,
-    
+    gt
   }
 })
 </script>
 
 <style lang="less" scoped>
-@import '../styles/variables';
 .info-guide {
   font-size: 15px;
   line-height: 18px;
   display: flex;
   align-items: flex-start;
   margin: 10px 0;
-  
+
   em b {
     font-size: 15px;
     line-height: 18px;
@@ -70,5 +68,4 @@ export default Vue.extend({
     margin-right: 10px;
   }
 }
-
 </style>
