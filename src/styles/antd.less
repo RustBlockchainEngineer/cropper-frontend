@@ -9,34 +9,44 @@
   background-size: 100% auto !important;
   margin-top: -21px;
 
+  &.fertilizer-project {
+    background: @gradient-color-bg, @color-blue800 !important;
+    background-blend-mode: normal;
+  }
+
   @media @max-sl-mobile {
     background-image: none !important;
   }
-}
 
-.ant-layout-header {
-  position: fixed;
-  width: 100%;
-  background: @color-blue800 !important;
-  top: 0;
-  z-index: 999;
-  height: 80px !important;
-}
-
-.ant-layout-footer {
-  background: transparent !important;
-}
-
-.ant-layout-header,
-.ant-layout-footer {
-  padding: 10px 64px !important;
-
-  @media @max-lg-tablet {
-    padding: 10px 32px !important;
+  .ant-layout-content {
+    min-height: calc(100vh - 64px - 82px);
+    margin-top: 70px;
   }
 
-  @media @max-sl-mobile {
-    padding: 24px 20px !important;
+  .ant-layout-header {
+    position: fixed;
+    width: 100%;
+    background: @color-blue800 !important;
+    top: 0;
+    z-index: 999;
+    height: 80px !important;
+  }
+
+  .ant-layout-footer {
+    background: transparent !important;
+  }
+
+  .ant-layout-header,
+  .ant-layout-footer {
+    padding: 10px 64px !important;
+
+    @media @max-lg-tablet {
+      padding: 10px 32px !important;
+    }
+
+    @media @max-sl-mobile {
+      padding: 24px 20px !important;
+    }
   }
 }
 
@@ -408,5 +418,17 @@ button.ant-btn-background-ghost[disabled] {
         }
       }
     }
+  }
+}
+
+// ant alert
+.ant-alert-warning {
+  width: 500px;
+  margin-top: 30px;
+  background-color: transparent;
+  border: 1px solid #85858d;
+
+  .anticon-close {
+    color: #fff;
   }
 }

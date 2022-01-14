@@ -3758,17 +3758,6 @@ export default Vue.extend({
     display: none;
   }
 
-  .ant-alert-warning {
-    width: 500px;
-    margin-top: 30px;
-    background-color: transparent;
-    border: 1px solid #85858d;
-
-    .anticon-close {
-      color: #fff;
-    }
-  }
-
   .ant-switch {
     margin: 0 8px;
   }
