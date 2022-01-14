@@ -1615,6 +1615,10 @@ export default class CreateFarm extends Vue {
   }
 }
 
+.btn-container {
+  background: transparent;
+}
+
 .create-btn {
   display: flex;
   align-items: center;
