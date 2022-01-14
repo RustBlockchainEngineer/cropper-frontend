@@ -1,5 +1,16 @@
 <template>
-  <Modal :title="title" :visible="true" :footer="null" :width="400" centered @cancel="$emit('onCancel')">
+  <Modal
+    :title="title"
+    :visible="true"
+    :footer="null"
+    :width="400"
+    :closable="false"
+    :mask-closable="true"
+    centered
+    @cancel="$emit('onCancel')"
+  >
+    <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
+
     <div class="liquidity-box">
       <div class="fcsb-container">
         <span></span>
@@ -7,10 +18,9 @@
       </div>
       <div class="fcsb-container">
         <div class="fcc-container">
-
           <div class="coins-container">
             <div class="coin-group font-small weight-semi">
-            <CoinIcon :mint-address="coin ? coin.mintAddress : ''" />
+              <CoinIcon :mint-address="coin ? coin.mintAddress : ''" />
               {{ coin.symbol }}
             </div>
           </div>
@@ -38,8 +48,7 @@
       </div>
     </div>
 
-    <div>{{text}}</div>
-
+    <div>{{ text }}</div>
 
     <div class="btn-group fcsb-container">
       <div class="btn-container">
@@ -56,7 +65,6 @@
         </Button>
       </div>
     </div>
-
   </Modal>
 </template>
 
@@ -66,7 +74,7 @@ import { Modal, Button } from 'ant-design-vue'
 
 import { inputRegex, escapeRegExp } from '@/utils/regex'
 import { lt, lte, isNullOrZero } from '@/utils/safe-math'
-import {getTotalSupply} from '@/store/liquidity'
+import { getTotalSupply } from '@/store/liquidity'
 const MIN_LP_SUPPLY = 0.001
 // fix: Failed to resolve directive: ant-portal
 Vue.use(Modal)
@@ -116,40 +124,30 @@ export default Vue.extend({
     lt,
     lte,
     isNullOrZero,
-    validateTotalSupply()
-    {
-      if(this.title == "Remove Liquidity")
-      {
+    validateTotalSupply() {
+      if (this.title == 'Remove Liquidity') {
         const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
-        if(lp_info)
-        {
-            const totalSupply = lp_info.lp.totalSupply.fixed()
-            const res = parseFloat(this.value) <= (parseFloat(totalSupply)  - MIN_LP_SUPPLY)//
-            return res
-        }
-        else
-        {
+        if (lp_info) {
+          const totalSupply = lp_info.lp.totalSupply.fixed()
+          const res = parseFloat(this.value) <= parseFloat(totalSupply) - MIN_LP_SUPPLY //
+          return res
+        } else {
           return false
         }
       }
       return true
     },
 
-    setMax() 
-    {
-
-      if(this.title == "Remove Liquidity")
-      {
+    setMax() {
+      if (this.title == 'Remove Liquidity') {
         let self = this
 
         const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
-        if(lp_info){
+        if (lp_info) {
           const totalSupply = lp_info.lp.totalSupply.fixed()
-          self.value = "" + Math.min(parseFloat(self.coin.balance.fixed()), parseFloat(totalSupply)  - MIN_LP_SUPPLY)
+          self.value = '' + Math.min(parseFloat(self.coin.balance.fixed()), parseFloat(totalSupply) - MIN_LP_SUPPLY)
         }
-      }
-      else
-      {
+      } else {
         this.value = this.coin.balance.fixed()
       }
     }
