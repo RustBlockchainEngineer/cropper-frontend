@@ -1098,10 +1098,6 @@ export default Vue.extend({
           picture: '/fertilizer/banner/winerz.png',
           title: 'Winerz',
           short_desc: 'Experience a new way of playing by betting on your victory.',
-          hard_cap: '250K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_start_date: 1643500800000
         },
         {
           status: 'Upcoming',
@@ -1109,10 +1105,6 @@ export default Vue.extend({
           picture: '/fertilizer/banner/secretum.png',
           title: 'Secretum Protocol',
           short_desc: 'Blockchain-based messaging app where every conversation is private by design.',
-          hard_cap: '200K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_start_date: 1643500800000
         },
         {
           status: 'Upcoming',
@@ -1120,10 +1112,6 @@ export default Vue.extend({
           picture: '/fertilizer/banner/zebec.png',
           title: 'Zebec Protocol',
           short_desc: 'Continuous Settlement Protocol.',
-          hard_cap: '300K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_start_date: 1643500800000
         }
       ],
       currentTimestamp: 0
@@ -1443,6 +1431,10 @@ export default Vue.extend({
   border-radius: 48px;
   padding: 3px;
   height: auto;
+
+  &:hover {
+    background: @gradient-color02;
+  }
 }
 
 .btn-transparent {
