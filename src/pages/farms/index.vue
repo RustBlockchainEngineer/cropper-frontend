@@ -680,7 +680,7 @@
                           Withdraw
                         </a>
                       </div>
-                      <div v-if="farm.farmInfo.poolId === removeRewardsFarmAddress" class="btn-container btn-container-outline">
+                      <div v-if="farm.farmInfo.poolId === removeRewardsFarmAddress" class="option-collapse-item text-center font-medium weight-semi icon-cursor">
                         <Button
                           size="large"
                           ghost
