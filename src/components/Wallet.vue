@@ -1076,6 +1076,10 @@ export default class Wallet extends Vue {
         margin: 18px 0;
         height: auto;
         border: none;
+
+        &:hover {
+          background: @gradient-color02;
+        }
       }
     }
   }

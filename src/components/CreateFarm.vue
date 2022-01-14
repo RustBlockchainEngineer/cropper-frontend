@@ -74,8 +74,8 @@
           <Col :span="15" class="notstep" :class="{ 'bordered-left': wallet.connected }">
             <Row v-if="current === 0 && !wallet.connected">
               <Col :span="24" class="step-item">
-                <div v-if="!wallet.connected">
-                  <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                <div v-if="!wallet.connected" class="btn-container">
+                  <Button class="btn-transparent font-medium weight-semi" @click="$accessor.wallet.openModal">
                     Connect wallet
                   </Button>
                 </div>
@@ -153,7 +153,7 @@
               <Col v-if="ammType === 1" :span="24" class="step-item">
                 <div class="btn-container">
                   <Button
-                    class="create-btn font-medium weight-semi"
+                    class="btn-transparent font-medium weight-semi"
                     :disabled="!wallet.connected"
                     @click="useExistingAMMID()"
                   >
@@ -163,7 +163,7 @@
               </Col>
               <Col v-if="ammType === 2" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button class="create-btn font-medium weight-semi" :disabled="true" @click="createNewAMMID()">
+                  <Button class="btn-transparent font-medium weight-semi" :disabled="true" @click="createNewAMMID()">
                     Next
                   </Button>
                 </div>
@@ -243,14 +243,14 @@
                 <div class="btn-container">
                   <Button
                     v-if="!wallet.connected"
-                    class="create-btn font-medium weight-semi"
+                    class="btn-transparent font-medium weight-semi"
                     @click="$accessor.wallet.openModal"
                   >
                     Connect wallet
                   </Button>
                   <Button
                     v-else-if="farm_created"
-                    class="create-btn font-medium weight-semi"
+                    class="btn-transparent font-medium weight-semi"
                     :disabled="!wallet.connected"
                     @click="addRewardToFarm"
                   >
@@ -266,7 +266,7 @@
 
                   <Button
                     v-else
-                    class="create-btn font-medium weight-semi"
+                    class="btn-transparent font-medium weight-semi"
                     :disabled="!wallet.connected"
                     @click="confirmFarmInfo"
                   >
@@ -303,14 +303,14 @@
                 <div class="btn-container">
                   <Button
                     v-if="!wallet.connected"
-                    class="create-btn font-medium weight-semi"
+                    class="btn-transparent font-medium weight-semi"
                     @click="$accessor.wallet.openModal"
                   >
                     Connect wallet
                   </Button>
                   <Button
                     v-else
-                    class="create-btn font-medium weight-semi"
+                    class="btn-transparent font-medium weight-semi"
                     :disabled="!wallet.connected"
                     @click="gotoFarms"
                   >
@@ -1616,22 +1616,28 @@ export default class CreateFarm extends Vue {
 }
 
 .btn-container {
-  background: transparent;
-}
-
-.create-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
-  padding: 10px 32px;
-  border: 0;
-  height: 45px;
+  padding: 3px;
+  height: auto;
+  width: fit-content;
+}
+
+.btn-transparent {
+  background: transparent;
+  border-radius: 48px;
+  border: none;
+  height: 39px;
+  padding: 0 32px;
 
   @media @max-sl-mobile {
     width: 100%;
+  }
+
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background: transparent;
+    border: none;
   }
 }
 
@@ -1644,7 +1650,11 @@ export default class CreateFarm extends Vue {
   &:last-child {
     margin-right: 0;
   }
-
+  
+  &:hover {
+    background: @gradient-color02;
+  }
+  
   .link-btn {
     height: 100%;
     background: @color-blue700;

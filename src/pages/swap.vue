@@ -255,12 +255,12 @@
         </div> -->
 
         <div v-if="!wallet.connected" class="btn-container">
-          <Button class="font-large weight-bold" ghost @click="$accessor.wallet.openModal"> Connect wallet </Button>
+          <Button class="btn-transparent font-large weight-bold" ghost @click="$accessor.wallet.openModal"> Connect wallet </Button>
         </div>
 
         <div v-else-if="!(officialPool || (!officialPool && userCheckUnofficial))" class="btn-container">
           <Button
-            class="font-large weight-bold"
+            class="btn-transparent font-large weight-bold"
             ghost
             @click="
               () => {
@@ -276,7 +276,7 @@
 
         <div v-else class="btn-container">
           <Button
-            class="font-large weight-bold"
+            class="btn-transparent font-large weight-bold"
             :disabled="
               !fromCoin ||
               !fromCoinAmount ||
@@ -1852,6 +1852,10 @@ export default Vue.extend({
       width: 108px;
       height: 33px;
 
+      &:hover {
+        background: @gradient-color02;
+      }
+      
       @media @max-lg-tablet {
         margin: 10px auto auto auto;
         display: flex;
@@ -2026,17 +2030,23 @@ export default Vue.extend({
 
 // global stylesheet
 .btn-container {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 38px;
+  padding: 3px;
+  height: auto;
+}
+
+.btn-transparent {
   background: transparent;
-  
-  button {
-    background: @gradient-color01 !important;
-    background-origin: border-box !important;
+  border-radius: 38px;
+  border: none;
+  height: 44px;
+  width: 100%;
+
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background: transparent;
     border: none;
-    position: relative;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 38px;
-    width: 100%;
-    height: 50px;
   }
 }
 

@@ -74,8 +74,8 @@
           </Col>
 
           <Col :span="14" class="notstep" :class="{ 'bordered-left': wallet.connected }">
-            <div v-if="!wallet.connected">
-              <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+            <div v-if="!wallet.connected" class="btn-container">
+              <Button class="btn-transparent font-medium weight-semi" @click="$accessor.wallet.openModal">
                 Connect wallet
               </Button>
             </div>
@@ -106,7 +106,7 @@
               <div class="btn-container">
                 <Button
                   v-if="!wallet.connected"
-                  class="create-btn font-medium weight-semi"
+                  class="btn-transparent font-medium weight-semi"
                   @click="$accessor.wallet.openModal"
                 >
                   Connect wallet
@@ -114,7 +114,7 @@
 
                 <Button
                   v-else
-                  class="create-btn font-medium weight-semi"
+                  class="btn-transparent font-medium weight-semi"
                   :disabled="!wallet.connected || alreadyExists"
                   :loading="getMarketLoading"
                   @click="marketInputFlag ? getMarketMsg() : rewriteMarket()"
@@ -230,14 +230,14 @@
 
                 <div class="inner-content">
                   <div v-if="!wallet.connected" class="btn-container">
-                    <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                    <Button class="btn-transparent font-medium weight-semi" @click="$accessor.wallet.openModal">
                       Connect wallet
                     </Button>
                   </div>
 
                   <div v-else class="btn-container">
                     <Button
-                      class="create-btn font-medium weight-semi"
+                      class="btn-transparent font-medium weight-semi"
                       :loading="createAmmFlag"
                       :disabled="createAmmFlag || !(inputPrice !== null && isAmountValid)"
                       @click="createKey"
@@ -275,13 +275,13 @@
               <div class="btn-container">
                 <Button
                   v-if="!wallet.connected"
-                  class="create-btn font-medium weight-semi"
+                  class="btn-transparent font-medium weight-semi"
                   @click="$accessor.wallet.openModal"
                 >
                   Connect wallet
                 </Button>
                 <NuxtLink to="/pools/" v-else>
-                  <Button class="create-btn font-medium weight-semi">View pool</Button>
+                  <Button class="btn-transparent font-medium weight-semi">View pool</Button>
                 </NuxtLink>
               </div>
             </Row>
@@ -993,22 +993,29 @@ export default class CreatePool extends Vue {
 }
 
 .btn-container {
-  background: transparent;
-}
-
-.create-btn {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
-  padding: 10px 32px;
-  border: 0;
-  height: 45px;
+  padding: 3px;
+  height: auto;
+  width: fit-content;
+}
+
+.btn-transparent {
+  background: transparent;
+  border-radius: 48px;
+  border: none;
+  height: 39px;
+  padding: 0 32px;
 
   @media @max-sl-mobile {
     width: 100%;
+  }
+
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background: transparent;
+    border: none;
   }
 }
 
@@ -1022,6 +1029,10 @@ export default class CreatePool extends Vue {
     margin-right: 0;
   }
 
+  &:hover {
+    background: @gradient-color02;
+  }
+  
   .link-btn {
     height: 100%;
     background: @color-blue700;

@@ -85,7 +85,7 @@
 
       <div class="btn-container">
         <Button
-          class="font-large weight-bold"
+          class="btn-transparent font-large weight-bold"
           id="vdeposit"
           :disabled="
             !farmInfo.lp.coin ||
@@ -245,17 +245,23 @@ export default Vue.extend({
 }
 
 .btn-container {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 38px;
+  padding: 3px;
+  height: auto;
+}
+
+.btn-transparent {
   background: transparent;
-  
-  button {
-    background: @gradient-color01 !important;
-    background-origin: border-box !important;
+  border-radius: 38px;
+  border: none;
+  height: 44px;
+  width: 100%;
+
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background: transparent;
     border: none;
-    position: relative;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 38px;
-    width: 100%;
-    height: 50px;
   }
 }
 
