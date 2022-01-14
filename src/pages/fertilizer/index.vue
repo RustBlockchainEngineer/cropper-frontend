@@ -302,17 +302,19 @@
             <Col
               v-for="(fertilizer, idx) in fertilizerItems"
               :key="fertilizer.key"
-              :lg="idx === 0 ? 6 : 6"
+              :lg="idx === 0 ? 12 : 6"
               :md="idx === 0 ? 16 : 8"
               :sm="24"
             >
-              <div class="fertilizer-project-table">
+              <div class="fertilizer-project-table" :class="idx === 0 ? 'first' : ''">
                 <div class="project-banner">
                   <img class="banner" :src="fertilizer.picture" />
                   <div
                     class="project-status"
                     :class="
-                      fertilizer.status === filterOptions.whitelist
+                      fertilizer.status === filterOptions.upcoming
+                        ? 'upcoming'
+                        : fertilizer.status === filterOptions.whitelist
                         ? 'whitelist'
                         : fertilizer.status === filterOptions.sales
                         ? 'sales'
@@ -336,31 +338,32 @@
                 <div class="project-details">
                   <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist fssb-container' : ''">
                     <div class="project-title">
-                      <h4 class="weight-bold spacing-medium">{{ fertilizer.title }}</h4>
+                      <h4 class="title weight-bold spacing-medium">{{ fertilizer.title }}</h4>
                       <span class="short-desc font-medium weight-semi spacing-small">{{ fertilizer.short_desc }}</span>
                     </div>
 
-                    <!-- <div class="project-info fcsb-container">
+                    <div class="project-info fcsb-container">
                       <div class="project-balance">
                         <div v-if="fertilizer.hard_cap">
-                          <span class="label font-small weight-semi spacing-large">Total raised</span>
+                          <span class="label font-small weight-semi spacing-large">Total raise</span>
                           <span class="value font-medium weight-semi spacing-small fcs-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            {{ fertilizer.hard_cap }} USDC
+                            <!-- <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                            {{ fertilizer.hard_cap }} USDC -->
+                            TBA
                           </span>
                         </div>
                       </div>
-                      <div class="project-balance">
+                      <!-- <div class="project-balance">
                         <div v-if="fertilizer.participants">
                           <span class="label font-small weight-semi spacing-large">Participants</span>
                           <span class="value font-medium weight-semi spacing-small fcs-container">{{ fertilizer.participants }}</span>
                         </div>
-                      </div>
-                    </div> -->
+                      </div> -->
+                    </div>
                   </div>
 
-                  <!-- <div v-if="idx === 0" class="project-info whitelist-countdown fcc-container text-center">
-                    <Countdown
+                  <div v-if="idx === 0" class="project-info whitelist-countdown fcc-container text-center">
+                    <!-- <Countdown
                       :title="
                         fertilizer.status === filterOptions.whitelist
                           ? 'End of the whitelist in'
@@ -388,10 +391,10 @@
                           : ''
                       "
                       format="DD:HH:mm:ss"
-                    />
+                    /> -->
                   </div>
 
-                  <div v-else class="project-info fcs-container">
+                  <!-- <div v-else class="project-info fcs-container">
                     <div
                       v-if="
                         fertilizer.sales_start_date ||
@@ -444,21 +447,22 @@
                     </div>
                   </div> -->
 
-                  <!-- <div class="btn-container">
+                  <div class="btn-container">
                     <Button
                       v-if="fertilizer.status === filterOptions.whitelist"
                       class="btn-transparent font-medium weight-semi fcc-container spacing-small"
                       >Subscription</Button
                     >
-                    <Button v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small">More details</Button>
-                  </div> -->
+                    <Button v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small"
+                      >Follow</Button
+                    >
+                  </div>
                 </div>
               </div>
             </Col>
           </Row>
 
-          <div v-else>
-            <!-- desktop version -->
+          <!-- <div v-else>
             <div class="fertilizer-funded-table isDesktop">
               <Row class="fertilizer-funded-table-header">
                 <Col class="header-column font-small weight-bold text-left" span="6"> Project name </Col>
@@ -481,7 +485,7 @@
                 </Col>
                 <Col class="header-column font-small weight-bold" span="4">
                   <div class="header-column-title" @click="sortByColumn(sortOptions.total_raised)">
-                    Total raised
+                    Total raise
                     <img
                       v-if="sortFunded === sortOptions.total_raised"
                       src="@/assets/icons/arrow-down-green.svg"
@@ -624,7 +628,6 @@
               </div>
             </div>
 
-            <!-- tablet version -->
             <div class="fertilizer-funded-table isTablet">
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
@@ -650,7 +653,7 @@
                     </Col>
 
                     <Col class="state font-medium weight-semi text-center" span="5">
-                      <span class="label font-small weight-bold">Total raised</span>
+                      <span class="label font-small weight-bold">Total raise</span>
                       ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
                     </Col>
 
@@ -732,7 +735,6 @@
               </Collapse>
             </div>
 
-            <!-- mobile version -->
             <div class="fertilizer-funded-table isMobile">
               <Collapse v-model="showCollapse" accordion>
                 <CollapsePanel
@@ -765,7 +767,7 @@
                     <Col :span="24">
                       <div class="fcsb-container">
                         <div class="state">
-                          <span class="label font-small weight-bold">Total raised</span>
+                          <span class="label font-small weight-bold">Total raise</span>
                           <span class="font-medium weight-semi"
                             >${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}</span
                           >
@@ -849,7 +851,7 @@
                 </CollapsePanel>
               </Collapse>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <!-- <div v-if="initialized"></div>
@@ -884,13 +886,13 @@ export default Vue.extend({
   components: {
     // Spin,
     // Icon,
-    Collapse,
-    CollapsePanel,
+    // Collapse,
+    // CollapsePanel,
     Row,
     Col,
-    Button,
+    Button
     // Countdown,
-    Tooltip
+    // Tooltip
   },
   data() {
     return {
@@ -930,7 +932,7 @@ export default Vue.extend({
       },
       sortOptions: {
         subscribers: 'Subscribers',
-        total_raised: 'Total raised',
+        total_raised: 'Total raise',
         token_price: 'Token price',
         ath: 'ATH Since IDO',
         end_date: 'Ended in UTC'
@@ -987,37 +989,37 @@ export default Vue.extend({
         //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
         //   distribution_start_date: 1643500800000
         // },
-        {
-          status: 'Preparation',
-          key: 'k4',
-          picture: '/fertilizer/banner/agoric.png',
-          title: 'Agoric',
-          short_desc: 'Social platform for NFT asset management',
-          hard_cap: '3000K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_start_date: 1643500800000
-        },
-        {
-          status: 'Preparation',
-          key: 'k5',
-          picture: '/fertilizer/banner/metaprints.png',
-          title: 'Metaprints',
-          short_desc: 'Blueprints for metaverses',
-          hard_cap: '3000K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-        },
-        {
-          status: 'Preparation',
-          key: 'k6',
-          picture: '/fertilizer/banner/galaxy.png',
-          title: 'Galaxy War',
-          short_desc: 'Our galatic adventure awaits',
-          hard_cap: '3000K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-        }
+        // {
+        //   status: 'Preparation',
+        //   key: 'k4',
+        //   picture: '/fertilizer/banner/agoric.png',
+        //   title: 'Agoric',
+        //   short_desc: 'Social platform for NFT asset management',
+        //   hard_cap: '3000K',
+        //   token_price: 0.071,
+        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        //   whitelist_start_date: 1643500800000
+        // },
+        // {
+        //   status: 'Preparation',
+        //   key: 'k5',
+        //   picture: '/fertilizer/banner/metaprints.png',
+        //   title: 'Metaprints',
+        //   short_desc: 'Blueprints for metaverses',
+        //   hard_cap: '3000K',
+        //   token_price: 0.071,
+        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+        // },
+        // {
+        //   status: 'Preparation',
+        //   key: 'k6',
+        //   picture: '/fertilizer/banner/galaxy.png',
+        //   title: 'Galaxy War',
+        //   short_desc: 'Our galatic adventure awaits',
+        //   hard_cap: '3000K',
+        //   token_price: 0.071,
+        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+        // },
         // {
         //   status: 'Funded',
         //   key: 'k7',
@@ -1089,7 +1091,40 @@ export default Vue.extend({
         //   token_price: 0.073,
         //   ath: 526.2,
         //   distribution_end_date: 1643500800000
-        // }
+        // },
+        {
+          status: 'Upcoming',
+          key: 'k13',
+          picture: '/fertilizer/banner/winerz.png',
+          title: 'Winerz',
+          short_desc: 'Experience a new way of playing by betting on your victory.',
+          hard_cap: '250K',
+          token_price: 0.071,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_start_date: 1643500800000
+        },
+        {
+          status: 'Upcoming',
+          key: 'k14',
+          picture: '/fertilizer/banner/secretum.png',
+          title: 'Secretum Protocol',
+          short_desc: 'Blockchain-based messaging app where every conversation is private by design.',
+          hard_cap: '200K',
+          token_price: 0.071,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_start_date: 1643500800000
+        },
+        {
+          status: 'Upcoming',
+          key: 'k15',
+          picture: '/fertilizer/banner/zebec.png',
+          title: 'Zebec Protocol',
+          short_desc: 'Continuous Settlement Protocol.',
+          hard_cap: '300K',
+          token_price: 0.071,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_start_date: 1643500800000
+        }
       ],
       currentTimestamp: 0
     }
@@ -1469,6 +1504,10 @@ export default Vue.extend({
   padding: 4px 8px;
   border-radius: 6px;
 
+  &.upcoming {
+    background: #a262ac;
+  }
+
   &.whitelist {
     background: @color-red600;
   }
@@ -1842,22 +1881,27 @@ export default Vue.extend({
             }
           }
 
+          &.first {
+            border: 3px solid @color-petrol500;
+
+            .project-banner {
+              border-bottom: 3px solid @color-petrol500;
+            }
+          }
+
           .project-details {
             padding: 14px;
 
             .project-title {
+              height: 170px;
+
+              @media @max-sl-mobile {
+                height: 111px;
+              }
+
               .short-desc {
                 display: block;
                 margin-top: 4px;
-                height: 48px;
-
-                @media @max-lg-tablet {
-                  height: 66px;
-                }
-
-                @media @max-sl-mobile {
-                  height: 48px;
-                }
               }
             }
 
@@ -1885,18 +1929,11 @@ export default Vue.extend({
               }
 
               &.whitelist-countdown {
-                height: 114px;
-                background: @color-blue800;
-                padding: 8px;
-                border-radius: 18px;
-
-                @media @max-lg-tablet {
-                  margin-top: 72px;
-                }
-
-                @media @max-sl-mobile {
-                  margin-top: 18px;
-                }
+                height: 48px;
+                // height: 114px;
+                // background: @color-blue800;
+                // padding: 8px;
+                // border-radius: 18px;
               }
 
               &.fcsb-container {
@@ -1915,12 +1952,6 @@ export default Vue.extend({
             }
 
             .project-desc {
-              .project-info {
-                @media @max-lg-tablet {
-                  height: 111px;
-                }
-              }
-
               &.project-desc-whitelist {
                 @media @max-sl-mobile {
                   display: inline-block !important;
