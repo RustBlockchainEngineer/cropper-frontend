@@ -219,6 +219,8 @@ export default Vue.extend({
   }
 }
 .btn-container {
+  background: transparent;
+  
   button {
     background: @gradient-color01 !important;
     background-origin: border-box !important;

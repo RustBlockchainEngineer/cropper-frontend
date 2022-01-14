@@ -21,62 +21,71 @@
                   <div
                     class="project-status"
                     :class="
-                      fertilizer.status === filterOptions.whitelist
-                        ? 'whitelist'
-                        : fertilizer.status === filterOptions.sales
-                        ? 'sales'
-                        : fertilizer.status === filterOptions.distribution
-                        ? 'distribution'
-                        : fertilizer.status === filterOptions.preparation
+                      currentStep === 0
                         ? 'preparation'
+                        : currentStep === 1
+                        ? 'whitelist'
+                        : currentStep === 2
+                        ? 'sales'
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
+                        ? 'open'
+                        : currentStep === 3
+                        ? 'distribution'
                         : ''
                     "
                   >
-                    <span class="font-xsmall weight-bold">{{ fertilizer.status }}</span>
+                    <span class="font-xsmall weight-bold">
+                      {{
+                        currentStep === 0
+                          ? projectStatus.preparation
+                          : currentStep === 1
+                          ? projectStatus.whitelist
+                          : currentStep === 2
+                          ? projectStatus.sales
+                          : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
+                          ? projectStatus.open
+                          : currentStep === 3
+                          ? projectStatus.distribution
+                          : ''
+                      }}
+                    </span>
                   </div>
                 </div>
-                <div class="project-countdown">
+                <div v-if="currentStep < 3 && whitelistDefined" class="project-countdown">
                   <Countdown
-                    v-if="currentStep < 3"
                     :title="
-                      fertilizer.status === filterOptions.whitelist
+                      currentStep === 0 && whitelistDefined
+                        ? 'The whitelist starts in'
+                        : currentStep === 1
                         ? 'End of the whitelist in'
-                        : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
-                        ? 'Sales starts in'
-                        : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
-                        ? 'End of the sales in'
-                        : fertilizer.status === filterOptions.distribution
-                        ? 'Distribution starts in'
-                        : fertilizer.status === filterOptions.preparation
-                        ? 'Whitelist starts in'
                         : ''
                     "
                     :value="
-                      fertilizer.status === filterOptions.whitelist
+                      fertilizer.status === projectStatus.whitelist
                         ? fertilizer.whitelist_end_date
-                        : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
+                        : fertilizer.status === projectStatus.sales && currentTimestamp < fertilizer.sales_start_date
                         ? fertilizer.sales_start_date
-                        : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
+                        : fertilizer.status === projectStatus.sales && currentTimestamp > fertilizer.sales_start_date
                         ? fertilizer.sales_end_date
-                        : fertilizer.status === filterOptions.distribution
+                        : fertilizer.status === projectStatus.distribution
                         ? fertilizer.distribution_start_date
-                        : fertilizer.status === filterOptions.preparation
+                        : fertilizer.status === projectStatus.preparation
                         ? fertilizer.whitelist_start_date
                         : ''
                     "
                     format="DD:HH:mm:ss"
                   />
                 </div>
-                <div class="project-progress">
-                  <div v-if="currentStep === 0" class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi">Subscribe Whitelist</Button>
+                <div v-if="currentStep > 0" class="project-progress">
+                  <div v-if="currentStep === 1" class="btn-container">
+                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
                   </div>
-                  <div v-else-if="currentStep > 0 && currentStep < 3" class="fcc-container">
+                  <div v-else-if="currentStep > 1 && currentStep < 3" class="fcc-container">
                     <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
                     <span class="font-small weight-semi spacing-large">Following {{ fertilizer.title }} </span>
                   </div>
-                  <div v-else class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi">Start Farming</Button>
+                  <div v-else-if="currentStep === 3" class="btn-container">
+                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
                   </div>
                 </div>
               </div>
@@ -130,7 +139,7 @@
               </div>
             </Col>
             <Col :span="18" class="project-detail-container">
-              <div class="project-detail-item">
+              <div class="project-detail-static">
                 <Row :gutter="24">
                   <Col :span="10">
                     <div class="project-detail-desc">
@@ -200,121 +209,130 @@
                   </Col>
                 </Row>
               </div>
-              <div v-if="currentStep === 1" class="project-detail-item">
-                <h4 class="weight-semi">Earn Social Pool tickets!</h4>
-                <span class="font-medium">
-                  A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
-                  allocation by performing various social tasks.
-                </span>
-                <div class="ticket-tasks-group fssb-container">
-                  <div class="ticket-tasks">
-                    <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
-                    <div class="ticket-task-status-group fcsb-container">
-                      <div class="ticket-task-status-card fcsb-container">
-                        <div class="ticket-task-status fs-container">
-                          <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
-                          <div>
-                            <span class="font-medium weight-bold">Telegram task</span>
-                            <br />
-                            <span class="font-xsmall weight-semi">0/2 Task completed</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ticket-task-status-card fcsb-container" :class="'active'">
-                        <div class="ticket-task-status fs-container">
-                          <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
-                          <div>
-                            <span class="font-medium weight-bold">Twitter task</span>
-                            <br />
-                            <span class="font-xsmall weight-semi">3/3 Task completed</span>
-                          </div>
-                        </div>
-                        <img class="check-icon" src="@/assets/icons/check-white.svg" />
-                      </div>
-                    </div>
-                    <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
-                    <div class="ticket-share-group fcsb-container">
-                      <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" />
-                      <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" />
-                    </div>
-                    <div class="ticket-btn-group fcsb-container">
-                      <div class="share-btn btn-container">
-                        <Button class="btn-primary font-small weight-semi spacing-large">Share on Telegram</Button>
-                      </div>
-                      <div class="share-btn btn-container">
-                        <Button class="btn-primary font-small weight-semi spacing-large">Share on Twitter</Button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="ticket-preview">
-                    <div class="ticket-earned">
-                      <span class="font-medium weight-bold"
-                        >You are now registered for the {{ fertilizer.title }} whitelist as:</span
-                      >
-                      <div class="ticket-earned-status fcs-container">
-                        <img class="referral-icon" src="@/assets/icons/referral.svg" />
-                        <div>
-                          <span class="font-medium weight-semi spacing-small">
-                            <label class="font-large">0</label>
-                            Earned Tickets
-                          </span>
-                          <br />
-                          <span class="font-xsmall">0 Social / 0 Referrals</span>
-                        </div>
-                      </div>
-                      <div class="fcsb-container">
-                        <span class="font-small weight-semi spacing-large">Verification</span>
-                        <span class="font-small text-upper">Unverified</span>
-                      </div>
-                    </div>
-                    <div class="ticket-referral">
-                      <span class="font-medium weight-semi spacing-small">Add referral link to win a ticket:</span>
-                      <input type="text" class="ticket-referral-link font-small weight-semi" :value="referralLink" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div v-else-if="currentStep === 2" class="project-detail-item"></div>
-              <div v-else class="project-detail-item text-center">
-                <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
-                <div class="distribution-details">
+
+              <div class="project-detail-condition">
+                <div v-if="currentStep === 0"></div>
+                <div v-else-if="currentStep === 1" class="project-detail-item">
+                  <h4 class="weight-semi">Earn Social Pool tickets!</h4>
                   <span class="font-medium">
-                    Sonar Watch raised:
-                    <br />
-                    <b>500,000 / 500,000 USDC</b>
+                    A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
+                    allocation by performing various social tasks.
                   </span>
-                  <div class="sale-details-group fcc-container">
-                    <div class="sale-detail-card text-left">
-                      <span class="font-xsmall">ROI (ATH)</span>
-                      <br />
-                      <span class="font-large weight-bold">8.20x</span>
+                  <div class="ticket-tasks-group fssb-container">
+                    <div class="ticket-tasks">
+                      <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
+                      <div class="ticket-task-status-group fcsb-container">
+                        <div class="ticket-task-status-card fcsb-container">
+                          <div class="ticket-task-status fs-container">
+                            <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
+                            <div>
+                              <span class="font-medium weight-bold">Telegram task</span>
+                              <br />
+                              <span class="font-xsmall weight-semi">0/2 Task completed</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="ticket-task-status-card fcsb-container" :class="'active'">
+                          <div class="ticket-task-status fs-container">
+                            <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
+                            <div>
+                              <span class="font-medium weight-bold">Twitter task</span>
+                              <br />
+                              <span class="font-xsmall weight-semi">3/3 Task completed</span>
+                            </div>
+                          </div>
+                          <img class="check-icon" src="@/assets/icons/check-white.svg" />
+                        </div>
+                      </div>
+                      <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
+                      <div class="ticket-share-group fcsb-container">
+                        <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" />
+                        <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" />
+                      </div>
+                      <div class="ticket-btn-group fcsb-container">
+                        <div class="share-btn btn-container">
+                          <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
+                            >Share on Telegram</Button
+                          >
+                        </div>
+                        <div class="share-btn btn-container">
+                          <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
+                            >Share on Twitter</Button
+                          >
+                        </div>
+                      </div>
                     </div>
-                    <div class="sale-detail-card text-left">
-                      <span class="font-xsmall">ROI (current)</span>
-                      <br />
-                      <span class="font-large weight-bold">1.07x</span>
-                    </div>
-                    <div class="sale-detail-card text-left">
-                      <span class="font-xsmall">Last Price</span>
-                      <br />
-                      <span class="font-large weight-bold">0.21 USDC</span>
+                    <div class="ticket-preview">
+                      <div class="ticket-earned">
+                        <span class="font-medium weight-bold"
+                          >You are now registered for the {{ fertilizer.title }} whitelist as:</span
+                        >
+                        <div class="ticket-earned-status fcs-container">
+                          <img class="referral-icon" src="@/assets/icons/referral.svg" />
+                          <div>
+                            <span class="font-medium weight-semi spacing-small">
+                              <label class="font-large">0</label>
+                              Earned Tickets
+                            </span>
+                            <br />
+                            <span class="font-xsmall">0 Social / 0 Referrals</span>
+                          </div>
+                        </div>
+                        <div class="fcsb-container">
+                          <span class="font-small weight-semi spacing-large">Verification</span>
+                          <span class="font-small text-upper">Unverified</span>
+                        </div>
+                      </div>
+                      <div class="ticket-referral">
+                        <span class="font-medium weight-semi spacing-small">Add referral link to win a ticket:</span>
+                        <input type="text" class="ticket-referral-link font-small weight-semi" :value="referralLink" />
+                      </div>
                     </div>
                   </div>
-                  <div class="btn-container margin-auto">
-                    <Button class="btn-transparent font-medium weight-semi">Start Farming</Button>
+                </div>
+                <div v-else-if="currentStep === 2" class="project-detail-item"></div>
+                <div v-else class="project-detail-item text-center">
+                  <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
+                  <div class="distribution-details">
+                    <span class="font-medium">
+                      Sonar Watch raised:
+                      <br />
+                      <b>500,000 / 500,000 USDC</b>
+                    </span>
+                    <div class="sale-details-group fcc-container">
+                      <div class="sale-detail-card text-left">
+                        <span class="font-xsmall">ROI (ATH)</span>
+                        <br />
+                        <span class="font-large weight-bold">8.20x</span>
+                      </div>
+                      <div class="sale-detail-card text-left">
+                        <span class="font-xsmall">ROI (current)</span>
+                        <br />
+                        <span class="font-large weight-bold">1.07x</span>
+                      </div>
+                      <div class="sale-detail-card text-left">
+                        <span class="font-xsmall">Last Price</span>
+                        <br />
+                        <span class="font-large weight-bold">0.21 USDC</span>
+                      </div>
+                    </div>
+                    <div class="btn-container margin-auto">
+                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="project-detail-item banner fcsb-container">
+
+              <div class="project-detail-static banner fcsb-container">
                 <div class="project-detail-stake">
                   <h4 class="weight-semi">Develop your Tier to have more allocation</h4>
                   <div class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi">Stake CRP</Button>
+                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Stake CRP</Button>
                   </div>
                 </div>
                 <img class="farmer-img" src="@/assets/background/farmer.png" />
               </div>
-              <div class="project-detail-item transparent">
+              <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Project Details</h3>
                 <Row :gutter="40">
                   <Col :span="12">
@@ -369,7 +387,7 @@
                   </Col>
                 </Row>
               </div>
-              <div class="project-detail-item transparent">
+              <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">About</h3>
                 <Row class="project-category-content-about" :gutter="40">
                   <Col :span="12">
@@ -387,7 +405,7 @@
                   </Col>
                 </Row>
               </div>
-              <div class="project-detail-item transparent">
+              <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Features</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.features" />
                 <div>
@@ -442,7 +460,7 @@
                   </div>
                 </div>
               </div>
-              <div class="project-detail-item transparent">
+              <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Roadmap</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.roadmap" />
                 <div>
@@ -457,7 +475,7 @@
                   </span>
                 </div>
               </div>
-              <div class="project-detail-item transparent">
+              <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Team & Backers</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.team" />
                 <div>
@@ -479,7 +497,7 @@
                   </span>
                 </div>
               </div>
-              <div class="project-detail-item transparent">
+              <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Tokenomics</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.tokenomics" />
                 <div>
@@ -504,7 +522,7 @@
                   </span>
                 </div>
               </div>
-              <div class="project-detail-item transparent">
+              <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Token Distribution</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.distribution" />
                 <div>
@@ -588,145 +606,16 @@ export default Vue.extend({
           distribution: '/fertilizer/project/unq/distribution.png'
         }
       },
-      fertilizerData: [
-        {
-          status: 'Whitelist Open',
-          picture: '/fertilizer/banner/unq.png',
-          logo: '/fertilizer/logo/unq.png',
-          title: 'UNQ.club',
-          short_desc: 'Social platform for NFT asset management',
-          hard_cap: '3000K',
-          token_price: 0.028,
-          participants: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_end_date: 1643500800000
-        },
-        {
-          status: 'Sales',
-          picture: '/fertilizer/banner/metaprints.png',
-          title: 'Metaprints',
-          short_desc: 'Blueprints for metaverses',
-          hard_cap: '3000K',
-          participants: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1641280215000,
-          sales_end_date: 1643500800000
-        },
-        {
-          status: 'Sales',
-          picture: '/fertilizer/banner/galaxy.png',
-          title: 'Galaxy War',
-          short_desc: 'Our galatic adventure awaits',
-          hard_cap: '3000K',
-          participants: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1643500800000
-        },
-        {
-          status: 'Distribution',
-          picture: '/fertilizer/banner/meanfi.png',
-          title: 'MeanFI',
-          short_desc: 'Grow your money stash with the best prices across DeFi',
-          hard_cap: '3000K',
-          participants: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          distribution_start_date: 1643500800000
-        },
-        {
-          status: 'Preparation',
-          picture: '/fertilizer/banner/agoric.png',
-          title: 'Agoric',
-          short_desc: 'Social platform for NFT asset management',
-          hard_cap: '3000K',
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_start_date: 1643500800000
-        },
-        {
-          status: 'Preparation',
-          picture: '/fertilizer/banner/metaprints.png',
-          title: 'Metaprints',
-          short_desc: 'Blueprints for metaverses',
-          hard_cap: '3000K',
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/defiland.png',
-          title: 'DeFi Land',
-          short_desc: 'Gamified Decentralized Finance',
-          subscribers: 1000,
-          hard_cap: 250000,
-          token_price: 0.068,
-          ath: 526.7,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/sonar.png',
-          title: 'Sonar Watch',
-          short_desc: 'Empowering user journey on Solana DeFi',
-          subscribers: 1001,
-          hard_cap: 249999,
-          token_price: 0.069,
-          ath: 526.6,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/goosefx.png',
-          title: 'GooseFX',
-          short_desc: 'A Complete DeFi Experience',
-          subscribers: 1002,
-          hard_cap: 249998,
-          token_price: 0.07,
-          ath: 526.5,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/waggle.png',
-          title: 'Waggle Network',
-          short_desc: 'Primary markets for everyone',
-          subscribers: 1003,
-          hard_cap: 249997,
-          token_price: 0.071,
-          ath: 526.4,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/cryowar.png',
-          title: 'Cryowar',
-          short_desc: 'Next-gen blockchain multiplayer game',
-          subscribers: 1004,
-          hard_cap: 249996,
-          token_price: 0.071,
-          ath: 526.3,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/cyclos.png',
-          title: 'Cyclos',
-          short_desc: 'Decentralized trading unleashed',
-          subscribers: 1005,
-          hard_cap: 249995,
-          token_price: 0.073,
-          ath: 526.2,
-          distribution_end_date: 1643500800000
-        }
-      ],
-      filterOptions: {
-        all: 'All',
+      projectStatus: {
+        preparation: 'Preparation',
         whitelist: 'Whitelist Open',
         sales: 'Sales',
-        distribution: 'Distribution',
-        upcoming: 'Upcoming',
-        preparation: 'Preparation',
-        funded: 'Funded'
+        open: 'Open Sales',
+        distribution: 'Distribution'
       },
       currentTimestamp: 0,
-      currentStep: 3 as number,
+      currentStep: 1 as number,
+      whitelistDefined: true as boolean,
       stepsStatus: 'process' as string,
       affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
       referralLink: 'http://' as string
@@ -865,11 +754,16 @@ export default Vue.extend({
                 }
               }
             }
+
             .project-countdown {
-              margin: 16px 0;
+              margin-top: 16px;
             }
 
             .project-progress {
+              .btn-container {
+                margin-top: 16px;
+              }
+
               .check-icon {
                 margin-right: 8px;
               }
@@ -892,15 +786,10 @@ export default Vue.extend({
         }
 
         .project-detail-container {
-          .project-detail-item {
+          .project-detail-static {
             background: @color-blue700;
             border-radius: 8px;
             padding: 32px;
-            margin-bottom: 32px;
-
-            &:last-child {
-              margin-bottom: 0;
-            }
 
             .project-detail-desc {
               .project-title {
@@ -942,127 +831,6 @@ export default Vue.extend({
                 }
               }
             }
-
-            .ticket-tasks-group {
-              margin-top: 32px;
-
-              .ticket-tasks {
-                width: calc(100% - 326px - 48px);
-                margin-right: 48px;
-
-                .ticket-task-status-group {
-                  margin: 24px 0;
-
-                  .ticket-task-status-card {
-                    background: @color-blue400;
-                    width: calc((100% - 24px) / 2);
-                    padding: 16px;
-                    border-radius: 8px;
-
-                    &.active {
-                      background: @color-green500;
-                    }
-                    .ticket-task-status {
-                      .ticket-social-icon {
-                        width: 24px;
-                        opacity: 0.5;
-                        margin-right: 24px;
-                      }
-                    }
-                  }
-                }
-
-                .ticket-share-group {
-                  margin: 8px 0 24px 0;
-                  padding: 0 8px;
-                  background: rgba(226, 227, 236, 0.1);
-                  border-radius: 12px;
-
-                  .ticket-share-link {
-                    background: transparent;
-                    outline: none;
-                    border: none;
-                    width: 100%;
-                    padding: 10px;
-                  }
-
-                  .copy-icon {
-                    margin: 0 10px;
-                  }
-                }
-
-                .ticket-btn-group {
-                  .share-btn {
-                    width: calc((100% - 24px) / 2);
-
-                    .btn-primary {
-                      width: 100%;
-                      padding: 10px 0;
-                    }
-                  }
-                }
-              }
-
-              .ticket-preview {
-                width: 326px;
-                height: 100%;
-                background: @color-blue800;
-                border-radius: 8px;
-                padding: 16px;
-
-                .ticket-earned {
-                  margin-bottom: 28px;
-
-                  .ticket-earned-status {
-                    background: @gradient-color03;
-                    padding: 16px;
-                    margin: 16px 0;
-                    border-radius: 8px;
-
-                    .referral-icon {
-                      margin-right: 24px;
-                    }
-                  }
-                }
-
-                .ticket-referral {
-                  .ticket-referral-link {
-                    background: rgba(226, 227, 236, 0.1);
-                    width: 100%;
-                    border-radius: 12px;
-                    outline: none;
-                    border: none;
-                    margin-top: 8px;
-                    padding: 10px;
-                  }
-                }
-              }
-            }
-
-            .distribution-details {
-              margin-top: 24px;
-
-              .sale-details-group {
-                margin: 24px 0;
-
-                .sale-detail-card {
-                  background: @color-blue500;
-                  min-width: 132px;
-                  border-radius: 8px;
-                  padding: 16px;
-                  margin-right: 24px;
-
-                  &:last-child {
-                    margin-right: 0;
-                  }
-                }
-              }
-
-              .btn-container {
-                width: 212px;
-              }
-            }
-
             &.banner {
               padding: 0 32px;
               margin-bottom: 132px;
@@ -1116,6 +884,136 @@ export default Vue.extend({
                   .label {
                     color: rgba(255, 255, 255, 0.7);
                   }
+                }
+              }
+            }
+          }
+
+          .project-detail-condition {
+            margin: 32px 0;
+
+            .project-detail-item {
+              background: @color-blue700;
+              border-radius: 8px;
+              padding: 32px;
+
+              .ticket-tasks-group {
+                margin-top: 32px;
+
+                .ticket-tasks {
+                  width: calc(100% - 326px - 48px);
+                  margin-right: 48px;
+
+                  .ticket-task-status-group {
+                    margin: 24px 0;
+
+                    .ticket-task-status-card {
+                      background: @color-blue400;
+                      width: calc((100% - 24px) / 2);
+                      padding: 16px;
+                      border-radius: 8px;
+
+                      &.active {
+                        background: @color-green500;
+                      }
+                      .ticket-task-status {
+                        .ticket-social-icon {
+                          width: 24px;
+                          opacity: 0.5;
+                          margin-right: 24px;
+                        }
+                      }
+                    }
+                  }
+
+                  .ticket-share-group {
+                    margin: 8px 0 24px 0;
+                    padding: 0 8px;
+                    background: rgba(226, 227, 236, 0.1);
+                    border-radius: 12px;
+
+                    .ticket-share-link {
+                      background: transparent;
+                      outline: none;
+                      border: none;
+                      width: 100%;
+                      padding: 10px;
+                    }
+
+                    .copy-icon {
+                      margin: 0 10px;
+                    }
+                  }
+
+                  .ticket-btn-group {
+                    .share-btn {
+                      width: calc((100% - 24px) / 2);
+
+                      .btn-primary {
+                        width: 100%;
+                        padding: 10px 0;
+                      }
+                    }
+                  }
+                }
+
+                .ticket-preview {
+                  width: 326px;
+                  height: 100%;
+                  background: @color-blue800;
+                  border-radius: 8px;
+                  padding: 16px;
+
+                  .ticket-earned {
+                    margin-bottom: 28px;
+
+                    .ticket-earned-status {
+                      background: @gradient-color03;
+                      padding: 16px;
+                      margin: 16px 0;
+                      border-radius: 8px;
+
+                      .referral-icon {
+                        margin-right: 24px;
+                      }
+                    }
+                  }
+
+                  .ticket-referral {
+                    .ticket-referral-link {
+                      background: rgba(226, 227, 236, 0.1);
+                      width: 100%;
+                      border-radius: 12px;
+                      outline: none;
+                      border: none;
+                      margin-top: 8px;
+                      padding: 10px;
+                    }
+                  }
+                }
+              }
+
+              .distribution-details {
+                margin-top: 24px;
+
+                .sale-details-group {
+                  margin: 24px 0;
+
+                  .sale-detail-card {
+                    background: @color-blue500;
+                    min-width: 132px;
+                    border-radius: 8px;
+                    padding: 16px;
+                    margin-right: 24px;
+
+                    &:last-child {
+                      margin-right: 0;
+                    }
+                  }
+                }
+
+                .btn-container {
+                  width: 212px;
                 }
               }
             }

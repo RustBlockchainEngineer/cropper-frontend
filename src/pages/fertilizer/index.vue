@@ -344,14 +344,12 @@
 
                     <div class="project-info fcsb-container">
                       <div class="project-balance">
-                        <div v-if="fertilizer.hard_cap">
-                          <span class="label font-small weight-semi spacing-large">Total raise</span>
-                          <span class="value font-medium weight-semi spacing-small fcs-container">
-                            <!-- <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            {{ fertilizer.hard_cap }} USDC -->
-                            TBA
-                          </span>
-                        </div>
+                        <span class="label font-small weight-semi spacing-large">Total raise</span>
+                        <span class="value font-medium weight-semi spacing-small fcs-container">
+                          <!-- <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          {{ fertilizer.hard_cap }} USDC -->
+                          TBA
+                        </span>
                       </div>
                       <!-- <div class="project-balance">
                         <div v-if="fertilizer.participants">
