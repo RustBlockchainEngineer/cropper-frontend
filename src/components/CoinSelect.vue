@@ -555,6 +555,10 @@ export default Vue.extend({
     direction: ltr;
     will-change: transform;
 
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
     .token-info {
       display: grid;
       justify-content: space-between;
