@@ -75,7 +75,9 @@
 
           <Col :span="14" class="notstep" :class="{ 'bordered-left': wallet.connected }">
             <div v-if="!wallet.connected">
-              <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal"> Connect wallet </Button>
+              <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                Connect wallet
+              </Button>
             </div>
 
             <Row v-if="current === 0 && wallet.connected">
@@ -102,7 +104,11 @@
                 </div>
               </Col>
               <div class="btn-container">
-                <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                <Button
+                  v-if="!wallet.connected"
+                  class="create-btn font-medium weight-semi"
+                  @click="$accessor.wallet.openModal"
+                >
                   Connect wallet
                 </Button>
 
@@ -253,7 +259,9 @@
                 <div class="lp-icons-group">
                   <div class="icons">
                     <CoinIcon :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())" />
-                    <span class="font-small weight-semi"> {{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }} - </span>
+                    <span class="font-small weight-semi">
+                      {{ getSymbolForMint(marketMsg.baseMintAddress.toBase58()) }} -
+                    </span>
                     <CoinIcon :mint-address="getNameForMint(marketMsg.baseMintAddress.toBase58())" />
                     <span class="font-small weight-semi">
                       {{ getSymbolForMint(marketMsg.quoteMintAddress.toBase58()) }}
@@ -265,7 +273,11 @@
                 <label class="created-amm-id font-small">AMM ID: {{ userCreateAmmId }}</label>
               </Col>
               <div class="btn-container">
-                <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                <Button
+                  v-if="!wallet.connected"
+                  class="create-btn font-medium weight-semi"
+                  @click="$accessor.wallet.openModal"
+                >
                   Connect wallet
                 </Button>
                 <NuxtLink to="/pools/" v-else>

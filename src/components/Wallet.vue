@@ -35,12 +35,7 @@
               <span class="font-xsmall weight-bold">Tier {{ wallet.tiers }}</span>
               <span class="font-xsmall weight-bold">Tier {{ wallet.tiers + 1 }}</span>
             </div>
-            <Progress
-              type="line"
-              :stroke-width="14"
-              :percent="Number(pctToNexttiers.toFixed(1))"
-              :show-info="false"
-            />
+            <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="false" />
             <div class="tier-progress-info-container">
               <div
                 class="tier-progress-end"

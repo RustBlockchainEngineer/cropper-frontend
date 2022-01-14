@@ -970,7 +970,11 @@
                               }}
                             </Button>
 
-                            <Button v-else class="btn-transparent font-small weight-bold" @click="$accessor.wallet.openModal">
+                            <Button
+                              v-else
+                              class="btn-transparent font-small weight-bold"
+                              @click="$accessor.wallet.openModal"
+                            >
                               {{
                                 !farm.farmInfo.poolInfo.is_allowed
                                   ? 'Not Allowed'
@@ -1034,7 +1038,9 @@
                             "
                             class="btn-container"
                           >
-                            <Button class="btn-primary font-small weight-bold" @click="payFarmFee(farm)"> Pay Farm Fees </Button>
+                            <Button class="btn-primary font-small weight-bold" @click="payFarmFee(farm)">
+                              Pay Farm Fees
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -1281,7 +1287,11 @@
                           }}
                         </Button>
 
-                        <Button v-else class="btn-transparent font-small weight-bold" @click="$accessor.wallet.openModal">
+                        <Button
+                          v-else
+                          class="btn-transparent font-small weight-bold"
+                          @click="$accessor.wallet.openModal"
+                        >
                           {{
                             !farm.farmInfo.poolInfo.is_allowed
                               ? 'Not Allowed'
@@ -1352,7 +1362,9 @@
                         "
                         class="btn-container"
                       >
-                        <Button class="btn-primary font-small weight-bold" @click="payFarmFee(farm)"> Pay Farm Fees </Button>
+                        <Button class="btn-primary font-small weight-bold" @click="payFarmFee(farm)">
+                          Pay Farm Fees
+                        </Button>
                       </div>
                     </Col>
 

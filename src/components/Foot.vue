@@ -89,7 +89,7 @@ export default class Foot extends Vue {
     img {
       height: 35px;
     }
-    
+
     @media @max-sl-mobile {
       margin-bottom: 30px;
     }

@@ -497,7 +497,7 @@ export default Vue.extend({
     Carousel,
     // Row,
     // Col,
-    Icon,
+    Icon
     // Tabs,
     // TabPane
   },
@@ -531,7 +531,7 @@ export default Vue.extend({
       currentTiers: 0 as number,
       nextTiers: 1 as number,
       selectedTier: 0 as number,
-      activeTab: '1' as string,
+      activeTab: '1' as string
     }
   },
   head: {

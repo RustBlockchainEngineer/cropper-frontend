@@ -5,19 +5,16 @@
         <div class="page-head fcsb-container">
           <span class="title">User List</span>
         </div>
-        
+
         <Input v-model="farmId" size="large" class="input-search" placeholder="input farm id">
-            <Icon slot="prefix" type="search" />
+          <Icon slot="prefix" type="search" />
         </Input>
-        <Button size="large" ghost @click="searchFarmUsers">
-            Search
-        </Button>
+        <Button size="large" ghost @click="searchFarmUsers"> Search </Button>
 
         <div v-for="userInfo in userInfos" :key="userInfo.stakeAccountAddress">
-            user - {{userInfo.wallet}}
-            depositBalance - {{userInfo.depositBalance / Math.pow(10,userInfo.decimals)}} &nbsp;&nbsp;{{userInfo.lpSymbol}}
+          user - {{ userInfo.wallet }} depositBalance -
+          {{ userInfo.depositBalance / Math.pow(10, userInfo.decimals) }} &nbsp;&nbsp;{{ userInfo.lpSymbol }}
         </div>
-         
       </div>
     </div>
   </div>
@@ -26,11 +23,9 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { Steps, Row, Col, Button, Tooltip, Icon, DatePicker, Input } from 'ant-design-vue'
-import {  getFilteredProgramAccounts } from '@/utils/web3'
+import { getFilteredProgramAccounts } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
-import {
-  FARM_PROGRAM_ID,
-} from '@/utils/ids'
+import { FARM_PROGRAM_ID } from '@/utils/ids'
 import { UserInfoAccountLayout } from '@/utils/farm'
 import { FARMS } from '@/utils/farms'
 const Step = Steps.Step
@@ -54,58 +49,52 @@ const Step = Steps.Step
 export default class CreateFarm extends Vue {
   userInfos: any = []
 
-  farmId: string = ""
+  farmId: string = ''
 
-  mounted() {
-    
-  }
+  mounted() {}
   async searchFarmUsers() {
-      
-    const connection = this.$web3 
+    const connection = this.$web3
     const wallet: any = this.$wallet
 
     if (wallet && wallet.connected) {
-        
-        let foundFarm = FARMS.find((item)=>item.poolId === this.farmId);
-        const decimals = foundFarm?.lp.decimals;
-        const lpSymbol = foundFarm?.lp.symbol;
+      let foundFarm = FARMS.find((item) => item.poolId === this.farmId)
+      const decimals = foundFarm?.lp.decimals
+      const lpSymbol = foundFarm?.lp.symbol
 
-        
-        this.userInfos = [];
-        // stake user info account
-        const stakeFilters = [
-          {
-            memcmp: {
-              offset: 32,
-              bytes: this.farmId
-            }
-          },
-          {
-            dataSize: UserInfoAccountLayout.span
+      this.userInfos = []
+      // stake user info account
+      const stakeFilters = [
+        {
+          memcmp: {
+            offset: 32,
+            bytes: this.farmId
           }
-        ]
+        },
+        {
+          dataSize: UserInfoAccountLayout.span
+        }
+      ]
 
-        getFilteredProgramAccounts(connection, new PublicKey(FARM_PROGRAM_ID), stakeFilters)
-          .then((stakeAccountInfos) => {
-              console.log("found - ",stakeAccountInfos.length)
-            stakeAccountInfos.forEach((stakeAccountInfo) => {
-              const stakeAccountAddress = stakeAccountInfo.publicKey.toBase58()
-              const { data } = stakeAccountInfo.accountInfo
+      getFilteredProgramAccounts(connection, new PublicKey(FARM_PROGRAM_ID), stakeFilters).then((stakeAccountInfos) => {
+        console.log('found - ', stakeAccountInfos.length)
+        stakeAccountInfos.forEach((stakeAccountInfo) => {
+          const stakeAccountAddress = stakeAccountInfo.publicKey.toBase58()
+          const { data } = stakeAccountInfo.accountInfo
 
-              const userStakeInfo = UserInfoAccountLayout.decode(data)
+          const userStakeInfo = UserInfoAccountLayout.decode(data)
 
-              const wallet = userStakeInfo.wallet.toBase58()
-              const depositBalance = userStakeInfo.deposit_balance.toNumber();
+          const wallet = userStakeInfo.wallet.toBase58()
+          const depositBalance = userStakeInfo.deposit_balance.toNumber()
 
-              this.userInfos.push({
-                  stakeAccountAddress,
-                  wallet,
-                  depositBalance,
-                  decimals,
-                  lpSymbol
-              })
-            });
-        });
+          this.userInfos.push({
+            stakeAccountAddress,
+            wallet,
+            depositBalance,
+            decimals,
+            lpSymbol
+          })
+        })
+      })
     }
   }
 }

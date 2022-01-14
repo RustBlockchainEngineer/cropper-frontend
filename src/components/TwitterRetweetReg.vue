@@ -25,15 +25,23 @@
         <div class="steps">
           <div :class="this.twitterA ? 'done' : 'notdone'">
             <span v-if="!this.twitterA" class="first">1</span>
-            <span v-else class="span first"
-              ><img src="@/assets/icons/check-circle-green.svg" alt=""
-            /></span>
+            <span v-else class="span first"><img src="@/assets/icons/check-circle-green.svg" alt="" /></span>
             <div>
-              <a href="https://twitter.com/CropperFinance" class="social-icon" target="_blank" @click="validateTwitterA()">
+              <a
+                href="https://twitter.com/CropperFinance"
+                class="social-icon"
+                target="_blank"
+                @click="validateTwitterA()"
+              >
                 <img src="@/assets/icons/twitter-purple.svg" width="30" height="30" />
               </a>
-              <a href="https://twitter.com/CropperFinance" target="_blank" style="color:#c6c6c6" @click="validateTwitterA()">
-              Follow <b>CropperFinance on Twitter</b>
+              <a
+                href="https://twitter.com/CropperFinance"
+                target="_blank"
+                style="color: #c6c6c6"
+                @click="validateTwitterA()"
+              >
+                Follow <b>CropperFinance on Twitter</b>
               </a>
             </div>
           </div>
@@ -45,35 +53,41 @@
               <a href="https://t.me/CropperFinance" class="social-icon" target="_blank" @click="validateTelegramA()">
                 <img src="@/assets/icons/telegram-purple.svg" width="30" height="30" />
               </a>
-              <a href="https://t.me/CropperFinance" style="color:#c6c6c6" target="_blank" @click="validateTelegramA()">
-              Join <b>CropperFinance on Telegram</b> 
+              <a href="https://t.me/CropperFinance" style="color: #c6c6c6" target="_blank" @click="validateTelegramA()">
+                Join <b>CropperFinance on Telegram</b>
               </a>
             </div>
           </div>
 
-          <div v-if="this.farm.links.twitter && this.farm.slug != 'cropper'" :class="this.twitterB ? 'done' : 'notdone'">
+          <div
+            v-if="this.farm.links.twitter && this.farm.slug != 'cropper'"
+            :class="this.twitterB ? 'done' : 'notdone'"
+          >
             <span v-if="!this.twitterB">3</span>
             <span v-else class="span"><img src="@/assets/icons/check-circle-green.svg" alt="" /></span>
             <div>
-              <a :href="this.farm.links.twitter" target="_blank" class="social-icon"  @click="validateTwitterB()">
+              <a :href="this.farm.links.twitter" target="_blank" class="social-icon" @click="validateTwitterB()">
                 <img src="@/assets/icons/twitter-purple.svg" width="30" height="30" />
               </a>
-              <a :href="this.farm.links.twitter" target="_blank" style="color:#c6c6c6"   @click="validateTwitterB()">
-              Follow <b>{{ this.farm.shortname }} on Twitter</b> 
+              <a :href="this.farm.links.twitter" target="_blank" style="color: #c6c6c6" @click="validateTwitterB()">
+                Follow <b>{{ this.farm.shortname }} on Twitter</b>
               </a>
             </div>
           </div>
 
-          <div v-if="this.farm.links.telegram && this.farm.slug != 'cropper'" :class="this.telegramB ? 'done' : 'notdone'">
-            <span v-if="!this.telegramB ">4</span>
+          <div
+            v-if="this.farm.links.telegram && this.farm.slug != 'cropper'"
+            :class="this.telegramB ? 'done' : 'notdone'"
+          >
+            <span v-if="!this.telegramB">4</span>
             <span v-else class="span"><img src="@/assets/icons/check-circle-green.svg" alt="" /></span>
             <div>
-              <a :href="this.farm.links.telegram" target="_blank" class="social-icon"  @click="validateTelegramB()">
+              <a :href="this.farm.links.telegram" target="_blank" class="social-icon" @click="validateTelegramB()">
                 <img src="@/assets/icons/telegram-purple.svg" width="30" height="30" />
               </a>
 
-              <a :href="this.farm.links.telegram" target="_blank" style="color:#c6c6c6"  @click="validateTelegramB()">
-              Join <b>{{ this.farm.shortname }} on Telegram</b> 
+              <a :href="this.farm.links.telegram" target="_blank" style="color: #c6c6c6" @click="validateTelegramB()">
+                Join <b>{{ this.farm.shortname }} on Telegram</b>
               </a>
             </div>
           </div>
@@ -85,12 +99,7 @@
               Input your twitter ID
               <div class="social-input-form">
                 <span class="inputContent">
-                  <input
-                    type="text"
-                    class="twlink"
-                    placeholder="@your-twitter-id"
-                    @input="tw($event.target.value)"
-                  />
+                  <input type="text" class="twlink" placeholder="@your-twitter-id" @input="tw($event.target.value)" />
                   <button class="submitbutton" @click="checkTw()">Submit</button>
                 </span>
               </div>
@@ -104,12 +113,7 @@
               Input your telegram ID
               <div class="social-input-form">
                 <span class="inputContent">
-                  <input
-                    type="text"
-                    class="twlink"
-                    placeholder="@your-telegram-id"
-                    @input="tg($event.target.value)"
-                  />
+                  <input type="text" class="twlink" placeholder="@your-telegram-id" @input="tg($event.target.value)" />
                   <button class="submitbutton" @click="checkTg()">Submit</button>
                 </span>
               </div>
@@ -117,7 +121,7 @@
           </div>
         </div>
 
-        <div class="infoCheck">We will be checking if you’ve completed the above tasks.</div>
+        <div class="infoCheck">We will be checking if you've completed the above tasks.</div>
 
         <Row :gutter="32" class="actions">
           <Col :span="24" style="text-align: center">
@@ -149,19 +153,16 @@
         <div class="steps">
           <div :class="this.inputretwit ? 'done big' : 'notdone big'">
             <span v-if="!this.inputretwit" class="first">1</span>
-            <span v-else class="span2 first"
-              ><img src="@/assets/icons/check-circle-green.svg" alt=""
-            /></span>
+            <span v-else class="span2 first"><img src="@/assets/icons/check-circle-green.svg" alt="" /></span>
             <Row :gutter="24">
-              <Col :span="10" class="twitter-section-left" v-html="this.farm.links.retweet_html">
-              </Col>
-               <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+              <Col :span="10" class="twitter-section-left" v-html="this.farm.links.retweet_html"> </Col>
+              <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
               <div class="twitter-section-right">
                 <div class="inforetweet">
-                  Quote Retweet <span>this tweet</span> <br>
-                  • Tagging 3 friends <br>
-                  • Using the hashtag <br>
-                    #CropperFinance #Fertilizer
+                  Quote Retweet <span>this tweet</span> <br />
+                  • Tagging 3 friends <br />
+                  • Using the hashtag <br />
+                  #CropperFinance #Fertilizer
                 </div>
 
                 <div class="social-input-form twitter-link">
@@ -180,7 +181,7 @@
           </div>
         </div>
 
-        <div class="infoCheck">We will be checking if you’ve completed the above tasks.</div>
+        <div class="infoCheck">We will be checking if you've completed the above tasks.</div>
 
         <Row :gutter="32" class="actions">
           <Col :span="24" style="text-align: center">
@@ -242,7 +243,7 @@ export default Vue.extend({
       if (this.progression < 1) {
         this.progression = 0
       }
-      this.title = "Whitelisting tasks";
+      this.title = 'Whitelisting tasks'
       this.progression++
       this.walletAddress =
         'https://api.cropper.finance/fertilizer/project/?f=' + this.farm.slug + '&r=' + this.$accessor.wallet.address
@@ -427,7 +428,7 @@ span.inputContent {
   .submitbutton {
     position: absolute;
     right: -1px;
-    background: #7E7ED8;
+    background: #7e7ed8;
     box-sizing: border-box;
     border-radius: 13px;
     height: 39px;
@@ -540,7 +541,7 @@ span.inputContent {
   font-size: 16px;
   line-height: 19px;
   text-align: center;
-  color: #FFF;
+  color: #fff;
   margin: 45px auto 20px auto;
 
   @media @max-sl-mobile {
@@ -580,7 +581,7 @@ span.inputContent {
       .social-icon {
         position: absolute;
         right: 22px;
-        
+
         @media @max-sl-mobile {
           display: none;
         }
@@ -595,11 +596,11 @@ span.inputContent {
     .social-input-form {
       position: absolute;
       right: 0;
-      border: 3px solid #7E7ED8;
+      border: 3px solid #7e7ed8;
       box-sizing: border-box;
       border-radius: 4px 13px 13px 4px;
       height: 40px;
-      
+
       @media @max-sl-mobile {
         position: relative;
       }
@@ -633,7 +634,7 @@ span.inputContent {
       &:not(.first)::before {
         content: '';
         width: 3px;
-        background: rgba(72,164,105,0.50196);
+        background: rgba(72, 164, 105, 0.50196);
         height: 18px;
         left: 18px;
         position: absolute;
@@ -672,7 +673,7 @@ span.inputContent {
         width: 100%;
         height: 100%;
       }
-      
+
       &:not(.first)::before {
         content: '';
         width: 3px;
@@ -722,7 +723,7 @@ span.inputContent {
     // }
 
     &.done {
-      background: #2B5A57;
+      background: #2b5a57;
 
       .date {
         font-weight: 500;
@@ -731,19 +732,19 @@ span.inputContent {
       }
 
       .social-input-form {
-        border-color: #5BCA83 !important;
+        border-color: #5bca83 !important;
 
         .twlink {
-          color: #5BCA83 !important;
+          color: #5bca83 !important;
         }
 
         .submitbutton {
-          background-color: #5BCA83 !important;
+          background-color: #5bca83 !important;
         }
       }
 
       & > div {
-        color: #5BCA83 !important;
+        color: #5bca83 !important;
       }
 
       & > div:not(.done) div.date {
@@ -790,7 +791,7 @@ span.inputContent {
     .twitter-section-left {
       background-color: white;
       margin-right: 20px;
-      
+
       @media @max-sl-mobile {
         width: 100%;
         margin-bottom: 10px;
@@ -805,13 +806,13 @@ span.inputContent {
         font-size: 18px;
       }
     }
-    
+
     .twitter-section-right {
       .inforetweet {
         font-weight: normal;
         font-size: 20px;
         line-height: 24px;
-        color: #B5B5B5;
+        color: #b5b5b5;
 
         @media @max-sl-mobile {
           margin-bottom: 20px;
@@ -843,7 +844,7 @@ span.inputContent {
 
   .done.big {
     .twitter-section-right .inforetweet {
-      color: #5BCa83;
+      color: #5bca83;
     }
   }
 }

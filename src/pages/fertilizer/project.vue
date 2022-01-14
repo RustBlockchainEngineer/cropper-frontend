@@ -73,9 +73,7 @@
                   </div>
                   <div v-else-if="currentStep > 0 && currentStep < 3" class="fcc-container">
                     <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
-                    <span class="font-small weight-semi spacing-large"
-                      >Following {{ fertilizer.title }}
-                    </span>
+                    <span class="font-small weight-semi spacing-large">Following {{ fertilizer.title }} </span>
                   </div>
                   <div v-else class="btn-container">
                     <Button class="btn-transparent font-medium weight-semi">Start Farming</Button>
@@ -107,9 +105,7 @@
                       <template slot="title">
                         <div class="fcsb-container">
                           <span class="font-small weight-bold">Sales</span>
-                          <span v-if="currentStep > 2" class="status-label closed font-small weight-bold"
-                            >Closed</span
-                          >
+                          <span v-if="currentStep > 2" class="status-label closed font-small weight-bold">Closed</span>
                         </div>
                         <span v-if="currentStep === 2" class="status-label description font-small"
                           >Winners can participate in the token sale.</span
@@ -194,12 +190,9 @@
                         <Col :span="8" class="project-detail-info-item">
                           <span class="title font-small weight-semi spacing-large">Website</span>
                           <div class="value fcs-container">
-                            <a
-                              class="website font-medium weight-semi"
-                              :href="fertilizer.website_url"
-                              target="_blank"
-                              >{{ fertilizer.website }}</a
-                            >
+                            <a class="website font-medium weight-semi" :href="fertilizer.website_url" target="_blank">{{
+                              fertilizer.website
+                            }}</a>
                           </div>
                         </Col>
                       </Row>
@@ -246,14 +239,10 @@
                     </div>
                     <div class="ticket-btn-group fcsb-container">
                       <div class="share-btn btn-container">
-                        <Button class="btn-primary font-small weight-semi spacing-large"
-                          >Share on Telegram</Button
-                        >
+                        <Button class="btn-primary font-small weight-semi spacing-large">Share on Telegram</Button>
                       </div>
                       <div class="share-btn btn-container">
-                        <Button class="btn-primary font-small weight-semi spacing-large"
-                          >Share on Twitter</Button
-                        >
+                        <Button class="btn-primary font-small weight-semi spacing-large">Share on Twitter</Button>
                       </div>
                     </div>
                   </div>
@@ -279,14 +268,8 @@
                       </div>
                     </div>
                     <div class="ticket-referral">
-                      <span class="font-medium weight-semi spacing-small"
-                        >Add referral link to win a ticket:</span
-                      >
-                      <input
-                        type="text"
-                        class="ticket-referral-link font-small weight-semi"
-                        :value="referralLink"
-                      />
+                      <span class="font-medium weight-semi spacing-small">Add referral link to win a ticket:</span>
+                      <input type="text" class="ticket-referral-link font-small weight-semi" :value="referralLink" />
                     </div>
                   </div>
                 </div>
@@ -339,33 +322,23 @@
                     <div class="information">
                       <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Hardcap</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.hard_cap
-                        }}</span>
+                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.hard_cap }}</span>
                       </div>
                       <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Sale rate</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.sale_rate
-                        }}</span>
+                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.sale_rate }}</span>
                       </div>
                       <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Sale type</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.sale_type
-                        }}</span>
+                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.sale_type }}</span>
                       </div>
                       <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Open Time</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.open_time
-                        }}</span>
+                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.open_time }}</span>
                       </div>
                       <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Close Time</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.close_time
-                        }}</span>
+                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.close_time }}</span>
                       </div>
                     </div>
                   </Col>
@@ -374,20 +347,14 @@
                     <div class="information">
                       <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Symbol</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.token_info.symbol
-                        }}</span>
+                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.token_info.symbol }}</span>
                       </div>
                       <div class="information-item fcsb-container">
                         <span class="label font-small weight-semi spacing-large">Category</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.token_info.category
-                        }}</span>
+                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.token_info.category }}</span>
                       </div>
                       <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large"
-                          >Token Distribution</span
-                        >
+                        <span class="label font-small weight-semi spacing-large">Token Distribution</span>
                         <span class="font-medium weight-semi spacing-small">{{
                           fertilizer.token_info.token_distribution
                         }}</span>
@@ -1091,7 +1058,7 @@ export default Vue.extend({
                   }
                 }
               }
-              
+
               .btn-container {
                 width: 212px;
               }

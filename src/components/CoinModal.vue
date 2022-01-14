@@ -23,10 +23,18 @@
               {{ coin.pc.symbol }}
             </div>
           </div>
-          <button v-if="!showHalf && coin.balance" class="input-button font-xsmall weight-bold fcc-container" @click="setMax(1)">
+          <button
+            v-if="!showHalf && coin.balance"
+            class="input-button font-xsmall weight-bold fcc-container"
+            @click="setMax(1)"
+          >
             Max
           </button>
-          <button v-if="showHalf && coin.balance" class="input-button font-xsmall weight-bold fcc-container" @click="setMax(0.5)">
+          <button
+            v-if="showHalf && coin.balance"
+            class="input-button font-xsmall weight-bold fcc-container"
+            @click="setMax(0.5)"
+          >
             Half
           </button>
         </div>
@@ -52,10 +60,12 @@
       <label class="font-small weight-semi spacing-large">LP Breakdown</label>
       <div class="lp-coins-container fcc-container">
         <div class="lp-coin-box font-small">
-          <b>{{lpbreakdown.pcSymbol}}</b> {{ Math.round(lpbreakdown.pcBalance * 1000 * ( value / coin.balance.fixed() )) / 1000 }}
+          <b>{{ lpbreakdown.pcSymbol }}</b>
+          {{ Math.round(lpbreakdown.pcBalance * 1000 * (value / coin.balance.fixed())) / 1000 }}
         </div>
         <div class="lp-coin-box font-small">
-          <b>{{lpbreakdown.coinSymbol}}</b> {{Math.round(lpbreakdown.coinBalance * 1000 * ( value / coin.balance.fixed() )) / 1000 }}
+          <b>{{ lpbreakdown.coinSymbol }}</b>
+          {{ Math.round(lpbreakdown.coinBalance * 1000 * (value / coin.balance.fixed())) / 1000 }}
         </div>
       </div>
     </div>

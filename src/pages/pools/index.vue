@@ -34,7 +34,9 @@
             <img class="icon-cursor close-icon" src="@/assets/icons/close-circle.svg" @click="hideGuide" />
             <Row class="guide-detail">
               <Col :sm="14" :xs="24">
-                <label class="font-small weight-semi spacing-large">Check out our v3 LP walkthrough and migration guides.</label>
+                <label class="font-small weight-semi spacing-large"
+                  >Check out our v3 LP walkthrough and migration guides.</label
+                >
                 <div class="learn-btn-container">
                   <Button class="learn-btn font-small weight-semi spacing-large">Learn more</Button>
                 </div>
@@ -437,7 +439,9 @@
                   <Col class="state font-medium weight-semi" span="2">
                     ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
                   </Col>
-                  <Col class="state font-medium weight-semi" span="2"> {{ new TokenAmount(data.apy, 2, false).format() }}% </Col>
+                  <Col class="state font-medium weight-semi" span="2">
+                    {{ new TokenAmount(data.apy, 2, false).format() }}%
+                  </Col>
                   <Col class="state font-medium weight-semi" span="3">
                     ${{ new TokenAmount(data.current, 2, false).format() }}
                   </Col>
@@ -577,7 +581,10 @@
 
                         <div class="btn-group">
                           <div class="btn-container">
-                            <Button class="btn-transparent font-small weight-bold" id="addp" @click="openPoolAddModal(data)"
+                            <Button
+                              class="btn-transparent font-small weight-bold"
+                              id="addp"
+                              @click="openPoolAddModal(data)"
                               >Add</Button
                             >
                           </div>
@@ -634,7 +641,10 @@
 
                       <div class="btn-group">
                         <div class="btn-container">
-                          <Button class="btn-transparent font-small weight-bold" id="addp" @click="openPoolAddModal(data)"
+                          <Button
+                            class="btn-transparent font-small weight-bold"
+                            id="addp"
+                            @click="openPoolAddModal(data)"
                             >Add</Button
                           >
                         </div>
@@ -729,11 +739,7 @@ import {
   Switch as Toggle
 } from 'ant-design-vue'
 
-import {
-  getCoinBalance, 
-  getPcBalance, 
-  getTotalSupply
-} from '@/utils/farm'
+import { getCoinBalance, getPcBalance, getTotalSupply } from '@/utils/farm'
 
 import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
@@ -1058,8 +1064,14 @@ export default class Pools extends Vue {
     const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.farmInfo.ammId)
     const totalSupply = getTotalSupply(currentPoolInfo)
 
-    const pcBalance = (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
-    const coinBalance = (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+    const pcBalance = (
+      (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString())) /
+      totalSupply
+    ).toFixed(3)
+    const coinBalance = (
+      (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString())) /
+      totalSupply
+    ).toFixed(3)
 
     set(this.unstakePoolInfo, 'pcBalance', pcBalance)
     set(this.unstakePoolInfo, 'coinBalance', coinBalance)
