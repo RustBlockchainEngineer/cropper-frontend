@@ -791,6 +791,46 @@ export default Vue.extend({
             border-radius: 8px;
             padding: 32px;
 
+            .project-detail-desc {
+              .project-title {
+                margin-bottom: 16px;
+
+                .project-logo {
+                  margin-right: 8px;
+                  border-radius: 50%;
+                }
+              }
+
+              .project-short-desc {
+                margin-bottom: 8px;
+              }
+            }
+
+            .project-detail-info-group {
+              .project-detail-info-item {
+                .title {
+                  color: rgba(255, 255, 255, 0.6);
+                }
+                .value {
+                  .website {
+                    color: #fff;
+                    text-decoration: underline;
+                    text-underline-position: under;
+                  }
+
+                  .coin-icon {
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    margin-right: 6px;
+                  }
+
+                  .lock-icon {
+                    margin-right: 6px;
+                  }
+                }
+              }
+            }
             &.banner {
               padding: 0 32px;
               margin-bottom: 132px;
@@ -856,47 +896,6 @@ export default Vue.extend({
               background: @color-blue700;
               border-radius: 8px;
               padding: 32px;
-
-              .project-detail-desc {
-                .project-title {
-                  margin-bottom: 16px;
-
-                  .project-logo {
-                    margin-right: 8px;
-                    border-radius: 50%;
-                  }
-                }
-
-                .project-short-desc {
-                  margin-bottom: 8px;
-                }
-              }
-
-              .project-detail-info-group {
-                .project-detail-info-item {
-                  .title {
-                    color: rgba(255, 255, 255, 0.6);
-                  }
-                  .value {
-                    .website {
-                      color: #fff;
-                      text-decoration: underline;
-                      text-underline-position: under;
-                    }
-
-                    .coin-icon {
-                      width: 16px;
-                      height: 16px;
-                      border-radius: 50%;
-                      margin-right: 6px;
-                    }
-
-                    .lock-icon {
-                      margin-right: 6px;
-                    }
-                  }
-                }
-              }
 
               .ticket-tasks-group {
                 margin-top: 32px;
