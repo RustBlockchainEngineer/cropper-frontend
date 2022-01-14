@@ -102,6 +102,35 @@ export function estimateRewards(
   return total_reward.toString()
 }
 
+
+export function estimateRewardsPerSec(
+  stateData:any,
+  extraConfigData:any,
+  poolData:any,
+  userData:any,
+){
+  const currentTimeStamp = Math.ceil(new Date().getTime() / 1000);
+
+  const duration = new BN(Math.max(currentTimeStamp - poolData.lastRewardTime, 0))
+
+  const reward_per_share = stateData.tokenPerSecond.mul(duration).mul(ACC_PRECISION).div(poolData.amount);
+  const acc_reward_per_share = poolData.accRewardPerShare.add(reward_per_share);
+
+  let extraPercentage = new BN(0)
+  extraConfigData.configs.forEach((item:any)=>{
+    if(item.duration.toString() === userData.lockDuration.toString())
+    {
+      extraPercentage = item.extraPercentage
+      return;
+    }
+  })
+
+  const pending_amount = userData.amount.mul( acc_reward_per_share).div(ACC_PRECISION).sub(userData.rewardDebt);
+  const extra_amount = userData.extraReward.add(pending_amount.mul(extraPercentage).div(FULL_100));
+  const total_reward = userData.rewardAmount.add(pending_amount).add(extra_amount)
+  return ((total_reward / 1000000000) / ((currentTimeStamp - poolData.lastRewardTime.toString()) * 1000));
+}
+
 export async function createFarmState(
   connection:Connection,
   wallet: any,

@@ -119,7 +119,7 @@
               <div class="staking-action-item fcsb-container">
                 <div class="reward-pending">
                   <label class="label font-medium">Reward Pending</label>
-                  <label class="value font-large weight-bold">{{ pendingReward }}</label>
+                  <label class="value font-large weight-bold">{{ pendingRewardDynamic }}</label>
                 </div>
                 <div class="btn-container">
                   <Button
@@ -481,6 +481,7 @@ import {
   getAllPools,
   getPoolUserAccount,
   estimateRewards,
+  estimateRewardsPerSec,
   calculateTiers,
   TIERS_XCRP,
   stake,
@@ -508,11 +509,14 @@ export default Vue.extend({
       lockDuration: 0 as number,
       crpbalance: 0 as any,
       endDateOfLock: 0 as any,
+      running: 0 as any,
 
       totalStaked: '0' as string,
       userStaked: 0 as number,
       userStakedUnformated: 0 as number,
       pendingReward: '0' as string,
+      pendingRewardDynamic: 0 as number,
+      counterdyn: null as any,
       totalStakedPrice: '0' as string,
       TVL: 0 as number,
       timer: null as any,
@@ -686,9 +690,17 @@ export default Vue.extend({
       this.userStakedUnformated = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed())
 
       const rewardAmount = estimateRewards(farm_state, extraRewardConfigs, current_pool.account, userAccount)
+      const rewardsPerSec = estimateRewardsPerSec(farm_state, extraRewardConfigs, current_pool.account, userAccount)
       const tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
       this.$accessor.wallet.setStakingTiers(tiers_info)
       this.pendingReward = new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed()
+      this.pendingRewardDynamic = (new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed() as unknown) as number
+
+      if(this.running != 1)
+      this.dynamicRebase(rewardsPerSec, this.pendingRewardDynamic)
+
+
+      this.running = 1
 
       this.currentTiers = tiers_info.tiers
       this.nextTiers = tiers_info.tiers + 1
@@ -715,6 +727,18 @@ export default Vue.extend({
         this.activeTab = '1'
       }
     },
+
+    dynamicRebase(rewardsPerSec: any, pendingRewardDynamic: any){
+
+      this.pendingRewardDynamic = Math.round(((pendingRewardDynamic * 1) + (rewardsPerSec)) * 1000000000) / 1000000000
+      const nreward = this.pendingRewardDynamic 
+        setTimeout(()=>{
+          this.dynamicRebase(rewardsPerSec, nreward)
+        }
+      , 1);
+
+    },
+
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
       this.baseModalShow = false
       this.estimatedAPY = estimated_apy
