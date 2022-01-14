@@ -1426,15 +1426,10 @@ export default Vue.extend({
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
   height: auto;
-
-  &:hover {
-    background: @gradient-color02;
-  }
 }
 
 .btn-transparent {

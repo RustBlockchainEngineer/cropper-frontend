@@ -351,7 +351,6 @@ export default Vue.extend({
 // global styles
 
 .btn-container {
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;

@@ -690,7 +690,6 @@ export default class Landing extends Vue {
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background-image: @gradient-color01;
   padding: 3px;
   border-radius: 48px;
   height: 54px;
@@ -698,10 +697,6 @@ export default class Landing extends Vue {
   -webkit-transition: background-color 2s ease-out;
   transition: background-color 2s ease-out;
   display: flex;
-
-  &:hover {
-    background-image: @gradient-color02;
-  }
 
   @media @max-sl-mobile {
     height: 60px;
