@@ -46,6 +46,7 @@ enum FarmInstruction
   Withdraw,
   AddReward,
   PayFarmFee,
+  RemoveRewards
 }
 export const FarmProgramAccountLayout = struct([
   u8('version'),
@@ -591,9 +592,9 @@ export class YieldFarm {
     startTimestamp:number,
     endTimestamp:number,
   ){
-    if(DEVNET_MODE){
-      endTimestamp = startTimestamp + 300; //temp
-    }
+    // if(DEVNET_MODE){
+    //   endTimestamp = startTimestamp + 300; //temp
+    // }
     
 
     const farmAccount = new Account();
@@ -1432,6 +1433,47 @@ export class YieldFarm {
     transaction.add(instruction);
     return await sendTransaction(connection, wallet, transaction, signers);
   }
+  public static async removeRewards( 
+    connection: Connection,
+    wallet: any ,
+    farmInfo: FarmInfo,
+    rewardAccount: string | undefined | null,
+  ) {
+    const transaction = new Transaction()
+    const signers: any = []
+    const owner = wallet.publicKey
+    const atas: string[] = []
+    const programId = new PublicKey(farmInfo.programId)
+    const farmId = new PublicKey(farmInfo.poolId)
+
+    // if no account, create new one
+    const userRewardTokenAccount = await createAssociatedTokenAccountIfNotExist(
+      rewardAccount,
+      owner,
+      farmInfo.reward.mintAddress,
+      transaction,
+      atas
+    )
+    let [authority] = await PublicKey.findProgramAddress(
+      [farmId.toBuffer()],
+      programId,
+    );
+
+    const seeds = [Buffer.from(FARM_PREFIX),programId.toBuffer()];
+    const [programAccount] = await PublicKey.findProgramAddress(seeds, programId);
+    const instruction = YieldFarm.createRemoveRewardsInstruction(
+      farmId,
+      authority,
+      owner,
+      userRewardTokenAccount,
+      new PublicKey(farmInfo.poolRewardTokenAccount),
+      TOKEN_PROGRAM_ID,
+      programId,
+      programAccount
+    );
+    transaction.add(instruction);
+    return await sendTransaction(connection, wallet, transaction, signers);
+  }
   static createDepositInstruction(
     farmId: PublicKey, // farm account 
     authority: PublicKey, //farm authority
@@ -1528,6 +1570,44 @@ export class YieldFarm {
         {
           instruction: FarmInstruction.Withdraw, // InitializeFarm instruction
           amount:amount,
+        },
+        data,
+      );
+      data = data.slice(0, encodeLength);
+    }
+    return new TransactionInstruction({
+      keys,
+      programId: farmProgramId,
+      data,
+    });
+  }
+  static createRemoveRewardsInstruction(
+    farmId: PublicKey, // farm account 
+    authority: PublicKey, //farm authority
+    owner: PublicKey,
+    userRewardTokenAccount: PublicKey,
+    poolRewardTokenAccount: PublicKey,
+    tokenProgramId: PublicKey,
+    farmProgramId: PublicKey,
+    programAccount: PublicKey,
+  ): TransactionInstruction {
+    const keys = [
+      {pubkey: farmId, isSigner: false, isWritable: true},
+      {pubkey: authority, isSigner: false, isWritable: false},
+      {pubkey: owner, isSigner: true, isWritable: false},
+      {pubkey: userRewardTokenAccount, isSigner: false, isWritable: true},
+      {pubkey: poolRewardTokenAccount, isSigner: false, isWritable: true},
+      {pubkey: programAccount, isSigner: false, isWritable: true},
+      {pubkey: tokenProgramId, isSigner: false, isWritable: false},
+    ];
+    const commandDataLayout = struct([
+      u8('instruction'),
+    ]); 
+    let data = Buffer.alloc(1024);
+    {
+      const encodeLength = commandDataLayout.encode(
+        {
+          instruction: FarmInstruction.RemoveRewards,
         },
         data,
       );
