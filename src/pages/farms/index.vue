@@ -45,13 +45,14 @@
       @onCancel="cancelAddReward"
     />
 
-    <CoinModal
+    <CoinModalAddReward
       v-if="stakeModalOpeningLP"
       title="Stake LP"
       :coin="lp"
+      :coinIcon="false"
       :farmInfo="farmInfo"
       :loading="staking"
-      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity."
+      text="<div style='text-align:center'>You now need to <b>stake your LP tokens</b> to start farming</div>"
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
@@ -1513,6 +1514,8 @@ export default Vue.extend({
       poolsDatas: {} as any,
       searchCertifiedFarm: 'labelized' as string,
       searchLifeFarm: false as boolean,
+      checkedFP: false as boolean,
+      updating: false as boolean,
       totalCount: 110,
       pageSize: 50,
       displaynoticeupdate: false,
@@ -1637,7 +1640,6 @@ export default Vue.extend({
       const conn = this.$web3
       const wallet = (this as any).$wallet
       const txid = await FarmProgram.createDefaultProgramData(conn, wallet)
-      console.log('create farm program account', txid)
 
       await this.delay(1500)
       this.checkIfFarmProgramExist()
@@ -1808,11 +1810,19 @@ export default Vue.extend({
       window.localStorage.TVL = this.TVL
     },
     async updateFarms() {
-      this.checkIfFarmProgramExist()
+      if(!this.checkedFP){
+        this.checkIfFarmProgramExist()
+      }
+      this.checkedFP = true
+
+
+      if(this.updating){
+        return;
+      }
+
+      this.updating = true;
 
       this.$accessor.token.loadTokens()
-      this.farmLoaded = false
-      console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
 
@@ -2237,6 +2247,7 @@ export default Vue.extend({
         this.showMoreMenu.push(false)
       })
       this.farmLoaded = true
+      this.updating = false;
     },
 
     updateCurrentLp(newTokenAccounts: any) {
@@ -2543,7 +2554,6 @@ export default Vue.extend({
             await this.delay(delayTime)
             totalDelayTime += delayTime
             txStatus = this.$accessor.transaction.history[txid].status
-            console.log('h1', totalDelayTime, txStatus)
           }
 
           if (txStatus === 'Fail') {
@@ -3033,7 +3043,6 @@ export default Vue.extend({
         }
         return item
       })
-      console.log(this.showMoreMenu)
     },
     hideMore() {
       if (this.currentShowMore != -1) {

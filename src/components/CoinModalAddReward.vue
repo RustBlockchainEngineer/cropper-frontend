@@ -20,7 +20,7 @@
         <div class="fcc-container">
           <div class="coins-container">
             <div class="coin-group font-small weight-semi">
-              <CoinIcon :mint-address="coin ? coin.mintAddress : ''" />
+              <CoinIcon v-if="coinIcon" :mint-address="coin ? coin.mintAddress : ''" />
               {{ coin.symbol }}
             </div>
           </div>
@@ -48,7 +48,10 @@
       </div>
     </div>
 
-    <div>{{ text }}</div>
+    <div v-if="text" v-html="text" class="info-box">
+      <img class="info-icon" src="@/assets/icons/info.svg" />
+      <label class="font-xsmall weight-bold" v-html="text"> </label>
+    </div>
 
     <div class="btn-group fcsb-container">
       <div class="btn-container">
@@ -101,6 +104,10 @@ export default Vue.extend({
     text: {
       type: String,
       default: ''
+    },
+    coinIcon: {
+      type: Boolean,
+      default: true
     }
   },
 
