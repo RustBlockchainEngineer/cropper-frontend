@@ -35,11 +35,15 @@
               Half
             </button>
           </div>
-          <input type="number" :value="toStake" placeholder="0.00" />
+          <input type="number" 
+          v-model="toStake" placeholder="0.00" />
         </div>
         <div v-if="crpbalance" class="label fcsb-container font-xsmall weight-semi">
           <span> Balance: {{ crpbalance }} </span>
-          <span> ~${{ crpbalance }} </span>
+          <span> ~${{ 
+          (Math.round(crpbalance * this.price.prices['CRP'] * 1000) / 1000)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} </span>
         </div>
       </div>
       <div class="tier-group fcsb-container">
@@ -113,7 +117,7 @@
             <Button
               class="btn-transparent font-medium weight-semi icon-cursor"
               id="vstake"
-              :disabled="this.crpbalance < toStake || toStake * 1 <= 0"
+              :disabled="crpbalance < toStake || toStake * 1 <= 0"
               @click="stakeToken"
               >Confirm</Button
             >
@@ -164,6 +168,7 @@ export default Vue.extend({
     return {
       toStake: null as any,
       tierActive: 4,
+      crpPrice: 1,
       boostAPY: 1,
       unstakeDate: '',
       minutesLock: null as any,
@@ -215,12 +220,13 @@ export default Vue.extend({
     }
   },
   computed: {
-    ...mapState(['wallet', 'url'])
+    ...mapState(['wallet', 'url', 'price', 'token'])
   },
 
   mounted() {
     setAnchorProvider(this.$web3, this.$wallet)
     this.displayTiers(this.tierActive)
+    this.crpPrice = this.price.prices['CRP'];
     getExtraRewardConfigs().then((res: any) => {
       res.configs.forEach((item: any, index: number) => {
         if (index >= this.lockData.length) {

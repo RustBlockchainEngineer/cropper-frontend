@@ -192,8 +192,10 @@
                 </label>
               </div>
               <div v-if="!endOfLock" class="get-crp fcc-container">
+              <NuxtLink to="/swap/">
                 <label class="font-medium weight-semi">Get CRP</label>
                 <img class="union-icon" src="@/assets/icons/union.svg" />
+              </NuxtLink>
               </div>
             </div>
           </div>
