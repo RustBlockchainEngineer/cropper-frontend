@@ -875,7 +875,7 @@ export default class CreateFarm extends Vue {
   gotoFarms() {
     this.$accessor.farm.requestInfos()
     this.$accessor.wallet.getTokenAccounts()
-    this.$router.push({ path: `/farms/#${this.farmId}` })
+    this.$router.push({ path: `/farms/?s=${this.farmId}` })
   }
   goToFarmInfo() {
     this.current++

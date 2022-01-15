@@ -1406,12 +1406,21 @@ export default class Pools extends Vue {
           var hash = window.location.hash
           if (hash) {
             hash = hash.substring(1)
-            this.searchName = hash
+
+            if(hash == 'createpool'){
+              if(this.wallet.connected){
+                this.createPoolModalOpening = true
+              }
+            } else {
+              this.searchName = hash
+            }
+
           } else {
             const query = new URLSearchParams(window.location.search)
             if (query.get('s')) this.searchName = query.get('s') as string
 
             if (query.get('d')) this.displayPoolID = query.get('d') as string
+
           }
 
           this.poolLoaded = true
