@@ -13,7 +13,7 @@
       :crpbalance="crpbalance"
       :userStaked="userStaked"
       :estimatedapy="estimatedAPY"
-      @onCancel="() => (stakeModalShow = false)"
+      @onCancel="closeModal"
     />
 
     <div class="card">
@@ -192,7 +192,7 @@
                 </label>
               </div>
               <div v-if="!endOfLock" class="get-crp fcc-container">
-              <NuxtLink to="/swap/">
+              <NuxtLink to="/swap/" class="get-crp ">
                 <label class="font-medium weight-semi">Get CRP</label>
                 <img class="union-icon" src="@/assets/icons/union.svg" />
               </NuxtLink>
@@ -622,6 +622,12 @@ export default Vue.extend({
 
       window.localStorage.TVL_last_updated = new Date().getTime()
       window.localStorage.TVL = this.TVL
+    },
+
+    closeModal(){
+      this.stakeModalShow = false
+      this.getGlobalState()
+      this.getUserState()
     },
 
     async getGlobalState() {
