@@ -36,8 +36,8 @@ export default class Nav extends Vue {
     //trading: true,
     swap: false,
     //liquidity: false,
-    pools: false,
     farms: false,
+    pools: false,
     staking: false,
     fertilizer: false
     // fusion: false,

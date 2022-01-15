@@ -38,7 +38,7 @@
                   >Check out our v3 LP walkthrough and migration guides.</label
                 >
                 <div class="learn-btn-container">
-                  <Button class="learn-btn font-small weight-semi spacing-large">Learn more</Button>
+                  <button class="learn-btn font-small weight-semi spacing-large"><a href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/user-tutorial/liquidity" style="color:#fff" target="_blank">Learn more</a></button>
                 </div>
               </Col>
               <Col :sm="10" :xs="0">
