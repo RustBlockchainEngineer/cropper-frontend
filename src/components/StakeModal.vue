@@ -77,7 +77,7 @@
           <div class="calc-yield-info">
             <label class="label font-small weight-bold">APY (%)</label>
             <label class="value font-small weight-semi spacing-large">{{
-              (Math.round(this.estimatedapy * 100) * boostAPY) / 100
+              (Math.round( ((Math.round(this.estimatedapy * 100) * boostAPY) / 100 ) * 100) / 100)
             }}</label>
           </div>
           <div class="calc-yield-info">
