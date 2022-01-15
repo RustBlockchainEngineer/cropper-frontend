@@ -737,7 +737,7 @@ export default Vue.extend({
     },
 
     dynamicRebase(rewardsPerSec: any, pendingRewardDynamic: any){
-
+      return false;
       const nreward = ((this.pendingRewardDynamic * 1) + (rewardsPerSec / 100))
       this.pendingRewardDynamic = Math.round(nreward * 1000000000) / 1000000000
         setTimeout(()=>{
