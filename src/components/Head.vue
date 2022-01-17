@@ -1,5 +1,5 @@
 <template>
-  <Header class="header fcsb-container">
+  <Header class="header fcsb-container" :class="isScrolling ? 'scrolling' : ''">
     <div class="nav-container fcs-container">
       <NuxtLink class="logo-container" to="/">
         <img class="logo" src="@/assets/icons/cropper-logo.svg" />
@@ -25,13 +25,26 @@ export default Vue.extend({
   components: {
     Header
   },
-
   data() {
     return {
-      navOpened: false
+      navOpened: false,
+      isScrolling: false,
     }
   },
-
+  mounted() {
+    // @ts-ignore
+    window.addEventListener('scroll', this.updateScroll)
+  },
+  methods: {
+    updateScroll() {
+      // @ts-ignore
+      this.isScrolling = true
+      if (window.scrollY === 0) {
+        // @ts-ignore
+        this.isScrolling = false
+      }
+    }
+  },
   computed: {
     isMobile() {
       return this.$accessor.isMobile
