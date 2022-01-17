@@ -868,6 +868,10 @@ export default class Wallet extends Vue {
               box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
               margin: -20px 0 4px 0;
             }
+
+            .tier-progress-percent {
+              white-space: nowrap;
+            }
           }
         }
       }
