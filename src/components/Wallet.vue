@@ -1088,37 +1088,7 @@ export default class Wallet extends Vue {
 .wallet {
   // ant progress
   .ant-progress {
-    background: transparent !important;
     width: 196px;
-
-    .ant-progress-outer {
-      display: flex;
-      margin: 0;
-      padding: 4px;
-      box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
-      border-radius: 50px;
-      height: 22px;
-      background: @color-blue800;
-
-      .ant-progress-inner {
-        background: transparent;
-
-        .ant-progress-bg {
-          background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
-          box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-          border-radius: 50px 0 0 50px !important;
-        }
-      }
-    }
-
-    .ant-progress-text {
-      font-size: 11px;
-      line-height: 16px;
-      font-weight: 400;
-      color: #fff;
-      float: right;
-      margin-top: 4px;
-    }
   }
 }
 </style>

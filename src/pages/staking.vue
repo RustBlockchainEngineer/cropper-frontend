@@ -39,7 +39,7 @@
             <div class="staking-progress">
               <div class="staking-progress-label fcsb-container">
                 <span class="font-xsmall weight-bold">Tier {{ currentTiers }}</span>
-                <span class="font-xsmall weight-bold">Tier {{ nextTiers }}</span>
+                <span v-if="currentTiers < 5" class="font-xsmall weight-bold">Tier {{ nextTiers }}</span>
               </div>
               <Progress
                 type="line"
@@ -530,8 +530,8 @@ export default Vue.extend({
 
       pctToNexttiers: 0 as number,
       userTier: 0 as number,
-      currentTiers: 0 as number,
-      nextTiers: 1 as number,
+      currentTiers: 5 as number,
+      nextTiers: 6 as number,
       selectedTier: 0 as number,
       activeTab: '1' as string
     }
@@ -581,7 +581,7 @@ export default Vue.extend({
       this.selectedTier = 1
       this.activeTab = '1'
     }
-
+    if (this.currentTiers === 5 ) this.pctToNexttiers = 100
     this.setTimer()
   },
   methods: {
@@ -725,6 +725,9 @@ export default Vue.extend({
             (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
           100
       }
+
+      if (this.currentTiers === 5 ) this.pctToNexttiers = 100
+
       if (this.currentTiers > 1) {
         this.setTierCarousel(this.currentTiers - 1)
         this.selectedTier = this.currentTiers
@@ -1332,29 +1335,7 @@ export default Vue.extend({
 
   // ant progress
   .ant-progress {
-    background: transparent !important;
     width: 100%;
-
-    .ant-progress-outer {
-      display: flex;
-      margin: 0;
-      padding: 4px;
-      box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
-      border-radius: 50px;
-      height: 22px;
-      background: @color-blue800;
-
-      .ant-progress-inner {
-        background: transparent;
-        border-radius: none;
-
-        .ant-progress-bg {
-          background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
-          box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-          border-radius: 50px 0 0 50px !important;
-        }
-      }
-    }
   }
 
   // ant tabs
