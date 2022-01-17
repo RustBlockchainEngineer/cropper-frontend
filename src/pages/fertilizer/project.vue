@@ -25,9 +25,9 @@
                         ? 'preparation'
                         : currentStep === 1
                         ? 'whitelist'
-                        : currentStep === 2
+                        : currentStep === 2 && currentTimestamp < sales_end_date
                         ? 'sales'
-                        : currentStep === 3
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date || currentStep === 3
                         ? 'distribution'
                         : ''
                     "
@@ -40,16 +40,16 @@
                           ? projectStatus.whitelist
                           : currentStep === 2 && fertilizer.sales_start_date > currentTimestamp
                           ? projectStatus.sales
-                          : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
+                          : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date && fertilizer.sales_end_date > currentTimestamp
                           ? projectStatus.open
-                          : currentStep === 3
+                          : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date || currentStep === 3
                           ? projectStatus.distribution
                           : ''
                       }}
                     </span>
                   </div>
                 </div>
-                <div v-if="currentStep < 3 && fertilizer.whitelist_start_date" class="project-countdown">
+                <div class="project-countdown">
                   <Countdown
                     :title="
                       currentStep === 0 && fertilizer.whitelist_start_date
@@ -58,8 +58,10 @@
                         ? 'End of the whitelist in'
                         : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
                         ? 'Sales start in'
-                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date
                         ? 'Sales end in'
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
+                        ? 'Distribution starts in'
                         : ''
                     "
                     :value="
@@ -69,8 +71,10 @@
                         ? fertilizer.whitelist_end_date
                         : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
                         ? fertilizer.sales_start_date
-                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date
                         ? fertilizer.sales_end_date
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
+                        ? fertilizer.distribution_start_date
                         : ''
                     "
                     format="DD:HH:mm:ss"
@@ -86,7 +90,7 @@
                       <span class="font-small weight-semi spacing-large">Earn ticket in progress</span>
                     </div>
                   </div>
-                  <div v-else-if="currentStep === 2">
+                  <div v-else-if="currentStep === 2 && currentTimestamp < fertilizer.sales_end_date">
                     <div class="fcc-container">
                       <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
                       <span class="font-small weight-semi spacing-large">
@@ -316,53 +320,63 @@
                       format="DD:HH:mm:ss"
                     />
                   </div>
-                  <div v-else>
+                  <div v-else-if="currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date">
                     <div class="project-detail-open">
                       <span class="font-medium weight-semi spacing-small"
                         >You can buy token from this project and see what you will receive.</span
                       >
                       <div class="token-amount fcsb-container">
-                        <div class="token-input-amount fcs-container">
-                          <input class="font-medium weight-bold" />
+                        <div class="token-amount-input fcs-container">
+                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          <input class="font-medium weight-bold" type="number" placeholder="627"/>
                         </div>
-                        <span class="token-max-amount">max 1500 USDC</span>
+                        <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
                       </div>
                       <div class="receive-amount">
                         <label class="font-xmall">You will receive:</label>
+                        <div class="receive-amount-output fcs-container">
+                          <img class="coin-icon" :src="fertilizer.logo">
+                          <span class="receive-amount-value font-medium weight-semi spacing-small">0.028 {{fertilizer.title}}</span>
+                        </div>
                       </div>
                       <div class="btn-container">
                         <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
                       </div>
                     </div>
                   </div>
+                  <div v-else>
+                    You have to wait Distribution date to receive Tokens. Be patient!
+                  </div>
                 </div>
-                <div v-else-if="currentStep === 3" class="project-detail-item text-center">
-                  <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
-                  <div class="distribution-details">
-                    <span class="font-medium">
-                      Sonar Watch raised:
-                      <br />
-                      <b>500,000 / 500,000 USDC</b>
-                    </span>
-                    <div class="sale-details-group fcc-container">
-                      <div class="sale-detail-card text-left">
-                        <span class="font-xsmall">ROI (ATH)</span>
+                <div v-else-if="currentStep === 3" class="project-detail-item">
+                  <div v-if="currentTimestamp > fertilizer.distribution_start_date" class="text-center">
+                    <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
+                    <div class="distribution-details">
+                      <span class="font-medium">
+                        Sonar Watch raised:
                         <br />
-                        <span class="font-large weight-bold">8.20x</span>
+                        <b>500,000 / 500,000 USDC</b>
+                      </span>
+                      <div class="sale-details-group fcc-container">
+                        <div class="sale-detail-card text-left">
+                          <span class="font-xsmall">ROI (ATH)</span>
+                          <br />
+                          <span class="font-large weight-bold">8.20x</span>
+                        </div>
+                        <div class="sale-detail-card text-left">
+                          <span class="font-xsmall">ROI (current)</span>
+                          <br />
+                          <span class="font-large weight-bold">1.07x</span>
+                        </div>
+                        <div class="sale-detail-card text-left">
+                          <span class="font-xsmall">Last Price</span>
+                          <br />
+                          <span class="font-large weight-bold">0.21 USDC</span>
+                        </div>
                       </div>
-                      <div class="sale-detail-card text-left">
-                        <span class="font-xsmall">ROI (current)</span>
-                        <br />
-                        <span class="font-large weight-bold">1.07x</span>
+                      <div class="btn-container margin-auto">
+                        <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
                       </div>
-                      <div class="sale-detail-card text-left">
-                        <span class="font-xsmall">Last Price</span>
-                        <br />
-                        <span class="font-large weight-bold">0.21 USDC</span>
-                      </div>
-                    </div>
-                    <div class="btn-container margin-auto">
-                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
                     </div>
                   </div>
                 </div>
@@ -377,6 +391,7 @@
                 </div>
                 <img class="farmer-img" src="@/assets/background/farmer.png" />
               </div>
+
               <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Project Details</h3>
                 <Row :gutter="40">
@@ -432,6 +447,7 @@
                   </Col>
                 </Row>
               </div>
+
               <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">About</h3>
                 <Row class="project-category-content-about" :gutter="40">
@@ -450,6 +466,7 @@
                   </Col>
                 </Row>
               </div>
+
               <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Features</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.features" />
@@ -505,6 +522,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Roadmap</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.roadmap" />
@@ -520,6 +538,7 @@
                   </span>
                 </div>
               </div>
+
               <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Team & Backers</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.team" />
@@ -542,6 +561,7 @@
                   </span>
                 </div>
               </div>
+
               <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Tokenomics</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.tokenomics" />
@@ -567,6 +587,7 @@
                   </span>
                 </div>
               </div>
+
               <div class="project-detail-static transparent">
                 <h3 class="project-category-title weight-semi">Token Distribution</h3>
                 <img class="project-category-banner-img" :src="fertilizer.img.distribution" />
@@ -651,7 +672,8 @@ export default Vue.extend({
         whitelist_start_date: 1642399272000,
         whitelist_end_date: 1643500800000,
         sales_start_date: 1642399272000,
-        sales_end_date: 1643500800000
+        sales_end_date: 1642399272000,
+        distribution_start_date: 1643500800000
       },
       projectStatus: {
         preparation: 'Preparation',
@@ -661,7 +683,7 @@ export default Vue.extend({
         distribution: 'Distribution'
       },
       currentTimestamp: 0,
-      currentStep: 0 as number,
+      currentStep: 2 as number,
       stepsStatus: 'process' as string,
       affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
       referralLink: 'http://' as string,
@@ -682,17 +704,11 @@ export default Vue.extend({
   mounted() {
     // this.$router.push({ path: `/swap/` })
     this.currentTimestamp = moment().valueOf()
-    this.checkStatus()
   },
 
   methods: {
     moment() {
       return moment()
-    },
-    checkStatus() {
-      if (this.fertilizer.whitelist_start_date) this.currentStep = 1
-      if (this.fertilizer.sales_start_date) this.currentStep = 2
-      console.log(this.currentStep)
     }
   }
 })
@@ -767,6 +783,13 @@ export default Vue.extend({
   margin-right: 8px;
 }
 
+.coin-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
 // class stylesheet
 .fertilizer-project.container {
   margin: 38px 0;
@@ -784,6 +807,7 @@ export default Vue.extend({
 
         .back-to-list {
           opacity: 0.5;
+          width: fit-content;
 
           .back-icon {
             margin-right: 8px;
@@ -869,13 +893,6 @@ export default Vue.extend({
                     text-underline-position: under;
                   }
 
-                  .coin-icon {
-                    width: 16px;
-                    height: 16px;
-                    border-radius: 50%;
-                    margin-right: 6px;
-                  }
-
                   .lock-icon {
                     margin-right: 6px;
                   }
@@ -958,6 +975,44 @@ export default Vue.extend({
                 display: table;
                 margin: auto;
                 
+                .token-amount {
+                  background: rgba(226, 227, 236, 0.1);
+                  border-radius: 12px;
+                  padding: 10px;
+                  margin: 16px 0 8px 0;
+
+                  .token-amount-input {
+                    width: calc(100% - 83px);
+
+                    input {
+                      border: none;
+                      outline: none;
+                      background: transparent;
+                      width: 100%;
+
+                      &::-webkit-inner-spin-button {
+                        display: none;
+                      }
+                    }
+                  }
+                  .token-max-amount {
+                    color: @color-blue100;
+                  }
+                }
+
+                .receive-amount {
+                  .receive-amount-output {
+                    background: @color-blue800;
+                    border-radius: 12px;
+                    padding: 10px;
+                    margin-top: 4px;
+
+                    .receive-amount-value {
+                      color: rgba(255, 255, 255, 0.5);
+                    }
+                  }
+                }
+
                 .btn-container {
                   margin-top: 24px;
                 }
