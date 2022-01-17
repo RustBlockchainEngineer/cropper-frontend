@@ -1,6 +1,6 @@
 <template>
   <main class="landing">
-    <section class="landing-header">
+    <section class="landing-header" :class="isScrolling ? 'scrolling' : ''">
       <div class="landing-top">
         <img class="cropper-logo" src="@/assets/icons/cropper-logo.svg" />
         <div class="lunch-btn-group">
@@ -540,14 +540,21 @@ export default class Landing extends Vue {
   }
   currentPlay: number = 1
   currentVideo: string = this.videoLinks.swap
+  isScrolling: boolean = false
 
   mounted() {
     this.getTvl()
     this.getTwitterFeeds()
+    window.addEventListener('scroll', this.updateScroll)
   }
 
   beforeDestroy() {
     window.clearInterval(this.timer)
+  }
+
+  updateScroll() {
+    this.isScrolling = true
+    if (window.scrollY === 0) this.isScrolling = false
   }
 
   changeToFarmer() {
@@ -753,11 +760,15 @@ h4 {
   .landing-header {
     position: fixed;
     width: 100%;
-    background: @color-blue800;
+    background: transparent;
     top: 0;
     z-index: 999;
     height: 80px;
-    opacity: 0.9;
+    
+    &.scrolling {
+      background: @color-blue800;
+      opacity: 0.9;
+    }
 
     .landing-top {
       height: 100%;
