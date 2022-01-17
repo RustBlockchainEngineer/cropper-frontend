@@ -38,6 +38,7 @@
             <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="false" />
             <div class="tier-progress-info-container">
               <div
+                v-if="Number(pctToNexttiers.toFixed(1)) > 1"
                 class="tier-progress-end"
                 :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
               ></div>
