@@ -27,7 +27,7 @@
                         ? 'whitelist'
                         : currentStep === 2 && currentTimestamp < sales_end_date
                         ? 'sales'
-                        : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date || currentStep === 3
+                        : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) || currentStep === 3
                         ? 'distribution'
                         : ''
                     "
@@ -40,9 +40,11 @@
                           ? projectStatus.whitelist
                           : currentStep === 2 && fertilizer.sales_start_date > currentTimestamp
                           ? projectStatus.sales
-                          : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date && fertilizer.sales_end_date > currentTimestamp
+                          : currentStep === 2 &&
+                            currentTimestamp > fertilizer.sales_start_date &&
+                            fertilizer.sales_end_date > currentTimestamp
                           ? projectStatus.open
-                          : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date || currentStep === 3
+                          : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) || currentStep === 3
                           ? projectStatus.distribution
                           : ''
                       }}
@@ -58,7 +60,9 @@
                         ? 'End of the whitelist in'
                         : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
                         ? 'Sales start in'
-                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date
+                        : currentStep === 2 &&
+                          currentTimestamp > fertilizer.sales_start_date &&
+                          currentTimestamp < fertilizer.sales_end_date
                         ? 'Sales end in'
                         : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
                         ? 'Distribution starts in'
@@ -71,7 +75,9 @@
                         ? fertilizer.whitelist_end_date
                         : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
                         ? fertilizer.sales_start_date
-                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date
+                        : currentStep === 2 &&
+                          currentTimestamp > fertilizer.sales_start_date &&
+                          currentTimestamp < fertilizer.sales_end_date
                         ? fertilizer.sales_end_date
                         : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
                         ? fertilizer.distribution_start_date
@@ -98,8 +104,11 @@
                       </span>
                     </div>
                   </div>
-                  <div v-else-if="currentStep === 3" class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
+                  <div v-else-if="currentStep === 3">
+                    <div class="fcc-container">
+                      <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
+                      <span class="font-small weight-semi spacing-large">Distribution in progress</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -320,7 +329,11 @@
                       format="DD:HH:mm:ss"
                     />
                   </div>
-                  <div v-else-if="currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date">
+                  <div
+                    v-else-if="
+                      currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date
+                    "
+                  >
                     <div class="project-detail-open">
                       <span class="font-medium weight-semi spacing-small"
                         >You can buy token from this project and see what you will receive.</span
@@ -328,15 +341,17 @@
                       <div class="token-amount fcsb-container">
                         <div class="token-amount-input fcs-container">
                           <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                          <input class="font-medium weight-bold" type="number" placeholder="627"/>
+                          <input class="font-medium weight-bold" type="number" placeholder="673" />
                         </div>
                         <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
                       </div>
                       <div class="receive-amount">
                         <label class="font-xmall">You will receive:</label>
                         <div class="receive-amount-output fcs-container">
-                          <img class="coin-icon" :src="fertilizer.logo">
-                          <span class="receive-amount-value font-medium weight-semi spacing-small">0.028 {{fertilizer.title}}</span>
+                          <img class="coin-icon" :src="fertilizer.logo" />
+                          <span class="receive-amount-value font-medium weight-semi spacing-small"
+                            >0.028 {{ fertilizer.title }}</span
+                          >
                         </div>
                       </div>
                       <div class="btn-container">
@@ -345,11 +360,70 @@
                     </div>
                   </div>
                   <div v-else>
-                    You have to wait Distribution date to receive Tokens. Be patient!
+                    <div class="project-detail-open">
+                      <Countdown
+                        class="distribution-start-countdown"
+                        title="Distribution starts in:"
+                        :value="fertilizer.distribution_start_date"
+                        format="DD:HH:mm:ss"
+                      />
+                      <span class="font-medium weight-semi spacing-small"
+                        >You have to wait Distribution date to receive Tokens. Be patient!</span
+                      >
+                      <div class="token-amount fcsb-container">
+                        <div class="token-amount-input fcs-container">
+                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          <input class="font-medium weight-bold" type="number" placeholder="673" />
+                        </div>
+                        <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                      </div>
+                      <div class="receive-amount">
+                        <label class="font-xmall">You will receive:</label>
+                        <div class="receive-amount-output fcs-container">
+                          <img class="coin-icon" :src="fertilizer.logo" />
+                          <span class="receive-amount-value font-medium weight-semi spacing-small"
+                            >0.028 {{ fertilizer.title }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="receive-notification fb-container">
+                        <img class="info-icon" src="@/assets/icons/info.svg" />
+                        <span class="font-xsmall weight-bold">You will receive your tokens on
+                          <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div v-else-if="currentStep === 3" class="project-detail-item">
-                  <div v-if="currentTimestamp > fertilizer.distribution_start_date" class="text-center">
+                  <div v-if="currentTimestamp > fertilizer.distribution_start_date" class="project-detail-open">
+                    <span class="font-medium weight-semi spacing-small"
+                      >Distribution in progress, keep in touch!</span
+                    >
+                    <div class="token-amount fcsb-container">
+                      <div class="token-amount-input fcs-container">
+                        <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                        <input class="font-medium weight-bold" type="number" placeholder="673" />
+                      </div>
+                      <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                    </div>
+                    <div class="receive-amount">
+                      <label class="font-xmall">You will receive:</label>
+                      <div class="receive-amount-output fcs-container">
+                        <img class="coin-icon" :src="fertilizer.logo" />
+                        <span class="receive-amount-value font-medium weight-semi spacing-small"
+                          >0.028 {{ fertilizer.title }}</span
+                        >
+                      </div>
+                    </div>
+                    <div class="receive-notification fb-container">
+                      <img class="info-icon" src="@/assets/icons/info.svg" />
+                      <span class="font-xsmall weight-bold">You will receive your tokens on
+                        <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- <div v-if="currentTimestamp > fertilizer.distribution_start_date" class="text-center">
                     <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
                     <div class="distribution-details">
                       <span class="font-medium">
@@ -378,7 +452,7 @@
                         <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
 
@@ -673,7 +747,7 @@ export default Vue.extend({
         whitelist_end_date: 1643500800000,
         sales_start_date: 1642399272000,
         sales_end_date: 1642399272000,
-        distribution_start_date: 1643500800000
+        distribution_start_date: 1642399272000
       },
       projectStatus: {
         preparation: 'Preparation',
@@ -683,7 +757,7 @@ export default Vue.extend({
         distribution: 'Distribution'
       },
       currentTimestamp: 0,
-      currentStep: 2 as number,
+      currentStep: 3 as number,
       stepsStatus: 'process' as string,
       affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
       referralLink: 'http://' as string,
@@ -788,6 +862,12 @@ export default Vue.extend({
   height: 16px;
   border-radius: 50%;
   margin-right: 6px;
+}
+
+.info-icon {
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
 }
 
 // class stylesheet
@@ -974,7 +1054,7 @@ export default Vue.extend({
               .project-detail-open {
                 display: table;
                 margin: auto;
-                
+
                 .token-amount {
                   background: rgba(226, 227, 236, 0.1);
                   border-radius: 12px;
@@ -1013,8 +1093,19 @@ export default Vue.extend({
                   }
                 }
 
+                .receive-notification {
+                  background: @color-blue800;
+                  margin-top: 32px;
+                  padding: 18px;
+                  border-radius: 18px;
+                }
+
                 .btn-container {
                   margin-top: 24px;
+                }
+
+                .distribution-start-countdown {
+                  margin-bottom: 32px;
                 }
               }
 
