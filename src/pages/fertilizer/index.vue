@@ -1122,7 +1122,7 @@ export default Vue.extend({
     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
   async mounted() {
-    this.$router.push({ path: `/swap/` })
+    // this.$router.push({ path: `/swap/` })
     this.getTvl()
     this.$accessor.token.loadTokens()
     await this.updateLabelizedAmms()
