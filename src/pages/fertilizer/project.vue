@@ -27,8 +27,6 @@
                         ? 'whitelist'
                         : currentStep === 2
                         ? 'sales'
-                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
-                        ? 'open'
                         : currentStep === 3
                         ? 'distribution'
                         : ''
@@ -40,7 +38,7 @@
                           ? projectStatus.preparation
                           : currentStep === 1
                           ? projectStatus.whitelist
-                          : currentStep === 2
+                          : currentStep === 2 && fertilizer.sales_start_date > currentTimestamp
                           ? projectStatus.sales
                           : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
                           ? projectStatus.open
@@ -51,38 +49,50 @@
                     </span>
                   </div>
                 </div>
-                <div v-if="currentStep < 3 && whitelistDefined" class="project-countdown">
+                <div v-if="currentStep < 3 && fertilizer.whitelist_start_date" class="project-countdown">
                   <Countdown
                     :title="
-                      currentStep === 0 && whitelistDefined
+                      currentStep === 0 && fertilizer.whitelist_start_date
                         ? 'The whitelist starts in'
                         : currentStep === 1
                         ? 'End of the whitelist in'
+                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
+                        ? 'Sales start in'
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
+                        ? 'Sales end in'
                         : ''
                     "
                     :value="
-                      fertilizer.status === projectStatus.whitelist
-                        ? fertilizer.whitelist_end_date
-                        : fertilizer.status === projectStatus.sales && currentTimestamp < fertilizer.sales_start_date
-                        ? fertilizer.sales_start_date
-                        : fertilizer.status === projectStatus.sales && currentTimestamp > fertilizer.sales_start_date
-                        ? fertilizer.sales_end_date
-                        : fertilizer.status === projectStatus.distribution
-                        ? fertilizer.distribution_start_date
-                        : fertilizer.status === projectStatus.preparation
+                      currentStep === 0 && fertilizer.whitelist_start_date
                         ? fertilizer.whitelist_start_date
+                        : currentStep === 1
+                        ? fertilizer.whitelist_end_date
+                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
+                        ? fertilizer.sales_start_date
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_start_date
+                        ? fertilizer.sales_end_date
                         : ''
                     "
                     format="DD:HH:mm:ss"
                   />
                 </div>
                 <div v-if="currentStep > 0" class="project-progress">
-                  <div v-if="currentStep === 1" class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
+                  <div v-if="currentStep === 1">
+                    <div v-if="!fertilizer.sales_start_date" class="btn-container">
+                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
+                    </div>
+                    <div v-else class="fcc-container">
+                      <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
+                      <span class="font-small weight-semi spacing-large">Earn ticket in progress</span>
+                    </div>
                   </div>
-                  <div v-else-if="currentStep > 1 && currentStep < 3" class="fcc-container">
-                    <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
-                    <span class="font-small weight-semi spacing-large">Following {{ fertilizer.title }} </span>
+                  <div v-else-if="currentStep === 2">
+                    <div class="fcc-container">
+                      <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
+                      <span class="font-small weight-semi spacing-large">
+                        {{ currentTimestamp > fertilizer.sales_start_date ? 'You can buy now' : 'You are registered' }}
+                      </span>
+                    </div>
                   </div>
                   <div v-else-if="currentStep === 3" class="btn-container">
                     <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
@@ -212,7 +222,7 @@
 
               <div class="project-detail-condition">
                 <div v-if="currentStep === 0"></div>
-                <div v-else-if="currentStep === 1" class="project-detail-item">
+                <div v-else-if="currentStep === 1 && fertilizer.sales_start_date" class="project-detail-item">
                   <h4 class="weight-semi">Earn Social Pool tickets!</h4>
                   <span class="font-medium">
                     A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
@@ -222,7 +232,7 @@
                     <div class="ticket-tasks">
                       <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
                       <div class="ticket-task-status-group fcsb-container">
-                        <div class="ticket-task-status-card fcsb-container">
+                        <div class="ticket-task-status-card fcsb-container" :class="ticketComplete ? 'active' : ''">
                           <div class="ticket-task-status fs-container">
                             <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
                             <div>
@@ -231,8 +241,9 @@
                               <span class="font-xsmall weight-semi">0/2 Task completed</span>
                             </div>
                           </div>
+                          <img v-if="ticketComplete" class="check-icon" src="@/assets/icons/check-white.svg" />
                         </div>
-                        <div class="ticket-task-status-card fcsb-container" :class="'active'">
+                        <div class="ticket-task-status-card fcsb-container" :class="ticketComplete ? 'active' : ''">
                           <div class="ticket-task-status fs-container">
                             <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
                             <div>
@@ -241,7 +252,7 @@
                               <span class="font-xsmall weight-semi">3/3 Task completed</span>
                             </div>
                           </div>
-                          <img class="check-icon" src="@/assets/icons/check-white.svg" />
+                          <img v-if="ticketComplete" class="check-icon" src="@/assets/icons/check-white.svg" />
                         </div>
                       </div>
                       <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
@@ -278,20 +289,54 @@
                             <span class="font-xsmall">0 Social / 0 Referrals</span>
                           </div>
                         </div>
-                        <div class="fcsb-container">
+                        <!-- <div class="fcsb-container">
                           <span class="font-small weight-semi spacing-large">Verification</span>
                           <span class="font-small text-upper">Unverified</span>
-                        </div>
+                        </div> -->
                       </div>
-                      <div class="ticket-referral">
+                      <!-- <div class="ticket-referral">
                         <span class="font-medium weight-semi spacing-small">Add referral link to win a ticket:</span>
                         <input type="text" class="ticket-referral-link font-small weight-semi" :value="referralLink" />
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div v-else-if="currentStep === 2" class="project-detail-item">
+                  <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
+                    <div class="fcc-container">
+                      <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
+                      <span class="font-medium weight-semi spacing-small"
+                        >Congratulations you will be able to buy when this sales start.</span
+                      >
+                    </div>
+                    <Countdown
+                      class="sales-start-countdown"
+                      title="Sales start in:"
+                      :value="fertilizer.sales_start_date"
+                      format="DD:HH:mm:ss"
+                    />
+                  </div>
+                  <div v-else>
+                    <div class="project-detail-open">
+                      <span class="font-medium weight-semi spacing-small"
+                        >You can buy token from this project and see what you will receive.</span
+                      >
+                      <div class="token-amount fcsb-container">
+                        <div class="token-input-amount fcs-container">
+                          <input class="font-medium weight-bold" />
+                        </div>
+                        <span class="token-max-amount">max 1500 USDC</span>
+                      </div>
+                      <div class="receive-amount">
+                        <label class="font-xmall">You will receive:</label>
+                      </div>
+                      <div class="btn-container">
+                        <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div v-else-if="currentStep === 2" class="project-detail-item"></div>
-                <div v-else class="project-detail-item text-center">
+                <div v-else-if="currentStep === 3" class="project-detail-item text-center">
                   <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
                   <div class="distribution-details">
                     <span class="font-medium">
@@ -570,7 +615,6 @@ export default Vue.extend({
   data() {
     return {
       fertilizer: {
-        status: 'Whitelist Open',
         picture: '/fertilizer/banner/unq.png',
         logo: '/fertilizer/logo/unq.png',
         title: 'UNQ.club',
@@ -583,7 +627,6 @@ export default Vue.extend({
         website: 'UNQ.club',
         website_url: 'https://UNQ.club',
         mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        whitelist_end_date: 1643500800000,
         ido_info: {
           hard_cap: 140000,
           sale_rate: 0.028,
@@ -604,7 +647,11 @@ export default Vue.extend({
           team: '/fertilizer/project/unq/team.png',
           tokenomics: '/fertilizer/project/unq/tokenomics.png',
           distribution: '/fertilizer/project/unq/distribution.png'
-        }
+        },
+        whitelist_start_date: 1642399272000,
+        whitelist_end_date: 1643500800000,
+        sales_start_date: 1642399272000,
+        sales_end_date: 1643500800000
       },
       projectStatus: {
         preparation: 'Preparation',
@@ -614,11 +661,11 @@ export default Vue.extend({
         distribution: 'Distribution'
       },
       currentTimestamp: 0,
-      currentStep: 1 as number,
-      whitelistDefined: true as boolean,
+      currentStep: 0 as number,
       stepsStatus: 'process' as string,
       affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
-      referralLink: 'http://' as string
+      referralLink: 'http://' as string,
+      ticketComplete: true as boolean
     }
   },
 
@@ -633,13 +680,19 @@ export default Vue.extend({
   watch: {},
 
   mounted() {
-    this.$router.push({ path: `/swap/` })
+    // this.$router.push({ path: `/swap/` })
     this.currentTimestamp = moment().valueOf()
+    this.checkStatus()
   },
 
   methods: {
     moment() {
       return moment()
+    },
+    checkStatus() {
+      if (this.fertilizer.whitelist_start_date) this.currentStep = 1
+      if (this.fertilizer.sales_start_date) this.currentStep = 2
+      console.log(this.currentStep)
     }
   }
 })
@@ -692,10 +745,6 @@ export default Vue.extend({
   &.preparation {
     background: @color-pink600;
   }
-
-  &.open {
-    background: @color-green500;
-  }
 }
 
 .status-label {
@@ -711,6 +760,13 @@ export default Vue.extend({
     color: @color-red500;
   }
 }
+
+.check-icon {
+  height: 16px;
+  width: 16px;
+  margin-right: 8px;
+}
+
 // class stylesheet
 .fertilizer-project.container {
   margin: 38px 0;
@@ -761,13 +817,7 @@ export default Vue.extend({
             }
 
             .project-progress {
-              .btn-container {
-                margin-top: 16px;
-              }
-
-              .check-icon {
-                margin-right: 8px;
-              }
+              margin-top: 16px;
             }
           }
 
@@ -898,6 +948,21 @@ export default Vue.extend({
               border-radius: 8px;
               padding: 32px;
 
+              .project-detail-sales {
+                .sales-start-countdown {
+                  margin-top: 32px;
+                }
+              }
+
+              .project-detail-open {
+                display: table;
+                margin: auto;
+                
+                .btn-container {
+                  margin-top: 24px;
+                }
+              }
+
               .ticket-tasks-group {
                 margin-top: 32px;
 
@@ -966,12 +1031,10 @@ export default Vue.extend({
                   padding: 16px;
 
                   .ticket-earned {
-                    margin-bottom: 28px;
-
                     .ticket-earned-status {
                       background: @gradient-color03;
                       padding: 16px;
-                      margin: 16px 0;
+                      margin-top: 16px;
                       border-radius: 8px;
 
                       .referral-icon {
