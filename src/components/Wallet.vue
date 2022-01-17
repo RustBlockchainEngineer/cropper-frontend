@@ -44,7 +44,7 @@
               ></div>
               <label
                 class="tier-progress-percent font-xsmall"
-                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
+                :style="Number(pctToNexttiers.toFixed(1)) < 90 ? 'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)' : 'margin-left: 90%'"
               >
                 {{ userTier }} sCRP
               </label>
