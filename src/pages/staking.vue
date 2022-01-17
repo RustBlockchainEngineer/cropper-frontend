@@ -530,8 +530,8 @@ export default Vue.extend({
 
       pctToNexttiers: 0 as number,
       userTier: 0 as number,
-      currentTiers: 5 as number,
-      nextTiers: 6 as number,
+      currentTiers: 0 as number,
+      nextTiers: 1 as number,
       selectedTier: 0 as number,
       activeTab: '1' as string
     }
