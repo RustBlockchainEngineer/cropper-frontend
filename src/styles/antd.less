@@ -10,8 +10,16 @@
   margin-top: -21px;
 
   &.fertilizer-project {
-    background: @gradient-color-bg, @color-blue800 !important;
+    background: linear-gradient(180deg, rgba(23, 32, 88, 0) 12.14%, #172058 15.99%), @color-blue800 !important;
     background-blend-mode: normal;
+
+    @media @max-lg-tablet {
+      background: linear-gradient(180deg, rgba(23, 32, 88, 0) 22.14%, #172058 25.99%), @color-blue800 !important;
+    }
+
+    @media @max-lg-tablet {
+      background: linear-gradient(180deg, rgba(23, 32, 88, 0) 22.14%, #172058 35.99%), @color-blue800 !important;
+    }
   }
 
   @media @max-sl-mobile {

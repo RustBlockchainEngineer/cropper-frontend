@@ -2,424 +2,373 @@
   <div class="fertilizer-project container">
     <div class="card">
       <div class="card-body">
-        <section class="project-header">
+        <div class="project-header">
           <div class="back-to-list icon-cursor fcs-container">
             <img class="back-icon" src="@/assets/icons/back.svg" />
             <span class="back-label font-medium weight-bold">Go back</span>
           </div>
-        </section>
+        </div>
 
-        <section class="project-content">
-          <Row :gutter="40">
-            <Col :span="6" class="project-preview-container">
-              <div class="project-preview">
-                <div class="project-overview fcsb-container">
-                  <div class="project-title fcs-container">
-                    <img class="project-logo" :src="fertilizer.logo" />
-                    <span class="font-large weight-bold">{{ fertilizer.title }}</span>
-                  </div>
-                  <div
-                    class="project-status"
-                    :class="
+        <div class="project-content">
+          <div class="project-preview-container">
+            <div class="project-preview">
+              <div class="project-overview fcsb-container">
+                <div class="project-title fcs-container">
+                  <img class="project-logo" :src="fertilizer.logo" />
+                  <span class="font-large weight-bold">{{ fertilizer.title }}</span>
+                </div>
+                <div
+                  class="project-status"
+                  :class="
+                    currentStep === 0
+                      ? 'preparation'
+                      : currentStep === 1
+                      ? 'whitelist'
+                      : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
+                      ? 'sales'
+                      : currentStep === 2 &&
+                        currentTimestamp > fertilizer.sales_start_date &&
+                        fertilizer.sales_end_date > currentTimestamp
+                      ? 'open'
+                      : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) ||
+                        (currentStep === 3 && !currentStatus.funded)
+                      ? 'distribution'
+                      : ''
+                  "
+                >
+                  <span class="font-xsmall weight-bold">
+                    {{
                       currentStep === 0
-                        ? 'preparation'
+                        ? projectStatus.preparation
                         : currentStep === 1
-                        ? 'whitelist'
-                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
-                        ? 'sales'
+                        ? projectStatus.whitelist
+                        : currentStep === 2 && fertilizer.sales_start_date > currentTimestamp
+                        ? projectStatus.sales
                         : currentStep === 2 &&
                           currentTimestamp > fertilizer.sales_start_date &&
                           fertilizer.sales_end_date > currentTimestamp
-                        ? 'open'
+                        ? projectStatus.open
                         : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) ||
                           (currentStep === 3 && !currentStatus.funded)
-                        ? 'distribution'
+                        ? projectStatus.distribution
                         : ''
-                    "
-                  >
-                    <span class="font-xsmall weight-bold">
-                      {{
-                        currentStep === 0
-                          ? projectStatus.preparation
-                          : currentStep === 1
-                          ? projectStatus.whitelist
-                          : currentStep === 2 && fertilizer.sales_start_date > currentTimestamp
-                          ? projectStatus.sales
-                          : currentStep === 2 &&
-                            currentTimestamp > fertilizer.sales_start_date &&
-                            fertilizer.sales_end_date > currentTimestamp
-                          ? projectStatus.open
-                          : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) ||
-                            (currentStep === 3 && !currentStatus.funded)
-                          ? projectStatus.distribution
-                          : ''
-                      }}
-                    </span>
-                  </div>
-                </div>
-                <div
-                  v-if="(currentStep === 0 && fertilizer.whitelist_start_date) || (currentStep >= 1 && currentStep < 3)"
-                  class="project-countdown"
-                >
-                  <Countdown
-                    :title="
-                      currentStep === 0 && fertilizer.whitelist_start_date
-                        ? 'The whitelist starts in'
-                        : currentStep === 1
-                        ? 'End of the whitelist in'
-                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
-                        ? 'Sales start in'
-                        : currentStep === 2 &&
-                          currentTimestamp > fertilizer.sales_start_date &&
-                          currentTimestamp < fertilizer.sales_end_date
-                        ? 'Sales end in'
-                        : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
-                        ? 'Distribution starts in'
-                        : ''
-                    "
-                    :value="
-                      currentStep === 0 && fertilizer.whitelist_start_date
-                        ? fertilizer.whitelist_start_date
-                        : currentStep === 1
-                        ? fertilizer.whitelist_end_date
-                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
-                        ? fertilizer.sales_start_date
-                        : currentStep === 2 &&
-                          currentTimestamp > fertilizer.sales_start_date &&
-                          currentTimestamp < fertilizer.sales_end_date
-                        ? fertilizer.sales_end_date
-                        : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
-                        ? fertilizer.distribution_start_date
-                        : ''
-                    "
-                    format="DD:HH:mm:ss"
-                  />
-                </div>
-                <div v-if="currentStep > 0" class="project-progress">
-                  <div v-if="currentStep === 1">
-                    <div v-if="!fertilizer.sales_start_date" class="btn-container">
-                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
-                    </div>
-                    <div v-else class="fcc-container">
-                      <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
-                      <span class="font-small weight-semi spacing-large">Earn ticket in progress</span>
-                    </div>
-                  </div>
-                  <div v-else-if="currentStep === 2">
-                    <div v-if="currentTimestamp < fertilizer.sales_end_date">
-                      <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub" class="fcc-container">
-                        <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
-                        <span class="font-small weight-semi spacing-large">You are registered</span>
-                      </div>
-                      <div
-                        v-else-if="
-                          (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
-                        "
-                        class="fcc-container"
-                      >
-                        <img class="alert-icon" src="@/assets/icons/alert.svg" />
-                        <span class="font-small weight-semi spacing-large">You are not in the whitelist</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div v-else-if="currentStep === 3">
-                    <div v-if="!currentStatus.funded" class="fcc-container">
-                      <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
-                      <span class="font-small weight-semi spacing-large">Distribution in progress</span>
-                    </div>
-                    <div v-else class="btn-container">
-                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="project-ido-container">
-                <div class="project-ido-process">
-                  <Steps :current="currentStep" size="small" direction="vertical" :status="currentStatus.steps">
-                    <Step>
-                      <template slot="title">
-                        <span class="font-small weight-bold">Preparation</span>
-                      </template>
-                    </Step>
-                    <Step>
-                      <template slot="title">
-                        <div class="fcsb-container">
-                          <span class="font-small weight-bold">Whitelist</span>
-                          <span v-if="currentStep > 1" class="status-label success font-small weight-bold"
-                            >Registered</span
-                          >
-                        </div>
-                        <span v-if="currentStep === 1" class="status-label description font-small"
-                          >You can now whitelist yourself for the lottery.</span
-                        >
-                      </template>
-                    </Step>
-                    <Step>
-                      <template slot="title">
-                        <div class="fcsb-container">
-                          <span class="font-small weight-bold">Sales</span>
-                          <span v-if="currentStep > 2" class="status-label closed font-small weight-bold">Closed</span>
-                        </div>
-                        <span v-if="currentStep === 2" class="status-label description font-small"
-                          >Winners can participate in the token sale.</span
-                        >
-                      </template>
-                    </Step>
-                    <Step>
-                      <template slot="title">
-                        <div class="fcsb-container">
-                          <span class="font-small weight-bold">Distribution</span>
-                          <span v-if="currentStep >= 3" class="status-label success font-small weight-bold"
-                            >Distributed</span
-                          >
-                        </div>
-                        <span v-if="currentStep === 3" class="status-label description font-small"
-                          >The tokens get distributed to Sale participants.</span
-                        >
-                      </template>
-                    </Step>
-                  </Steps>
-                </div>
-              </div>
-            </Col>
-            <Col :span="18" :offset="6" class="project-detail-container">
-              <div class="project-detail-static">
-                <Row :gutter="24">
-                  <Col :span="10">
-                    <div class="project-detail-desc">
-                      <div class="project-title fcs-container">
-                        <img class="project-logo" :src="fertilizer.logo" />
-                        <h4 class="weight-bold spacing-medium">{{ fertilizer.title }}</h4>
-                      </div>
-                      <div class="project-short-desc">
-                        <span class="font-medium weight-semi">{{ fertilizer.short_desc }}</span>
-                      </div>
-                      <span class="font-medium">{{ fertilizer.long_desc }}</span>
-                    </div>
-                  </Col>
-                  <Col :span="14">
-                    <div class="project-detail-info-group">
-                      <Row :gutter="[28, 40]">
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Token Price</span>
-                          <div class="value fcs-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <span class="font-medium"
-                              ><b>{{ fertilizer.ido_info.sale_rate }}</b> USDC</span
-                            >
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Hard Cap</span>
-                          <div class="value fcs-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <span class="font-medium"
-                              ><b>{{ fertilizer.ido_info.hard_cap }}</b> USDC</span
-                            >
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Pool Size</span>
-                          <div class="value fcs-container">
-                            <img class="coin-icon" :src="fertilizer.logo" />
-                            <span class="font-medium"
-                              ><b>{{ fertilizer.pool_size }}</b> {{ fertilizer.token_info.symbol }}</span
-                            >
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Type</span>
-                          <div class="value fcs-container">
-                            <img class="lock-icon" src="@/assets/icons/lock.svg" />
-                            <span class="font-medium weight-semi">{{ fertilizer.ido_info.sale_type }}</span>
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Participants</span>
-                          <div class="value fcs-container">
-                            <span class="font-medium weight-semi">{{ fertilizer.participants }}</span>
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Website</span>
-                          <div class="value fcs-container">
-                            <a class="website font-medium weight-semi" :href="fertilizer.website_url" target="_blank">{{
-                              fertilizer.website
-                            }}</a>
-                          </div>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-
-              <div class="project-detail-condition">
-                <div v-if="currentStep === 0"></div>
-                <div v-else-if="currentStep === 1 && fertilizer.sales_start_date" class="project-detail-item">
-                  <h4 class="weight-semi">Earn Social Pool tickets!</h4>
-                  <span class="font-medium">
-                    A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
-                    allocation by performing various social tasks.
+                    }}
                   </span>
-                  <div class="ticket-tasks-group fssb-container">
-                    <div class="ticket-tasks">
-                      <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
-                      <div class="ticket-task-status-group fcsb-container">
-                        <div
-                          class="ticket-task-status-card fcsb-container"
-                          :class="currentStatus.ticket ? 'active' : ''"
-                        >
-                          <div class="ticket-task-status fs-container">
-                            <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
-                            <div>
-                              <span class="font-medium weight-bold">Telegram task</span>
-                              <br />
-                              <span class="font-xsmall weight-semi">0/2 Task completed</span>
-                            </div>
-                          </div>
-                          <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
-                        </div>
-                        <div
-                          class="ticket-task-status-card fcsb-container"
-                          :class="currentStatus.ticket ? 'active' : ''"
-                        >
-                          <div class="ticket-task-status fs-container">
-                            <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
-                            <div>
-                              <span class="font-medium weight-bold">Twitter task</span>
-                              <br />
-                              <span class="font-xsmall weight-semi">3/3 Task completed</span>
-                            </div>
-                          </div>
-                          <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
-                        </div>
-                      </div>
-                      <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
-                      <div class="ticket-share-group fcsb-container">
-                        <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" />
-                        <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" />
-                      </div>
-                      <div class="ticket-btn-group fcsb-container">
-                        <div class="share-btn btn-container">
-                          <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
-                            >Share on Telegram</Button
-                          >
-                        </div>
-                        <div class="share-btn btn-container">
-                          <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
-                            >Share on Twitter</Button
-                          >
-                        </div>
-                      </div>
-                    </div>
-                    <div class="ticket-preview">
-                      <div class="ticket-earned">
-                        <span class="font-medium weight-bold"
-                          >You are now registered for the {{ fertilizer.title }} whitelist as:</span
-                        >
-                        <div class="ticket-earned-status fcs-container">
-                          <img class="referral-icon" src="@/assets/icons/referral.svg" />
-                          <div>
-                            <span class="font-medium weight-semi spacing-small">
-                              <label class="font-large">0</label>
-                              Earned Tickets
-                            </span>
-                            <br />
-                            <span class="font-xsmall">0 Social / 0 Referrals</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                </div>
+              </div>
+              <div
+                v-if="(currentStep === 0 && fertilizer.whitelist_start_date) || (currentStep >= 1 && currentStep < 3)"
+                class="project-countdown"
+              >
+                <Countdown
+                  :title="
+                    currentStep === 0 && fertilizer.whitelist_start_date
+                      ? 'The whitelist starts in'
+                      : currentStep === 1
+                      ? 'End of the whitelist in'
+                      : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
+                      ? 'Sales start in'
+                      : currentStep === 2 &&
+                        currentTimestamp > fertilizer.sales_start_date &&
+                        currentTimestamp < fertilizer.sales_end_date
+                      ? 'Sales end in'
+                      : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
+                      ? 'Distribution starts in'
+                      : ''
+                  "
+                  :value="
+                    currentStep === 0 && fertilizer.whitelist_start_date
+                      ? fertilizer.whitelist_start_date
+                      : currentStep === 1
+                      ? fertilizer.whitelist_end_date
+                      : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
+                      ? fertilizer.sales_start_date
+                      : currentStep === 2 &&
+                        currentTimestamp > fertilizer.sales_start_date &&
+                        currentTimestamp < fertilizer.sales_end_date
+                      ? fertilizer.sales_end_date
+                      : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
+                      ? fertilizer.distribution_start_date
+                      : ''
+                  "
+                  format="DD:HH:mm:ss"
+                />
+              </div>
+              <div v-if="currentStep > 0" class="project-progress">
+                <div v-if="currentStep === 1">
+                  <div v-if="!fertilizer.sales_start_date" class="btn-container">
+                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
+                  </div>
+                  <div v-else class="fcc-container">
+                    <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
+                    <span class="font-small weight-semi spacing-large">Earn ticket in progress</span>
                   </div>
                 </div>
-                <div v-else-if="currentStep === 2" class="project-detail-item">
-                  <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
-                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub">
-                      <div class="fcc-container">
-                        <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
-                        <span class="font-medium weight-semi spacing-small"
-                          >Congratulations you will be able to buy when this sales start.</span
-                        >
-                      </div>
-                      <Countdown
-                        class="sales-start-countdown"
-                        title="Sales start in:"
-                        :value="fertilizer.sales_start_date"
-                        format="DD:HH:mm:ss"
-                      />
+                <div v-else-if="currentStep === 2">
+                  <div v-if="currentTimestamp < fertilizer.sales_end_date">
+                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub" class="fcc-container">
+                      <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
+                      <span class="font-small weight-semi spacing-large">You are registered</span>
                     </div>
                     <div
                       v-else-if="
                         (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
                       "
-                      class="text-center"
+                      class="fcc-container"
                     >
-                      <div class="fcc-container mb-8">
-                        <img class="alert-icon" src="@/assets/icons/alert.svg" />
-                        <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
+                      <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                      <span class="font-small weight-semi spacing-large">You are not in the whitelist</span>
+                    </div>
+                  </div>
+                </div>
+                <div v-else-if="currentStep === 3">
+                  <div v-if="!currentStatus.funded" class="fcc-container">
+                    <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
+                    <span class="font-small weight-semi spacing-large">Distribution in progress</span>
+                  </div>
+                  <div v-else class="btn-container">
+                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="project-ido-container">
+              <div class="project-ido-process">
+                <Steps :current="currentStep" size="small" direction="vertical" :status="currentStatus.steps">
+                  <Step>
+                    <template slot="title">
+                      <span class="font-small weight-bold">Preparation</span>
+                    </template>
+                  </Step>
+                  <Step>
+                    <template slot="title">
+                      <div class="fcsb-container">
+                        <span class="font-small weight-bold">Whitelist</span>
+                        <span v-if="currentStep > 1" class="status-label success font-small weight-bold"
+                          >Registered</span
+                        >
                       </div>
-                      <span class="font-medium"
-                        >You do not have a winning staking ticket or winning social ticket.</span
+                      <span v-if="currentStep === 1" class="status-label description font-small"
+                        >You can now whitelist yourself for the lottery.</span
+                      >
+                    </template>
+                  </Step>
+                  <Step>
+                    <template slot="title">
+                      <div class="fcsb-container">
+                        <span class="font-small weight-bold">Sales</span>
+                        <span v-if="currentStep > 2" class="status-label closed font-small weight-bold">Closed</span>
+                      </div>
+                      <span v-if="currentStep === 2" class="status-label description font-small"
+                        >Winners can participate in the token sale.</span
+                      >
+                    </template>
+                  </Step>
+                  <Step>
+                    <template slot="title">
+                      <div class="fcsb-container">
+                        <span class="font-small weight-bold">Distribution</span>
+                        <span v-if="currentStep >= 3" class="status-label success font-small weight-bold"
+                          >Distributed</span
+                        >
+                      </div>
+                      <span v-if="currentStep === 3" class="status-label description font-small"
+                        >The tokens get distributed to Sale participants.</span
+                      >
+                    </template>
+                  </Step>
+                </Steps>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-detail-container">
+            <div class="project-detail-static">
+              <div class="project-detail-card">
+                <div class="project-detail-desc">
+                  <div class="project-title fcs-container">
+                    <img class="project-logo" :src="fertilizer.logo" />
+                    <h4 class="weight-bold spacing-medium">{{ fertilizer.title }}</h4>
+                  </div>
+                  <div class="project-short-desc">
+                    <span class="font-medium weight-semi">{{ fertilizer.short_desc }}</span>
+                  </div>
+                  <span class="font-medium">{{ fertilizer.long_desc }}</span>
+                </div>
+                <div class="project-detail-info-group">
+                  <Row :gutter="[28, 40]">
+                    <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
+                      <span class="title font-small weight-semi spacing-large">Token Price</span>
+                      <div class="value fcs-container">
+                        <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                        <span class="font-medium"
+                          ><b>{{ fertilizer.ido_info.sale_rate }}</b> USDC</span
+                        >
+                      </div>
+                    </Col>
+                    <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
+                      <span class="title font-small weight-semi spacing-large">Hard Cap</span>
+                      <div class="value fcs-container">
+                        <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                        <span class="font-medium"
+                          ><b>{{ fertilizer.ido_info.hard_cap }}</b> USDC</span
+                        >
+                      </div>
+                    </Col>
+                    <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
+                      <span class="title font-small weight-semi spacing-large">Pool Size</span>
+                      <div class="value fcs-container">
+                        <img class="coin-icon" :src="fertilizer.logo" />
+                        <span class="font-medium"
+                          ><b>{{ fertilizer.pool_size }}</b> {{ fertilizer.token_info.symbol }}</span
+                        >
+                      </div>
+                    </Col>
+                    <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
+                      <span class="title font-small weight-semi spacing-large">Type</span>
+                      <div class="value fcs-container">
+                        <img class="lock-icon" src="@/assets/icons/lock.svg" />
+                        <span class="font-medium weight-semi">{{ fertilizer.ido_info.sale_type }}</span>
+                      </div>
+                    </Col>
+                    <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
+                      <span class="title font-small weight-semi spacing-large">Participants</span>
+                      <div class="value fcs-container">
+                        <span class="font-medium weight-semi">{{ fertilizer.participants }}</span>
+                      </div>
+                    </Col>
+                    <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
+                      <span class="title font-small weight-semi spacing-large">Website</span>
+                      <div class="value fcs-container">
+                        <a class="website font-medium weight-semi" :href="fertilizer.website_url" target="_blank">{{
+                          fertilizer.website
+                        }}</a>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-detail-condition">
+              <div v-if="currentStep === 0"></div>
+              <div v-else-if="currentStep === 1 && fertilizer.sales_start_date" class="project-detail-item">
+                <h4 class="weight-semi">Earn Social Pool tickets!</h4>
+                <span class="font-medium">
+                  A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
+                  allocation by performing various social tasks.
+                </span>
+                <div class="ticket-tasks-group fssb-container">
+                  <div class="ticket-tasks">
+                    <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
+                    <div class="ticket-task-status-group fcsb-container">
+                      <div
+                        class="ticket-task-status-card fcsb-container"
+                        :class="currentStatus.ticket ? 'active' : ''"
+                      >
+                        <div class="ticket-task-status fs-container">
+                          <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
+                          <div>
+                            <span class="font-medium weight-bold">Telegram task</span>
+                            <br />
+                            <span class="font-xsmall weight-semi">0/2 Task completed</span>
+                          </div>
+                        </div>
+                        <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
+                      </div>
+                      <div
+                        class="ticket-task-status-card fcsb-container"
+                        :class="currentStatus.ticket ? 'active' : ''"
+                      >
+                        <div class="ticket-task-status fs-container">
+                          <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
+                          <div>
+                            <span class="font-medium weight-bold">Twitter task</span>
+                            <br />
+                            <span class="font-xsmall weight-semi">3/3 Task completed</span>
+                          </div>
+                        </div>
+                        <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
+                      </div>
+                    </div>
+                    <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
+                    <div class="ticket-share-group fcsb-container">
+                      <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" />
+                      <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" />
+                    </div>
+                    <div class="ticket-btn-group fcsb-container">
+                      <div class="share-btn btn-container">
+                        <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
+                          >Share on Telegram</Button
+                        >
+                      </div>
+                      <div class="share-btn btn-container">
+                        <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
+                          >Share on Twitter</Button
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ticket-preview">
+                    <div class="ticket-earned">
+                      <span class="font-medium weight-bold"
+                        >You are now registered for the {{ fertilizer.title }} whitelist as:</span
+                      >
+                      <div class="ticket-earned-status fcs-container">
+                        <img class="referral-icon" src="@/assets/icons/referral.svg" />
+                        <div>
+                          <span class="font-medium weight-semi spacing-small">
+                            <label class="font-large">0</label>
+                            Earned Tickets
+                          </span>
+                          <br />
+                          <span class="font-xsmall">0 Social / 0 Referrals</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div v-else-if="currentStep === 2" class="project-detail-item">
+                <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
+                  <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub">
+                    <div class="fcc-container">
+                      <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
+                      <span class="font-medium weight-semi spacing-small"
+                        >Congratulations you will be able to buy when this sales start.</span
                       >
                     </div>
+                    <Countdown
+                      class="sales-start-countdown"
+                      title="Sales start in:"
+                      :value="fertilizer.sales_start_date"
+                      format="DD:HH:mm:ss"
+                    />
                   </div>
                   <div
                     v-else-if="
-                      currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date
+                      (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
                     "
+                    class="text-center"
                   >
-                    <div class="project-detail-open">
-                      <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub">
-                        <span class="font-medium weight-semi spacing-small"
-                          >You can buy token from this project and see what you will receive.</span
-                        >
-                        <div class="token-amount fcsb-container">
-                          <div class="token-amount-input fcs-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <input class="font-medium weight-bold" type="number" placeholder="673" />
-                          </div>
-                          <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
-                        </div>
-                        <div class="receive-amount">
-                          <label class="font-xmall">You will receive:</label>
-                          <div class="receive-amount-output fcs-container">
-                            <img class="coin-icon" :src="fertilizer.logo" />
-                            <span class="receive-amount-value font-medium weight-semi spacing-small"
-                              >0.028 {{ fertilizer.title }}</span
-                            >
-                          </div>
-                        </div>
-                        <div class="btn-container">
-                          <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
-                        </div>
-                      </div>
-                      <div
-                        v-else-if="
-                          (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
-                        "
-                        class="text-center"
-                      >
-                        <div class="fcc-container mb-8">
-                          <img class="alert-icon" src="@/assets/icons/alert.svg" />
-                          <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
-                        </div>
-                        <span class="font-medium"
-                          >You do not have a winning staking ticket or winning social ticket.</span
-                        >
-                      </div>
+                    <div class="fcc-container mb-8">
+                      <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                      <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
                     </div>
+                    <span class="font-medium"
+                      >You do not have a winning staking ticket or winning social ticket.</span
+                    >
                   </div>
-                  <div v-else>
-                    <div class="project-detail-open">
-                      <Countdown
-                        class="distribution-start-countdown"
-                        title="Distribution starts in:"
-                        :value="fertilizer.distribution_start_date"
-                        format="DD:HH:mm:ss"
-                      />
+                </div>
+                <div
+                  v-else-if="
+                    currentTimestamp > fertilizer.sales_start_date && currentTimestamp < fertilizer.sales_end_date
+                  "
+                >
+                  <div class="project-detail-open">
+                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub">
                       <span class="font-medium weight-semi spacing-small"
-                        >You have to wait Distribution date to receive Tokens. Be patient!</span
+                        >You can buy token from this project and see what you will receive.</span
                       >
                       <div class="token-amount fcsb-container">
                         <div class="token-amount-input fcs-container">
@@ -437,22 +386,37 @@
                           >
                         </div>
                       </div>
-                      <div class="receive-notification fb-container">
-                        <img class="info-icon" src="@/assets/icons/info.svg" />
-                        <span class="font-xsmall weight-bold"
-                          >You will receive your tokens on
-                          <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
-                        </span>
+                      <div class="btn-container">
+                        <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
                       </div>
+                    </div>
+                    <div
+                      v-else-if="
+                        (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
+                      "
+                      class="text-center"
+                    >
+                      <div class="fcc-container mb-8">
+                        <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                        <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
+                      </div>
+                      <span class="font-medium"
+                        >You do not have a winning staking ticket or winning social ticket.</span
+                      >
                     </div>
                   </div>
                 </div>
-                <div v-else-if="currentStep === 3" class="project-detail-item">
-                  <div
-                    v-if="currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded"
-                    class="project-detail-open"
-                  >
-                    <span class="font-medium weight-semi spacing-small">Distribution in progress, keep in touch!</span>
+                <div v-else>
+                  <div class="project-detail-open">
+                    <Countdown
+                      class="distribution-start-countdown"
+                      title="Distribution starts in:"
+                      :value="fertilizer.distribution_start_date"
+                      format="DD:HH:mm:ss"
+                    />
+                    <span class="font-medium weight-semi spacing-small"
+                      >You have to wait Distribution date to receive Tokens. Be patient!</span
+                    >
                     <div class="token-amount fcsb-container">
                       <div class="token-amount-input fcs-container">
                         <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
@@ -477,269 +441,300 @@
                       </span>
                     </div>
                   </div>
-                  <div v-else class="text-center">
-                    <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
-                    <div class="distribution-details">
-                      <span class="font-medium">
-                        Sonar Watch raised:
+                </div>
+              </div>
+              <div v-else-if="currentStep === 3" class="project-detail-item">
+                <div
+                  v-if="currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded"
+                  class="project-detail-open"
+                >
+                  <span class="font-medium weight-semi spacing-small">Distribution in progress, keep in touch!</span>
+                  <div class="token-amount fcsb-container">
+                    <div class="token-amount-input fcs-container">
+                      <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                      <input class="font-medium weight-bold" type="number" placeholder="673" />
+                    </div>
+                    <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                  </div>
+                  <div class="receive-amount">
+                    <label class="font-xmall">You will receive:</label>
+                    <div class="receive-amount-output fcs-container">
+                      <img class="coin-icon" :src="fertilizer.logo" />
+                      <span class="receive-amount-value font-medium weight-semi spacing-small"
+                        >0.028 {{ fertilizer.title }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="receive-notification fb-container">
+                    <img class="info-icon" src="@/assets/icons/info.svg" />
+                    <span class="font-xsmall weight-bold"
+                      >You will receive your tokens on
+                      <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
+                    </span>
+                  </div>
+                </div>
+                <div v-else class="text-center">
+                  <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
+                  <div class="distribution-details">
+                    <span class="font-medium">
+                      Sonar Watch raised:
+                      <br />
+                      <b>500,000 / 500,000 USDC</b>
+                    </span>
+                    <div class="sale-details-group fcc-container">
+                      <div class="sale-detail-card text-left">
+                        <span class="font-xsmall">ROI (ATH)</span>
                         <br />
-                        <b>500,000 / 500,000 USDC</b>
-                      </span>
-                      <div class="sale-details-group fcc-container">
-                        <div class="sale-detail-card text-left">
-                          <span class="font-xsmall">ROI (ATH)</span>
-                          <br />
-                          <span class="font-large weight-bold">8.20x</span>
-                        </div>
-                        <div class="sale-detail-card text-left">
-                          <span class="font-xsmall">ROI (current)</span>
-                          <br />
-                          <span class="font-large weight-bold">1.07x</span>
-                        </div>
-                        <div class="sale-detail-card text-left">
-                          <span class="font-xsmall">Last Price</span>
-                          <br />
-                          <span class="font-large weight-bold">0.21 USDC</span>
-                        </div>
+                        <span class="font-large weight-bold">8.20x</span>
                       </div>
-                      <div class="btn-container m-auto">
-                        <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
+                      <div class="sale-detail-card text-left">
+                        <span class="font-xsmall">ROI (current)</span>
+                        <br />
+                        <span class="font-large weight-bold">1.07x</span>
                       </div>
+                      <div class="sale-detail-card text-left">
+                        <span class="font-xsmall">Last Price</span>
+                        <br />
+                        <span class="font-large weight-bold">0.21 USDC</span>
+                      </div>
+                    </div>
+                    <div class="btn-container m-auto">
+                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="project-detail-static banner fcsb-container">
-                <div class="project-detail-stake">
-                  <h4 class="weight-semi">Develop your Tier to have more allocation</h4>
-                  <div class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Stake CRP</Button>
-                  </div>
+            <div class="project-detail-static banner fcsb-container">
+              <div class="project-detail-stake">
+                <h4 class="weight-semi">Develop your Tier to have more allocation</h4>
+                <div class="btn-container">
+                  <Button class="btn-transparent font-medium weight-semi icon-cursor">Stake CRP</Button>
                 </div>
-                <img class="farmer-img" src="@/assets/background/farmer.png" />
               </div>
+              <img class="farmer-img" src="@/assets/background/farmer.png" />
+            </div>
 
-              <div class="project-detail-static transparent">
-                <h3 class="project-category-title weight-semi">Project Details</h3>
-                <Row :gutter="40">
-                  <Col :span="12">
-                    <span class="font-large weight-bold">IDO Information</span>
-                    <div class="information">
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Hardcap</span>
-                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.hard_cap }}</span>
-                      </div>
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Sale rate</span>
-                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.sale_rate }}</span>
-                      </div>
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Sale type</span>
-                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.sale_type }}</span>
-                      </div>
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Open Time</span>
-                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.open_time }}</span>
-                      </div>
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Close Time</span>
-                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.close_time }}</span>
-                      </div>
+            <div class="project-detail-static transparent">
+              <h3 class="project-category-title weight-semi">Project Details</h3>
+              <Row :gutter="[40, 20]">
+                <Col :md="12" :sm="24" :xs="24">
+                  <span class="font-large weight-bold">IDO Information</span>
+                  <div class="information">
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Hardcap</span>
+                      <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.hard_cap }}</span>
                     </div>
-                  </Col>
-                  <Col :span="12">
-                    <span class="font-large weight-bold">Token Information</span>
-                    <div class="information">
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Symbol</span>
-                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.token_info.symbol }}</span>
-                      </div>
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Category</span>
-                        <span class="font-medium weight-semi spacing-small">{{ fertilizer.token_info.category }}</span>
-                      </div>
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Token Distribution</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.token_info.token_distribution
-                        }}</span>
-                      </div>
-                      <div class="information-item fcsb-container">
-                        <span class="label font-small weight-semi spacing-large">Blockchain</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.token_info.blockchain
-                        }}</span>
-                      </div>
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Sale rate</span>
+                      <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.sale_rate }}</span>
                     </div>
-                  </Col>
-                </Row>
-              </div>
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Sale type</span>
+                      <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.sale_type }}</span>
+                    </div>
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Open Time</span>
+                      <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.open_time }}</span>
+                    </div>
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Close Time</span>
+                      <span class="font-medium weight-semi spacing-small">{{ fertilizer.ido_info.close_time }}</span>
+                    </div>
+                  </div>
+                </Col>
+                <Col :md="12" :sm="24" :xs="24">
+                  <span class="font-large weight-bold">Token Information</span>
+                  <div class="information">
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Symbol</span>
+                      <span class="font-medium weight-semi spacing-small">{{ fertilizer.token_info.symbol }}</span>
+                    </div>
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Category</span>
+                      <span class="font-medium weight-semi spacing-small">{{ fertilizer.token_info.category }}</span>
+                    </div>
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Token Distribution</span>
+                      <span class="font-medium weight-semi spacing-small">{{
+                        fertilizer.token_info.token_distribution
+                      }}</span>
+                    </div>
+                    <div class="information-item fcsb-container">
+                      <span class="label font-small weight-semi spacing-large">Blockchain</span>
+                      <span class="font-medium weight-semi spacing-small">{{
+                        fertilizer.token_info.blockchain
+                      }}</span>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </div>
 
-              <div class="project-detail-static transparent">
-                <h3 class="project-category-title weight-semi">About</h3>
-                <Row class="project-category-content-about" :gutter="40">
-                  <Col :span="12">
-                    <span class="font-medium">
-                      Discover, Collect, and Trade NFTs as a team.<br /><br />
-                      The first NFT asset management platform providing tools for collectors and investors to power the
-                      NFT space. Running cross-chain, powered by Solana.<br /><br />
-                      We bring more togetherness to the NFT space<br /><br />
-                      Create a club, act as a curator, raise funds to expand your collection, and build a community
-                      around it.
-                    </span>
-                  </Col>
-                  <Col :span="12">
-                    <img class="banner-img" :src="fertilizer.img.about" />
-                  </Col>
-                </Row>
-              </div>
-
-              <div class="project-detail-static transparent">
-                <h3 class="project-category-title weight-semi">Features</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.features" />
-                <div>
-                  <div>
-                    <span class="font-medium weight-semi">Onwership DAOs</span>
-                    <br /><br />
-                    <span class="font-medium">
-                      You can't just copy trade NFTs since they are unique and have a big social component. That's why
-                      UNQ allows you to create Clubs - essentially, ownership DAOs that are led by an experience and
-                      dedicated collector, and community can bring additional liquidity, participation, and governance.
-                    </span>
-                  </div>
-                  <br />
-                  <div>
-                    <span class="font-medium weight-semi">Flexible structure</span>
-                    <br /><br />
-                    <span class="font-medium">
-                      Want to have a better asset management for you play to earn guild? We got it. Want to get buy
-                      those expensive NFTs together with a team to de-risk your invetments? Do it. Want to turn
-                      collecting into a business, or expand existing gallery business into the digital world and be able
-                      to raise funds and get access to the world of NFTs? Explore our Public clubs and social tokens.
-                    </span>
-                  </div>
-                  <br />
-                  <div>
-                    <span class="font-medium weight-semi">Cross-chain transactions</span>
-                    <br /><br />
-                    <span class="font-medium">
-                      NFT market is growing, and more blockchains are introducing NFT support, which makes collector's
-                      life hard. We know that, and we want you to be able to focus on what you do best - buy and sell
-                      NFTs. That's why we are developing a solution that will allow you to transact with NFTs across
-                      chains from a single trustless Solana-based interface.
-                    </span>
-                  </div>
-                  <br />
-                  <div>
-                    <span class="font-medium weight-semi">Token utility :</span>
-                    <br /><br />
-                    <span class="font-medium">
-                      -UNQ is a single token utilized across the products.
-                      <br /><br />
-                      -Transacting Universe NFTs with UNQ gives additional benefits
-                      <br /><br />
-                      -UNQ is a platform governance token in Clubs
-                      <br /><br />
-                      -Clubs can upgrade using UNQ
-                      <br /><br />
-                      -Club tokens can be only traded against UNQ
-                      <br /><br />
-                      -Rewards for content creators in Worlds are in UNQ
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="project-detail-static transparent">
-                <h3 class="project-category-title weight-semi">Roadmap</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.roadmap" />
-                <div>
+            <div class="project-detail-static transparent">
+              <h3 class="project-category-title weight-semi">About</h3>
+              <Row class="project-category-content-about" :gutter="[40, 40]">
+                <Col :md="12" :sm="24" :xs="24">
                   <span class="font-medium">
-                    <b>Phase 1 - </b>Inception <br /><br />
-                    <b>Phase 2 - </b>MVP development , Solana Hackathon participation (winner 3rd place) <br /><br />
-                    <b>Phase 3 - </b>Further development, Market research, Private fundraise <br /><br />
-                    <b>Phase 4 - </b>Private beta of UNQ Club and UNQ World, NFT collection - UNQ Universe, Public beta
-                    of UNQ Club <br /><br />
-                    <b>Phase 5 - </b>Release of UNQ Club, Public beta of UNQ World <br /><br />
-                    <b>Phase 6 - </b>Release of UNQ World
+                    Discover, Collect, and Trade NFTs as a team.<br /><br />
+                    The first NFT asset management platform providing tools for collectors and investors to power the
+                    NFT space. Running cross-chain, powered by Solana.<br /><br />
+                    We bring more togetherness to the NFT space<br /><br />
+                    Create a club, act as a curator, raise funds to expand your collection, and build a community
+                    around it.
+                  </span>
+                </Col>
+                <Col :md="12" :sm="24" :xs="24">
+                  <img class="banner-img" :src="fertilizer.img.about" />
+                </Col>
+              </Row>
+            </div>
+
+            <div class="project-detail-static transparent">
+              <h3 class="project-category-title weight-semi">Features</h3>
+              <img class="project-category-banner-img" :src="fertilizer.img.features" />
+              <div>
+                <div>
+                  <span class="font-medium weight-semi">Onwership DAOs</span>
+                  <br /><br />
+                  <span class="font-medium">
+                    You can't just copy trade NFTs since they are unique and have a big social component. That's why
+                    UNQ allows you to create Clubs - essentially, ownership DAOs that are led by an experience and
+                    dedicated collector, and community can bring additional liquidity, participation, and governance.
+                  </span>
+                </div>
+                <br />
+                <div>
+                  <span class="font-medium weight-semi">Flexible structure</span>
+                  <br /><br />
+                  <span class="font-medium">
+                    Want to have a better asset management for you play to earn guild? We got it. Want to get buy
+                    those expensive NFTs together with a team to de-risk your invetments? Do it. Want to turn
+                    collecting into a business, or expand existing gallery business into the digital world and be able
+                    to raise funds and get access to the world of NFTs? Explore our Public clubs and social tokens.
+                  </span>
+                </div>
+                <br />
+                <div>
+                  <span class="font-medium weight-semi">Cross-chain transactions</span>
+                  <br /><br />
+                  <span class="font-medium">
+                    NFT market is growing, and more blockchains are introducing NFT support, which makes collector's
+                    life hard. We know that, and we want you to be able to focus on what you do best - buy and sell
+                    NFTs. That's why we are developing a solution that will allow you to transact with NFTs across
+                    chains from a single trustless Solana-based interface.
+                  </span>
+                </div>
+                <br />
+                <div>
+                  <span class="font-medium weight-semi">Token utility :</span>
+                  <br /><br />
+                  <span class="font-medium">
+                    -UNQ is a single token utilized across the products.
+                    <br /><br />
+                    -Transacting Universe NFTs with UNQ gives additional benefits
+                    <br /><br />
+                    -UNQ is a platform governance token in Clubs
+                    <br /><br />
+                    -Clubs can upgrade using UNQ
+                    <br /><br />
+                    -Club tokens can be only traded against UNQ
+                    <br /><br />
+                    -Rewards for content creators in Worlds are in UNQ
                   </span>
                 </div>
               </div>
+            </div>
 
-              <div class="project-detail-static transparent">
-                <h3 class="project-category-title weight-semi">Team & Backers</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.team" />
-                <div>
-                  <span class="font-medium">
-                    Co-founder and CEO - Alex Migitko : Entrepreneur, 17 years in IT, of which 10 years in game
-                    development, 5 years blockchain.
-                    <br /><br />
-                    Co-founder and CTO - Uros Sosevic : Software engineer, 17 years of experience as a developer,
-                    architect and CTO;5 years of experience working with
-                    <br /><br />
-                    Co-founder and BD - Martin Kardzhilov - Crypto-native, investor, marketing expert, working for 5
-                    years exclusively in the crypto industry.
-                    <br /><br />
-                    Backers :
-                    <br /><br />
-                    Solana Foundation, Jump Capital, GSR, Gate.io , MEXC, NGC, WWG, Chainboost, Solanium Ventures, Solar
-                    Eco Fund, ZBS, Kernel Ventuires, Basics Capital, Titans Ventures, AU21, DWeb3 Capital, WaterDrip,
-                    FBG, Everse Capital, Chain Capital, CryptoJ, Moonedge
-                  </span>
-                </div>
+            <div class="project-detail-static transparent">
+              <h3 class="project-category-title weight-semi">Roadmap</h3>
+              <img class="project-category-banner-img" :src="fertilizer.img.roadmap" />
+              <div>
+                <span class="font-medium">
+                  <b>Phase 1 - </b>Inception <br /><br />
+                  <b>Phase 2 - </b>MVP development , Solana Hackathon participation (winner 3rd place) <br /><br />
+                  <b>Phase 3 - </b>Further development, Market research, Private fundraise <br /><br />
+                  <b>Phase 4 - </b>Private beta of UNQ Club and UNQ World, NFT collection - UNQ Universe, Public beta
+                  of UNQ Club <br /><br />
+                  <b>Phase 5 - </b>Release of UNQ Club, Public beta of UNQ World <br /><br />
+                  <b>Phase 6 - </b>Release of UNQ World
+                </span>
               </div>
+            </div>
 
-              <div class="project-detail-static transparent">
-                <h3 class="project-category-title weight-semi">Tokenomics</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.tokenomics" />
-                <div>
-                  <span class="font-medium">
-                    Tokenomics description *
-                    <br /><br />
-                    Team and Advisors - 20%
-                    <br /><br />
-                    Seed round - 15%
-                    <br /><br />
-                    Strategic round - 7.5%
-                    <br /><br />
-                    Public - 1.5%
-                    <br /><br />
-                    Marketing - 5%
-                    <br /><br />
-                    Liquidity - 10%
-                    <br /><br />
-                    Staking rewards - 25%
-                    <br /><br />
-                    Treasury - 16%
-                  </span>
-                </div>
+            <div class="project-detail-static transparent">
+              <h3 class="project-category-title weight-semi">Team & Backers</h3>
+              <img class="project-category-banner-img" :src="fertilizer.img.team" />
+              <div>
+                <span class="font-medium">
+                  Co-founder and CEO - Alex Migitko : Entrepreneur, 17 years in IT, of which 10 years in game
+                  development, 5 years blockchain.
+                  <br /><br />
+                  Co-founder and CTO - Uros Sosevic : Software engineer, 17 years of experience as a developer,
+                  architect and CTO;5 years of experience working with
+                  <br /><br />
+                  Co-founder and BD - Martin Kardzhilov - Crypto-native, investor, marketing expert, working for 5
+                  years exclusively in the crypto industry.
+                  <br /><br />
+                  Backers :
+                  <br /><br />
+                  Solana Foundation, Jump Capital, GSR, Gate.io , MEXC, NGC, WWG, Chainboost, Solanium Ventures, Solar
+                  Eco Fund, ZBS, Kernel Ventuires, Basics Capital, Titans Ventures, AU21, DWeb3 Capital, WaterDrip,
+                  FBG, Everse Capital, Chain Capital, CryptoJ, Moonedge
+                </span>
               </div>
+            </div>
 
-              <div class="project-detail-static transparent">
-                <h3 class="project-category-title weight-semi">Token Distribution</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.distribution" />
-                <div>
-                  <span class="font-medium">
-                    Seed round - $0.02 (10M FDV), 5% TGE, 12 months cliff, 5%/ Daily over 12 months
-                    <br /><br />
-                    Strategic round - 0.04 (20m FDV), 10% TGE, 9 months cliff, 5%/ Daily over 9 months
-                    <br /><br />
-                    Public round - 0.0533 (26.7 FDV), 50% TGE, 3 months cliff / 25% / 3 months cliff/ 25%
-                    <br /><br />
-                    Team and Advisors - 2 years cliff , 3 years daily distribution
-                    <br /><br />
-                    Total supply - 500 000 000 UNQ tokens
-                    <br /><br />
-                    Initial Market cap - $700 000
-                    <br /><br />
-                    Hard cap - $3 400 000
-                  </span>
-                </div>
+            <div class="project-detail-static transparent">
+              <h3 class="project-category-title weight-semi">Tokenomics</h3>
+              <img class="project-category-banner-img" :src="fertilizer.img.tokenomics" />
+              <div>
+                <span class="font-medium">
+                  Tokenomics description *
+                  <br /><br />
+                  Team and Advisors - 20%
+                  <br /><br />
+                  Seed round - 15%
+                  <br /><br />
+                  Strategic round - 7.5%
+                  <br /><br />
+                  Public - 1.5%
+                  <br /><br />
+                  Marketing - 5%
+                  <br /><br />
+                  Liquidity - 10%
+                  <br /><br />
+                  Staking rewards - 25%
+                  <br /><br />
+                  Treasury - 16%
+                </span>
               </div>
-            </Col>
-          </Row>
-        </section>
+            </div>
+
+            <div class="project-detail-static transparent">
+              <h3 class="project-category-title weight-semi">Token Distribution</h3>
+              <img class="project-category-banner-img" :src="fertilizer.img.distribution" />
+              <div>
+                <span class="font-medium">
+                  Seed round - $0.02 (10M FDV), 5% TGE, 12 months cliff, 5%/ Daily over 12 months
+                  <br /><br />
+                  Strategic round - 0.04 (20m FDV), 10% TGE, 9 months cliff, 5%/ Daily over 9 months
+                  <br /><br />
+                  Public round - 0.0533 (26.7 FDV), 50% TGE, 3 months cliff / 25% / 3 months cliff/ 25%
+                  <br /><br />
+                  Team and Advisors - 2 years cliff , 3 years daily distribution
+                  <br /><br />
+                  Total supply - 500 000 000 UNQ tokens
+                  <br /><br />
+                  Initial Market cap - $700 000
+                  <br /><br />
+                  Hard cap - $3 400 000
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -798,10 +793,10 @@ export default Vue.extend({
           distribution: '/fertilizer/project/unq/distribution.png'
         },
         whitelist_start_date: 1642399272000,
-        whitelist_end_date: 1642399272000,
-        sales_start_date: 1642399272000,
-        sales_end_date: 1642399272000,
-        distribution_start_date: 1642399272000
+        whitelist_end_date: 1643500800000,
+        sales_start_date: 1643500800000,
+        sales_end_date: 1643500800000,
+        distribution_start_date: 1643500800000
         // 1643500800000
       },
       projectStatus: {
@@ -813,10 +808,10 @@ export default Vue.extend({
       },
       currentStatus: {
         steps: 'process' as string,
-        funded: true as boolean,
+        funded: false as boolean,
         win: false as boolean,
         sub: false as boolean,
-        ticket: true as boolean
+        ticket: false as boolean
       },
       currentTimestamp: 0 as any,
       currentStep: 0 as number,
@@ -973,14 +968,44 @@ export default Vue.extend({
       }
 
       .project-content {
+        display: flex;
+
+        @media @max-md-tablet {
+          display: block;
+        }
+
         .project-preview-container {
           position: fixed;
+          width: 300px;
+
+          @media @max-md-tablet {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+          }
+
+          @media @max-sl-mobile {
+            display: block;
+          }
 
           .project-preview {
             background: @gradient-color04;
             border-radius: 8px;
             padding: 16px;
             margin-bottom: 16px;
+
+            @media @max-md-tablet {
+              width: 50%;
+              margin-bottom: 0;
+              margin-right: 8px;
+            }
+
+            @media @max-sl-mobile {
+              width: 100%;
+              margin-bottom: 16px;
+              margin-right: 0;
+            }
 
             .project-overview {
               .project-title {
@@ -1005,6 +1030,16 @@ export default Vue.extend({
             padding: 3px;
             border-radius: 8px;
 
+            @media @max-md-tablet {
+              width: 50%;
+              margin-left: 8px;
+            }
+
+            @media @max-sl-mobile {
+              width: 100%;
+              margin-left: 0;
+            }
+
             .project-ido-process {
               height: 100%;
               width: 100%;
@@ -1016,60 +1051,96 @@ export default Vue.extend({
         }
 
         .project-detail-container {
+          width: calc(100% - 300px - 16px);
+          margin-left: calc(300px + 16px);
+
+          @media @max-md-tablet {
+            width: 100%;
+            margin-left: 0;
+            margin-top: 16px;
+          }
+
           .project-detail-static {
             background: @color-blue700;
             border-radius: 8px;
             padding: 32px;
 
-            .project-detail-desc {
-              .project-title {
-                margin-bottom: 16px;
+            .project-detail-card {
+              display: flex;
 
-                .project-logo {
-                  margin-right: 8px;
-                  border-radius: 50%;
-                }
+              @media @max-lg-tablet {
+                display: block;
               }
 
-              .project-short-desc {
-                margin-bottom: 8px;
-              }
-            }
+              .project-detail-desc {
+                width: 40%;
+                padding-right: 12px;
 
-            .project-detail-info-group {
-              .project-detail-info-item {
-                .title {
-                  color: rgba(255, 255, 255, 0.6);
+                @media @max-lg-tablet {
+                  width: 100%;
+                  padding-right: 0;
                 }
-                .value {
-                  .website {
-                    color: #fff;
-                    text-decoration: underline;
-                    text-underline-position: under;
-                  }
 
-                  .lock-icon {
-                    margin-right: 6px;
+                .project-title {
+                  margin-bottom: 16px;
+
+                  .project-logo {
+                    margin-right: 8px;
+                    border-radius: 50%;
                   }
                 }
+
+                .project-short-desc {
+                  margin-bottom: 8px;
+                }
+              }
+
+              .project-detail-info-group {
+                width: 60%;
+                padding-left: 12px;
+
+                @media @max-lg-tablet {
+                  width: 100%;
+                  padding-left: 0;
+                  margin-top: 24px;
+                }
+
+                .project-detail-info-item {
+                  .title {
+                    color: rgba(255, 255, 255, 0.6);
+                  }
+                  .value {
+                    .website {
+                      color: #fff;
+                      text-decoration: underline;
+                      text-underline-position: under;
+                    }
+
+                    .lock-icon {
+                      margin-right: 6px;
+                    }
+                  }
+                }
               }
             }
+            
             &.banner {
               padding: 0 32px;
               margin-bottom: 132px;
 
               .project-detail-stake {
                 padding: 32px 32px 32px 0;
-                width: calc(100% - 350px);
+                width: 60%;
 
                 .btn-container {
-                  width: 150px;
+                  max-width: 150px;
+                  width: 100%;
                   margin-top: 18px;
                 }
               }
 
               .farmer-img {
-                width: 350px;
+                width: 40%;
               }
             }
 
@@ -1085,6 +1156,10 @@ export default Vue.extend({
               .project-category-content-about {
                 display: flex;
                 align-content: stretch;
+
+                @media @max-sl-mobile {
+                  display: block;
+                }
 
                 .banner-img {
                   width: 100%;
@@ -1187,12 +1262,25 @@ export default Vue.extend({
               .ticket-tasks-group {
                 margin-top: 32px;
 
+                @media @max-lg-tablet {
+                  display: block !important;
+                }
+
                 .ticket-tasks {
-                  width: calc(100% - 326px - 48px);
-                  margin-right: 48px;
+                  width: 60%;
+                  padding-right: 48px;
+
+                  @media @max-lg-tablet {
+                    width: 100%;
+                    padding-right: 0;
+                  }
 
                   .ticket-task-status-group {
                     margin: 24px 0;
+                    
+                    @media @max-sl-mobile {
+                      display: block !important;
+                    }
 
                     .ticket-task-status-card {
                       background: @color-blue400;
@@ -1200,9 +1288,18 @@ export default Vue.extend({
                       padding: 16px;
                       border-radius: 8px;
 
+                      @media @max-sl-mobile {
+                        width: 100%;
+
+                        &:first-child {
+                          margin-bottom: 24px;
+                        }
+                      }
+
                       &.active {
                         background: @color-green500;
                       }
+
                       .ticket-task-status {
                         .ticket-social-icon {
                           width: 24px;
@@ -1233,8 +1330,20 @@ export default Vue.extend({
                   }
 
                   .ticket-btn-group {
+                    @media @max-sl-mobile {
+                      display: block !important;
+                    }
+                    
                     .share-btn {
                       width: calc((100% - 24px) / 2);
+
+                      @media @max-sl-mobile {
+                        width: 100%;
+
+                        &:first-child {
+                          margin-bottom: 24px;
+                        }
+                      }
 
                       .btn-primary {
                         width: 100%;
@@ -1245,12 +1354,16 @@ export default Vue.extend({
                 }
 
                 .ticket-preview {
-                  width: 326px;
+                  width: 40%;
                   height: 100%;
                   background: @color-blue800;
                   border-radius: 8px;
                   padding: 16px;
 
+                  @media @max-lg-tablet {
+                    width: 100%;
+                    margin-top: 24px;
+                  }
                   .ticket-earned {
                     .ticket-earned-status {
                       background: @gradient-color03;
