@@ -59,7 +59,7 @@
           @onSelect="openFromCoinSelect"
         />
 
-        <img src="@/assets/icons/swap-horizontal.svg" @click="changeCoinPosition" class="icon-cursor margin-auto" />
+        <img src="@/assets/icons/swap-horizontal.svg" @click="changeCoinPosition" class="icon-cursor m-auto" />
 
         <CoinInput
           v-model="toCoinAmount"

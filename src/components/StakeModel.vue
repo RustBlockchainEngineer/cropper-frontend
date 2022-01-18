@@ -33,7 +33,7 @@
       />
 
       <div class="plus-icon-container text-center">
-        <img src="@/assets/icons/plus.svg" class="plus-icon margin-auto" />
+        <img src="@/assets/icons/plus.svg" class="plus-icon m-auto" />
       </div>
 
       <CoinInput

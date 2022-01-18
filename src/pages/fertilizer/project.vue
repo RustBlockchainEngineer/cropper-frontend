@@ -10,7 +10,7 @@
         </section>
 
         <section class="project-content">
-          <Row :gutter="20">
+          <Row :gutter="40">
             <Col :span="6" class="project-preview-container">
               <div class="project-preview">
                 <div class="project-overview fcsb-container">
@@ -25,9 +25,14 @@
                         ? 'preparation'
                         : currentStep === 1
                         ? 'whitelist'
-                        : currentStep === 2 && currentTimestamp < sales_end_date
+                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
                         ? 'sales'
-                        : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) || currentStep === 3
+                        : currentStep === 2 &&
+                          currentTimestamp > fertilizer.sales_start_date &&
+                          fertilizer.sales_end_date > currentTimestamp
+                        ? 'open'
+                        : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) ||
+                          (currentStep === 3 && !currentStatus.funded)
                         ? 'distribution'
                         : ''
                     "
@@ -44,14 +49,18 @@
                             currentTimestamp > fertilizer.sales_start_date &&
                             fertilizer.sales_end_date > currentTimestamp
                           ? projectStatus.open
-                          : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) || currentStep === 3
+                          : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) ||
+                            (currentStep === 3 && !currentStatus.funded)
                           ? projectStatus.distribution
                           : ''
                       }}
                     </span>
                   </div>
                 </div>
-                <div class="project-countdown">
+                <div
+                  v-if="(currentStep === 0 && fertilizer.whitelist_start_date) || (currentStep >= 1 && currentStep < 3)"
+                  class="project-countdown"
+                >
                   <Countdown
                     :title="
                       currentStep === 0 && fertilizer.whitelist_start_date
@@ -92,29 +101,41 @@
                       <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
                     </div>
                     <div v-else class="fcc-container">
-                      <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
+                      <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                       <span class="font-small weight-semi spacing-large">Earn ticket in progress</span>
                     </div>
                   </div>
-                  <div v-else-if="currentStep === 2 && currentTimestamp < fertilizer.sales_end_date">
-                    <div class="fcc-container">
-                      <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
-                      <span class="font-small weight-semi spacing-large">
-                        {{ currentTimestamp > fertilizer.sales_start_date ? 'You can buy now' : 'You are registered' }}
-                      </span>
+                  <div v-else-if="currentStep === 2">
+                    <div v-if="currentTimestamp < fertilizer.sales_end_date">
+                      <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub" class="fcc-container">
+                        <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
+                        <span class="font-small weight-semi spacing-large">You are registered</span>
+                      </div>
+                      <div
+                        v-else-if="
+                          (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
+                        "
+                        class="fcc-container"
+                      >
+                        <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                        <span class="font-small weight-semi spacing-large">You are not in the whitelist</span>
+                      </div>
                     </div>
                   </div>
                   <div v-else-if="currentStep === 3">
-                    <div class="fcc-container">
-                      <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
+                    <div v-if="!currentStatus.funded" class="fcc-container">
+                      <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                       <span class="font-small weight-semi spacing-large">Distribution in progress</span>
+                    </div>
+                    <div v-else class="btn-container">
+                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="project-ido-container">
                 <div class="project-ido-process">
-                  <Steps :current="currentStep" size="small" direction="vertical" :status="stepsStatus">
+                  <Steps :current="currentStep" size="small" direction="vertical" :status="currentStatus.steps">
                     <Step>
                       <template slot="title">
                         <span class="font-small weight-bold">Preparation</span>
@@ -161,7 +182,7 @@
                 </div>
               </div>
             </Col>
-            <Col :span="18" class="project-detail-container">
+            <Col :span="18" :offset="6" class="project-detail-container">
               <div class="project-detail-static">
                 <Row :gutter="24">
                   <Col :span="10">
@@ -245,7 +266,10 @@
                     <div class="ticket-tasks">
                       <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
                       <div class="ticket-task-status-group fcsb-container">
-                        <div class="ticket-task-status-card fcsb-container" :class="ticketComplete ? 'active' : ''">
+                        <div
+                          class="ticket-task-status-card fcsb-container"
+                          :class="currentStatus.ticket ? 'active' : ''"
+                        >
                           <div class="ticket-task-status fs-container">
                             <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
                             <div>
@@ -254,9 +278,12 @@
                               <span class="font-xsmall weight-semi">0/2 Task completed</span>
                             </div>
                           </div>
-                          <img v-if="ticketComplete" class="check-icon" src="@/assets/icons/check-white.svg" />
+                          <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
                         </div>
-                        <div class="ticket-task-status-card fcsb-container" :class="ticketComplete ? 'active' : ''">
+                        <div
+                          class="ticket-task-status-card fcsb-container"
+                          :class="currentStatus.ticket ? 'active' : ''"
+                        >
                           <div class="ticket-task-status fs-container">
                             <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
                             <div>
@@ -265,7 +292,7 @@
                               <span class="font-xsmall weight-semi">3/3 Task completed</span>
                             </div>
                           </div>
-                          <img v-if="ticketComplete" class="check-icon" src="@/assets/icons/check-white.svg" />
+                          <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
                         </div>
                       </div>
                       <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
@@ -302,32 +329,40 @@
                             <span class="font-xsmall">0 Social / 0 Referrals</span>
                           </div>
                         </div>
-                        <!-- <div class="fcsb-container">
-                          <span class="font-small weight-semi spacing-large">Verification</span>
-                          <span class="font-small text-upper">Unverified</span>
-                        </div> -->
                       </div>
-                      <!-- <div class="ticket-referral">
-                        <span class="font-medium weight-semi spacing-small">Add referral link to win a ticket:</span>
-                        <input type="text" class="ticket-referral-link font-small weight-semi" :value="referralLink" />
-                      </div> -->
                     </div>
                   </div>
                 </div>
                 <div v-else-if="currentStep === 2" class="project-detail-item">
                   <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
-                    <div class="fcc-container">
-                      <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
-                      <span class="font-medium weight-semi spacing-small"
-                        >Congratulations you will be able to buy when this sales start.</span
+                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub">
+                      <div class="fcc-container">
+                        <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
+                        <span class="font-medium weight-semi spacing-small"
+                          >Congratulations you will be able to buy when this sales start.</span
+                        >
+                      </div>
+                      <Countdown
+                        class="sales-start-countdown"
+                        title="Sales start in:"
+                        :value="fertilizer.sales_start_date"
+                        format="DD:HH:mm:ss"
+                      />
+                    </div>
+                    <div
+                      v-else-if="
+                        (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
+                      "
+                      class="text-center"
+                    >
+                      <div class="fcc-container mb-8">
+                        <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                        <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
+                      </div>
+                      <span class="font-medium"
+                        >You do not have a winning staking ticket or winning social ticket.</span
                       >
                     </div>
-                    <Countdown
-                      class="sales-start-countdown"
-                      title="Sales start in:"
-                      :value="fertilizer.sales_start_date"
-                      format="DD:HH:mm:ss"
-                    />
                   </div>
                   <div
                     v-else-if="
@@ -335,27 +370,43 @@
                     "
                   >
                     <div class="project-detail-open">
-                      <span class="font-medium weight-semi spacing-small"
-                        >You can buy token from this project and see what you will receive.</span
+                      <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub">
+                        <span class="font-medium weight-semi spacing-small"
+                          >You can buy token from this project and see what you will receive.</span
+                        >
+                        <div class="token-amount fcsb-container">
+                          <div class="token-amount-input fcs-container">
+                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                            <input class="font-medium weight-bold" type="number" placeholder="673" />
+                          </div>
+                          <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                        </div>
+                        <div class="receive-amount">
+                          <label class="font-xmall">You will receive:</label>
+                          <div class="receive-amount-output fcs-container">
+                            <img class="coin-icon" :src="fertilizer.logo" />
+                            <span class="receive-amount-value font-medium weight-semi spacing-small"
+                              >0.028 {{ fertilizer.title }}</span
+                            >
+                          </div>
+                        </div>
+                        <div class="btn-container">
+                          <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                        </div>
+                      </div>
+                      <div
+                        v-else-if="
+                          (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
+                        "
+                        class="text-center"
                       >
-                      <div class="token-amount fcsb-container">
-                        <div class="token-amount-input fcs-container">
-                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                          <input class="font-medium weight-bold" type="number" placeholder="673" />
+                        <div class="fcc-container mb-8">
+                          <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                          <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
                         </div>
-                        <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
-                      </div>
-                      <div class="receive-amount">
-                        <label class="font-xmall">You will receive:</label>
-                        <div class="receive-amount-output fcs-container">
-                          <img class="coin-icon" :src="fertilizer.logo" />
-                          <span class="receive-amount-value font-medium weight-semi spacing-small"
-                            >0.028 {{ fertilizer.title }}</span
-                          >
-                        </div>
-                      </div>
-                      <div class="btn-container">
-                        <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                        <span class="font-medium"
+                          >You do not have a winning staking ticket or winning social ticket.</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -388,7 +439,8 @@
                       </div>
                       <div class="receive-notification fb-container">
                         <img class="info-icon" src="@/assets/icons/info.svg" />
-                        <span class="font-xsmall weight-bold">You will receive your tokens on
+                        <span class="font-xsmall weight-bold"
+                          >You will receive your tokens on
                           <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
                         </span>
                       </div>
@@ -396,10 +448,11 @@
                   </div>
                 </div>
                 <div v-else-if="currentStep === 3" class="project-detail-item">
-                  <div v-if="currentTimestamp > fertilizer.distribution_start_date" class="project-detail-open">
-                    <span class="font-medium weight-semi spacing-small"
-                      >Distribution in progress, keep in touch!</span
-                    >
+                  <div
+                    v-if="currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded"
+                    class="project-detail-open"
+                  >
+                    <span class="font-medium weight-semi spacing-small">Distribution in progress, keep in touch!</span>
                     <div class="token-amount fcsb-container">
                       <div class="token-amount-input fcs-container">
                         <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
@@ -418,12 +471,13 @@
                     </div>
                     <div class="receive-notification fb-container">
                       <img class="info-icon" src="@/assets/icons/info.svg" />
-                      <span class="font-xsmall weight-bold">You will receive your tokens on
+                      <span class="font-xsmall weight-bold"
+                        >You will receive your tokens on
                         <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
                       </span>
                     </div>
                   </div>
-                  <!-- <div v-if="currentTimestamp > fertilizer.distribution_start_date" class="text-center">
+                  <div v-else class="text-center">
                     <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
                     <div class="distribution-details">
                       <span class="font-medium">
@@ -448,11 +502,11 @@
                           <span class="font-large weight-bold">0.21 USDC</span>
                         </div>
                       </div>
-                      <div class="btn-container margin-auto">
+                      <div class="btn-container m-auto">
                         <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
                       </div>
                     </div>
-                  </div> -->
+                  </div>
                 </div>
               </div>
 
@@ -744,10 +798,11 @@ export default Vue.extend({
           distribution: '/fertilizer/project/unq/distribution.png'
         },
         whitelist_start_date: 1642399272000,
-        whitelist_end_date: 1643500800000,
+        whitelist_end_date: 1642399272000,
         sales_start_date: 1642399272000,
         sales_end_date: 1642399272000,
         distribution_start_date: 1642399272000
+        // 1643500800000
       },
       projectStatus: {
         preparation: 'Preparation',
@@ -756,12 +811,17 @@ export default Vue.extend({
         open: 'Open Sales',
         distribution: 'Distribution'
       },
-      currentTimestamp: 0,
-      currentStep: 3 as number,
-      stepsStatus: 'process' as string,
-      affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
-      referralLink: 'http://' as string,
-      ticketComplete: true as boolean
+      currentStatus: {
+        steps: 'process' as string,
+        funded: true as boolean,
+        win: false as boolean,
+        sub: false as boolean,
+        ticket: true as boolean
+      },
+      currentTimestamp: 0 as any,
+      currentStep: 0 as number,
+      currentTier: 0 as number,
+      affiliatedLink: 'http://cropper.finance/unq?r=250' as string
     }
   },
 
@@ -778,6 +838,9 @@ export default Vue.extend({
   mounted() {
     // this.$router.push({ path: `/swap/` })
     this.currentTimestamp = moment().valueOf()
+    if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
+    if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
+    if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
   },
 
   methods: {
@@ -824,6 +887,10 @@ export default Vue.extend({
   }
 
   &.sales {
+    background: @color-purple600;
+  }
+
+  &.open {
     background: @color-purple500;
   }
 
@@ -851,9 +918,15 @@ export default Vue.extend({
   }
 }
 
-.check-icon {
+.status-icon {
   height: 16px;
   width: 16px;
+  margin-right: 8px;
+}
+
+.alert-icon {
+  height: 24px;
+  width: 24px;
   margin-right: 8px;
 }
 
@@ -901,6 +974,8 @@ export default Vue.extend({
 
       .project-content {
         .project-preview-container {
+          position: fixed;
+
           .project-preview {
             background: @gradient-color04;
             border-radius: 8px;
@@ -1186,18 +1261,6 @@ export default Vue.extend({
                       .referral-icon {
                         margin-right: 24px;
                       }
-                    }
-                  }
-
-                  .ticket-referral {
-                    .ticket-referral-link {
-                      background: rgba(226, 227, 236, 0.1);
-                      width: 100%;
-                      border-radius: 12px;
-                      outline: none;
-                      border: none;
-                      margin-top: 8px;
-                      padding: 10px;
                     }
                   }
                 }
