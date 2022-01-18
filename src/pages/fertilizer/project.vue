@@ -196,7 +196,7 @@
                   <span class="font-medium">{{ fertilizer.long_desc }}</span>
                 </div>
                 <div class="project-detail-info-group">
-                  <Row :gutter="[28, 40]">
+                  <Row :gutter="16">
                     <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
                       <span class="title font-small weight-semi spacing-large">Token Price</span>
                       <div class="value fcs-container">
@@ -233,13 +233,13 @@
                     </Col>
                     <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
                       <span class="title font-small weight-semi spacing-large">Participants</span>
-                      <div class="value fcs-container">
+                      <div class="value">
                         <span class="font-medium weight-semi">{{ fertilizer.participants }}</span>
                       </div>
                     </Col>
                     <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
                       <span class="title font-small weight-semi spacing-large">Website</span>
-                      <div class="value fcs-container">
+                      <div class="value">
                         <a class="website font-medium weight-semi" :href="fertilizer.website_url" target="_blank">{{
                           fertilizer.website
                         }}</a>
@@ -262,10 +262,7 @@
                   <div class="ticket-tasks">
                     <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
                     <div class="ticket-task-status-group fcsb-container">
-                      <div
-                        class="ticket-task-status-card fcsb-container"
-                        :class="currentStatus.ticket ? 'active' : ''"
-                      >
+                      <div class="ticket-task-status-card fcsb-container" :class="currentStatus.ticket ? 'active' : ''">
                         <div class="ticket-task-status fs-container">
                           <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
                           <div>
@@ -276,10 +273,7 @@
                         </div>
                         <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
                       </div>
-                      <div
-                        class="ticket-task-status-card fcsb-container"
-                        :class="currentStatus.ticket ? 'active' : ''"
-                      >
+                      <div class="ticket-task-status-card fcsb-container" :class="currentStatus.ticket ? 'active' : ''">
                         <div class="ticket-task-status fs-container">
                           <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
                           <div>
@@ -346,18 +340,14 @@
                     />
                   </div>
                   <div
-                    v-else-if="
-                      (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
-                    "
+                    v-else-if="(currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub"
                     class="text-center"
                   >
                     <div class="fcc-container mb-8">
                       <img class="alert-icon" src="@/assets/icons/alert.svg" />
                       <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
                     </div>
-                    <span class="font-medium"
-                      >You do not have a winning staking ticket or winning social ticket.</span
-                    >
+                    <span class="font-medium">You do not have a winning staking ticket or winning social ticket.</span>
                   </div>
                 </div>
                 <div
@@ -563,9 +553,7 @@
                     </div>
                     <div class="information-item fcsb-container">
                       <span class="label font-small weight-semi spacing-large">Blockchain</span>
-                      <span class="font-medium weight-semi spacing-small">{{
-                        fertilizer.token_info.blockchain
-                      }}</span>
+                      <span class="font-medium weight-semi spacing-small">{{ fertilizer.token_info.blockchain }}</span>
                     </div>
                   </div>
                 </Col>
@@ -581,8 +569,8 @@
                     The first NFT asset management platform providing tools for collectors and investors to power the
                     NFT space. Running cross-chain, powered by Solana.<br /><br />
                     We bring more togetherness to the NFT space<br /><br />
-                    Create a club, act as a curator, raise funds to expand your collection, and build a community
-                    around it.
+                    Create a club, act as a curator, raise funds to expand your collection, and build a community around
+                    it.
                   </span>
                 </Col>
                 <Col :md="12" :sm="24" :xs="24">
@@ -599,9 +587,9 @@
                   <span class="font-medium weight-semi">Onwership DAOs</span>
                   <br /><br />
                   <span class="font-medium">
-                    You can't just copy trade NFTs since they are unique and have a big social component. That's why
-                    UNQ allows you to create Clubs - essentially, ownership DAOs that are led by an experience and
-                    dedicated collector, and community can bring additional liquidity, participation, and governance.
+                    You can't just copy trade NFTs since they are unique and have a big social component. That's why UNQ
+                    allows you to create Clubs - essentially, ownership DAOs that are led by an experience and dedicated
+                    collector, and community can bring additional liquidity, participation, and governance.
                   </span>
                 </div>
                 <br />
@@ -609,10 +597,10 @@
                   <span class="font-medium weight-semi">Flexible structure</span>
                   <br /><br />
                   <span class="font-medium">
-                    Want to have a better asset management for you play to earn guild? We got it. Want to get buy
-                    those expensive NFTs together with a team to de-risk your invetments? Do it. Want to turn
-                    collecting into a business, or expand existing gallery business into the digital world and be able
-                    to raise funds and get access to the world of NFTs? Explore our Public clubs and social tokens.
+                    Want to have a better asset management for you play to earn guild? We got it. Want to get buy those
+                    expensive NFTs together with a team to de-risk your invetments? Do it. Want to turn collecting into
+                    a business, or expand existing gallery business into the digital world and be able to raise funds
+                    and get access to the world of NFTs? Explore our Public clubs and social tokens.
                   </span>
                 </div>
                 <br />
@@ -655,8 +643,8 @@
                   <b>Phase 1 - </b>Inception <br /><br />
                   <b>Phase 2 - </b>MVP development , Solana Hackathon participation (winner 3rd place) <br /><br />
                   <b>Phase 3 - </b>Further development, Market research, Private fundraise <br /><br />
-                  <b>Phase 4 - </b>Private beta of UNQ Club and UNQ World, NFT collection - UNQ Universe, Public beta
-                  of UNQ Club <br /><br />
+                  <b>Phase 4 - </b>Private beta of UNQ Club and UNQ World, NFT collection - UNQ Universe, Public beta of
+                  UNQ Club <br /><br />
                   <b>Phase 5 - </b>Release of UNQ Club, Public beta of UNQ World <br /><br />
                   <b>Phase 6 - </b>Release of UNQ World
                 </span>
@@ -674,14 +662,14 @@
                   Co-founder and CTO - Uros Sosevic : Software engineer, 17 years of experience as a developer,
                   architect and CTO;5 years of experience working with
                   <br /><br />
-                  Co-founder and BD - Martin Kardzhilov - Crypto-native, investor, marketing expert, working for 5
-                  years exclusively in the crypto industry.
+                  Co-founder and BD - Martin Kardzhilov - Crypto-native, investor, marketing expert, working for 5 years
+                  exclusively in the crypto industry.
                   <br /><br />
                   Backers :
                   <br /><br />
                   Solana Foundation, Jump Capital, GSR, Gate.io , MEXC, NGC, WWG, Chainboost, Solanium Ventures, Solar
-                  Eco Fund, ZBS, Kernel Ventuires, Basics Capital, Titans Ventures, AU21, DWeb3 Capital, WaterDrip,
-                  FBG, Everse Capital, Chain Capital, CryptoJ, Moonedge
+                  Eco Fund, ZBS, Kernel Ventuires, Basics Capital, Titans Ventures, AU21, DWeb3 Capital, WaterDrip, FBG,
+                  Everse Capital, Chain Capital, CryptoJ, Moonedge
                 </span>
               </div>
             </div>
@@ -938,6 +926,12 @@ export default Vue.extend({
   margin-right: 8px;
 }
 
+.lock-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+}
+
 // class stylesheet
 .fertilizer-project.container {
   margin: 38px 0;
@@ -1065,6 +1059,10 @@ export default Vue.extend({
             border-radius: 8px;
             padding: 32px;
 
+            @media @max-sl-mobile {
+              padding: 24px;
+            }
+
             .project-detail-card {
               display: flex;
 
@@ -1106,27 +1104,30 @@ export default Vue.extend({
                 }
 
                 .project-detail-info-item {
+                  height: 90px;
+
                   .title {
                     color: rgba(255, 255, 255, 0.6);
                   }
+
                   .value {
                     .website {
                       color: #fff;
                       text-decoration: underline;
                       text-underline-position: under;
                     }
-
-                    .lock-icon {
-                      margin-right: 6px;
-                    }
                   }
                 }
               }
             }
-            
+
             &.banner {
               padding: 0 32px;
-              margin-bottom: 132px;
+              margin-bottom: 100px;
+
+              @media @max-sl-mobile {
+                padding: 0 24px;
+              }
 
               .project-detail-stake {
                 padding: 32px 32px 32px 0;
@@ -1194,6 +1195,10 @@ export default Vue.extend({
               background: @color-blue700;
               border-radius: 8px;
               padding: 32px;
+
+              @media @max-sl-mobile {
+                padding: 24px;
+              }
 
               .project-detail-sales {
                 .sales-start-countdown {
@@ -1277,7 +1282,7 @@ export default Vue.extend({
 
                   .ticket-task-status-group {
                     margin: 24px 0;
-                    
+
                     @media @max-sl-mobile {
                       display: block !important;
                     }
@@ -1333,7 +1338,7 @@ export default Vue.extend({
                     @media @max-sl-mobile {
                       display: block !important;
                     }
-                    
+
                     .share-btn {
                       width: calc((100% - 24px) / 2);
 
