@@ -43,11 +43,17 @@
                 :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
               ></div>
               <label
+                v-if="currentTiers < 5"
                 class="tier-progress-percent font-xsmall"
-                :style="Number(pctToNexttiers.toFixed(1)) < 90 ? 'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)' : 'margin-left: 90%'"
+                :style="
+                  Number(pctToNexttiers.toFixed(1)) < 90
+                    ? 'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'
+                    : 'margin-left: 90%'
+                "
               >
                 {{ userTier }} sCRP
               </label>
+              <label v-else class="staking-progress-percent max-tier font-xsmall"> {{ userTier }} sCRP </label>
             </div>
           </div>
         </div>
@@ -872,6 +878,12 @@ export default class Wallet extends Vue {
 
             .tier-progress-percent {
               white-space: nowrap;
+
+              &.max-tier {
+                display: block;
+                text-align: right;
+                padding-top: 4px;
+              }
             }
           }
         }

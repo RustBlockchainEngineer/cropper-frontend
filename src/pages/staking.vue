@@ -54,11 +54,17 @@
                   :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
                 ></div>
                 <label
+                  v-if="currentTiers < 5"
                   class="staking-progress-percent font-xsmall"
-                  :style="Number(pctToNexttiers.toFixed(1)) < 90 ? 'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)' : 'margin-left: 90%'"
+                  :style="
+                    Number(pctToNexttiers.toFixed(1)) < 90
+                      ? 'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'
+                      : 'margin-left: 90%'
+                  "
                 >
                   {{ userTier }} sCRP
                 </label>
+                <label v-else class="staking-progress-percent max-tier font-xsmall"> {{ userTier }} sCRP </label>
               </div>
             </div>
 
@@ -192,10 +198,10 @@
                 </label>
               </div>
               <div v-if="!endOfLock" class="get-crp fcc-container">
-              <NuxtLink to="/swap/" class="get-crp ">
-                <label class="font-medium weight-semi">Get CRP</label>
-                <img class="union-icon" src="@/assets/icons/union.svg" />
-              </NuxtLink>
+                <NuxtLink to="/swap/" class="get-crp">
+                  <label class="font-medium weight-semi">Get CRP</label>
+                  <img class="union-icon" src="@/assets/icons/union.svg" />
+                </NuxtLink>
               </div>
             </div>
           </div>
@@ -581,7 +587,7 @@ export default Vue.extend({
       this.selectedTier = 1
       this.activeTab = '1'
     }
-    if (this.currentTiers === 5 ) this.pctToNexttiers = 100
+    if (this.currentTiers === 5) this.pctToNexttiers = 100
     this.setTimer()
   },
   methods: {
@@ -624,7 +630,7 @@ export default Vue.extend({
       window.localStorage.TVL = this.TVL
     },
 
-    closeModal(){
+    closeModal() {
       this.stakeModalShow = false
       this.getGlobalState()
       this.getUserState()
@@ -702,11 +708,9 @@ export default Vue.extend({
       const tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
       this.$accessor.wallet.setStakingTiers(tiers_info)
       this.pendingReward = new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed()
-      this.pendingRewardDynamic = (new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed() as unknown) as number
+      this.pendingRewardDynamic = new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed() as unknown as number
 
-      if(this.running != 1)
-      this.dynamicRebase(rewardsPerSec, this.pendingRewardDynamic)
-
+      if (this.running != 1) this.dynamicRebase(rewardsPerSec, this.pendingRewardDynamic)
 
       this.running = 1
 
@@ -726,7 +730,7 @@ export default Vue.extend({
           100
       }
 
-      if (this.currentTiers === 5 ) this.pctToNexttiers = 100
+      if (this.currentTiers === 5) this.pctToNexttiers = 100
 
       if (this.currentTiers > 1) {
         this.setTierCarousel(this.currentTiers - 1)
@@ -739,15 +743,13 @@ export default Vue.extend({
       }
     },
 
-    dynamicRebase(rewardsPerSec: any, pendingRewardDynamic: any){
-      return false;
-      const nreward = ((this.pendingRewardDynamic * 1) + (rewardsPerSec / 100))
+    dynamicRebase(rewardsPerSec: any, pendingRewardDynamic: any) {
+      return false
+      const nreward = this.pendingRewardDynamic * 1 + rewardsPerSec / 100
       this.pendingRewardDynamic = Math.round(nreward * 1000000000) / 1000000000
-        setTimeout(()=>{
-          this.dynamicRebase(rewardsPerSec, nreward)
-        }
-      , 10);
-
+      setTimeout(() => {
+        this.dynamicRebase(rewardsPerSec, nreward)
+      }, 10)
     },
 
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
@@ -1116,6 +1118,12 @@ export default Vue.extend({
 
                 .staking-progress-percent {
                   white-space: nowrap;
+
+                  &.max-tier {
+                    display: block;
+                    text-align: right;
+                    padding-top: 4px;
+                  }
                 }
               }
             }
