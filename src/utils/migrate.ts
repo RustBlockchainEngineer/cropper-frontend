@@ -25,7 +25,7 @@ export async function mergeTokens(
 ) {
   if (!connection || !wallet) throw new Error('Miss connection')
   if (!auxiliaryTokenAccounts || auxiliaryTokenAccounts.length === 0)
-    throw new Error('Miss auxiliary accounts infomations')
+    throw new Error('Miss auxiliary accounts informations')
 
   const owner = wallet.publicKey
 
@@ -86,7 +86,7 @@ export async function unstakeAll(
   farms: Array<Farms>
 ) {
   if (!connection || !wallet) throw new Error('Miss connection')
-  if (!farms || farms.length === 0) throw new Error('Miss farms infomations')
+  if (!farms || farms.length === 0) throw new Error('Miss farms informations')
 
   const transaction = new Transaction()
   const signers: any = []
@@ -98,9 +98,9 @@ export async function unstakeAll(
   farms.forEach(async (farm) => {
     const { farmInfo, lpAccount, rewardAccount, infoAccount, amount } = farm
 
-    if (!farmInfo) throw new Error('Miss pool infomations')
-    if (!infoAccount) throw new Error('Miss account infomations')
-    if (!amount) throw new Error('Miss amount infomations')
+    if (!farmInfo) throw new Error('Miss pool informations')
+    if (!infoAccount) throw new Error('Miss account informations')
+    if (!amount) throw new Error('Miss amount informations')
 
     const userLpAccount = await createAssociatedTokenAccountIfNotExist(
       lpAccount,

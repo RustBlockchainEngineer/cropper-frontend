@@ -21,8 +21,8 @@ export async function deposit(
   amount: string | number | undefined | null
 ): Promise<string> {
   if (!connection || !wallet) throw new Error('Miss connection')
-  if (!farmInfo) throw new Error('Miss pool infomations')
-  if (!amount) throw new Error('Miss amount infomations')
+  if (!farmInfo) throw new Error('Miss pool informations')
+  if (!amount) throw new Error('Miss amount informations')
   return await YieldFarm.deposit(
     connection,
     wallet,
@@ -46,8 +46,8 @@ export async function depositV4(
   amount: string | undefined | null
 ): Promise<string> {
   if (!connection || !wallet) throw new Error('Miss connection')
-  if (!farmInfo) throw new Error('Miss pool infomations')
-  if (!amount) throw new Error('Miss amount infomations')
+  if (!farmInfo) throw new Error('Miss pool informations')
+  if (!amount) throw new Error('Miss amount informations')
 
   const transaction = new Transaction()
   const signers: any = []
@@ -130,9 +130,9 @@ export async function withdraw(
   amount: string | undefined | null
 ): Promise<string> {
   if (!connection || !wallet) throw new Error('Miss connection')
-  if (!farmInfo) throw new Error('Miss pool infomations')
-  if (!infoAccount) throw new Error('Miss account infomations')
-  if (!amount) throw new Error('Miss amount infomations')
+  if (!farmInfo) throw new Error('Miss pool informations')
+  if (!infoAccount) throw new Error('Miss account informations')
+  if (!amount) throw new Error('Miss amount informations')
 
   return await YieldFarm.withdraw(
     connection,
@@ -157,9 +157,9 @@ export async function withdrawV4(
   amount: string | undefined | null
 ): Promise<string> {
   if (!connection || !wallet) throw new Error('Miss connection')
-  if (!farmInfo) throw new Error('Miss pool infomations')
-  if (!infoAccount) throw new Error('Miss account infomations')
-  if (!amount) throw new Error('Miss amount infomations')
+  if (!farmInfo) throw new Error('Miss pool informations')
+  if (!infoAccount) throw new Error('Miss account informations')
+  if (!amount) throw new Error('Miss amount informations')
 
   const transaction = new Transaction()
   const signers: any = []

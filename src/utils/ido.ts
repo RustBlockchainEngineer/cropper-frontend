@@ -384,9 +384,9 @@ export async function purchase({
   amount: string | number
 }) {
   if (!connection || !wallet) throw new Error('Miss connection')
-  if (!poolInfo) throw new Error('Miss pool infomations')
+  if (!poolInfo) throw new Error('Miss pool informations')
 
-  if (!amount) throw new Error('Miss amount infomations')
+  if (!amount) throw new Error('Miss amount informations')
 
   const transaction = new Transaction()
   const signers: Account[] = []
@@ -487,7 +487,7 @@ export async function claim({
   aim?: 'quote' | 'base'
 }) {
   if (!connection || !wallet) throw new Error('Miss connection')
-  if (!poolInfo) throw new Error('Miss pool infomations')
+  if (!poolInfo) throw new Error('Miss pool informations')
 
   const transaction = new Transaction()
   const signers: Account[] = []

@@ -402,7 +402,7 @@ export const actions = actionTree(
     async requestInfos({ commit }) {
       commit('setLoading', true)
 
-      logger('Liquidity pool infomations fetch')
+      logger('Liquidity pool informations fetch')
 
       const conn = this.$web3
       let need_to_update = false
@@ -586,7 +586,7 @@ export const actions = actionTree(
       })
 
       commit('setInfos', liquidityPools)
-      logger('Liquidity pool infomations updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
+      logger('Liquidity pool informations updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
 
       commit('setInitialized')
       commit('setLoading', false)
