@@ -355,8 +355,8 @@
                     </div>
                     <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
                     <div class="ticket-share-group fcsb-container">
-                      <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" />
-                      <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" />
+                      <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" disabled/>
+                      <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" @click="copyToClipboard()" />
                     </div>
                     <div class="ticket-btn-group fcsb-container">
                       <div class="share-btn btn-container">
@@ -904,7 +904,15 @@ export default Vue.extend({
   methods: {
     moment() {
       return moment()
-    }
+    },
+    copyToClipboard() {
+      var textField = document.createElement('textarea')
+      textField.innerText = this.affiliatedLink
+      document.body.appendChild(textField)
+      textField.select()
+      document.execCommand('copy')
+      textField.remove()
+    },
   }
 })
 </script>
