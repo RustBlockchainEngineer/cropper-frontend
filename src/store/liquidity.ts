@@ -430,7 +430,7 @@ export const actions = actionTree(
         })
 
         pools.forEach((pool:LiquidityPoolInfo)=>{
-          if(!ammSet[pool.ammId]){
+          if(!ammSet[pool.ammId] && pool.programId == CRP_LP_PROGRAM_ID_V1){
             LIQUIDITY_POOLS.push(pool)
           }
         })
@@ -447,7 +447,7 @@ export const actions = actionTree(
 
         await getCropperPools(conn);
 
-        // await getRaydiumPools(conn);
+      //  await getRaydiumPools(conn);
 
         if(!DEVNET_MODE)
         { 
@@ -478,8 +478,13 @@ export const actions = actionTree(
 
       LIQUIDITY_POOLS.forEach((pool) => {
 
+        if(pool.programId != CRP_LP_PROGRAM_ID_V1){
+            return;
+        }
 
         const { poolCoinTokenAccount, poolPcTokenAccount, ammOpenOrders, ammId, coin, pc, lp } = pool
+
+
 
         publicKeys.push(
           new PublicKey(poolCoinTokenAccount),
@@ -584,6 +589,8 @@ export const actions = actionTree(
           }
         }
       })
+
+
 
       commit('setInfos', liquidityPools)
       logger('Liquidity pool infomations updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
