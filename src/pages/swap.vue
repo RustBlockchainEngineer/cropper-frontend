@@ -196,14 +196,14 @@
                     <span class="font-small weight-semi">{{ fromCoin.symbol }}</span>
                   </div>
                 </div>
-                <img class="fst" src="@/assets/icons/arrow-right.svg" />
+                <img class="fst" src="@/assets/icons/swap-right.svg" />
                 <div v-if="midTokenSymbol" class="coin-box-container">
                   <div class="coin-box">
                     <CoinIcon :mint-address="midTokenMint" />
                     <span class="font-small weight-semi">{{ midTokenSymbol }}</span>
                   </div>
                 </div>
-                <img v-if="midTokenSymbol" class="fst" src="@/assets/icons/arrow-right.svg" />
+                <img v-if="midTokenSymbol" class="fst" src="@/assets/icons/swap-right.svg" />
                 <div class="coin-box-container">
                   <div class="coin-box">
                     <CoinIcon :mint-address="toCoin.mintAddress" />

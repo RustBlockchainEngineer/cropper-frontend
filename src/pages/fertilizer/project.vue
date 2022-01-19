@@ -3,6 +3,25 @@
     <div class="card">
       <div class="card-body">
         <SubscribeModal :show="subscribeShow" @onCancel="() => (subscribeShow = false)" />
+        <TaskProcessModal
+          :show="taskModalShow"
+          :step="taskModalType === 0 ? currentStatus.telegramTicket : currentStatus.twitterTicket"
+          :project="fertilizer.title"
+          :type="taskModalType"
+          @onNext="
+            () => {
+              if (this.taskModalType === 0) this.currentStatus.telegramTicket++
+              else this.currentStatus.twitterTicket++
+            }
+          "
+          @onPrev="
+            () => {
+              if (this.taskModalType === 0) this.currentStatus.telegramTicket--
+              else this.currentStatus.twitterTicket--
+            }
+          "
+          @onCancel="() => (taskModalShow = false)"
+        />
 
         <div class="project-content">
           <div class="project-preview-container">
@@ -272,7 +291,16 @@
                   <div class="ticket-tasks">
                     <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
                     <div class="ticket-task-status-group fcsb-container">
-                      <div class="ticket-task-status-card fcsb-container" :class="currentStatus.ticket ? 'active' : ''">
+                      <div
+                        class="ticket-task-status-card fcsb-container icon-cursor"
+                        :class="currentStatus.telegramTicket === 3 ? 'active' : ''"
+                        @click="
+                          () => {
+                            this.taskModalShow = true
+                            this.taskModalType = 0
+                          }
+                        "
+                      >
                         <div class="ticket-task-status fs-container">
                           <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
                           <div>
@@ -281,9 +309,22 @@
                             <span class="font-xsmall weight-semi">0/2 Task completed</span>
                           </div>
                         </div>
-                        <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
+                        <img
+                          v-if="currentStatus.telegramTicket === 3"
+                          class="status-icon"
+                          src="@/assets/icons/check-white.svg"
+                        />
                       </div>
-                      <div class="ticket-task-status-card fcsb-container" :class="currentStatus.ticket ? 'active' : ''">
+                      <div
+                        class="ticket-task-status-card fcsb-container icon-cursor"
+                        :class="currentStatus.twitterTicket === 3 ? 'active' : ''"
+                        @click="
+                          () => {
+                            this.taskModalShow = true
+                            this.taskModalType = 1
+                          }
+                        "
+                      >
                         <div class="ticket-task-status fs-container">
                           <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
                           <div>
@@ -292,7 +333,11 @@
                             <span class="font-xsmall weight-semi">3/3 Task completed</span>
                           </div>
                         </div>
-                        <img v-if="currentStatus.ticket" class="status-icon" src="@/assets/icons/check-white.svg" />
+                        <img
+                          v-if="currentStatus.twitterTicket === 3"
+                          class="status-icon"
+                          src="@/assets/icons/check-white.svg"
+                        />
                       </div>
                     </div>
                     <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
@@ -791,8 +836,8 @@ export default Vue.extend({
           distribution: '/fertilizer/project/unq/distribution.png'
         },
         whitelist_start_date: 1642399272000,
-        whitelist_end_date: 1643500800000
-        // sales_start_date: 1643500800000,
+        whitelist_end_date: 1643500800000,
+        sales_start_date: 1643500800000
         // sales_end_date: 1643500800000,
         // distribution_start_date: 1643500800000
         // 1643500800000
@@ -809,13 +854,17 @@ export default Vue.extend({
         funded: false as boolean,
         win: false as boolean,
         sub: false as boolean,
-        ticket: false as boolean
+        telegramTicket: 1 as number,
+        twitterTicket: 1 as number
       },
       currentTimestamp: 0 as any,
       currentStep: 0 as number,
       currentTier: 0 as number,
       affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
-      subscribeShow: false as boolean
+      subscribeShow: false as boolean,
+      taskModalShow: false as boolean,
+      taskModalType: 0 as number,
+      twitterShow: false as boolean
     }
   },
 
