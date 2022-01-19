@@ -347,9 +347,9 @@ import { inputRegex, escapeRegExp } from '@/utils/regex'
 import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
 import { SERUM_PROGRAM_ID_V3, ENDPOINT_CRP, ENDPOINT_SRM, ENDPOINT_JUP } from '@/utils/ids'
-
-import { Jupiter } from '@pngfi/jupiter-core';
-
+// @ts-ignore
+import { Jupiter } from "@jup-ag/core";
+//@pngfi/jupiter-core
 import {
   getOutAmount,
   getSwapOutAmount,
@@ -498,14 +498,6 @@ export default Vue.extend({
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
         this.wsolBalance = this.wallet.tokenAccounts[TOKENS.WSOL.mintAddress]
 
-        this.jupiter =  await Jupiter.load({
-          connection: this.$web3,
-          cluster: 'mainnet-beta',
-          user: this.wallet.publicKey, // or public key
-          // platformFeeAndAccounts:  NO_PLATFORM_FEE,
-          // routeCacheDuration: CACHE_DURATION_MS 
-        });
-
         this.flush()
       },
       deep: true
@@ -604,7 +596,11 @@ export default Vue.extend({
 
     this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP')
     this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC')
-
+    const jupiter = await Jupiter.load({
+        connection: this.$web3,
+        cluster: 'mainnet-beta',
+        user: this.$wallet?.publicKey as PublicKey // or public key
+    })
   },
   methods: {
     gt,

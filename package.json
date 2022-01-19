@@ -23,6 +23,7 @@
     }
   },
   "dependencies": {
+    "@jup-ag/core": "1.0.0-beta.7",
     "@ledgerhq/hw-transport": "^5.51.1",
     "@ledgerhq/hw-transport-webusb": "^5.53.1",
     "@nuxtjs/axios": "^5.12.5",
@@ -100,5 +101,14 @@
     "stylelint-config-standard": "^20.0.0",
     "ts-jest": "^26.4.4",
     "vue-jest": "^3.0.4"
-  }
+  },
+  "resolutions": {
+    "@solana/buffer-layout": "4.0.0"
+  },
+  "browserslist": [
+    ">0.2%",
+   "not dead",
+   "not op_mini all"
+ ],
+ "jshint.options": { "esversion": 11 }
 }

@@ -203,14 +203,15 @@ export default {
         ]
       ]
     },
-  build: {
-    extend(config, ctx) {
-        config.node = {
-            fs: "empty"
-        },
+    
+    build: {
+      extend(config, ctx) {
+          config.node = {
+              fs: "empty"
+          },
 
-      config.resolve.alias['@ant-design/icons/lib/dist$'] = path.resolve(__dirname, './src/utils/antd-icons.ts')
-    }
-},
+        config.resolve.alias['@ant-design/icons/lib/dist$'] = path.resolve(__dirname, './src/utils/antd-icons.ts')
+      }
+    },
   }
 }
