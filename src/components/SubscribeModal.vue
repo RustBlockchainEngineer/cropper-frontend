@@ -60,6 +60,7 @@ export default Vue.extend({
     onSubmit() {
       //@ts-ignore
       console.log(this.$hcaptcha.getResponse())
+      this.$emit('onOk')
     }
   },
   mounted() {}

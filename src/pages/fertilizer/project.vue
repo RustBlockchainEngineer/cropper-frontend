@@ -2,7 +2,16 @@
   <div class="fertilizer-project container">
     <div class="card">
       <div class="card-body">
-        <SubscribeModal :show="subscribeShow" @onCancel="() => (subscribeShow = false)" />
+        <SubscribeModal
+          :show="subscribeShow"
+          @onCancel="() => (subscribeShow = false)"
+          @onOk="
+            () => {
+              currentStatus.social = true
+              subscribeShow = false
+            }
+          "
+        />
         <TaskProcessModal
           :show="taskModalShow"
           :step="taskModalType === 0 ? currentStatus.telegramTicket : currentStatus.twitterTicket"
@@ -117,7 +126,7 @@
                 </div>
                 <div v-if="currentStep > 0" class="project-progress">
                   <div v-if="currentStep === 1">
-                    <div v-if="!fertilizer.sales_start_date" class="btn-container">
+                    <div v-if="!currentStatus.social" class="btn-container">
                       <Button
                         class="btn-transparent font-medium weight-semi icon-cursor"
                         @click="
@@ -281,7 +290,7 @@
 
             <div class="project-detail-condition">
               <div v-if="currentStep === 0"></div>
-              <div v-else-if="currentStep === 1 && fertilizer.sales_start_date" class="project-detail-item">
+              <div v-else-if="currentStep === 1 && currentStatus.social" class="project-detail-item">
                 <h4 class="weight-semi">Earn Social Pool tickets!</h4>
                 <span class="font-medium">
                   A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
@@ -306,7 +315,9 @@
                           <div>
                             <span class="font-medium weight-bold">Telegram task</span>
                             <br />
-                            <span class="font-xsmall weight-semi">0/2 Task completed</span>
+                            <span class="font-xsmall weight-semi"
+                              >{{ currentStatus.telegramTicket }} /3 Task completed</span
+                            >
                           </div>
                         </div>
                         <img
@@ -330,7 +341,9 @@
                           <div>
                             <span class="font-medium weight-bold">Twitter task</span>
                             <br />
-                            <span class="font-xsmall weight-semi">3/3 Task completed</span>
+                            <span class="font-xsmall weight-semi"
+                              >{{ currentStatus.twitterTicket }}/3 Task completed</span
+                            >
                           </div>
                         </div>
                         <img
@@ -836,8 +849,8 @@ export default Vue.extend({
           distribution: '/fertilizer/project/unq/distribution.png'
         },
         whitelist_start_date: 1642399272000,
-        whitelist_end_date: 1643500800000,
-        sales_start_date: 1643500800000
+        whitelist_end_date: 1643500800000
+        // sales_start_date: 1643500800000
         // sales_end_date: 1643500800000,
         // distribution_start_date: 1643500800000
         // 1643500800000
@@ -854,6 +867,7 @@ export default Vue.extend({
         funded: false as boolean,
         win: false as boolean,
         sub: false as boolean,
+        social: false as boolean,
         telegramTicket: 1 as number,
         twitterTicket: 1 as number
       },
