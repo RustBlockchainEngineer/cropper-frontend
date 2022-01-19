@@ -23,12 +23,14 @@
           typesetting, remaining essentially unchanged.
         </span>
       </div>
-      <Checkbox class="check-container">
+      <Checkbox class="check-container" v-model="countryCheck">
         <label class="font-small weight-semi spacing-large">I confirm that my country is not in this list</label>
       </Checkbox>
       <hcaptcha class="text-center" />
       <div class="btn-container">
-        <Button class="btn-transparent font-medium weight-semi letter-small icon-cursor" @click="onSubmit">Subscribe Whitelist</Button>
+        <Button class="btn-transparent font-medium weight-semi letter-small icon-cursor" @click="onSubmit"
+          >Subscribe Whitelist</Button
+        >
       </div>
     </div>
   </Modal>
@@ -53,14 +55,26 @@ export default Vue.extend({
   },
 
   data() {
-    return {}
+    return {
+      countryCheck: false as boolean,
+      captchaCheck: false as boolean
+    }
   },
 
   methods: {
     onSubmit() {
       //@ts-ignore
-      console.log(this.$hcaptcha.getResponse())
-      this.$emit('onOk')
+      this.$hcaptcha
+        .getResponse()
+        .then((res: any) => {
+          if (res) this.captchaCheck = true
+        })
+        .catch((error: any) => {
+          console.log(error)
+        })
+        .finally(() => {
+          if (this.captchaCheck && this.countryCheck) this.$emit('onOk')
+        })
     }
   },
   mounted() {}
