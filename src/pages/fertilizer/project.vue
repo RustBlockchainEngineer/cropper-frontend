@@ -2,6 +2,8 @@
   <div class="fertilizer-project container">
     <div class="card">
       <div class="card-body">
+        <SubscribeModal :show="subscribeShow" @onCancel="() => (subscribeShow = false)" />
+
         <div class="project-content">
           <div class="project-preview-container">
             <div class="project-back">
@@ -97,7 +99,15 @@
                 <div v-if="currentStep > 0" class="project-progress">
                   <div v-if="currentStep === 1">
                     <div v-if="!fertilizer.sales_start_date" class="btn-container">
-                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
+                      <Button
+                        class="btn-transparent font-medium weight-semi icon-cursor"
+                        @click="
+                          () => {
+                            this.subscribeShow = true
+                          }
+                        "
+                        >Subscribe Whitelist</Button
+                      >
                     </div>
                     <div v-else class="fcc-container">
                       <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
@@ -116,7 +126,7 @@
                         "
                         class="fcc-container"
                       >
-                        <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                        <img class="alert-icon" src="@/assets/icons/alert-white.svg" />
                         <span class="font-small weight-semi spacing-large">You are not in the whitelist</span>
                       </div>
                     </div>
@@ -344,7 +354,7 @@
                     class="text-center"
                   >
                     <div class="fcc-container mb-8">
-                      <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                      <img class="alert-icon" src="@/assets/icons/alert-white.svg" />
                       <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
                     </div>
                     <span class="font-medium">You do not have a winning staking ticket or winning social ticket.</span>
@@ -387,7 +397,7 @@
                       class="text-center"
                     >
                       <div class="fcc-container mb-8">
-                        <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                        <img class="alert-icon" src="@/assets/icons/alert-white.svg" />
                         <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
                       </div>
                       <span class="font-medium"
@@ -781,10 +791,10 @@ export default Vue.extend({
           distribution: '/fertilizer/project/unq/distribution.png'
         },
         whitelist_start_date: 1642399272000,
-        whitelist_end_date: 1643500800000,
-        sales_start_date: 1643500800000,
-        sales_end_date: 1643500800000,
-        distribution_start_date: 1643500800000
+        whitelist_end_date: 1643500800000
+        // sales_start_date: 1643500800000,
+        // sales_end_date: 1643500800000,
+        // distribution_start_date: 1643500800000
         // 1643500800000
       },
       projectStatus: {
@@ -804,7 +814,8 @@ export default Vue.extend({
       currentTimestamp: 0 as any,
       currentStep: 0 as number,
       currentTier: 0 as number,
-      affiliatedLink: 'http://cropper.finance/unq?r=250' as string
+      affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
+      subscribeShow: false as boolean
     }
   },
 
@@ -823,7 +834,8 @@ export default Vue.extend({
     this.currentTimestamp = moment().valueOf()
     if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
     if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
-    if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
+    // if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
+    console.log(this.currentStep)
   },
 
   methods: {
@@ -1137,7 +1149,6 @@ export default Vue.extend({
               }
 
               .project-detail-stake {
-                padding: 32px 32px 32px 0;
                 width: 60%;
 
                 .btn-container {

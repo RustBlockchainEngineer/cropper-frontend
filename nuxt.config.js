@@ -148,9 +148,13 @@ export default {
     'nuxt-clipboard',
     '@nuxtjs/dayjs',
     '@nuxtjs/google-gtag',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    "hcaptcha-nuxt"
     // '@nuxtjs/sentry'
   ],
+  hcaptcha: {
+      siteKey: '674e572b-7661-4213-b74c-490096ed9d3f'
+  },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
 
