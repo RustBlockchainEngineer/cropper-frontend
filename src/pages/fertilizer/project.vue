@@ -2,186 +2,186 @@
   <div class="fertilizer-project container">
     <div class="card">
       <div class="card-body">
-        <div class="project-header">
-          <div class="back-to-list icon-cursor fcs-container">
-            <img class="back-icon" src="@/assets/icons/back.svg" />
-            <span class="back-label font-medium weight-bold">Go back</span>
-          </div>
-        </div>
-
         <div class="project-content">
           <div class="project-preview-container">
-            <div class="project-preview">
-              <div class="project-overview fcsb-container">
-                <div class="project-title fcs-container">
-                  <img class="project-logo" :src="fertilizer.logo" />
-                  <span class="font-large weight-bold">{{ fertilizer.title }}</span>
-                </div>
-                <div
-                  class="project-status"
-                  :class="
-                    currentStep === 0
-                      ? 'preparation'
-                      : currentStep === 1
-                      ? 'whitelist'
-                      : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
-                      ? 'sales'
-                      : currentStep === 2 &&
-                        currentTimestamp > fertilizer.sales_start_date &&
-                        fertilizer.sales_end_date > currentTimestamp
-                      ? 'open'
-                      : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) ||
-                        (currentStep === 3 && !currentStatus.funded)
-                      ? 'distribution'
-                      : ''
-                  "
-                >
-                  <span class="font-xsmall weight-bold">
-                    {{
+            <div class="project-back">
+              <div class="back-to-list icon-cursor fcs-container">
+                <img class="back-icon" src="@/assets/icons/back.svg" />
+                <span class="back-label font-medium weight-bold">Go back</span>
+              </div>
+            </div>
+            <div class="project-preview-ido-container">
+              <div class="project-preview">
+                <div class="project-overview fcsb-container">
+                  <div class="project-title fcs-container">
+                    <img class="project-logo" :src="fertilizer.logo" />
+                    <span class="font-large weight-bold">{{ fertilizer.title }}</span>
+                  </div>
+                  <div
+                    class="project-status"
+                    :class="
                       currentStep === 0
-                        ? projectStatus.preparation
+                        ? 'preparation'
                         : currentStep === 1
-                        ? projectStatus.whitelist
-                        : currentStep === 2 && fertilizer.sales_start_date > currentTimestamp
-                        ? projectStatus.sales
+                        ? 'whitelist'
+                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
+                        ? 'sales'
                         : currentStep === 2 &&
                           currentTimestamp > fertilizer.sales_start_date &&
                           fertilizer.sales_end_date > currentTimestamp
-                        ? projectStatus.open
+                        ? 'open'
                         : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) ||
                           (currentStep === 3 && !currentStatus.funded)
-                        ? projectStatus.distribution
+                        ? 'distribution'
                         : ''
-                    }}
-                  </span>
-                </div>
-              </div>
-              <div
-                v-if="(currentStep === 0 && fertilizer.whitelist_start_date) || (currentStep >= 1 && currentStep < 3)"
-                class="project-countdown"
-              >
-                <Countdown
-                  :title="
-                    currentStep === 0 && fertilizer.whitelist_start_date
-                      ? 'The whitelist starts in'
-                      : currentStep === 1
-                      ? 'End of the whitelist in'
-                      : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
-                      ? 'Sales start in'
-                      : currentStep === 2 &&
-                        currentTimestamp > fertilizer.sales_start_date &&
-                        currentTimestamp < fertilizer.sales_end_date
-                      ? 'Sales end in'
-                      : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
-                      ? 'Distribution starts in'
-                      : ''
-                  "
-                  :value="
-                    currentStep === 0 && fertilizer.whitelist_start_date
-                      ? fertilizer.whitelist_start_date
-                      : currentStep === 1
-                      ? fertilizer.whitelist_end_date
-                      : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
-                      ? fertilizer.sales_start_date
-                      : currentStep === 2 &&
-                        currentTimestamp > fertilizer.sales_start_date &&
-                        currentTimestamp < fertilizer.sales_end_date
-                      ? fertilizer.sales_end_date
-                      : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
-                      ? fertilizer.distribution_start_date
-                      : ''
-                  "
-                  format="DD:HH:mm:ss"
-                />
-              </div>
-              <div v-if="currentStep > 0" class="project-progress">
-                <div v-if="currentStep === 1">
-                  <div v-if="!fertilizer.sales_start_date" class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
-                  </div>
-                  <div v-else class="fcc-container">
-                    <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
-                    <span class="font-small weight-semi spacing-large">Earn ticket in progress</span>
+                    "
+                  >
+                    <span class="font-xsmall weight-bold">
+                      {{
+                        currentStep === 0
+                          ? projectStatus.preparation
+                          : currentStep === 1
+                          ? projectStatus.whitelist
+                          : currentStep === 2 && fertilizer.sales_start_date > currentTimestamp
+                          ? projectStatus.sales
+                          : currentStep === 2 &&
+                            currentTimestamp > fertilizer.sales_start_date &&
+                            fertilizer.sales_end_date > currentTimestamp
+                          ? projectStatus.open
+                          : (currentStep === 2 && currentTimestamp > fertilizer.sales_end_date) ||
+                            (currentStep === 3 && !currentStatus.funded)
+                          ? projectStatus.distribution
+                          : ''
+                      }}
+                    </span>
                   </div>
                 </div>
-                <div v-else-if="currentStep === 2">
-                  <div v-if="currentTimestamp < fertilizer.sales_end_date">
-                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub" class="fcc-container">
+                <div
+                  v-if="(currentStep === 0 && fertilizer.whitelist_start_date) || (currentStep >= 1 && currentStep < 3)"
+                  class="project-countdown"
+                >
+                  <Countdown
+                    :title="
+                      currentStep === 0 && fertilizer.whitelist_start_date
+                        ? 'The whitelist starts in'
+                        : currentStep === 1
+                        ? 'End of the whitelist in'
+                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
+                        ? 'Sales start in'
+                        : currentStep === 2 &&
+                          currentTimestamp > fertilizer.sales_start_date &&
+                          currentTimestamp < fertilizer.sales_end_date
+                        ? 'Sales end in'
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
+                        ? 'Distribution starts in'
+                        : ''
+                    "
+                    :value="
+                      currentStep === 0 && fertilizer.whitelist_start_date
+                        ? fertilizer.whitelist_start_date
+                        : currentStep === 1
+                        ? fertilizer.whitelist_end_date
+                        : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
+                        ? fertilizer.sales_start_date
+                        : currentStep === 2 &&
+                          currentTimestamp > fertilizer.sales_start_date &&
+                          currentTimestamp < fertilizer.sales_end_date
+                        ? fertilizer.sales_end_date
+                        : currentStep === 2 && currentTimestamp > fertilizer.sales_end_date
+                        ? fertilizer.distribution_start_date
+                        : ''
+                    "
+                    format="DD:HH:mm:ss"
+                  />
+                </div>
+                <div v-if="currentStep > 0" class="project-progress">
+                  <div v-if="currentStep === 1">
+                    <div v-if="!fertilizer.sales_start_date" class="btn-container">
+                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Subscribe Whitelist</Button>
+                    </div>
+                    <div v-else class="fcc-container">
                       <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
-                      <span class="font-small weight-semi spacing-large">You are registered</span>
-                    </div>
-                    <div
-                      v-else-if="
-                        (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
-                      "
-                      class="fcc-container"
-                    >
-                      <img class="alert-icon" src="@/assets/icons/alert.svg" />
-                      <span class="font-small weight-semi spacing-large">You are not in the whitelist</span>
+                      <span class="font-small weight-semi spacing-large">Earn ticket in progress</span>
                     </div>
                   </div>
-                </div>
-                <div v-else-if="currentStep === 3">
-                  <div v-if="!currentStatus.funded" class="fcc-container">
-                    <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
-                    <span class="font-small weight-semi spacing-large">Distribution in progress</span>
+                  <div v-else-if="currentStep === 2">
+                    <div v-if="currentTimestamp < fertilizer.sales_end_date">
+                      <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub" class="fcc-container">
+                        <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
+                        <span class="font-small weight-semi spacing-large">You are registered</span>
+                      </div>
+                      <div
+                        v-else-if="
+                          (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
+                        "
+                        class="fcc-container"
+                      >
+                        <img class="alert-icon" src="@/assets/icons/alert.svg" />
+                        <span class="font-small weight-semi spacing-large">You are not in the whitelist</span>
+                      </div>
+                    </div>
                   </div>
-                  <div v-else class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
+                  <div v-else-if="currentStep === 3">
+                    <div v-if="!currentStatus.funded" class="fcc-container">
+                      <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
+                      <span class="font-small weight-semi spacing-large">Distribution in progress</span>
+                    </div>
+                    <div v-else class="btn-container">
+                      <Button class="btn-transparent font-medium weight-semi icon-cursor">Start Farming</Button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="project-ido-container">
-              <div class="project-ido-process">
-                <Steps :current="currentStep" size="small" direction="vertical" :status="currentStatus.steps">
-                  <Step>
-                    <template slot="title">
-                      <span class="font-small weight-bold">Preparation</span>
-                    </template>
-                  </Step>
-                  <Step>
-                    <template slot="title">
-                      <div class="fcsb-container">
-                        <span class="font-small weight-bold">Whitelist</span>
-                        <span v-if="currentStep > 1" class="status-label success font-small weight-bold"
-                          >Registered</span
+              <div class="project-ido">
+                <div class="project-ido-process">
+                  <Steps :current="currentStep" size="small" direction="vertical" :status="currentStatus.steps">
+                    <Step>
+                      <template slot="title">
+                        <span class="font-small weight-bold">Preparation</span>
+                      </template>
+                    </Step>
+                    <Step>
+                      <template slot="title">
+                        <div class="fcsb-container">
+                          <span class="font-small weight-bold">Whitelist</span>
+                          <span v-if="currentStep > 1" class="status-label success font-small weight-bold"
+                            >Registered</span
+                          >
+                        </div>
+                        <span v-if="currentStep === 1" class="status-label description font-small"
+                          >You can now whitelist yourself for the lottery.</span
                         >
-                      </div>
-                      <span v-if="currentStep === 1" class="status-label description font-small"
-                        >You can now whitelist yourself for the lottery.</span
-                      >
-                    </template>
-                  </Step>
-                  <Step>
-                    <template slot="title">
-                      <div class="fcsb-container">
-                        <span class="font-small weight-bold">Sales</span>
-                        <span v-if="currentStep > 2" class="status-label closed font-small weight-bold">Closed</span>
-                      </div>
-                      <span v-if="currentStep === 2" class="status-label description font-small"
-                        >Winners can participate in the token sale.</span
-                      >
-                    </template>
-                  </Step>
-                  <Step>
-                    <template slot="title">
-                      <div class="fcsb-container">
-                        <span class="font-small weight-bold">Distribution</span>
-                        <span v-if="currentStep >= 3" class="status-label success font-small weight-bold"
-                          >Distributed</span
+                      </template>
+                    </Step>
+                    <Step>
+                      <template slot="title">
+                        <div class="fcsb-container">
+                          <span class="font-small weight-bold">Sales</span>
+                          <span v-if="currentStep > 2" class="status-label closed font-small weight-bold">Closed</span>
+                        </div>
+                        <span v-if="currentStep === 2" class="status-label description font-small"
+                          >Winners can participate in the token sale.</span
                         >
-                      </div>
-                      <span v-if="currentStep === 3" class="status-label description font-small"
-                        >The tokens get distributed to Sale participants.</span
-                      >
-                    </template>
-                  </Step>
-                </Steps>
+                      </template>
+                    </Step>
+                    <Step>
+                      <template slot="title">
+                        <div class="fcsb-container">
+                          <span class="font-small weight-bold">Distribution</span>
+                          <span v-if="currentStep >= 3" class="status-label success font-small weight-bold"
+                            >Distributed</span
+                          >
+                        </div>
+                        <span v-if="currentStep === 3" class="status-label description font-small"
+                          >The tokens get distributed to Sale participants.</span
+                        >
+                      </template>
+                    </Step>
+                  </Steps>
+                </div>
               </div>
             </div>
           </div>
-
           <div class="project-detail-container">
             <div class="project-detail-static">
               <div class="project-detail-card">
@@ -944,23 +944,6 @@ export default Vue.extend({
     .card-body {
       padding: 0;
 
-      .project-header {
-        margin-bottom: 28px;
-
-        .back-to-list {
-          opacity: 0.5;
-          width: fit-content;
-
-          .back-icon {
-            margin-right: 8px;
-          }
-
-          .back-label {
-            color: #fff;
-          }
-        }
-      }
-
       .project-content {
         display: flex;
 
@@ -974,72 +957,94 @@ export default Vue.extend({
 
           @media @max-md-tablet {
             position: relative;
-            display: flex;
-            justify-content: space-between;
             width: 100%;
           }
 
-          @media @max-sl-mobile {
-            display: block;
+          .project-back {
+            margin-bottom: 28px;
+
+            .back-to-list {
+              opacity: 0.5;
+              width: fit-content;
+
+              .back-icon {
+                margin-right: 8px;
+              }
+
+              .back-label {
+                color: #fff;
+              }
+            }
           }
 
-          .project-preview {
-            background: @gradient-color04;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-
+          .project-preview-ido-container {
             @media @max-md-tablet {
-              width: 50%;
-              margin-bottom: 0;
-              margin-right: 8px;
+              display: flex;
+              justify-content: space-between;
             }
 
             @media @max-sl-mobile {
-              width: 100%;
-              margin-bottom: 16px;
-              margin-right: 0;
+              display: block;
             }
 
-            .project-overview {
-              .project-title {
-                .project-logo {
-                  border-radius: 50%;
-                  margin-right: 8px;
+            .project-preview {
+              background: @gradient-color04;
+              border-radius: 8px;
+              padding: 16px;
+              margin-bottom: 16px;
+
+              @media @max-md-tablet {
+                width: 50%;
+                margin-bottom: 0;
+                margin-right: 8px;
+              }
+
+              @media @max-sl-mobile {
+                width: 100%;
+                margin-bottom: 16px;
+                margin-right: 0;
+              }
+
+              .project-overview {
+                .project-title {
+                  .project-logo {
+                    border-radius: 50%;
+                    margin-right: 8px;
+                  }
                 }
+              }
+
+              .project-countdown {
+                margin-top: 16px;
+              }
+
+              .project-progress {
+                margin-top: 16px;
               }
             }
 
-            .project-countdown {
-              margin-top: 16px;
-            }
-
-            .project-progress {
-              margin-top: 16px;
-            }
-          }
-
-          .project-ido-container {
-            background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
-            padding: 3px;
-            border-radius: 8px;
-
-            @media @max-md-tablet {
-              width: 50%;
-              margin-left: 8px;
-            }
-
-            @media @max-sl-mobile {
-              width: 100%;
-              margin-left: 0;
-            }
-
-            .project-ido-process {
-              height: 100%;
-              width: 100%;
-              background: @color-blue800;
+            .project-ido {
+              background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+              padding: 3px;
               border-radius: 8px;
-              padding: 13px 21px;
+
+              @media @max-md-tablet {
+                width: 50%;
+                margin-left: 8px;
+              }
+
+              @media @max-sl-mobile {
+                width: 100%;
+                margin-left: 0;
+              }
+
+              .project-ido-process {
+                height: 100%;
+                width: 100%;
+                background: @color-blue800;
+                border-radius: 8px;
+                padding: 13px 21px;
+              }
             }
           }
         }
@@ -1047,11 +1052,13 @@ export default Vue.extend({
         .project-detail-container {
           width: calc(100% - 300px - 16px);
           margin-left: calc(300px + 16px);
+          padding-top: 52px;
 
           @media @max-md-tablet {
             width: 100%;
             margin-left: 0;
             margin-top: 16px;
+            padding-top: 0;
           }
 
           .project-detail-static {
