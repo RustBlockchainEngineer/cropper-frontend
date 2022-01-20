@@ -772,7 +772,7 @@ export default Vue.extend({
           }
 
           .project-ido-container {
-            background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+            background: @gradient-color03;
             padding: 3px;
             border-radius: 8px;
 

@@ -1644,7 +1644,7 @@ export default class Pools extends Vue {
         width: calc(100% - 40px);
         max-width: 420px;
         padding: 18px;
-        background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+        background: @gradient-color03;
         border-radius: 18px;
         z-index: 999;
 
@@ -1661,7 +1661,7 @@ export default class Pools extends Vue {
 
             .learn-btn-container {
               height: 45px;
-              background: linear-gradient(190.83deg, #23a7b2 -119.02%, #273a93 86.38%);
+              background: @gradient-color-primary;
               padding: 2px;
               border-radius: 48px;
               margin-top: 18px;
@@ -2013,7 +2013,7 @@ export default class Pools extends Vue {
                     margin-top: 8px;
 
                     .shortcut-container {
-                      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+                      background: @gradient-color-outline;
                       border-radius: 8px;
                       padding: 2px;
                       margin-right: 8px;

@@ -521,7 +521,7 @@ export default Vue.extend({
       margin-top: 8px !important;
 
       .common-select-container {
-        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+        background: @gradient-color-outline;
         border-radius: 8px;
         padding: 2px !important;
 

@@ -813,7 +813,7 @@ export default class Wallet extends Vue {
 
     .tier-profile {
       display: flex;
-      background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+      background: @gradient-color03;
       padding: 2px;
       height: 30px;
       width: 30px;

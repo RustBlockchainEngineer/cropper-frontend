@@ -69,6 +69,46 @@
 
     <div class="card">
       <div class="card-body">
+        <div v-if="showGuide" class="guide-card">
+          <div class="guide-content">
+            <label class="font-large weight-bold">Migration tool</label>
+            <img class="icon-cursor close-icon" src="@/assets/icons/close-circle.svg" @click="hideGuide" />
+            <div class="guide-detail fcc-container">
+              <div class="fs-container">
+                <img class="note-icon" src="@/assets/icons/status-warning.svg" />
+                <span class="font-small weight-semi letter-large">
+                  The 
+                  <label class="highlight">CRP-USDC</label> 
+                  farm is ended, you must migrate your LP tokens to continue farming.
+                </span>
+              </div>
+              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
+            </div>
+            <div class="guide-detail fcc-container">
+              <div class="fs-container">
+                <img class="note-icon" src="@/assets/icons/status-warning.svg" />
+                <span class="font-small weight-semi letter-large">
+                  The 
+                  <label class="highlight">CRP-SOL</label> 
+                  farm is ended, you must migrate your LP tokens to continue farming.
+                </span>
+              </div>
+              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
+            </div>
+            <div class="guide-detail fcc-container">
+              <div class="fs-container">
+                <img class="note-icon" src="@/assets/icons/status-warning.svg" />
+                <span class="font-small weight-semi letter-large">
+                  The 
+                  <label class="highlight">CRP-WAG</label> 
+                  farm is ended, you must migrate your LP tokens to continue farming.
+                </span>
+              </div>
+              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
+            </div>
+          </div>
+        </div>
+
         <div class="farm-content">
           <div class="farm-head fcsb-container">
             <h3 class="title weight-bold">Farms</h3>
@@ -1536,6 +1576,7 @@ export default Vue.extend({
       showMoreMenu: [] as boolean[],
       showSearchMenu: false as boolean,
       showTabMenu: false as boolean,
+      showGuide: true as boolean,
       isSearchClicking: false as boolean,
       currentShowMore: -1 as number,
       mostUsed: [
@@ -3057,6 +3098,10 @@ export default Vue.extend({
         })
         this.currentShowMore = -1
       }
+    },
+    hideGuide() {
+      this.showGuide = false
+      // window.localStorage.pool_guide = true
     }
   }
 })
@@ -3341,6 +3386,63 @@ export default Vue.extend({
     .card-body {
       padding: 0;
 
+      .guide-card {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        width: calc(100% - 40px);
+        max-width: 420px;
+        padding: 18px;
+        background: @gradient-color03;
+        border-radius: 18px;
+        z-index: 999;
+
+        @media @max-sl-mobile {
+          top: 80px;
+          right: unset;
+        }
+
+        .guide-content {
+          position: relative;
+
+          .guide-detail {
+            background: @color-blue700;
+            padding: 8px 18px;
+            margin-top: 8px;
+            border-radius: 18px;
+
+            .highlight {
+              color: @color-petrol500;
+            }
+
+            .note-btn {
+              background: @gradient-color01;
+              box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+              border-radius: 48px;
+              padding: 8px;
+              border: none;
+              height: auto;
+
+              &:hover {
+                background: @gradient-color02;
+              }
+            }
+          }
+
+          .close-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+          }
+
+          .note-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+          }
+        }
+      }
+
       .farm-content {
         .farm-head {
           @media @max-sl-mobile {
@@ -3610,7 +3712,7 @@ export default Vue.extend({
                     margin-top: 8px;
 
                     .shortcut-container {
-                      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+                      background: @gradient-color-outline;
                       border-radius: 8px;
                       padding: 2px;
                       margin-right: 8px;
