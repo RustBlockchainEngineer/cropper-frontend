@@ -661,7 +661,10 @@
                       class="option-collapse-menu collapse-right"
                       v-click-outside="hideMore"
                     >
-                      <div class="option-collapse-item text-center font-medium weight-semi icon-cursor">
+                      <div
+                        v-if="!(farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)"
+                        class="option-collapse-item text-center font-medium weight-semi icon-cursor"
+                      >
                         <a class="social-link fcc-container" :href="farm.farmInfo.twitterShare" target="_blank">
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
@@ -681,13 +684,11 @@
                           Withdraw
                         </a>
                       </div>
-                      <div v-if="farm.farmInfo.poolId === removeRewardsFarmAddress" class="option-collapse-item text-center font-medium weight-semi icon-cursor">
-                        <Button
-                          size="large"
-                          ghost
-                          :disabled="!wallet.connected"
-                          @click.stop="removeRewards(farm)"
-                        >
+                      <div
+                        v-if="farm.farmInfo.poolId === removeRewardsFarmAddress"
+                        class="option-collapse-item text-center font-medium weight-semi icon-cursor"
+                      >
+                        <Button size="large" ghost :disabled="!wallet.connected" @click.stop="removeRewards(farm)">
                           Remove Rewards
                         </Button>
                       </div>
@@ -895,6 +896,7 @@
                     <Col class="farm-collapse-item fcsb-container" span="24">
                       <div class="fcc-container">
                         <a
+                          v-if="!(farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)"
                           class="social-link fcc-container font-medium weight-semi icon-cursor"
                           :href="farm.farmInfo.twitterShare"
                           target="_blank"
@@ -1381,6 +1383,7 @@
 
                     <Col class="farm-collapse-item fcc-container" span="24">
                       <a
+                        v-if="!(farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)"
                         class="social-link fcc-container font-xsmall weight-semi icon-cursor"
                         :href="farm.farmInfo.twitterShare"
                         target="_blank"
@@ -1455,7 +1458,13 @@ import {
   getTotalSupply
 } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
-import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER, FARM_VERSION, REMOVE_REWARDS_FARM_ADDRESS } from '@/utils/ids'
+import {
+  DEVNET_MODE,
+  FARM_PROGRAM_ID,
+  FARM_INITIAL_SUPER_OWNER,
+  FARM_VERSION,
+  REMOVE_REWARDS_FARM_ADDRESS
+} from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
@@ -1810,17 +1819,16 @@ export default Vue.extend({
       window.localStorage.TVL = this.TVL
     },
     async updateFarms() {
-      if(!this.checkedFP){
+      if (!this.checkedFP) {
         this.checkIfFarmProgramExist()
       }
       this.checkedFP = true
 
-
-      if(this.updating){
-        return;
+      if (this.updating) {
+        return
       }
 
-      this.updating = true;
+      this.updating = true
 
       this.$accessor.token.loadTokens()
       await this.updateLabelizedAmms()
@@ -2224,14 +2232,14 @@ export default Vue.extend({
 
       const currentTimestamp = moment().unix()
       if (!searchLifeFarm) {
-        //Opened
+        //opened
         this.showFarms = this.showFarms.filter(
           (farm: any) =>
             farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
             farm.farmInfo.poolInfo.end_timestamp > currentTimestamp
         )
       } else {
-        //Ended
+        //ended
         this.showFarms = this.showFarms.filter((farm: any) => farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)
       }
 
@@ -2247,7 +2255,7 @@ export default Vue.extend({
         this.showMoreMenu.push(false)
       })
       this.farmLoaded = true
-      this.updating = false;
+      this.updating = false
     },
 
     updateCurrentLp(newTokenAccounts: any) {
@@ -2771,8 +2779,6 @@ export default Vue.extend({
 
           const description = `Remove Rewards`
           this.$accessor.transaction.sub({ txid, description })
-
-          
         })
         .catch((error) => {
           this.$notify.error({
