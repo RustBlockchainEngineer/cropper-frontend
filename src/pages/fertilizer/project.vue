@@ -7,7 +7,7 @@
           @onCancel="() => (subscribeShow = false)"
           @onOk="
             () => {
-              currentStatus.social = true
+              currentStatus.subscribe = true
               subscribeShow = false
             }
           "
@@ -126,7 +126,7 @@
                 </div>
                 <div v-if="currentStep > 0" class="project-progress">
                   <div v-if="currentStep === 1">
-                    <div v-if="!currentStatus.social" class="btn-container">
+                    <div v-if="!currentStatus.subscribe" class="btn-container">
                       <Button
                         class="btn-transparent font-medium weight-semi icon-cursor"
                         @click="
@@ -144,13 +144,13 @@
                   </div>
                   <div v-else-if="currentStep === 2">
                     <div v-if="currentTimestamp < fertilizer.sales_end_date">
-                      <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub" class="fcc-container">
+                      <div v-if="(currentTier === 0 && currentStatus.win) || currentStatussubscribe" class="fcc-container">
                         <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                         <span class="font-small weight-semi spacing-large">You are registered</span>
                       </div>
                       <div
                         v-else-if="
-                          (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
+                          (currentTier === 0 && (!currentStatus.win || !currentStatussubscribe)) || !currentStatussubscribe
                         "
                         class="fcc-container"
                       >
@@ -290,7 +290,7 @@
 
             <div class="project-detail-condition">
               <div v-if="currentStep === 0"></div>
-              <div v-else-if="currentStep === 1 && currentStatus.social" class="project-detail-item">
+              <div v-else-if="currentStep === 1 && currentStatus.subscribe" class="project-detail-item">
                 <h4 class="weight-semi">Earn Social Pool tickets!</h4>
                 <span class="font-medium">
                   A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
@@ -393,7 +393,7 @@
               </div>
               <div v-else-if="currentStep === 2" class="project-detail-item">
                 <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
-                  <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub">
+                  <div v-if="(currentTier === 0 && currentStatus.win) || currentStatussubscribe">
                     <div class="fcc-container">
                       <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                       <span class="font-medium weight-semi spacing-small"
@@ -408,7 +408,7 @@
                     />
                   </div>
                   <div
-                    v-else-if="(currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub"
+                    v-else-if="(currentTier === 0 && (!currentStatus.win || !currentStatussubscribe)) || !currentStatussubscribe"
                     class="text-center"
                   >
                     <div class="fcc-container mb-8">
@@ -424,7 +424,7 @@
                   "
                 >
                   <div class="project-detail-open">
-                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.sub">
+                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatussubscribe">
                       <span class="font-medium weight-semi spacing-small"
                         >You can buy token from this project and see what you will receive.</span
                       >
@@ -450,7 +450,7 @@
                     </div>
                     <div
                       v-else-if="
-                        (currentTier === 0 && (!currentStatus.win || !currentStatus.sub)) || !currentStatus.sub
+                        (currentTier === 0 && (!currentStatus.win || !currentStatussubscribe)) || !currentStatussubscribe
                       "
                       class="text-center"
                     >
@@ -866,8 +866,7 @@ export default Vue.extend({
         steps: 'process' as string,
         funded: false as boolean,
         win: false as boolean,
-        sub: false as boolean,
-        social: false as boolean,
+        subscribe: false as boolean,
         telegramTicket: 1 as number,
         twitterTicket: 1 as number
       },
