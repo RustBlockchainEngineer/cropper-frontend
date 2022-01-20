@@ -1649,8 +1649,7 @@ export default class Pools extends Vue {
         z-index: 999;
 
         @media @max-sl-mobile {
-          bottom: 20px;
-          right: unset;
+          left: unset;
         }
 
         .guide-content {

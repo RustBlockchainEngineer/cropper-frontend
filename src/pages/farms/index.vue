@@ -3388,7 +3388,7 @@ export default Vue.extend({
 
       .guide-card {
         position: fixed;
-        top: 80px;
+        bottom: 20px;
         right: 20px;
         width: calc(100% - 40px);
         max-width: 420px;
@@ -3398,8 +3398,7 @@ export default Vue.extend({
         z-index: 999;
 
         @media @max-sl-mobile {
-          top: 80px;
-          right: unset;
+          left: unset;
         }
 
         .guide-content {
@@ -3410,6 +3409,10 @@ export default Vue.extend({
             padding: 8px 18px;
             margin-top: 8px;
             border-radius: 18px;
+
+            @media @max-sl-mobile {
+              padding: 8px;
+            }
 
             .highlight {
               color: @color-petrol500;
