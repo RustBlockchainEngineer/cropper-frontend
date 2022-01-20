@@ -813,7 +813,6 @@ import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
 const TEST_TIME = 1643500800000
-const ONE_MIN = 60000
 
 export default Vue.extend({
   components: {
@@ -860,11 +859,11 @@ export default Vue.extend({
           tokenomics: '/fertilizer/project/unq/tokenomics.png',
           distribution: '/fertilizer/project/unq/distribution.png'
         },
-        whitelist_start_date: TEST_TIME + ONE_MIN * 5,
-        whitelist_end_date: TEST_TIME + ONE_MIN * 10,
-        sales_start_date: TEST_TIME + ONE_MIN * 15,
-        sales_end_date: TEST_TIME + ONE_MIN * 20,
-        distribution_start_date: TEST_TIME + ONE_MIN * 25
+        whitelist_start_date: TEST_TIME + 60000 * 5,
+        whitelist_end_date: TEST_TIME + 60000 * 10,
+        sales_start_date: TEST_TIME + 60000 * 15,
+        sales_end_date: TEST_TIME + 60000 * 20,
+        distribution_start_date: TEST_TIME + 60000 * 25
       },
       projectStatus: {
         preparation: 'Preparation',
