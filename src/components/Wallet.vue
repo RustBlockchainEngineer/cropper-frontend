@@ -949,7 +949,7 @@ export default class Wallet extends Vue {
 
     .tier-info-menu {
       position: absolute;
-      top: 50px;
+      top: 70px;
       background: @gradient-color-primary;
       background-origin: border-box;
       border: 2px solid rgba(255, 255, 255, 0.14);
