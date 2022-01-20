@@ -87,12 +87,15 @@
                   </div>
                 </div>
                 <div
-                  v-if="(currentStep === 0 && fertilizer.whitelist_start_date) || (currentStep >= 1 && currentStep < 3)"
+                  v-if="
+                    (currentStep === 0 && currentTimestamp < fertilizer.whitelist_start_date) ||
+                    (currentStep >= 1 && currentStep < 3)
+                  "
                   class="project-countdown"
                 >
                   <Countdown
                     :title="
-                      currentStep === 0 && fertilizer.whitelist_start_date
+                      currentStep === 0 && currentTimestamp < fertilizer.whitelist_start_date
                         ? 'The whitelist starts in'
                         : currentStep === 1
                         ? 'End of the whitelist in'
@@ -107,7 +110,7 @@
                         : ''
                     "
                     :value="
-                      currentStep === 0 && fertilizer.whitelist_start_date
+                      currentStep === 0 && currentTimestamp < fertilizer.whitelist_start_date
                         ? fertilizer.whitelist_start_date
                         : currentStep === 1
                         ? fertilizer.whitelist_end_date
@@ -144,13 +147,17 @@
                   </div>
                   <div v-else-if="currentStep === 2">
                     <div v-if="currentTimestamp < fertilizer.sales_end_date">
-                      <div v-if="(currentTier === 0 && currentStatus.win) || currentStatussubscribe" class="fcc-container">
+                      <div
+                        v-if="(currentTier === 0 && currentStatus.win) || currentStatus.subscribe"
+                        class="fcc-container"
+                      >
                         <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                         <span class="font-small weight-semi spacing-large">You are registered</span>
                       </div>
                       <div
                         v-else-if="
-                          (currentTier === 0 && (!currentStatus.win || !currentStatussubscribe)) || !currentStatussubscribe
+                          (currentTier === 0 && (!currentStatus.win || !currentStatus.subscribe)) ||
+                          !currentStatus.subscribe
                         "
                         class="fcc-container"
                       >
@@ -393,7 +400,7 @@
               </div>
               <div v-else-if="currentStep === 2" class="project-detail-item">
                 <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
-                  <div v-if="(currentTier === 0 && currentStatus.win) || currentStatussubscribe">
+                  <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.subscribe">
                     <div class="fcc-container">
                       <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                       <span class="font-medium weight-semi spacing-small"
@@ -408,7 +415,9 @@
                     />
                   </div>
                   <div
-                    v-else-if="(currentTier === 0 && (!currentStatus.win || !currentStatussubscribe)) || !currentStatussubscribe"
+                    v-else-if="
+                      (currentTier === 0 && (!currentStatus.win || !currentStatus.subscribe)) || !currentStatus.subscribe
+                    "
                     class="text-center"
                   >
                     <div class="fcc-container mb-8">
@@ -424,7 +433,7 @@
                   "
                 >
                   <div class="project-detail-open">
-                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatussubscribe">
+                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.subscribe">
                       <span class="font-medium weight-semi spacing-small"
                         >You can buy token from this project and see what you will receive.</span
                       >
@@ -450,7 +459,8 @@
                     </div>
                     <div
                       v-else-if="
-                        (currentTier === 0 && (!currentStatus.win || !currentStatussubscribe)) || !currentStatussubscribe
+                        (currentTier === 0 && (!currentStatus.win || !currentStatus.subscribe)) ||
+                        !currentStatus.subscribe
                       "
                       class="text-center"
                     >
@@ -802,6 +812,8 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
+const TEST_TIME = 1643500800000
+const ONE_MIN = 60000
 
 export default Vue.extend({
   components: {
@@ -848,12 +860,11 @@ export default Vue.extend({
           tokenomics: '/fertilizer/project/unq/tokenomics.png',
           distribution: '/fertilizer/project/unq/distribution.png'
         },
-        whitelist_start_date: 1642399272000,
-        whitelist_end_date: 1643500800000
-        // sales_start_date: 1643500800000
-        // sales_end_date: 1643500800000,
-        // distribution_start_date: 1643500800000
-        // 1643500800000
+        whitelist_start_date: TEST_TIME + ONE_MIN * 5,
+        whitelist_end_date: TEST_TIME + ONE_MIN * 10,
+        sales_start_date: TEST_TIME + ONE_MIN * 15,
+        sales_end_date: TEST_TIME + ONE_MIN * 20,
+        distribution_start_date: TEST_TIME + ONE_MIN * 25
       },
       projectStatus: {
         preparation: 'Preparation',
@@ -865,7 +876,7 @@ export default Vue.extend({
       currentStatus: {
         steps: 'process' as string,
         funded: false as boolean,
-        win: false as boolean,
+        win: true as boolean,
         subscribe: false as boolean,
         telegramTicket: 1 as number,
         twitterTicket: 1 as number
@@ -877,7 +888,8 @@ export default Vue.extend({
       subscribeShow: false as boolean,
       taskModalShow: false as boolean,
       taskModalType: 0 as number,
-      twitterShow: false as boolean
+      twitterShow: false as boolean,
+      timer: null as any
     }
   },
 
@@ -894,15 +906,23 @@ export default Vue.extend({
   mounted() {
     // this.$router.push({ path: `/swap/` })
     this.currentTimestamp = moment().valueOf()
-    if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
-    if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
-    // if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
-    console.log(this.currentStep)
+    this.setTimer()
   },
 
   methods: {
     moment() {
       return moment()
+    },
+    checkCurrentStep() {
+      if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
+      if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
+      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
+    },
+    setTimer() {
+      this.timer = setInterval(async () => {
+        this.currentTimestamp = moment().valueOf()
+        this.checkCurrentStep()
+      }, 1000)
     },
     copyToClipboard() {
       var textField = document.createElement('textarea')
