@@ -57,8 +57,15 @@
       @onCancel="cancelStakeLP"
     />
 
-    <CreateFarm v-if="createFarmModalOpening" @onCancel="cancelCreateFarm" />
+    <FarmMigration
+      v-if="userMigrations.length > 0"
+      title="Farm Migration"
+      :migrationFarms="userMigrations"
+      @onMigrate="migrateFarm"
+      @onCancel="cancelStake"
+    />
 
+    <CreateFarm v-if="createFarmModalOpening" @onCancel="cancelCreateFarm" />
 
     <div class="card">
       <div class="card-body">
@@ -1647,24 +1654,19 @@ export default Vue.extend({
       this.checkIfFarmProgramExist()
     },
     async checkFarmMigration() {
-
-      let userMigrations: any = [];
+      this.userMigrations = []
 
       try {
-        const migrations = await fetch('https://api.cropper.finance/migration/').then((res) => res.json())
+        const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
+        //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
 
         forIn(migrations, (newFarmId, oldFarmId, _object) => {
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
           let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
-          let oldFarm = get(this.farm.infos, oldFarmId)
-          let oldFarmInfo = cloneDeep(oldFarm)
           if (userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0) {
-          
-
-            userMigrations.push({
+            this.userMigrations.push({
               oldFarmId,
               newFarmId,
-              farmInfo : oldFarmInfo,
               depositBalance:
                 userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)
             })
@@ -1672,13 +1674,9 @@ export default Vue.extend({
         })
       } catch {
         // dummy data
-        userMigrations = []
         this.userMigrations = []
       } finally {
-
-        this.userMigrations = userMigrations
       }
-
     },
     migrateFarm(migrationFarm: any) {
       const amount = migrationFarm.depositBalance
@@ -1735,10 +1733,7 @@ export default Vue.extend({
           this.$accessor.farm.requestInfos()
           this.$accessor.wallet.getTokenAccounts()
         })
-        .finally(() => {
-          this.checkFarmMigration()
-
-        })
+        .finally(() => {})
     },
     async checkIfFarmProgramExist() {
       const conn = this.$web3
