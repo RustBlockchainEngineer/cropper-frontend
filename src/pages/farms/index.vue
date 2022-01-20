@@ -57,54 +57,25 @@
       @onCancel="cancelStakeLP"
     />
 
-    <FarmMigration
-      v-if="userMigrations.length > 0"
-      title="Farm Migration"
-      :migrationFarms="userMigrations"
-      @onMigrate="migrateFarm"
-      @onCancel="cancelStake"
-    />
-
     <CreateFarm v-if="createFarmModalOpening" @onCancel="cancelCreateFarm" />
+
 
     <div class="card">
       <div class="card-body">
-        <div v-if="showGuide" class="guide-card">
+        <div v-if="showGuide && userMigrations.length > 0" class="guide-card">
           <div class="guide-content">
             <label class="font-large weight-bold">Migration tool</label>
             <img class="icon-cursor close-icon" src="@/assets/icons/close-circle.svg" @click="hideGuide" />
-            <div class="guide-detail fcc-container">
+            <div class="guide-detail fcc-container" v-for="migrationFarm in userMigrations" :key="migrationFarm.oldFarmId">
               <div class="fs-container">
                 <img class="note-icon" src="@/assets/icons/status-warning.svg" />
                 <span class="font-small weight-semi letter-large">
                   The 
-                  <label class="highlight">CRP-USDC</label> 
+                  <label class="highlight">{{migrationFarm.farmInfo.lp.coin.symbol}}-{{migrationFarm.farmInfo.lp.pc.symbol}}</label> 
                   farm is ended, you must migrate your LP tokens to continue farming.
                 </span>
               </div>
-              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
-            </div>
-            <div class="guide-detail fcc-container">
-              <div class="fs-container">
-                <img class="note-icon" src="@/assets/icons/status-warning.svg" />
-                <span class="font-small weight-semi letter-large">
-                  The 
-                  <label class="highlight">CRP-SOL</label> 
-                  farm is ended, you must migrate your LP tokens to continue farming.
-                </span>
-              </div>
-              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
-            </div>
-            <div class="guide-detail fcc-container">
-              <div class="fs-container">
-                <img class="note-icon" src="@/assets/icons/status-warning.svg" />
-                <span class="font-small weight-semi letter-large">
-                  The 
-                  <label class="highlight">CRP-WAG</label> 
-                  farm is ended, you must migrate your LP tokens to continue farming.
-                </span>
-              </div>
-              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
+              <Button class="note-btn font-small weight-semi spacing-large" @click="migrateFarm(migrationFarm)">Migrate LP Tokens</Button>
             </div>
           </div>
         </div>
@@ -1698,16 +1669,20 @@ export default Vue.extend({
       this.userMigrations = []
 
       try {
-        const migrations = await fetch('https://api.cropper.finance/migrate/').then((res) => res.json())
-        //const migrations = {"G8V86qfLq3v4EXrZxpUWS4yufDymsddMJkve46z4tnry":"B8XAiSowXmqKbcvhuQKemPwReXTFLPTQdTyMm1xANZpK"}
+        const migrations = await fetch('https://api.cropper.finance/migration/').then((res) => res.json())
 
         forIn(migrations, (newFarmId, oldFarmId, _object) => {
           let userInfoNew = get(this.farm.stakeAccounts, newFarmId)
           let userInfoOld = get(this.farm.stakeAccounts, oldFarmId)
+          let oldFarm = get(this.farm.infos, oldFarmId)
+          let oldFarmInfo = cloneDeep(oldFarm)
           if (userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0) {
+          
+
             this.userMigrations.push({
               oldFarmId,
               newFarmId,
+              farmInfo : oldFarmInfo,
               depositBalance:
                 userInfoOld.depositBalance.wei.toNumber() / Math.pow(10, userInfoOld.depositBalance.decimals)
             })
@@ -1774,7 +1749,10 @@ export default Vue.extend({
           this.$accessor.farm.requestInfos()
           this.$accessor.wallet.getTokenAccounts()
         })
-        .finally(() => {})
+        .finally(() => {
+          this.checkFarmMigration()
+
+        })
     },
     async checkIfFarmProgramExist() {
       const conn = this.$web3
