@@ -1,46 +1,5 @@
 <template>
   <div class="wallet">
-    <div v-if="wallet.connected" class="guide-container">
-      <img class="icon-cursor" src="@/assets/icons/ring.svg" @click="() => {this.showGuide = true}"/>
-      <div v-if="showGuide" class="guide-card" v-click-outside="hideGuide">
-        <div class="guide-content">
-          <div class="guide-detail fcc-container">
-            <div class="fs-container">
-              <img class="note-icon" src="@/assets/icons/status-warning.svg" />
-              <span class="font-small weight-semi letter-large">
-                The 
-                <label class="highlight">CRP-USDC</label> 
-                farm is ended, you must migrate your LP tokens to continue farming.
-              </span>
-            </div>
-            <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
-          </div>
-          <div class="guide-detail fcc-container">
-            <div class="fs-container">
-              <img class="note-icon" src="@/assets/icons/status-warning.svg" />
-              <span class="font-small weight-semi letter-large">
-                The 
-                <label class="highlight">CRP-SOL</label> 
-                farm is ended, you must migrate your LP tokens to continue farming.
-              </span>
-            </div>
-            <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
-          </div>
-          <div class="guide-detail fcc-container">
-            <div class="fs-container">
-              <img class="note-icon" src="@/assets/icons/status-warning.svg" />
-              <span class="font-small weight-semi letter-large">
-                The 
-                <label class="highlight">CRP-WAG</label> 
-                farm is ended, you must migrate your LP tokens to continue farming.
-              </span>
-            </div>
-            <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div v-if="wallet.connected" class="tier-container fcs-container">
       <div class="tier-profile">
         <img class="tier-img" src="@/assets/background/tier-blur.png" />
@@ -400,7 +359,6 @@ export default class Wallet extends Vue {
   farmTimer: number | undefined = undefined
   idoTimer: number | undefined = undefined
   crpbalance: any = undefined
-
   // web3 listener
   tierloaded: boolean = false
   walletListenerId = null as number | null
@@ -411,7 +369,6 @@ export default class Wallet extends Vue {
   popIn = false as boolean
   isModal = true as boolean
   showTierInfo = false as boolean
-  showGuide = true as boolean
 
   // tier
   userStaked = 0 as number
@@ -839,82 +796,12 @@ export default class Wallet extends Vue {
   onResize() {
     this.windowWidth = window.innerWidth
   }
-
-  hideGuide() {
-    this.showGuide = false
-  }
 }
 </script>
 
 <style lang="less" scoped>
 .wallet {
   display: flex;
-  
-  .guide-container {
-    position: relative;
-    margin-right: 18px;
-
-    .guide-card {
-      position: absolute;
-      top: 70px;
-      right: 0;
-      width: 420px;
-      padding: 18px;
-      background: @gradient-color03;
-      border-radius: 18px;
-      z-index: 999;
-
-      @media @max-lg-tablet {
-        right: -270px;
-      }
-
-      @media @max-sl-mobile {
-        right: -160px;
-      }
-
-      @media @max-sm-mobile {
-        width: 340px;
-      }
-
-      .guide-content {
-        position: relative;
-
-        .guide-detail {
-          background: @color-blue700;
-          padding: 8px 8px 8px 18px;
-          margin-top: 8px;
-          border-radius: 18px;
-
-          &:first-child {
-            margin-top: 0;
-          }
-
-          .highlight {
-            color: @color-petrol500;
-          }
-
-          .note-btn {
-            background: @gradient-color01;
-            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-            border-radius: 48px;
-            padding: 8px;
-            border: none;
-            height: auto;
-
-            &:hover {
-              background: @gradient-color02;
-            }
-          }
-        }
-
-        .note-icon {
-          width: 16px;
-          height: 16px;
-          margin-right: 8px;
-        }
-      }
-    }
-  }
 
   .tier-container {
     position: relative;
