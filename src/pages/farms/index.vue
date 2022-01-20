@@ -1666,7 +1666,8 @@ export default Vue.extend({
       this.checkIfFarmProgramExist()
     },
     async checkFarmMigration() {
-      this.userMigrations = []
+
+      let userMigrations = [];
 
       try {
         const migrations = await fetch('https://api.cropper.finance/migration/').then((res) => res.json())
@@ -1679,7 +1680,7 @@ export default Vue.extend({
           if (userInfoNew === undefined && userInfoOld != undefined && userInfoOld.depositBalance.wei.toNumber() > 0) {
           
 
-            this.userMigrations.push({
+            userMigrations.push({
               oldFarmId,
               newFarmId,
               farmInfo : oldFarmInfo,
@@ -1690,9 +1691,13 @@ export default Vue.extend({
         })
       } catch {
         // dummy data
+        userMigrations = []
         this.userMigrations = []
       } finally {
+
+        this.userMigrations = userMigrations
       }
+
     },
     migrateFarm(migrationFarm: any) {
       const amount = migrationFarm.depositBalance
