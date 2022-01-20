@@ -1667,7 +1667,7 @@ export default Vue.extend({
     },
     async checkFarmMigration() {
 
-      let userMigrations = [];
+      let userMigrations: any = [];
 
       try {
         const migrations = await fetch('https://api.cropper.finance/migration/').then((res) => res.json())
