@@ -57,14 +57,6 @@
       @onCancel="cancelStakeLP"
     />
 
-    <FarmMigration
-      v-if="userMigrations.length > 0"
-      title="Farm Migration"
-      :migrationFarms="userMigrations"
-      @onMigrate="migrateFarm"
-      @onCancel="cancelStake"
-    />
-
     <CreateFarm v-if="createFarmModalOpening" @onCancel="cancelCreateFarm" />
 
     <div class="card">
