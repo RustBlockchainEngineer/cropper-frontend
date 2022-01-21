@@ -813,7 +813,7 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
-const TEST_TIME = 1642774964128
+const TEST_TIME = 1643500800000
 
 export default Vue.extend({
   components: {
