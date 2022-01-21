@@ -34,9 +34,11 @@
             <img class="icon-cursor close-icon" src="@/assets/icons/close-circle.svg" @click="hideGuide" />
             <Row class="guide-detail">
               <Col :sm="14" :xs="24">
-                <label class="font-small weight-semi spacing-large">Check out our v3 LP walkthrough and migration guides.</label>
+                <label class="font-small weight-semi spacing-large"
+                  >Check out our v3 LP walkthrough and migration guides.</label
+                >
                 <div class="learn-btn-container">
-                  <Button class="learn-btn font-small weight-semi spacing-large">Learn more</Button>
+                  <button class="learn-btn font-small weight-semi spacing-large"><a href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/user-tutorial/liquidity" style="color:#fff" target="_blank">Learn more</a></button>
                 </div>
               </Col>
               <Col :sm="10" :xs="0">
@@ -47,7 +49,7 @@
         </div>
 
         <div class="pools-content" :class="showGuide ? 'guide-enabled' : ''">
-          <div class="pools-head fcb-container">
+          <div class="pools-head fcsb-container">
             <h3 class="title weight-bold">Liquidity Pools</h3>
             <div class="information">
               <div class="tvl-info">
@@ -73,7 +75,7 @@
             </div>
           </div>
 
-          <div class="pools-option-bar fcb-container">
+          <div class="pools-option-bar fcsb-container">
             <div class="option-tab-group">
               <div class="option-tab">
                 <Button
@@ -192,7 +194,7 @@
                   }
                 "
               >
-                <div class="collapse-item-header fcb-container">
+                <div class="collapse-item-header fcsb-container">
                   <label class="font-large weight-bold">Search</label>
                   <img
                     class="icon-cursor"
@@ -437,7 +439,9 @@
                   <Col class="state font-medium weight-semi" span="2">
                     ${{ new TokenAmount(data.fee_24h, 2, false).format() }}
                   </Col>
-                  <Col class="state font-medium weight-semi" span="2"> {{ new TokenAmount(data.apy, 2, false).format() }}% </Col>
+                  <Col class="state font-medium weight-semi" span="2">
+                    {{ new TokenAmount(data.apy, 2, false).format() }}%
+                  </Col>
                   <Col class="state font-medium weight-semi" span="3">
                     ${{ new TokenAmount(data.current, 2, false).format() }}
                   </Col>
@@ -577,7 +581,10 @@
 
                         <div class="btn-group">
                           <div class="btn-container">
-                            <Button class="btn-transparent font-small weight-bold" id="addp" @click="openPoolAddModal(data)"
+                            <Button
+                              class="btn-transparent font-small weight-bold"
+                              id="addp"
+                              @click="openPoolAddModal(data)"
                               >Add</Button
                             >
                           </div>
@@ -634,7 +641,10 @@
 
                       <div class="btn-group">
                         <div class="btn-container">
-                          <Button class="btn-transparent font-small weight-bold" id="addp" @click="openPoolAddModal(data)"
+                          <Button
+                            class="btn-transparent font-small weight-bold"
+                            id="addp"
+                            @click="openPoolAddModal(data)"
                             >Add</Button
                           >
                         </div>
@@ -729,11 +739,7 @@ import {
   Switch as Toggle
 } from 'ant-design-vue'
 
-import {
-  getCoinBalance, 
-  getPcBalance, 
-  getTotalSupply
-} from '@/utils/farm'
+import { getCoinBalance, getPcBalance, getTotalSupply } from '@/utils/farm'
 
 import { getPoolByLpMintAddress, getAllCropperPools } from '@/utils/pools'
 import { TokenAmount } from '@/utils/safe-math'
@@ -1058,8 +1064,14 @@ export default class Pools extends Vue {
     const currentPoolInfo = Object.values(this.$accessor.liquidity.infos).find((p: any) => p.ammId === this.farmInfo.ammId)
     const totalSupply = getTotalSupply(currentPoolInfo)
 
-    const pcBalance = (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
-    const coinBalance = (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString()) / totalSupply).toFixed(3)
+    const pcBalance = (
+      (getPcBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString())) /
+      totalSupply
+    ).toFixed(3)
+    const coinBalance = (
+      (getCoinBalance(currentPoolInfo) * parseFloat(lpBalance.toEther().toString())) /
+      totalSupply
+    ).toFixed(3)
 
     set(this.unstakePoolInfo, 'pcBalance', pcBalance)
     set(this.unstakePoolInfo, 'coinBalance', coinBalance)
@@ -1394,12 +1406,21 @@ export default class Pools extends Vue {
           var hash = window.location.hash
           if (hash) {
             hash = hash.substring(1)
-            this.searchName = hash
+
+            if(hash == 'createpool'){
+              if(this.wallet.connected){
+                this.createPoolModalOpening = true
+              }
+            } else {
+              this.searchName = hash
+            }
+
           } else {
             const query = new URLSearchParams(window.location.search)
             if (query.get('s')) this.searchName = query.get('s') as string
 
             if (query.get('d')) this.displayPoolID = query.get('d') as string
+
           }
 
           this.poolLoaded = true
@@ -1502,7 +1523,6 @@ export default class Pools extends Vue {
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
@@ -1624,7 +1644,7 @@ export default class Pools extends Vue {
         width: calc(100% - 40px);
         max-width: 420px;
         padding: 18px;
-        background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
+        background: @gradient-color03;
         border-radius: 18px;
         z-index: 999;
 
@@ -1641,7 +1661,7 @@ export default class Pools extends Vue {
 
             .learn-btn-container {
               height: 45px;
-              background: linear-gradient(190.83deg, #23a7b2 -119.02%, #273a93 86.38%);
+              background: @gradient-color-primary;
               padding: 2px;
               border-radius: 48px;
               margin-top: 18px;
@@ -1993,7 +2013,7 @@ export default class Pools extends Vue {
                     margin-top: 8px;
 
                     .shortcut-container {
-                      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+                      background: @gradient-color-outline;
                       border-radius: 8px;
                       padding: 2px;
                       margin-right: 8px;

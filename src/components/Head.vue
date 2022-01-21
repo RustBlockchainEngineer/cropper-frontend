@@ -1,16 +1,14 @@
 <template>
-  <Header class="header fcb-container">
-    <div class="nav-container fcl-container">
-      <NuxtLink to="/">
+  <Header class="header fcsb-container" :class="isScrolling ? 'scrolling' : ''">
+    <div class="nav-container fcs-container">
+      <NuxtLink class="logo-container" to="/">
         <img class="logo" src="@/assets/icons/cropper-logo.svg" />
       </NuxtLink>
 
-      <!-- <div v-if="isMobile ? (navOpened ? true : false) : true" :class="isMobile ? 'mobile-nav' : ''"> -->
       <Nav @onSelect="() => (navOpened = false)" />
-      <!-- </div> -->
     </div>
-    
-    <div class="fcb-container wallet-container">
+
+    <div class="fcsb-container wallet-container">
       <Wallet />
     </div>
   </Header>
@@ -27,13 +25,26 @@ export default Vue.extend({
   components: {
     Header
   },
-
   data() {
     return {
-      navOpened: false
+      navOpened: false,
+      isScrolling: false,
     }
   },
-
+  mounted() {
+    // @ts-ignore
+    window.addEventListener('scroll', this.updateScroll)
+  },
+  methods: {
+    updateScroll() {
+      // @ts-ignore
+      this.isScrolling = true
+      if (window.scrollY === 0) {
+        // @ts-ignore
+        this.isScrolling = false
+      }
+    }
+  },
   computed: {
     isMobile() {
       return this.$accessor.isMobile
@@ -44,24 +55,16 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 .header {
-  .logo {
-    height: 47px;
-    margin-right: 28px;
-    
-    @media @max-md-tablet {
-      height: 36px;
-      margin-right: 18px;
-    }
-  }
+  .logo-container {
+    margin-right: 38px;
 
-  .mobile-nav {
-    position: absolute;
-    width: 100vw;
-    max-width: 100%;
-    top: 64px;
-    left: 0;
-    text-align: center;
-    z-index: 99;
+    .logo {
+      height: 47px;
+
+      @media @max-md-tablet {
+        height: 36px;
+      }
+    }
   }
 
   .nav-button {
@@ -126,25 +129,4 @@ export default Vue.extend({
     }
   }
 }
-
-// @media @max-md-tablet {
-//   .header {
-//     margin: 10px 20px 80px 20px;
-//     padding: 0 !important;
-//     display: block;
-
-//     .logo {
-//       height: 32px;
-//     }
-
-//     .nav-button {
-//       display: none;
-//     }
-//   }
-
-//   .wallet-container {
-//     float: right;
-//     margin-top: -140px;
-//   }
-// }
 </style>

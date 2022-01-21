@@ -192,7 +192,7 @@ export const actions = actionTree(
         }
       });
       commit('setInfos', farms)
-      logger('Farm infomations updated')
+      logger('Farm informations updated')
       commit('setInitialized')
       commit('setLoading', false)
     },

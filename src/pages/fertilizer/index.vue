@@ -2,847 +2,42 @@
   <div class="fertilizer container">
     <div class="card">
       <div class="card-body">
-        <div class="fertilizer-head fcb-container">
-          <h3 class="title weight-bold">Fertilizer</h3>
-          <div class="information">
-            <div class="tvl-info">
-              <p class="font-large weight-semi">TVL : ${{ TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
-            </div>
-
-            <div class="action-btn-group">
-              <div class="reload-btn icon-cursor" :class="activeSpinning ? 'active' : ''" @click="reloadTimer">
-                <img src="@/assets/icons/reload.svg" />
-              </div>
-            </div>
-          </div>
+        <div class="fertilizer-head fcsb-container">
+          <h3 class="title weight-bold">Fertilizer / Admin panel <span v-if="mint == 'new'">New</span> <span v-else-if="mint">Update</span></h3>
         </div>
 
-        <div class="fertilizer-option-bar fcb-container">
-          <div class="option-tab-group">
-            <div class="option-tab">
-              <Button
-                class="font-large weight-semi icon-cursor"
-                :class="filterProject === filterOptions.upcoming ? 'active-tab' : ''"
-                @click="
-                  () => {
-                    this.filterProject = filterOptions.upcoming
-                  }
-                "
-                >Upcoming projects</Button
-              >
-              <div v-if="filterProject === filterOptions.upcoming" class="active-underline"></div>
-            </div>
-            <!-- <div class="option-tab">
-              <Button
-                class="font-large weight-semi icon-cursor"
-                :class="filterProject === filterOptions.funded ? 'active-tab' : ''"
-                @click="
-                  () => {
-                    this.filterProject = filterOptions.funded
-                  }
-                "
-              >
-                Funded projects
-              </Button>
-              <div v-if="filterProject === filterOptions.funded" class="active-underline"></div>
-            </div> -->
+
+
+
+
+          <div class="create">
+              <NuxtLink to="/fertilizer/project/?mint=new"><button>Create a new project</button></NuxtLink>
           </div>
 
-          <div
-            class="option-tab-group option-tab-collapse icon-cursor"
-            @click="
-              () => {
-                this.showTabMenu = !this.showTabMenu
-              }
-            "
-          >
-            <label class="font-large weight-semi icon-cursor">
-              {{
-                filterProject === filterOptions.upcoming
-                  ? filterOptions.upcoming
-                  : filterProject === filterOptions.funded
-                  ? filterOptions.funded
-                  : ''
-              }}
-            </label>
-            <img
-              class="arrow-icon"
-              :class="showTabMenu ? 'arrow-up' : 'arrow-down'"
-              src="@/assets/icons/arrow-down-white.svg"
-            />
 
-            <div
-              v-if="showTabMenu"
-              class="option-sort-collapse collapse-left"
-              v-click-outside="
-                () => {
-                  this.showTabMenu = false
-                }
-              "
-            >
-              <div
-                class="collapse-item text-center font-medium weight-semi icon-cursor"
-                :class="filterProject === filterOptions.upcoming ? 'active-item' : ''"
-                @click="
-                  () => {
-                    this.filterProject = filterOptions.upcoming
-                  }
-                "
-              >
-                Upcoming
-              </div>
-              <!-- <div
-                class="collapse-item text-center font-medium weight-semi icon-cursor"
-                :class="filterProject === filterOptions.funded ? 'active-item' : ''"
-                @click="
-                  () => {
-                    this.filterProject = filterOptions.funded
-                  }
-                "
-              >
-                Funded
-              </div> -->
+          <div class="projectList">
+
+            <div class="item" 
+                        v-for="item in projects"
+                        :key="item.mint">
+              <button style="color:#000" @click="goTo(item.mint)">{{item.title}} - {{item.mint}}</button>
             </div>
+
+
           </div>
 
-          <div class="option-filter-group">
-            <div class="option-filter option-filter-fixed fcc-container icon-cursor">
-              <img
-                src="@/assets/icons/search.svg"
-                @click="
-                  () => {
-                    this.showSearchMenu = !this.showSearchMenu
-                  }
-                "
-              />
-            </div>
 
-            <div
-              v-if="showSearchMenu"
-              class="option-search-collapse"
-              v-click-outside="
-                () => {
-                  this.showSearchMenu = false
-                }
-              "
-            >
-              <div class="collapse-item-header fcb-container">
-                <label class="font-large weight-bold">Search</label>
-                <img
-                  class="icon-cursor"
-                  src="@/assets/icons/close-circle.svg"
-                  @click="
-                    () => {
-                      this.showSearchMenu = false
-                    }
-                  "
-                />
-              </div>
-              <div class="collapse-item-body">
-                <input ref="userInput" v-model="searchName" class="font-medium" placeholder="Search" />
-              </div>
-            </div>
 
-            <div
-              class="option-filter option-sort fcc-container icon-cursor"
-              @click="
-                () => {
-                  this.showFilterMenu = !this.showFilterMenu
-                }
-              "
-            >
-              <span class="option-sort-item fcc-container font-body-medium weight-semi">
-                <label>Sort by:</label>
-                <span class="sort-detail">
-                  <span v-if="filterProject === filterOptions.upcoming">
-                    {{
-                      sortUpcoming === filterOptions.all
-                        ? filterOptions.all
-                        : sortUpcoming === filterOptions.whitelist
-                        ? filterOptions.whitelist
-                        : sortUpcoming === filterOptions.sales
-                        ? filterOptions.sales
-                        : sortUpcoming === filterOptions.distribution
-                        ? filterOptions.distribution
-                        : sortUpcoming === filterOptions.preparation
-                        ? filterOptions.preparation
-                        : filterOptions.all
-                    }}
-                  </span>
-                  <span v-else>
-                    {{
-                      sortFunded === sortOptions.subscribers
-                        ? sortOptions.subscribers
-                        : sortFunded === sortOptions.total_raised
-                        ? sortOptions.total_raised
-                        : sortFunded === sortOptions.token_price
-                        ? sortOptions.token_price
-                        : sortFunded === sortOptions.ath
-                        ? sortOptions.ath
-                        : sortFunded === sortOptions.end_date
-                        ? sortOptions.end_date
-                        : ''
-                    }}
-                  </span>
-                  <img
-                    class="arrow-icon"
-                    :class="showFilterMenu ? 'arrow-up' : 'arrow-down'"
-                    src="@/assets/icons/arrow-down-white.svg"
-                  />
-                </span>
-              </span>
-            </div>
 
-            <div class="option-filter option-filter-collapse option-filter-fixed fcc-container icon-cursor">
-              <img
-                src="@/assets/icons/filter.svg"
-                @click="
-                  () => {
-                    this.showFilterMenu = !this.showFilterMenu
-                  }
-                "
-              />
-            </div>
 
-            <div
-              v-if="showFilterMenu"
-              v-click-outside="
-                () => {
-                  this.showFilterMenu = false
-                }
-              "
-            >
-              <div v-if="filterProject === filterOptions.upcoming" class="option-sort-collapse collapse-right">
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortUpcoming === filterOptions.all ? 'active-item' : ''"
-                  @click="sortByStatus(filterOptions.all)"
-                >
-                  {{ filterOptions.all }}
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortUpcoming === filterOptions.whitelist ? 'active-item' : ''"
-                  @click="sortByStatus(filterOptions.whitelist)"
-                >
-                  {{ filterOptions.whitelist }}
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortUpcoming === filterOptions.sales ? 'active-item' : ''"
-                  @click="sortByStatus(filterOptions.sales)"
-                >
-                  {{ filterOptions.sales }}
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortUpcoming === filterOptions.distribution ? 'active-item' : ''"
-                  @click="sortByStatus(filterOptions.distribution)"
-                >
-                  {{ filterOptions.distribution }}
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortUpcoming === filterOptions.preparation ? 'active-item' : ''"
-                  @click="sortByStatus(filterOptions.preparation)"
-                >
-                  {{ filterOptions.preparation }}
-                </div>
-              </div>
-              <div v-else-if="filterProject === filterOptions.funded" class="option-sort-collapse collapse-right">
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortFunded === sortOptions.subscribers && !sortAsc ? 'active-item' : ''"
-                  @click="sortByColumnMenu(sortOptions.subscribers, false)"
-                >
-                  {{ sortOptions.subscribers }} (Low > High)
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortFunded === sortOptions.subscribers && sortAsc ? 'active-item' : ''"
-                  @click="sortByColumnMenu(sortOptions.subscribers, true)"
-                >
-                  {{ sortOptions.subscribers }} (High > Low)
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortFunded === sortOptions.total_raised && !sortAsc ? 'active-item' : ''"
-                  @click="sortByColumnMenu(sortOptions.total_raised, false)"
-                >
-                  {{ sortOptions.total_raised }} (Low > High)
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortFunded === sortOptions.total_raised && sortAsc ? 'active-item' : ''"
-                  @click="sortByColumnMenu(sortOptions.total_raised, true)"
-                >
-                  {{ sortOptions.total_raised }} (High > Low)
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortFunded === sortOptions.ath && !sortAsc ? 'active-item' : ''"
-                  @click="sortByColumnMenu(sortOptions.ath, false)"
-                >
-                  {{ sortOptions.ath }} (Low > High)
-                </div>
-                <div
-                  class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortFunded === sortOptions.ath && sortAsc ? 'active-item' : ''"
-                  @click="sortByColumnMenu(sortOptions.ath, true)"
-                >
-                  {{ sortOptions.ath }} (High > Low)
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="fertilizer-content">
-          <Row v-if="filterProject != filterOptions.funded" :gutter="[18, 28]">
-            <Col
-              v-for="(fertilizer, idx) in fertilizerItems"
-              :key="fertilizer.key"
-              :lg="idx === 0 ? 12 : 6"
-              :md="idx === 0 ? 16 : 8"
-              :sm="24"
-            >
-              <div class="fertilizer-project-table">
-                <div class="project-banner">
-                  <img class="banner" :src="fertilizer.picture" />
-                  <div
-                    class="project-status"
-                    :class="
-                      fertilizer.status === filterOptions.whitelist
-                        ? 'whitelist'
-                        : fertilizer.status === filterOptions.sales
-                        ? 'sales'
-                        : fertilizer.status === filterOptions.distribution
-                        ? 'distribution'
-                        : fertilizer.status === filterOptions.preparation
-                        ? 'preparation'
-                        : ''
-                    "
-                  >
-                    <span class="font-xsmall weight-bold">
-                      {{
-                        fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
-                          ? 'Open Sales'
-                          : fertilizer.status
-                      }}
-                    </span>
-                  </div>
-                </div>
 
-                <div class="project-details">
-                  <div class="project-desc" :class="idx === 0 ? 'project-desc-whitelist ftb-container' : ''">
-                    <div class="project-title">
-                      <h4 class="weight-bold spacing-medium">{{ fertilizer.title }}</h4>
-                      <span class="short-desc font-medium weight-semi spacing-small">{{ fertilizer.short_desc }}</span>
-                    </div>
 
-                    <!-- <div class="project-info fcb-container">
-                      <div class="project-balance">
-                        <div v-if="fertilizer.hard_cap">
-                          <span class="label font-small weight-semi spacing-large">Total raised</span>
-                          <span class="value font-medium weight-semi spacing-small fcl-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            {{ fertilizer.hard_cap }} USDC
-                          </span>
-                        </div>
-                      </div>
-                      <div class="project-balance">
-                        <div v-if="fertilizer.participants">
-                          <span class="label font-small weight-semi spacing-large">Participants</span>
-                          <span class="value font-medium weight-semi spacing-small fcl-container">{{ fertilizer.participants }}</span>
-                        </div>
-                      </div>
-                    </div> -->
-                  </div>
 
-                  <!-- <div v-if="idx === 0" class="project-info whitelist-countdown fcc-container text-center">
-                    <Countdown
-                      :title="
-                        fertilizer.status === filterOptions.whitelist
-                          ? 'End of the whitelist in'
-                          : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
-                          ? 'Sales starts in'
-                          : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
-                          ? 'End of the sales in'
-                          : fertilizer.status === filterOptions.distribution
-                          ? 'Distribution starts in'
-                          : fertilizer.status === filterOptions.preparation
-                          ? 'Whitelist starts in'
-                          : ''
-                      "
-                      :value="
-                        fertilizer.status === filterOptions.whitelist
-                          ? fertilizer.whitelist_end_date
-                          : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
-                          ? fertilizer.sales_start_date
-                          : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
-                          ? fertilizer.sales_end_date
-                          : fertilizer.status === filterOptions.distribution
-                          ? fertilizer.distribution_start_date
-                          : fertilizer.status === filterOptions.preparation
-                          ? fertilizer.whitelist_start_date
-                          : ''
-                      "
-                      format="DD:HH:mm:ss"
-                    />
-                  </div>
 
-                  <div v-else class="project-info fcl-container">
-                    <div
-                      v-if="
-                        fertilizer.sales_start_date ||
-                        fertilizer.sales_end_date ||
-                        fertilizer.distribution_start_date ||
-                        fertilizer.distribution_end_date ||
-                        fertilizer.whitelist_start_date ||
-                        fertilizer.whitelist_end_date
-                      "
-                    >
-                      <div
-                        v-if="
-                          fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
-                        "
-                        class="project-status open"
-                      >
-                        <span class="font-xsmall weight-bold">Open Now</span>
-                      </div>
-                      <div v-else class="project-balance">
-                        <span class="label font-small weight-semi spacing-large">
-                          {{
-                            fertilizer.status === filterOptions.preparation
-                              ? 'Whitelist starts in'
-                              : fertilizer.status === filterOptions.whitelist
-                              ? 'Whitelist ends in'
-                              : fertilizer.status === filterOptions.sales
-                              ? 'Sales starts in'
-                              : fertilizer.status === filterOptions.distribution
-                              ? 'Distribution starts in'
-                              : ''
-                          }}
-                        </span>
-                        <span class="value fcl-container">
-                          <Countdown
-                            :value="
-                              fertilizer.status === filterOptions.preparation
-                              ? fertilizer.whitelist_start_date
-                              : fertilizer.status === filterOptions.whitelist
-                              ? fertilizer.whitelist_end_date
-                              : fertilizer.status === filterOptions.sales
-                              ? fertilizer.sales_start_date
-                              : fertilizer.status === filterOptions.distribution
-                              ? fertilizer.distribution_start_date
-                              : 0
-                            "
-                            format="DD:HH:mm:ss"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                  </div> -->
 
-                  <!-- <div class="btn-container">
-                    <Button
-                      v-if="fertilizer.status === filterOptions.whitelist"
-                      class="btn-transparent font-medium weight-semi fcc-container spacing-small"
-                      >Subscription</Button
-                    >
-                    <Button v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small">More details</Button>
-                  </div> -->
-                </div>
-              </div>
-            </Col>
-          </Row>
 
-          <div v-else>
-            <!-- desktop version -->
-            <div class="fertilizer-funded-table isDesktop">
-              <Row class="fertilizer-funded-table-header">
-                <Col class="header-column font-small weight-bold text-left" span="6"> Project name </Col>
-                <Col class="header-column font-small weight-bold" span="3">
-                  <div class="header-column-title" @click="sortByColumn(sortOptions.subscribers)">
-                    Subscribers
-                    <img
-                      v-if="sortFunded === sortOptions.subscribers"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column font-small weight-bold" span="4">
-                  <div class="header-column-title" @click="sortByColumn(sortOptions.total_raised)">
-                    Total raised
-                    <img
-                      v-if="sortFunded === sortOptions.total_raised"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.total_raised && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.total_raised && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column font-small weight-bold" span="3">
-                  <div class="header-column-title" @click="sortByColumn(sortOptions.token_price)">
-                    Token price
-                    <img
-                      v-if="sortFunded === sortOptions.token_price"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.token_price && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.token_price && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column font-small weight-bold" span="3">
-                  <div class="header-column-title" @click="sortByColumn(sortOptions.ath)">
-                    ATH Since IDO
-                    <img
-                      v-if="sortFunded === sortOptions.ath"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.ath && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.ath && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-                <Col class="header-column font-small weight-bold" span="4">
-                  <div class="header-column-title" @click="sortByColumn(sortOptions.end_date)">
-                    Ended in UTC
-                    <img
-                      v-if="sortFunded === sortOptions.end_date"
-                      src="@/assets/icons/arrow-down-green.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.end_date && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                    <img
-                      v-else
-                      src="@/assets/icons/arrow-down-white.svg"
-                      class="arrow-icon"
-                      :class="sortFunded === sortOptions.end_date && sortAsc ? 'arrow-down' : 'arrow-up'"
-                    />
-                  </div>
-                </Col>
-              </Row>
 
-              <div class="fertilizer-funded-table-body">
-                <Row
-                  class="fertilizer-funded-table-item"
-                  v-for="(fertilizer, idx) in fertilizerItems"
-                  :key="fertilizer.key"
-                >
-                  <Col class="state" span="6">
-                    <div class="project-name fcl-container">
-                      <img class="logo" :src="fertilizer.picture" />
-                      <div class="title">
-                        <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
-                        <span class="short-desc bodXS weight-semi">{{ fertilizer.short_desc }}</span>
-                      </div>
-                    </div>
-                  </Col>
-
-                  <Col class="state font-medium weight-semi" span="3">
-                    {{ fertilizer.subscribers }}
-                  </Col>
-
-                  <Col class="state font-medium weight-semi" span="4">
-                    ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
-                  </Col>
-                  <Col class="state font-medium weight-semi" span="3">
-                    ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
-                  </Col>
-                  <Col class="state font-medium weight-semi" span="3">
-                    <div class="project-ath fcc-container">
-                      <Tooltip placement="bottomLeft">
-                        <template slot="title">
-                          <span class="font-small weight-semi">If you invested 100$ you would have 1000$</span>
-                        </template>
-                        <div class="info-icon">
-                          <img src="@/assets/icons/info.svg" />
-                        </div>
-                      </Tooltip>
-                      <span class="value font-medium weight-semi spacing-small">+{{ fertilizer.ath }}%</span>
-                    </div>
-                  </Col>
-                  <Col class="state font-medium weight-semi" span="4">
-                    {{ moment(fertilizer.distribution_end_date).format('MMMM Do YYYY') }}
-                  </Col>
-                  <Col class="state" span="1">
-                    <div class="show-more icon-cursor" @click="showMore(idx)">
-                      <img src="@/assets/icons/dot3.svg" />
-                      <div
-                        v-if="showMoreMenu[idx]"
-                        class="option-sort-collapse collapse-right"
-                        v-click-outside="hideMore"
-                      >
-                        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
-                          <a> Stake </a>
-                        </div>
-                        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
-                          <a> Swap </a>
-                        </div>
-                        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
-                          <a class="social-link fcc-container" href="#" target="_blank">
-                            Share
-                            <img class="social-icon" src="@/assets/icons/share.svg" />
-                          </a>
-                        </div>
-                        <div class="collapse-item text-center font-medium weight-semi icon-cursor">
-                          <a class="social-link fcc-container" href="#" target="_blank">
-                            Twitter
-                            <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-            </div>
-
-            <!-- tablet version -->
-            <div class="fertilizer-funded-table isTablet">
-              <Collapse v-model="showCollapse" accordion>
-                <CollapsePanel
-                  v-for="(fertilizer, idx) in fertilizerItems"
-                  :key="fertilizer.key"
-                  v-show="true"
-                  :show-arrow="true"
-                >
-                  <Row slot="header" class="collapse-header">
-                    <Col class="state" span="8">
-                      <div class="project-name fcl-container">
-                        <img class="logo" :src="fertilizer.picture" />
-                        <div class="title">
-                          <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
-                          <span class="short-desc bodXS weight-semi">{{ fertilizer.short_desc }}</span>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col class="state text-center" span="5">
-                      <span class="label font-small weight-bold">Subscribers</span>
-                      <span class="font-medium weight-semi">{{ fertilizer.subscribers }} </span>
-                    </Col>
-
-                    <Col class="state font-medium weight-semi text-center" span="5">
-                      <span class="label font-small weight-bold">Total raised</span>
-                      ${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}
-                    </Col>
-
-                    <Col class="state font-medium weight-semi text-center" span="5">
-                      <span class="label font-small weight-bold">Token price</span>
-                      ${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}
-                    </Col>
-
-                    <Button class="detail-btn font-small weight-semi">
-                      <img
-                        class="arrow-icon"
-                        :class="idx != showCollapse ? 'arrow-up' : 'arrow-down'"
-                        src="@/assets/icons/arrow-down-white.svg"
-                      />
-                    </Button>
-                  </Row>
-
-                  <Row class="collapse-row" :gutter="[18, 18]">
-                    <Col :span="12">
-                      <div class="ftb-container">
-                        <div class="state">
-                          <span class="label font-small weight-bold">ATH Since IDO</span>
-                          <div class="project-ath fcc-container">
-                            <Tooltip placement="bottomLeft">
-                              <template slot="title">
-                                <span class="font-small weight-semi">If you invested 100$ you would have 1000$</span>
-                              </template>
-                              <div class="info-icon">
-                                <img src="@/assets/icons/info.svg" />
-                              </div>
-                            </Tooltip>
-                            <span class="value font-medium weight-semi spacing-small">+{{ fertilizer.ath }}%</span>
-                          </div>
-                        </div>
-
-                        <div class="state text-center" span="5">
-                          <span class="label font-small weight-bold">Ended in UTC</span>
-                          <span class="font-medium weight-semi">{{
-                            moment(fertilizer.distribution_end_date).format('MMMM Do YYYY')
-                          }}</span>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col class="btn-group" :span="12">
-                      <div class="fcr-container">
-                        <div class="btn-container">
-                          <Button class="btn-primary font-small weight-bold"> Stake </Button>
-                        </div>
-
-                        <div class="btn-container">
-                          <Button class="btn-primary font-small weight-bold"> Swap </Button>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col class="btn-group" :span="24">
-                      <div class="fcc-container">
-                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
-                          Share
-                          <img class="social-icon" src="@/assets/icons/share.svg" />
-                        </a>
-                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
-                          Twitter
-                          <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
-                        </a>
-                      </div>
-                    </Col>
-                  </Row>
-                </CollapsePanel>
-              </Collapse>
-            </div>
-
-            <!-- mobile version -->
-            <div class="fertilizer-funded-table isMobile">
-              <Collapse v-model="showCollapse" accordion>
-                <CollapsePanel
-                  v-for="(fertilizer, idx) in fertilizerItems"
-                  :key="fertilizer.key"
-                  v-show="true"
-                  :show-arrow="true"
-                >
-                  <Row slot="header" class="collapse-header">
-                    <Col class="state" span="23">
-                      <div class="project-name fcl-container">
-                        <img class="logo" :src="fertilizer.picture" />
-                        <div class="title">
-                          <span class="font-medium weight-semi">{{ fertilizer.title }}</span>
-                          <span class="short-desc bodXS weight-semi">{{ fertilizer.short_desc }}</span>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Button class="detail-btn font-small weight-semi">
-                      <img
-                        class="arrow-icon"
-                        :class="idx != showCollapse ? 'arrow-up' : 'arrow-down'"
-                        src="@/assets/icons/arrow-down-white.svg"
-                      />
-                    </Button>
-                  </Row>
-
-                  <Row class="collapse-row" :gutter="[18, 18]">
-                    <Col :span="24">
-                      <div class="fcb-container">
-                        <div class="state">
-                          <span class="label font-small weight-bold">Total raised</span>
-                          <span class="font-medium weight-semi"
-                            >${{ new TokenAmount(fertilizer.hard_cap, 2, false).format() }}</span
-                          >
-                        </div>
-
-                        <div class="state">
-                          <span class="label font-small weight-bold">Subscribers</span>
-                          <span class="font-medium weight-semi">{{ fertilizer.subscribers }}</span>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col :span="24">
-                      <div class="fcb-container">
-                        <div class="state">
-                          <span class="label font-small weight-bold">Token price</span>
-                          <span class="font-medium weight-semi spacing-small"
-                            >${{ new TokenAmount(fertilizer.token_price, 3, false).format() }}</span
-                          >
-                        </div>
-
-                        <div class="state">
-                          <span class="label font-small weight-bold">ATH Since IDO</span>
-                          <div class="project-ath fcc-container">
-                            <Tooltip placement="bottomLeft">
-                              <template slot="title">
-                                <span class="font-small weight-semi">If you invested 100$ you would have 1000$</span>
-                              </template>
-                              <div class="info-icon">
-                                <img src="@/assets/icons/info.svg" />
-                              </div>
-                            </Tooltip>
-                            <span class="value font-medium weight-semi spacing-small">+{{ fertilizer.ath }}%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col :span="24">
-                      <div class="fcb-container">
-                        <div class="state" span="5">
-                          <span class="label font-small weight-bold">Ended in UTC</span>
-                          <span class="font-medium weight-semi">{{
-                            moment(fertilizer.distribution_end_date).format('MMMM Do YYYY')
-                          }}</span>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col class="btn-group" :span="24">
-                      <div class="btn-group-item fcc-container">
-                        <div class="btn-container">
-                          <Button class="btn-primary font-small weight-bold"> Stake </Button>
-                        </div>
-
-                        <div class="btn-container">
-                          <Button class="btn-primary font-small weight-bold"> Swap </Button>
-                        </div>
-                      </div>
-
-                      <div class="btn-group-item fcc-container">
-                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
-                          Share
-                          <img class="social-icon" src="@/assets/icons/share.svg" />
-                        </a>
-                        <a class="social-link fcc-container font-xsmall weight-semi icon-cursor" href="#" target="_blank">
-                          Twitter
-                          <img class="social-icon" src="@/assets/icons/twitter-white.svg" />
-                        </a>
-                      </div>
-                    </Col>
-                  </Row>
-                </CollapsePanel>
-              </Collapse>
-            </div>
-          </div>
-        </div>
-
-        <!-- <div v-if="initialized"></div>
-
-        <div v-else class="fcc-container">
-          <Spin :spinning="true">
-            <Icon slot="indicator" type="loading" style="font-size: 24px" spin />
-          </Spin>
-        </div> -->
       </div>
     </div>
   </div>
@@ -868,23 +63,34 @@ export default Vue.extend({
   components: {
     // Spin,
     // Icon,
-    Collapse,
-    CollapsePanel,
-    Row,
-    Col,
-    Button,
+    // Collapse,
+    // CollapsePanel,
+    // Row,
+    // Col,
+    // Button
     // Countdown,
-    Tooltip
+    // Tooltip
   },
   data() {
     return {
       searchName: '',
       coinPicUrl: '',
+      mint: '',
       initialized: false as boolean,
       labelizedAmms: {} as any,
       currentPage: 1,
       coinName: '',
       mintAddress: '',
+      scValues: {
+
+      } as any,
+      apiValues: {
+        title : '',
+        ath: '',
+        hard_cap: '',
+      } as any,
+
+      projects: {} as any,
       poolLoaded: false,
       autoRefreshTime: 60 as number,
       countdown: 0,
@@ -914,7 +120,7 @@ export default Vue.extend({
       },
       sortOptions: {
         subscribers: 'Subscribers',
-        total_raised: 'Total raised',
+        total_raised: 'Total raise',
         token_price: 'Token price',
         ath: 'ATH Since IDO',
         end_date: 'Ended in UTC'
@@ -922,158 +128,27 @@ export default Vue.extend({
       filterProject: 'Upcoming' as string,
       fertilizerItems: [] as any[],
       fertilizerData: [
-        // {
-        //   status: 'Whitelist Open',
-        //   key: 'k0',
-        //   picture: '/fertilizer/banner/unq.png',
-        //   title: 'UNQ.club',
-        //   short_desc: 'Social platform for NFT asset management',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   participants: 100418,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   whitelist_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Sales',
-        //   key: 'k1',
-        //   picture: '/fertilizer/banner/metaprints.png',
-        //   title: 'Metaprints',
-        //   short_desc: 'Blueprints for metaverses',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   participants: 100418,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   sales_start_date: 1641280215000,
-        //   sales_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Sales',
-        //   key: 'k2',
-        //   picture: '/fertilizer/banner/galaxy.png',
-        //   title: 'Galaxy War',
-        //   short_desc: 'Our galatic adventure awaits',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   participants: 100418,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   sales_start_date: 1643500800000
-        // },
-        // {
-        //   status: 'Distribution',
-        //   key: 'k3',
-        //   picture: '/fertilizer/banner/meanfi.png',
-        //   title: 'MeanFI',
-        //   short_desc: 'Grow your money stash with the best prices across DeFi',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   participants: 100418,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   distribution_start_date: 1643500800000
-        // },
         {
-          status: 'Preparation',
-          key: 'k4',
-          picture: '/fertilizer/banner/agoric.png',
-          title: 'Agoric',
-          short_desc: 'Social platform for NFT asset management',
-          hard_cap: '3000K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_start_date: 1643500800000
+          status: 'Upcoming',
+          key: 'k13',
+          picture: '/fertilizer/banner/winerz.png',
+          title: 'Winerz',
+          short_desc: 'Experience a new way of playing by betting on your victory.',
         },
         {
-          status: 'Preparation',
-          key: 'k5',
-          picture: '/fertilizer/banner/metaprints.png',
-          title: 'Metaprints',
-          short_desc: 'Blueprints for metaverses',
-          hard_cap: '3000K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+          status: 'Upcoming',
+          key: 'k14',
+          picture: '/fertilizer/banner/secretum.png',
+          title: 'Secretum Protocol',
+          short_desc: 'Blockchain-based messaging app where every conversation is private by design.',
         },
         {
-          status: 'Preparation',
-          key: 'k6',
-          picture: '/fertilizer/banner/galaxy.png',
-          title: 'Galaxy War',
-          short_desc: 'Our galatic adventure awaits',
-          hard_cap: '3000K',
-          token_price: 0.071,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-        },
-        // {
-        //   status: 'Funded',
-        //   key: 'k7',
-        //   picture: '/fertilizer/logo/defiland.png',
-        //   title: 'DeFi Land',
-        //   short_desc: 'Gamified Decentralized Finance',
-        //   subscribers: 1000,
-        //   hard_cap: 250000,
-        //   token_price: 0.068,
-        //   ath: 526.7,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k8',
-        //   picture: '/fertilizer/logo/sonar.png',
-        //   title: 'Sonar Watch',
-        //   short_desc: 'Empowering user journey on Solana DeFi',
-        //   subscribers: 1001,
-        //   hard_cap: 249999,
-        //   token_price: 0.069,
-        //   ath: 526.6,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k9',
-        //   picture: '/fertilizer/logo/goosefx.png',
-        //   title: 'GooseFX',
-        //   short_desc: 'A Complete DeFi Experience',
-        //   subscribers: 1002,
-        //   hard_cap: 249998,
-        //   token_price: 0.07,
-        //   ath: 526.5,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k10',
-        //   picture: '/fertilizer/logo/waggle.png',
-        //   title: 'Waggle Network',
-        //   short_desc: 'Primary markets for everyone',
-        //   subscribers: 1003,
-        //   hard_cap: 249997,
-        //   token_price: 0.071,
-        //   ath: 526.4,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k11',
-        //   picture: '/fertilizer/logo/cryowar.png',
-        //   title: 'Cryowar',
-        //   short_desc: 'Next-gen blockchain multiplayer game',
-        //   subscribers: 1004,
-        //   hard_cap: 249996,
-        //   token_price: 0.071,
-        //   ath: 526.3,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k12',
-        //   picture: '/fertilizer/logo/cyclos.png',
-        //   title: 'Cyclos',
-        //   short_desc: 'Decentralized trading unleashed',
-        //   subscribers: 1005,
-        //   hard_cap: 249995,
-        //   token_price: 0.073,
-        //   ath: 526.2,
-        //   distribution_end_date: 1643500800000
-        // }
+          status: 'Upcoming',
+          key: 'k15',
+          picture: '/fertilizer/banner/zebec.png',
+          title: 'Zebec Protocol',
+          short_desc: 'Continuous Settlement Protocol.',
+        }
       ],
       currentTimestamp: 0
     }
@@ -1085,238 +160,43 @@ export default Vue.extend({
     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
   async mounted() {
-    this.getTvl()
+    // this.$router.push({ path: `/swap/` })
     this.$accessor.token.loadTokens()
-    await this.updateLabelizedAmms()
 
-    let timer = setInterval(async () => {
-      if (this.nbFarmsLoaded == Object.keys(this.labelizedAmms).length) {
-        this.initialized = true
+
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('mint')) {
+      this.mint = query.get('mint') as string
+    }
+
+    let responseData = {} as any
+
+      try {
+        responseData =  await fetch('https://api.croppppp.com/launchpad/?list=1').then((res) => res.json())
+      } catch {
+        // dummy data
+      } finally {
+        this.projects = responseData.message
       }
-    }, 1000)
-
-    this.timer = setInterval(async () => {
-      clearInterval(this.timer)
-      this.setTimer()
-    }, 1000)
 
     this.currentTimestamp = moment().valueOf()
     this.updateFertilizer()
   },
   watch: {
-    showCollapse: {
-      immediate: true,
-      handler() {
-        if (this.showCollapse.length > 0) {
-         this.showCollapse.splice(0, this.showCollapse.length)
-        }
-      },
-      deep: true
-    },
-    searchName: {
-      handler(newSearchName: string) {
-        this.filterFertilizer(newSearchName, this.filterProject)
-      },
-      deep: true
-    },
-    filterProject: {
-      handler(newFilterProject: string) {
-        this.sortUpcoming = this.filterOptions.all
-        this.sortFunded = this.sortOptions.subscribers
-        this.sortAsc = false
-        this.showFilterMenu = false
-        this.filterFertilizer(this.searchName, newFilterProject)
-      },
-      deep: true
-    }
   },
   methods: {
     importIcon,
     TokenAmount,
-    async getTvl() {
-      let cur_date = new Date().getTime()
-      if (window.localStorage.TVL_last_updated) {
-        const last_updated = parseInt(window.localStorage.TVL_last_updated)
-        if (cur_date - last_updated <= 600000) {
-          this.TVL = window.localStorage.TVL
-          return
-        }
-      }
-
-      let responseData: any = []
-      let tvl = 0
-      try {
-        responseData = await fetch('https://api.cropper.finance/cmc/').then((res) => res.json())
-
-        Object.keys(responseData).forEach(function (key) {
-          if ((responseData as any)[key as any].tvl * 1 < 2000000) {
-            tvl = tvl * 1 + (responseData as any)[key as any].tvl * 1
-          }
-        })
-      } catch {
-        // dummy data
-      } finally {
-      }
-
-      try {
-        responseData = await fetch('https://api.cropper.finance/staking/').then((res) => res.json())
-        tvl = tvl * 1 + (responseData as any).value * 1
-      } catch {
-        // dummy data
-      } finally {
-      }
-
-      this.TVL = Math.round(tvl)
-
-      window.localStorage.TVL_last_updated = new Date().getTime()
-      window.localStorage.TVL = this.TVL
-    },
-    async flush() {
-      await this.updateLabelizedAmms()
-      clearInterval(this.timer)
-      this.poolLoaded = true
-      this.countdown = 0
-      this.setTimer()
-    },
-    async updateLabelizedAmms() {
-      this.labelizedAmms = {}
-      let responseData2 = {}
-      let responseData
-      try {
-        responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
-      } catch {
-        // dummy data
-        responseData = [
-          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
-          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
-        ]
-      } finally {
-        responseData.forEach(async (element: any) => {
-          if (element.pfo == true) {
-            element.calculateNextStep = 'Bla bla bla'
-
-            this.labelizedAmms[element.slug] = element
-            try {
-              responseData2 = await fetch(
-                'https://api.cropper.finance/pfo/?farmId=' +
-                  this.labelizedAmms[element.slug].pfarmID +
-                  '&t=' +
-                  Math.round(moment().unix() / 60000)
-              ).then((res) => res.json())
-            } catch {
-            } finally {
-              this.labelizedAmms[element.slug]['followers'] = Object.keys(responseData2).length
-              this.nbFarmsLoaded++
-            }
-          }
-        })
-      }
-    },
+    async flush() {},
+    async updateLabelizedAmms() {},
     async delay(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms))
     },
-    setTimer() {
-      this.timer = setInterval(async () => {
-        if (!this.loading) {
-          if (this.countdown < this.autoRefreshTime) {
-            this.countdown += 1
-            if (this.countdown === this.autoRefreshTime) {
-              await this.flush()
-            }
-          }
-        }
-      }, 1000)
-    },
-    reloadTimer() {
-      this.flush()
-      this.$accessor.wallet.getTokenAccounts()
-      this.activeSpinning = true
-      setTimeout(() => {
-        this.activeSpinning = false
-      }, 1000)
-    },
+    setTimer() {},
+    reloadTimer() {},
     updateFertilizer() {
-      this.filterFertilizer(this.searchName, this.filterProject)
     },
-    filterFertilizer(searchName: string, filterProject: string) {
-      // filter with tabs
-      if (filterProject === this.filterOptions.upcoming) {
-        this.fertilizerItems = this.fertilizerData.filter(
-          (fertilizer: any) => fertilizer.status != this.filterOptions.funded
-        )
-
-        // sort by status on Upcoming projects
-        if (this.sortUpcoming === this.filterOptions.all) {
-          this.fertilizerItems = this.fertilizerItems.filter(
-            (fertilizer: any) => fertilizer.status != this.filterOptions.funded
-          )
-        } else if (this.sortUpcoming === this.filterOptions.whitelist) {
-          this.fertilizerItems = this.fertilizerItems.filter(
-            (fertilizer: any) => fertilizer.status === this.filterOptions.whitelist
-          )
-        } else if (this.sortUpcoming === this.filterOptions.sales) {
-          this.fertilizerItems = this.fertilizerItems.filter(
-            (fertilizer: any) => fertilizer.status === this.filterOptions.sales
-          )
-        } else if (this.sortUpcoming === this.filterOptions.distribution) {
-          this.fertilizerItems = this.fertilizerItems.filter(
-            (fertilizer: any) => fertilizer.status === this.filterOptions.distribution
-          )
-        } else if (this.sortUpcoming === this.filterOptions.preparation) {
-          this.fertilizerItems = this.fertilizerItems.filter(
-            (fertilizer: any) => fertilizer.status === this.filterOptions.preparation
-          )
-        }
-      } else {
-        this.fertilizerItems = this.fertilizerData.filter(
-          (fertilizer: any) => fertilizer.status === this.filterOptions.funded
-        )
-
-        // sort by column on Funded projects
-        if (this.sortAsc) {
-          if (this.sortFunded == this.sortOptions.subscribers) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.subscribers - a.subscribers)
-          } else if (this.sortFunded == this.sortOptions.total_raised) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.hard_cap - a.hard_cap)
-          } else if (this.sortFunded == this.sortOptions.token_price) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.token_price - a.token_price)
-          } else if (this.sortFunded == this.sortOptions.ath) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.ath - a.ath)
-          } else if (this.sortFunded == this.sortOptions.end_date) {
-            this.fertilizerItems = this.fertilizerItems.sort(
-              (a: any, b: any) => b.distribution_end_date - a.distribution_end_date
-            )
-          }
-        } else {
-          if (this.sortFunded == this.sortOptions.subscribers) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.subscribers - b.subscribers)
-          } else if (this.sortFunded == this.sortOptions.total_raised) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.hard_cap - b.hard_cap)
-          } else if (this.sortFunded == this.sortOptions.token_price) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.token_price - b.token_price)
-          } else if (this.sortFunded == this.sortOptions.ath) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.ath - b.ath)
-          } else if (this.sortFunded == this.sortOptions.end_date) {
-            this.fertilizerItems = this.fertilizerItems.sort(
-              (a: any, b: any) => a.distribution_end_date - b.distribution_end_date
-            )
-          }
-        }
-      }
-
-      // search with name
-      if (searchName != '') {
-        console.log(searchName)
-        this.fertilizerItems = this.fertilizerItems.filter((fertilizer: any) =>
-          fertilizer.title.toLowerCase().includes(searchName.toLowerCase())
-        )
-      }
-
-      this.showMoreMenu = []
-      this.fertilizerItems.forEach((element) => {
-        this.showMoreMenu.push(false)
-      })
-    },
+    filterFertilizer(searchName: string, filterProject: string) {},
     moment() {
       return moment()
     },
@@ -1339,6 +219,11 @@ export default Vue.extend({
     goToProject(fertilizer: any) {
       this.$router.push({
         path: '/fertilizer/project/?f=' + fertilizer.uniqueKey
+      })
+    },
+    goTo(mint:any){
+      this.$router.push({
+        path: '/fertilizer/project/?mint=' + mint
       })
     },
     sortByStatus(option: string) {
@@ -1379,6 +264,10 @@ export default Vue.extend({
         })
         this.currentShowMore = -1
       }
+    },
+    save() {
+      // TODO - SC PART
+      alert('YO !')
     }
   }
 })
@@ -1387,7 +276,6 @@ export default Vue.extend({
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
@@ -1453,6 +341,10 @@ export default Vue.extend({
   padding: 4px 8px;
   border-radius: 6px;
 
+  &.upcoming {
+    background: #a262ac;
+  }
+
   &.whitelist {
     background: @color-red600;
   }
@@ -1508,6 +400,19 @@ export default Vue.extend({
     height: 12px;
     margin-right: 8px;
   }
+}
+
+input.std,
+select.std,
+textarea.std{
+  width:100%;
+  color:#000;
+  padding:5px 10px;
+}
+
+label{
+  margin-bottom:20px;
+  display:block
 }
 
 .arrow-icon {
@@ -1826,22 +731,27 @@ export default Vue.extend({
             }
           }
 
+          &.first {
+            border: 3px solid @color-petrol500;
+
+            .project-banner {
+              border-bottom: 3px solid @color-petrol500;
+            }
+          }
+
           .project-details {
             padding: 14px;
 
             .project-title {
+              height: 170px;
+
+              @media @max-sl-mobile {
+                height: 111px;
+              }
+
               .short-desc {
                 display: block;
                 margin-top: 4px;
-                height: 48px;
-
-                @media @max-lg-tablet {
-                  height: 66px;
-                }
-
-                @media @max-sl-mobile {
-                  height: 48px;
-                }
               }
             }
 
@@ -1869,21 +779,14 @@ export default Vue.extend({
               }
 
               &.whitelist-countdown {
-                height: 114px;
-                background: @color-blue800;
-                padding: 8px;
-                border-radius: 18px;
-
-                @media @max-lg-tablet {
-                  margin-top: 72px;
-                }
-
-                @media @max-sl-mobile {
-                  margin-top: 18px;
-                }
+                height: 48px;
+                // height: 114px;
+                // background: @color-blue800;
+                // padding: 8px;
+                // border-radius: 18px;
               }
 
-              &.fcb-container {
+              &.fcsb-container {
                 @media @max-lg-tablet {
                   display: inline-block !important;
 
@@ -1899,12 +802,6 @@ export default Vue.extend({
             }
 
             .project-desc {
-              .project-info {
-                @media @max-lg-tablet {
-                  height: 111px;
-                }
-              }
-
               &.project-desc-whitelist {
                 @media @max-sl-mobile {
                   display: inline-block !important;

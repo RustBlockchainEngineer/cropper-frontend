@@ -12,29 +12,41 @@
     <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
     <div class="stake-modal-container">
       <div class="balance-form">
-        <div class="fcb-container">
+        <div class="fcsb-container">
           <div class="fcc-container">
-            <button class="select-button fcb-container">
+            <button class="select-button fcsb-container">
               <div class="coin-group fcc-container">
                 <CoinIcon :mint-address="CRPMintAddress" />
                 <span class="font-body-medium weight-bold">CRP</span>
               </div>
             </button>
-            <button v-if="!showHalf && crpbalance" class="input-button font-xsmall weight-bold fcc-container" @click="setMax(1)">
+            <button
+              v-if="!showHalf && crpbalance"
+              class="input-button font-xsmall weight-bold fcc-container"
+              @click="setMax(1)"
+            >
               Max
             </button>
-            <button v-if="showHalf && crpbalance" class="input-button font-xsmall weight-bold fcc-container" @click="setMax(0.5)">
+            <button
+              v-if="showHalf && crpbalance"
+              class="input-button font-xsmall weight-bold fcc-container"
+              @click="setMax(0.5)"
+            >
               Half
             </button>
           </div>
-          <input type="number" :value="toStake" placeholder="0.00" />
+          <input type="number" 
+          v-model="toStake" placeholder="0.00" />
         </div>
-        <div v-if="crpbalance" class="label fcb-container font-xsmall weight-semi">
+        <div v-if="crpbalance" class="label fcsb-container font-xsmall weight-semi">
           <span> Balance: {{ crpbalance }} </span>
-          <span> ~${{ crpbalance }} </span>
+          <span> ~${{ 
+          (Math.round(crpbalance * this.price.prices['CRP'] * 1000) / 1000)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} </span>
         </div>
       </div>
-      <div class="tier-group fcb-container">
+      <div class="tier-group fcsb-container">
         <div class="tier-item text-center icon-cursor" v-for="data in lockData" :key="data.tier">
           <span
             v-if="data.min >= enddatemin"
@@ -65,7 +77,7 @@
           <div class="calc-yield-info">
             <label class="label font-small weight-bold">APY (%)</label>
             <label class="value font-small weight-semi spacing-large">{{
-              (Math.round(this.estimatedapy * 100) * boostAPY) / 100
+              (Math.round( ((Math.round(this.estimatedapy * 100) * boostAPY) / 100 ) * 100) / 100)
             }}</label>
           </div>
           <div class="calc-yield-info">
@@ -86,8 +98,10 @@
         </div>
       </div>
       <div class="calc-footer">
-        <label class="lock-note font-small weight-bold">Your total staked tokens will be locked until {{ unstakeDate }}</label>
-        <div class="btn-group fcb-container">
+        <label class="lock-note font-small weight-bold"
+          >Your total staked tokens will be locked until {{ unstakeDate }}</label
+        >
+        <div class="btn-group fcsb-container">
           <div class="btn-container">
             <Button
               class="btn-primary font-medium weight-semi icon-cursor"
@@ -103,7 +117,7 @@
             <Button
               class="btn-transparent font-medium weight-semi icon-cursor"
               id="vstake"
-              :disabled="this.crpbalance < toStake || toStake * 1 <= 0"
+              :disabled="crpbalance < toStake || toStake * 1 <= 0"
               @click="stakeToken"
               >Confirm</Button
             >
@@ -154,6 +168,7 @@ export default Vue.extend({
     return {
       toStake: null as any,
       tierActive: 4,
+      crpPrice: 1,
       boostAPY: 1,
       unstakeDate: '',
       minutesLock: null as any,
@@ -205,12 +220,13 @@ export default Vue.extend({
     }
   },
   computed: {
-    ...mapState(['wallet', 'url'])
+    ...mapState(['wallet', 'url', 'price', 'token'])
   },
 
   mounted() {
     setAnchorProvider(this.$web3, this.$wallet)
     this.displayTiers(this.tierActive)
+    this.crpPrice = this.price.prices['CRP'];
     getExtraRewardConfigs().then((res: any) => {
       res.configs.forEach((item: any, index: number) => {
         if (index >= this.lockData.length) {
@@ -341,7 +357,6 @@ export default Vue.extend({
 // global styles
 
 .btn-container {
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
@@ -462,6 +477,7 @@ export default Vue.extend({
       padding: 2px;
       background: @gradient-color04;
       background-origin: border-box;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: destination-out;
       mask-composite: exclude;

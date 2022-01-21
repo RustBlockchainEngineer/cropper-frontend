@@ -2,7 +2,7 @@ import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 
 import { PublicKey } from '@solana/web3.js'
 import { SERUM_PROGRAM_ID_V3 } from '@/utils/ids'
-import { MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market.js'
+import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market.js'
 import { cloneDeep } from 'lodash-es'
 import { startMarkets } from '@/utils/serum'
 import { getFilteredProgramAccounts } from '@/utils/web3'
@@ -28,7 +28,7 @@ export const actions = actionTree(
 
       const filters = [
         {
-          dataSize: MARKET_STATE_LAYOUT_V2.span
+          dataSize: _MARKET_STATE_LAYOUT_V2.span
         }
       ]
 
@@ -43,7 +43,7 @@ export const actions = actionTree(
 
             const { data } = marketInfo.accountInfo
             // console.log(address, MARKET_STATE_LAYOUT_V2.decode(data))
-            markets[address] = MARKET_STATE_LAYOUT_V2.decode(data)
+            markets[address] = _MARKET_STATE_LAYOUT_V2.decode(data)
           })
 
           commit('setMarkets', markets)

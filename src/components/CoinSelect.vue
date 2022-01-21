@@ -55,7 +55,7 @@
           </div>
         </template>
       </div>
-      <div v-if="addUserCoin" class="sort fcb-container">
+      <div v-if="addUserCoin" class="sort fcsb-container">
         <span class="title">Create a name for this token</span>
         <Icon :type="desc ? 'arrow-up' : 'arrow-down'" @click="setDesc" />
       </div>
@@ -206,7 +206,6 @@ export default Vue.extend({
 
           window.localStorage.common = JSON.stringify(responseData)
           window.localStorage.common_last_updated = new Date().getTime() as number
-
           ;(responseData as any).forEach((element: any) => {
             this.commonBases.push(element)
           })
@@ -522,7 +521,7 @@ export default Vue.extend({
       margin-top: 8px !important;
 
       .common-select-container {
-        background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+        background: @gradient-color-outline;
         border-radius: 8px;
         padding: 2px !important;
 
@@ -556,6 +555,10 @@ export default Vue.extend({
     direction: ltr;
     will-change: transform;
 
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
     .token-info {
       display: grid;
       justify-content: space-between;

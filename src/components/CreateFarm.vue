@@ -11,7 +11,7 @@
   >
     <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
 
-    <div class="create-farm-head fcb-container">
+    <div class="create-farm-head fcsb-container">
       <div class="btn-outline">
         <a
           href="https://docs.cropper.finance/cropperfinance/cropperfinance-platform-1/builder-tutorial/create-a-permissionless-farm"
@@ -74,8 +74,10 @@
           <Col :span="15" class="notstep" :class="{ 'bordered-left': wallet.connected }">
             <Row v-if="current === 0 && !wallet.connected">
               <Col :span="24" class="step-item">
-                <div v-if="!wallet.connected">
-                  <Button class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal"> Connect wallet </Button>
+                <div v-if="!wallet.connected" class="btn-container">
+                  <Button class="btn-transparent font-medium weight-semi" @click="$accessor.wallet.openModal">
+                    Connect wallet
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -95,7 +97,7 @@
                 <div class="step-item-content">
                   <RadioGroup v-model="ammType" @change="selectAMM">
                     <Radio :value="1">Use existing CropperFinance's AMM ID</Radio>
-                    <div class="existing-amm fl-container">
+                    <div class="existing-amm fs-container">
                       <CoinNameInput
                         :label="'Token A'"
                         :mint-address="tokenA ? tokenA.mintAddress : ''"
@@ -120,11 +122,7 @@
                         <div v-if="userCreatePoolLiquidity" class="pool-info font-medium">
                           <span><b>Pool Liquidity: </b>{{ userCreatePoolLiquidity }}</span>
                         </div>
-                        <img
-                          class="close-icon icon-cursor"
-                          src="@/assets/icons/close.svg"
-                          @click="removeSelected"
-                        />
+                        <img class="close-icon icon-cursor" src="@/assets/icons/close.svg" @click="removeSelected" />
                       </div>
                     </div>
                     <Radio :value="2">Create a new AMM ID</Radio>
@@ -154,14 +152,20 @@
               </Col>
               <Col v-if="ammType === 1" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button class="create-btn font-medium weight-semi" :disabled="!wallet.connected" @click="useExistingAMMID()">
+                  <Button
+                    class="btn-transparent font-medium weight-semi"
+                    :disabled="!wallet.connected"
+                    @click="useExistingAMMID()"
+                  >
                     Next
                   </Button>
                 </div>
               </Col>
               <Col v-if="ammType === 2" :span="24" class="step-item">
                 <div class="btn-container">
-                  <Button class="create-btn font-medium weight-semi" :disabled="true" @click="createNewAMMID()"> Next </Button>
+                  <Button class="btn-transparent font-medium weight-semi" :disabled="true" @click="createNewAMMID()">
+                    Next
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -197,7 +201,15 @@
                   <div class="note">
                     <span class="font-xsmall weight-bold">
                       Note: you will be able to add rewards into your farm whenever you want.
+                      <br />
                     </span>
+                    <div class="note-highlight fb-container">
+                      <img class="info-icon" src="@/assets/icons/info.svg" />
+                      <span class="note-highlight-content font-xsmall weight-bold">
+                        Please note that all rewards provided are final and unused rewards cannot be recovered upon
+                        completion of the farm.
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Col>
@@ -229,12 +241,16 @@
 
               <Col :span="24">
                 <div class="btn-container">
-                  <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                  <Button
+                    v-if="!wallet.connected"
+                    class="btn-transparent font-medium weight-semi"
+                    @click="$accessor.wallet.openModal"
+                  >
                     Connect wallet
                   </Button>
                   <Button
                     v-else-if="farm_created"
-                    class="create-btn font-medium weight-semi"
+                    class="btn-transparent font-medium weight-semi"
                     :disabled="!wallet.connected"
                     @click="addRewardToFarm"
                   >
@@ -250,7 +266,7 @@
 
                   <Button
                     v-else
-                    class="create-btn font-medium weight-semi"
+                    class="btn-transparent font-medium weight-semi"
                     :disabled="!wallet.connected"
                     @click="confirmFarmInfo"
                   >
@@ -270,7 +286,9 @@
             <Row v-if="current === 2">
               <Col :span="24" class="step-item">
                 <div v-if="!isCRPTokenPair" class="farm-created">
-                  <label class="font-large weight-bold">Congratulations! Your farm has been successfully created!</label>
+                  <label class="font-large weight-bold"
+                    >Congratulations! Your farm has been successfully created!</label
+                  >
                 </div>
                 <div class="lp-icons">
                   <div class="lp-icons-group">
@@ -283,10 +301,19 @@
                   </div>
                 </div>
                 <div class="btn-container">
-                  <Button v-if="!wallet.connected" class="create-btn font-medium weight-semi" @click="$accessor.wallet.openModal">
+                  <Button
+                    v-if="!wallet.connected"
+                    class="btn-transparent font-medium weight-semi"
+                    @click="$accessor.wallet.openModal"
+                  >
                     Connect wallet
                   </Button>
-                  <Button v-else class="create-btn font-medium weight-semi" :disabled="!wallet.connected" @click="gotoFarms">
+                  <Button
+                    v-else
+                    class="btn-transparent font-medium weight-semi"
+                    :disabled="!wallet.connected"
+                    @click="gotoFarms"
+                  >
                     View Farm
                   </Button>
                 </div>
@@ -848,7 +875,7 @@ export default class CreateFarm extends Vue {
   gotoFarms() {
     this.$accessor.farm.requestInfos()
     this.$accessor.wallet.getTokenAccounts()
-    this.$router.push({ path: `/farms/#${this.farmId}` })
+    this.$router.push({ path: `/farms/?s=${this.farmId}` })
   }
   goToFarmInfo() {
     this.current++
@@ -1284,7 +1311,6 @@ export default class CreateFarm extends Vue {
           font-size: 20px;
           line-height: 24px;
           color: rgba(255, 255, 255, 0.3);
-          margin-top: 6px;
         }
       }
     }
@@ -1589,19 +1615,29 @@ export default class CreateFarm extends Vue {
   }
 }
 
-.create-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: @gradient-color01;
+.btn-container {
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
-  padding: 10px 32px;
-  border: 0;
-  height: 45px;
+  padding: 3px;
+  height: auto;
+  width: fit-content;
+}
+
+.btn-transparent {
+  background: transparent;
+  border-radius: 48px;
+  border: none;
+  height: 39px;
+  padding: 0 32px;
 
   @media @max-sl-mobile {
     width: 100%;
+  }
+
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background: transparent;
+    border: none;
   }
 }
 
@@ -1614,7 +1650,11 @@ export default class CreateFarm extends Vue {
   &:last-child {
     margin-right: 0;
   }
-
+  
+  &:hover {
+    background: @gradient-color02;
+  }
+  
   .link-btn {
     height: 100%;
     background: @color-blue700;
@@ -1742,6 +1782,16 @@ u {
 
             span {
               color: rgba(255, 255, 255, 0.5);
+            }
+
+            .note-highlight {
+              .info-icon {
+                margin-right: 8px;
+              }
+
+              .note-highlight-content {
+                color: hsl(0deg 81% 62%);
+              }
             }
           }
         }

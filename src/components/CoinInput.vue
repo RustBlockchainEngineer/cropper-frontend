@@ -4,9 +4,9 @@
       <label class="font-xsmall weight-semi">{{ label }}</label>
     </div>
     <div class="coin-input">
-      <div class="fcb-container">
+      <div class="fcsb-container">
         <div class="fcc-container">
-          <button class="select-button fcb-container" @click="$emit('onSelect')">
+          <button class="select-button fcsb-container" @click="$emit('onSelect')">
             <div v-if="coinName" class="coin-group fcc-container">
               <CoinIcon :mint-address="mintAddress" />
               <span class="font-body-medium weight-bold">{{ coinName }}</span>
@@ -46,7 +46,7 @@
           @focus="$emit('onFocus')"
         />
       </div>
-      <div v-if="balance && !balance.wei.isNaN()" class="label fcb-container font-xsmall weight-semi">
+      <div v-if="balance && !balance.wei.isNaN()" class="label fcsb-container font-xsmall weight-semi">
         <span> Balance: {{ balance.fixed() }} </span>
         <span> ~${{ balance.fixed() }} </span>
       </div>
@@ -210,6 +210,7 @@ export default Vue.extend({
       padding: 2px;
       background: @gradient-color04;
       background-origin: border-box;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: destination-out;
       mask-composite: exclude;

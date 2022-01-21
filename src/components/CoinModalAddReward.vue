@@ -3,8 +3,8 @@
     :title="title"
     :visible="true"
     :footer="null"
-    :closable="false"
     :width="400"
+    :closable="false"
     :mask-closable="true"
     centered
     @cancel="$emit('onCancel')"
@@ -13,31 +13,26 @@
 
     <div class="liquidity-box">
       <div class="fcsb-container">
+        <span></span>
+        <span v-if="coin.balance && !coin.balance.wei.isNaN()"> Balance: {{ coin.balance.fixed() }} </span>
+      </div>
+      <div class="fcsb-container">
         <div class="fcc-container">
           <div class="coins-container">
             <div class="coin-group font-small weight-semi">
-              <CoinIcon :mint-address="coin ? coin.coin.mintAddress : ''" />
-              {{ coin.coin.symbol }}
-              <span class="from-to">-</span>
-              <CoinIcon :mint-address="coin ? coin.pc.mintAddress : ''" />
-              {{ coin.pc.symbol }}
+              <CoinIcon v-if="coinIcon" :mint-address="coin ? coin.mintAddress : ''" />
+              {{ coin.symbol }}
             </div>
           </div>
           <button
-            v-if="!showHalf && coin.balance"
+            v-if="coin.balance && (isNullOrZero(value) || lt(value, coin.balance.toEther()))"
             class="input-button font-xsmall weight-bold fcc-container"
-            @click="setMax(1)"
+            @click="setMax"
           >
             Max
           </button>
-          <button
-            v-if="showHalf && coin.balance"
-            class="input-button font-xsmall weight-bold fcc-container"
-            @click="setMax(0.5)"
-          >
-            Half
-          </button>
         </div>
+
         <input
           v-model="value"
           inputmode="decimal"
@@ -51,25 +46,9 @@
           spellcheck="false"
         />
       </div>
-      <div v-if="coin.balance && !coin.balance.wei.isNaN()" class="balance-info fcsb-container font-xsmall weight-semi">
-        <span> Balance: {{ coin.balance.fixed() }} </span>
-        <span> ~${{ coin.balance.fixed() }} </span>
-      </div>
     </div>
-    <div class="lp-breakdown text-center">
-      <label class="font-small weight-semi spacing-large">LP Breakdown</label>
-      <div class="lp-coins-container fcc-container">
-        <div class="lp-coin-box font-small">
-          <b>{{ lpbreakdown.pcSymbol }}</b>
-          {{ Math.round(lpbreakdown.pcBalance * 1000 * (value / coin.balance.fixed())) / 1000 }}
-        </div>
-        <div class="lp-coin-box font-small">
-          <b>{{ lpbreakdown.coinSymbol }}</b>
-          {{ Math.round(lpbreakdown.coinBalance * 1000 * (value / coin.balance.fixed())) / 1000 }}
-        </div>
-      </div>
-    </div>
-    <div class="info-box">
+
+    <div v-if="text" v-html="text" class="info-box">
       <img class="info-icon" src="@/assets/icons/info.svg" />
       <label class="font-xsmall weight-bold" v-html="text"> </label>
     </div>
@@ -126,16 +105,15 @@ export default Vue.extend({
       type: String,
       default: ''
     },
-    lpbreakdown: {
-      type: Object,
-      default: null
+    coinIcon: {
+      type: Boolean,
+      default: true
     }
   },
 
   data() {
     return {
-      value: '',
-      showHalf: false as boolean
+      value: ''
     }
   },
   watch: {
@@ -155,7 +133,7 @@ export default Vue.extend({
     isNullOrZero,
     validateTotalSupply() {
       if (this.title == 'Remove Liquidity') {
-        const lp_info = this.$accessor.liquidity.infos[this.coin.mintAddress]
+        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
         if (lp_info) {
           const totalSupply = lp_info.lp.totalSupply.fixed()
           const res = parseFloat(this.value) <= parseFloat(totalSupply) - MIN_LP_SUPPLY //
@@ -167,20 +145,17 @@ export default Vue.extend({
       return true
     },
 
-    setMax(amount: number) {
-      this.showHalf = !this.showHalf
-
+    setMax() {
       if (this.title == 'Remove Liquidity') {
         let self = this
 
-        const lp_info = this.$accessor.liquidity.infos[this.coin.mintAddress]
+        const lp_info = Object(this.$accessor.liquidity.infos)[this.coin.mintAddress]
         if (lp_info) {
           const totalSupply = lp_info.lp.totalSupply.fixed()
-          self.value =
-            '' + Math.min(parseFloat(self.coin.balance.fixed()), parseFloat(totalSupply) - MIN_LP_SUPPLY) * amount
+          self.value = '' + Math.min(parseFloat(self.coin.balance.fixed()), parseFloat(totalSupply) - MIN_LP_SUPPLY)
         }
       } else {
-        this.value = (this.coin.balance.fixed() * amount).toString()
+        this.value = this.coin.balance.fixed()
       }
     }
   }
@@ -188,6 +163,7 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
+@import '../styles/variables';
 .liquidity-box {
   background: rgba(226, 227, 236, 0.1);
   border-radius: 18px;

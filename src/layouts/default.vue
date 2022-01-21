@@ -1,5 +1,5 @@
 <template>
-  <Layout>
+  <Layout :class="pageName === 'fertilizer-project' ? 'fertilizer-project' : ''">
     <Head />
     <Setting />
 
@@ -95,21 +95,3 @@ export default class Default extends Vue {
   }
 }
 </script>
-
-<style lang="less">
-.ant-layout-content {
-  min-height: calc(100vh - 64px - 82px);
-  margin-top: 70px;
-}
-
-.ant-alert-warning {
-  width: 500px;
-  margin-top: 30px;
-  background-color: transparent;
-  border: 1px solid #85858d;
-
-  .anticon-close {
-    color: #fff;
-  }
-}
-</style>

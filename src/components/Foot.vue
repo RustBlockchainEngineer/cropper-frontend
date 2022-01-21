@@ -89,7 +89,7 @@ export default class Foot extends Vue {
     img {
       height: 35px;
     }
-    
+
     @media @max-sl-mobile {
       margin-bottom: 30px;
     }
@@ -211,16 +211,5 @@ export default class Foot extends Vue {
   @media @max-sl-mobile {
     text-align: left;
   }
-}
-
-// ant customization
-.ant-layout-footer {
-  @media @max-sl-mobile {
-    padding: 22px !important;
-  }
-}
-
-.planet-bottom {
-  display: none;
 }
 </style>

@@ -29,25 +29,25 @@
               {{ info.lp.symbol }} {{ info.poolInfo.official ? '' : '(Permissionless)' }}
               <Tag v-if="![5].includes(info.poolInfo.version)" color="pink">Legacy</Tag>
             </div>
-            <div class="fcb-container">
+            <div class="fcsb-container">
               <div>Pooled:</div>
               <div>
                 ≈ {{ info.userCoinBalance ? info.userCoinBalance.toEther().toFixed(info.coin.decimals) : '' }}
                 {{ info.coin.symbol }}
               </div>
             </div>
-            <div class="fcb-container">
+            <div class="fcsb-container">
               <div>Pooled:</div>
               <div>
                 ≈ {{ info.userPcBalance ? info.userPcBalance.toEther().toFixed(info.pc.decimals) : '' }}
                 {{ info.pc.symbol }}
               </div>
             </div>
-            <div class="fcb-container">
+            <div class="fcsb-container">
               <div>Your pool tokens:</div>
               <div>{{ info.userLpBalance ? info.userLpBalance.toEther() : '' }}</div>
             </div>
-            <div class="fcb-container">
+            <div class="fcsb-container">
               <div>Your pool share:</div>
               <div>
                 ≈ {{ info.percent.isLessThan(0.0001) ? '&lt;0.01' : info.percent.multipliedBy(100).toFixed(2) }}%

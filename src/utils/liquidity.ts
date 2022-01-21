@@ -92,13 +92,13 @@ export async function addLiquidity(
 ): Promise<string> {
   if (!connection || !wallet) throw new Error('Miss connection')
   if (!poolInfo || !fromCoin || !toCoin) {
-    throw new Error('Miss pool infomations')
+    throw new Error('Miss pool informations')
   }
   if (!fromCoinAccount || !toCoinAccount) {
-    throw new Error('Miss account infomations')
+    throw new Error('Miss account informations')
   }
   if (!fromAmount || !toAmount) {
-    throw new Error('Miss amount infomations')
+    throw new Error('Miss amount informations')
   }
 
   const transaction = new Transaction()
@@ -238,11 +238,11 @@ export async function removeLiquidity(
   amount: string | undefined | null
 ) {
   if (!connection || !wallet) throw new Error('Miss connection')
-  if (!poolInfo) throw new Error('Miss pool infomations')
+  if (!poolInfo) throw new Error('Miss pool informations')
 
-  if (!lpAccount || !fromCoinAccount || !toCoinAccount) throw new Error('Miss account infomations')
+  if (!lpAccount || !fromCoinAccount || !toCoinAccount) throw new Error('Miss account informations')
 
-  if (!amount) throw new Error('Miss amount infomations')
+  if (!amount) throw new Error('Miss amount informations')
 
   const transaction = new Transaction()
   const signers: any = []

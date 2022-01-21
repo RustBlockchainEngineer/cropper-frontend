@@ -22,7 +22,7 @@ import {
   LP_UPDATE_INTERVAL,
   MARKET_UPDATE_INTERVAL,
   DEVNET_MODE} from '@/utils/ids'
-import { MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
+import { _MARKET_STATE_LAYOUT_V2 } from '@project-serum/serum/lib/market'
 import { NATIVE_SOL, TOKENS } from '@/utils/tokens'
 
 const AUTO_REFRESH_TIME = 60
@@ -92,11 +92,11 @@ async function getSerumMarkets(conn:any){
   {
     let marketAll = await getFilteredProgramAccounts(conn, new PublicKey(SERUM_PROGRAM_ID_V3), [
       {
-        dataSize: MARKET_STATE_LAYOUT_V2.span
+        dataSize: _MARKET_STATE_LAYOUT_V2.span
       }
     ])
     marketAll.forEach((item: any) => {
-      const market = MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
+      const market = _MARKET_STATE_LAYOUT_V2.decode(item.accountInfo.data)
       markets[item.publicKey] = {
         asks : market.asks.toString(),
         bids : market.bids.toString(),
@@ -402,7 +402,7 @@ export const actions = actionTree(
     async requestInfos({ commit }) {
       commit('setLoading', true)
 
-      logger('Liquidity pool infomations fetch')
+      logger('Liquidity pool informations fetch')
 
       const conn = this.$web3
       let need_to_update = false
@@ -593,7 +593,7 @@ export const actions = actionTree(
 
 
       commit('setInfos', liquidityPools)
-      logger('Liquidity pool infomations updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
+      logger('Liquidity pool informations updated - ' + need_to_update + ' | ' + (new Date().getTime() - cur_date))
 
       commit('setInitialized')
       commit('setLoading', false)

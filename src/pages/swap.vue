@@ -85,7 +85,10 @@
         />
 
         <div class="exchange-info">
-          <div v-if="fromCoin && toCoin && isWrap && fromCoinAmount" class="font-small weight-semi price-base fcc-container">
+          <div
+            v-if="fromCoin && toCoin && isWrap && fromCoinAmount"
+            class="font-small weight-semi price-base fcc-container"
+          >
             <span>
               1 {{ fromCoin.symbol }} = 1
               {{ toCoin.symbol }}
@@ -124,7 +127,7 @@
         </div>
 
         <div v-if="wallet.connected">
-          <div class="swap-actions fcb-container">
+          <div class="swap-actions fcsb-container">
             <div class="swap-status font-medium weight-semi">
               <div v-if="priceImpact <= 2" class="price-status">
                 <img class="status-icon" src="@/assets/icons/status-ok.svg" />
@@ -252,12 +255,12 @@
         </div> -->
 
         <div v-if="!wallet.connected" class="btn-container">
-          <Button class="font-large weight-bold" ghost @click="$accessor.wallet.openModal"> Connect wallet </Button>
+          <Button class="btn-transparent font-large weight-bold" ghost @click="$accessor.wallet.openModal"> Connect wallet </Button>
         </div>
 
         <div v-else-if="!(officialPool || (!officialPool && userCheckUnofficial))" class="btn-container">
           <Button
-            class="font-large weight-bold"
+            class="btn-transparent font-large weight-bold"
             ghost
             @click="
               () => {
@@ -273,7 +276,7 @@
 
         <div v-else class="btn-container">
           <Button
-            class="font-large weight-bold"
+            class="btn-transparent font-large weight-bold"
             :disabled="
               !fromCoin ||
               !fromCoinAmount ||
@@ -347,9 +350,7 @@ import { inputRegex, escapeRegExp } from '@/utils/regex'
 import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
 import { SERUM_PROGRAM_ID_V3, ENDPOINT_CRP, ENDPOINT_SRM, ENDPOINT_JUP } from '@/utils/ids'
-// @ts-ignore
-import { Jupiter } from "@jup-ag/core";
-//@pngfi/jupiter-core
+
 import {
   getOutAmount,
   getSwapOutAmount,
@@ -596,11 +597,7 @@ export default Vue.extend({
 
     this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP')
     this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC')
-    const jupiter = await Jupiter.load({
-        connection: this.$web3,
-        cluster: 'mainnet-beta',
-        user: this.$wallet?.publicKey as PublicKey // or public key
-    })
+
   },
   methods: {
     gt,
@@ -1744,6 +1741,10 @@ export default Vue.extend({
       width: 108px;
       height: 33px;
 
+      &:hover {
+        background: @gradient-color02;
+      }
+      
       @media @max-lg-tablet {
         margin: 10px auto auto auto;
         display: flex;
@@ -1918,15 +1919,23 @@ export default Vue.extend({
 
 // global stylesheet
 .btn-container {
-  button {
-    background: @gradient-color01 !important;
-    background-origin: border-box !important;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 38px;
+  padding: 3px;
+  height: auto;
+}
+
+.btn-transparent {
+  background: transparent;
+  border-radius: 38px;
+  border: none;
+  height: 44px;
+  width: 100%;
+
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background: transparent;
     border: none;
-    position: relative;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 38px;
-    width: 100%;
-    height: 50px;
   }
 }
 

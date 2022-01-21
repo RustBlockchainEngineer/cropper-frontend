@@ -32,18 +32,19 @@ export const CRP_LP_PROGRAM_ID_V1 = DEVNET_MODE? '7ZZJNL4xD8db6yrT46SeMFZXcVr9ML
 
 
 export const STAKE_TIERS_PROGRAM_ID = DEVNET_MODE ? "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw" : "HYzrD877vEcBgd6ySKPpa3pcMbqYEmwEF1GFQmvuswcC"
+export const LAUNCHPAD_PROGRAM_ID = DEVNET_MODE ? "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw" : "HYzrD877vEcBgd6ySKPpa3pcMbqYEmwEF1GFQmvuswcC"
 //"FBHjXGXUa65hSCzyfMhkcLzu2U3HByNqcWMuDUUHURLa"
 
 export let FARM_VERSION = 2;//@Hongbo
 
 export const FARM_PROGRAM_ID_VS = DEVNET_MODE ? [
     'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR',
-    'ZLNzLaAgeKHLa4vatwcQUSgkTf3UUiD8uuLq3qh3BVR'
+    'E94tgQNzn5JZtnVu7EvnYCQNCkwuyimWEdcW9rhSBMLX'
 ] : [
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J',
     '4TK3unq6Q4KMcejD2zrwE2wM5QPkgpMYpphqmxsLnJ2J'
 ]//@Hongbo
-export const FARM_PROGRAM_ID = FARM_PROGRAM_ID_VS[FARM_VERSION-2];//@Hongbo
+export const FARM_PROGRAM_ID = FARM_PROGRAM_ID_VS[FARM_VERSION-1];//@Hongbo
 
 export const FARM_INITIAL_SUPER_OWNER = DEVNET_MODE ? "4GJ3z4skEHJADz3MVeNYBg4YV8H27rBQey2YYdiPC8PA":"AwtDEd9GThBNWNahvLZUok1BiRULNQ86VruXkYAckCtV";//@Hongbo
 export const FARM_INITIAL_FEE_OWNER = DEVNET_MODE ? "4GJ3z4skEHJADz3MVeNYBg4YV8H27rBQey2YYdiPC8PA":"DyDdJM9KVsvosfXbcHDp4pRpmbMHkRq3pcarBykPy4ir";//@Hongbo
@@ -68,3 +69,7 @@ export const COIN_VAULT_ASSOCIATED_SEED = 'coin_vault_associated_seed'
 export const PC_VAULT_ASSOCIATED_SEED = 'pc_vault_associated_seed'
 export const LP_MINT_ASSOCIATED_SEED = 'lp_mint_associated_seed'
 export const TEMP_LP_TOKEN_ASSOCIATED_SEED = 'temp_lp_token_associated_seed'
+
+
+export const REMOVE_REWARDS_FARM_ADDRESS = 'GEqojVngDhVu5yiVemUT5Y1Rryj98UPTYvhc8LWYC1JJ'
+

@@ -1,6 +1,6 @@
 <template>
   <main class="landing">
-    <section class="landing-header">
+    <section class="landing-header" :class="isScrolling ? 'scrolling' : ''">
       <div class="landing-top">
         <img class="cropper-logo" src="@/assets/icons/cropper-logo.svg" />
         <div class="lunch-btn-group">
@@ -13,8 +13,11 @@
         </div>
       </div>
     </section>
-
     <section class="landing-body">
+      <video class="landing-video" autoplay muted loop preload="auto">
+        <source :src="videoLinks.landing" type="video/mp4" />
+      </video>
+
       <div class="landing-content">
         <Row :gutter="20">
           <Col :span="22" :offset="1">
@@ -37,7 +40,10 @@
             </div>
             <div class="read-more">
               <div class="btn-container">
-                <a href="https://docs.cropper.finance/cropperfinance/" target="_blank" class="btn-outline font-body-medium weight-semi"
+                <a
+                  href="https://docs.cropper.finance/cropperfinance/"
+                  target="_blank"
+                  class="btn-outline font-body-medium weight-semi"
                   >Documentation</a
                 >
               </div>
@@ -524,6 +530,7 @@ export default class Landing extends Vue {
     telegram: 'https://linktr.ee/cropperfinance'
   }
   videoLinks = {
+    landing: 'https://cropper.finance/distant/landing/landing.mp4',
     swap: 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4',
     stake: 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4',
     harvest: 'https://cropper.finance/distant/industry/HarvestvideoforGIF.mp4',
@@ -533,14 +540,21 @@ export default class Landing extends Vue {
   }
   currentPlay: number = 1
   currentVideo: string = this.videoLinks.swap
+  isScrolling: boolean = false
 
   mounted() {
     this.getTvl()
     this.getTwitterFeeds()
+    window.addEventListener('scroll', this.updateScroll)
   }
 
   beforeDestroy() {
     window.clearInterval(this.timer)
+  }
+
+  updateScroll() {
+    this.isScrolling = true
+    if (window.scrollY === 0) this.isScrolling = false
   }
 
   changeToFarmer() {
@@ -649,7 +663,6 @@ export default class Landing extends Vue {
 
     this.TVL = Math.round(tvl)
 
-
     window.localStorage.TVL_last_updated = new Date().getTime()
     window.localStorage.TVL = this.TVL
 
@@ -684,7 +697,6 @@ export default class Landing extends Vue {
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background-image: @gradient-color01;
   padding: 3px;
   border-radius: 48px;
   height: 54px;
@@ -692,10 +704,6 @@ export default class Landing extends Vue {
   -webkit-transition: background-color 2s ease-out;
   transition: background-color 2s ease-out;
   display: flex;
-
-  &:hover {
-    background-image: @gradient-color02;
-  }
 
   @media @max-sl-mobile {
     height: 60px;
@@ -752,11 +760,15 @@ h4 {
   .landing-header {
     position: fixed;
     width: 100%;
-    background: @color-blue800;
+    background: transparent;
     top: 0;
     z-index: 999;
     height: 80px;
-    opacity: 0.9;
+    
+    &.scrolling {
+      background: @color-blue800;
+      opacity: 0.9;
+    }
 
     .landing-top {
       height: 100%;
@@ -815,14 +827,6 @@ h4 {
   .landing-body {
     margin-top: -20px;
     padding: 38px 64px 89px 64px;
-    background-image: url('@/assets/landing/landing-first-bg.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-
-    @media @min-xl-desktop {
-      height: calc(100vw * 902 / 1440);
-    }
 
     @media @max-lg-tablet {
       padding-left: 32px;
@@ -833,8 +837,16 @@ h4 {
       padding: 20px 20px 0 20px;
     }
 
-    @media @max-xs-mobile {
-      background-image: url('@/assets/landing/landing-first-bg-mobile.svg');
+    .landing-video {
+      position: absolute;
+      right: 0;
+      top: 0;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      background-size: cover;
+      overflow: hidden;
     }
 
     .landing-content {
@@ -1156,7 +1168,7 @@ h4 {
         padding-left: 36px;
         padding-right: 36px;
         height: 472px;
-        padding-top: 50px;
+        padding-top: 30px;
         border: 4px solid transparent;
         background-origin: border-box;
         text-align: center;
@@ -1198,6 +1210,7 @@ h4 {
           margin-top: 5px;
           margin-bottom: 60px !important;
           text-align: left;
+          word-break: break-all;
 
           @media @max-sl-mobile {
             margin-bottom: 18px !important;

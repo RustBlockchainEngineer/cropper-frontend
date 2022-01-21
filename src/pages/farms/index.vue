@@ -36,7 +36,7 @@
       If the pop up for the second operation does not appear, it may have popped up behind your browser. You can check this by minimizing your browser."
     />
 
-    <CoinModal
+    <CoinModalAddReward
       v-if="addRewardModalOpening"
       title="Add Reward"
       :coin="rewardCoin"
@@ -45,13 +45,14 @@
       @onCancel="cancelAddReward"
     />
 
-    <CoinModal
+    <CoinModalAddReward
       v-if="stakeModalOpeningLP"
       title="Stake LP"
       :coin="lp"
+      :coinIcon="false"
       :farmInfo="farmInfo"
       :loading="staking"
-      text="You will have to validate 2 operations, Unstake LP & Unstake Liquidity."
+      text="<div style='text-align:center'>You now need to <b>stake your LP tokens</b> to start farming</div>"
       @onOk="stake"
       @onCancel="cancelStakeLP"
     />
@@ -68,8 +69,48 @@
 
     <div class="card">
       <div class="card-body">
+        <div v-if="showGuide" class="guide-card">
+          <div class="guide-content">
+            <label class="font-large weight-bold">Migration tool</label>
+            <img class="icon-cursor close-icon" src="@/assets/icons/close-circle.svg" @click="hideGuide" />
+            <div class="guide-detail fcc-container">
+              <div class="fs-container">
+                <img class="note-icon" src="@/assets/icons/status-warning.svg" />
+                <span class="font-small weight-semi letter-large">
+                  The 
+                  <label class="highlight">CRP-USDC</label> 
+                  farm is ended, you must migrate your LP tokens to continue farming.
+                </span>
+              </div>
+              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
+            </div>
+            <div class="guide-detail fcc-container">
+              <div class="fs-container">
+                <img class="note-icon" src="@/assets/icons/status-warning.svg" />
+                <span class="font-small weight-semi letter-large">
+                  The 
+                  <label class="highlight">CRP-SOL</label> 
+                  farm is ended, you must migrate your LP tokens to continue farming.
+                </span>
+              </div>
+              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
+            </div>
+            <div class="guide-detail fcc-container">
+              <div class="fs-container">
+                <img class="note-icon" src="@/assets/icons/status-warning.svg" />
+                <span class="font-small weight-semi letter-large">
+                  The 
+                  <label class="highlight">CRP-WAG</label> 
+                  farm is ended, you must migrate your LP tokens to continue farming.
+                </span>
+              </div>
+              <Button class="note-btn font-small weight-semi spacing-large">Migrate LP Tokens</Button>
+            </div>
+          </div>
+        </div>
+
         <div class="farm-content">
-          <div class="farm-head fcb-container">
+          <div class="farm-head fcsb-container">
             <h3 class="title weight-bold">Farms</h3>
             <div class="information">
               <div class="tvl-info">
@@ -95,7 +136,7 @@
             </div>
           </div>
 
-          <div class="farm-option-bar fcb-container">
+          <div class="farm-option-bar fcsb-container">
             <div class="option-tab-group">
               <div class="option-tab">
                 <Button
@@ -214,7 +255,7 @@
                   }
                 "
               >
-                <div class="collapse-item-header fcb-container">
+                <div class="collapse-item-header fcsb-container">
                   <label class="font-large weight-bold">Search</label>
                   <img
                     class="icon-cursor"
@@ -355,7 +396,7 @@
           <div v-if="farm.initialized && farmLoaded">
             <div class="farm-table isDesktop">
               <Row class="farm-item" v-for="(farm, idx) in showFarms" :key="farm.farmInfo.poolId" :gutter="16">
-                <Col class="fcl-container" span="6">
+                <Col class="fcs-container" span="6">
                   <div class="state">
                     <div class="lp-icons">
                       <div class="lp-icons-group">
@@ -395,7 +436,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="2">
+                <Col class="fce-container" span="2">
                   <div class="state">
                     <div class="farm-labels">
                       <div v-if="farm.labelized" class="label labelized weight-semi">Labelized</div>
@@ -414,7 +455,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="3">
+                <Col class="fce-container" span="3">
                   <div class="state">
                     <div class="title font-small weight-semi spacing-large">Total Deposited</div>
                     <div
@@ -436,7 +477,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="3">
+                <Col class="fce-container" span="3">
                   <div class="state">
                     <div class="title font-small weight-semi spacing-large">
                       Total APR
@@ -482,7 +523,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="4">
+                <Col class="fce-container" span="4">
                   <div class="state">
                     <div class="title font-small weight-semi spacing-large">Pending Rewards</div>
                     <div
@@ -500,7 +541,7 @@
                   </div>
                 </Col>
 
-                <Col class="fcr-container" span="3">
+                <Col class="fce-container" span="3">
                   <div class="state">
                     <div class="title font-small weight-semi spacing-large">
                       Value Deposited
@@ -556,7 +597,7 @@
                   </div>
                 </Col>
 
-                <Col class="state fcb-container" span="3">
+                <Col class="state fcsb-container" span="3">
                   <div class="farm-btn-group">
                     <div
                       class="btn-container"
@@ -660,7 +701,10 @@
                       class="option-collapse-menu collapse-right"
                       v-click-outside="hideMore"
                     >
-                      <div class="option-collapse-item text-center font-medium weight-semi icon-cursor">
+                      <div
+                        v-if="!(farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)"
+                        class="option-collapse-item text-center font-medium weight-semi icon-cursor"
+                      >
                         <a class="social-link fcc-container" :href="farm.farmInfo.twitterShare" target="_blank">
                           Share
                           <img class="social-icon" src="@/assets/icons/share.svg" />
@@ -679,6 +723,14 @@
                         >
                           Withdraw
                         </a>
+                      </div>
+                      <div
+                        v-if="farm.farmInfo.poolId === removeRewardsFarmAddress"
+                        class="option-collapse-item text-center font-medium weight-semi icon-cursor"
+                      >
+                        <Button size="large" ghost :disabled="!wallet.connected" @click.stop="removeRewards(farm)">
+                          Remove Rewards
+                        </Button>
                       </div>
                       <div
                         v-if="
@@ -862,7 +914,7 @@
                         </div>
                       </Col>
                       <Col class="state" span="10">
-                        <div class="title font-small weight-semi spacing-large fcr-container">Value Deposited</div>
+                        <div class="title font-small weight-semi spacing-large fce-container">Value Deposited</div>
                         <div
                           v-if="farm.farmInfo.poolInfo.start_timestamp > currentTimestamp"
                           class="value font-medium weight-semi spacing-small text-right"
@@ -881,9 +933,10 @@
                       </Col>
                     </Col>
 
-                    <Col class="farm-collapse-item fcb-container" span="24">
+                    <Col class="farm-collapse-item fcsb-container" span="24">
                       <div class="fcc-container">
                         <a
+                          v-if="!(farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)"
                           class="social-link fcc-container font-medium weight-semi icon-cursor"
                           :href="farm.farmInfo.twitterShare"
                           target="_blank"
@@ -970,7 +1023,11 @@
                               }}
                             </Button>
 
-                            <Button v-else class="btn-transparent font-small weight-bold" @click="$accessor.wallet.openModal">
+                            <Button
+                              v-else
+                              class="btn-transparent font-small weight-bold"
+                              @click="$accessor.wallet.openModal"
+                            >
                               {{
                                 !farm.farmInfo.poolInfo.is_allowed
                                   ? 'Not Allowed'
@@ -1034,7 +1091,9 @@
                             "
                             class="btn-container"
                           >
-                            <Button class="btn-primary font-small weight-bold" @click="payFarmFee(farm)"> Pay Farm Fees </Button>
+                            <Button class="btn-primary font-small weight-bold" @click="payFarmFee(farm)">
+                              Pay Farm Fees
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -1281,7 +1340,11 @@
                           }}
                         </Button>
 
-                        <Button v-else class="btn-transparent font-small weight-bold" @click="$accessor.wallet.openModal">
+                        <Button
+                          v-else
+                          class="btn-transparent font-small weight-bold"
+                          @click="$accessor.wallet.openModal"
+                        >
                           {{
                             !farm.farmInfo.poolInfo.is_allowed
                               ? 'Not Allowed'
@@ -1352,12 +1415,15 @@
                         "
                         class="btn-container"
                       >
-                        <Button class="btn-primary font-small weight-bold" @click="payFarmFee(farm)"> Pay Farm Fees </Button>
+                        <Button class="btn-primary font-small weight-bold" @click="payFarmFee(farm)">
+                          Pay Farm Fees
+                        </Button>
                       </div>
                     </Col>
 
                     <Col class="farm-collapse-item fcc-container" span="24">
                       <a
+                        v-if="!(farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)"
                         class="social-link fcc-container font-xsmall weight-semi icon-cursor"
                         :href="farm.farmInfo.twitterShare"
                         target="_blank"
@@ -1432,7 +1498,13 @@ import {
   getTotalSupply
 } from '@/utils/farm'
 import { PublicKey } from '@solana/web3.js'
-import { DEVNET_MODE, FARM_PROGRAM_ID, FARM_INITIAL_SUPER_OWNER, FARM_VERSION } from '@/utils/ids'
+import {
+  DEVNET_MODE,
+  FARM_PROGRAM_ID,
+  FARM_INITIAL_SUPER_OWNER,
+  FARM_VERSION,
+  REMOVE_REWARDS_FARM_ADDRESS
+} from '@/utils/ids'
 import { TOKENS } from '@/utils/tokens'
 import { addLiquidity, removeLiquidity } from '@/utils/liquidity'
 import { loadAccount } from '@/utils/account'
@@ -1458,6 +1530,7 @@ export default Vue.extend({
     return {
       farmProgramCreated: true,
       superOwnerAddress: FARM_INITIAL_SUPER_OWNER,
+      removeRewardsFarmAddress: REMOVE_REWARDS_FARM_ADDRESS,
       farmLoaded: false as boolean,
       farms: [] as any[],
       showFarms: [] as any[],
@@ -1490,6 +1563,8 @@ export default Vue.extend({
       poolsDatas: {} as any,
       searchCertifiedFarm: 'labelized' as string,
       searchLifeFarm: false as boolean,
+      checkedFP: false as boolean,
+      updating: false as boolean,
       totalCount: 110,
       pageSize: 50,
       displaynoticeupdate: false,
@@ -1501,6 +1576,7 @@ export default Vue.extend({
       showMoreMenu: [] as boolean[],
       showSearchMenu: false as boolean,
       showTabMenu: false as boolean,
+      showGuide: true as boolean,
       isSearchClicking: false as boolean,
       currentShowMore: -1 as number,
       mostUsed: [
@@ -1614,7 +1690,6 @@ export default Vue.extend({
       const conn = this.$web3
       const wallet = (this as any).$wallet
       const txid = await FarmProgram.createDefaultProgramData(conn, wallet)
-      console.log('create farm program account', txid)
 
       await this.delay(1500)
       this.checkIfFarmProgramExist()
@@ -1785,9 +1860,18 @@ export default Vue.extend({
       window.localStorage.TVL = this.TVL
     },
     async updateFarms() {
+      if (!this.checkedFP) {
+        this.checkIfFarmProgramExist()
+      }
+      this.checkedFP = true
+
+      if (this.updating) {
+        return
+      }
+
+      this.updating = true
+
       this.$accessor.token.loadTokens()
-      this.farmLoaded = false
-      console.log('updating farms ...')
       await this.updateLabelizedAmms()
       this.currentTimestamp = moment().unix()
 
@@ -2189,14 +2273,14 @@ export default Vue.extend({
 
       const currentTimestamp = moment().unix()
       if (!searchLifeFarm) {
-        //Opened
+        //opened
         this.showFarms = this.showFarms.filter(
           (farm: any) =>
             farm.farmInfo.poolInfo.start_timestamp < currentTimestamp &&
             farm.farmInfo.poolInfo.end_timestamp > currentTimestamp
         )
       } else {
-        //Ended
+        //ended
         this.showFarms = this.showFarms.filter((farm: any) => farm.farmInfo.poolInfo.end_timestamp < currentTimestamp)
       }
 
@@ -2212,6 +2296,7 @@ export default Vue.extend({
         this.showMoreMenu.push(false)
       })
       this.farmLoaded = true
+      this.updating = false
     },
 
     updateCurrentLp(newTokenAccounts: any) {
@@ -2518,7 +2603,6 @@ export default Vue.extend({
             await this.delay(delayTime)
             totalDelayTime += delayTime
             txStatus = this.$accessor.transaction.history[txid].status
-            console.log('h1', totalDelayTime, txStatus)
           }
 
           if (txStatus === 'Fail') {
@@ -2702,7 +2786,52 @@ export default Vue.extend({
 
       this.unstakeModalOpening = true
     },
+    removeRewards(farm: any) {
+      const conn = this.$web3
+      const wallet = (this as any).$wallet
 
+      const rewardAccount = get(this.wallet.tokenAccounts, `${farm.farmInfo.reward.mintAddress}.tokenAccountAddress`)
+
+      const key = getUnixTs().toString()
+      this.$notify.info({
+        key,
+        message: 'Making transaction...',
+        description: '',
+        duration: 0
+      })
+
+      YieldFarm.removeRewards(conn, wallet, farm.farmInfo, rewardAccount)
+        .then(async (txid) => {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: { href: `${this.url.explorer}/tx/${txid}`, target: '_blank' }
+                  },
+                  'here'
+                )
+              ])
+          })
+
+          const description = `Remove Rewards`
+          this.$accessor.transaction.sub({ txid, description })
+        })
+        .catch((error) => {
+          this.$notify.error({
+            key,
+            message: 'Remove Rewards failed',
+            description: error.message
+          })
+          this.$accessor.farm.requestInfos()
+          this.$accessor.wallet.getTokenAccounts()
+        })
+        .finally(() => {})
+    },
     unstakeAndRemove(amount: string) {
       this.unstaking = true
 
@@ -2961,7 +3090,6 @@ export default Vue.extend({
         }
         return item
       })
-      console.log(this.showMoreMenu)
     },
     hideMore() {
       if (this.currentShowMore != -1) {
@@ -2970,6 +3098,10 @@ export default Vue.extend({
         })
         this.currentShowMore = -1
       }
+    },
+    hideGuide() {
+      this.showGuide = false
+      // window.localStorage.pool_guide = true
     }
   }
 })
@@ -2997,7 +3129,6 @@ export default Vue.extend({
 }
 
 .btn-container {
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
@@ -3254,6 +3385,63 @@ export default Vue.extend({
   .card {
     .card-body {
       padding: 0;
+
+      .guide-card {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        width: calc(100% - 40px);
+        max-width: 420px;
+        padding: 18px;
+        background: @gradient-color03;
+        border-radius: 18px;
+        z-index: 999;
+
+        @media @max-sl-mobile {
+          top: 80px;
+          right: unset;
+        }
+
+        .guide-content {
+          position: relative;
+
+          .guide-detail {
+            background: @color-blue700;
+            padding: 8px 18px;
+            margin-top: 8px;
+            border-radius: 18px;
+
+            .highlight {
+              color: @color-petrol500;
+            }
+
+            .note-btn {
+              background: @gradient-color01;
+              box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+              border-radius: 48px;
+              padding: 8px;
+              border: none;
+              height: auto;
+
+              &:hover {
+                background: @gradient-color02;
+              }
+            }
+          }
+
+          .close-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+          }
+
+          .note-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+          }
+        }
+      }
 
       .farm-content {
         .farm-head {
@@ -3524,7 +3712,7 @@ export default Vue.extend({
                     margin-top: 8px;
 
                     .shortcut-container {
-                      background: linear-gradient(97.63deg, #280c86 -29.92%, #22b5b6 103.89%);
+                      background: @gradient-color-outline;
                       border-radius: 8px;
                       padding: 2px;
                       margin-right: 8px;
@@ -3570,7 +3758,7 @@ export default Vue.extend({
               margin-top: 0;
             }
 
-            .fcl-container {
+            .fcs-container {
               padding: 0 !important;
             }
 
@@ -3744,17 +3932,6 @@ export default Vue.extend({
 
   .ant-tooltip-arrow {
     display: none;
-  }
-
-  .ant-alert-warning {
-    width: 500px;
-    margin-top: 30px;
-    background-color: transparent;
-    border: 1px solid #85858d;
-
-    .anticon-close {
-      color: #fff;
-    }
   }
 
   .ant-switch {

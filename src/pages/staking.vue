@@ -13,12 +13,12 @@
       :crpbalance="crpbalance"
       :userStaked="userStaked"
       :estimatedapy="estimatedAPY"
-      @onCancel="() => (stakeModalShow = false)"
+      @onCancel="closeModal"
     />
 
     <div class="card">
       <div class="card-body">
-        <div class="staking-head fcb-container">
+        <div class="staking-head fcsb-container">
           <h3 class="title weight-bold">Staking</h3>
           <div class="information">
             <div class="tvl-info">
@@ -33,13 +33,13 @@
           </div>
         </div>
 
-        <div class="staking-content fcb-container">
+        <div class="staking-content fcsb-container">
           <div class="staking-body">
-            <h4 class="weight-bold">$CRP Staking</h4>
+            <h4 class="weight-bold">CRP Staking</h4>
             <div class="staking-progress">
-              <div class="staking-progress-label fcb-container">
+              <div class="staking-progress-label fcsb-container">
                 <span class="font-xsmall weight-bold">Tier {{ currentTiers }}</span>
-                <span class="font-xsmall weight-bold">Tier {{ nextTiers }}</span>
+                <span v-if="currentTiers < 5" class="font-xsmall weight-bold">Tier {{ nextTiers }}</span>
               </div>
               <Progress
                 type="line"
@@ -47,21 +47,29 @@
                 :percent="Number(pctToNexttiers.toFixed(1))"
                 :show-info="false"
               />
-              <div
-                v-if="Number(pctToNexttiers.toFixed(1)) >= 5"
-                class="staking-progress-end"
-                :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 3px)'"
-              ></div>
-              <label
-                class="staking-progress-percent font-xsmall"
-                :style="'margin-left: ' + Number(pctToNexttiers.toFixed(1)) + '%'"
-              >
-                {{ Number(pctToNexttiers.toFixed(1)) }}%
-              </label>
+              <div class="staking-progress-info-container">
+                <div
+                  v-if="Number(pctToNexttiers.toFixed(1)) > 1"
+                  class="staking-progress-end"
+                  :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
+                ></div>
+                <label
+                  v-if="currentTiers < 5"
+                  class="staking-progress-percent font-xsmall"
+                  :style="
+                    Number(pctToNexttiers.toFixed(1)) < 90
+                      ? 'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'
+                      : 'margin-left: 90%'
+                  "
+                >
+                  {{ userTier }} sCRP
+                </label>
+                <label v-else class="staking-progress-percent max-tier font-xsmall"> {{ userTier }} sCRP </label>
+              </div>
             </div>
 
             <div class="staking-infos-group">
-              <div class="staking-info fcb-container">
+              <div class="staking-info fcsb-container">
                 <div class="label font-medium weight-semi spacing-small">
                   Estimated APY
                   <Tooltip placement="bottomLeft">
@@ -85,7 +93,7 @@
                 </div>
               </div>
 
-              <div class="staking-info fcb-container">
+              <div class="staking-info fcsb-container">
                 <div class="label font-medium weight-semi spacing-small">
                   Total Staked
                   <Tooltip placement="bottomLeft">
@@ -97,19 +105,8 @@
                 </div>
                 <div class="value font-medium weight-bold">{{ totalStaked }}</div>
               </div>
-              <div class="staking-info fcb-container">
-                <div class="label font-medium weight-semi spacing-small">
-                  Total Users 
-                  <Tooltip placement="bottomLeft">
-                    <template slot="title">
-                      <div>Count of users staked</div>
-                    </template>
-                    <img class="tooltip-icon" src="@/assets/icons/info.svg" />
-                  </Tooltip>
-                </div>
-                <div class="value font-medium weight-bold">{{ totalUsers }}</div>
-              </div>
-              <div class="staking-info fcb-container">
+
+              <div class="staking-info fcsb-container">
                 <div class="label font-medium weight-semi spacing-small">
                   Total Value
                   <Tooltip placement="bottomLeft">
@@ -125,10 +122,10 @@
             </div>
 
             <div class="staking-actions-group">
-              <div class="staking-action-item fcb-container">
+              <div class="staking-action-item fcsb-container">
                 <div class="reward-pending">
                   <label class="label font-medium">Reward Pending</label>
-                  <label class="value font-large weight-bold">{{ pendingReward }}</label>
+                  <label class="value font-large weight-bold">{{ pendingRewardDynamic }}</label>
                 </div>
                 <div class="btn-container">
                   <Button
@@ -147,7 +144,7 @@
               </div>
 
               <div v-else>
-                <div v-if="userStaked > 0" class="staking-action-item fcb-container">
+                <div v-if="userStaked > 0" class="staking-action-item fcsb-container">
                   <div class="reward-pending">
                     <label class="label font-medium">CRP Staked</label>
                     <label class="value font-large weight-bold">{{ userStaked }}</label>
@@ -192,7 +189,7 @@
             </div>
 
             <div class="staking-footer">
-              <div class="lock-tokens fcb-container">
+              <div class="lock-tokens fcsb-container">
                 <label class="label font-small weight-semi spacing-large">
                   {{ endOfLock ? 'End of lock' : 'Lock tokens for' }}
                 </label>
@@ -201,8 +198,10 @@
                 </label>
               </div>
               <div v-if="!endOfLock" class="get-crp fcc-container">
-                <label class="font-medium weight-semi">Get CRP</label>
-                <img class="union-icon" src="@/assets/icons/union.svg" />
+                <NuxtLink to="/swap/" class="get-crp">
+                  <label class="font-medium weight-semi">Get CRP</label>
+                  <img class="union-icon" src="@/assets/icons/union.svg" />
+                </NuxtLink>
               </div>
             </div>
           </div>
@@ -224,18 +223,17 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 1</label>
-                  </div>
-                  <div class="btn-container">
+                <div class="fcsb-container">
+                  <label class="font-large weight-bold">Tier 1</label>
+                  <label class="font-large weight-bold">200 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -246,18 +244,17 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 2</label>
-                  </div>
-                  <div class="btn-container">
+                <div class="fcsb-container">
+                  <label class="font-large weight-bold">Tier 2</label>
+                  <label class="font-large weight-bold">2000 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -268,18 +265,17 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 3</label>
-                  </div>
-                  <div class="btn-container">
+                <div class="fcsb-container">
+                  <label class="font-large weight-bold">Tier 3</label>
+                  <label class="font-large weight-bold">10,000 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -290,18 +286,17 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 4</label>
-                  </div>
-                  <div class="btn-container">
+                <div class="fcsb-container">
+                  <label class="font-large weight-bold">Tier 4</label>
+                  <label class="font-large weight-bold">20,000 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -312,30 +307,29 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcb-container">
-                  <div class="tier-info">
-                    <label class="font-large weight-bold">Tier 5</label>
-                  </div>
-                  <div class="btn-container">
+                <div class="fcsb-container">
+                  <label class="font-large weight-bold">Tier 5</label>
+                  <label class="font-large weight-bold">100,000 sCRP</label>
+                  <!-- <div class="btn-container">
                     <a
                       class="btn-primary font-medium weight-semi fcc-container"
                       href="#staking-tiers-details"
                       @click="setTierTabs"
                       >About Tiers</a
                     >
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </Carousel>
           </div>
         </div>
 
-        <div class="staking-tiers-details" id="staking-tiers-details">
+        <!-- <div class="staking-tiers-details" id="staking-tiers-details">
           <span class="font-large weight-bold">About Tiers</span>
           <div class="staking-tiers-features">
             <Tabs v-model="activeTab">
               <TabPane tab="Tier 1" key="1">
-                <Row :gutter="56" class="staking-tier-container fcb-container">
+                <Row :gutter="56" class="staking-tier-container fcsb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
                     <span class="font-medium weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
@@ -359,7 +353,7 @@
                 </Row>
               </TabPane>
               <TabPane tab="Tier 2" key="2">
-                <Row :gutter="56" class="staking-tier-container fcb-container">
+                <Row :gutter="56" class="staking-tier-container fcsb-container">
                   <Col :sm="12" :xs="24" class="staking-tier-tab">
                     <span class="font-medium weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
@@ -383,7 +377,7 @@
                 </Row>
               </TabPane>
               <TabPane tab="Tier 3" key="3">
-                <Row :gutter="56" class="staking-tier-container fcb-container">
+                <Row :gutter="56" class="staking-tier-container fcsb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="font-medium weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
@@ -407,7 +401,7 @@
                 </Row>
               </TabPane>
               <TabPane tab="Tier 4" key="4">
-                <Row :gutter="56" class="staking-tier-container fcb-container">
+                <Row :gutter="56" class="staking-tier-container fcsb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="font-medium weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
@@ -431,7 +425,7 @@
                 </Row>
               </TabPane>
               <TabPane tab="Tier 5" key="5">
-                <Row :gutter="56" class="staking-tier-container fcb-container">
+                <Row :gutter="56" class="staking-tier-container fcsb-container">
                   <Col :span="12" class="staking-tier-tab">
                     <span class="font-medium weight-semi">
                       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
@@ -456,7 +450,7 @@
               </TabPane>
             </Tabs>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -495,6 +489,7 @@ import {
   getAllPools,
   getPoolUserAccount,
   estimateRewards,
+  estimateRewardsPerSec,
   calculateTiers,
   TIERS_XCRP,
   stake,
@@ -508,11 +503,11 @@ export default Vue.extend({
     Tooltip,
     Progress,
     Carousel,
-    Row,
-    Col,
-    Icon,
-    Tabs,
-    TabPane
+    // Row,
+    // Col,
+    Icon
+    // Tabs,
+    // TabPane
   },
   data() {
     return {
@@ -522,12 +517,15 @@ export default Vue.extend({
       lockDuration: 0 as number,
       crpbalance: 0 as any,
       endDateOfLock: 0 as any,
+      running: 0 as any,
 
       totalStaked: '0' as string,
       totalUsers: 0 as number,
       userStaked: 0 as number,
       userStakedUnformated: 0 as number,
       pendingReward: '0' as string,
+      pendingRewardDynamic: 0 as number,
+      counterdyn: null as any,
       totalStakedPrice: '0' as string,
       TVL: 0 as number,
       timer: null as any,
@@ -538,6 +536,7 @@ export default Vue.extend({
       canUnstake: false as boolean,
 
       pctToNexttiers: 0 as number,
+      userTier: 0 as number,
       currentTiers: 0 as number,
       nextTiers: 1 as number,
       selectedTier: 0 as number,
@@ -589,7 +588,7 @@ export default Vue.extend({
       this.selectedTier = 1
       this.activeTab = '1'
     }
-
+    if (this.currentTiers === 5) this.pctToNexttiers = 100
     this.setTimer()
   },
   methods: {
@@ -630,6 +629,12 @@ export default Vue.extend({
 
       window.localStorage.TVL_last_updated = new Date().getTime()
       window.localStorage.TVL = this.TVL
+    },
+
+    closeModal() {
+      this.stakeModalShow = false
+      this.getGlobalState()
+      this.getUserState()
     },
 
     async getGlobalState() {
@@ -698,9 +703,15 @@ export default Vue.extend({
       this.userStakedUnformated = Number(new TokenAmount(userAccount.amount, TOKENS['CRP'].decimals).fixed())
 
       const rewardAmount = estimateRewards(farm_state, extraRewardConfigs, current_pool.account, userAccount)
+      const rewardsPerSec = estimateRewardsPerSec(farm_state, extraRewardConfigs, current_pool.account, userAccount)
       const tiers_info = calculateTiers(this.userStaked, userAccount.lockDuration.toNumber())
       this.$accessor.wallet.setStakingTiers(tiers_info)
       this.pendingReward = new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed()
+      this.pendingRewardDynamic = new TokenAmount(rewardAmount, TOKENS['CRP'].decimals).fixed() as unknown as number
+
+      if (this.running != 1) this.dynamicRebase(rewardsPerSec, this.pendingRewardDynamic)
+
+      this.running = 1
 
       this.currentTiers = tiers_info.tiers
       this.nextTiers = tiers_info.tiers + 1
@@ -709,12 +720,17 @@ export default Vue.extend({
         this.nextTiers--
         this.currentTiers--
         this.pctToNexttiers = 100
+        this.userTier = TIERS_XCRP[this.nextTiers]
       } else {
+        this.userTier = tiers_info.xCRP
         this.pctToNexttiers =
           ((tiers_info.xCRP - TIERS_XCRP[this.currentTiers]) /
             (TIERS_XCRP[this.nextTiers] - TIERS_XCRP[this.currentTiers])) *
           100
       }
+
+      if (this.currentTiers === 5) this.pctToNexttiers = 100
+
       if (this.currentTiers > 1) {
         this.setTierCarousel(this.currentTiers - 1)
         this.selectedTier = this.currentTiers
@@ -725,6 +741,16 @@ export default Vue.extend({
         this.activeTab = '1'
       }
     },
+
+    dynamicRebase(rewardsPerSec: any, pendingRewardDynamic: any) {
+      return false
+      const nreward = this.pendingRewardDynamic * 1 + rewardsPerSec / 100
+      this.pendingRewardDynamic = Math.round(nreward * 1000000000) / 1000000000
+      setTimeout(() => {
+        this.dynamicRebase(rewardsPerSec, nreward)
+      }, 10)
+    },
+
     onBaseDetailSelect(lock_duration: number, estimated_apy: number) {
       this.baseModalShow = false
       this.estimatedAPY = estimated_apy
@@ -895,7 +921,6 @@ export default Vue.extend({
   // global styles
 
   .btn-container {
-    background: @gradient-color01;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 48px;
     padding: 3px;
@@ -1047,11 +1072,6 @@ export default Vue.extend({
                 border: 5px solid @color-blue-dark;
               }
 
-              .tier-info {
-                display: inline-grid;
-                row-gap: 4px;
-              }
-
               .btn-container {
                 width: 120px;
 
@@ -1077,24 +1097,33 @@ export default Vue.extend({
             }
 
             .staking-progress {
-              position: relative;
               margin-top: 28px;
 
               .staking-progress-label {
                 margin-bottom: 4px;
               }
 
-              .staking-progress-end {
-                position: absolute;
-                width: 2px;
-                height: 14px;
-                background: @color-petrol500;
-                box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-                margin-top: -21px;
-              }
+              .staking-progress-info-container {
+                position: relative;
+                padding: 0 4px;
 
-              .staking-progress-percent {
-                margin-top: 4px;
+                .staking-progress-end {
+                  width: 2px;
+                  height: 14px;
+                  background: @color-petrol500;
+                  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+                  margin: -20px 0 4px 0;
+                }
+
+                .staking-progress-percent {
+                  white-space: nowrap;
+
+                  &.max-tier {
+                    display: block;
+                    text-align: right;
+                    padding-top: 4px;
+                  }
+                }
               }
             }
 
@@ -1317,28 +1346,7 @@ export default Vue.extend({
 
   // ant progress
   .ant-progress {
-    background: transparent !important;
     width: 100%;
-
-    .ant-progress-outer {
-      display: flex;
-      margin: 0;
-      padding: 4px;
-      box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.85);
-      border-radius: 50px;
-      height: 22px;
-      background: @color-blue800;
-
-      .ant-progress-inner {
-        background: transparent;
-
-        .ant-progress-bg {
-          background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
-          box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
-          border-radius: 50px 0 0 50px !important;
-        }
-      }
-    }
   }
 
   // ant tabs

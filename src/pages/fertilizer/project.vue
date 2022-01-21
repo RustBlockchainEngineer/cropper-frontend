@@ -1,566 +1,191 @@
 <template>
-  <div class="fertilizer-project container">
+  <div class="fertilizer container">
     <div class="card">
       <div class="card-body">
-        <section class="project-header">
-          <div class="back-to-list icon-cursor fcl-container">
-            <img class="back-icon" src="@/assets/icons/back.svg" />
-            <span class="back-label font-medium weight-bold">Go back</span>
-          </div>
-        </section>
+        <div class="fertilizer-head fcsb-container">
+          <h3 class="title weight-bold">Fertilizer / Admin panel <span v-if="mint == 'new'">New</span> <span v-else-if="mint">Update</span></h3>
+        </div>
 
-        <section class="project-content">
-          <Row :gutter="20">
-            <Col :span="6" class="project-preview-container">
-              <div class="project-preview">
-                <div class="project-overview fcb-container">
-                  <div class="project-title fcl-container">
-                    <img class="project-logo" :src="fertilizer.logo" />
-                    <span class="font-large weight-bold">{{ fertilizer.title }}</span>
-                  </div>
-                  <div
-                    class="project-status"
-                    :class="
-                      fertilizer.status === filterOptions.whitelist
-                        ? 'whitelist'
-                        : fertilizer.status === filterOptions.sales
-                        ? 'sales'
-                        : fertilizer.status === filterOptions.distribution
-                        ? 'distribution'
-                        : fertilizer.status === filterOptions.preparation
-                        ? 'preparation'
-                        : ''
-                    "
-                  >
-                    <span class="font-xsmall weight-bold">{{ fertilizer.status }}</span>
-                  </div>
-                </div>
-                <div class="project-countdown">
-                  <Countdown
-                    v-if="currentStep < 3"
-                    :title="
-                      fertilizer.status === filterOptions.whitelist
-                        ? 'End of the whitelist in'
-                        : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
-                        ? 'Sales starts in'
-                        : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
-                        ? 'End of the sales in'
-                        : fertilizer.status === filterOptions.distribution
-                        ? 'Distribution starts in'
-                        : fertilizer.status === filterOptions.preparation
-                        ? 'Whitelist starts in'
-                        : ''
-                    "
-                    :value="
-                      fertilizer.status === filterOptions.whitelist
-                        ? fertilizer.whitelist_end_date
-                        : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
-                        ? fertilizer.sales_start_date
-                        : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
-                        ? fertilizer.sales_end_date
-                        : fertilizer.status === filterOptions.distribution
-                        ? fertilizer.distribution_start_date
-                        : fertilizer.status === filterOptions.preparation
-                        ? fertilizer.whitelist_start_date
-                        : ''
-                    "
-                    format="DD:HH:mm:ss"
-                  />
-                </div>
-                <div class="project-progress">
-                  <div v-if="currentStep === 0" class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi">Subscribe Whitelist</Button>
-                  </div>
-                  <div v-else-if="currentStep > 0 && currentStep < 3" class="fcc-container">
-                    <img class="check-icon" src="@/assets/icons/check-circle-white.svg" />
-                    <span class="font-small weight-semi spacing-large"
-                      >Following {{ fertilizer.title }}
-                    </span>
-                  </div>
-                  <div v-else class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi">Start Farming</Button>
-                  </div>
-                </div>
-              </div>
-              <div class="project-ido-container">
-                <div class="project-ido-process">
-                  <Steps :current="currentStep" size="small" direction="vertical" :status="stepsStatus">
-                    <Step>
-                      <template slot="title">
-                        <span class="font-small weight-bold">Preparation</span>
-                      </template>
-                    </Step>
-                    <Step>
-                      <template slot="title">
-                        <div class="fcb-container">
-                          <span class="font-small weight-bold">Whitelist</span>
-                          <span v-if="currentStep > 1" class="status-label success font-small weight-bold"
-                            >Registered</span
-                          >
-                        </div>
-                        <span v-if="currentStep === 1" class="status-label description font-small"
-                          >You can now whitelist yourself for the lottery.</span
-                        >
-                      </template>
-                    </Step>
-                    <Step>
-                      <template slot="title">
-                        <div class="fcb-container">
-                          <span class="font-small weight-bold">Sales</span>
-                          <span v-if="currentStep > 2" class="status-label closed font-small weight-bold"
-                            >Closed</span
-                          >
-                        </div>
-                        <span v-if="currentStep === 2" class="status-label description font-small"
-                          >Winners can participate in the token sale.</span
-                        >
-                      </template>
-                    </Step>
-                    <Step>
-                      <template slot="title">
-                        <div class="fcb-container">
-                          <span class="font-small weight-bold">Distribution</span>
-                          <span v-if="currentStep >= 3" class="status-label success font-small weight-bold"
-                            >Distributed</span
-                          >
-                        </div>
-                        <span v-if="currentStep === 3" class="status-label description font-small"
-                          >The tokens get distributed to Sale participants.</span
-                        >
-                      </template>
-                    </Step>
-                  </Steps>
-                </div>
-              </div>
-            </Col>
-            <Col :span="18" class="project-detail-container">
-              <div class="project-detail-item">
-                <Row :gutter="24">
-                  <Col :span="10">
-                    <div class="project-detail-desc">
-                      <div class="project-title fcl-container">
-                        <img class="project-logo" :src="fertilizer.logo" />
-                        <h4 class="weight-bold spacing-medium">{{ fertilizer.title }}</h4>
-                      </div>
-                      <div class="project-short-desc">
-                        <span class="font-medium weight-semi">{{ fertilizer.short_desc }}</span>
-                      </div>
-                      <span class="font-medium">{{ fertilizer.long_desc }}</span>
-                    </div>
-                  </Col>
-                  <Col :span="14">
-                    <div class="project-detail-info-group">
-                      <Row :gutter="[28, 40]">
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Token Price</span>
-                          <div class="value fcl-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <span class="font-medium"
-                              ><b>{{ fertilizer.ido_info.sale_rate }}</b> USDC</span
-                            >
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Hard Cap</span>
-                          <div class="value fcl-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <span class="font-medium"
-                              ><b>{{ fertilizer.ido_info.hard_cap }}</b> USDC</span
-                            >
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Pool Size</span>
-                          <div class="value fcl-container">
-                            <img class="coin-icon" :src="fertilizer.logo" />
-                            <span class="font-medium"
-                              ><b>{{ fertilizer.pool_size }}</b> {{ fertilizer.token_info.symbol }}</span
-                            >
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Type</span>
-                          <div class="value fcl-container">
-                            <img class="lock-icon" src="@/assets/icons/lock.svg" />
-                            <span class="font-medium weight-semi">{{ fertilizer.ido_info.sale_type }}</span>
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Participants</span>
-                          <div class="value fcl-container">
-                            <span class="font-medium weight-semi">{{ fertilizer.participants }}</span>
-                          </div>
-                        </Col>
-                        <Col :span="8" class="project-detail-info-item">
-                          <span class="title font-small weight-semi spacing-large">Website</span>
-                          <div class="value fcl-container">
-                            <a
-                              class="website font-medium weight-semi"
-                              :href="fertilizer.website_url"
-                              target="_blank"
-                              >{{ fertilizer.website }}</a
-                            >
-                          </div>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-              <div v-if="currentStep === 1" class="project-detail-item">
-                <h4 class="weight-semi">Earn Social Pool tickets!</h4>
-                <span class="font-medium">
-                  A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
-                  allocation by performing various social tasks.
-                </span>
-                <div class="ticket-tasks-group ftb-container">
-                  <div class="ticket-tasks">
-                    <span class="font-medium weight-bold">Earn tickets by completing these tasks:</span>
-                    <div class="ticket-task-status-group fcb-container">
-                      <div class="ticket-task-status-card fcb-container">
-                        <div class="ticket-task-status ft-container">
-                          <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
-                          <div>
-                            <span class="font-medium weight-bold">Telegram task</span>
-                            <br />
-                            <span class="font-xsmall weight-semi">0/2 Task completed</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ticket-task-status-card fcb-container" :class="'active'">
-                        <div class="ticket-task-status ft-container">
-                          <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
-                          <div>
-                            <span class="font-medium weight-bold">Twitter task</span>
-                            <br />
-                            <span class="font-xsmall weight-semi">3/3 Task completed</span>
-                          </div>
-                        </div>
-                        <img class="check-icon" src="@/assets/icons/check-white.svg" />
-                      </div>
-                    </div>
-                    <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
-                    <div class="ticket-share-group fcb-container">
-                      <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" />
-                      <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" />
-                    </div>
-                    <div class="ticket-btn-group fcb-container">
-                      <div class="share-btn btn-container">
-                        <Button class="btn-primary font-small weight-semi spacing-large"
-                          >Share on Telegram</Button
-                        >
-                      </div>
-                      <div class="share-btn btn-container">
-                        <Button class="btn-primary font-small weight-semi spacing-large"
-                          >Share on Twitter</Button
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="ticket-preview">
-                    <div class="ticket-earned">
-                      <span class="font-medium weight-bold"
-                        >You are now registered for the {{ fertilizer.title }} whitelist as:</span
-                      >
-                      <div class="ticket-earned-status fcl-container">
-                        <img class="referral-icon" src="@/assets/icons/referral.svg" />
-                        <div>
-                          <span class="font-medium weight-semi spacing-small">
-                            <label class="font-large">0</label>
-                            Earned Tickets
-                          </span>
-                          <br />
-                          <span class="font-xsmall">0 Social / 0 Referrals</span>
-                        </div>
-                      </div>
-                      <div class="fcb-container">
-                        <span class="font-small weight-semi spacing-large">Verification</span>
-                        <span class="font-small text-upper">Unverified</span>
-                      </div>
-                    </div>
-                    <div class="ticket-referral">
-                      <span class="font-medium weight-semi spacing-small"
-                        >Add referral link to win a ticket:</span
-                      >
-                      <input
-                        type="text"
-                        class="ticket-referral-link font-small weight-semi"
-                        :value="referralLink"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div v-else-if="currentStep === 2" class="project-detail-item"></div>
-              <div v-else class="project-detail-item text-center">
-                <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
-                <div class="distribution-details">
-                  <span class="font-medium">
-                    Sonar Watch raised:
-                    <br />
-                    <b>500,000 / 500,000 USDC</b>
-                  </span>
-                  <div class="sale-details-group fcc-container">
-                    <div class="sale-detail-card text-left">
-                      <span class="font-xsmall">ROI (ATH)</span>
-                      <br />
-                      <span class="font-large weight-bold">8.20x</span>
-                    </div>
-                    <div class="sale-detail-card text-left">
-                      <span class="font-xsmall">ROI (current)</span>
-                      <br />
-                      <span class="font-large weight-bold">1.07x</span>
-                    </div>
-                    <div class="sale-detail-card text-left">
-                      <span class="font-xsmall">Last Price</span>
-                      <br />
-                      <span class="font-large weight-bold">0.21 USDC</span>
-                    </div>
-                  </div>
-                  <div class="btn-container margin-auto">
-                    <Button class="btn-transparent font-medium weight-semi">Start Farming</Button>
-                  </div>
-                </div>
-              </div>
-              <div class="project-detail-item banner fcb-container">
-                <div class="project-detail-stake">
-                  <h4 class="weight-semi">Develop your Tier to have more allocation</h4>
-                  <div class="btn-container">
-                    <Button class="btn-transparent font-medium weight-semi">Stake CRP</Button>
-                  </div>
-                </div>
-                <img class="farmer-img" src="@/assets/background/farmer.png" />
-              </div>
-              <div class="project-detail-item transparent">
-                <h3 class="project-category-title weight-semi">Project Details</h3>
-                <Row :gutter="40">
-                  <Col :span="12">
-                    <span class="font-large weight-bold">IDO Information</span>
-                    <div class="information">
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large">Hardcap</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.hard_cap
-                        }}</span>
-                      </div>
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large">Sale rate</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.sale_rate
-                        }}</span>
-                      </div>
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large">Sale type</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.sale_type
-                        }}</span>
-                      </div>
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large">Open Time</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.open_time
-                        }}</span>
-                      </div>
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large">Close Time</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.ido_info.close_time
-                        }}</span>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col :span="12">
-                    <span class="font-large weight-bold">Token Information</span>
-                    <div class="information">
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large">Symbol</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.token_info.symbol
-                        }}</span>
-                      </div>
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large">Category</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.token_info.category
-                        }}</span>
-                      </div>
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large"
-                          >Token Distribution</span
-                        >
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.token_info.token_distribution
-                        }}</span>
-                      </div>
-                      <div class="information-item fcb-container">
-                        <span class="label font-small weight-semi spacing-large">Blockchain</span>
-                        <span class="font-medium weight-semi spacing-small">{{
-                          fertilizer.token_info.blockchain
-                        }}</span>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
-              <div class="project-detail-item transparent">
-                <h3 class="project-category-title weight-semi">About</h3>
-                <Row class="project-category-content-about" :gutter="40">
-                  <Col :span="12">
-                    <span class="font-medium">
-                      Discover, Collect, and Trade NFTs as a team.<br /><br />
-                      The first NFT asset management platform providing tools for collectors and investors to power the
-                      NFT space. Running cross-chain, powered by Solana.<br /><br />
-                      We bring more togetherness to the NFT space<br /><br />
-                      Create a club, act as a curator, raise funds to expand your collection, and build a community
-                      around it.
-                    </span>
-                  </Col>
-                  <Col :span="12">
-                    <img class="banner-img" :src="fertilizer.img.about" />
-                  </Col>
-                </Row>
-              </div>
-              <div class="project-detail-item transparent">
-                <h3 class="project-category-title weight-semi">Features</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.features" />
-                <div>
-                  <div>
-                    <span class="font-medium weight-semi">Onwership DAOs</span>
-                    <br /><br />
-                    <span class="font-medium">
-                      You can't just copy trade NFTs since they are unique and have a big social component. That's why
-                      UNQ allows you to create Clubs - essentially, ownership DAOs that are led by an experience and
-                      dedicated collector, and community can bring additional liquidity, participation, and governance.
-                    </span>
-                  </div>
-                  <br />
-                  <div>
-                    <span class="font-medium weight-semi">Flexible structure</span>
-                    <br /><br />
-                    <span class="font-medium">
-                      Want to have a better asset management for you play to earn guild? We got it. Want to get buy
-                      those expensive NFTs together with a team to de-risk your invetments? Do it. Want to turn
-                      collecting into a business, or expand existing gallery business into the digital world and be able
-                      to raise funds and get access to the world of NFTs? Explore our Public clubs and social tokens.
-                    </span>
-                  </div>
-                  <br />
-                  <div>
-                    <span class="font-medium weight-semi">Cross-chain transactions</span>
-                    <br /><br />
-                    <span class="font-medium">
-                      NFT market is growing, and more blockchains are introducing NFT support, which makes collector's
-                      life hard. We know that, and we want you to be able to focus on what you do best - buy and sell
-                      NFTs. That's why we are developing a solution that will allow you to transact with NFTs across
-                      chains from a single trustless Solana-based interface.
-                    </span>
-                  </div>
-                  <br />
-                  <div>
-                    <span class="font-medium weight-semi">Token utility :</span>
-                    <br /><br />
-                    <span class="font-medium">
-                      -UNQ is a single token utilized across the products.
-                      <br /><br />
-                      -Transacting Universe NFTs with UNQ gives additional benefits
-                      <br /><br />
-                      -UNQ is a platform governance token in Clubs
-                      <br /><br />
-                      -Clubs can upgrade using UNQ
-                      <br /><br />
-                      -Club tokens can be only traded against UNQ
-                      <br /><br />
-                      -Rewards for content creators in Worlds are in UNQ
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="project-detail-item transparent">
-                <h3 class="project-category-title weight-semi">Roadmap</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.roadmap" />
-                <div>
-                  <span class="font-medium">
-                    <b>Phase 1 - </b>Inception <br /><br />
-                    <b>Phase 2 - </b>MVP development , Solana Hackathon participation (winner 3rd place) <br /><br />
-                    <b>Phase 3 - </b>Further development, Market research, Private fundraise <br /><br />
-                    <b>Phase 4 - </b>Private beta of UNQ Club and UNQ World, NFT collection - UNQ Universe, Public beta
-                    of UNQ Club <br /><br />
-                    <b>Phase 5 - </b>Release of UNQ Club, Public beta of UNQ World <br /><br />
-                    <b>Phase 6 - </b>Release of UNQ World
-                  </span>
-                </div>
-              </div>
-              <div class="project-detail-item transparent">
-                <h3 class="project-category-title weight-semi">Team & Backers</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.team" />
-                <div>
-                  <span class="font-medium">
-                    Co-founder and CEO - Alex Migitko : Entrepreneur, 17 years in IT, of which 10 years in game
-                    development, 5 years blockchain.
-                    <br /><br />
-                    Co-founder and CTO - Uros Sosevic : Software engineer, 17 years of experience as a developer,
-                    architect and CTO;5 years of experience working with
-                    <br /><br />
-                    Co-founder and BD - Martin Kardzhilov - Crypto-native, investor, marketing expert, working for 5
-                    years exclusively in the crypto industry.
-                    <br /><br />
-                    Backers :
-                    <br /><br />
-                    Solana Foundation, Jump Capital, GSR, Gate.io , MEXC, NGC, WWG, Chainboost, Solanium Ventures, Solar
-                    Eco Fund, ZBS, Kernel Ventuires, Basics Capital, Titans Ventures, AU21, DWeb3 Capital, WaterDrip,
-                    FBG, Everse Capital, Chain Capital, CryptoJ, Moonedge
-                  </span>
-                </div>
-              </div>
-              <div class="project-detail-item transparent">
-                <h3 class="project-category-title weight-semi">Tokenomics</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.tokenomics" />
-                <div>
-                  <span class="font-medium">
-                    Tokenomics description *
-                    <br /><br />
-                    Team and Advisors - 20%
-                    <br /><br />
-                    Seed round - 15%
-                    <br /><br />
-                    Strategic round - 7.5%
-                    <br /><br />
-                    Public - 1.5%
-                    <br /><br />
-                    Marketing - 5%
-                    <br /><br />
-                    Liquidity - 10%
-                    <br /><br />
-                    Staking rewards - 25%
-                    <br /><br />
-                    Treasury - 16%
-                  </span>
-                </div>
-              </div>
-              <div class="project-detail-item transparent">
-                <h3 class="project-category-title weight-semi">Token Distribution</h3>
-                <img class="project-category-banner-img" :src="fertilizer.img.distribution" />
-                <div>
-                  <span class="font-medium">
-                    Seed round - $0.02 (10M FDV), 5% TGE, 12 months cliff, 5%/ Daily over 12 months
-                    <br /><br />
-                    Strategic round - 0.04 (20m FDV), 10% TGE, 9 months cliff, 5%/ Daily over 9 months
-                    <br /><br />
-                    Public round - 0.0533 (26.7 FDV), 50% TGE, 3 months cliff / 25% / 3 months cliff/ 25%
-                    <br /><br />
-                    Team and Advisors - 2 years cliff , 3 years daily distribution
-                    <br /><br />
-                    Total supply - 500 000 000 UNQ tokens
-                    <br /><br />
-                    Initial Market cap - $700 000
-                    <br /><br />
-                    Hard cap - $3 400 000
-                  </span>
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </section>
+
+
+
+        <div v-if="mint">
+
+
+            <h4>Project infos</h4>
+
+            <label>
+              Project title : 
+              <input type="text" class="std" id="title" name="title" v-model="apiValues.title" />
+            </label>
+
+            <label>
+              Picture URL: 
+              <input type="text" class="std" id="picture" name="picture" v-model="apiValues.picture" />
+            </label>
+
+            <label>
+              ATH : 
+              <textarea class="std" id="ath" name="ath" v-model="apiValues.ath"></textarea>
+            </label>
+
+
+            <label>
+              ROI Display: 
+              <input type="text" class="std" id="roi_display" name="roi_display" v-model="apiValues.roi_display" />
+            </label>
+
+            <label>
+              Hard Cap : 
+              <input type="text" class="std" id="hard_cap" name="hard_cap" v-model="apiValues.hard_cap" />
+            </label>
+
+            <label>
+              Short desc : 
+              <textarea class="std" id="short_desc" name="short_desc" v-model="apiValues.short_desc"></textarea>
+            </label>
+
+            <label>
+              Long desc (file path): 
+              <input type="text" class="std" id="long_desc" name="long_desc" v-model="apiValues.long_desc" />
+            </label>
+
+
+            <h4>Token infos</h4>
+
+            <label>
+              Mint : 
+              <input type="text" class="std" id="mint" name="mint" v-model="mint" />
+            </label>
+
+            <label>
+              (SC) Token Price : 
+              <input type="text" class="std" id="token_price" name="token_price" v-model="scValues.token_price" />
+            </label>
+
+            <label>
+              (SC) Token Price token : 
+              <select class="std" id="type" name="type">
+                <option value="">USDC</option>
+                <option>SOL</option>
+              </select>
+            </label>
+
+            <label>
+              (SC) Pool size : 
+              <input type="text" class="std" id="pool_size" name="pool_size" v-model="scValues.pool_size" />
+            </label>
+
+            <label>
+              Type : 
+              <select class="std" id="type" v-model="apiValues.type" name="type">
+                <option>100% TGE</option>
+                <option>Vested</option>
+              </select>
+            </label>
+
+            
+
+
+
+
+            <label>
+              Active : 
+              <select class="std" id="active" v-model="apiValues.active" name="active">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </label>
+
+
+            <label class="date">
+              (SC) Preparation Date (D1) : 
+              <input type="text" class="std" id="date_preparation" name="date_preparation" v-model="scValues.date_preparation" />
+            </label>
+
+            <label class="date">
+              (SC) Whitelist start Date (D2) : 
+              <input type="text" class="std" id="date_whitelist_start" name="date_whitelist_start" v-model="scValues.date_whitelist_start" />
+            </label>
+
+            <label class="date">
+              (SC) Whitelist end Date (D2.2) : 
+              <input type="text" class="std" id="date_whitelist_end" name="date_whitelist_end" v-model="scValues.date_whitelist_end" />
+            </label>
+
+            <label class="date">
+              (SC) Sales start Date (D4) : 
+              <input type="text" class="std" id="date_sale_start" name="date_sale_start" v-model="scValues.date_sale_start" />
+            </label>
+
+            <label class="date">
+              (SC) Sales end Date (D4) : 
+              <input type="text" class="std" id="date_sale_end" name="date_sale_end" v-model="scValues.date_sale_end" />
+            </label>
+
+            <label class="date">
+              (SC) Distribution Date (D5) : 
+              <input type="text" class="std" id="date_distribution" name="date_distribution" v-model="scValues.date_distribution" />
+            </label>
+
+            
+
+
+
+
+
+
+            <label>
+              Sort order: 
+              <input type="text" class="std" id="sort_order" name="sort_order" v-model="apiValues.sort_order" />
+            </label>
+
+
+            <h4>Social infos</h4>
+
+            <label>
+              Post to retweet: 
+              <textarea class="std" id="post_a" name="post_a" v-model="apiValues.post_a"></textarea>
+            </label>
+
+            <label>
+              Twitter A: 
+              <input type="text" class="std" id="twitter_a" name="twitter_a" v-model="apiValues.twitter_a" />
+            </label>
+
+            <label>
+              Twitter B: 
+              <input type="text" class="std" id="twitter_b" name="twitter_b" v-model="apiValues.twitter_b" />
+            </label>
+
+            <label>
+              Telegram A: 
+              <input type="text" class="std" id="tg_a" name="tg_a" v-model="apiValues.tg_a" />
+            </label>
+
+            <label>
+              Telegram B: 
+              <input type="text" class="std" id="tg_b" name="tg_b" v-model="apiValues.tg_b" />
+            </label>
+
+
+            <button @click="save">Save</button>
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
       </div>
     </div>
   </div>
@@ -568,187 +193,69 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Row, Col, Statistic, Steps } from 'ant-design-vue'
+import { mapState } from 'vuex'
+import importIcon from '@/utils/import-icon'
+import { Collapse, Row, Col, Pagination, Button, Statistic, Tooltip } from 'ant-design-vue'
+import { get, cloneDeep } from 'lodash-es'
+import { TokenAmount } from '@/utils/safe-math'
+import { getUnixTs } from '@/utils'
 import moment from 'moment'
+import axios from '@nuxtjs/axios'
+import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
+import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
+const Vco = require('v-click-outside')
+Vue.use(Vco)
+const CollapsePanel = Collapse.Panel
 const Countdown = Statistic.Countdown
-const Step = Steps.Step
 
 export default Vue.extend({
   components: {
-    Row,
-    Col,
-    Countdown,
-    Steps,
-    Step
+    // Spin,
+    // Icon,
+    // Collapse,
+    // CollapsePanel,
+    // Row,
+    // Col,
+    // Button
+    // Countdown,
+    // Tooltip
   },
-
   data() {
     return {
-      fertilizer: {
-        status: 'Whitelist Open',
-        picture: '/fertilizer/banner/unq.png',
-        logo: '/fertilizer/logo/unq.png',
-        title: 'UNQ.club',
-        short_desc: 'Social platform for NFT asset management',
-        long_desc:
-          'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
-        hard_cap: '3000K',
-        pool_size: 5000,
-        participants: 100418,
-        website: 'UNQ.club',
-        website_url: 'https://UNQ.club',
-        mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        whitelist_end_date: 1643500800000,
-        ido_info: {
-          hard_cap: 140000,
-          sale_rate: 0.028,
-          sale_type: 'Vested',
-          open_time: 1643500800000,
-          close_time: 1643500800000
-        },
-        token_info: {
-          symbol: 'UNQ',
-          category: 'NFT',
-          token_distribution: 1643500800000,
-          blockchain: 'Solana'
-        },
-        img: {
-          about: '/fertilizer/project/unq/about.png',
-          features: '/fertilizer/project/unq/features.png',
-          roadmap: '/fertilizer/project/unq/roadmap.png',
-          team: '/fertilizer/project/unq/team.png',
-          tokenomics: '/fertilizer/project/unq/tokenomics.png',
-          distribution: '/fertilizer/project/unq/distribution.png'
-        }
-      },
-      fertilizerData: [
-        {
-          status: 'Whitelist Open',
-          picture: '/fertilizer/banner/unq.png',
-          logo: '/fertilizer/logo/unq.png',
-          title: 'UNQ.club',
-          short_desc: 'Social platform for NFT asset management',
-          hard_cap: '3000K',
-          token_price: 0.028,
-          participants: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_end_date: 1643500800000
-        },
-        {
-          status: 'Sales',
-          picture: '/fertilizer/banner/metaprints.png',
-          title: 'Metaprints',
-          short_desc: 'Blueprints for metaverses',
-          hard_cap: '3000K',
-          participants: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1641280215000,
-          sales_end_date: 1643500800000
-        },
-        {
-          status: 'Sales',
-          picture: '/fertilizer/banner/galaxy.png',
-          title: 'Galaxy War',
-          short_desc: 'Our galatic adventure awaits',
-          hard_cap: '3000K',
-          participants: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          sales_start_date: 1643500800000
-        },
-        {
-          status: 'Distribution',
-          picture: '/fertilizer/banner/meanfi.png',
-          title: 'MeanFI',
-          short_desc: 'Grow your money stash with the best prices across DeFi',
-          hard_cap: '3000K',
-          participants: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          distribution_start_date: 1643500800000
-        },
-        {
-          status: 'Preparation',
-          picture: '/fertilizer/banner/agoric.png',
-          title: 'Agoric',
-          short_desc: 'Social platform for NFT asset management',
-          hard_cap: '3000K',
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_start_date: 1643500800000
-        },
-        {
-          status: 'Preparation',
-          picture: '/fertilizer/banner/metaprints.png',
-          title: 'Metaprints',
-          short_desc: 'Blueprints for metaverses',
-          hard_cap: '3000K',
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/defiland.png',
-          title: 'DeFi Land',
-          short_desc: 'Gamified Decentralized Finance',
-          subscribers: 1000,
-          hard_cap: 250000,
-          token_price: 0.068,
-          ath: 526.7,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/sonar.png',
-          title: 'Sonar Watch',
-          short_desc: 'Empowering user journey on Solana DeFi',
-          subscribers: 1001,
-          hard_cap: 249999,
-          token_price: 0.069,
-          ath: 526.6,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/goosefx.png',
-          title: 'GooseFX',
-          short_desc: 'A Complete DeFi Experience',
-          subscribers: 1002,
-          hard_cap: 249998,
-          token_price: 0.07,
-          ath: 526.5,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/waggle.png',
-          title: 'Waggle Network',
-          short_desc: 'Primary markets for everyone',
-          subscribers: 1003,
-          hard_cap: 249997,
-          token_price: 0.071,
-          ath: 526.4,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/cryowar.png',
-          title: 'Cryowar',
-          short_desc: 'Next-gen blockchain multiplayer game',
-          subscribers: 1004,
-          hard_cap: 249996,
-          token_price: 0.071,
-          ath: 526.3,
-          distribution_end_date: 1643500800000
-        },
-        {
-          status: 'Funded',
-          picture: '/fertilizer/logo/cyclos.png',
-          title: 'Cyclos',
-          short_desc: 'Decentralized trading unleashed',
-          subscribers: 1005,
-          hard_cap: 249995,
-          token_price: 0.073,
-          ath: 526.2,
-          distribution_end_date: 1643500800000
-        }
-      ],
+      searchName: '',
+      coinPicUrl: '',
+      mint: '',
+      initialized: false as boolean,
+      labelizedAmms: {} as any,
+      currentPage: 1,
+      coinName: '',
+      mintAddress: '',
+      scValues: {
+
+      } as any,
+      apiValues: {
+        title : '',
+        ath: '',
+        hard_cap: '',
+      } as any,
+      poolLoaded: false,
+      autoRefreshTime: 60 as number,
+      countdown: 0,
+      showCollapse: [] as any[],
+      timer: null as any,
+      loading: false as boolean,
+      nbFarmsLoaded: 0 as number,
+      poolType: true as boolean,
+      TVL: 0,
+      activeSpinning: false as boolean,
+      showTabMenu: false as boolean,
+      showSearchMenu: false as boolean,
+      showFilterMenu: false as boolean,
+      showMoreMenu: [] as boolean[],
+      currentShowMore: -1 as number,
+      sortUpcoming: 'All' as string,
+      sortFunded: 'Subscribers' as string,
+      sortAsc: false as boolean,
       filterOptions: {
         all: 'All',
         whitelist: 'Whitelist Open',
@@ -758,31 +265,179 @@ export default Vue.extend({
         preparation: 'Preparation',
         funded: 'Funded'
       },
-      currentTimestamp: 0,
-      currentStep: 3 as number,
-      stepsStatus: 'process' as string,
-      affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
-      referralLink: 'http://' as string
+      sortOptions: {
+        subscribers: 'Subscribers',
+        total_raised: 'Total raise',
+        token_price: 'Token price',
+        ath: 'ATH Since IDO',
+        end_date: 'Ended in UTC'
+      },
+      filterProject: 'Upcoming' as string,
+      fertilizerItems: [] as any[],
+      fertilizerData: [
+        {
+          status: 'Upcoming',
+          key: 'k13',
+          picture: '/fertilizer/banner/winerz.png',
+          title: 'Winerz',
+          short_desc: 'Experience a new way of playing by betting on your victory.',
+        },
+        {
+          status: 'Upcoming',
+          key: 'k14',
+          picture: '/fertilizer/banner/secretum.png',
+          title: 'Secretum Protocol',
+          short_desc: 'Blockchain-based messaging app where every conversation is private by design.',
+        },
+        {
+          status: 'Upcoming',
+          key: 'k15',
+          picture: '/fertilizer/banner/zebec.png',
+          title: 'Zebec Protocol',
+          short_desc: 'Continuous Settlement Protocol.',
+        }
+      ],
+      currentTimestamp: 0
     }
   },
-
   head: {
-    title: 'Fertilizer Project Details'
+    title: 'Fertilizer'
   },
-
   computed: {
-    // ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
+    ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
+  async mounted() {
+    // this.$router.push({ path: `/swap/` })
+    this.$accessor.token.loadTokens()
 
-  watch: {},
 
-  mounted() {
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('mint')) {
+      this.mint = query.get('mint') as string
+
+
+    let responseData = {} as any
+
+      try {
+        responseData =  await fetch('https://api.croppppp.com/launchpad/?mint=' + this.mint).then((res) => res.json())
+      } catch {
+        // dummy data
+      } finally {
+        this.apiValues = responseData.message
+      }
+
+    }
+
+
     this.currentTimestamp = moment().valueOf()
+    this.updateFertilizer()
   },
-
+  watch: {
+  },
   methods: {
+    importIcon,
+    TokenAmount,
+    async flush() {},
+    async updateLabelizedAmms() {},
+    async delay(ms: number) {
+      return new Promise((resolve) => setTimeout(resolve, ms))
+    },
+    setTimer() {},
+    reloadTimer() {},
+    updateFertilizer() {
+    },
+    filterFertilizer(searchName: string, filterProject: string) {},
     moment() {
       return moment()
+    },
+    getCoinPicUrl() {
+      let token
+      if (this.mintAddress == NATIVE_SOL.mintAddress) {
+        token = NATIVE_SOL
+      } else {
+        token = Object.values(TOKENS).find((item) => item.mintAddress === this.mintAddress)
+      }
+      if (token) {
+        this.coinName = token.symbol.toLowerCase()
+        if (token.picUrl) {
+          this.coinPicUrl = token.picUrl
+        } else {
+          this.coinPicUrl = ''
+        }
+      }
+    },
+    goToProject(fertilizer: any) {
+      this.$router.push({
+        path: '/fertilizer/project/?f=' + fertilizer.uniqueKey
+      })
+    },
+    sortByStatus(option: string) {
+      this.sortUpcoming = option
+      this.showFilterMenu = false
+      this.filterFertilizer(this.searchName, this.filterProject)
+    },
+    sortByColumn(option: string) {
+      if (this.sortFunded === option) this.sortAsc = !this.sortAsc
+      this.sortFunded = option
+      this.filterFertilizer(this.searchName, this.filterProject)
+    },
+    sortByColumnMenu(option: string, asc: boolean) {
+      this.sortFunded = option
+      this.sortAsc = asc
+      this.showFilterMenu = false
+      this.filterFertilizer(this.searchName, this.filterProject)
+    },
+    showMore(idx: number) {
+      if (idx != this.currentShowMore) {
+        this.showMoreMenu = this.showMoreMenu.map((item) => {
+          return false
+        })
+      }
+      this.showMoreMenu = this.showMoreMenu.map((item, i) => {
+        if (i === idx) {
+          this.currentShowMore = idx
+          return !item
+        }
+        return item
+      })
+      console.log(this.showMoreMenu)
+    },
+    hideMore() {
+      if (this.currentShowMore != -1) {
+        this.showMoreMenu = this.showMoreMenu.map((item) => {
+          return false
+        })
+        this.currentShowMore = -1
+      }
+    },
+    save() {
+      // TODO - SC PART
+
+      console.log(this.apiValues);
+
+      let apiDatas = this.apiValues;
+      apiDatas.mint = this.mint;
+
+      var request = require('request');
+      var options = {
+        'method': 'POST',
+        'url': 'https://api.croppppp.com/launchpad/post/',
+        'headers': {
+          'mint': 'aijfiej',
+          'title': 'gekpogkpokpoke',
+          'Referrer-Policy': 'no-referer',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        form: apiDatas
+      };
+      request(options, function (error : any, response : any) {
+        if (error) throw new Error(error);
+        console.log(response.body);
+      });
+
+
+
+
     }
   }
 })
@@ -791,7 +446,6 @@ export default Vue.extend({
 <style lang="less" scoped>
 // global stylesheet
 .btn-container {
-  background: @gradient-color01;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 48px;
   padding: 3px;
@@ -816,9 +470,50 @@ export default Vue.extend({
   padding: 4.5px 23.5px;
 }
 
+.option-sort-collapse {
+  position: absolute;
+  top: 50px;
+  background: @gradient-color-primary;
+  background-origin: border-box;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  min-width: 188px;
+  z-index: 999;
+
+  &.collapse-left {
+    left: 0;
+  }
+
+  &.collapse-right {
+    right: 0;
+  }
+
+  .collapse-item {
+    padding: 18px 0;
+    border-bottom: 1px solid #c4c4c420;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &.active-item {
+      color: @color-petrol500;
+    }
+
+    a {
+      color: #fff;
+    }
+  }
+}
+
 .project-status {
   padding: 4px 8px;
   border-radius: 6px;
+
+  &.upcoming {
+    background: #a262ac;
+  }
 
   &.whitelist {
     background: @color-red600;
@@ -842,21 +537,114 @@ export default Vue.extend({
   }
 }
 
-.status-label {
-  &.description {
-    color: #fff;
+.project-name {
+  .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 18px;
   }
 
-  &.success {
-    color: @color-green500;
-  }
+  .title {
+    text-align: left;
 
-  &.closed {
-    color: @color-red500;
+    .short-desc {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+    }
   }
 }
+
+.project-ath {
+  .value {
+    background: @color-petrol400;
+    color: @color-blue800;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+}
+
+.info-icon {
+  img {
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+  }
+}
+
+input.std,
+select.std,
+textarea.std{
+  width:100%;
+  color:#000;
+  padding:5px 10px;
+}
+
+label{
+  margin-bottom:20px;
+  display:block
+}
+
+.arrow-icon {
+  transition: all 0.3s;
+
+  &.arrow-up {
+    transform: rotate(180deg);
+  }
+}
+
+.social-link {
+  color: #fff;
+
+  .social-icon {
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+  }
+}
+
+.detail-btn {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.isDesktop {
+  @media @max-lg-tablet {
+    display: none;
+  }
+}
+
+.isTablet {
+  display: none;
+
+  @media @max-lg-tablet {
+    display: unset;
+  }
+
+  @media @max-sl-mobile {
+    display: none;
+  }
+}
+
+.isMobile {
+  display: none;
+
+  @media @max-sl-mobile {
+    display: unset;
+  }
+}
+
+button{
+  color:#000 !important;
+  padding:20px 40px;
+}
+
 // class stylesheet
-.fertilizer-project.container {
+.fertilizer.container {
   margin: 38px 0;
 
   @media @max-sl-mobile {
@@ -867,288 +655,431 @@ export default Vue.extend({
     .card-body {
       padding: 0;
 
-      .project-header {
-        margin-bottom: 28px;
+      .fertilizer-head {
+        @media @max-sl-mobile {
+          display: block !important;
+        }
 
-        .back-to-list {
-          opacity: 0.5;
+        .title {
+          text-align: center;
+          position: relative;
+          float: left;
 
-          .back-icon {
-            margin-right: 8px;
+          @media @max-sl-mobile {
+            margin-bottom: 18px !important;
+          }
+        }
+
+        .information {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          @media @max-sl-mobile {
+            width: 100%;
           }
 
-          .back-label {
-            color: #fff;
+          .tvl-info {
+            margin-right: 18px;
+          }
+
+          .action-btn-group {
+            display: flex;
+            align-items: center;
+
+            .reload-btn {
+              background: @color-blue600;
+              border-radius: 8px;
+              padding: 6px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              @media @max-lg-tablet {
+                margin-left: 5px;
+              }
+
+              img {
+                width: 18px;
+                height: 18px;
+              }
+
+              &.active img {
+                transform: rotate(360deg);
+                transition: all 1s ease-in-out;
+              }
+            }
           }
         }
       }
 
-      .project-content {
-        .project-preview-container {
-          .project-preview {
-            background: @gradient-color04;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
+      .fertilizer-option-bar {
+        margin: 38px 0;
 
-            .project-overview {
-              .project-title {
-                .project-logo {
-                  border-radius: 50%;
-                  margin-right: 8px;
-                }
+        @media @max-sl-mobile {
+          margin: 28px 0;
+        }
+
+        .option-tab-group {
+          display: flex;
+
+          @media @max-sl-mobile {
+            display: none;
+          }
+
+          &.option-tab-collapse {
+            display: none;
+
+            @media @max-sl-mobile {
+              position: relative;
+              display: flex;
+              align-items: center;
+              padding: 6px 10px;
+              border: 2px solid @color-blue500;
+              border-radius: 8px;
+
+              label {
+                color: @color-petrol500;
               }
-            }
-            .project-countdown {
-              margin: 16px 0;
-            }
 
-            .project-progress {
-              .check-icon {
-                margin-right: 8px;
+              .arrow-icon {
+                margin-left: 4px;
               }
             }
           }
 
-          .project-ido-container {
-            background: linear-gradient(215.52deg, #273592 0.03%, #23adb4 99.97%);
-            padding: 3px;
-            border-radius: 8px;
+          .option-tab {
+            margin-right: 38px;
 
-            .project-ido-process {
-              height: 100%;
-              width: 100%;
-              background: @color-blue800;
-              border-radius: 8px;
-              padding: 13px 21px;
+            &:last-child {
+              margin-right: 0;
+            }
+
+            button {
+              background: transparent;
+              border: none;
+              outline: none;
+              padding: 0;
+              margin-bottom: 8px;
+
+              &.active-tab {
+                color: @color-petrol500;
+              }
+
+              .deposit-icon {
+                margin-right: 8px;
+              }
+            }
+
+            .active-underline {
+              height: 4px;
+              border-radius: 10px;
+              background: @color-petrol400;
             }
           }
         }
 
-        .project-detail-container {
-          .project-detail-item {
-            background: @color-blue700;
-            border-radius: 8px;
-            padding: 32px;
-            margin-bottom: 32px;
+        .option-filter-group {
+          position: relative;
+          display: flex;
+          align-items: center;
 
-            &:last-child {
-              margin-bottom: 0;
+          .option-filter {
+            border: 2px solid @color-blue500;
+            border-radius: 8px;
+            padding: 0 8px;
+            height: 40px;
+            margin-left: 18px;
+
+            @media @max-sl-mobile {
+              height: 32px;
+              padding: 0 4px;
             }
 
-            .project-detail-desc {
-              .project-title {
-                margin-bottom: 16px;
+            &:first-child {
+              margin-left: 0;
+            }
 
-                .project-logo {
-                  margin-right: 8px;
-                  border-radius: 50%;
+            &.option-filter-fixed {
+              width: 40px;
+
+              @media @max-sl-mobile {
+                width: 32px;
+              }
+            }
+
+            &.option-filter-collapse {
+              display: none !important;
+
+              @media @max-md-tablet {
+                display: flex !important;
+              }
+            }
+
+            &.option-sort {
+              @media @max-md-tablet {
+                display: none !important;
+              }
+            }
+
+            .option-sort-item {
+              letter-spacing: 0.15px;
+
+              label {
+                color: #eae8f1;
+                opacity: 0.5;
+                margin-right: 8px;
+              }
+
+              .sort-detail {
+                display: flex;
+                align-items: center;
+
+                .arrow-icon {
+                  margin-left: 8px;
                 }
               }
+            }
+          }
 
-              .project-short-desc {
-                margin-bottom: 8px;
+          .option-search-collapse {
+            position: absolute;
+            top: 0;
+            left: -209px;
+            transition: visibility 0s, opacity 0.5s linear;
+            background: @color-blue700;
+            border: 2px solid @color-blue500;
+            border-radius: 8px;
+            padding: 18px;
+            z-index: 999;
+            width: 250px;
+
+            .collapse-item-header {
+              margin-bottom: 10px;
+            }
+
+            .collapse-item-body {
+              input {
+                border: 2px solid @color-blue400;
+                border-radius: 8px;
+                padding: 8px 18px;
+                background-color: transparent;
+                color: #ccd1f1;
+                width: 100%;
+
+                &:active,
+                &:focus,
+                &:hover {
+                  outline: 0;
+                }
+
+                &::placeholder {
+                  color: #ccd1f1;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .fertilizer-content {
+        .fertilizer-project-table {
+          background: @color-blue700;
+          border: 3px solid @color-blue500;
+          border-radius: 18px;
+
+          .project-banner {
+            position: relative;
+            border-bottom: 3px solid @color-blue500;
+            height: 190px;
+
+            .banner {
+              width: 100%;
+              height: 100%;
+              border-radius: 18px 18px 0 0;
+            }
+
+            .project-status {
+              position: absolute;
+              top: 9px;
+              left: 13px;
+            }
+          }
+
+          &.first {
+            border: 3px solid @color-petrol500;
+
+            .project-banner {
+              border-bottom: 3px solid @color-petrol500;
+            }
+          }
+
+          .project-details {
+            padding: 14px;
+
+            .project-title {
+              height: 170px;
+
+              @media @max-sl-mobile {
+                height: 111px;
+              }
+
+              .short-desc {
+                display: block;
+                margin-top: 4px;
               }
             }
 
-            .project-detail-info-group {
-              .project-detail-info-item {
-                .title {
+            .project-info {
+              margin-top: 18px;
+              height: 48px;
+
+              .project-balance {
+                @media @max-lg-tablet {
+                  height: 48px;
+                }
+
+                .label {
                   color: rgba(255, 255, 255, 0.6);
                 }
+
                 .value {
-                  .website {
-                    color: #fff;
-                    text-decoration: underline;
-                    text-underline-position: under;
-                  }
-
                   .coin-icon {
-                    width: 16px;
-                    height: 16px;
+                    width: 18px;
+                    height: 18px;
                     border-radius: 50%;
-                    margin-right: 6px;
+                    margin-right: 8px;
                   }
+                }
+              }
 
-                  .lock-icon {
-                    margin-right: 6px;
+              &.whitelist-countdown {
+                height: 48px;
+                // height: 114px;
+                // background: @color-blue800;
+                // padding: 8px;
+                // border-radius: 18px;
+              }
+
+              &.fcsb-container {
+                @media @max-lg-tablet {
+                  display: inline-block !important;
+
+                  .project-balance {
+                    margin-bottom: 18px;
+
+                    &:last-child {
+                      margin-bottom: 0;
+                    }
                   }
                 }
               }
             }
 
-            .ticket-tasks-group {
-              margin-top: 32px;
-
-              .ticket-tasks {
-                width: calc(100% - 326px - 48px);
-                margin-right: 48px;
-
-                .ticket-task-status-group {
-                  margin: 24px 0;
-
-                  .ticket-task-status-card {
-                    background: @color-blue400;
-                    width: calc((100% - 24px) / 2);
-                    padding: 16px;
-                    border-radius: 8px;
-
-                    &.active {
-                      background: @color-green500;
-                    }
-                    .ticket-task-status {
-                      .ticket-social-icon {
-                        width: 24px;
-                        opacity: 0.5;
-                        margin-right: 24px;
-                      }
-                    }
-                  }
+            .project-desc {
+              &.project-desc-whitelist {
+                @media @max-sl-mobile {
+                  display: inline-block !important;
                 }
 
-                .ticket-share-group {
-                  margin: 8px 0 24px 0;
-                  padding: 0 8px;
-                  background: rgba(226, 227, 236, 0.1);
-                  border-radius: 12px;
+                .project-title {
+                  width: 50%;
 
-                  .ticket-share-link {
-                    background: transparent;
-                    outline: none;
-                    border: none;
+                  @media @max-lg-tablet {
+                    width: 60%;
+                  }
+
+                  @media @max-sl-mobile {
                     width: 100%;
-                    padding: 10px;
-                  }
-
-                  .copy-icon {
-                    margin: 0 10px;
                   }
                 }
 
-                .ticket-btn-group {
-                  .share-btn {
-                    width: calc((100% - 24px) / 2);
+                .project-info {
+                  margin-top: 0;
+                  height: auto;
+                  width: 50%;
 
-                    .btn-primary {
-                      width: 100%;
-                      padding: 10px 0;
-                    }
+                  @media @max-lg-tablet {
+                    width: 40%;
                   }
-                }
-              }
 
-              .ticket-preview {
-                width: 326px;
-                height: 100%;
-                background: @color-blue800;
-                border-radius: 8px;
-                padding: 16px;
-
-                .ticket-earned {
-                  margin-bottom: 28px;
-
-                  .ticket-earned-status {
-                    background: @gradient-color03;
-                    padding: 16px;
-                    margin: 16px 0;
-                    border-radius: 8px;
-
-                    .referral-icon {
-                      margin-right: 24px;
-                    }
-                  }
-                }
-
-                .ticket-referral {
-                  .ticket-referral-link {
-                    background: rgba(226, 227, 236, 0.1);
+                  @media @max-sl-mobile {
                     width: 100%;
-                    border-radius: 12px;
-                    outline: none;
-                    border: none;
-                    margin-top: 8px;
-                    padding: 10px;
+                    margin-top: 18px;
                   }
                 }
               }
             }
+          }
 
-            .distribution-details {
-              margin-top: 24px;
+          .btn-container {
+            margin-top: 18px;
+          }
+        }
 
-              .sale-details-group {
-                margin: 24px 0;
+        .fertilizer-funded-table {
+          width: 100%;
 
-                .sale-detail-card {
-                  background: @color-blue500;
-                  min-width: 132px;
-                  border-radius: 8px;
-                  padding: 16px;
-                  margin-right: 24px;
-
-                  &:last-child {
-                    margin-right: 0;
-                  }
-                }
-              }
-              
-              .btn-container {
-                width: 212px;
-              }
+          .fertilizer-funded-table-header {
+            &.scrollFixed {
+              position: sticky;
+              background: @color-blue800;
+              top: 70px;
+              z-index: 999;
+              width: 100%;
+              transition: 0.3s all ease-in-out;
             }
 
-            &.banner {
-              padding: 0 32px;
-              margin-bottom: 132px;
+            .header-column {
+              text-align: center;
+              padding: 18px 0;
+              color: @color-neutral400;
 
-              .project-detail-stake {
-                padding: 32px 32px 32px 0;
-                width: calc(100% - 350px);
-
-                .btn-container {
-                  width: 150px;
-                  margin-top: 18px;
-                }
-              }
-
-              .farmer-img {
-                width: 350px;
-              }
-            }
-
-            &.transparent {
-              background: transparent;
-              padding: 0;
-              margin-bottom: 60px;
-
-              .project-category-title {
-                margin-bottom: 32px !important;
-              }
-
-              .project-category-content-about {
+              .header-column-title {
+                cursor: pointer;
                 display: flex;
-                align-content: stretch;
+                justify-content: center;
 
-                .banner-img {
-                  width: 100%;
-                  height: 100%;
+                .arrow-icon {
+                  margin-left: 4px;
+                }
+
+                .sort-icon-active {
+                  color: #13ecab;
                 }
               }
+            }
+          }
 
-              .project-category-banner-img {
-                width: 100%;
-                border-radius: 8px;
-                margin-bottom: 40px;
+          .fertilizer-funded-table-body {
+            .fertilizer-funded-table-item {
+              display: flex;
+              align-items: center;
+              background: rgba(23, 32, 88, 0.9);
+              border-radius: 8px;
+              padding: 18px;
+              margin-bottom: 8px;
+              border: 3px solid transparent;
+
+              &:hover {
+                border-color: @color-blue500;
               }
 
-              .information {
-                .information-item {
-                  margin-top: 8px;
-                  padding: 8px 0;
-                  border-bottom: 1px solid @color-blue200;
+              &:last-child {
+                margin-bottom: 0;
+              }
 
-                  .label {
-                    color: rgba(255, 255, 255, 0.7);
+              .state {
+                text-align: center;
+
+                .show-more {
+                  position: relative;
+                  width: 20px;
+                  margin: auto;
+
+                  .option-sort-collapse {
+                    top: 0;
+                    right: 25px;
                   }
                 }
               }
@@ -1159,67 +1090,92 @@ export default Vue.extend({
     }
   }
 }
-</style>
-<style lang="less">
-.fertilizer-project {
-  // ant steps
-  .ant-steps-vertical {
-    .ant-steps-item-content {
-      min-height: 45px;
-    }
 
-    .ant-steps-item-active,
-    .ant-steps-item-finish {
-      .ant-steps-item-tail::after,
-      .ant-steps-item-icon {
-        background-color: @color-petrol500 !important;
+@media @max-lg-tablet {
+  .fertilizer.container {
+    .state {
+      .label {
+        display: block;
+        color: @color-neutral400;
       }
 
-      .ant-steps-item-title {
-        color: @color-petrol500 !important;
+      .project-ath .value {
+        margin-top: 4px;
       }
     }
 
-    .ant-steps-item-error {
-      .ant-steps-item-icon {
-        background-color: red !important;
-      }
-    }
+    .collapse-row {
+      background: @color-blue800;
+      border-radius: 8px;
+      padding: 18px;
 
-    .ant-steps-item {
-      .ant-steps-item-container {
-        .ant-steps-item-tail {
-          &::after {
-            background-color: rgba(255, 255, 255, 0.4);
+      .btn-group {
+        .btn-group-item {
+          &:last-child {
+            margin-top: 18px;
           }
         }
 
-        .ant-steps-item-icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 24px;
-          height: 24px;
-          border: none;
-          background-color: rgba(255, 255, 255, 0.4);
+        .btn-container,
+        .social-link {
+          margin-right: 18px;
 
-          .ant-steps-icon {
-            display: flex;
-            top: 0;
-            font-size: 13px;
-            line-height: 19.5px;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            color: @color-blue700;
+          &:last-child {
+            margin-right: 0;
           }
-        }
-
-        .ant-steps-item-title {
-          width: 100%;
-          color: rgba(255, 255, 255, 0.4);
         }
       }
     }
   }
+}
+</style>
+
+<style lang="less">
+.fertilizer {
+  .ant-collapse {
+    background: transparent;
+    border: none;
+
+    .ant-collapse-item {
+      position: relative;
+      background: rgba(23, 32, 88, 0.9);
+      border-radius: 8px !important;
+      margin-bottom: 8px;
+      border-bottom: 0;
+      border: 3px solid transparent;
+
+      &:hover {
+        border-color: @color-blue500;
+      }
+
+      .ant-collapse-header {
+        padding: 18px;
+
+        .ant-collapse-arrow {
+          display: none;
+        }
+      }
+
+      .ant-collapse-content {
+        border: none;
+        background: transparent;
+
+        .ant-collapse-content-box {
+          padding: 18px;
+        }
+      }
+    }
+  }
+
+  .project-info .project-balance .value .ant-statistic-content-value {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+  }
+}
+
+.ant-tooltip .ant-tooltip-inner {
+  width: 180px !important;
 }
 </style>

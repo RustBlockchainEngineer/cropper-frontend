@@ -16,7 +16,7 @@
     </div>
 
     <div class="price-info-box">
-      <div class="price-info fcb-container">
+      <div class="price-info fcsb-container">
         <span class="name font-small weight-bold">Pool liquidity</span>
         <div class="text-right">
           <span class="value">
@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="price-info fcb-container">
+      <div class="price-info fcsb-container">
         <span class="name font-small weight-bold">LP supply</span>
         <span class="value">
           {{ lp.totalSupply.format() }}
