@@ -32,7 +32,7 @@
               >
               <div v-if="filterProject === filterOptions.upcoming" class="active-underline"></div>
             </div>
-            <!-- <div class="option-tab">
+            <div class="option-tab">
               <Button
                 class="font-large weight-semi icon-cursor"
                 :class="filterProject === filterOptions.funded ? 'active-tab' : ''"
@@ -45,7 +45,7 @@
                 Funded projects
               </Button>
               <div v-if="filterProject === filterOptions.funded" class="active-underline"></div>
-            </div> -->
+            </div>
           </div>
 
           <div
@@ -91,7 +91,7 @@
               >
                 Upcoming
               </div>
-              <!-- <div
+              <div
                 class="collapse-item text-center font-medium weight-semi icon-cursor"
                 :class="filterProject === filterOptions.funded ? 'active-item' : ''"
                 @click="
@@ -101,11 +101,11 @@
                 "
               >
                 Funded
-              </div> -->
+              </div>
             </div>
           </div>
 
-          <!-- <div class="option-filter-group">
+          <div class="option-filter-group">
             <div class="option-filter option-filter-fixed fcc-container icon-cursor">
               <img
                 src="@/assets/icons/search.svg"
@@ -294,7 +294,7 @@
                 </div>
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
 
         <div class="fertilizer-content">
@@ -346,22 +346,24 @@
                       <div class="project-balance">
                         <span class="label font-small weight-semi spacing-large">Total raise</span>
                         <span class="value font-medium weight-semi spacing-small fcs-container">
-                          <!-- <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                          {{ fertilizer.hard_cap }} USDC -->
-                          TBA
+                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          {{ fertilizer.hard_cap }} USDC
+                          <!-- TBA -->
                         </span>
                       </div>
-                      <!-- <div class="project-balance">
+                      <div class="project-balance">
                         <div v-if="fertilizer.participants">
                           <span class="label font-small weight-semi spacing-large">Participants</span>
-                          <span class="value font-medium weight-semi spacing-small fcs-container">{{ fertilizer.participants }}</span>
+                          <span class="value font-medium weight-semi spacing-small fcs-container">{{
+                            fertilizer.participants
+                          }}</span>
                         </div>
-                      </div> -->
+                      </div>
                     </div>
                   </div>
 
                   <div v-if="idx === 0" class="project-info whitelist-countdown fcc-container text-center">
-                    <!-- <Countdown
+                    <Countdown
                       :title="
                         fertilizer.status === filterOptions.whitelist
                           ? 'End of the whitelist in'
@@ -389,10 +391,10 @@
                           : ''
                       "
                       format="DD:HH:mm:ss"
-                    /> -->
+                    />
                   </div>
 
-                  <!-- <div v-else class="project-info fcs-container">
+                  <div v-else class="project-info fcs-container">
                     <div
                       v-if="
                         fertilizer.sales_start_date ||
@@ -429,21 +431,21 @@
                           <Countdown
                             :value="
                               fertilizer.status === filterOptions.preparation
-                              ? fertilizer.whitelist_start_date
-                              : fertilizer.status === filterOptions.whitelist
-                              ? fertilizer.whitelist_end_date
-                              : fertilizer.status === filterOptions.sales
-                              ? fertilizer.sales_start_date
-                              : fertilizer.status === filterOptions.distribution
-                              ? fertilizer.distribution_start_date
-                              : 0
+                                ? fertilizer.whitelist_start_date
+                                : fertilizer.status === filterOptions.whitelist
+                                ? fertilizer.whitelist_end_date
+                                : fertilizer.status === filterOptions.sales
+                                ? fertilizer.sales_start_date
+                                : fertilizer.status === filterOptions.distribution
+                                ? fertilizer.distribution_start_date
+                                : 0
                             "
                             format="DD:HH:mm:ss"
                           />
                         </span>
                       </div>
                     </div>
-                  </div> -->
+                  </div>
 
                   <div class="btn-container">
                     <Button
@@ -460,7 +462,7 @@
             </Col>
           </Row>
 
-          <!-- <div v-else>
+          <div v-else>
             <div class="fertilizer-funded-table isDesktop">
               <Row class="fertilizer-funded-table-header">
                 <Col class="header-column font-small weight-bold text-left" span="6"> Project name </Col>
@@ -849,7 +851,7 @@
                 </CollapsePanel>
               </Collapse>
             </div>
-          </div> -->
+          </div>
         </div>
 
         <!-- <div v-if="initialized"></div>
@@ -884,13 +886,13 @@ export default Vue.extend({
   components: {
     // Spin,
     // Icon,
-    // Collapse,
-    // CollapsePanel,
+    Collapse,
+    CollapsePanel,
     Row,
     Col,
-    Button
-    // Countdown,
-    // Tooltip
+    Button,
+    Countdown,
+    Tooltip
   },
   data() {
     return {
@@ -938,179 +940,179 @@ export default Vue.extend({
       filterProject: 'Upcoming' as string,
       fertilizerItems: [] as any[],
       fertilizerData: [
-        // {
-        //   status: 'Whitelist Open',
-        //   key: 'k0',
-        //   picture: '/fertilizer/banner/unq.png',
-        //   title: 'UNQ.club',
-        //   short_desc: 'Social platform for NFT asset management',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   participants: 100418,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   whitelist_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Sales',
-        //   key: 'k1',
-        //   picture: '/fertilizer/banner/metaprints.png',
-        //   title: 'Metaprints',
-        //   short_desc: 'Blueprints for metaverses',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   participants: 100418,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   sales_start_date: 1641280215000,
-        //   sales_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Sales',
-        //   key: 'k2',
-        //   picture: '/fertilizer/banner/galaxy.png',
-        //   title: 'Galaxy War',
-        //   short_desc: 'Our galatic adventure awaits',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   participants: 100418,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   sales_start_date: 1643500800000
-        // },
-        // {
-        //   status: 'Distribution',
-        //   key: 'k3',
-        //   picture: '/fertilizer/banner/meanfi.png',
-        //   title: 'MeanFI',
-        //   short_desc: 'Grow your money stash with the best prices across DeFi',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   participants: 100418,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   distribution_start_date: 1643500800000
-        // },
-        // {
-        //   status: 'Preparation',
-        //   key: 'k4',
-        //   picture: '/fertilizer/banner/agoric.png',
-        //   title: 'Agoric',
-        //   short_desc: 'Social platform for NFT asset management',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-        //   whitelist_start_date: 1643500800000
-        // },
-        // {
-        //   status: 'Preparation',
-        //   key: 'k5',
-        //   picture: '/fertilizer/banner/metaprints.png',
-        //   title: 'Metaprints',
-        //   short_desc: 'Blueprints for metaverses',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-        // },
-        // {
-        //   status: 'Preparation',
-        //   key: 'k6',
-        //   picture: '/fertilizer/banner/galaxy.png',
-        //   title: 'Galaxy War',
-        //   short_desc: 'Our galatic adventure awaits',
-        //   hard_cap: '3000K',
-        //   token_price: 0.071,
-        //   mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k7',
-        //   picture: '/fertilizer/logo/defiland.png',
-        //   title: 'DeFi Land',
-        //   short_desc: 'Gamified Decentralized Finance',
-        //   subscribers: 1000,
-        //   hard_cap: 250000,
-        //   token_price: 0.068,
-        //   ath: 526.7,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k8',
-        //   picture: '/fertilizer/logo/sonar.png',
-        //   title: 'Sonar Watch',
-        //   short_desc: 'Empowering user journey on Solana DeFi',
-        //   subscribers: 1001,
-        //   hard_cap: 249999,
-        //   token_price: 0.069,
-        //   ath: 526.6,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k9',
-        //   picture: '/fertilizer/logo/goosefx.png',
-        //   title: 'GooseFX',
-        //   short_desc: 'A Complete DeFi Experience',
-        //   subscribers: 1002,
-        //   hard_cap: 249998,
-        //   token_price: 0.07,
-        //   ath: 526.5,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k10',
-        //   picture: '/fertilizer/logo/waggle.png',
-        //   title: 'Waggle Network',
-        //   short_desc: 'Primary markets for everyone',
-        //   subscribers: 1003,
-        //   hard_cap: 249997,
-        //   token_price: 0.071,
-        //   ath: 526.4,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k11',
-        //   picture: '/fertilizer/logo/cryowar.png',
-        //   title: 'Cryowar',
-        //   short_desc: 'Next-gen blockchain multiplayer game',
-        //   subscribers: 1004,
-        //   hard_cap: 249996,
-        //   token_price: 0.071,
-        //   ath: 526.3,
-        //   distribution_end_date: 1643500800000
-        // },
-        // {
-        //   status: 'Funded',
-        //   key: 'k12',
-        //   picture: '/fertilizer/logo/cyclos.png',
-        //   title: 'Cyclos',
-        //   short_desc: 'Decentralized trading unleashed',
-        //   subscribers: 1005,
-        //   hard_cap: 249995,
-        //   token_price: 0.073,
-        //   ath: 526.2,
-        //   distribution_end_date: 1643500800000
-        // },
         {
-          status: 'Upcoming',
-          key: 'k13',
-          picture: '/fertilizer/banner/winerz.png',
-          title: 'Winerz',
-          short_desc: 'Experience a new way of playing by betting on your victory.',
+          status: 'Whitelist Open',
+          key: 'k0',
+          picture: '/fertilizer/banner/unq.png',
+          title: 'UNQ.club',
+          short_desc: 'Social platform for NFT asset management',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_end_date: 1643500800000
         },
         {
-          status: 'Upcoming',
-          key: 'k14',
-          picture: '/fertilizer/banner/secretum.png',
-          title: 'Secretum Protocol',
-          short_desc: 'Blockchain-based messaging app where every conversation is private by design.',
+          status: 'Sales',
+          key: 'k1',
+          picture: '/fertilizer/banner/metaprints.png',
+          title: 'Metaprints',
+          short_desc: 'Blueprints for metaverses',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          sales_start_date: 1641280215000,
+          sales_end_date: 1643500800000
         },
         {
-          status: 'Upcoming',
-          key: 'k15',
-          picture: '/fertilizer/banner/zebec.png',
-          title: 'Zebec Protocol',
-          short_desc: 'Continuous Settlement Protocol.',
+          status: 'Sales',
+          key: 'k2',
+          picture: '/fertilizer/banner/galaxy.png',
+          title: 'Galaxy War',
+          short_desc: 'Our galatic adventure awaits',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          sales_start_date: 1643500800000
+        },
+        {
+          status: 'Distribution',
+          key: 'k3',
+          picture: '/fertilizer/banner/meanfi.png',
+          title: 'MeanFI',
+          short_desc: 'Grow your money stash with the best prices across DeFi',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          participants: 100418,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          distribution_start_date: 1643500800000
+        },
+        {
+          status: 'Preparation',
+          key: 'k4',
+          picture: '/fertilizer/banner/agoric.png',
+          title: 'Agoric',
+          short_desc: 'Social platform for NFT asset management',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          whitelist_start_date: 1643500800000
+        },
+        {
+          status: 'Preparation',
+          key: 'k5',
+          picture: '/fertilizer/banner/metaprints.png',
+          title: 'Metaprints',
+          short_desc: 'Blueprints for metaverses',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+        },
+        {
+          status: 'Preparation',
+          key: 'k6',
+          picture: '/fertilizer/banner/galaxy.png',
+          title: 'Galaxy War',
+          short_desc: 'Our galatic adventure awaits',
+          hard_cap: '3000K',
+          token_price: 0.071,
+          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+        },
+        {
+          status: 'Funded',
+          key: 'k7',
+          picture: '/fertilizer/logo/defiland.png',
+          title: 'DeFi Land',
+          short_desc: 'Gamified Decentralized Finance',
+          subscribers: 1000,
+          hard_cap: 250000,
+          token_price: 0.068,
+          ath: 526.7,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k8',
+          picture: '/fertilizer/logo/sonar.png',
+          title: 'Sonar Watch',
+          short_desc: 'Empowering user journey on Solana DeFi',
+          subscribers: 1001,
+          hard_cap: 249999,
+          token_price: 0.069,
+          ath: 526.6,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k9',
+          picture: '/fertilizer/logo/goosefx.png',
+          title: 'GooseFX',
+          short_desc: 'A Complete DeFi Experience',
+          subscribers: 1002,
+          hard_cap: 249998,
+          token_price: 0.07,
+          ath: 526.5,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k10',
+          picture: '/fertilizer/logo/waggle.png',
+          title: 'Waggle Network',
+          short_desc: 'Primary markets for everyone',
+          subscribers: 1003,
+          hard_cap: 249997,
+          token_price: 0.071,
+          ath: 526.4,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k11',
+          picture: '/fertilizer/logo/cryowar.png',
+          title: 'Cryowar',
+          short_desc: 'Next-gen blockchain multiplayer game',
+          subscribers: 1004,
+          hard_cap: 249996,
+          token_price: 0.071,
+          ath: 526.3,
+          distribution_end_date: 1643500800000
+        },
+        {
+          status: 'Funded',
+          key: 'k12',
+          picture: '/fertilizer/logo/cyclos.png',
+          title: 'Cyclos',
+          short_desc: 'Decentralized trading unleashed',
+          subscribers: 1005,
+          hard_cap: 249995,
+          token_price: 0.073,
+          ath: 526.2,
+          distribution_end_date: 1643500800000
         }
+        // {
+        //   status: 'Upcoming',
+        //   key: 'k13',
+        //   picture: '/fertilizer/banner/winerz.png',
+        //   title: 'Winerz',
+        //   short_desc: 'Experience a new way of playing by betting on your victory.',
+        // },
+        // {
+        //   status: 'Upcoming',
+        //   key: 'k14',
+        //   picture: '/fertilizer/banner/secretum.png',
+        //   title: 'Secretum Protocol',
+        //   short_desc: 'Blockchain-based messaging app where every conversation is private by design.',
+        // },
+        // {
+        //   status: 'Upcoming',
+        //   key: 'k15',
+        //   picture: '/fertilizer/banner/zebec.png',
+        //   title: 'Zebec Protocol',
+        //   short_desc: 'Continuous Settlement Protocol.',
+        // }
       ],
       currentTimestamp: 0
     }
@@ -1122,7 +1124,7 @@ export default Vue.extend({
     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
   async mounted() {
-    this.$router.push({ path: `/swap/` })
+    // this.$router.push({ path: `/swap/` })
     this.getTvl()
     this.$accessor.token.loadTokens()
     await this.updateLabelizedAmms()
@@ -1915,11 +1917,11 @@ export default Vue.extend({
               }
 
               &.whitelist-countdown {
-                height: 48px;
-                // height: 114px;
-                // background: @color-blue800;
-                // padding: 8px;
-                // border-radius: 18px;
+                // height: 48px;
+                height: 114px;
+                background: @color-blue800;
+                padding: 8px;
+                border-radius: 18px;
               }
 
               &.fcsb-container {
