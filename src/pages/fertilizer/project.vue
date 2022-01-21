@@ -41,6 +41,7 @@
               </div>
             </div>
             <div class="project-preview-ido-container">
+              {{ currentTimestamp }}
               <div class="project-preview">
                 <div class="project-overview fcsb-container">
                   <div class="project-title fcs-container">
@@ -440,7 +441,7 @@
                       <div class="token-amount fcsb-container">
                         <div class="token-amount-input fcs-container">
                           <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                          <input class="font-medium weight-bold" type="number" placeholder="673" />
+                          <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
                         </div>
                         <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
                       </div>
@@ -488,7 +489,7 @@
                     <div class="token-amount fcsb-container">
                       <div class="token-amount-input fcs-container">
                         <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                        <input class="font-medium weight-bold" type="number" placeholder="673" />
+                        <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
                       </div>
                       <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
                     </div>
@@ -520,7 +521,7 @@
                   <div class="token-amount fcsb-container">
                     <div class="token-amount-input fcs-container">
                       <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                      <input class="font-medium weight-bold" type="number" placeholder="673" />
+                      <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
                     </div>
                     <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
                   </div>
@@ -812,7 +813,7 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
-const TEST_TIME = 1643500800000
+const TEST_TIME = 1642774964128
 
 export default Vue.extend({
   components: {
@@ -859,11 +860,11 @@ export default Vue.extend({
           tokenomics: '/fertilizer/project/unq/tokenomics.png',
           distribution: '/fertilizer/project/unq/distribution.png'
         },
-        whitelist_start_date: TEST_TIME + 60000 * 5,
-        whitelist_end_date: TEST_TIME + 60000 * 10,
-        sales_start_date: TEST_TIME + 60000 * 15,
-        sales_end_date: TEST_TIME + 60000 * 20,
-        distribution_start_date: TEST_TIME + 60000 * 25
+        whitelist_start_date: TEST_TIME + 60000 * 1,
+        whitelist_end_date: TEST_TIME + 60000 * 2,
+        sales_start_date: TEST_TIME + 60000 * 3,
+        sales_end_date: TEST_TIME + 60000 * 4,
+        distribution_start_date: TEST_TIME + 60000 * 5
       },
       projectStatus: {
         preparation: 'Preparation',
