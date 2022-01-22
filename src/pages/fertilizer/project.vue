@@ -633,7 +633,7 @@ export default Vue.extend({
   watch: {},
 
   mounted() {
-    // this.$router.push({ path: `/swap/` })
+    this.$router.push({ path: `/swap/` })
     this.currentTimestamp = moment().valueOf()
   },
 
