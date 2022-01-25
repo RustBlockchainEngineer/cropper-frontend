@@ -127,9 +127,7 @@ export async function updateLaunchpad(
 }
 
 export async function getProject(mint: string){
-  console.log("Mint", mint)
   const projectAddress = await getProjectAddress(new PublicKey(mint));
-  console.log("Project", projectAddress.toString());
   try{
     const data = await LaunchpadProgram.account.projectAccount.fetch(projectAddress)
     return data
@@ -194,7 +192,6 @@ export async function saveProject(
   );
 
   const project = await getProject(projectMint);
-  console.log("Prepare date", project?.prepareDate.toString());
 
   if(!project){
     transaction.add(
