@@ -3752,7 +3752,6 @@ export default Vue.extend({
 
               .value {
                 margin-top: 4px;
-                word-break: break-all;
                 text-align: right;
               }
 
@@ -3815,7 +3814,6 @@ export default Vue.extend({
 
                 .value {
                   margin-top: 4px;
-                  word-break: break-all;
                   text-align: center;
                 }
 

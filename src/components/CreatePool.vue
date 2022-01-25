@@ -1145,7 +1145,6 @@ export default class CreatePool extends Vue {
               border-radius: 12px;
               padding: 10px 12px;
               color: rgba(255, 255, 255, 0.5);
-              word-break: break-all;
               margin-top: 8px;
             }
           }

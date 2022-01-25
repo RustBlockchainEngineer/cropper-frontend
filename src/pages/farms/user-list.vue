@@ -175,7 +175,6 @@ input {
   padding-right: 5%;
 }
 div {
-  word-break: break-all;
   word-wrap: break-word;
 }
 .item-msg-mobile {
