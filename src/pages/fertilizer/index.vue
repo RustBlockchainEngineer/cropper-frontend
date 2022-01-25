@@ -172,15 +172,15 @@
                   <span v-else>
                     {{
                       sortFunded === sortOptions.subscribers
-                        ? sortOptions.subscribers
+                        ? sortOptions.subscribers + (sortAsc ? ' (High > Low)' : ' (Low > High)')
                         : sortFunded === sortOptions.total_raised
-                        ? sortOptions.total_raised
+                        ? sortOptions.total_raised + (sortAsc ? ' (High > Low)' : ' (Low > High)')
                         : sortFunded === sortOptions.token_price
-                        ? sortOptions.token_price
+                        ? sortOptions.token_price + (sortAsc ? ' (High > Low)' : ' (Low > High)')
                         : sortFunded === sortOptions.ath
-                        ? sortOptions.ath
+                        ? sortOptions.ath + (sortAsc ? ' (High > Low)' : ' (Low > High)')
                         : sortFunded === sortOptions.end_date
-                        ? sortOptions.end_date
+                        ? sortOptions.end_date + (sortAsc ? ' (High > Low)' : ' (Low > High)')
                         : ''
                     }}
                   </span>
@@ -454,7 +454,7 @@
                       >Subscription</Button
                     >
                     <Button v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small"
-                      >Follow</Button
+                      >More Details</Button
                     >
                   </div>
                 </div>

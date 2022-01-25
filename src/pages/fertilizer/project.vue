@@ -41,7 +41,6 @@
               </div>
             </div>
             <div class="project-preview-ido-container">
-              {{ currentTimestamp }}
               <div class="project-preview">
                 <div class="project-overview fcsb-container">
                   <div class="project-title fcs-container">
@@ -180,6 +179,7 @@
               </div>
               <div class="project-ido">
                 <div class="project-ido-process">
+                  <span class="label font-medium weight-bold">IDO process:</span>
                   <Steps :current="currentStep" size="small" direction="vertical" :status="currentStatus.steps">
                     <Step>
                       <template slot="title">
@@ -582,7 +582,8 @@
                   <Button class="btn-transparent font-medium weight-semi icon-cursor">Stake CRP</Button>
                 </div>
               </div>
-              <img class="farmer-img" src="@/assets/background/farmer.png" />
+              <img class="farmer-img isDesktop" src="@/assets/background/farmer-desktop.png" />
+              <img class="farmer-img isTablet" src="@/assets/background/farmer-table.png" />
             </div>
 
             <div class="project-detail-static transparent">
@@ -1085,6 +1086,32 @@ export default Vue.extend({
   margin-right: 6px;
 }
 
+.isDesktop {
+  @media @max-lg-tablet {
+    display: none;
+  }
+}
+
+.isTablet {
+  display: none;
+
+  @media @max-lg-tablet {
+    display: unset;
+  }
+
+  @media @max-sl-mobile {
+    display: none;
+  }
+}
+
+.isMobile {
+  display: none;
+
+  @media @max-sl-mobile {
+    display: unset;
+  }
+}
+
 // class stylesheet
 .fertilizer-project.container {
   margin: 38px 0;
@@ -1197,6 +1224,11 @@ export default Vue.extend({
                 background: @color-blue800;
                 border-radius: 8px;
                 padding: 13px 21px;
+
+                .label {
+                  display: block;
+                  margin-bottom: 18px;
+                }
               }
             }
           }
@@ -1290,7 +1322,7 @@ export default Vue.extend({
               }
 
               .project-detail-stake {
-                width: 60%;
+                padding: 24px 0;
 
                 .btn-container {
                   max-width: 150px;
@@ -1300,7 +1332,15 @@ export default Vue.extend({
               }
 
               .farmer-img {
-                width: 40%;
+                width: 350px;
+
+                @media @max-lg-tablet {
+                  width: 35%;
+                }
+
+                @media @max-sl-mobile {
+                  display: none;
+                }
               }
             }
 
