@@ -21,11 +21,10 @@ const defaultAccounts = {
 }
 
 import launchpad_idl from '@/utils/crp-launchpad-idl.json'
-import { Account, Connection } from '@solana/web3.js';
-import { createSplAccount } from './crp-swap';
-import { createAssociatedTokenAccountIfNotExist2, sendTransaction } from './web3';
+import { Account, Connection} from '@solana/web3.js';
 import { LAUNCHPAD_PROGRAM_ID } from './ids';
 import moment from 'moment';
+import { sendTransaction } from './web3';
 let LaunchpadProgram:any = null
 
 export function setAnchorProvider(
@@ -44,34 +43,26 @@ export function setAnchorProvider(
 }
 
 export async function getLaunchpadAddress(){
-  const [stateSigner, stateBump] = await anchor.web3.PublicKey.findProgramAddress(
+  const [launchpad, bump] = await anchor.web3.PublicKey.findProgramAddress(
     [utf8.encode('launchpad')],
     LaunchpadProgram.programId
   );
-  return stateSigner
+  return launchpad
 }
 
-async function getExtraRewardAddress(){
-  const [stateSigner, stateBump] = await anchor.web3.PublicKey.findProgramAddress(
-    [utf8.encode('extra')],
+export async function getProjectAddress(mint: anchor.web3.PublicKey){
+  const [project, bump] = await anchor.web3.PublicKey.findProgramAddress(
+    [utf8.encode('project'), mint.toBuffer() ],
     LaunchpadProgram.programId
   );
-  return stateSigner
+  return project
 }
 
-async function getPoolAddressFromMint(mint:string){
-  const [stateSigner, stateBump] = await anchor.web3.PublicKey.findProgramAddress(
-    [new PublicKey(mint).toBuffer()],
-    LaunchpadProgram.programId
-  );
-  return stateSigner
-}
 
 export async function createLaunchpad(
   connection:Connection,
   wallet: any,
-)
-{
+) {
   const transaction = new Transaction()
   const signers: Account[] = []
 
@@ -80,12 +71,15 @@ export async function createLaunchpad(
     LaunchpadProgram.programId
   );
 
+  const treasury = new Keypair()
+
   transaction.add(
     LaunchpadProgram.instruction.createLaunchpad(launchpadBump, 
     {
       accounts: {
         launchpad,
         authority: wallet.publicKey,
+        treasury: treasury.publicKey,
         ...defaultAccounts
       }
     })
@@ -97,133 +91,154 @@ export async function createLaunchpad(
 
 export async function getLaunchpad(){
   const launchpadAddress = await getLaunchpadAddress();
-  return await LaunchpadProgram.account.LaunchpadAccount.fetch(launchpadAddress)
+  try{
+    const data = await LaunchpadProgram.account.launchpadAccount.fetch(launchpadAddress)
+    return data
+  }
+  catch{
+
+  }
+  return null
 }
 
 export async function updateLaunchpad(
   connection:Connection,
   wallet: any,
+) {
+  const transaction = new Transaction()
+  const signers: Account[] = []
+
+  const launchpadAddress = await getLaunchpadAddress();
+  const treasury = new Keypair()
+
+  transaction.add(
+    LaunchpadProgram.instruction.createLaunchpad( 
+    {
+      accounts: {
+        launchpad: launchpadAddress,
+        authority: wallet.publicKey,
+        treasury: treasury.publicKey,
+        ...defaultAccounts
+      }
+    })
+  )
+  return await sendTransaction(connection, wallet, transaction, signers)
+
+}
+
+export async function getProject(mint: string){
+  console.log("Mint", mint)
+  const projectAddress = await getProjectAddress(new PublicKey(mint));
+  console.log("Project", projectAddress.toString());
+  try{
+    const data = await LaunchpadProgram.account.projectAccount.fetch(projectAddress)
+    return data
+  }
+  catch{
+
+  }
+  return null
+}
+
+export async function getProjectFormatted(mint: string){
+  try{
+    const data = await getProject(mint)
+    return {
+      date_preparation: time2str(data.prepareDate),
+      date_whitelist_start: time2str(data.wlStartDate),
+      date_whitelist_end: time2str(data.wlEndDate),
+      date_sale_start: time2str(data.saleStartDate),
+      date_sale_end: time2str(data.saleEndDate),
+      date_distribution: time2str(data.distributionDate),
+      token_price: 0,
+      pool_size: 0,
+    }
+  }
+  catch{
+
+  }
+
+  return {}
+
+}
+
+function str2time(date:string){
+  return new BN(moment(date, 'DD MMMM YYYY').format("X"))
+}
+
+function time2str(date: any){
+  return moment(new Date(date * 1000)).format('DD MMMM YYYY')
+}
+export async function saveProject(
+  connection:Connection,
+  wallet: any,
+
+  projectMint: string,
   prepareDate: any,
   whiltelistStartDate: any,
   whiltelistEndDate: any,
-  lotteryWinPct: any,
   saleStartDate: any,
   saleEndDate: any,
   distributionDate: any,
-  whitelist: any,
-  maxAlloc: any
 )
 {
+  console.log(prepareDate);
   const transaction = new Transaction()
   const signers: Account[] = []
 
   const launchpadAddress = await getLaunchpadAddress();
+  
+  const [projectAddress, bump] = await anchor.web3.PublicKey.findProgramAddress(
+    [utf8.encode('project'), new PublicKey(projectMint).toBuffer() ],
+    LaunchpadProgram.programId
+  );
 
+  const project = await getProject(projectMint);
+  console.log("Prepare date", project?.prepareDate.toString());
 
-  transaction.add(
-    LaunchpadProgram.instruction.updateLaunchpad(
-      prepareDate,
-      whiltelistStartDate,
-      whiltelistEndDate,
-      lotteryWinPct,
-      saleStartDate,
-      saleEndDate,
-      distributionDate,
-      whitelist,
-      maxAlloc, 
-    {
-      accounts: {
-        launchpad: launchpadAddress,
-        authority: wallet.publicKey,
-        ...defaultAccounts
-      }
-    })
-  )
+  if(!project){
+    transaction.add(
+      LaunchpadProgram.instruction.createProject(
+        bump,
+        str2time(prepareDate),
+        str2time(whiltelistStartDate),
+        str2time(whiltelistEndDate),
+        str2time(saleStartDate),
+        str2time(saleEndDate),
+        str2time(distributionDate),
+        [new BN(0),new BN(1), new BN(2), new BN(3), new BN(4), new BN(5)],
+      {
+        accounts: {
+          launchpad: launchpadAddress,
+          project: projectAddress,
+          authority: wallet.publicKey,
+          projectMint,
+          ...defaultAccounts
+        }
+      })
+    )
+  }
+  else
+  {
+    transaction.add(
+      LaunchpadProgram.instruction.updateProject(
+        str2time(prepareDate),
+        str2time(whiltelistStartDate),
+        str2time(whiltelistEndDate),
+        str2time(saleStartDate),
+        str2time(saleEndDate),
+        str2time(distributionDate),
+        [new BN(0),new BN(1), new BN(2), new BN(3), new BN(4), new BN(5)],
+      {
+        accounts: {
+          launchpad: launchpadAddress,
+          project: projectAddress,
+          authority: wallet.publicKey,
+          ...defaultAccounts
+        }
+      })
+    )
+  }
 
-  // const stateInfo = await StakingProgram.account.stateAccount.fetch(stateSigner)
-  return await sendTransaction(connection, wallet, transaction, signers)
-}
-
-export async function setPreparationDate(
-  connection:Connection,
-  wallet: any,
-  prepareDate: any,
-)
-{
-  const transaction = new Transaction()
-  const signers: Account[] = []
-
-  const launchpadAddress = await getLaunchpadAddress();
-
-
-  transaction.add(
-    LaunchpadProgram.instruction.setPreparationDate(
-      prepareDate,
-    {
-      accounts: {
-        launchpad: launchpadAddress,
-        authority: wallet.publicKey,
-        ...defaultAccounts
-      }
-    })
-  )
-
-  // const stateInfo = await StakingProgram.account.stateAccount.fetch(stateSigner)
-  return await sendTransaction(connection, wallet, transaction, signers)
-}
-
-export async function setWhitelistStartDate(
-  connection:Connection,
-  wallet: any,
-  date: any,
-)
-{
-  const transaction = new Transaction()
-  const signers: Account[] = []
-
-  const launchpadAddress = await getLaunchpadAddress();
-
-
-  transaction.add(
-    LaunchpadProgram.instruction.setWhitelistStartDate(
-      date,
-    {
-      accounts: {
-        launchpad: launchpadAddress,
-        authority: wallet.publicKey,
-        ...defaultAccounts
-      }
-    })
-  )
-
-  // const stateInfo = await StakingProgram.account.stateAccount.fetch(stateSigner)
-  return await sendTransaction(connection, wallet, transaction, signers)
-}
-
-export async function setWhitelistEndDate(
-  connection:Connection,
-  wallet: any,
-  date: any,
-)
-{
-  const transaction = new Transaction()
-  const signers: Account[] = []
-
-  const launchpadAddress = await getLaunchpadAddress();
-
-
-  transaction.add(
-    LaunchpadProgram.instruction.setWhitelistEndDate(
-      date,
-    {
-      accounts: {
-        launchpad: launchpadAddress,
-        authority: wallet.publicKey,
-        ...defaultAccounts
-      }
-    })
-  )
-
-  // const stateInfo = await StakingProgram.account.stateAccount.fetch(stateSigner)
   return await sendTransaction(connection, wallet, transaction, signers)
 }

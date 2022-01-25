@@ -169,7 +169,7 @@
             </label>
 
 
-            <button @click="save">Save</button>
+            <button @click="save" @disabled="!$wallet || $wallet.publicKey">Save</button>
 
 
 
@@ -203,6 +203,8 @@ import moment from 'moment'
 import axios from '@nuxtjs/axios'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
+import {setAnchorProvider, saveProject, getProjectFormatted} from '@/utils/crp-launchpad'
+
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
@@ -231,7 +233,6 @@ export default Vue.extend({
       coinName: '',
       mintAddress: '',
       scValues: {
-
       } as any,
       apiValues: {
         title : '',
@@ -308,12 +309,17 @@ export default Vue.extend({
   },
   async mounted() {
     // this.$router.push({ path: `/swap/` })
-    this.$accessor.token.loadTokens()
 
+    setAnchorProvider(this.$web3, this.$wallet)
+
+    this.$accessor.token.loadTokens()
 
     const query = new URLSearchParams(window.location.search)
     if (query.get('mint')) {
       this.mint = query.get('mint') as string
+
+    this.scValues = await getProjectFormatted(this.mint)
+    console.log("SC Values", this.scValues)
 
 
     let responseData = {} as any
@@ -412,7 +418,7 @@ export default Vue.extend({
     },
     save() {
       // TODO - SC PART
-
+/*
       console.log(this.apiValues);
 
       let apiDatas = this.apiValues;
@@ -434,10 +440,18 @@ export default Vue.extend({
         if (error) throw new Error(error);
         console.log(response.body);
       });
-
-
-
-
+*/
+      saveProject(
+        this.$web3,
+        this.$wallet,
+        this.mint,
+        this.scValues.date_preparation,
+        this.scValues.date_whitelist_start,
+        this.scValues.date_whitelist_end,
+        this.scValues.date_sale_start,
+        this.scValues.date_sale_end,
+        this.scValues.date_distribution,
+      );
     }
   }
 })

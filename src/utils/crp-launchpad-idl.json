@@ -16,6 +16,11 @@
           "isSigner": true
         },
         {
+          "name": "treasury",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -40,6 +45,103 @@
           "name": "authority",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "treasury",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createProject",
+      "accounts": [
+        {
+          "name": "launchpad",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "projectMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "bump",
+          "type": "u8"
+        },
+        {
+          "name": "prepareDate",
+          "type": "i64"
+        },
+        {
+          "name": "wlStartDate",
+          "type": "i64"
+        },
+        {
+          "name": "wlEndDate",
+          "type": "i64"
+        },
+        {
+          "name": "saleStartDate",
+          "type": "i64"
+        },
+        {
+          "name": "saleEndDate",
+          "type": "i64"
+        },
+        {
+          "name": "distributionDate",
+          "type": "i64"
+        },
+        {
+          "name": "maxAlloc",
+          "type": {
+            "vec": "u64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "updateProject",
+      "accounts": [
+        {
+          "name": "launchpad",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
@@ -56,10 +158,6 @@
           "type": "i64"
         },
         {
-          "name": "lotteryWinPct",
-          "type": "u64"
-        },
-        {
           "name": "saleStartDate",
           "type": "i64"
         },
@@ -72,207 +170,10 @@
           "type": "i64"
         },
         {
-          "name": "whitelist",
-          "type": "u64"
-        },
-        {
           "name": "maxAlloc",
           "type": {
             "vec": "u64"
           }
-        }
-      ]
-    },
-    {
-      "name": "setPreparationDate",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "date",
-          "type": "i64"
-        }
-      ]
-    },
-    {
-      "name": "setWhiltelistStartDate",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "date",
-          "type": "i64"
-        }
-      ]
-    },
-    {
-      "name": "setWhiltelistEndDate",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "date",
-          "type": "i64"
-        }
-      ]
-    },
-    {
-      "name": "setLotteryWinPct",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "winPct",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "setSaleStartDate",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "date",
-          "type": "i64"
-        }
-      ]
-    },
-    {
-      "name": "setSaleEndDate",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "date",
-          "type": "i64"
-        }
-      ]
-    },
-    {
-      "name": "setDistributionDate",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "date",
-          "type": "i64"
-        }
-      ]
-    },
-    {
-      "name": "setWhiltelist",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "whiltelist",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "setTierMaxAlloc",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "maxAlloc",
-          "type": "u64"
-        },
-        {
-          "name": "tierIndex",
-          "type": "u8"
         }
       ]
     },
@@ -349,6 +250,38 @@
             "type": "publicKey"
           },
           {
+            "name": "treasury",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProjectAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "saleMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "projectMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "projectVault",
+            "type": "publicKey"
+          },
+          {
             "name": "prepareDate",
             "type": "i64"
           },
@@ -359,10 +292,6 @@
           {
             "name": "wlEndDate",
             "type": "i64"
-          },
-          {
-            "name": "lotteryWinPct",
-            "type": "u64"
           },
           {
             "name": "saleStartDate",
@@ -377,14 +306,28 @@
             "type": "i64"
           },
           {
-            "name": "whitelist",
+            "name": "maxAllocTier0",
             "type": "u64"
           },
           {
-            "name": "maxAlloc",
-            "type": {
-              "vec": "u64"
-            }
+            "name": "maxAllocTier1",
+            "type": "u64"
+          },
+          {
+            "name": "maxAllocTier2",
+            "type": "u64"
+          },
+          {
+            "name": "maxAllocTier3",
+            "type": "u64"
+          },
+          {
+            "name": "maxAllocTier4",
+            "type": "u64"
+          },
+          {
+            "name": "maxAllocTier5",
+            "type": "u64"
           }
         ]
       }

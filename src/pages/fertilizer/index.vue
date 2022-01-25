@@ -8,10 +8,12 @@
 
 
 
-
+          <div class="create">
+              <Button @click="create" ghost>Create launchpad</Button>
+          </div>
 
           <div class="create">
-              <NuxtLink to="/fertilizer/project/?mint=new"><button>Create a new project</button></NuxtLink>
+              <NuxtLink to="/fertilizer/project/?mint=BT37QA8Az1zJWQG3L5yeyHPeM99pkGcWTpwjrQ5M42Xs"><button>Create a new project</button></NuxtLink>
           </div>
 
 
@@ -25,19 +27,6 @@
 
 
           </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
       </div>
     </div>
   </div>
@@ -54,6 +43,10 @@ import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
+
+import {setAnchorProvider, createLaunchpad, getLaunchpad} from '@/utils/crp-launchpad'
+
+
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
@@ -160,6 +153,10 @@ export default Vue.extend({
     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
   async mounted() {
+
+    setAnchorProvider(this.$web3, this.$wallet)
+    console.log(await getLaunchpad());
+
     // this.$router.push({ path: `/swap/` })
     this.$accessor.token.loadTokens()
 
@@ -265,10 +262,11 @@ export default Vue.extend({
         this.currentShowMore = -1
       }
     },
-    save() {
+    create() {
       // TODO - SC PART
-      alert('YO !')
+      createLaunchpad(this.$web3, this.$wallet)
     }
+
   }
 })
 </script>
