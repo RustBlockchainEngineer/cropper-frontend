@@ -1332,7 +1332,7 @@ export default Vue.extend({
               }
 
               .farmer-img {
-                width: 350px;
+                width: 28%;
 
                 @media @max-lg-tablet {
                   width: 35%;
