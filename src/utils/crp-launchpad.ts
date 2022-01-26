@@ -148,8 +148,19 @@ export async function getProjectFormatted(mint: string){
       date_sale_start: time2str(data.saleStartDate),
       date_sale_end: time2str(data.saleEndDate),
       date_distribution: time2str(data.distributionDate),
-      token_price: 0,
-      pool_size: 0,
+      token_price: data.tokenPrice.toString(),
+      pool_size: data.poolSize.toString(),
+      first_liberation: data.firstLiberation.toString(),
+      price_token_mint: data.priceTokenMint.toString(),
+      
+      max_allocation:  [ 
+        new Number(data.maxAllocTier0.toString()), 
+        new Number(data.maxAllocTier1.toString()),
+        new Number(data.maxAllocTier2.toString()),
+        new Number(data.maxAllocTier3.toString()),
+        new Number(data.maxAllocTier4.toString()),
+        new Number(data.maxAllocTier5.toString())
+      ]
     }
   }
   catch{
@@ -188,7 +199,6 @@ export async function saveProject(
   firstLiberation: any,
 )
 {
-  console.log(prepareDate);
   const transaction = new Transaction()
   const signers: Account[] = []
 
@@ -204,6 +214,32 @@ export async function saveProject(
 
   const project = await getProject(projectMint);
 
+  // transaction.add(
+  //   LaunchpadProgram.instruction.createProject(
+  //     bump,
+  //     str2time('01 Feb 2021'),
+  //     str2time('02 Feb 2021'),
+  //     str2time('03 Feb 2021'),
+  //     str2time('04 Feb 2021'),
+  //     str2time('05 Feb 2021'),
+  //     str2time('06 Feb 2021'),
+  //     [new BN(0), new BN(1), new BN(2), new BN(3), new BN(4), new BN(5),],
+  //     new BN(100),
+  //     new BN(25),
+  //     new BN(10),
+  //   {
+  //     accounts: {
+  //       launchpad: launchpadAddress,
+  //       project: projectAddress,
+  //       authority: wallet.publicKey,
+  //       projectMint,
+  //       priceTokenMint: new Keypair().publicKey,
+  //       ...defaultAccounts
+  //     }
+  //   })
+  // )
+  // return await sendTransaction(connection, wallet, transaction, signers)
+  
   if(!project){
     transaction.add(
       LaunchpadProgram.instruction.createProject(
@@ -234,16 +270,20 @@ export async function saveProject(
   {
     transaction.add(
       LaunchpadProgram.instruction.updateProject(
+        
         str2time(prepareDate),
         str2time(whiltelistStartDate),
         str2time(whiltelistEndDate),
         str2time(saleStartDate),
         str2time(saleEndDate),
         str2time(distributionDate),
+        
         tmp_max_allocs,
+        
         new BN(tokenPrice),
         new BN(poolSize),
         new BN(firstLiberation),
+
       {
         accounts: {
           launchpad: launchpadAddress,

@@ -7,22 +7,21 @@
         </div>
 
 
-
           <div class="create">
-              <Button @click="create" ghost>Create launchpad</Button>
+              <button class="full" @click="create">Create a launchpad account</button>
           </div>
 
           <div class="create">
-              <NuxtLink to="/fertilizer/project/?mint=BT37QA8Az1zJWQG3L5yeyHPeM99pkGcWTpwjrQ5M42Xs"><button>Create a new project</button></NuxtLink>
+              <NuxtLink to="/fertilizer/project/?mint=new"><button class="full">Create a new project</button></NuxtLink>
           </div>
 
 
           <div class="projectList">
 
-            <div class="item" 
+            <div class="item " 
                         v-for="item in projects"
                         :key="item.mint">
-              <button style="color:#000" @click="goTo(item.mint)">{{item.title}} - {{item.mint}}</button>
+              <button style="color:#000" class="full" @click="goTo(item.mint)">{{item.title}}<br /><small>{{item.mint}}</small></button>
             </div>
 
 
@@ -952,10 +951,24 @@ label{
     }
   }
 }
+
+
+
+
 </style>
 
 <style lang="less">
 .fertilizer {
+
+  button.full{
+    width:800px !important;
+    max-width:100% !important;
+    margin-bottom:10px !important;
+    font-weight:bold !important;
+    color:#000 !important;
+    padding:10px 20px !important;
+  }
+
   .ant-collapse {
     background: transparent;
     border: none;

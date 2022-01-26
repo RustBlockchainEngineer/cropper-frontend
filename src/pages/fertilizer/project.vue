@@ -3,24 +3,41 @@
     <div class="card">
       <div class="card-body">
         <div class="fertilizer-head fcsb-container">
-          <h3 class="title weight-bold">Fertilizer / Admin panel <span v-if="mint == 'new'">New</span> <span v-else-if="mint">Update</span></h3>
+          <h3 class="title weight-bold">Fertilizer / Admin panel <span v-if="is_new">New</span> <span v-else-if="mint">Update</span></h3>
         </div>
 
 
 
+        <div v-if="is_new">
 
-        <div v-if="mint">
+            <h4>Project initiation</h4>
+          <label>
+            Project Mint Address : 
+            <input style="font-size:20px;font-weight:bold" type="text" class="std" id="address" name="address" v-model="mint" />
+          </label>
+
+
+          <div class="create">
+              <Button @click="create" ghost>Create launchpad</Button>
+          </div>
+        </div>
+        <div v-else-if="mint">
 
 
             <h4>Project infos</h4>
 
             <label>
               Project title : 
-              <input type="text" class="std" id="title" name="title" v-model="apiValues.title" />
+              <input style="font-size:20px;font-weight:bold" type="text" class="std" id="title" name="title" v-model="apiValues.title" />
             </label>
 
-            <label>
+            <label class="half">
               Picture URL: 
+              <input type="text" class="std" id="picture" name="picture" v-model="apiValues.picture" />
+            </label>
+
+            <label class="half">
+              Picture URL (mobile) TODOAPI: 
               <input type="text" class="std" id="picture" name="picture" v-model="apiValues.picture" />
             </label>
 
@@ -30,12 +47,12 @@
             </label>
 
 
-            <label>
+            <label class="half">
               ROI Display: 
               <input type="text" class="std" id="roi_display" name="roi_display" v-model="apiValues.roi_display" />
             </label>
 
-            <label>
+            <label class="half">
               Hard Cap : 
               <input type="text" class="std" id="hard_cap" name="hard_cap" v-model="apiValues.hard_cap" />
             </label>
@@ -55,19 +72,19 @@
 
             <label>
               Mint : 
-              <input type="text" class="std" id="mint" name="mint" v-model="mint" />
+              <input disabled type="text" class="std" id="mint" name="mint" v-model="mint" />
             </label>
             <label>
               Price Token Mint : 
               <input type="text" class="std" id="price_token_mint" name="price_token_mint" v-model="scValues.price_token_mint" />
             </label>
 
-            <label>
+            <label class="half">
               (SC) Token Price : 
               <input type="text" class="std" id="token_price" name="token_price" v-model="scValues.token_price" />
             </label>
 
-            <label>
+            <label class="half">
               (SC) Token Price token : 
               <select class="std" id="type" name="type">
                 <option value="">USDC</option>
@@ -75,21 +92,29 @@
               </select>
             </label>
 
-            <label>
-              (SC) Pool size : 
+            <label class="half">
+              (SC) Pool size (in token price value) : 
               <input type="text" class="std" id="pool_size" name="pool_size" v-model="scValues.pool_size" />
             </label>
 
-            <label>
-              (SC) First Liberation : 
-              <input type="text" class="std" id="first_liberation" name="first_liberation" v-model="scValues.first_liberation" />
-            </label>
-
-            <label>
+            <label class="half">
               Type : 
               <select class="std" id="type" v-model="apiValues.type" name="type">
                 <option>100% TGE</option>
                 <option>Vested</option>
+              </select>
+            </label>
+
+            <label class="half">
+              First liberation : 
+              <select class="std" id="type" v-model="scValues.first_liberation" name="type">
+                <option value="100">100% TGE</option>
+                <option value="50">50% TGE</option>
+                <option value="40">40% TGE</option>
+                <option value="30">30% TGE</option>
+                <option value="25">25% TGE</option>
+                <option value="20">20% TGE</option>
+                <option value="10">10% TGE</option>
               </select>
             </label>
 
@@ -157,28 +182,126 @@
               <textarea class="std" id="post_a" name="post_a" v-model="apiValues.post_a"></textarea>
             </label>
 
-            <label>
+            <label class="half">
               Twitter A: 
               <input type="text" class="std" id="twitter_a" name="twitter_a" v-model="apiValues.twitter_a" />
             </label>
 
-            <label>
+            <label class="half">
               Twitter B: 
               <input type="text" class="std" id="twitter_b" name="twitter_b" v-model="apiValues.twitter_b" />
             </label>
 
-            <label>
+            <label class="half">
               Telegram A: 
               <input type="text" class="std" id="tg_a" name="tg_a" v-model="apiValues.tg_a" />
             </label>
 
-            <label>
+            <label class="half">
               Telegram B: 
               <input type="text" class="std" id="tg_b" name="tg_b" v-model="apiValues.tg_b" />
             </label>
 
 
-            <button @click="save" @disabled="!$wallet || $wallet.publicKey">Save</button>
+
+
+
+            
+            <h4>Allocation infos - (<b>{{ (
+              (
+                (apiValues.ticketsCount * scValues.alloc_ticket) +
+                (scValues.tier1Count * scValues.tier1) + 
+                (scValues.tier2Count * scValues.tier2) + 
+                (scValues.tier3Count * scValues.tier3) + 
+                (scValues.tier4Count * scValues.tier4) + 
+                (scValues.tier5Count * scValues.tier5) 
+              )  / scValues.pool_size) * 100 }} % </b> filled) </h4>
+
+
+            <label>
+              <div>Lottery ticket :</div>
+              <div class="conta">Tickets count<br />
+              <input style="color:#000;font-weight:bold" type="text" class="tier" id="ticketsCount" name="ticketsCount" v-model="apiValues.ticketsCount" />
+              </div>
+              <div class="conta">Tickets value (USDC)<br />
+              <input style="color:#000;font-weight:bold" type="text" class="tier" id="alloc_ticket" name="alloc_ticket" v-model="scValues.alloc_ticket" />
+              </div>
+              <div class="conta">% Allocation<br />
+              {{ (apiValues.ticketsCount * scValues.alloc_ticket / scValues.pool_size) * 100 }} %
+              </div>
+            </label>
+
+            <label>
+              <div>Tier1 : </div>
+              <div class="conta">Tickets count<br /> <b>{{ scValues.tier1Count * 1 }}</b>
+              </div>
+              <div class="conta">Tickets value (USDC)<br />
+              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier1" name="tier1" v-model="scValues.tier1" />
+              </div>
+              <div class="conta">% Allocation<br />
+              {{ (scValues.tier1Count * scValues.tier1 / scValues.pool_size) * 100 }} %
+              </div>
+            </label>
+
+            <label>
+              <div>Tier2 :</div>
+              <div class="conta">Tickets count<br />  <b>{{ scValues.tier2Count * 1 }}</b>
+              </div>
+              <div class="conta">Tickets value (USDC)<br />
+              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier2" name="tier2" v-model="scValues.tier2" />
+              </div>
+              <div class="conta">% Allocation<br />
+              {{ (scValues.tier2Count * scValues.tier2 / scValues.pool_size) * 100 }} %
+              </div>
+            </label>
+
+            <label>
+              <div>Tier3 : </div>
+              <div class="conta">Tickets count<br /> <b>{{ scValues.tier3Count * 1 }}</b>
+              </div>
+              <div class="conta">Tickets value (USDC)<br />
+              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier3" name="tier3" v-model="scValues.tier3" />
+              </div>
+              <div class="conta">% Allocation<br />
+              {{ (scValues.tier3Count * scValues.tier3 / scValues.pool_size) * 100 }} %
+              </div>
+            </label>
+
+            <label>
+              <div>Tier4 : </div>
+              <div class="conta">Tickets count<br /> <b>{{ scValues.tier4Count * 1 }}</b>
+              </div>
+              <div class="conta">Tickets value (USDC)<br />
+              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier4" name="tier4" v-model="scValues.tier4" />
+              </div>
+              <div class="conta">% Allocation<br />
+              {{ (scValues.tier4Count * scValues.tier4 / scValues.pool_size) * 100 }} %
+              </div>
+            </label>
+
+            <label>
+              <div>Tier5 : </div>
+              <div class="conta">Tickets count<br /> <b>{{ scValues.tier5Count * 1 }}</b>
+              </div>
+              <div class="conta">Tickets value (USDC)<br />
+              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier5" name="tier5" v-model="scValues.tier5" />
+              </div>
+              <div class="conta">% Allocation<br />
+              {{ (scValues.tier5Count * scValues.tier5 / scValues.pool_size) * 100 }} %
+              </div>
+            </label>
+            
+
+
+
+
+
+
+
+
+
+
+        <button @click="save" @disabled="!$wallet || $wallet.publicKey">Save</button>
 
 
 
@@ -212,8 +335,8 @@ import moment from 'moment'
 import axios from '@nuxtjs/axios'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
-import {setAnchorProvider, saveProject, getProjectFormatted} from '@/utils/crp-launchpad'
-
+import {setAnchorProvider, saveProject, createLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
+import {Keypair} from '@solana/web3.js'
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
@@ -236,6 +359,7 @@ export default Vue.extend({
       searchName: '',
       coinPicUrl: '',
       mint: '',
+      is_new: 0,
       initialized: false as boolean,
       labelizedAmms: {} as any,
       currentPage: 1,
@@ -327,11 +451,20 @@ export default Vue.extend({
     if (query.get('mint')) {
       this.mint = query.get('mint') as string
 
-    this.scValues = await getProjectFormatted(this.mint)
-    console.log("SC Values", this.scValues)
 
+      if(this.mint == 'new'){
+        this.is_new = 1;
+        this.mint = new Keypair().publicKey.toString();
+      }
 
-    let responseData = {} as any
+      this.scValues = await getProjectFormatted(this.mint)
+      console.log("SC Values", this.scValues)
+
+      if(this.scValues.pool_size * 1 == 0){
+      this.scValues.pool_size = 1;
+      }
+
+      let responseData = {} as any
 
       try {
         responseData =  await fetch('https://api.croppppp.com/launchpad/?mint=' + this.mint).then((res) => res.json())
@@ -425,10 +558,39 @@ export default Vue.extend({
         this.currentShowMore = -1
       }
     },
+
+
+    async create() {
+
+
+      await this.delay(1000);
+
+      var request = require('request');
+      var options = {
+        'method': 'POST',
+        'url': 'https://api.croppppp.com/launchpad/post/',
+        'headers': {
+          'Referrer-Policy': 'no-referer',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        form: { 'mint' : this.mint}
+      };
+      request(options, function (error : any, response : any) {
+        if (error) throw new Error(error);
+
+      });
+
+      
+      this.$router.push({
+        path: '/fertilizer/project/?mint=' + this.mint
+      })
+
+      this.is_new = 0;
+
+    }, 
+
     save() {
       // TODO - SC PART
-/*
-      console.log(this.apiValues);
 
       let apiDatas = this.apiValues;
       apiDatas.mint = this.mint;
@@ -449,7 +611,7 @@ export default Vue.extend({
         if (error) throw new Error(error);
         console.log(response.body);
       });
-*/
+
       saveProject(
         this.$web3,
         this.$wallet,
@@ -609,8 +771,17 @@ input.std,
 select.std,
 textarea.std{
   width:100%;
-  color:#000;
+  color:#000 !important;
   padding:5px 10px;
+  border-radius:3px;
+}
+
+
+input.std.tier,
+select.std.tier,
+textarea.std.tier{
+  padding:5px 10px;
+  color:#000 !important;
 }
 
 label{
@@ -674,6 +845,19 @@ label{
 button{
   color:#000 !important;
   padding:20px 40px;
+}
+
+.half{
+  display:inline-block;
+  width:49%;
+}
+
+.conta{
+  padding:10px;
+  width:25%;
+  display:inline-block;
+  border:1px solid #fff;
+  margin:5px
 }
 
 // class stylesheet
