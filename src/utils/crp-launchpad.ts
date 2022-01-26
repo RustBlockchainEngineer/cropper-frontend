@@ -171,12 +171,13 @@ export async function getProjectFormatted(mint: string){
 
 }
 
+const datetime_format = 'YYYY-MM-DD HH:mm:ss'
 function str2time(date:string){
-  return new BN(moment(date, 'DD MMMM YYYY').format("X"))
+  return new BN(moment(date, datetime_format).format("X"))
 }
 
 function time2str(date: any){
-  return moment(new Date(date * 1000)).format('DD MMMM YYYY')
+  return moment(new Date(date * 1000)).format(datetime_format)
 }
 export async function saveProject(
   connection:Connection,

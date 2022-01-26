@@ -577,9 +577,7 @@ export default Vue.extend({
       };
       request(options, function (error : any, response : any) {
         if (error) throw new Error(error);
-
       });
-
       
       this.$router.push({
         path: '/fertilizer/project/?mint=' + this.mint
