@@ -33,7 +33,7 @@
           <div class="tier-progress text-left">
             <div class="tier-progress-label fcsb-container">
               <span class="font-xsmall weight-bold">Tier {{ wallet.tiers }}</span>
-              <span v-if="currentTiers < 5" class="font-xsmall weight-bold">Tier {{ wallet.tiers + 1 }}</span>
+              <span v-if="wallet.tiers < 5" class="font-xsmall weight-bold">Tier {{ wallet.tiers + 1 }}</span>
             </div>
             <Progress type="line" :stroke-width="14" :percent="Number(pctToNexttiers.toFixed(1))" :show-info="false" />
             <div class="tier-progress-info-container">
@@ -43,7 +43,7 @@
                 :style="'margin-left: calc(' + Number(pctToNexttiers.toFixed(1)) + '% - 2px)'"
               ></div>
               <label
-                v-if="currentTiers < 5"
+                v-if="wallet.tiers < 5"
                 class="tier-progress-percent font-xsmall"
                 :style="
                   Number(pctToNexttiers.toFixed(1)) < 90
@@ -836,7 +836,7 @@ export default class Wallet extends Vue {
 
     .tier-info-menu {
       position: absolute;
-      top: 50px;
+      top: 70px;
       background: @gradient-color-primary;
       background-origin: border-box;
       border: 2px solid rgba(255, 255, 255, 0.14);

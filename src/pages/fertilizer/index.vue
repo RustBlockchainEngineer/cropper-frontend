@@ -158,6 +158,7 @@ export default Vue.extend({
     console.log(await getLaunchpad());
 
     // this.$router.push({ path: `/swap/` })
+    // this.getTvl()
     this.$accessor.token.loadTokens()
 
 
