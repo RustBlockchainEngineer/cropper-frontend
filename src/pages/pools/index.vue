@@ -406,21 +406,16 @@ export default class Pools extends Vue {
       existingAddresses[value.name] = 1;
     });
 
-    console.log(existingAddresses);
 
 
     getAllCropperPools().forEach(function (value: any) {
       const liquidityItem = get(liquidity.infos, value.lp_mint)
-      console.log(
-        window.gitDatas.filter((pool: any) => (pool.address) == (value.lp_mint))
-          .length > 0)
 
       if (
         window.gitDatas.filter((pool: any) => (pool.address) == (value.lp_mint))
           .length > 0
       ) {
 
-        console.log('continue');
         return;
       }
 
@@ -477,17 +472,16 @@ export default class Pools extends Vue {
       //@ts-ignore
       value.name = lp.pc.symbol + lp.coin.symbol
 
-      console.log(value.name, existing[value.name])
 
       if(existing[value.name]){
-      console.log('in existing');
       return;
       }
 
       existing[value.name] = 1
 
-
-      if(existingAddresses[value.name]){
+      //@ts-ignore
+      if(existingAddresses[value.ammId] || existingAddresses['Cropper LP token ('+lp.pc.symbol +'/'+ lp.coin.symbol+')']){
+      console.log(value.name)
         console.log('in existingAddresses');
         return;
       }
