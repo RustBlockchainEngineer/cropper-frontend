@@ -31,6 +31,7 @@
           "
           @onCancel="() => (taskModalShow = false)"
         />
+        <IDVerifyModal :show="KYCModalShow" @onCancel="() => (KYCModalShow = false)" />
 
         <div class="project-content">
           <div class="project-preview-container">
@@ -41,6 +42,7 @@
               </div>
             </div>
             <div class="project-preview-ido-container">
+              {{ currentTimestamp }}
               <div class="project-preview">
                 <div class="project-overview fcsb-container">
                   <div class="project-title fcs-container">
@@ -436,27 +438,120 @@
                 >
                   <div class="project-detail-open">
                     <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.subscribe">
-                      <span class="font-medium weight-semi spacing-small"
-                        >You can buy token from this project and see what you will receive.</span
-                      >
-                      <div class="token-amount fcsb-container">
-                        <div class="token-amount-input fcs-container">
-                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                          <input class="font-medium weight-bold" type="number" placeholder="673" />
+                      <div class="kyc-form">
+                        <div class="kyc-progress-container fcs-container">
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">1</span>
+                            <span class="kyc-title font-small weight-bold">ID Verification</span>
+                          </div>
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 2 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">2</span>
+                            <span class="kyc-title font-small weight-bold">Verification</span>
+                          </div>
+                          <div class="kyc-step text-center" :class="KYCStatus.step > 3 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">3</span>
+                            <span class="kyc-title font-small weight-bold">Start to buy</span>
+                          </div>
                         </div>
-                        <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
-                      </div>
-                      <div class="receive-amount">
-                        <label class="font-xmall">You will receive:</label>
-                        <div class="receive-amount-output fcs-container">
-                          <img class="coin-icon" :src="fertilizer.logo" />
-                          <span class="receive-amount-value font-medium weight-semi spacing-small"
-                            >0.028 {{ fertilizer.title }}</span
+                        <div class="kyc-status-container fcsb-container">
+                          <div class="kyc-current-step fcs-container">
+                            <span class="font-large weight-bold">ID Verification</span>
+                            <img class="info-icon left" src="@/assets/icons/info.svg" />
+                          </div>
+                          <span
+                            class="kyc-status font-xsmall weight-bold"
+                            :class="
+                              KYCStatus.step === 1
+                                ? 'failed'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                ? 'progress'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                ? 'success'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                ? 'failed'
+                                : ''
+                            "
+                            >{{
+                              KYCStatus.step === 1
+                                ? 'Not verified'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                ? 'In progress'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                ? 'Verified'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                ? 'Verification failed'
+                                : ''
+                            }}</span
+                          >
+                        </div>
+                        <div class="kyc-description">
+                          <span class="font-small weight-semi spacing-large">
+                            Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours to
+                            be verified.
+                          </span>
+                          <img
+                            v-if="KYCStatus.step === 1"
+                            class="kyc-status-icon flex m-auto"
+                            src="@/assets/icons/kyc-verification.svg"
+                          />
+                          <img
+                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                            class="kyc-status-icon flex m-auto"
+                            src="@/assets/icons/kyc-progress.svg"
+                          />
+                          <img
+                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
+                            class="kyc-status-icon flex m-auto"
+                            src="@/assets/icons/kyc-success.svg"
+                          />
+                          <img
+                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
+                            class="kyc-status-icon flex m-auto"
+                            src="@/assets/icons/kyc-failed.svg"
+                          />
+                        </div>
+                        <div class="btn-container">
+                          <Button
+                            class="btn-transparent font-medium weight-semi icon-cursor"
+                            :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                            @click="KYCConfirm"
+                            >{{
+                              KYCStatus.step === 1
+                                ? 'Verify your ID now'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                ? 'Next'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                ? 'Next'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                ? 'Verify your ID again'
+                                : ''
+                            }}</Button
                           >
                         </div>
                       </div>
-                      <div class="btn-container">
-                        <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                      <div class="buy-form" :class="KYCStatus.userVerified ? '' : 'inactive'">
+                        <span class="font-medium weight-semi spacing-small"
+                          >You can buy token from this project and see what you will receive.</span
+                        >
+                        <div class="token-amount fcsb-container">
+                          <div class="token-amount-input fcs-container">
+                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                            <input class="font-medium weight-bold" type="number" placeholder="673" />
+                          </div>
+                          <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                        </div>
+                        <div class="receive-amount">
+                          <label class="font-xmall">You will receive:</label>
+                          <div class="receive-amount-output fcs-container">
+                            <img class="coin-icon" :src="fertilizer.logo" />
+                            <span class="receive-amount-value font-medium weight-semi spacing-small"
+                              >0.028 {{ fertilizer.title }}</span
+                            >
+                          </div>
+                        </div>
+                        <div class="btn-container">
+                          <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                        </div>
                       </div>
                     </div>
                     <div
@@ -487,6 +582,41 @@
                     <span class="font-medium weight-semi spacing-small"
                       >You have to wait Distribution date to receive Tokens. Be patient!</span
                     >
+                    <div class="buy-form">
+                      <div class="token-amount fcsb-container">
+                        <div class="token-amount-input fcs-container">
+                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
+                        </div>
+                        <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                      </div>
+                      <div class="receive-amount">
+                        <label class="font-xmall">You will receive:</label>
+                        <div class="receive-amount-output fcs-container">
+                          <img class="coin-icon" :src="fertilizer.logo" />
+                          <span class="receive-amount-value font-medium weight-semi spacing-small"
+                            >0.028 {{ fertilizer.title }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="receive-notification fb-container">
+                        <img class="info-icon right" src="@/assets/icons/info.svg" />
+                        <span class="font-xsmall weight-bold"
+                          >You will receive your tokens on
+                          <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div v-else-if="currentStep === 3" class="project-detail-item">
+                <div
+                  v-if="currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded"
+                  class="project-detail-open"
+                >
+                  <span class="font-medium weight-semi spacing-small">Distribution in progress, keep in touch!</span>
+                  <div class="buy-form">
                     <div class="token-amount fcsb-container">
                       <div class="token-amount-input fcs-container">
                         <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
@@ -504,43 +634,12 @@
                       </div>
                     </div>
                     <div class="receive-notification fb-container">
-                      <img class="info-icon" src="@/assets/icons/info.svg" />
+                      <img class="info-icon right" src="@/assets/icons/info.svg" />
                       <span class="font-xsmall weight-bold"
                         >You will receive your tokens on
                         <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
                       </span>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div v-else-if="currentStep === 3" class="project-detail-item">
-                <div
-                  v-if="currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded"
-                  class="project-detail-open"
-                >
-                  <span class="font-medium weight-semi spacing-small">Distribution in progress, keep in touch!</span>
-                  <div class="token-amount fcsb-container">
-                    <div class="token-amount-input fcs-container">
-                      <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                      <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
-                    </div>
-                    <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
-                  </div>
-                  <div class="receive-amount">
-                    <label class="font-xmall">You will receive:</label>
-                    <div class="receive-amount-output fcs-container">
-                      <img class="coin-icon" :src="fertilizer.logo" />
-                      <span class="receive-amount-value font-medium weight-semi spacing-small"
-                        >0.028 {{ fertilizer.title }}</span
-                      >
-                    </div>
-                  </div>
-                  <div class="receive-notification fb-container">
-                    <img class="info-icon" src="@/assets/icons/info.svg" />
-                    <span class="font-xsmall weight-bold"
-                      >You will receive your tokens on
-                      <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
-                    </span>
                   </div>
                 </div>
                 <div v-else class="text-center">
@@ -815,7 +914,7 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
-const TEST_TIME = 1643500800000
+const TEST_TIME = 1643214435194
 
 export default Vue.extend({
   components: {
@@ -828,7 +927,8 @@ export default Vue.extend({
 
   data() {
     return {
-      TEST_TIME: 1643500800000,
+      TEST_TIME: 1643214435194,
+      // 1643500800000
       fertilizer: {
         picture: '/fertilizer/banner/unq.png',
         logo: '/fertilizer/logo/unq.png',
@@ -865,8 +965,10 @@ export default Vue.extend({
         },
         whitelist_start_date: TEST_TIME + 60000 * 5,
         whitelist_end_date: TEST_TIME + 60000 * 10,
-        sales_start_date: TEST_TIME + 60000 * 15,
-        sales_end_date: TEST_TIME + 60000 * 20,
+        // sales_start_date: TEST_TIME + 60000 * 15,
+        // sales_end_date: TEST_TIME + 60000 * 20,
+        sales_start_date: TEST_TIME,
+        sales_end_date: TEST_TIME + 60000 * 60,
         distribution_start_date: TEST_TIME + 60000 * 25
       },
       projectStatus: {
@@ -885,13 +987,19 @@ export default Vue.extend({
         twitterTicket: 1 as number
       },
       currentTimestamp: 0 as any,
-      currentStep: 0 as number,
+      currentStep: 2 as number,
       currentTier: 0 as number,
       affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
       subscribeShow: false as boolean,
       taskModalShow: false as boolean,
       taskModalType: 0 as number,
       twitterShow: false as boolean,
+      KYCStatus: {
+        step: 1 as number,
+        verification: 0 as number,
+        userVerified: false as boolean
+      },
+      KYCModalShow: false as boolean,
       timer: null as any
     }
   },
@@ -950,8 +1058,10 @@ export default Vue.extend({
       },
       whitelist_start_date: this.TEST_TIME + 60000 * 5,
       whitelist_end_date: this.TEST_TIME + 60000 * 10,
-      sales_start_date: this.TEST_TIME + 60000 * 15,
-      sales_end_date: this.TEST_TIME + 60000 * 20,
+      // sales_start_date: this.TEST_TIME + 60000 * 15,
+      // sales_end_date: this.TEST_TIME + 60000 * 20,
+      sales_start_date: TEST_TIME,
+      sales_end_date: TEST_TIME + 60000 * 60,
       distribution_start_date: this.TEST_TIME + 60000 * 25
     }
   },
@@ -961,10 +1071,9 @@ export default Vue.extend({
       return moment()
     },
     checkCurrentStep() {
-      if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
-      if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
-      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date)
-        this.currentStep = 3
+      // if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
+      // if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
+      // if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
     },
     setTimer() {
       this.timer = setInterval(async () => {
@@ -979,6 +1088,11 @@ export default Vue.extend({
       textField.select()
       document.execCommand('copy')
       textField.remove()
+    },
+    KYCConfirm() {
+      if (this.KYCStatus.step === 1 || (this.KYCStatus.step === 2 && this.KYCStatus.verification === 0))
+        this.KYCModalShow = true
+      else if (this.KYCStatus.step === 2 && this.KYCStatus.verification === 2) this.KYCStatus.step = 3
     }
   }
 })
@@ -1000,6 +1114,11 @@ export default Vue.extend({
   height: auto;
   width: 100%;
   padding: 7.5px 0;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .btn-primary {
@@ -1073,7 +1192,14 @@ export default Vue.extend({
 .info-icon {
   width: 12px;
   height: 12px;
-  margin-right: 8px;
+
+  &.left {
+    margin-left: 8px;
+  }
+
+  &.right {
+    margin-right: 8px;
+  }
 }
 
 .lock-icon {
@@ -1395,70 +1521,6 @@ export default Vue.extend({
                 padding: 24px;
               }
 
-              .project-detail-sales {
-                .sales-start-countdown {
-                  margin-top: 32px;
-                }
-              }
-
-              .project-detail-open {
-                display: table;
-                margin: auto;
-
-                .token-amount {
-                  background: rgba(226, 227, 236, 0.1);
-                  border-radius: 12px;
-                  padding: 10px;
-                  margin: 16px 0 8px 0;
-
-                  .token-amount-input {
-                    width: calc(100% - 83px);
-
-                    input {
-                      border: none;
-                      outline: none;
-                      background: transparent;
-                      width: 100%;
-
-                      &::-webkit-inner-spin-button {
-                        display: none;
-                      }
-                    }
-                  }
-                  .token-max-amount {
-                    color: @color-blue100;
-                  }
-                }
-
-                .receive-amount {
-                  .receive-amount-output {
-                    background: @color-blue800;
-                    border-radius: 12px;
-                    padding: 10px;
-                    margin-top: 4px;
-
-                    .receive-amount-value {
-                      color: rgba(255, 255, 255, 0.5);
-                    }
-                  }
-                }
-
-                .receive-notification {
-                  background: @color-blue800;
-                  margin-top: 32px;
-                  padding: 18px;
-                  border-radius: 18px;
-                }
-
-                .btn-container {
-                  margin-top: 24px;
-                }
-
-                .distribution-start-countdown {
-                  margin-bottom: 32px;
-                }
-              }
-
               .ticket-tasks-group {
                 margin-top: 32px;
 
@@ -1600,6 +1662,146 @@ export default Vue.extend({
 
                 .btn-container {
                   width: 212px;
+                }
+              }
+
+              .project-detail-sales {
+                .sales-start-countdown {
+                  margin-top: 32px;
+                }
+              }
+
+              .project-detail-open {
+                display: table;
+                margin: auto;
+
+                .kyc-form {
+                  margin-bottom: 48px;
+
+                  .kyc-progress-container {
+                    margin-bottom: 48px;
+
+                    .kyc-step {
+                      width: calc((100% - 16px) / 3);
+                      margin-right: 8px;
+
+                      &:last-child {
+                        margin-right: 0;
+                      }
+
+                      .kyc-no {
+                        display: block;
+                        background: rgba(255, 255, 255, 0.4);
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        margin-bottom: 8px !important;
+                        color: @color-blue700;
+                      }
+
+                      .kyc-title {
+                        color: rgba(255, 255, 255, 0.4);
+                      }
+
+                      &.active {
+                        .kyc-no {
+                          background: @color-petrol500;
+                        }
+
+                        .kyc-title {
+                          color: @color-petrol500;
+                        }
+                      }
+                    }
+                  }
+
+                  .kyc-status-container {
+                    margin-bottom: 16px;
+
+                    .kyc-status {
+                      padding: 4px 8px;
+                      border-radius: 6px;
+
+                      &.failed {
+                        background: @color-red600;
+                      }
+
+                      &.progress {
+                        background: @color-yellow600;
+                      }
+
+                      &.success {
+                        background: @color-petrol500;
+                      }
+                    }
+                  }
+
+                  .kyc-description {
+                    margin-bottom: 24px;
+
+                    .kyc-status-icon {
+                      margin-top: 24px !important;
+                    }
+                  }
+                }
+
+                .buy-form {
+                  &.inactive {
+                    opacity: 0.5;
+                  }
+
+                  .token-amount {
+                    background: rgba(226, 227, 236, 0.1);
+                    border-radius: 12px;
+                    padding: 10px;
+                    margin: 16px 0 8px 0;
+
+                    .token-amount-input {
+                      width: calc(100% - 83px);
+
+                      input {
+                        border: none;
+                        outline: none;
+                        background: transparent;
+                        width: 100%;
+
+                        &::-webkit-inner-spin-button {
+                          display: none;
+                        }
+                      }
+                    }
+                    .token-max-amount {
+                      color: @color-blue100;
+                    }
+                  }
+
+                  .receive-amount {
+                    .receive-amount-output {
+                      background: @color-blue800;
+                      border-radius: 12px;
+                      padding: 10px;
+                      margin-top: 4px;
+
+                      .receive-amount-value {
+                        color: rgba(255, 255, 255, 0.5);
+                      }
+                    }
+                  }
+
+                  .receive-notification {
+                    background: @color-blue800;
+                    margin-top: 32px;
+                    padding: 18px;
+                    border-radius: 18px;
+                  }
+
+                  .btn-container {
+                    margin-top: 24px;
+                  }
+                }
+
+                .distribution-start-countdown {
+                  margin-bottom: 32px;
                 }
               }
             }
