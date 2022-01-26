@@ -57,6 +57,10 @@
               Mint : 
               <input type="text" class="std" id="mint" name="mint" v-model="mint" />
             </label>
+            <label>
+              Price Token Mint : 
+              <input type="text" class="std" id="price_token_mint" name="price_token_mint" v-model="scValues.price_token_mint" />
+            </label>
 
             <label>
               (SC) Token Price : 
@@ -74,6 +78,11 @@
             <label>
               (SC) Pool size : 
               <input type="text" class="std" id="pool_size" name="pool_size" v-model="scValues.pool_size" />
+            </label>
+
+            <label>
+              (SC) First Liberation : 
+              <input type="text" class="std" id="first_liberation" name="first_liberation" v-model="scValues.first_liberation" />
             </label>
 
             <label>
@@ -444,13 +453,23 @@ export default Vue.extend({
       saveProject(
         this.$web3,
         this.$wallet,
+        
         this.mint,
+        this.scValues.price_token_mint, //price token mint
+        
         this.scValues.date_preparation,
         this.scValues.date_whitelist_start,
         this.scValues.date_whitelist_end,
         this.scValues.date_sale_start,
         this.scValues.date_sale_end,
         this.scValues.date_distribution,
+
+        [0,1,2,3,4,5],
+
+        this.scValues.token_price,
+        this.scValues.pool_size,
+        this.scValues.first_liberation,
+
       );
     }
   }

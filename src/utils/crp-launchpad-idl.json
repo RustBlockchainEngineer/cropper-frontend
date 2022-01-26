@@ -78,6 +78,11 @@
           "isSigner": false
         },
         {
+          "name": "priceTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -117,6 +122,18 @@
           "type": {
             "vec": "u64"
           }
+        },
+        {
+          "name": "tokenPrice",
+          "type": "u64"
+        },
+        {
+          "name": "poolSize",
+          "type": "u64"
+        },
+        {
+          "name": "firstLiberation",
+          "type": "u8"
         }
       ]
     },
@@ -137,6 +154,11 @@
           "name": "authority",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "priceTokenMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "systemProgram",
@@ -174,6 +196,18 @@
           "type": {
             "vec": "u64"
           }
+        },
+        {
+          "name": "tokenPrice",
+          "type": "u64"
+        },
+        {
+          "name": "poolSize",
+          "type": "u64"
+        },
+        {
+          "name": "firstLiberation",
+          "type": "u8"
         }
       ]
     },
@@ -328,6 +362,22 @@
           {
             "name": "maxAllocTier5",
             "type": "u64"
+          },
+          {
+            "name": "tokenPrice",
+            "type": "u64"
+          },
+          {
+            "name": "poolSize",
+            "type": "u64"
+          },
+          {
+            "name": "priceTokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "firstLiberation",
+            "type": "u8"
           }
         ]
       }

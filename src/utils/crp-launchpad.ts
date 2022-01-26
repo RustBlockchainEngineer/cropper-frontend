@@ -172,12 +172,20 @@ export async function saveProject(
   wallet: any,
 
   projectMint: string,
+  priceTokenMint: string,
+
   prepareDate: any,
   whiltelistStartDate: any,
   whiltelistEndDate: any,
   saleStartDate: any,
   saleEndDate: any,
   distributionDate: any,
+  
+  max_allocs: any[],
+
+  tokenPrice: any,
+  poolSize: any,
+  firstLiberation: any,
 )
 {
   console.log(prepareDate);
@@ -190,6 +198,9 @@ export async function saveProject(
     [utf8.encode('project'), new PublicKey(projectMint).toBuffer() ],
     LaunchpadProgram.programId
   );
+  const tmp_max_allocs = max_allocs.map(function(ele){
+    return new BN(ele);
+  })
 
   const project = await getProject(projectMint);
 
@@ -203,13 +214,17 @@ export async function saveProject(
         str2time(saleStartDate),
         str2time(saleEndDate),
         str2time(distributionDate),
-        [new BN(0),new BN(1), new BN(2), new BN(3), new BN(4), new BN(5)],
+        tmp_max_allocs,
+        new BN(tokenPrice),
+        new BN(poolSize),
+        new BN(firstLiberation),
       {
         accounts: {
           launchpad: launchpadAddress,
           project: projectAddress,
           authority: wallet.publicKey,
           projectMint,
+          priceTokenMint: new PublicKey(priceTokenMint),
           ...defaultAccounts
         }
       })
@@ -225,12 +240,16 @@ export async function saveProject(
         str2time(saleStartDate),
         str2time(saleEndDate),
         str2time(distributionDate),
-        [new BN(0),new BN(1), new BN(2), new BN(3), new BN(4), new BN(5)],
+        tmp_max_allocs,
+        new BN(tokenPrice),
+        new BN(poolSize),
+        new BN(firstLiberation),
       {
         accounts: {
           launchpad: launchpadAddress,
           project: projectAddress,
           authority: wallet.publicKey,
+          priceTokenMint: new PublicKey(priceTokenMint),
           ...defaultAccounts
         }
       })
