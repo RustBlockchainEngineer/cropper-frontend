@@ -8,12 +8,9 @@
 
 
 
-          <div class="create">
-              <Button @click="create" ghost>Create launchpad</Button>
-          </div>
 
           <div class="create">
-              <NuxtLink to="/fertilizer/project/?mint=BT37QA8Az1zJWQG3L5yeyHPeM99pkGcWTpwjrQ5M42Xs"><button>Create a new project</button></NuxtLink>
+              <NuxtLink to="/fertilizer/project/?mint=new"><button>Create a new project</button></NuxtLink>
           </div>
 
 
