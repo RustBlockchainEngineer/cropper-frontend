@@ -101,6 +101,19 @@
               </select>
             </label>
 
+            <label class="half">
+              First liberation : 
+              <select class="std" id="type" v-model="scValues.first_liberation" name="type">
+                <option value="100">100% TGE</option>
+                <option value="50">50% TGE</option>
+                <option value="40">40% TGE</option>
+                <option value="30">30% TGE</option>
+                <option value="25">25% TGE</option>
+                <option value="20">20% TGE</option>
+                <option value="10">10% TGE</option>
+              </select>
+            </label>
+
             
 
 
@@ -543,24 +556,37 @@ export default Vue.extend({
       }
     },
 
-    create() {
-      createLaunchpad(this.$web3, this.$wallet)
+
+    async create() {
+
+
+      await this.delay(1000);
+
+        var request = require('request');
+        var options = {
+          'method': 'POST',
+          'url': 'https://api.croppppp.com/launchpad/post/',
+          'headers': {
+            'Referrer-Policy': 'no-referer',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          form: { 'mint' : this.mint}
+        };
+        request(options, function (error : any, response : any) {
+          if (error) throw new Error(error);
+
+        });
+
+        
+      this.$router.push({
+        path: '/fertilizer/project/?f=' + this.mint
+      })
+
       
 
-      var request = require('request');
-      var options = {
-        'method': 'POST',
-        'url': 'https://api.croppppp.com/launchpad/post/',
-        'headers': {
-          'Referrer-Policy': 'no-referer',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        form: { 'mint' : this.mint}
-      };
-      request(options, function (error : any, response : any) {
-        if (error) throw new Error(error);
-        console.log(response.body);
-      });
+
+
+
 
     }, 
 
