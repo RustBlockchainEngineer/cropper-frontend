@@ -577,6 +577,7 @@ export default Vue.extend({
 
         });
 
+      this.is_new = 0;
         
       this.$router.push({
         path: '/fertilizer/project/?f=' + this.mint
