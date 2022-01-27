@@ -377,6 +377,9 @@
                     <div class="ticket-share-group fcsb-container">
                       <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" disabled />
                       <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" @click="copyToClipboard()" />
+                      <div v-if="copyNotification" class="copy-notification">
+                        <span class="font-small weight-semi spacing-large">Link was copied to clipboard</span>
+                      </div>
                     </div>
                     <div class="ticket-btn-group fcsb-container">
                       <div class="share-btn btn-container">
@@ -926,7 +929,7 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
-const TEST_TIME = 1643297535664
+const TEST_TIME = 1643299890203
 // 1643500800000
 
 export default Vue.extend({
@@ -1009,6 +1012,7 @@ export default Vue.extend({
         userVerified: false as boolean
       },
       KYCModalShow: false as boolean,
+      copyNotification: false as boolean,
       timer: null as any
     }
   },
@@ -1039,7 +1043,8 @@ export default Vue.extend({
     checkCurrentStep() {
       if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
       if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
-      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
+      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date)
+        this.currentStep = 3
     },
     setTimer() {
       this.timer = setInterval(async () => {
@@ -1054,6 +1059,10 @@ export default Vue.extend({
       textField.select()
       document.execCommand('copy')
       textField.remove()
+      this.copyNotification = true
+      setTimeout(() => {
+        this.copyNotification = false
+      }, 3000)
     },
     KYCConfirm() {
       if (this.KYCStatus.step === 1 || (this.KYCStatus.step === 2 && this.KYCStatus.verification === 0))
@@ -1542,6 +1551,7 @@ export default Vue.extend({
                   }
 
                   .ticket-share-group {
+                    position: relative;
                     margin: 8px 0 24px 0;
                     padding: 0 8px;
                     background: rgba(226, 227, 236, 0.1);
@@ -1557,6 +1567,18 @@ export default Vue.extend({
 
                     .copy-icon {
                       margin: 0 10px;
+                    }
+
+                    .copy-notification {
+                      position: absolute;
+                      top: 50px;
+                      right: 10px;
+                      background: @gradient-color-primary;
+                      background-origin: border-box;
+                      border: 2px solid rgba(255, 255, 255, 0.14);
+                      box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+                      border-radius: 8px;
+                      padding: 12px;
                     }
                   }
 
