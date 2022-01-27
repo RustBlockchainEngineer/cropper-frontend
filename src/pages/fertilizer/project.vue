@@ -31,6 +31,18 @@
               <input style="font-size:20px;font-weight:bold" type="text" class="std" id="title" name="title" v-model="apiValues.title" />
             </label>
 
+
+            <label>
+              Project title tag : TODOAPI
+              <input type="text" class="std" id="titletag" name="titletag" v-model="apiValues.titletag" />
+            </label>
+
+
+            <label>
+              Project meta description : TODOAPI
+              <input type="text" class="std" id="metadec" name="metadec" v-model="apiValues.metadec" />
+            </label>
+
             <label class="half">
               Picture URL: 
               <input type="text" class="std" id="picture" name="picture" v-model="apiValues.picture" />
@@ -39,11 +51,6 @@
             <label class="half">
               Picture URL (mobile) TODOAPI: 
               <input type="text" class="std" id="picture" name="picture" v-model="apiValues.picture" />
-            </label>
-
-            <label>
-              ATH : 
-              <textarea class="std" id="ath" name="ath" v-model="apiValues.ath"></textarea>
             </label>
 
 
@@ -74,38 +81,40 @@
               Mint : 
               <input disabled type="text" class="std" id="mint" name="mint" v-model="mint" />
             </label>
+
             <label>
-              Price Token Mint : 
-              <input type="text" class="std" id="price_token_mint" name="price_token_mint" v-model="scValues.price_token_mint" />
+              Logo Token (optional) TODOAPI : 
+              <input type="text" class="std" id="logo_token" name="logo_token" v-model="apiValues.logo_token" />
+            </label>
+
+
+            <label class="half">
+              Token Price token : <span v-if="scValues.price_token_mint == '' || scValues.price_token_mint == undefined" class="error">Required</span>
+              <select class="std" id="price_token_mint" name="price_token_mint" v-model="scValues.price_token_mint">
+                <option value="6MBRfPbzejwVpADXq3LCotZetje3N16m5Yn7LCs2ffU4">USDC</option>
+                <option value="11111111111111111111111111111111">SOL</option>
+              </select>
             </label>
 
             <label class="half">
-              (SC) Token Price : 
+              Token Price : <span v-if="scValues.token_price * 1 == 0" class="error">Price unknown</span>
               <input type="text" class="std" id="token_price" name="token_price" v-model="scValues.token_price" />
             </label>
 
             <label class="half">
-              (SC) Token Price token : 
-              <select class="std" id="type" name="type">
-                <option value="">USDC</option>
-                <option>SOL</option>
-              </select>
-            </label>
-
-            <label class="half">
-              (SC) Pool size (in token price value) : 
+              Pool size (in token price value) :  <span v-if="scValues.pool_size * 1 == 0" class="error">Pool size unknown</span>
               <input type="text" class="std" id="pool_size" name="pool_size" v-model="scValues.pool_size" />
             </label>
 
             <label class="half">
-              Type : 
+              Type : <span v-if="apiValues.type == ''" class="error">Required</span>
               <select class="std" id="type" v-model="apiValues.type" name="type">
-                <option>100% TGE</option>
-                <option>Vested</option>
+                <option value="100% TGE">100% TGE</option>
+                <option value="Vested">Vested</option>
               </select>
             </label>
 
-            <label class="half">
+            <label class="half" v-if="apiValues.type == 'Vested'">
               First liberation : 
               <select class="std" id="type" v-model="scValues.first_liberation" name="type">
                 <option value="100">100% TGE</option>
@@ -133,36 +142,44 @@
 
 
             <label class="date">
-              (SC) Preparation Date (D1) : 
-              <input type="text" class="std" id="date_preparation" name="date_preparation" v-model="scValues.date_preparation" />
+              Preparation Date (D1) :  <span v-if="!scValues.date_preparation || scValues.date_preparation.length != 19" class="error">Please enter a date like YYYY-MM-JJ HH:II:SS</span>
+              <input placeholder="YYYY-MM-JJ HH:II:SS" type="text" class="std" id="date_preparation" name="date_preparation" v-model="scValues.date_preparation" />
             </label>
 
             <label class="date">
-              (SC) Whitelist start Date (D2) : 
-              <input type="text" class="std" id="date_whitelist_start" name="date_whitelist_start" v-model="scValues.date_whitelist_start" />
+              Whitelist start Date (D2) :  <span v-if="scValues.date_whitelist_start <= scValues.date_preparation" class="error">Date doesn't look good</span> <span v-if="!scValues.date_whitelist_start || scValues.date_whitelist_start.length != 19" class="error">Please enter a date like YYYY-MM-JJ HH:II:SS</span>
+              <input placeholder="YYYY-MM-JJ HH:II:SS" type="text" class="std" id="date_whitelist_start" name="date_whitelist_start" v-model="scValues.date_whitelist_start" />
             </label>
 
             <label class="date">
-              (SC) Whitelist end Date (D2.2) : 
-              <input type="text" class="std" id="date_whitelist_end" name="date_whitelist_end" v-model="scValues.date_whitelist_end" />
+              Whitelist end Date (D2.2) :   <span v-if="scValues.date_whitelist_end <= scValues.date_whitelist_start" class="error">Date doesn't look good</span> <span v-if="!scValues.date_whitelist_end || scValues.date_whitelist_end.length != 19" class="error">Please enter a date like YYYY-MM-JJ HH:II:SS</span>
+              <input placeholder="YYYY-MM-JJ HH:II:SS" type="text" class="std" id="date_whitelist_end" name="date_whitelist_end" v-model="scValues.date_whitelist_end" />
             </label>
 
             <label class="date">
-              (SC) Sales start Date (D4) : 
-              <input type="text" class="std" id="date_sale_start" name="date_sale_start" v-model="scValues.date_sale_start" />
+              Sales start Date (D4) : <span v-if="scValues.date_sale_start <= scValues.date_whitelist_end" class="error">Date doesn't look good</span> <span v-if="!scValues.date_sale_start || scValues.date_sale_start.length != 19" class="error">Please enter a date like YYYY-MM-JJ HH:II:SS</span>
+              <input placeholder="YYYY-MM-JJ HH:II:SS" type="text" class="std" id="date_sale_start" name="date_sale_start" v-model="scValues.date_sale_start" />
             </label>
 
             <label class="date">
-              (SC) Sales end Date (D4) : 
-              <input type="text" class="std" id="date_sale_end" name="date_sale_end" v-model="scValues.date_sale_end" />
+              Sales end Date (D4) : <span v-if="scValues.date_sale_end <= scValues.date_sale_start" class="error">Date doesn't look good</span> <span v-if="!scValues.date_sale_end || scValues.date_sale_end.length != 19" class="error">Please enter a date like YYYY-MM-JJ HH:II:SS</span>
+              <input placeholder="YYYY-MM-JJ HH:II:SS" type="text" class="std" id="date_sale_end" name="date_sale_end" v-model="scValues.date_sale_end" />
             </label>
 
             <label class="date">
-              (SC) Distribution Date (D5) : 
-              <input type="text" class="std" id="date_distribution" name="date_distribution" v-model="scValues.date_distribution" />
+              Distribution Date (D5) : <span v-if="scValues.date_distribution <= scValues.date_sale_end" class="error">Date doesn't look good</span> <span v-if="!scValues.date_distribution || scValues.date_distribution.length != 19" class="error">Please enter a date like YYYY-MM-JJ HH:II:SS</span>
+              <input placeholder="YYYY-MM-JJ HH:II:SS" type="text" class="std" id="date_distribution" name="date_distribution" v-model="scValues.date_distribution" />
             </label>
 
             
+
+            <label>
+              Set launch as closed :  TODOAPI
+              <select class="std" id="closed" v-model="apiValues.closed" name="closed">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </label>
 
 
 
@@ -176,6 +193,18 @@
 
 
             <h4>Social infos</h4>
+
+
+            <label class="half">
+              Twitter link TODOAPI: 
+              <input type="text" class="std" id="twitter_link" name="twitter_link" v-model="apiValues.twitter_link" />
+            </label>
+
+            <label class="half">
+              Website TODOAPI: 
+              <input type="text" class="std" id="website" name="website" v-model="apiValues.website" />
+            </label>
+
 
             <label>
               Post to retweet: 
@@ -220,7 +249,7 @@
 
             <label>
               <div>Lottery ticket :</div>
-              <div class="conta">Tickets count<br />
+              <div class="conta">Tickets count <br />
               <input style="color:#000;font-weight:bold" type="text" class="tier" id="ticketsCount" name="ticketsCount" v-model="apiValues.ticketsCount" />
               </div>
               <div class="conta">Tickets value (USDC)<br />
@@ -228,6 +257,10 @@
               </div>
               <div class="conta">% Allocation<br />
               {{ (apiValues.ticketsCount * scValues.alloc_ticket / scValues.pool_size) * 100 }} %
+              </div>
+
+              <div class="conta">
+<button>Process Lottery</button>
               </div>
             </label>
 
@@ -588,7 +621,11 @@ export default Vue.extend({
     }, 
 
     save() {
-      // TODO - SC PART
+
+
+      if(this.apiValues.type != 'Vested'){
+        this.scValues.first_liberation = 100;
+      }
 
       let apiDatas = this.apiValues;
       apiDatas.mint = this.mint;
@@ -755,6 +792,11 @@ export default Vue.extend({
     padding: 4px 8px;
     border-radius: 4px;
   }
+}
+
+.error{
+  color:#f00 !important;
+  font-weight:bold;
 }
 
 .info-icon {
