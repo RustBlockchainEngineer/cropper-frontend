@@ -996,7 +996,7 @@ export default Vue.extend({
         twitterTicket: 1 as number
       },
       currentTimestamp: 0 as any,
-      currentStep: 2 as number,
+      currentStep: 0 as number,
       currentTier: 0 as number,
       affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
       subscribeShow: false as boolean,
