@@ -543,7 +543,7 @@ export default Vue.extend({
     }
   },
   head: {
-    title: 'CropperFinance Swap'
+    title: 'CropperFinance Staking'
   },
   computed: {
     ...mapState(['wallet', 'swap', 'liquidity', 'url', 'setting', 'price', 'token'])
