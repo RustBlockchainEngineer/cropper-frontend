@@ -128,10 +128,12 @@
             <Row slot="header" class="id-form-header fcsb-container">
               <span class="id-form-title font-medium">ID Card</span>
               <img
+                v-if="!imgUploaded.id"
                 class="arrow-icon"
                 :class="showCollapse === 'id' ? 'down' : 'right'"
                 src="@/assets/icons/arrow-down-white.svg"
               />
+              <img v-else class="status-icon" src="@/assets/icons/status-ok.svg" />
             </Row>
             <Row class="id-form-content">
               <div class="fcs-container">
@@ -208,10 +210,12 @@
             <Row slot="header" class="id-form-header fcsb-container">
               <span class="id-form-title font-medium">Passport</span>
               <img
+                v-if="!imgUploaded.passport"
                 class="arrow-icon"
                 :class="showCollapse === 'passport' ? 'down' : 'right'"
                 src="@/assets/icons/arrow-down-white.svg"
               />
+              <img v-else class="status-icon" src="@/assets/icons/status-ok.svg" />
             </Row>
             <Row class="id-form-content">
               <div class="fcs-container">
@@ -361,11 +365,11 @@ export default Vue.extend({
       if (!isJpgOrPng) {
         this.$message.error('You can only upload JPG file!')
       }
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('Image must smaller than 2MB!')
+      const isLt4M = file.size / 1024 / 1024 < 4
+      if (!isLt4M) {
+        this.$message.error('Image must smaller than 4MB!')
       }
-      return isJpgOrPng && isLt2M
+      return isJpgOrPng && isLt4M
     },
     uploadFrontImage(info: any) {
       if (info.file.status === 'uploading') {
