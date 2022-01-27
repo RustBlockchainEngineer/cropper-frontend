@@ -54,6 +54,10 @@
               <img v-else class="status-icon" src="@/assets/icons/status-ok.svg" />
             </Row>
             <Row class="id-form-content">
+              <div class="fcs-container mb-8">
+                <img class="info-icon" src="@/assets/icons/info.svg" />
+                <span class="font-small">valid file (jpg, jpeg, png) and max 4MB</span>
+              </div>
               <div class="fcs-container">
                 <div class="upload-box">
                   <Upload
@@ -136,6 +140,10 @@
               <img v-else class="status-icon" src="@/assets/icons/status-ok.svg" />
             </Row>
             <Row class="id-form-content">
+              <div class="fcs-container mb-8">
+                <img class="info-icon" src="@/assets/icons/info.svg" />
+                <span class="font-small">valid file (jpg, jpeg, png) and max 4MB</span>
+              </div>
               <div class="fcs-container">
                 <div class="upload-box">
                   <Upload
@@ -218,6 +226,10 @@
               <img v-else class="status-icon" src="@/assets/icons/status-ok.svg" />
             </Row>
             <Row class="id-form-content">
+              <div class="fcs-container mb-8">
+                <img class="info-icon" src="@/assets/icons/info.svg" />
+                <span class="font-small">valid file (jpg, jpeg, png) and max 4MB</span>
+              </div>
               <div class="fcs-container">
                 <div class="upload-box">
                   <Upload
@@ -455,6 +467,10 @@ export default Vue.extend({
   height: 16px;
 }
 
+.info-icon {
+  margin-right: 8px;
+}
+
 a {
   color: #fff !important;
 }
@@ -646,7 +662,7 @@ a {
         border: none !important;
         background: transparent !important;
         padding: 0;
-        margin-top: 20px;
+        margin-top: 10px;
 
         .ant-collapse-content-box {
           padding: 0;
