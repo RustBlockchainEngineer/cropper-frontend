@@ -231,7 +231,7 @@
                           >
                         </div>
                         <span v-if="currentStep === 3" class="status-label description font-small"
-                          >The tokens get distributed to Sale participants.</span
+                          >The tokens get distributed to Sale subscribers.</span
                         >
                       </template>
                     </Step>
@@ -290,9 +290,9 @@
                       </div>
                     </Col>
                     <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
-                      <span class="title font-small weight-semi spacing-large">Participants</span>
+                      <span class="title font-small weight-semi spacing-large">Subscribers</span>
                       <div class="value">
-                        <span class="font-medium weight-semi">{{ fertilizer.participants }}</span>
+                        <span class="font-medium weight-semi">{{ fertilizer.subscribers }}</span>
                       </div>
                     </Col>
                     <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
@@ -949,7 +949,7 @@ export default Vue.extend({
           'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
         hard_cap: '3000K',
         pool_size: 5000,
-        participants: 100418,
+        subscribers: 100418,
         website: 'UNQ.club',
         website_url: 'https://UNQ.club',
         mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',

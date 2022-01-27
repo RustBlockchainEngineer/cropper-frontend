@@ -171,8 +171,8 @@
                   </span>
                   <span v-else>
                     {{
-                      sortFunded === sortOptions.subscribers
-                        ? sortOptions.subscribers + (sortAsc ? ' (High > Low)' : ' (Low > High)')
+                      sortFunded === sortOptions.investors
+                        ? sortOptions.investors + (sortAsc ? ' (High > Low)' : ' (Low > High)')
                         : sortFunded === sortOptions.total_raised
                         ? sortOptions.total_raised + (sortAsc ? ' (High > Low)' : ' (Low > High)')
                         : sortFunded === sortOptions.token_price
@@ -252,17 +252,17 @@
               <div v-else-if="filterProject === filterOptions.funded" class="option-sort-collapse collapse-right">
                 <div
                   class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortFunded === sortOptions.subscribers && !sortAsc ? 'active-item' : ''"
-                  @click="sortByColumnMenu(sortOptions.subscribers, false)"
+                  :class="sortFunded === sortOptions.investors && !sortAsc ? 'active-item' : ''"
+                  @click="sortByColumnMenu(sortOptions.investors, false)"
                 >
-                  {{ sortOptions.subscribers }} (Low > High)
+                  {{ sortOptions.investors }} (Low > High)
                 </div>
                 <div
                   class="collapse-item text-center texts weight-bold icon-cursor"
-                  :class="sortFunded === sortOptions.subscribers && sortAsc ? 'active-item' : ''"
-                  @click="sortByColumnMenu(sortOptions.subscribers, true)"
+                  :class="sortFunded === sortOptions.investors && sortAsc ? 'active-item' : ''"
+                  @click="sortByColumnMenu(sortOptions.investors, true)"
                 >
-                  {{ sortOptions.subscribers }} (High > Low)
+                  {{ sortOptions.investors }} (High > Low)
                 </div>
                 <div
                   class="collapse-item text-center texts weight-bold icon-cursor"
@@ -352,10 +352,10 @@
                         </span>
                       </div>
                       <div class="project-balance">
-                        <div v-if="fertilizer.participants">
-                          <span class="label font-small weight-semi spacing-large">Participants</span>
+                        <div v-if="fertilizer.subscribers">
+                          <span class="label font-small weight-semi spacing-large">Subscribers</span>
                           <span class="value font-medium weight-semi spacing-small fcs-container">{{
-                            fertilizer.participants
+                            fertilizer.subscribers
                           }}</span>
                         </div>
                       </div>
@@ -467,19 +467,19 @@
               <Row class="fertilizer-funded-table-header">
                 <Col class="header-column font-small weight-bold text-left" span="6"> Project name </Col>
                 <Col class="header-column font-small weight-bold" span="3">
-                  <div class="header-column-title" @click="sortByColumn(sortOptions.subscribers)">
-                    Subscribers
+                  <div class="header-column-title" @click="sortByColumn(sortOptions.investors)">
+                    Investors
                     <img
-                      v-if="sortFunded === sortOptions.subscribers"
+                      v-if="sortFunded === sortOptions.investors"
                       src="@/assets/icons/arrow-down-green.svg"
                       class="arrow-icon"
-                      :class="sortFunded === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortFunded === sortOptions.investors && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                     <img
                       v-else
                       src="@/assets/icons/arrow-down-white.svg"
                       class="arrow-icon"
-                      :class="sortFunded === sortOptions.subscribers && sortAsc ? 'arrow-down' : 'arrow-up'"
+                      :class="sortFunded === sortOptions.investors && sortAsc ? 'arrow-down' : 'arrow-up'"
                     />
                   </div>
                 </Col>
@@ -570,7 +570,7 @@
                   </Col>
 
                   <Col class="state font-medium weight-semi" span="3">
-                    {{ fertilizer.subscribers }}
+                    {{ fertilizer.investors }}
                   </Col>
 
                   <Col class="state font-medium weight-semi" span="4">
@@ -648,8 +648,8 @@
                     </Col>
 
                     <Col class="state text-center" span="5">
-                      <span class="label font-small weight-bold">Subscribers</span>
-                      <span class="font-medium weight-semi">{{ fertilizer.subscribers }} </span>
+                      <span class="label font-small weight-bold">Investors</span>
+                      <span class="font-medium weight-semi">{{ fertilizer.investors }} </span>
                     </Col>
 
                     <Col class="state font-medium weight-semi text-center" span="5">
@@ -774,8 +774,8 @@
                         </div>
 
                         <div class="state">
-                          <span class="label font-small weight-bold">Subscribers</span>
-                          <span class="font-medium weight-semi">{{ fertilizer.subscribers }}</span>
+                          <span class="label font-small weight-bold">Investors</span>
+                          <span class="font-medium weight-semi">{{ fertilizer.investors }}</span>
                         </div>
                       </div>
                     </Col>
@@ -919,7 +919,7 @@ export default Vue.extend({
       showMoreMenu: [] as boolean[],
       currentShowMore: -1 as number,
       sortUpcoming: 'All' as string,
-      sortFunded: 'Subscribers' as string,
+      sortFunded: 'Investors' as string,
       sortAsc: false as boolean,
       filterOptions: {
         all: 'All',
@@ -931,7 +931,7 @@ export default Vue.extend({
         funded: 'Funded'
       },
       sortOptions: {
-        subscribers: 'Subscribers',
+        investors: 'Investors',
         total_raised: 'Total raise',
         token_price: 'Token price',
         ath: 'ATH Since IDO',
@@ -948,7 +948,7 @@ export default Vue.extend({
           short_desc: 'Social platform for NFT asset management',
           hard_cap: '3000K',
           token_price: 0.071,
-          participants: 100418,
+          subscribers: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           whitelist_end_date: 1643500800000
         },
@@ -960,7 +960,7 @@ export default Vue.extend({
           short_desc: 'Blueprints for metaverses',
           hard_cap: '3000K',
           token_price: 0.071,
-          participants: 100418,
+          subscribers: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           sales_start_date: 1641280215000,
           sales_end_date: 1643500800000
@@ -973,7 +973,7 @@ export default Vue.extend({
           short_desc: 'Our galatic adventure awaits',
           hard_cap: '3000K',
           token_price: 0.071,
-          participants: 100418,
+          subscribers: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           sales_start_date: 1643500800000
         },
@@ -985,7 +985,7 @@ export default Vue.extend({
           short_desc: 'Grow your money stash with the best prices across DeFi',
           hard_cap: '3000K',
           token_price: 0.071,
-          participants: 100418,
+          subscribers: 100418,
           mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           distribution_start_date: 1643500800000
         },
@@ -1026,7 +1026,7 @@ export default Vue.extend({
           picture: '/fertilizer/logo/defiland.png',
           title: 'DeFi Land',
           short_desc: 'Gamified Decentralized Finance',
-          subscribers: 1000,
+          investors: 1000,
           hard_cap: 250000,
           token_price: 0.068,
           ath: 526.7,
@@ -1038,7 +1038,7 @@ export default Vue.extend({
           picture: '/fertilizer/logo/sonar.png',
           title: 'Sonar Watch',
           short_desc: 'Empowering user journey on Solana DeFi',
-          subscribers: 1001,
+          investors: 1001,
           hard_cap: 249999,
           token_price: 0.069,
           ath: 526.6,
@@ -1050,7 +1050,7 @@ export default Vue.extend({
           picture: '/fertilizer/logo/goosefx.png',
           title: 'GooseFX',
           short_desc: 'A Complete DeFi Experience',
-          subscribers: 1002,
+          investors: 1002,
           hard_cap: 249998,
           token_price: 0.07,
           ath: 526.5,
@@ -1062,7 +1062,7 @@ export default Vue.extend({
           picture: '/fertilizer/logo/waggle.png',
           title: 'Waggle Network',
           short_desc: 'Primary markets for everyone',
-          subscribers: 1003,
+          investors: 1003,
           hard_cap: 249997,
           token_price: 0.071,
           ath: 526.4,
@@ -1074,7 +1074,7 @@ export default Vue.extend({
           picture: '/fertilizer/logo/cryowar.png',
           title: 'Cryowar',
           short_desc: 'Next-gen blockchain multiplayer game',
-          subscribers: 1004,
+          investors: 1004,
           hard_cap: 249996,
           token_price: 0.071,
           ath: 526.3,
@@ -1086,7 +1086,7 @@ export default Vue.extend({
           picture: '/fertilizer/logo/cyclos.png',
           title: 'Cyclos',
           short_desc: 'Decentralized trading unleashed',
-          subscribers: 1005,
+          investors: 1005,
           hard_cap: 249995,
           token_price: 0.073,
           ath: 526.2,
@@ -1162,7 +1162,7 @@ export default Vue.extend({
     filterProject: {
       handler(newFilterProject: string) {
         this.sortUpcoming = this.filterOptions.all
-        this.sortFunded = this.sortOptions.subscribers
+        this.sortFunded = this.sortOptions.investors
         this.sortAsc = false
         this.showFilterMenu = false
         this.filterFertilizer(this.searchName, newFilterProject)
@@ -1314,8 +1314,8 @@ export default Vue.extend({
 
         // sort by column on Funded projects
         if (this.sortAsc) {
-          if (this.sortFunded == this.sortOptions.subscribers) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.subscribers - a.subscribers)
+          if (this.sortFunded == this.sortOptions.investors) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.investors - a.investors)
           } else if (this.sortFunded == this.sortOptions.total_raised) {
             this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => b.hard_cap - a.hard_cap)
           } else if (this.sortFunded == this.sortOptions.token_price) {
@@ -1328,8 +1328,8 @@ export default Vue.extend({
             )
           }
         } else {
-          if (this.sortFunded == this.sortOptions.subscribers) {
-            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.subscribers - b.subscribers)
+          if (this.sortFunded == this.sortOptions.investors) {
+            this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.investors - b.investors)
           } else if (this.sortFunded == this.sortOptions.total_raised) {
             this.fertilizerItems = this.fertilizerItems.sort((a: any, b: any) => a.hard_cap - b.hard_cap)
           } else if (this.sortFunded == this.sortOptions.token_price) {
