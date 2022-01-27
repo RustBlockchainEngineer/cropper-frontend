@@ -1007,8 +1007,8 @@ export default Vue.extend({
       taskModalType: 0 as number,
       twitterShow: false as boolean,
       KYCStatus: {
-        step: 2 as number,
-        verification: 2 as number,
+        step: 1 as number,
+        verification: 1 as number,
         userVerified: false as boolean
       },
       KYCModalShow: false as boolean,
