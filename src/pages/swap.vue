@@ -130,7 +130,7 @@
           <div class="swap-actions fcsb-container">
             <div class="swap-status font-medium weight-semi">
               <div v-if="priceImpact <= 2" class="price-status">
-                <img class="status-icon" src="@/assets/icons/status-ok.svg" />
+                <img class="status-icon" src="@/assets/icons/status-success.svg" />
                 <label class="font-medium weight-semi price-impact-green">Fair Price</label>
               </div>
               <div v-else-if="priceImpact > 2 && priceImpact <= 5" class="price-status">

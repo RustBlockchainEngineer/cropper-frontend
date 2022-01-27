@@ -51,7 +51,7 @@
                 :class="showCollapse === 'driver' ? 'down' : 'right'"
                 src="@/assets/icons/arrow-down-white.svg"
               />
-              <img v-else class="status-icon" src="@/assets/icons/status-ok.svg" />
+              <img v-else class="status-icon" src="@/assets/icons/status-success.svg" />
             </Row>
             <Row class="id-form-content">
               <div class="fcs-container mb-8">
@@ -137,7 +137,7 @@
                 :class="showCollapse === 'id' ? 'down' : 'right'"
                 src="@/assets/icons/arrow-down-white.svg"
               />
-              <img v-else class="status-icon" src="@/assets/icons/status-ok.svg" />
+              <img v-else class="status-icon" src="@/assets/icons/status-success.svg" />
             </Row>
             <Row class="id-form-content">
               <div class="fcs-container mb-8">
@@ -223,7 +223,7 @@
                 :class="showCollapse === 'passport' ? 'down' : 'right'"
                 src="@/assets/icons/arrow-down-white.svg"
               />
-              <img v-else class="status-icon" src="@/assets/icons/status-ok.svg" />
+              <img v-else class="status-icon" src="@/assets/icons/status-success.svg" />
             </Row>
             <Row class="id-form-content">
               <div class="fcs-container mb-8">
