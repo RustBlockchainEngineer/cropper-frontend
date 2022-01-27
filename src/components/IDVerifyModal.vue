@@ -76,7 +76,7 @@
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
-                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                      <div class="ant-upload-text font-xsmall">Upload</div>
                     </div>
                   </Upload>
                   <div class="fcsb-container">
@@ -106,7 +106,7 @@
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
-                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                      <div class="ant-upload-text font-xsmall">Upload</div>
                     </div>
                   </Upload>
                   <div class="fcsb-container">
@@ -162,7 +162,7 @@
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
-                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                      <div class="ant-upload-text font-xsmall">Upload</div>
                     </div>
                   </Upload>
                   <div class="fcsb-container">
@@ -192,7 +192,7 @@
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
-                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                      <div class="ant-upload-text font-xsmall">Upload</div>
                     </div>
                   </Upload>
                   <div class="fcsb-container">
@@ -248,7 +248,7 @@
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
-                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                      <div class="ant-upload-text font-xsmall">Upload</div>
                     </div>
                   </Upload>
                   <div class="fcsb-container">
@@ -278,7 +278,7 @@
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
-                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                      <div class="ant-upload-text font-xsmall">Upload</div>
                     </div>
                   </Upload>
                   <div class="fcsb-container">
