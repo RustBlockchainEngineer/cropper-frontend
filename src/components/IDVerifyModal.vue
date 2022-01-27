@@ -67,10 +67,10 @@
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
                     @change="
-                        (info) => {
-                          this.uploadFrontImage(info)
-                          this.imgUploaded.driver = true
-                        }
+                      (info) => {
+                        this.uploadFrontImage(info)
+                        this.imgUploaded.driver = true
+                      }
                     "
                   >
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
@@ -97,10 +97,10 @@
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
                     @change="
-                        (info) => {
-                          this.uploadBackImage(info)
-                          this.imgUploaded.driver = true
-                        }
+                      (info) => {
+                        this.uploadBackImage(info)
+                        this.imgUploaded.driver = true
+                      }
                     "
                   >
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
@@ -153,10 +153,10 @@
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
                     @change="
-                        (info) => {
-                          this.uploadFrontImage(info)
-                          this.imgUploaded.id = true
-                        }
+                      (info) => {
+                        this.uploadFrontImage(info)
+                        this.imgUploaded.id = true
+                      }
                     "
                   >
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
@@ -183,10 +183,10 @@
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
                     @change="
-                        (info) => {
-                          this.uploadBackImage(info)
-                          this.imgUploaded.id = true
-                        }
+                      (info) => {
+                        this.uploadBackImage(info)
+                        this.imgUploaded.id = true
+                      }
                     "
                   >
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
@@ -239,10 +239,10 @@
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
                     @change="
-                        (info) => {
-                          this.uploadFrontImage(info)
-                          this.imgUploaded.passport = true
-                        }
+                      (info) => {
+                        this.uploadFrontImage(info)
+                        this.imgUploaded.passport = true
+                      }
                     "
                   >
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
@@ -269,10 +269,10 @@
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
                     @change="
-                        (info) => {
-                          this.uploadBackImage(info)
-                          this.imgUploaded.passport = true
-                        }
+                      (info) => {
+                        this.uploadBackImage(info)
+                        this.imgUploaded.passport = true
+                      }
                     "
                   >
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
