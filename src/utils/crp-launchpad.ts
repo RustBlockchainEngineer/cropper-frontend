@@ -148,7 +148,7 @@ export async function getProjectFormatted(mint: string){
       date_sale_start: time2str(data.saleStartDate),
       date_sale_end: time2str(data.saleEndDate),
       date_distribution: time2str(data.distributionDate),
-      token_price: data.tokenPrice.toString(),
+      token_price: data.tokenPrice.toString() / PRICE_PRECISION,
       pool_size: data.poolSize.toString(),
       first_liberation: data.firstLiberation.toString(),
       price_token_mint: data.priceTokenMint.toString(),
@@ -179,6 +179,38 @@ function str2time(date:string){
 function time2str(date: any){
   return moment(new Date(date * 1000)).format(datetime_format)
 }
+const PRICE_PRECISION = 1000000;
+
+function formatProjectParams(
+  prepareDate: any,
+  whiltelistStartDate: any,
+  whiltelistEndDate: any,
+  saleStartDate: any,
+  saleEndDate: any,
+  distributionDate: any,
+  
+  max_allocs: any[],
+
+  tokenPrice: any,
+  poolSize: any,
+  firstLiberation: any,
+){
+  return [
+    str2time(prepareDate),
+    str2time(whiltelistStartDate),
+    str2time(whiltelistEndDate),
+    str2time(saleStartDate),
+    str2time(saleEndDate),
+    str2time(distributionDate),
+    
+    max_allocs.map(function(ele){ return new BN(ele)}),
+    
+    new BN(Math.ceil(tokenPrice * PRICE_PRECISION)),
+    new BN(poolSize),
+    new BN(firstLiberation),
+  ]
+}
+
 export async function saveProject(
   connection:Connection,
   wallet: any,
@@ -209,52 +241,29 @@ export async function saveProject(
     [utf8.encode('project'), new PublicKey(projectMint).toBuffer() ],
     LaunchpadProgram.programId
   );
-  const tmp_max_allocs = max_allocs.map(function(ele){
-    return new BN(ele);
-  })
+
 
   const project = await getProject(projectMint);
-
-  // transaction.add(
-  //   LaunchpadProgram.instruction.createProject(
-  //     bump,
-  //     str2time('01 Feb 2021'),
-  //     str2time('02 Feb 2021'),
-  //     str2time('03 Feb 2021'),
-  //     str2time('04 Feb 2021'),
-  //     str2time('05 Feb 2021'),
-  //     str2time('06 Feb 2021'),
-  //     [new BN(0), new BN(1), new BN(2), new BN(3), new BN(4), new BN(5),],
-  //     new BN(100),
-  //     new BN(25),
-  //     new BN(10),
-  //   {
-  //     accounts: {
-  //       launchpad: launchpadAddress,
-  //       project: projectAddress,
-  //       authority: wallet.publicKey,
-  //       projectMint,
-  //       priceTokenMint: new Keypair().publicKey,
-  //       ...defaultAccounts
-  //     }
-  //   })
-  // )
-  // return await sendTransaction(connection, wallet, transaction, signers)
+  const paramFormatted = await formatProjectParams(  
+    prepareDate,
+    whiltelistStartDate,
+    whiltelistEndDate,
+    saleStartDate,
+    saleEndDate,
+    distributionDate,
+    
+    max_allocs,
   
+    tokenPrice,
+    poolSize,
+    firstLiberation,
+  );
+
   if(!project){
     transaction.add(
       LaunchpadProgram.instruction.createProject(
         bump,
-        str2time(prepareDate),
-        str2time(whiltelistStartDate),
-        str2time(whiltelistEndDate),
-        str2time(saleStartDate),
-        str2time(saleEndDate),
-        str2time(distributionDate),
-        tmp_max_allocs,
-        new BN(tokenPrice),
-        new BN(poolSize),
-        new BN(firstLiberation),
+        ...paramFormatted,
       {
         accounts: {
           launchpad: launchpadAddress,
@@ -271,20 +280,7 @@ export async function saveProject(
   {
     transaction.add(
       LaunchpadProgram.instruction.updateProject(
-        
-        str2time(prepareDate),
-        str2time(whiltelistStartDate),
-        str2time(whiltelistEndDate),
-        str2time(saleStartDate),
-        str2time(saleEndDate),
-        str2time(distributionDate),
-        
-        tmp_max_allocs,
-        
-        new BN(tokenPrice),
-        new BN(poolSize),
-        new BN(firstLiberation),
-
+        ...paramFormatted,
       {
         accounts: {
           launchpad: launchpadAddress,
