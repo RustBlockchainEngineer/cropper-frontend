@@ -31,7 +31,17 @@
           "
           @onCancel="() => (taskModalShow = false)"
         />
-        <IDVerifyModal :show="KYCModalShow" @onCancel="() => (KYCModalShow = false)" />
+        <IDVerifyModal
+          :show="KYCModalShow"
+          @onCancel="() => (KYCModalShow = false)"
+          @onOk="
+            () => {
+              KYCStatus.step = 2
+              KYCStatus.verification = 1
+              KYCModalShow = false
+            }
+          "
+        />
 
         <div class="project-content">
           <div class="project-preview-container">
@@ -448,88 +458,90 @@
                             <span class="kyc-no m-auto font-medium weight-bold">2</span>
                             <span class="kyc-title font-small weight-bold">Verification</span>
                           </div>
-                          <div class="kyc-step text-center" :class="KYCStatus.step > 3 ? 'active' : ''">
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 3 ? 'active' : ''">
                             <span class="kyc-no m-auto font-medium weight-bold">3</span>
                             <span class="kyc-title font-small weight-bold">Start to buy</span>
                           </div>
                         </div>
-                        <div class="kyc-status-container fcsb-container">
-                          <div class="kyc-current-step fcs-container">
-                            <span class="font-large weight-bold">ID Verification</span>
-                            <img class="info-icon left" src="@/assets/icons/info.svg" />
+                        <div v-if="KYCStatus.step < 3">
+                          <div class="kyc-status-container fcsb-container">
+                            <div class="kyc-current-step fcs-container">
+                              <span class="font-large weight-bold">ID Verification</span>
+                              <img class="info-icon left" src="@/assets/icons/info.svg" />
+                            </div>
+                            <span
+                              class="kyc-status font-xsmall weight-bold"
+                              :class="
+                                KYCStatus.step === 1
+                                  ? 'failed'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'progress'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'success'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'failed'
+                                  : ''
+                              "
+                              >{{
+                                KYCStatus.step === 1
+                                  ? 'Not verified'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'In progress'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'Verified'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'Verification failed'
+                                  : ''
+                              }}</span
+                            >
                           </div>
-                          <span
-                            class="kyc-status font-xsmall weight-bold"
-                            :class="
-                              KYCStatus.step === 1
-                                ? 'failed'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                ? 'progress'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                ? 'success'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                ? 'failed'
-                                : ''
-                            "
-                            >{{
-                              KYCStatus.step === 1
-                                ? 'Not verified'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                ? 'In progress'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                ? 'Verified'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                ? 'Verification failed'
-                                : ''
-                            }}</span
-                          >
-                        </div>
-                        <div class="kyc-description">
-                          <span class="font-small weight-semi spacing-large">
-                            Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours to
-                            be verified.
-                          </span>
-                          <img
-                            v-if="KYCStatus.step === 1"
-                            class="kyc-status-icon flex m-auto"
-                            src="@/assets/icons/kyc-verification.svg"
-                          />
-                          <img
-                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
-                            class="kyc-status-icon flex m-auto"
-                            src="@/assets/icons/kyc-progress.svg"
-                          />
-                          <img
-                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
-                            class="kyc-status-icon flex m-auto"
-                            src="@/assets/icons/kyc-success.svg"
-                          />
-                          <img
-                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
-                            class="kyc-status-icon flex m-auto"
-                            src="@/assets/icons/kyc-failed.svg"
-                          />
-                        </div>
-                        <div class="btn-container">
-                          <Button
-                            class="btn-transparent font-medium weight-semi icon-cursor"
-                            :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
-                            @click="KYCConfirm"
-                            >{{
-                              KYCStatus.step === 1
-                                ? 'Verify your ID now'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                ? 'Next'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                ? 'Next'
-                                : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                ? 'Verify your ID again'
-                                : ''
-                            }}</Button
-                          >
+                          <div class="kyc-description">
+                            <span class="font-small weight-semi spacing-large">
+                              Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours to
+                              be verified.
+                            </span>
+                            <img
+                              v-if="KYCStatus.step === 1"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-verification.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-progress.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-success.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-failed.svg"
+                            />
+                          </div>
+                          <div class="btn-container">
+                            <Button
+                              class="btn-transparent font-medium weight-semi icon-cursor"
+                              :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                              @click="KYCConfirm"
+                              >{{
+                                KYCStatus.step === 1
+                                  ? 'Verify your ID now'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'Next'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'Next'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'Verify your ID again'
+                                  : ''
+                              }}</Button
+                            >
+                          </div>
                         </div>
                       </div>
-                      <div class="buy-form" :class="KYCStatus.userVerified ? '' : 'inactive'">
+                      <div class="buy-form" :class="KYCStatus.userVerified && KYCStatus.step === 3 ? '' : 'inactive'">
                         <span class="font-medium weight-semi spacing-small"
                           >You can buy token from this project and see what you will receive.</span
                         >
@@ -914,7 +926,7 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
-const TEST_TIME = 1643214435194
+const TEST_TIME = 1643277196722
 
 export default Vue.extend({
   components: {
@@ -927,7 +939,7 @@ export default Vue.extend({
 
   data() {
     return {
-      TEST_TIME: 1643214435194,
+      TEST_TIME: 1643277196722,
       // 1643500800000
       fertilizer: {
         picture: '/fertilizer/banner/unq.png',
@@ -995,8 +1007,8 @@ export default Vue.extend({
       taskModalType: 0 as number,
       twitterShow: false as boolean,
       KYCStatus: {
-        step: 1 as number,
-        verification: 0 as number,
+        step: 2 as number,
+        verification: 2 as number,
         userVerified: false as boolean
       },
       KYCModalShow: false as boolean,
@@ -1092,7 +1104,10 @@ export default Vue.extend({
     KYCConfirm() {
       if (this.KYCStatus.step === 1 || (this.KYCStatus.step === 2 && this.KYCStatus.verification === 0))
         this.KYCModalShow = true
-      else if (this.KYCStatus.step === 2 && this.KYCStatus.verification === 2) this.KYCStatus.step = 3
+      else if (this.KYCStatus.step === 2 && this.KYCStatus.verification === 2) {
+        this.KYCStatus.step = 3
+        this.KYCStatus.userVerified = true
+      }
     }
   }
 })
