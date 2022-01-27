@@ -305,7 +305,7 @@
       <div class="btn-container">
         <Button
           class="btn-transparent font-medium weight-semi letter-small icon-cursor"
-          :disabled="!accepted"
+          :disabled="!(accepted && (imgUploaded.driver || imgUploaded.id || imgUploaded.passport))"
           @click="$emit('onOk')"
           >Submit</Button
         >

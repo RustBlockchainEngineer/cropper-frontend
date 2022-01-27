@@ -926,7 +926,8 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
-const TEST_TIME = 1643296360140
+const TEST_TIME = 1643297535664
+// 1643500800000
 
 export default Vue.extend({
   components: {
@@ -939,8 +940,6 @@ export default Vue.extend({
 
   data() {
     return {
-      TEST_TIME: 1643296360140,
-      // 1643500800000
       fertilizer: {
         picture: '/fertilizer/banner/unq.png',
         logo: '/fertilizer/logo/unq.png',
@@ -975,13 +974,11 @@ export default Vue.extend({
           tokenomics: '/fertilizer/project/unq/tokenomics.png',
           distribution: '/fertilizer/project/unq/distribution.png'
         },
-        whitelist_start_date: TEST_TIME + 60000 * 5,
-        whitelist_end_date: TEST_TIME + 60000 * 10,
-        // sales_start_date: TEST_TIME + 60000 * 15,
-        // sales_end_date: TEST_TIME + 60000 * 20,
-        sales_start_date: TEST_TIME,
-        sales_end_date: TEST_TIME + 60000 * 60,
-        distribution_start_date: TEST_TIME + 60000 * 25
+        whitelist_start_date: TEST_TIME + 60000 * 20,
+        whitelist_end_date: TEST_TIME + 60000 * 25,
+        sales_start_date: TEST_TIME + 60000 * 30,
+        sales_end_date: TEST_TIME + 60000 * 35,
+        distribution_start_date: TEST_TIME + 60000 * 40
       },
       projectStatus: {
         preparation: 'Preparation',
@@ -1031,51 +1028,8 @@ export default Vue.extend({
     this.currentTimestamp = moment().valueOf()
     this.setTimer()
 
-    const query = new URLSearchParams(window.location.search)
-    if (query.get('tt')) this.TEST_TIME = (query.get('tt') as any) * 1
-
-    this.fertilizer = {
-      picture: '/fertilizer/banner/unq.png',
-      logo: '/fertilizer/logo/unq.png',
-      title: 'UNQ.club',
-      short_desc: 'Social platform for NFT asset management',
-      long_desc:
-        'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
-      hard_cap: '3000K',
-      pool_size: 5000,
-      participants: 100418,
-      website: 'UNQ.club',
-      website_url: 'https://UNQ.club',
-      mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-      ido_info: {
-        hard_cap: 140000,
-        sale_rate: 0.028,
-        sale_type: 'Vested',
-        open_time: 1643500800000,
-        close_time: 1643500800000
-      },
-      token_info: {
-        symbol: 'UNQ',
-        category: 'NFT',
-        token_distribution: 1643500800000,
-        blockchain: 'Solana'
-      },
-      img: {
-        about: '/fertilizer/project/unq/about.png',
-        features: '/fertilizer/project/unq/features.png',
-        roadmap: '/fertilizer/project/unq/roadmap.png',
-        team: '/fertilizer/project/unq/team.png',
-        tokenomics: '/fertilizer/project/unq/tokenomics.png',
-        distribution: '/fertilizer/project/unq/distribution.png'
-      },
-      whitelist_start_date: this.TEST_TIME + 60000 * 5,
-      whitelist_end_date: this.TEST_TIME + 60000 * 10,
-      // sales_start_date: this.TEST_TIME + 60000 * 15,
-      // sales_end_date: this.TEST_TIME + 60000 * 20,
-      sales_start_date: TEST_TIME,
-      sales_end_date: TEST_TIME + 60000 * 60,
-      distribution_start_date: this.TEST_TIME + 60000 * 25
-    }
+    // const query = new URLSearchParams(window.location.search)
+    // if (query.get('tt')) this.TEST_TIME = (query.get('tt') as any) * 1
   },
 
   methods: {
@@ -1083,9 +1037,9 @@ export default Vue.extend({
       return moment()
     },
     checkCurrentStep() {
-      // if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
-      // if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
-      // if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
+      if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
+      if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
+      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
     },
     setTimer() {
       this.timer = setInterval(async () => {
