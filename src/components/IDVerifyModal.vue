@@ -62,7 +62,12 @@
                     class="id-uploader"
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
-                    @change="uploadDriverFrontImage"
+                    @change="
+                        (info) => {
+                          this.uploadFrontImage(info)
+                          this.imgUploaded.driver = true
+                        }
+                    "
                   >
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
@@ -87,7 +92,12 @@
                     class="id-uploader"
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
-                    @change="uploadDriverBackImage"
+                    @change="
+                        (info) => {
+                          this.uploadBackImage(info)
+                          this.imgUploaded.driver = true
+                        }
+                    "
                   >
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
@@ -132,7 +142,12 @@
                     class="id-uploader"
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
-                    @change="uploadIDFrontImage"
+                    @change="
+                        (info) => {
+                          this.uploadFrontImage(info)
+                          this.imgUploaded.id = true
+                        }
+                    "
                   >
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
@@ -157,7 +172,12 @@
                     class="id-uploader"
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
-                    @change="uploadIDBackImage"
+                    @change="
+                        (info) => {
+                          this.uploadBackImage(info)
+                          this.imgUploaded.id = true
+                        }
+                    "
                   >
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
@@ -202,7 +222,12 @@
                     class="id-uploader"
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
-                    @change="uploadPassportFrontImage"
+                    @change="
+                        (info) => {
+                          this.uploadFrontImage(info)
+                          this.imgUploaded.passport = true
+                        }
+                    "
                   >
                     <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
@@ -227,7 +252,12 @@
                     class="id-uploader"
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
-                    @change="uploadPassportBackImage"
+                    @change="
+                        (info) => {
+                          this.uploadBackImage(info)
+                          this.imgUploaded.passport = true
+                        }
+                    "
                   >
                     <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
@@ -337,7 +367,7 @@ export default Vue.extend({
       }
       return isJpgOrPng && isLt2M
     },
-    uploadDriverFrontImage(info: any) {
+    uploadFrontImage(info: any) {
       if (info.file.status === 'uploading') {
         return
       }
@@ -346,34 +376,9 @@ export default Vue.extend({
         getBase64(info.file.originFileObj, (imgUrl: any) => {
           this.imgUrl.front = imgUrl
         })
-        this.imgUploaded.driver = true
       }
     },
-    uploadIDFrontImage(info: any) {
-      if (info.file.status === 'uploading') {
-        return
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.front = imgUrl
-        })
-        this.imgUploaded.id = true
-      }
-    },
-    uploadPassportFrontImage(info: any) {
-      if (info.file.status === 'uploading') {
-        return
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.front = imgUrl
-        })
-        this.imgUploaded.passport = true
-      }
-    },
-    uploadDriverBackImage(info: any) {
+    uploadBackImage(info: any) {
       if (info.file.status === 'uploading') {
         return
       }
@@ -382,38 +387,13 @@ export default Vue.extend({
         getBase64(info.file.originFileObj, (imgUrl: any) => {
           this.imgUrl.back = imgUrl
         })
-        this.imgUploaded.driver = true
-      }
-    },
-    uploadIDBackImage(info: any) {
-      if (info.file.status === 'uploading') {
-        return
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.back = imgUrl
-        })
-        this.imgUploaded.id = true
-      }
-    },
-    uploadPassportBackImage(info: any) {
-      if (info.file.status === 'uploading') {
-        return
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.back = imgUrl
-        })
-        this.imgUploaded.passport = true
       }
     },
     removeFrontImage(type: string) {
       this.imgUrl.front = ''
       if (this.imgUrl.back === '') {
         if (type === 'driver') this.imgUploaded.driver = false
-        else if (type === 'driver') this.imgUploaded.id = false
+        else if (type === 'id') this.imgUploaded.id = false
         else this.imgUploaded.passport = false
       }
     },
@@ -421,7 +401,7 @@ export default Vue.extend({
       this.imgUrl.back = ''
       if (this.imgUrl.front === '') {
         if (type === 'driver') this.imgUploaded.driver = false
-        else if (type === 'driver') this.imgUploaded.id = false
+        else if (type === 'id') this.imgUploaded.id = false
         else this.imgUploaded.passport = false
       }
     }
