@@ -15,14 +15,21 @@
         <span class="select-title font-small weight-semi spacing-large">Select your country</span>
         <Dropdown :trigger="['click']">
           <a class="fcsb-container">
-            <span class="font-medium">France</span>
+            <span class="font-medium">{{ selectedCountry }}</span>
             <img class="arrow-icon" src="@/assets/icons/arrow-down-white.svg" />
           </a>
-          <!-- <div slot="overlay">
-            <li key="0">
-              <a>France</a>
+          <div slot="overlay">
+            <li v-for="country in countries" :key="country.value">
+              <a
+                @click="
+                  () => {
+                    selectedCountry = country.label
+                  }
+                "
+                >{{ country.label }}</a
+              >
             </li>
-          </div> -->
+          </div>
         </Dropdown>
       </div>
       <div class="id-type-select">
@@ -33,13 +40,13 @@
             v-show="true"
             key="driver"
             class="id-form-collapse"
-            :class="imgUploaded ? 'completed' : ''"
-            :disabled="imgUploaded"
+            :class="imgUploaded.driver ? 'completed' : ''"
+            :disabled="imgUploaded.id || imgUploaded.passport"
           >
             <Row slot="header" class="id-form-header fcsb-container">
               <span class="id-form-title font-medium">Driver's Licence</span>
               <img
-                v-if="!imgUploaded"
+                v-if="!imgUploaded.driver"
                 class="arrow-icon"
                 :class="showCollapse === 'driver' ? 'down' : 'right'"
                 src="@/assets/icons/arrow-down-white.svg"
@@ -52,40 +59,62 @@
                   <Upload
                     name="avatar"
                     list-type="picture-card"
-                    class="avatar-uploader"
+                    class="id-uploader"
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
-                    @change="handleChange"
+                    @change="uploadDriverFrontImage"
                   >
-                    <img v-if="imgUrl[0]" class="imgPreview" :src="imgUrl[0]" alt="avatar" />
+                    <img v-if="imgUrl.driverFront" class="img-preview" :src="imgUrl.driverFront" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
                       <div class="ant-upload-text font-xsmall">Upload jpg</div>
                     </div>
                   </Upload>
-                  <span class="upload-title text-small weight-semi spacing-large">Front</span>
+                  <div class="fcsb-container">
+                    <span class="upload-title text-small weight-semi spacing-large">Front</span>
+                    <img
+                      v-if="imgUrl.driverFront"
+                      class="img-remove icon-cursor"
+                      src="@/assets/icons/close-circle.svg"
+                      @click="removeFrontImage('driver')"
+                    />
+                  </div>
                 </div>
                 <div class="upload-box">
                   <Upload
                     name="avatar"
                     list-type="picture-card"
-                    class="avatar-uploader"
+                    class="id-uploader"
                     :show-upload-list="false"
                     :before-upload="beforeUpload"
-                    @change="handleChange"
+                    @change="uploadDriverBackImage"
                   >
-                    <img v-if="imgUrl[1]" class="imgPreview" :src="imgUrl[1]" alt="avatar" />
+                    <img v-if="imgUrl.driverBack" class="img-preview" :src="imgUrl.driverBack" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
                       <div class="ant-upload-text font-xsmall">Upload jpg</div>
                     </div>
                   </Upload>
-                  <span class="upload-title text-small weight-semi spacing-large">Back</span>
+                  <div class="fcsb-container">
+                    <span class="upload-title text-small weight-semi spacing-large">Back</span>
+                    <img
+                      v-if="imgUrl.driverBack"
+                      class="img-remove icon-cursor"
+                      src="@/assets/icons/close-circle.svg"
+                      @click="removeBackImage('driver')"
+                    />
+                  </div>
                 </div>
               </div>
             </Row>
           </CollapsePanel>
-          <CollapsePanel v-show="true" key="id" class="id-form-collapse" :disabled="imgUploaded">
+          <CollapsePanel
+            v-show="true"
+            key="id"
+            class="id-form-collapse"
+            :class="imgUploaded.id ? 'completed' : ''"
+            :disabled="imgUploaded.driver || imgUploaded.passport"
+          >
             <Row slot="header" class="id-form-header fcsb-container">
               <span class="id-form-title font-medium">ID Card</span>
               <img
@@ -94,9 +123,68 @@
                 src="@/assets/icons/arrow-down-white.svg"
               />
             </Row>
-            <Row class="id-form-content"> </Row>
+            <Row class="id-form-content">
+              <div class="fcs-container">
+                <div class="upload-box">
+                  <Upload
+                    name="avatar"
+                    list-type="picture-card"
+                    class="id-uploader"
+                    :show-upload-list="false"
+                    :before-upload="beforeUpload"
+                    @change="uploadIDFrontImage"
+                  >
+                    <img v-if="imgUrl.idFront" class="img-preview" :src="imgUrl.idFront" alt="avatar" />
+                    <div v-else>
+                      <img src="@/assets/icons/upload.svg" />
+                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                    </div>
+                  </Upload>
+                  <div class="fcsb-container">
+                    <span class="upload-title text-small weight-semi spacing-large">Front</span>
+                    <img
+                      v-if="imgUrl.idFront"
+                      class="img-remove icon-cursor"
+                      src="@/assets/icons/close-circle.svg"
+                      @click="removeFrontImage('id')"
+                    />
+                  </div>
+                </div>
+                <div class="upload-box">
+                  <Upload
+                    name="avatar"
+                    list-type="picture-card"
+                    class="id-uploader"
+                    :show-upload-list="false"
+                    :before-upload="beforeUpload"
+                    @change="uploadIDBackImage"
+                  >
+                    <img v-if="imgUrl.idBack" class="img-preview" :src="imgUrl.idBack" alt="avatar" />
+                    <div v-else>
+                      <img src="@/assets/icons/upload.svg" />
+                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                    </div>
+                  </Upload>
+                  <div class="fcsb-container">
+                    <span class="upload-title text-small weight-semi spacing-large">Back</span>
+                    <img
+                      v-if="imgUrl.idBack"
+                      class="img-remove icon-cursor"
+                      src="@/assets/icons/close-circle.svg"
+                      @click="removeBackImage('id')"
+                    />
+                  </div>
+                </div>
+              </div>
+            </Row>
           </CollapsePanel>
-          <CollapsePanel v-show="true" key="passport" class="id-form-collapse" :disabled="imgUploaded">
+          <CollapsePanel
+            v-show="true"
+            key="passport"
+            class="id-form-collapse"
+            :class="imgUploaded.passport ? 'completed' : ''"
+            :disabled="imgUploaded.driver || imgUploaded.id"
+          >
             <Row slot="header" class="id-form-header fcsb-container">
               <span class="id-form-title font-medium">Passport</span>
               <img
@@ -105,7 +193,60 @@
                 src="@/assets/icons/arrow-down-white.svg"
               />
             </Row>
-            <Row class="id-form-content"> </Row>
+            <Row class="id-form-content">
+              <div class="fcs-container">
+                <div class="upload-box">
+                  <Upload
+                    name="avatar"
+                    list-type="picture-card"
+                    class="id-uploader"
+                    :show-upload-list="false"
+                    :before-upload="beforeUpload"
+                    @change="uploadPassportFrontImage"
+                  >
+                    <img v-if="imgUrl.passportFront" class="img-preview" :src="imgUrl.passportFront" alt="avatar" />
+                    <div v-else>
+                      <img src="@/assets/icons/upload.svg" />
+                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                    </div>
+                  </Upload>
+                  <div class="fcsb-container">
+                    <span class="upload-title text-small weight-semi spacing-large">Front</span>
+                    <img
+                      v-if="imgUrl.passportFront"
+                      class="img-remove icon-cursor"
+                      src="@/assets/icons/close-circle.svg"
+                      @click="removeFrontImage('passport')"
+                    />
+                  </div>
+                </div>
+                <div class="upload-box">
+                  <Upload
+                    name="avatar"
+                    list-type="picture-card"
+                    class="id-uploader"
+                    :show-upload-list="false"
+                    :before-upload="beforeUpload"
+                    @change="uploadPassportBackImage"
+                  >
+                    <img v-if="imgUrl.passportBack" class="img-preview" :src="imgUrl.passportBack" alt="avatar" />
+                    <div v-else>
+                      <img src="@/assets/icons/upload.svg" />
+                      <div class="ant-upload-text font-xsmall">Upload jpg</div>
+                    </div>
+                  </Upload>
+                  <div class="fcsb-container">
+                    <span class="upload-title text-small weight-semi spacing-large">Back</span>
+                    <img
+                      v-if="imgUrl.passportBack"
+                      class="img-remove icon-cursor"
+                      src="@/assets/icons/close-circle.svg"
+                      @click="removeBackImage('passport')"
+                    />
+                  </div>
+                </div>
+              </div>
+            </Row>
           </CollapsePanel>
         </Collapse>
       </div>
@@ -118,7 +259,7 @@
       <div class="btn-container">
         <Button
           class="btn-transparent font-medium weight-semi letter-small icon-cursor"
-          :disabled="!accepted || !imgUploaded"
+          :disabled="!accepted"
           @click="$emit('onOk')"
           >Submit</Button
         >
@@ -132,6 +273,8 @@ import Vue from 'vue'
 import { Modal, Checkbox, Dropdown, Upload, Button, Collapse, Row } from 'ant-design-vue'
 Vue.use(Modal)
 const CollapsePanel = Collapse.Panel
+const countries = require('i18n-iso-countries')
+countries.registerLocale(require('i18n-iso-countries/langs/en.json'))
 
 function getBase64(img: any, callback: any) {
   const reader = new FileReader()
@@ -158,31 +301,35 @@ export default Vue.extend({
     }
   },
 
+  computed: {
+    countries() {
+      const list = countries.getNames('en', { select: 'official' })
+      return Object.keys(list).map((key) => ({ value: key, label: list[key] }))
+    }
+  },
+
   data() {
     return {
-      imgUploaded: false as boolean,
-      imgUrl: [] as any[],
+      imgUploaded: {
+        driver: false as boolean,
+        id: false as boolean,
+        passport: false as boolean
+      },
+      imgUrl: {
+        driverFront: '' as string,
+        driverBack: '' as string,
+        idFront: '' as string,
+        idBack: '' as string,
+        passportFront: '' as string,
+        passportBack: '' as string
+      },
+      selectedCountry: 'France' as string,
       accepted: false as boolean,
       showCollapse: [] as any[]
     }
   },
 
   methods: {
-    handleChange(info: any) {
-      if (info.file.status === 'uploading') {
-        return
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.push(imgUrl)
-        })
-      }
-      if (this.imgUrl.length === 1) {
-        this.imgUploaded = true
-        this.showCollapse = []
-      }
-    },
     beforeUpload(file: any) {
       const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
       if (!isJpgOrPng) {
@@ -193,6 +340,102 @@ export default Vue.extend({
         this.$message.error('Image must smaller than 2MB!')
       }
       return isJpgOrPng && isLt2M
+    },
+    uploadDriverFrontImage(info: any) {
+      if (info.file.status === 'uploading') {
+        return
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, (imgUrl: any) => {
+          this.imgUrl.driverFront = imgUrl
+        })
+        this.imgUploaded.driver = true
+      }
+    },
+    uploadIDFrontImage(info: any) {
+      if (info.file.status === 'uploading') {
+        return
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, (imgUrl: any) => {
+          this.imgUrl.idFront = imgUrl
+        })
+        this.imgUploaded.id = true
+      }
+    },
+    uploadPassportFrontImage(info: any) {
+      if (info.file.status === 'uploading') {
+        return
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, (imgUrl: any) => {
+          this.imgUrl.passportFront = imgUrl
+        })
+        this.imgUploaded.passport = true
+      }
+    },
+    uploadDriverBackImage(info: any) {
+      if (info.file.status === 'uploading') {
+        return
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, (imgUrl: any) => {
+          this.imgUrl.driverBack = imgUrl
+        })
+        this.imgUploaded.driver = true
+      }
+    },
+    uploadIDBackImage(info: any) {
+      if (info.file.status === 'uploading') {
+        return
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, (imgUrl: any) => {
+          this.imgUrl.idBack = imgUrl
+        })
+        this.imgUploaded.id = true
+      }
+    },
+    uploadPassportBackImage(info: any) {
+      if (info.file.status === 'uploading') {
+        return
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, (imgUrl: any) => {
+          this.imgUrl.passportBack = imgUrl
+        })
+        this.imgUploaded.passport = true
+      }
+    },
+    removeFrontImage(type: string) {
+      if (type === 'driver') {
+        this.imgUrl.driverFront = ''
+        if (this.imgUrl.driverBack === '') this.imgUploaded.driver = false
+      } else if (type === 'id') {
+        this.imgUrl.idFront = ''
+        if (this.imgUrl.idBack === '') this.imgUploaded.id = false
+      } else {
+        this.imgUrl.passportFront = ''
+        if (this.imgUrl.passportBack === '') this.imgUploaded.passport = false
+      }
+    },
+    removeBackImage(type: string) {
+      if (type === 'driver') {
+        this.imgUrl.driverBack = ''
+        if (this.imgUrl.driverFront === '') this.imgUploaded.driver = false
+      } else if (type === 'id') {
+        this.imgUrl.idBack = ''
+        if (this.imgUrl.idFront === '') this.imgUploaded.id = false
+      } else {
+        this.imgUrl.passportBack = ''
+        if (this.imgUrl.passportFront === '') this.imgUploaded.passport = false
+      }
     }
   },
   mounted() {}
@@ -270,9 +513,14 @@ a {
             margin-right: 0;
           }
 
-          .imgPreview {
-            height: 100px;
+          .img-preview {
+            height: 96px;
             width: 100%;
+          }
+
+          .img-remove {
+            width: 16px;
+            height: 16px;
           }
         }
       }
@@ -313,6 +561,26 @@ a {
 }
 </style>
 <style lang="less">
+// ant dropdown
+.ant-dropdown-trigger {
+  background: rgba(226, 227, 236, 0.1);
+  border-radius: 12px;
+  padding: 10px 18px;
+}
+
+.ant-dropdown {
+  .ant-dropdown-content {
+    height: 200px;
+    overflow-y: scroll;
+    background: @color-blue600;
+    z-index: 999;
+
+    li {
+      padding: 4px;
+    }
+  }
+}
+
 .verify-container {
   // ant checkbox
   .ant-checkbox {
@@ -353,13 +621,6 @@ a {
   .ant-checkbox:hover .ant-checkbox-inner,
   .ant-checkbox-input:focus + .ant-checkbox-inner {
     border-color: @color-farms !important;
-  }
-
-  // ant dropdown
-  .ant-dropdown-trigger {
-    background: rgba(226, 227, 236, 0.1);
-    border-radius: 12px;
-    padding: 10px 18px;
   }
 
   // ant upload

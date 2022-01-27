@@ -497,8 +497,8 @@
                           </div>
                           <div class="kyc-description">
                             <span class="font-small weight-semi spacing-large">
-                              Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours to
-                              be verified.
+                              Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours
+                              to be verified.
                             </span>
                             <img
                               v-if="KYCStatus.step === 1"
@@ -541,7 +541,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="buy-form" :class="KYCStatus.userVerified && KYCStatus.step === 3 ? '' : 'inactive'">
+                      <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
                         <span class="font-medium weight-semi spacing-small"
                           >You can buy token from this project and see what you will receive.</span
                         >
@@ -926,7 +926,7 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
-const TEST_TIME = 1643277196722
+const TEST_TIME = 1643292001590
 
 export default Vue.extend({
   components: {
@@ -939,7 +939,7 @@ export default Vue.extend({
 
   data() {
     return {
-      TEST_TIME: 1643277196722,
+      TEST_TIME: 1643292001590,
       // 1643500800000
       fertilizer: {
         picture: '/fertilizer/banner/unq.png',
@@ -1691,8 +1691,6 @@ export default Vue.extend({
                 margin: auto;
 
                 .kyc-form {
-                  margin-bottom: 48px;
-
                   .kyc-progress-container {
                     margin-bottom: 48px;
 
@@ -1761,10 +1759,6 @@ export default Vue.extend({
                 }
 
                 .buy-form {
-                  &.inactive {
-                    opacity: 0.5;
-                  }
-
                   .token-amount {
                     background: rgba(226, 227, 236, 0.1);
                     border-radius: 12px;
