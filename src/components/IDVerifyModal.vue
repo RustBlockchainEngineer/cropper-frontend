@@ -64,7 +64,7 @@
                     :before-upload="beforeUpload"
                     @change="uploadDriverFrontImage"
                   >
-                    <img v-if="imgUrl.driverFront" class="img-preview" :src="imgUrl.driverFront" alt="avatar" />
+                    <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
                       <div class="ant-upload-text font-xsmall">Upload jpg</div>
@@ -73,7 +73,7 @@
                   <div class="fcsb-container">
                     <span class="upload-title text-small weight-semi spacing-large">Front</span>
                     <img
-                      v-if="imgUrl.driverFront"
+                      v-if="imgUrl.front"
                       class="img-remove icon-cursor"
                       src="@/assets/icons/close-circle.svg"
                       @click="removeFrontImage('driver')"
@@ -89,7 +89,7 @@
                     :before-upload="beforeUpload"
                     @change="uploadDriverBackImage"
                   >
-                    <img v-if="imgUrl.driverBack" class="img-preview" :src="imgUrl.driverBack" alt="avatar" />
+                    <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
                       <div class="ant-upload-text font-xsmall">Upload jpg</div>
@@ -98,7 +98,7 @@
                   <div class="fcsb-container">
                     <span class="upload-title text-small weight-semi spacing-large">Back</span>
                     <img
-                      v-if="imgUrl.driverBack"
+                      v-if="imgUrl.back"
                       class="img-remove icon-cursor"
                       src="@/assets/icons/close-circle.svg"
                       @click="removeBackImage('driver')"
@@ -134,7 +134,7 @@
                     :before-upload="beforeUpload"
                     @change="uploadIDFrontImage"
                   >
-                    <img v-if="imgUrl.idFront" class="img-preview" :src="imgUrl.idFront" alt="avatar" />
+                    <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
                       <div class="ant-upload-text font-xsmall">Upload jpg</div>
@@ -143,7 +143,7 @@
                   <div class="fcsb-container">
                     <span class="upload-title text-small weight-semi spacing-large">Front</span>
                     <img
-                      v-if="imgUrl.idFront"
+                      v-if="imgUrl.front"
                       class="img-remove icon-cursor"
                       src="@/assets/icons/close-circle.svg"
                       @click="removeFrontImage('id')"
@@ -159,7 +159,7 @@
                     :before-upload="beforeUpload"
                     @change="uploadIDBackImage"
                   >
-                    <img v-if="imgUrl.idBack" class="img-preview" :src="imgUrl.idBack" alt="avatar" />
+                    <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
                       <div class="ant-upload-text font-xsmall">Upload jpg</div>
@@ -168,7 +168,7 @@
                   <div class="fcsb-container">
                     <span class="upload-title text-small weight-semi spacing-large">Back</span>
                     <img
-                      v-if="imgUrl.idBack"
+                      v-if="imgUrl.back"
                       class="img-remove icon-cursor"
                       src="@/assets/icons/close-circle.svg"
                       @click="removeBackImage('id')"
@@ -204,7 +204,7 @@
                     :before-upload="beforeUpload"
                     @change="uploadPassportFrontImage"
                   >
-                    <img v-if="imgUrl.passportFront" class="img-preview" :src="imgUrl.passportFront" alt="avatar" />
+                    <img v-if="imgUrl.front" class="img-preview" :src="imgUrl.front" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
                       <div class="ant-upload-text font-xsmall">Upload jpg</div>
@@ -213,7 +213,7 @@
                   <div class="fcsb-container">
                     <span class="upload-title text-small weight-semi spacing-large">Front</span>
                     <img
-                      v-if="imgUrl.passportFront"
+                      v-if="imgUrl.front"
                       class="img-remove icon-cursor"
                       src="@/assets/icons/close-circle.svg"
                       @click="removeFrontImage('passport')"
@@ -229,7 +229,7 @@
                     :before-upload="beforeUpload"
                     @change="uploadPassportBackImage"
                   >
-                    <img v-if="imgUrl.passportBack" class="img-preview" :src="imgUrl.passportBack" alt="avatar" />
+                    <img v-if="imgUrl.back" class="img-preview" :src="imgUrl.back" alt="avatar" />
                     <div v-else>
                       <img src="@/assets/icons/upload.svg" />
                       <div class="ant-upload-text font-xsmall">Upload jpg</div>
@@ -238,7 +238,7 @@
                   <div class="fcsb-container">
                     <span class="upload-title text-small weight-semi spacing-large">Back</span>
                     <img
-                      v-if="imgUrl.passportBack"
+                      v-if="imgUrl.back"
                       class="img-remove icon-cursor"
                       src="@/assets/icons/close-circle.svg"
                       @click="removeBackImage('passport')"
@@ -316,12 +316,8 @@ export default Vue.extend({
         passport: false as boolean
       },
       imgUrl: {
-        driverFront: '' as string,
-        driverBack: '' as string,
-        idFront: '' as string,
-        idBack: '' as string,
-        passportFront: '' as string,
-        passportBack: '' as string
+        front: '' as string,
+        back: '' as string
       },
       selectedCountry: 'France' as string,
       accepted: false as boolean,
@@ -348,7 +344,7 @@ export default Vue.extend({
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.driverFront = imgUrl
+          this.imgUrl.front = imgUrl
         })
         this.imgUploaded.driver = true
       }
@@ -360,7 +356,7 @@ export default Vue.extend({
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.idFront = imgUrl
+          this.imgUrl.front = imgUrl
         })
         this.imgUploaded.id = true
       }
@@ -372,7 +368,7 @@ export default Vue.extend({
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.passportFront = imgUrl
+          this.imgUrl.front = imgUrl
         })
         this.imgUploaded.passport = true
       }
@@ -384,7 +380,7 @@ export default Vue.extend({
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.driverBack = imgUrl
+          this.imgUrl.back = imgUrl
         })
         this.imgUploaded.driver = true
       }
@@ -396,7 +392,7 @@ export default Vue.extend({
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.idBack = imgUrl
+          this.imgUrl.back = imgUrl
         })
         this.imgUploaded.id = true
       }
@@ -408,33 +404,25 @@ export default Vue.extend({
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         getBase64(info.file.originFileObj, (imgUrl: any) => {
-          this.imgUrl.passportBack = imgUrl
+          this.imgUrl.back = imgUrl
         })
         this.imgUploaded.passport = true
       }
     },
     removeFrontImage(type: string) {
-      if (type === 'driver') {
-        this.imgUrl.driverFront = ''
-        if (this.imgUrl.driverBack === '') this.imgUploaded.driver = false
-      } else if (type === 'id') {
-        this.imgUrl.idFront = ''
-        if (this.imgUrl.idBack === '') this.imgUploaded.id = false
-      } else {
-        this.imgUrl.passportFront = ''
-        if (this.imgUrl.passportBack === '') this.imgUploaded.passport = false
+      this.imgUrl.front = ''
+      if (this.imgUrl.back === '') {
+        if (type === 'driver') this.imgUploaded.driver = false
+        else if (type === 'driver') this.imgUploaded.id = false
+        else this.imgUploaded.passport = false
       }
     },
     removeBackImage(type: string) {
-      if (type === 'driver') {
-        this.imgUrl.driverBack = ''
-        if (this.imgUrl.driverFront === '') this.imgUploaded.driver = false
-      } else if (type === 'id') {
-        this.imgUrl.idBack = ''
-        if (this.imgUrl.idFront === '') this.imgUploaded.id = false
-      } else {
-        this.imgUrl.passportBack = ''
-        if (this.imgUrl.passportFront === '') this.imgUploaded.passport = false
+      this.imgUrl.back = ''
+      if (this.imgUrl.front === '') {
+        if (type === 'driver') this.imgUploaded.driver = false
+        else if (type === 'driver') this.imgUploaded.id = false
+        else this.imgUploaded.passport = false
       }
     }
   },
