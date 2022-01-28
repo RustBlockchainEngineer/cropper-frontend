@@ -216,14 +216,8 @@
               </div>
 
               <div class="staking-tier-item">
-                <div class="staking-tier-preview fcc-container">
-                  <div class="tier-text">
-                    <span class="font-large">Tier 1</span>
-                    <br />
-                    <span class="font-large weight-bold text-upper">Soon</span>
-                  </div>
-                </div>
-                <div class="fcsb-container">
+                <div class="staking-tier-preview tier-1 fcc-container"></div>
+                <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 1</label>
                   <label class="font-large weight-bold">200 sCRP</label>
                   <!-- <div class="btn-container">
@@ -244,7 +238,7 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcsb-container">
+                <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 2</label>
                   <label class="font-large weight-bold">2000 sCRP</label>
                   <!-- <div class="btn-container">
@@ -265,7 +259,7 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcsb-container">
+                <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 3</label>
                   <label class="font-large weight-bold">10,000 sCRP</label>
                   <!-- <div class="btn-container">
@@ -286,7 +280,7 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcsb-container">
+                <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 4</label>
                   <label class="font-large weight-bold">20,000 sCRP</label>
                   <!-- <div class="btn-container">
@@ -307,7 +301,7 @@
                     <span class="font-large weight-bold text-upper">Soon</span>
                   </div>
                 </div>
-                <div class="fcsb-container">
+                <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 5</label>
                   <label class="font-large weight-bold">100,000 sCRP</label>
                   <!-- <div class="btn-container">
@@ -1045,13 +1039,13 @@ export default Vue.extend({
           }
 
           .staking-tiers {
-            max-width: 370px;
+            max-width: 361px;
             margin: auto;
             width: 100%;
             background: @color-blue800;
             border: 4px solid @color-petrol500;
             border-radius: 18px;
-            padding: 24px !important;
+            padding-bottom: 24px;
 
             @media @max-md-tablet {
               max-width: 320px;
@@ -1062,15 +1056,37 @@ export default Vue.extend({
             }
 
             .staking-tier-item {
-              padding: 0 4px;
-
               .staking-tier-preview {
-                background: url('@/assets/background/tier-blur.png');
-                background-size: cover;
-                height: 277px;
+                background: url('@/assets/tier/tier-blur.png');
+                background-size: cover !important;
+                background-position: center !important;
+                height: 317px;
                 margin-bottom: 28px;
-                border-radius: 18px;
-                border: 5px solid @color-blue-dark;
+                border-radius: 14px;
+
+                &.tier-1 {
+                  background: url('@/assets/tier/Tier1.jpg');
+                }
+
+                &.tier-2 {
+                  background: url('@/assets/tier/Tier2.jpg');
+                }
+
+                &.tier-3 {
+                  background: url('@/assets/tier/Tier3.jpg');
+                }
+
+                &.tier-4 {
+                  background: url('@/assets/tier/Tier4.jpg');
+                }
+
+                &.tier-5 {
+                  background: url('@/assets/tier/Tier5.jpg');
+                }
+              }
+
+              .staking-tier-desc {
+                padding: 0 18px;
               }
 
               .btn-container {
@@ -1257,7 +1273,7 @@ export default Vue.extend({
                 }
 
                 .staking-tier-item-box {
-                  background: url('@/assets/background/tier-blur.png');
+                  background: url('@/assets/tier/tier-blur.png');
                   background-size: cover;
                   border-radius: 18px;
                   border: 5px solid @color-blue-dark;

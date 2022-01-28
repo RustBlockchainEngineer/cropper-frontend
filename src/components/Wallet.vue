@@ -2,7 +2,7 @@
   <div class="wallet">
     <div v-if="wallet.connected" class="tier-container fcs-container">
       <div class="tier-profile">
-        <img class="tier-img" src="@/assets/background/tier-blur.png" />
+        <img class="tier-img" src="@/assets/tier/tier-blur.png" />
       </div>
 
       <div
