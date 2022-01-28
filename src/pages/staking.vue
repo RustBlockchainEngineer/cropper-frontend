@@ -1039,7 +1039,7 @@ export default Vue.extend({
           }
 
           .staking-tiers {
-            max-width: 361px;
+            max-width: 369px;
             margin: auto;
             width: 100%;
             background: @color-blue800;
