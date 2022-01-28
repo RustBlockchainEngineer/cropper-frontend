@@ -1056,6 +1056,7 @@ export default Vue.extend({
               position: relative;
               
               .staking-tier-preview {
+                background: url('@/assets/tier/tier-blur.png');
                 background-size: cover !important;
                 background-position: center !important;
                 height: 317px;
@@ -1066,25 +1067,25 @@ export default Vue.extend({
                   background: url('@/assets/tier/Tier1.jpg');
                 }
 
-                &.tier-2 {
-                  background: url('@/assets/tier/Tier2.jpg');
-                }
+                // &.tier-2 {
+                //   background: url('@/assets/tier/Tier2.jpg');
+                // }
 
-                &.tier-3 {
-                  background: url('@/assets/tier/Tier3.jpg');
-                }
+                // &.tier-3 {
+                //   background: url('@/assets/tier/Tier3.jpg');
+                // }
 
-                &.tier-4 {
-                  background: url('@/assets/tier/Tier4.jpg');
-                }
+                // &.tier-4 {
+                //   background: url('@/assets/tier/Tier4.jpg');
+                // }
 
-                &.tier-5 {
-                  background: url('@/assets/tier/Tier5.jpg');
-                }
+                // &.tier-5 {
+                //   background: url('@/assets/tier/Tier5.jpg');
+                // }
 
-                &.blur {
-                  filter: blur(3px);
-                }
+                // &.blur {
+                //   filter: blur(3px);
+                // }
               }
 
               .staking-tier-soon {
