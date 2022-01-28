@@ -1084,7 +1084,7 @@ export default Vue.extend({
                 // }
 
                 &.blur {
-                  filter: blur(20px);
+                  filter: blur(17px);
                 }
               }
 
