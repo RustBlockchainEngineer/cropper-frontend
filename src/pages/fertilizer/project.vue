@@ -754,7 +754,7 @@ export default Vue.extend({
         mint: '',
         ido_info: {
           hard_cap: 140000,
-          sale_rate: 0.028,
+          sale_rate: 0.028 as any,
           sale_type: 'Vested',
           open_time: 1643500800000,
           close_time: 1643500800000
@@ -763,11 +763,13 @@ export default Vue.extend({
           symbol: 'UNQ',
           category: 'NFT',
         },
-        whitelist_start_date: TEST_TIME + 60000 * 20,
-        whitelist_end_date: TEST_TIME + 60000 * 25,
-        sales_start_date: TEST_TIME + 60000 * 30,
-        sales_end_date: TEST_TIME + 60000 * 35,
-        distribution_start_date: TEST_TIME + 60000 * 40
+        whitelist_start_date: 0 as any,
+        whitelist_end_date: 0 as any,
+        sales_start_date: 0 as any,
+        sales_end_date: 0 as any,
+        distribution_start_date: 0 as any,
+        distribution_end_date: 0 as any,
+        date_preparation: 0 as any
       },
       projectStatus: {
         preparation: 'Preparation',
@@ -857,7 +859,6 @@ export default Vue.extend({
 
         }
 
-        this.fertilizerData = [];
         let key = 0;
 
 
@@ -908,22 +909,6 @@ export default Vue.extend({
           this.fertilizer.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000;
 
           this.fertilizer.ido_info.sale_rate = scValues.token_price;
-
-          if(curdate > this.fertilizer.distribution_end_date){
-            this.fertilizer.status = 'Funded'
-          } else if(curdate >  this.fertilizer.distribution_start_date){
-            this.fertilizer.status = 'Distribution'
-          } else if(curdate >  this.fertilizer.sales_end_date){
-            this.fertilizer.status = 'Distribution'
-          } else if(curdate >  this.fertilizer.sales_start_date){
-            this.fertilizer.status = 'Sales'
-          } else if(curdate >  this.fertilizer.whitelist_end_date){
-            this.fertilizer.status = 'Lottery'
-          } else if(curdate >  this.fertilizer.whitelist_start_date){
-            this.fertilizer.status = 'Whitelist Open'
-          } else {
-            this.fertilizer.status = 'Upcoming'
-          }
 
           this.fertilizer.ido_info.hard_cap = scValues.pool_size;
 
