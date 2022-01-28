@@ -2,15 +2,12 @@
   <div class="wallet">
     <div v-if="wallet.connected" class="tier-container fcs-container">
       <div class="tier-profile">
-        <!-- <img
-          class="tier-profile-img"
-          :class="wallet.tiers >= 0 ? 'blur' : ''"
-          :src="require(`@/assets/tier/Tier${wallet.tiers === 0 ? '1' : wallet.tiers}.png`)"
-        /> -->
         <img
           class="tier-profile-img"
-          :src="require(`@/assets/tier/${wallet.tiers <= 1 ? 'Tier1' : 'tier-blur'}.png`)"
+          :class="wallet.tiers > 1 ? 'blur' : ''"
+          :src="require(`@/assets/tier/${wallet.tiers <= 1 ? 'Tier1' : 'tier'}.png`)"
         />
+        <!-- :src="require(`@/assets/tier/Tier${wallet.tiers === 0 ? '1' : wallet.tiers}.png`)" -->
       </div>
 
       <div
