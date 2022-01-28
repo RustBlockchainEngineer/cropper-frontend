@@ -5,9 +5,8 @@
         <img
           class="tier-profile-img"
           :class="wallet.tiers > 1 ? 'blur' : ''"
-          :src="require(`@/assets/tier/${wallet.tiers <= 1 ? 'Tier1' : 'tier'}.png`)"
+          :src="require(`@/assets/tier/Tier${wallet.tiers === 0 ? '1' : wallet.tiers}.png`)"
         />
-        <!-- :src="require(`@/assets/tier/Tier${wallet.tiers === 0 ? '1' : wallet.tiers}.png`)" -->
       </div>
 
       <div
