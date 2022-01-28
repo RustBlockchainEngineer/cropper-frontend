@@ -1033,8 +1033,7 @@ export default Vue.extend({
           padding: 18px;
           box-shadow: 0 40px 70px rgba(0, 0, 0, 0.3);
           border-radius: 18px;
-          overflow: hidden;
-          
+
           @media @max-sl-mobile {
             display: inline-block !important;
           }
@@ -1047,6 +1046,7 @@ export default Vue.extend({
             border: 4px solid @color-petrol500;
             border-radius: 18px;
             padding-bottom: 24px;
+            overflow: hidden;
 
             @media @max-md-tablet {
               max-width: 320px;
