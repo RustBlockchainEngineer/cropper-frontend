@@ -1033,7 +1033,8 @@ export default Vue.extend({
           padding: 18px;
           box-shadow: 0 40px 70px rgba(0, 0, 0, 0.3);
           border-radius: 18px;
-
+          overflow: hidden;
+          
           @media @max-sl-mobile {
             display: inline-block !important;
           }
