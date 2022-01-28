@@ -449,11 +449,13 @@
 
                   <div class="btn-container">
                     <Button
+                      @click="goToProject(fertilizer.mint)"
                       v-if="fertilizer.status === filterOptions.whitelist"
                       class="btn-transparent font-medium weight-semi fcc-container spacing-small"
                       >Subscription</Button
                     >
-                    <Button v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small"
+                    <Button
+                      @click="goToProject(fertilizer.mint)" v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small"
                       >More Details</Button
                     >
                   </div>
@@ -877,7 +879,7 @@ import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
-import {setAnchorProvider, createLaunchpad, getLaunchpad} from '@/utils/crp-launchpad'
+import {setAnchorProvider, getLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
@@ -1144,19 +1146,13 @@ export default Vue.extend({
       this.setTimer()
     }, 1000)
 
-    let responseData = {} as any
-
-      try {
-        responseData =  await fetch('https://api.croppppp.com/launchpad/?list=1').then((res) => res.json())
-      } catch {
-        // dummy data
-      } finally {
-        this.projects = responseData.message
-      }
-
+    await this.constructFertilizerData();
+   
     this.currentTimestamp = moment().valueOf()
     this.updateFertilizer()
   },
+
+
   watch: {
     showCollapse: {
       immediate: true,
@@ -1187,6 +1183,89 @@ export default Vue.extend({
   methods: {
     importIcon,
     TokenAmount,
+
+    async constructFertilizerData(){
+        let responseData = {} as any
+
+        try {
+          responseData =  await fetch('https://api.croppppp.com/launchpad/?list=1').then((res) => res.json())
+        } catch {
+          // dummy data
+        } finally {
+
+        }
+
+        this.fertilizerData = [];
+        let key = 0;
+
+
+        for (const item of responseData.message) {
+
+          let project = {
+            status: 'Whitelist Open',
+            key: 'k' + key,
+            picture: item['picture'],
+            title: item['title'],
+            short_desc: item['short_desc'],
+            hard_cap: '3000K',
+            token_price: 0.071,
+            subscribers: 'XXX',
+            mint: item.mint,
+            whitelist_end_date: 1643500800000
+          };
+
+          if(!item['title']){
+            continue;
+          }
+
+          let scValues = await getProjectFormatted(item.mint)
+
+          if(!scValues){
+            continue;
+          }
+
+          var curdate = new Date();
+
+          project.distribution_end_date = (moment(scValues.date_distribution).unix() + (86400 * 2)) * 1000;
+          project.distribution_start_date = moment(scValues.date_distribution).unix() * 1000;
+          project.date_preparation = moment(scValues.date_preparation).unix() * 1000;
+          project.sales_end_date = moment(scValues.date_sale_end).unix() * 1000;
+          project.sales_start_date = moment(scValues.date_sale_start).unix() * 1000;
+          project.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000;
+          project.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000;
+
+          project.token_price = scValues.token_price;
+
+          if(curdate > project.distribution_end_date){
+            project.status = 'Funded'
+          } else if(curdate >  project.distribution_start_date){
+            project.status = 'Distribution'
+          } else if(curdate >  project.sales_end_date){
+            project.status = 'Distribution'
+          } else if(curdate >  project.sales_start_date){
+            project.status = 'Sales'
+          } else if(curdate >  project.whitelist_end_date){
+            project.status = 'Lottery'
+          } else if(curdate >  project.whitelist_start_date){
+            project.status = 'Whitelist Open'
+          } else {
+            project.status = 'Upcoming'
+          }
+
+          project.hard_cap = scValues.pool_size;
+
+
+
+          key++;
+          console.log(project)
+          this.fertilizerData.push(project);
+        }
+
+
+
+
+    },
+
     async getTvl() {
       let cur_date = new Date().getTime()
       if (window.localStorage.TVL_last_updated) {
@@ -1392,7 +1471,7 @@ export default Vue.extend({
     },
     goToProject(fertilizer: any) {
       this.$router.push({
-        path: '/fertilizer/project/?f=' + fertilizer.uniqueKey
+        path: '/fertilizer/project/?f=' + fertilizer
       })
     },
     sortByStatus(option: string) {
