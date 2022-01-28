@@ -877,6 +877,7 @@ import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
+import {setAnchorProvider, createLaunchpad, getLaunchpad} from '@/utils/crp-launchpad'
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
@@ -939,6 +940,7 @@ export default Vue.extend({
       },
       filterProject: 'Upcoming' as string,
       fertilizerItems: [] as any[],
+      projects: [] as any,
       fertilizerData: [
         {
           status: 'Whitelist Open',
@@ -1125,6 +1127,8 @@ export default Vue.extend({
   },
   async mounted() {
     // this.$router.push({ path: `/swap/` })
+    setAnchorProvider(this.$web3, this.$wallet)
+    console.log(await getLaunchpad());
     this.getTvl()
     this.$accessor.token.loadTokens()
     await this.updateLabelizedAmms()
@@ -1139,6 +1143,16 @@ export default Vue.extend({
       clearInterval(this.timer)
       this.setTimer()
     }, 1000)
+
+    let responseData = {} as any
+
+      try {
+        responseData =  await fetch('https://api.croppppp.com/launchpad/?list=1').then((res) => res.json())
+      } catch {
+        // dummy data
+      } finally {
+        this.projects = responseData.message
+      }
 
     this.currentTimestamp = moment().valueOf()
     this.updateFertilizer()
