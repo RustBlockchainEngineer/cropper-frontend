@@ -14,19 +14,19 @@
         />
         <TaskProcessModal
           :show="taskModalShow"
-          :step="taskModalType === 0 ? currentStatus.telegramTicket : currentStatus.twitterTicket"
+          :step="taskModalType === 0 ? socialTicket.telegram : socialTicket.twitter"
           :project="fertilizer.title"
           :type="taskModalType"
           @onNext="
             () => {
-              if (this.taskModalType === 0) this.currentStatus.telegramTicket++
-              else this.currentStatus.twitterTicket++
+              if (this.taskModalType === 0) this.socialTicket.telegram++
+              else this.socialTicket.twitter++
             }
           "
           @onPrev="
             () => {
-              if (this.taskModalType === 0) this.currentStatus.telegramTicket--
-              else this.currentStatus.twitterTicket--
+              if (this.taskModalType === 0) this.socialTicket.telegram--
+              else this.socialTicket.twitter--
             }
           "
           @onCancel="() => (taskModalShow = false)"
@@ -322,7 +322,7 @@
                     <div class="ticket-task-status-group fcsb-container">
                       <div
                         class="ticket-task-status-card fcsb-container icon-cursor"
-                        :class="currentStatus.telegramTicket === 3 ? 'active' : ''"
+                        :class="socialTicket.telegram === 3 ? 'active' : ''"
                         @click="
                           () => {
                             this.taskModalShow = true
@@ -336,19 +336,19 @@
                             <span class="font-medium weight-bold">Telegram task</span>
                             <br />
                             <span class="font-xsmall weight-semi"
-                              >{{ currentStatus.telegramTicket }} /3 Task completed</span
+                              >{{ socialTicket.telegram }} /3 Task completed</span
                             >
                           </div>
                         </div>
                         <img
-                          v-if="currentStatus.telegramTicket === 3"
+                          v-if="socialTicket.telegram === 3"
                           class="status-icon"
                           src="@/assets/icons/check-white.svg"
                         />
                       </div>
                       <div
                         class="ticket-task-status-card fcsb-container icon-cursor"
-                        :class="currentStatus.twitterTicket === 3 ? 'active' : ''"
+                        :class="socialTicket.twitter === 3 ? 'active' : ''"
                         @click="
                           () => {
                             this.taskModalShow = true
@@ -362,12 +362,12 @@
                             <span class="font-medium weight-bold">Twitter task</span>
                             <br />
                             <span class="font-xsmall weight-semi"
-                              >{{ currentStatus.twitterTicket }}/3 Task completed</span
+                              >{{ socialTicket.twitter }}/3 Task completed</span
                             >
                           </div>
                         </div>
                         <img
-                          v-if="currentStatus.twitterTicket === 3"
+                          v-if="socialTicket.twitter === 3"
                           class="status-icon"
                           src="@/assets/icons/check-white.svg"
                         />
@@ -929,7 +929,7 @@ import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
-const TEST_TIME = 1643299890203
+const TEST_TIME = 1643356116915
 // 1643500800000
 
 export default Vue.extend({
@@ -994,9 +994,11 @@ export default Vue.extend({
         steps: 'process' as string,
         funded: false as boolean,
         win: true as boolean,
-        subscribe: false as boolean,
-        telegramTicket: 1 as number,
-        twitterTicket: 1 as number
+        subscribe: false as boolean
+      },
+      socialTicket: {
+        telegram: 1 as number,
+        twitter: 1 as number
       },
       currentTimestamp: 0 as any,
       currentStep: 0 as number,
@@ -1005,7 +1007,6 @@ export default Vue.extend({
       subscribeShow: false as boolean,
       taskModalShow: false as boolean,
       taskModalType: 0 as number,
-      twitterShow: false as boolean,
       KYCStatus: {
         step: 1 as number,
         verification: 1 as number,
