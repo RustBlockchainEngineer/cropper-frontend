@@ -2,7 +2,11 @@
   <div class="wallet">
     <div v-if="wallet.connected" class="tier-container fcs-container">
       <div class="tier-profile">
-        <img class="tier-img" src="@/assets/tier/tier-blur.png" />
+        <img
+          class="tier-profile-img"
+          :class="wallet.tiers >= 0 ? 'blur' : ''"
+          :src="require(`@/assets/tier/Tier${wallet.tiers === 0 ? '1' : wallet.tiers}.png`)"
+        />
       </div>
 
       <div
@@ -820,10 +824,14 @@ export default class Wallet extends Vue {
       border-radius: 50%;
       margin-right: 4px;
 
-      .tier-img {
+      .tier-profile-img {
         width: 100%;
         height: 100%;
         border-radius: 50%;
+
+        &.blur {
+          filter: blur(2px);
+        }
       }
     }
 

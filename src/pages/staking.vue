@@ -231,12 +231,11 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview fcc-container">
-                  <div class="tier-text">
-                    <span class="font-large">Tier 2</span>
-                    <br />
-                    <span class="font-large weight-bold text-upper">Soon</span>
-                  </div>
+                <div class="staking-tier-preview tier-2 blur"></div>
+                <div class="staking-tier-soon">
+                  <span class="font-large">Tier 2</span>
+                  <br />
+                  <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
                 <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 2</label>
@@ -252,12 +251,11 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview fcc-container">
-                  <div class="tier-text">
-                    <span class="font-large">Tier 3</span>
-                    <br />
-                    <span class="font-large weight-bold text-upper">Soon</span>
-                  </div>
+                <div class="staking-tier-preview tier-3 blur fcc-container"></div>
+                <div class="staking-tier-soon">
+                  <span class="font-large">Tier 3</span>
+                  <br />
+                  <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
                 <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 3</label>
@@ -273,12 +271,11 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview fcc-container">
-                  <div class="tier-text">
-                    <span class="font-large">Tier 4</span>
-                    <br />
-                    <span class="font-large weight-bold text-upper">Soon</span>
-                  </div>
+                <div class="staking-tier-preview tier-4 blur fcc-container"></div>
+                <div class="staking-tier-soon">
+                  <span class="font-large">Tier 4</span>
+                  <br />
+                  <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
                 <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 4</label>
@@ -294,12 +291,11 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview fcc-container">
-                  <div class="tier-text">
-                    <span class="font-large">Tier 5</span>
-                    <br />
-                    <span class="font-large weight-bold text-upper">Soon</span>
-                  </div>
+                <div class="staking-tier-preview tier-5 blur fcc-container"></div>
+                <div class="staking-tier-soon">
+                  <span class="font-large">Tier 5</span>
+                  <br />
+                  <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
                 <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 5</label>
@@ -1057,8 +1053,9 @@ export default Vue.extend({
             }
 
             .staking-tier-item {
+              position: relative;
+              
               .staking-tier-preview {
-                background: url('@/assets/tier/tier-blur.png');
                 background-size: cover !important;
                 background-position: center !important;
                 height: 317px;
@@ -1084,6 +1081,17 @@ export default Vue.extend({
                 &.tier-5 {
                   background: url('@/assets/tier/Tier5.jpg');
                 }
+
+                &.blur {
+                  filter: blur(3px);
+                }
+              }
+
+              .staking-tier-soon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
               }
 
               .staking-tier-desc {
@@ -1235,56 +1243,56 @@ export default Vue.extend({
           }
         }
 
-        .staking-tiers-details {
-          max-width: 870px;
-          min-width: 335px;
-          width: 100%;
-          margin: 30px auto !important;
-          background: @color-blue700;
-          border: 3px solid @color-blue500;
-          padding: 18px;
-          border-radius: 18px;
+        // .staking-tiers-details {
+        //   max-width: 870px;
+        //   min-width: 335px;
+        //   width: 100%;
+        //   margin: 30px auto !important;
+        //   background: @color-blue700;
+        //   border: 3px solid @color-blue500;
+        //   padding: 18px;
+        //   border-radius: 18px;
 
-          .staking-tiers-features {
-            margin: 18px 0;
+        //   .staking-tiers-features {
+        //     margin: 18px 0;
 
-            .staking-tier-container {
-              margin: 0 !important;
+        //     .staking-tier-container {
+        //       margin: 0 !important;
 
-              @media @max-sl-mobile {
-                display: inline-block !important;
-              }
+        //       @media @max-sl-mobile {
+        //         display: inline-block !important;
+        //       }
 
-              .staking-tier-tab {
-                padding-left: 0 !important;
+        //       .staking-tier-tab {
+        //         padding-left: 0 !important;
 
-                @media @max-sl-mobile {
-                  padding-right: 0 !important;
-                  width: 100%;
-                }
-              }
+        //         @media @max-sl-mobile {
+        //           padding-right: 0 !important;
+        //           width: 100%;
+        //         }
+        //       }
 
-              .staking-tier-preview {
-                padding-right: 0 !important;
+        //       .staking-tier-preview {
+        //         padding-right: 0 !important;
 
-                @media @max-sl-mobile {
-                  margin-top: 28px;
-                  width: 100%;
-                  padding-left: 0 !important;
-                }
+        //         @media @max-sl-mobile {
+        //           margin-top: 28px;
+        //           width: 100%;
+        //           padding-left: 0 !important;
+        //         }
 
-                .staking-tier-item-box {
-                  background: url('@/assets/tier/tier-blur.png');
-                  background-size: cover;
-                  border-radius: 18px;
-                  border: 5px solid @color-blue-dark;
-                  width: 100%;
-                  height: 300px;
-                }
-              }
-            }
-          }
-        }
+        //         .staking-tier-item-box {
+        //           background: url('@/assets/tier/tier-blur.png');
+        //           background-size: cover;
+        //           border-radius: 18px;
+        //           border: 5px solid @color-blue-dark;
+        //           width: 100%;
+        //           height: 300px;
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -1295,7 +1303,7 @@ export default Vue.extend({
   // ant carousel
   .ant-carousel {
     .custom-slick-arrow {
-      top: 35%;
+      top: 40%;
       width: 25px;
       height: 25px;
       font-size: 25px;
