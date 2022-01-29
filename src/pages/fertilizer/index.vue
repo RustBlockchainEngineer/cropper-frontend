@@ -933,6 +933,7 @@ export default Vue.extend({
         preparation: 'Preparation',
         funded: 'Funded'
       },
+      registerdList : {},
       sortOptions: {
         investors: 'Investors',
         total_raised: 'Total raise',
@@ -1029,7 +1030,16 @@ export default Vue.extend({
     TokenAmount,
 
     async constructFertilizerData(){
-        let responseData = {} as any
+
+        let registerdList;
+        try {
+          registerdList =  await fetch('http://141.95.168.181:8080/registers/').then((res) => res.json())
+        } catch {
+        } finally {
+          
+        }
+
+        let responseData
 
         try {
           responseData =  await fetch('https://api.croppppp.com/launchpad/?list=1').then((res) => res.json())
@@ -1053,7 +1063,7 @@ export default Vue.extend({
             short_desc: item['short_desc'],
             hard_cap: '3000K',
             token_price: 0.071,
-            subscribers: 'XXX',
+            subscribers: 0,
             mint: item.mint,
             whitelist_end_date: 1643500800000
           };
@@ -1098,6 +1108,13 @@ export default Vue.extend({
 
           project.hard_cap = scValues.pool_size;
 
+          let sub = registerdList.find(
+            (items) => items.mint === item.mint
+          )
+          if(sub){
+
+            project.subscribers = sub.ct
+          }
 
 
           key++;

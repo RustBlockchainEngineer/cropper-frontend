@@ -9,6 +9,7 @@
             () => {
               currentStatus.subscribe = true
               subscribeShow = false
+              initSubscribe()
             }
           "
         />
@@ -335,12 +336,12 @@
                             <span class="font-medium weight-bold">Telegram task</span>
                             <br />
                             <span class="font-xsmall weight-semi"
-                              >{{ socialTicket.telegram }} /3 Task completed</span
+                              >{{ socialTicket.telegram }} /2 Task completed</span
                             >
                           </div>
                         </div>
                         <img
-                          v-if="socialTicket.telegram === 3"
+                          v-if="socialTicket.telegram === 2"
                           class="status-icon"
                           src="@/assets/icons/check-white.svg"
                         />
@@ -402,11 +403,11 @@
                         <img class="referral-icon" src="@/assets/icons/referral.svg" />
                         <div>
                           <span class="font-medium weight-semi spacing-small">
-                            <label class="font-large">0</label>
+                            <label class="font-large">{{total_tickets}}</label>
                             Earned Tickets
                           </span>
                           <br />
-                          <span class="font-xsmall">0 Social / 0 Referrals</span>
+                          <span class="font-xsmall">{{social_tickets}} Social / {{referral_tickets}} Referrals</span>
                         </div>
                       </div>
                     </div>
@@ -700,11 +701,7 @@
               <img class="farmer-img isTablet" src="@/assets/background/farmer-table.png" />
             </div>
 
-            <div class="pds">
-<!--
-
--->
-            </div>
+            <div class="pds" v-html="fertilizer.longContent"></div>
 
 
 
@@ -720,6 +717,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { mapState } from 'vuex'
 import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import {setAnchorProvider, getLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
 import moment from 'moment'
@@ -739,23 +737,25 @@ export default Vue.extend({
 
   data() {
     return {
+      total_tickets: 0,
       fertilizer: {
         picture: '/fertilizer/banner/unq.png',
         logo: '/fertilizer/logo/unq.png',
+        longContent: '',
         title: '',
         short_desc: '',
         long_desc:
           'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
         hard_cap: '3000K',
-        pool_size: 5000,
-        subscribers: 100418,
-        website: 'UNQ.club',
-        website_url: 'https://UNQ.club',
+        pool_size: 5000 as any,
+        subscribers: 0 as any,
+        website: '',
+        website_url: '',
         mint: '',
         ido_info: {
           hard_cap: 140000,
           sale_rate: 0.028 as any,
-          sale_type: 'Vested',
+          sale_type: '',
           open_time: 1643500800000,
           close_time: 1643500800000
         },
@@ -781,8 +781,8 @@ export default Vue.extend({
       currentStatus: {
         steps: 'process' as string,
         funded: false as boolean,
-        win: true as boolean,
-        subscribe: true as boolean
+        win: false as boolean,
+        subscribe: false as boolean
       },
       socialTicket: {
         telegram: 0 as number,
@@ -802,7 +802,10 @@ export default Vue.extend({
       },
       KYCModalShow: false as boolean,
       copyNotification: false as boolean,
-      timer: null as any
+      timer: null as any,
+
+      social_tickets : 0,
+      referral_tickets : 0
     }
   },
 
@@ -811,10 +814,19 @@ export default Vue.extend({
   },
 
   computed: {
-    // ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
+     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
 
-  watch: {},
+  watch: {
+
+    'wallet.address': {
+      handler(newTokenAccounts: any) {
+        this.loadDatas();
+      },
+      deep: true
+    },
+
+  },
 
   mounted() {
     this.currentTimestamp = moment().valueOf()
@@ -846,6 +858,49 @@ export default Vue.extend({
       })
     },
 
+    async initSubscribe(){
+
+      const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ spl: this.wallet.address, mint: this.fertilizer.mint, tx_id_register: '3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc' })
+        };
+        await fetch('http://141.95.168.181:8080/registers/', requestOptions);
+
+      this.contextualizeUser();
+    },
+
+    async contextualizeUser(){
+
+
+
+      if(!this.wallet.connected){
+        return;
+      }
+
+
+        let responseData;
+        try {
+          responseData =  await fetch('http://141.95.168.181:8080/registers/'+ this.wallet.address +'/'+ this.fertilizer.mint +'/').then((res) => res.json())
+        } catch {
+          this.currentStatus.subscribe = false
+        } finally {
+
+
+    console.log('Wallet', responseData);
+
+    
+          this.currentStatus.subscribe = true
+          this.social_tickets = responseData.tickets;
+          this.referral_tickets = responseData.referal_ticket;
+
+          this.total_tickets = responseData.tickets + responseData.referal_ticket;
+
+
+
+
+        }
+    },
 
     async loadDatas(){
 
@@ -868,19 +923,6 @@ export default Vue.extend({
             continue;
           }
 
-
-
-
-          let project = {
-            status: 'Whitelist Open',
-            key: 'k' + key,
-            picture: item['picture'],
-            hard_cap: '3000K',
-            subscribers: 'XXX',
-            mint: item.mint,
-            whitelist_end_date: 1643500800000
-          };
-
           if(!item['title']){
             continue;
           }
@@ -893,9 +935,10 @@ export default Vue.extend({
           }
 
 
-          console.log(scValues)
+          console.log(item)
 
           this.fertilizer.short_desc = item['short_desc'];
+          this.fertilizer.long_desc = 'TODO';
           this.fertilizer.title = item['title'];
 
           var curdate = new Date();
@@ -909,10 +952,33 @@ export default Vue.extend({
           this.fertilizer.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000;
 
           this.fertilizer.ido_info.sale_rate = scValues.token_price;
-
           this.fertilizer.ido_info.hard_cap = scValues.pool_size;
+          this.fertilizer.ido_info.sale_type = item.type;
+
+          this.fertilizer.pool_size = Math.round((scValues.pool_size / scValues.token_price) * 100) / 100;
 
           console.log(scValues, this.fertilizer)
+
+
+          this.fertilizer.website = 'TODO'
+          this.fertilizer.website_url = item.type
+          this.fertilizer.subscribers = 'TODO'
+
+
+          let content = '' as any
+
+            
+          try {
+            content = await fetch(item.long_desc).then((res) => res)
+          } catch {
+            // dummy data
+            this.fertilizer.longContent = 'TODO';
+          } finally {
+            this.fertilizer.longContent = content;
+          }
+
+          this.contextualizeUser();
+
         }
     },
 
