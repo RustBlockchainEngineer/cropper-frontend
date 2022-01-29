@@ -260,7 +260,7 @@
                       <div class="value fcs-container">
                         <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                         <span class="font-medium"
-                          ><b>{{ fertilizer.ido_info.sale_rate }}</b> USDC</span
+                          ><b>{{ fertilizer.ido_info.sale_rate }}</b> {{ fertilizer.token_price }}</span
                         >
                       </div>
                     </Col>
@@ -269,7 +269,7 @@
                       <div class="value fcs-container">
                         <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                         <span class="font-medium"
-                          ><b>{{ fertilizer.ido_info.hard_cap }}</b> USDC</span
+                          ><b>{{ fertilizer.ido_info.hard_cap }}</b> {{ fertilizer.token_price }}</span
                         >
                       </div>
                     </Col>
@@ -383,14 +383,16 @@
                     </div>
                     <div class="ticket-btn-group fcsb-container">
                       <div class="share-btn btn-container">
+                        <a :href="telegramShareLink" target="_blank">
                         <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
                           >Share on Telegram</Button
-                        >
+                        ></a>
                       </div>
                       <div class="share-btn btn-container">
+                        <a :href="twitterShareLink" target="_blank">
                         <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
                           >Share on Twitter</Button
-                        >
+                        ></a>
                       </div>
                     </div>
                   </div>
@@ -553,7 +555,7 @@
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                             <input class="font-medium weight-bold" type="number" placeholder="673" />
                           </div>
-                          <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                          <span class="font-xsmall weight-semi token-max-amount">max 1500 {{ fertilizer.token_price }}</span>
                         </div>
                         <div class="receive-amount">
                           <label class="font-xmall">You will receive:</label>
@@ -603,7 +605,7 @@
                           <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                           <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
                         </div>
-                        <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                        <span class="font-xsmall weight-semi token-max-amount">max 1500 {{ fertilizer.token_price }}</span>
                       </div>
                       <div class="receive-amount">
                         <label class="font-xmall">You will receive:</label>
@@ -637,7 +639,7 @@
                         <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                         <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
                       </div>
-                      <span class="font-xsmall weight-semi token-max-amount">max 1500 USDC</span>
+                      <span class="font-xsmall weight-semi token-max-amount">max 1500 {{ fertilizer.token_price }}</span>
                     </div>
                     <div class="receive-amount">
                       <label class="font-xmall">You will receive:</label>
@@ -663,7 +665,7 @@
                     <span class="font-medium">
                       Sonar Watch raised:
                       <br />
-                      <b>500,000 / 500,000 USDC</b>
+                      <b>500,000 / 500,000 {{ fertilizer.token_price }}</b>
                     </span>
                     <div class="sale-details-group fcc-container">
                       <div class="sale-detail-card text-left">
@@ -679,7 +681,7 @@
                       <div class="sale-detail-card text-left">
                         <span class="font-xsmall">Last Price</span>
                         <br />
-                        <span class="font-large weight-bold">0.21 USDC</span>
+                        <span class="font-large weight-bold">0.21 {{ fertilizer.token_price }}</span>
                       </div>
                     </div>
                     <div class="btn-container m-auto">
@@ -720,6 +722,7 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import { Row, Col, Statistic, Steps } from 'ant-design-vue'
 import {setAnchorProvider, getLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
+import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
@@ -740,10 +743,11 @@ export default Vue.extend({
       total_tickets: 0,
       fertilizer: {
         picture: '/fertilizer/banner/unq.png',
-        logo: '/fertilizer/logo/unq.png',
+        logo: '',
         longContent: '',
         title: '',
         short_desc: '',
+        price_token: '',
         long_desc:
           'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
         hard_cap: '3000K',
@@ -791,7 +795,9 @@ export default Vue.extend({
       currentTimestamp: 0 as any,
       currentStep: 0 as number,
       currentTier: 0 as number,
-      affiliatedLink: 'http://cropper.finance/unq?r=250' as string,
+      affiliatedLink: '' as string,
+      twitterShareLink: '' as string,
+      telegramShareLink: '' as string,
       subscribeShow: false as boolean,
       taskModalShow: false as boolean,
       taskModalType: 0 as number,
@@ -897,7 +903,10 @@ export default Vue.extend({
           this.total_tickets = responseData.tickets + responseData.referal_ticket;
 
 
+          this.affiliatedLink = 'https://cropper.finance/fertilizer/'+ 'ABC' + '/' +this.wallet.address;
 
+          this.twitterShareLink = `http://twitter.com/share?text=${this.affiliatedLink} I am participating to the ${this.fertilizer.title} IDO on @cropper&url= `
+          this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=I am participating to the ${this.fertilizer.title} IDO on @cropper`
 
         }
     },
@@ -938,7 +947,7 @@ export default Vue.extend({
           console.log(item)
 
           this.fertilizer.short_desc = item['short_desc'];
-          this.fertilizer.long_desc = 'TODO';
+          this.fertilizer.long_desc = item['short_desc_2'];
           this.fertilizer.title = item['title'];
 
           var curdate = new Date();
@@ -960,10 +969,16 @@ export default Vue.extend({
           console.log(scValues, this.fertilizer)
 
 
-          this.fertilizer.website = 'TODO'
-          this.fertilizer.website_url = item.type
+          this.fertilizer.website_url = item.website_display
+          this.fertilizer.website = item.website_url
+          this.fertilizer.logo = item.token_logo
           this.fertilizer.subscribers = 'TODO'
 
+          let token = getTokenByMintAddress(scValues.price_token_mint);
+
+          if(token){
+            project.fertilizer.price_token = token.symbol
+          }
 
           let content = '' as any
 
@@ -1226,6 +1241,7 @@ export default Vue.extend({
                   .project-logo {
                     border-radius: 50%;
                     margin-right: 8px;
+                    width: 40px;
                   }
                 }
               }
@@ -1313,6 +1329,7 @@ export default Vue.extend({
                   .project-logo {
                     margin-right: 8px;
                     border-radius: 50%;
+                    width: 40px
                   }
                 }
 

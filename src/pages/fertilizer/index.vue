@@ -347,7 +347,7 @@
                         <span class="label font-small weight-semi spacing-large">Total raise</span>
                         <span class="value font-medium weight-semi spacing-small fcs-container">
                           <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                          {{ fertilizer.hard_cap }} USDC
+                          {{ fertilizer.hard_cap }} {{ fertilizer.price_token }}
                           <!-- TBA -->
                         </span>
                       </div>
@@ -878,7 +878,7 @@ import { TokenAmount } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
-import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
+import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
 import {setAnchorProvider, getLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
 const Vco = require('v-click-outside')
 Vue.use(Vco)
@@ -961,6 +961,7 @@ export default Vue.extend({
           sales_end_date : 0 as any,
           sales_start_date : 0 as any,
           whitelist_start_date : 0 as any,
+          price_token : '' as any
         },
       ],
       currentTimestamp: 0
@@ -1116,6 +1117,11 @@ export default Vue.extend({
             project.subscribers = sub.ct
           }
 
+          let token = getTokenByMintAddress(scValues.price_token_mint);
+
+          if(token){
+            project.price_token = token.symbol
+          }
 
           key++;
           console.log(project)
