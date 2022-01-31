@@ -36,7 +36,7 @@
             </button>
           </div>
           <input type="number" 
-          v-model="toStake" placeholder="0.00" />
+          v-model="toStake" @input="getsCRP" placeholder="0.00" />
         </div>
         <div v-if="crpbalance" class="label fcsb-container font-xsmall weight-semi">
           <span> Balance: {{ crpbalance }} </span>
@@ -95,6 +95,18 @@
               CRP</label
             >
           </div>
+
+          <div class="calc-yield-info">
+            <label class="label font-small weight-bold">Total sCRP earn </label>
+            <label class="value font-small weight-semi spacing-large"
+              >{{
+                scrpEstimate.xCRP
+              }}</label
+            >
+          </div>
+
+
+
         </div>
       </div>
       <div class="calc-footer">
@@ -155,8 +167,10 @@ import {
   estimateRewards,
   stake,
   unstake,
+  calculateTiers,
   harvest
 } from '@/utils/crp-stake'
+import { TokenAmount } from '@/utils/safe-math'
 
 Vue.use(Modal)
 
@@ -169,6 +183,10 @@ export default Vue.extend({
       toStake: null as any,
       tierActive: 4,
       crpPrice: 1,
+      scrpEstimate: {
+        xCRP: 0,
+        tiers: 0
+      },
       boostAPY: 1,
       unstakeDate: '',
       minutesLock: null as any,
@@ -240,10 +258,18 @@ export default Vue.extend({
         var currentDate = moment()
         this.lockData[index].min = moment(currentDate).add('days', this.lockData[index].days).unix()
       })
+      this.getsCRP();
     })
+
+
   },
 
   methods: {
+
+    async getsCRP(){
+      this.scrpEstimate = calculateTiers(this.userStaked * 1 + this.toStake * 1, this.minutesLock * 60)
+    },
+
     displayTiers(tier: any) {
       this.tierActive = tier
       let currentTier = this.lockData.filter((tierSearch: any) => (tierSearch.tier as string) == (tier as string))
@@ -575,7 +601,8 @@ export default Vue.extend({
         justify-content: space-between;
         align-items: center;
 
-        &:nth-child(2) {
+        &:nth-child(2),
+        &:nth-child(3) {
           padding-bottom: 12px;
           border-bottom: 1px solid #384d71;
         }
