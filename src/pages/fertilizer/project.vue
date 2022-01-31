@@ -420,7 +420,7 @@
               </div>
               <div v-else-if="currentStep === 2" class="project-detail-item">
                 <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
-                  <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.subscribe">
+                  <div v-if="(currentStatus.win) || (currentTier > 3 && currentStatus.subscribe)">
                     <div class="fcc-container">
                       <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                       <span class="font-medium weight-semi spacing-small"
@@ -435,7 +435,7 @@
                     />
 
                   <div class="project-detail-open">
-                    <div v-if="KYCStatus.step < 3 && ((currentTier === 0 && currentStatus.win) || currentStatus.subscribe)">
+                    <div v-if="KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe))">
                       <div class="kyc-form">
                         <div class="kyc-progress-container fcs-container">
                           <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
