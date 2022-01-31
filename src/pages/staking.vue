@@ -216,7 +216,12 @@
               </div>
 
               <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-1 fcc-container"></div>
+                <div class="staking-tier-preview tier-1 blur fcc-container"></div>
+                <div class="staking-tier-soon">
+                  <span class="font-large">Tier 1</span>
+                  <br />
+                  <span class="font-large weight-bold text-upper">Soon</span>
+                </div>
                 <div class="staking-tier-desc fcsb-container">
                   <label class="font-large weight-bold">Tier 1</label>
                   <label class="font-large weight-bold">200 sCRP</label>
