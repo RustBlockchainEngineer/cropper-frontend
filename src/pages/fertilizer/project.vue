@@ -1016,6 +1016,7 @@ export default Vue.extend({
       if (query.get('f')) {
         return query.get('f') as string
       }
+      return '';
     },
 
     async contextualizeUser(){
@@ -1068,7 +1069,9 @@ export default Vue.extend({
                     body: JSON.stringify({ spl: this.wallet.address})
                   };
                 responseData = await fetch('http://141.95.168.181:8080/kyc/', requestOptions);
+                //@ts-ignore
                 if(responseData.session_id){
+                  //@ts-ignore
                   this.KYCStatus.sessionID = responseData.session_id;
                 }
 
@@ -1103,7 +1106,7 @@ export default Vue.extend({
         let key = 0;
 
         if(!this.fertilizer.mint){
-          this.fertilizer.mint = this.getFertilzerMint();
+          this.fertilizer.mint = this.getFertilzerMint().toString();
         }
 
         console.log('ResponseData', responseData, this.fertilizer.mint);
