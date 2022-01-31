@@ -16,12 +16,7 @@
           <img class="alert-icon" src="@/assets/icons/alert-yellow.svg" />
           <span class="font-large weight-bold">Subscription Notice</span>
         </div>
-        <span class="font-medium weight-semi spacing-small">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged.
-        </span>
+        <span class="font-medium weight-semi spacing-small" v-html="this.content"></span>
       </div>
       <Checkbox class="check-container" v-model="countryCheck">
         <label class="font-small weight-semi spacing-large">I confirm that my country is not in this list</label>
@@ -51,6 +46,10 @@ export default Vue.extend({
     show: {
       type: Boolean,
       default: false
+    },
+    content: {
+      type: String,
+      default: ''
     }
   },
 

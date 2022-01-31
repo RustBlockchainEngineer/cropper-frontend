@@ -10,34 +10,67 @@
     centered
   >
     <img class="modal-close" src="@/assets/icons/close-circle.svg" @click="$emit('onCancel')" />
-    <div class="task-telegram-container">
+    <div class="social-task-container">
       <div class="task-progress-container fcs-container">
         <div class="task-item text-center" :class="step === 1 ? 'active' : ''">
           <span class="task-no m-auto font-medium weight-bold">1</span>
-          <span class="task-title font-small weight-bold">Join {{ project }}</span>
+          <span class="task-title font-small weight-bold">{{ type === 0 ? 'Telegram ID' : 'Retweet Link' }}</span>
         </div>
         <div class="task-item text-center" :class="step === 2 ? 'active' : ''">
           <span class="task-no m-auto font-medium weight-bold">2</span>
-          <span class="task-title font-small weight-bold">Join Cropper</span>
+          <span class="task-title font-small weight-bold">Join {{ project }}</span>
         </div>
         <div class="task-item text-center" :class="step === 3 ? 'active' : ''">
           <span class="task-no m-auto font-medium weight-bold">3</span>
+          <span class="task-title font-small weight-bold">Join Cropper</span>
+        </div>
+        <div class="task-item text-center" :class="step === 4 ? 'active' : ''">
+          <span class="task-no m-auto font-medium weight-bold">4</span>
           <span class="task-title font-small weight-bold">Confirm</span>
         </div>
       </div>
+      <div v-if="step === 1" class="social-input-container fcsb-container" :class="saved ? 'completed' : ''">
+        <input
+          type="text"
+          class="social-input font-medium"
+          :value="type === 0 ? telegramID : twitterLink"
+          :placeholder="type === 0 ? '@XXXXX' : 'Retweet link'"
+        />
+        <img v-if="saved" class="status-icon" src="@/assets/icons/status-success.svg" />
+      </div>
       <div class="btn-container m-auto">
-        <Button class="btn-transparent font-medium weight-semi letter-small icon-cursor fcc-container">
-          <img v-if="step != 3" class="social-icon" src="@/assets/icons/telegram-white.svg" />
-          {{ step === 1 ? 'Join' + project : step === 2 ? 'Join Cropper' : step === 3 ? 'Confirm' : '' }}
+        <Button
+          class="btn-transparent font-medium weight-semi letter-small icon-cursor fcc-container"
+          @click="nextProcess"
+        >
+          <img v-if="step === 2 || step === 3" class="social-icon" src="@/assets/icons/telegram-white.svg" />
+          {{
+            step === 1
+              ? 'Save'
+              : step === 2
+              ? 'Join ' + project
+              : step === 3
+              ? 'Join Cropper'
+              : step === 4
+              ? 'Confirm'
+              : ''
+          }}
         </Button>
       </div>
       <div class="task-move-container fcc-container">
         <Button class="move-btn prev icon-cursor fcc-container" :disabled="step === 1" @click="$emit('onPrev')">
           <img class="arrow-icon" src="@/assets/icons/arrow-left.svg" />
         </Button>
-        <Button class="move-btn next icon-cursor fcc-container" :disabled="step === 3" @click="$emit('onNext')">
+        <Button class="move-btn next icon-cursor fcc-container" :disabled="step === 4" @click="$emit('onNext')">
           <img class="arrow-icon" src="@/assets/icons/arrow-right.svg" />
         </Button>
+      </div>
+      <div v-if="step === 1" class="social-notification fb-container">
+        <img class="info-icon" src="@/assets/icons/info.svg" />
+        <label class="font-small weight-bold"
+          >Be sure to communicate the correct {{ type === 0 ? 'id' : 'link' }} otherwise your registration will not be
+          retained</label
+        >
       </div>
     </div>
   </Modal>
@@ -73,10 +106,24 @@ export default Vue.extend({
   },
 
   data() {
-    return {}
+    return {
+      telegramID: '' as string,
+      twitterLink: '' as string,
+      saveStatus: {
+        telegram: false as boolean,
+        twitter: false as boolean
+      }
+    }
   },
 
-  methods: {},
+  methods: {
+    nextProcess() {
+      if (this.step === 1) {
+        if (this.type === 0) this.saveStatus.telegram = true
+        else this.saveStatus.twitter = true
+      }
+    }
+  },
   mounted() {}
 })
 </script>
@@ -102,9 +149,20 @@ export default Vue.extend({
   opacity: 0.5;
   margin-right: 16px;
 }
+
+.info-icon {
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+}
+
+.status-icon {
+  width: 16px;
+  height: 16px;
+}
 </style>
 <style lang="less">
-.task-telegram-container {
+.social-task-container {
   .task-progress-container {
     background: @color-blue600;
     border-radius: 8px;
@@ -145,6 +203,31 @@ export default Vue.extend({
     }
   }
 
+  .social-input-container {
+    margin: 8px 0 24px 0;
+    padding: 0 8px;
+    background: rgba(226, 227, 236, 0.1);
+    border: 2px solid transparent;
+    border-radius: 12px;
+
+    .social-input {
+      background: transparent;
+      outline: none;
+      border: none;
+      width: 100%;
+      padding: 8px 10px;
+    }
+
+    &.completed {
+      background: rgba(49, 183, 159, 0.2);
+      border: 2px solid @color-green500;
+
+      .social-input {
+        color: @color-green500;
+      }
+    }
+  }
+
   .task-move-container {
     margin-top: 24px;
 
@@ -166,6 +249,10 @@ export default Vue.extend({
         opacity: 0.5;
       }
     }
+  }
+
+  .social-notification {
+    margin: 24px 0;
   }
 }
 </style>

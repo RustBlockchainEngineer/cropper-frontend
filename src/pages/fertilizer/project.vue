@@ -4,6 +4,7 @@
       <div class="card-body">
         <SubscribeModal
           :show="subscribeShow"
+          :content="SubscribeModalContent"
           @onCancel="() => (subscribeShow = false)"
           @onOk="
             () => {
@@ -15,7 +16,7 @@
         />
         <TaskProcessModal
           :show="taskModalShow"
-          :step="taskModalType === 0 ? socialTicket.telegram : socialTicket.twitter"
+          :step="taskModalType === 0 ? (socialTicket.telegram + 1) : (socialTicket.twitter + 1) "
           :project="fertilizer.title"
           :type="taskModalType"
           @onNext="
@@ -36,7 +37,8 @@
           :show="KYCModalShow"
           @onCancel="() => (KYCModalShow = false)"
           @onOk="
-            () => {
+            (driver, id, passport, selectedCountry, imgUrl) => {
+              sendKYC(driver, id, passport, selectedCountry, imgUrl);
               KYCStatus.step = 2
               KYCStatus.verification = 1
               KYCModalShow = false
@@ -258,18 +260,18 @@
                     <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
                       <span class="title font-small weight-semi spacing-large">Token Price</span>
                       <div class="value fcs-container">
-                        <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                        <CoinIcon class="coin-icon" :mint-address="fertilizer.price_token_mint" />
                         <span class="font-medium"
-                          ><b>{{ fertilizer.ido_info.sale_rate }}</b> {{ fertilizer.token_price }}</span
+                          ><b>{{ fertilizer.ido_info.sale_rate }}</b> {{ fertilizer.price_token }}</span
                         >
                       </div>
                     </Col>
                     <Col :md="8" :sm="12" :xs="12" class="project-detail-info-item">
                       <span class="title font-small weight-semi spacing-large">Hard Cap</span>
                       <div class="value fcs-container">
-                        <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                        <CoinIcon class="coin-icon" :mint-address="fertilizer.price_token_mint" />
                         <span class="font-medium"
-                          ><b>{{ fertilizer.ido_info.hard_cap }}</b> {{ fertilizer.token_price }}</span
+                          ><b>{{ fertilizer.ido_info.hard_cap }}</b> {{ fertilizer.price_token }}</span
                         >
                       </div>
                     </Col>
@@ -431,6 +433,128 @@
                       :value="fertilizer.sales_start_date"
                       format="DD:HH:mm:ss"
                     />
+
+                  <div class="project-detail-open">
+                    <div v-if="KYCStatus.step < 3 && ((currentTier === 0 && currentStatus.win) || currentStatus.subscribe)">
+                      <div class="kyc-form">
+                        <div class="kyc-progress-container fcs-container">
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">1</span>
+                            <span class="kyc-title font-small weight-bold">ID Verification</span>
+                          </div>
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 2 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">2</span>
+                            <span class="kyc-title font-small weight-bold">Verification</span>
+                          </div>
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 3 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">3</span>
+                            <span class="kyc-title font-small weight-bold">Start to buy</span>
+                          </div>
+                        </div>
+                        <div v-if="KYCStatus.step < 3">
+                          <div class="kyc-status-container fcsb-container">
+                            <div class="kyc-current-step fcs-container">
+                              <span class="font-large weight-bold">ID Verification</span>
+                              <img class="info-icon left" src="@/assets/icons/info.svg" />
+                            </div>
+                            <span
+                              class="kyc-status font-xsmall weight-bold"
+                              :class="
+                                KYCStatus.step === 1
+                                  ? 'failed'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'progress'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'success'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'failed'
+                                  : ''
+                              "
+                              >{{
+                                KYCStatus.step === 1
+                                  ? 'Not verified'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'In progress'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'Verified'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'Verification failed'
+                                  : ''
+                              }}</span
+                            >
+                          </div>
+                          <div class="kyc-description">
+                            <span class="font-small weight-semi spacing-large">
+                              Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours
+                              to be verified.
+                            </span>
+                            <img
+                              v-if="KYCStatus.step === 1"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-verification.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-progress.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-success.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-failed.svg"
+                            />
+                          </div>
+                          <div class="btn-container">
+                            <Button
+                              class="btn-transparent font-medium weight-semi icon-cursor"
+                              :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                              @click="KYCConfirm"
+                              >{{
+                                KYCStatus.step === 1
+                                  ? 'Verify your ID now'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'Next'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'Next'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'Verify your ID again'
+                                  : ''
+                              }}</Button
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
+                        <span class="font-medium weight-semi spacing-small"
+                          >You can buy token from this project and see what you will receive.</span
+                        >
+                        <div class="token-amount fcsb-container">
+                          <div class="token-amount-input fcs-container">
+                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                            <input class="font-medium weight-bold" type="number" placeholder="673" />
+                          </div>
+                          <span class="font-xsmall weight-semi token-max-amount">max 1500 {{ fertilizer.token_price }}</span>
+                        </div>
+                        <div class="receive-amount">
+                          <label class="font-xmall">You will receive:</label>
+                          <div class="receive-amount-output fcs-container">
+                            <img class="coin-icon" :src="fertilizer.logo" />
+                            <span class="receive-amount-value font-medium weight-semi spacing-small"
+                              >0.028 {{ fertilizer.title }}</span
+                            >
+                          </div>
+                        </div>
+                        <div class="btn-container">
+                          <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
                   </div>
                   <div
                     v-else-if="
@@ -727,6 +851,7 @@ import moment from 'moment'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
 const TEST_TIME = 1643356116915
+const countries = require('i18n-iso-countries')
 // 1643500800000
 
 export default Vue.extend({
@@ -748,6 +873,7 @@ export default Vue.extend({
         title: '',
         short_desc: '',
         price_token: '',
+        price_token_mint: '',
         long_desc:
           'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
         hard_cap: '3000K',
@@ -792,6 +918,7 @@ export default Vue.extend({
         telegram: 0 as number,
         twitter: 0 as number
       },
+      SubscribeModalContent: '' as string,
       currentTimestamp: 0 as any,
       currentStep: 0 as number,
       currentTier: 0 as number,
@@ -803,8 +930,9 @@ export default Vue.extend({
       taskModalType: 0 as number,
       KYCStatus: {
         step: 1 as number,
-        verification: 1 as number,
-        userVerified: false as boolean
+        verification: 0 as number,
+        userVerified: false as boolean,
+        sessionID: '' as string
       },
       KYCModalShow: false as boolean,
       copyNotification: false as boolean,
@@ -835,15 +963,22 @@ export default Vue.extend({
   },
 
   mounted() {
+    setAnchorProvider(this.$web3, this.$wallet)
+    console.log(getLaunchpad());
     this.currentTimestamp = moment().valueOf()
     this.setTimer()
-
     const query = new URLSearchParams(window.location.search)
     if (query.get('f')) {
-      this.fertilizer.mint = query.get('f') as string
-    }
 
-    this.loadDatas();
+      this.fertilizer.mint = query.get('f') as string
+      this.loadDatas();
+
+    } else {
+
+      this.$router.push({
+        path: '/fertilizer/'
+      })
+    }
 
 
   },
@@ -873,17 +1008,21 @@ export default Vue.extend({
         };
         await fetch('http://141.95.168.181:8080/registers/', requestOptions);
 
-      this.contextualizeUser();
+      await this.contextualizeUser();
+    },
+
+    getFertilzerMint(){
+      const query = new URLSearchParams(window.location.search)
+      if (query.get('f')) {
+        return query.get('f') as string
+      }
     },
 
     async contextualizeUser(){
 
-
-
-      if(!this.wallet.connected){
-        return;
-      }
-
+        if(!this.wallet.connected){
+          return;
+        }
 
         let responseData;
         try {
@@ -891,24 +1030,63 @@ export default Vue.extend({
         } catch {
           this.currentStatus.subscribe = false
         } finally {
-
-
-    console.log('Wallet', responseData);
-
-    
           this.currentStatus.subscribe = true
-          this.social_tickets = responseData.tickets;
-          this.referral_tickets = responseData.referal_ticket;
-
-          this.total_tickets = responseData.tickets + responseData.referal_ticket;
-
-
+          this.social_tickets = (responseData.tickets ? responseData.tickets : 0);
+          this.referral_tickets = (responseData.referal_ticket ? responseData.referal_ticket : 0);
+          this.total_tickets = this.social_tickets + this.referral_tickets;
           this.affiliatedLink = 'https://cropper.finance/fertilizer/'+ 'ABC' + '/' +this.wallet.address;
-
           this.twitterShareLink = `http://twitter.com/share?text=${this.affiliatedLink} I am participating to the ${this.fertilizer.title} IDO on @cropper&url= `
           this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=I am participating to the ${this.fertilizer.title} IDO on @cropper`
-
         }
+
+        if(
+          this.currentTimestamp < this.fertilizer.sales_end_date && 
+          this.currentTimestamp > this.fertilizer.whitelist_end_date 
+          && this.KYCStatus.step < 3 
+          && (
+            (this.currentTier === 0 && this.currentStatus.win) || 
+            this.currentStatus.subscribe
+          )
+        ){
+
+          responseData;
+          try {
+            responseData =  await fetch('http://141.95.168.181:8080/kyc/'+ this.wallet.address +'/').then((res) => res.json())
+          } catch {
+          } finally {
+            if(responseData.session_id){
+              this.KYCStatus.sessionID = responseData.session_id;
+              if(responseData.status){
+                this.KYCStatus.step = 2;
+              }
+            } else if(responseData.message){
+              this.KYCStatus.step = 1;
+              try {
+                const requestOptions = {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ spl: this.wallet.address})
+                  };
+                responseData = await fetch('http://141.95.168.181:8080/kyc/', requestOptions);
+                if(responseData.session_id){
+                  this.KYCStatus.sessionID = responseData.session_id;
+                }
+
+              } catch {
+              } finally {
+                if(responseData.message){
+                  this.KYCStatus.step = 1;
+                }
+              }
+            }
+
+          console.log('KYCStatus', this.KYCStatus);
+          }
+        }
+    },
+
+    async delay(ms: number) {
+      return new Promise((resolve) => setTimeout(resolve, ms))
     },
 
     async loadDatas(){
@@ -921,10 +1099,14 @@ export default Vue.extend({
           // dummy data
         } finally {
 
-        }
 
         let key = 0;
 
+        if(!this.fertilizer.mint){
+          this.fertilizer.mint = this.getFertilzerMint();
+        }
+
+        console.log('ResponseData', responseData, this.fertilizer.mint);
 
         for (const item of responseData.message) {
 
@@ -936,7 +1118,6 @@ export default Vue.extend({
             continue;
           }
 
-          console.log(this.fertilizer.mint);
           let scValues = await getProjectFormatted(this.fertilizer.mint)
 
           if(!scValues){
@@ -944,14 +1125,11 @@ export default Vue.extend({
           }
 
 
-          console.log(item)
-
+          var curdate = new Date();
           this.fertilizer.short_desc = item['short_desc'];
           this.fertilizer.long_desc = item['short_desc_2'];
           this.fertilizer.title = item['title'];
-
-          var curdate = new Date();
-
+          this.SubscribeModalContent = item['disclaimer'];
           this.fertilizer.distribution_end_date = (moment(scValues.date_distribution).unix() + (86400 * 2)) * 1000;
           this.fertilizer.distribution_start_date = moment(scValues.date_distribution).unix() * 1000;
           this.fertilizer.date_preparation = moment(scValues.date_preparation).unix() * 1000;
@@ -959,16 +1137,12 @@ export default Vue.extend({
           this.fertilizer.sales_start_date = moment(scValues.date_sale_start).unix() * 1000;
           this.fertilizer.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000;
           this.fertilizer.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000;
-
           this.fertilizer.ido_info.sale_rate = scValues.token_price;
           this.fertilizer.ido_info.hard_cap = scValues.pool_size;
           this.fertilizer.ido_info.sale_type = item.type;
-
-          this.fertilizer.pool_size = Math.round((scValues.pool_size / scValues.token_price) * 100) / 100;
-
-          console.log(scValues, this.fertilizer)
-
-
+          if(scValues.token_price != undefined && scValues.token_price > 0){
+            this.fertilizer.pool_size = Math.round((scValues.pool_size / scValues.token_price) * 100) / 100;
+          }
           this.fertilizer.website_url = item.website_display
           this.fertilizer.website = item.website_url
           this.fertilizer.logo = item.token_logo
@@ -977,12 +1151,18 @@ export default Vue.extend({
           let token = getTokenByMintAddress(scValues.price_token_mint);
 
           if(token){
-            project.fertilizer.price_token = token.symbol
+            this.fertilizer.price_token = token.symbol
+            this.fertilizer.price_token_mint = scValues.price_token_mint
           }
 
-          let content = '' as any
+          token = getTokenByMintAddress(this.fertilizer.mint);
+          if(token){
+            this.fertilizer.token_info.symbol = token.symbol
+          }
 
-            
+          let content = 'TODO' as any
+
+          /*  
           try {
             content = await fetch(item.long_desc).then((res) => res)
           } catch {
@@ -992,8 +1172,11 @@ export default Vue.extend({
             this.fertilizer.longContent = content;
           }
 
+          */
+          console.log('done', this.fertilizer);
           this.contextualizeUser();
-
+        }
+          console.log('dune', this.fertilizer);
         }
     },
 
@@ -1015,6 +1198,66 @@ export default Vue.extend({
         this.copyNotification = false
       }, 3000)
     },
+
+    dataURLtoFile(dataurl :any, filename :any) {
+ 
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), 
+            n = bstr.length, 
+            u8arr = new Uint8Array(n);
+            
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        
+
+
+
+        return new File([u8arr], filename + '.jpg', {type:mime});
+    },
+
+    async sendKYC(driver:any, id:any, passport:any, selectedCountry:any, imgUrl:any){
+      let body = {} as any;
+
+
+      body.document_type = driver ? 'DRIVER_LICENSE' : (id ? 'NATIONAL_ID' : 'PASSPORT')
+      body.country = countries.alpha2ToAlpha3(selectedCountry)
+      body.step_id = 1909259753480
+
+      if(imgUrl.back){
+        body.back_document = imgUrl.back;
+      }
+
+      if(imgUrl.front){
+        body.front_document = imgUrl.front;
+      }
+
+      console.log(body);
+      //1909259753480
+
+      let responseData;
+
+
+      const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Session-Id" : this.KYCStatus.sessionID},
+          body: JSON.stringify(body)
+        };
+
+        try{
+          responseData = await fetch('https://individual-api.synaps.io/v3/identity/submit?step_id=1909259753480' , requestOptions);
+
+        } catch {
+          alert('alarmaaaaaa')
+        } finally {
+          alert('good')
+        }
+
+      console.log(responseData);
+
+    },
+
     KYCConfirm() {
       if (this.KYCStatus.step === 1 || (this.KYCStatus.step === 2 && this.KYCStatus.verification === 0))
         this.KYCModalShow = true

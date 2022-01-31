@@ -24,6 +24,7 @@
                 @click="
                   () => {
                     selectedCountry = country.label
+                    selectedCountryISO = country.value
                   }
                 "
                 >{{ country.label }}</a
@@ -306,7 +307,7 @@
         <Button
           class="btn-transparent font-medium weight-semi letter-small icon-cursor"
           :disabled="!(accepted && (imgUploaded.driver || imgUploaded.id || imgUploaded.passport))"
-          @click="$emit('onOk')"
+          @click="$emit('onOk', imgUploaded.driver, imgUploaded.id, imgUploaded.passport, selectedCountryISO, imgUrl)"
           >Submit</Button
         >
       </div>
@@ -363,9 +364,12 @@ export default Vue.extend({
       },
       imgUrl: {
         front: '' as string,
-        back: '' as string
+        back: '' as string,
+        frontFull: false as any,
+        backFull: false as any
       },
       selectedCountry: 'France' as string,
+      selectedCountryISO: 'FR' as string,
       accepted: false as boolean,
       showCollapse: [] as any[]
     }
@@ -389,6 +393,7 @@ export default Vue.extend({
       }
       if (info.file.status === 'done') {
         // Get this url from response in real world.
+        this.imgUrl.frontFull = info.file
         getBase64(info.file.originFileObj, (imgUrl: any) => {
           this.imgUrl.front = imgUrl
         })
@@ -400,6 +405,7 @@ export default Vue.extend({
       }
       if (info.file.status === 'done') {
         // Get this url from response in real world.
+        this.imgUrl.backFull = info.file
         getBase64(info.file.originFileObj, (imgUrl: any) => {
           this.imgUrl.back = imgUrl
         })

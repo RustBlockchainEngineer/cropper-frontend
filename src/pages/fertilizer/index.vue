@@ -346,7 +346,7 @@
                       <div class="project-balance">
                         <span class="label font-small weight-semi spacing-large">Total raise</span>
                         <span class="value font-medium weight-semi spacing-small fcs-container">
-                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          <CoinIcon class="coin-icon" :mint-address="fertilizer.price_token_mint" />
                           {{ fertilizer.hard_cap }} {{ fertilizer.price_token }}
                           <!-- TBA -->
                         </span>
@@ -944,26 +944,7 @@ export default Vue.extend({
       filterProject: 'Upcoming' as string,
       fertilizerItems: [] as any[],
       projects: [] as any,
-      fertilizerData: [
-        {
-          status: 'Whitelist Open',
-          key: 'k0',
-          picture: '/fertilizer/banner/unq.png',
-          title: 'UNQ.club',
-          short_desc: 'Social platform for NFT asset management',
-          hard_cap: '3000K',
-          token_price: 0.071 as any,
-          subscribers: 100418,
-          mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          whitelist_end_date: 1643500800000,
-          distribution_end_date : 0 as any,
-          distribution_start_date : 0 as any,
-          sales_end_date : 0 as any,
-          sales_start_date : 0 as any,
-          whitelist_start_date : 0 as any,
-          price_token : '' as any
-        },
-      ],
+      fertilizerData: [] as any,
       currentTimestamp: 0
     }
   },
@@ -1063,10 +1044,18 @@ export default Vue.extend({
             title: item['title'],
             short_desc: item['short_desc'],
             hard_cap: '3000K',
-            token_price: 0.071,
             subscribers: 0,
             mint: item.mint,
-            whitelist_end_date: 1643500800000
+            whitelist_end_date: 1643500800000,
+            whitelist_start_date: 0,
+            distribution_end_date: 0,
+            distribution_start_date: 0,
+            date_preparation: 0,
+            sales_end_date: 0,
+            sales_start_date: 0,
+            token_price: 0,
+            price_token: '',
+            price_token_mint: ''
           };
 
           if(!item['title']){
@@ -1079,7 +1068,7 @@ export default Vue.extend({
             continue;
           }
 
-          var curdate = new Date();
+          var curdate = (new Date() as any) * 1;
 
           project.distribution_end_date = (moment(scValues.date_distribution).unix() + (86400 * 2)) * 1000;
           project.distribution_start_date = moment(scValues.date_distribution).unix() * 1000;
@@ -1088,6 +1077,10 @@ export default Vue.extend({
           project.sales_start_date = moment(scValues.date_sale_start).unix() * 1000;
           project.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000;
           project.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000;
+
+          if(scValues.token_price == undefined){
+            continue;
+          }
 
           project.token_price = scValues.token_price;
 
@@ -1110,7 +1103,7 @@ export default Vue.extend({
           project.hard_cap = scValues.pool_size;
 
           let sub = registerdList.find(
-            (items) => items.mint === item.mint
+            (items: any) => items.mint === item.mint
           )
           if(sub){
 
@@ -1121,6 +1114,7 @@ export default Vue.extend({
 
           if(token){
             project.price_token = token.symbol
+            project.price_token_mint = scValues.price_token_mint
           }
 
           key++;
