@@ -1015,7 +1015,7 @@ export default Vue.extend({
 
         let registerdList;
         try {
-          registerdList =  await fetch('http://141.95.168.181:8080/registers/').then((res) => res.json())
+          registerdList =  await fetch('https://flow.cropper.finance/registers/').then((res) => res.json())
         } catch {
         } finally {
           

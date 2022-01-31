@@ -1006,7 +1006,7 @@ export default Vue.extend({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ spl: this.wallet.address, mint: this.fertilizer.mint, tx_id_register: '3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc' })
         };
-        await fetch('http://141.95.168.181:8080/registers/', requestOptions);
+        await fetch('https://flow.cropper.finance/registers/', requestOptions);
 
       await this.contextualizeUser();
     },
@@ -1027,7 +1027,7 @@ export default Vue.extend({
 
         let responseData;
         try {
-          responseData =  await fetch('http://141.95.168.181:8080/registers/'+ this.wallet.address +'/'+ this.fertilizer.mint +'/').then((res) => res.json())
+          responseData =  await fetch('https://flow.cropper.finance/registers/'+ this.wallet.address +'/'+ this.fertilizer.mint +'/').then((res) => res.json())
         } catch {
           this.currentStatus.subscribe = false
         } finally {
@@ -1052,7 +1052,7 @@ export default Vue.extend({
 
           responseData;
           try {
-            responseData =  await fetch('http://141.95.168.181:8080/kyc/'+ this.wallet.address +'/').then((res) => res.json())
+            responseData =  await fetch('https://flow.cropper.finance/kyc/'+ this.wallet.address +'/').then((res) => res.json())
           } catch {
           } finally {
             if(responseData.session_id){
@@ -1068,7 +1068,7 @@ export default Vue.extend({
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ spl: this.wallet.address})
                   };
-                responseData = await fetch('http://141.95.168.181:8080/kyc/', requestOptions);
+                responseData = await fetch('https://flow.cropper.finance/kyc/', requestOptions);
                 //@ts-ignore
                 if(responseData.session_id){
                   //@ts-ignore
