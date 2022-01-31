@@ -1031,13 +1031,20 @@ export default Vue.extend({
         } catch {
           this.currentStatus.subscribe = false
         } finally {
-          this.currentStatus.subscribe = true
-          this.social_tickets = (responseData.tickets ? responseData.tickets : 0);
-          this.referral_tickets = (responseData.referal_ticket ? responseData.referal_ticket : 0);
-          this.total_tickets = this.social_tickets + this.referral_tickets;
-          this.affiliatedLink = 'https://cropper.finance/fertilizer/'+ 'ABC' + '/' +this.wallet.address;
-          this.twitterShareLink = `http://twitter.com/share?text=${this.affiliatedLink} I am participating to the ${this.fertilizer.title} IDO on @cropper&url= `
-          this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=I am participating to the ${this.fertilizer.title} IDO on @cropper`
+          if(!responseData){
+
+            this.currentStatus.subscribe = false
+          } else {
+
+            this.currentStatus.subscribe = true
+            this.social_tickets = (responseData.tickets ? responseData.tickets : 0);
+            this.referral_tickets = (responseData.referal_ticket ? responseData.referal_ticket : 0);
+            this.total_tickets = this.social_tickets + this.referral_tickets;
+            this.affiliatedLink = 'https://cropper.finance/fertilizer/'+ 'ABC' + '/' +this.wallet.address;
+            this.twitterShareLink = `http://twitter.com/share?text=${this.affiliatedLink} I am participating to the ${this.fertilizer.title} IDO on @cropper&url= `
+            this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=I am participating to the ${this.fertilizer.title} IDO on @cropper`
+          }
+
         }
 
         if(
