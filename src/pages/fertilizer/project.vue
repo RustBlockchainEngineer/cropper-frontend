@@ -1031,7 +1031,7 @@ export default Vue.extend({
         } catch {
           this.currentStatus.subscribe = false
         } finally {
-          if(!responseData){
+          if(responseData.message){
 
             this.currentStatus.subscribe = false
           } else {
