@@ -913,7 +913,7 @@ export default Vue.extend({
           'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
         hard_cap: '3000K',
         pool_size: 5000 as any,
-        subscribers: 0 as any,
+        subscribers: '' as any,
         website: '',
         website_url: '',
         mint: '',
@@ -1215,7 +1215,6 @@ export default Vue.extend({
           this.fertilizer.website_url = item.website_display
           this.fertilizer.website = item.website_url
           this.fertilizer.logo = item.token_logo
-          this.fertilizer.subscribers = 'TODO'
 
           let token = getTokenByMintAddress(scValues.price_token_mint);
 
@@ -1242,6 +1241,24 @@ export default Vue.extend({
 
             console.log(content);
           }
+
+
+          let registerdList;
+          try {
+            registerdList =  await fetch('https://flow.cropper.finance/registers/').then((res) => res.json())
+          } catch {
+            this.fertilizer.subscribers = ''
+          } finally {
+              
+            let sub = registerdList.find(
+              (items: any) => items.mint === this.fertilizer.mint
+            )
+            if(sub){
+
+              this.fertilizer.subscribers = sub.ct
+            }
+          }
+
 
           this.contextualizeUser();
         }
