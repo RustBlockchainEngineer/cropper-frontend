@@ -673,6 +673,8 @@ export default Vue.extend({
 
       let apiDatas = this.apiValues;
       apiDatas.mint = this.mint;
+      apiDatas.date_whitelist_start = this.scValues.date_whitelist_start;
+      apiDatas.date_whitelist_end = this.scValues.date_whitelist_end;
 
       var request = require('request');
       var options = {

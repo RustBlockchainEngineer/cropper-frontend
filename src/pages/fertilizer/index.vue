@@ -21,7 +21,8 @@
             <div class="item " 
                         v-for="item in projects"
                         :key="item.mint">
-              <button style="color:#000" class="full" @click="goTo(item.mint)">{{item.title}}<br /><small>{{item.mint}}</small></button>
+              <button v-if="item.title" style="color:#000" class="full" @click="goTo(item.mint)">{{item.title}}<br /><small>{{item.mint}}</small></button>
+              <button v-else class="full" style="background:red;color:#fff" @click="goTo(item.mint)">{{item.title}}<br /><small>{{item.mint}}</small></button>
             </div>
 
 
