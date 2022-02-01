@@ -917,6 +917,11 @@ export default Vue.extend({
         website: '',
         website_url: '',
         mint: '',
+        tw_a: '',
+        tw_b: '',
+        tg_a: '',
+        tg_b: '',
+        retweetlink: '',
         ido_info: {
           hard_cap: 140000,
           sale_rate: 0.028 as any,

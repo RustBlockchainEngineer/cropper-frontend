@@ -164,6 +164,7 @@ export default Vue.extend({
 
           let requestOptions = {
             method: "PUT",
+            body: "",
             headers: { "Content-Type": "application/json" },
           };
 
@@ -190,6 +191,7 @@ export default Vue.extend({
 
           let requestOptions = {
             method: "PUT",
+            body: "",
             headers: { "Content-Type": "application/json" },
           };
 
