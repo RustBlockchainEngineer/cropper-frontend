@@ -909,8 +909,7 @@ export default Vue.extend({
         short_desc: '',
         price_token: '',
         price_token_mint: '',
-        long_desc:
-          'Whether a professional collector or aspiring enthusiast - UNQ is a place where you can take your game to the next level.',
+        long_desc: '',
         hard_cap: '3000K',
         pool_size: 5000 as any,
         subscribers: '' as any,
@@ -1041,10 +1040,17 @@ export default Vue.extend({
 
     async initSubscribe(){
 
-      const requestOptions = {
+      let requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ spl: this.wallet.address, mint: this.fertilizer.mint, tx_id_register: '3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc' })
+        };
+        await fetch('https://flow.cropper.finance/registers/', requestOptions);
+
+      requestOptions = {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ spl: this.wallet.address, hash: '58eda2485e96378dca8f5d8044161e6a567614bb6a24626c92df13277fdc2d72' })
         };
         await fetch('https://flow.cropper.finance/registers/', requestOptions);
 
