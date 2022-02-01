@@ -24,22 +24,29 @@
           <span class="task-no m-auto font-medium weight-bold">3</span>
           <span class="task-title font-small weight-bold">Join Cropper</span>
         </div>
-        <div class="task-item text-center" :class="step === 4 ? 'active' : ''">
-          <span class="task-no m-auto font-medium weight-bold">4</span>
-          <span class="task-title font-small weight-bold">Confirm</span>
-        </div>
       </div>
+
+      <div v-if="step === 1 && type === 1" v-html="this.retweetlink" class="social-input-container fcsb-container" :class="saved ? 'completed' : ''">
+      </div>
+      <div v-if="step === 1 && type === 1">
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+      </div>
+
       <div v-if="step === 1" class="social-input-container fcsb-container" :class="saved ? 'completed' : ''">
         <input
           type="text"
           class="social-input font-medium"
-          :value="type === 0 ? telegramID : twitterLink"
+          v-model="data"
           :placeholder="type === 0 ? '@XXXXX' : 'Retweet link'"
+          @input="checkinput"
         />
         <img v-if="saved" class="status-icon" src="@/assets/icons/status-success.svg" />
       </div>
       <div class="btn-container m-auto">
+        <a v-if="step !=1 " :href="( (step === 2 && type === 0) ? this.tg_a : (step === 3 && type === 0) ? this.tg_b : (step === 2 && type === 1) ? this.tw_a : this.tw_b )" target="_blank">
         <Button
+          :disabled="buttonDisabled"
           class="btn-transparent font-medium weight-semi letter-small icon-cursor fcc-container"
           @click="nextProcess"
         >
@@ -52,17 +59,20 @@
               : step === 3
               ? 'Join Cropper'
               : step === 4
-              ? 'Confirm'
+              ? ''
               : ''
           }}
         </Button>
+        </a>
+
       </div>
       <div class="task-move-container fcc-container">
         <Button class="move-btn prev icon-cursor fcc-container" :disabled="step === 1" @click="$emit('onPrev')">
           <img class="arrow-icon" src="@/assets/icons/arrow-left.svg" />
         </Button>
-        <Button class="move-btn next icon-cursor fcc-container" :disabled="step === 4" @click="$emit('onNext')">
-          <img class="arrow-icon" src="@/assets/icons/arrow-right.svg" />
+        <Button 
+          :disabled="buttonDisabled && step === 1" class="move-btn next icon-cursor fcc-container" @click="nextProcess();$emit('onNext');">
+          Confirm
         </Button>
       </div>
       <div v-if="step === 1" class="social-notification fb-container">
@@ -79,6 +89,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Modal } from 'ant-design-vue'
+import { mapState } from 'vuex'
 Vue.use(Modal)
 
 export default Vue.extend({
@@ -102,25 +113,121 @@ export default Vue.extend({
     project: {
       type: String,
       default: ''
+    },
+    mint: {
+      type: String,
+      default: ''
+    },
+    tg_a: {
+      type: String,
+      default: ''
+    },
+    tg_b: {
+      type: String,
+      default: ''
+    },
+    tw_a: {
+      type: String,
+      default: ''
+    },
+    tw_b: {
+      type: String,
+      default: ''
+    },
+    retweetlink: {
+      type: String,
+      default: ''
     }
+  },
+
+  computed: {
+    ...mapState(['wallet'])
   },
 
   data() {
     return {
+      data: '' as string,
+      saved: false as boolean,
       telegramID: '' as string,
       twitterLink: '' as string,
       saveStatus: {
         telegram: false as boolean,
         twitter: false as boolean
-      }
+      },
+      buttonDisabled: true as boolean
     }
   },
 
   methods: {
-    nextProcess() {
-      if (this.step === 1) {
-        if (this.type === 0) this.saveStatus.telegram = true
-        else this.saveStatus.twitter = true
+    async nextProcess() {
+        if (this.type === 0) {
+
+          let requestOptions = {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+          };
+
+          switch(this.step){
+            case 1:
+              requestOptions.body = JSON.stringify({ mnemonic: 'tg_name', data: this.data })
+            break;
+
+            case 2:
+              requestOptions.body = JSON.stringify({ mnemonic: 'tg_a' })
+            break;
+
+            case 3:
+              requestOptions.body = JSON.stringify({ mnemonic: 'tg_b' })
+            break;
+
+            default:
+              return;
+          }
+
+          await fetch('https://flow.cropper.finance/registers/'+this.wallet.address+'/'+this.mint+'/', requestOptions);
+
+        } else {
+
+          let requestOptions = {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+          };
+
+          switch(this.step){
+            case 1:
+              requestOptions.body = JSON.stringify({ mnemonic: 'retweet', data: this.data })
+            break;
+
+            case 2:
+              requestOptions.body = JSON.stringify({ mnemonic: 'twitter_a' })
+            break;
+
+            case 3:
+              requestOptions.body = JSON.stringify({ mnemonic: 'twitter_b' })
+            break;
+
+            default:
+              return;
+          }
+
+          await fetch('https://flow.cropper.finance/registers/'+this.wallet.address+'/'+this.mint+'/', requestOptions);
+
+        }
+      
+    },
+    checkinput(){
+      if(this.type === 0 && this.step === 1){ // tg
+        if(this.data.length < 4){
+          this.buttonDisabled = true
+        } else {
+          this.buttonDisabled = false
+        }
+      } else if(this.type === 1 && this.step === 1) { // twitter
+        if(this.data.length < 4){
+          this.buttonDisabled = true
+        } else {
+          this.buttonDisabled = false
+        }
       }
     }
   },

@@ -1024,7 +1024,7 @@ export default Vue.extend({
         let responseData
 
         try {
-          responseData =  await fetch('https://api.croppppp.com/launchpad/?list=1').then((res) => res.json())
+          responseData =  await fetch('https://api.cropper.finance/fertilizer/').then((res) => res.json())
         } catch {
           // dummy data
         } finally {

@@ -19,10 +19,29 @@
           :step="taskModalType === 0 ? (socialTicket.telegram + 1) : (socialTicket.twitter + 1) "
           :project="fertilizer.title"
           :type="taskModalType"
+          :mint="fertilizer.mint"
+          :tg_a="fertilizer.tg_a"
+          :tg_b="fertilizer.tg_b"
+          :tw_a="fertilizer.tw_a"
+          :tw_b="fertilizer.tw_b"
+          :retweetlink="fertilizer.retweetlink"
           @onNext="
             () => {
-              if (this.taskModalType === 0) this.socialTicket.telegram++
-              else this.socialTicket.twitter++
+              if (this.taskModalType === 0){ 
+                this.socialTicket.telegram++; 
+                if(this.socialTicket.telegram == 3){
+                  taskModalShow = false;
+                  contextualizeUser();
+                } 
+              } else { 
+                this.socialTicket.twitter++; 
+                if(this.socialTicket.twitter == 3){
+                  taskModalShow = false;
+                  contextualizeUser();
+
+                }
+              }
+
             }
           "
           @onPrev="
@@ -31,7 +50,11 @@
               else this.socialTicket.twitter--
             }
           "
-          @onCancel="() => (taskModalShow = false)"
+          @onCancel="() => {
+            contextualizeUser();
+            (taskModalShow = false)
+
+          }"
         />
         <IDVerifyModal
           :show="KYCModalShow"
@@ -327,8 +350,13 @@
                         :class="socialTicket.telegram === 3 ? 'active' : ''"
                         @click="
                           () => {
-                            this.taskModalShow = true
-                            this.taskModalType = 0
+                            if((this.socialTicket.telegram == 0) ? 
+                                  0 : 
+                                  (this.socialTicket.telegram - 1) < 2){
+                                    this.taskModalShow = true
+                                    this.taskModalType = 0
+
+                                  }
                           }
                         "
                       >
@@ -338,7 +366,11 @@
                             <span class="font-medium weight-bold">Telegram task</span>
                             <br />
                             <span class="font-xsmall weight-semi"
-                              >{{ socialTicket.telegram }} /2 Task completed</span
+                              >{{ 
+                                (socialTicket.telegram == 0) ? 
+                                  0 : 
+                                  (socialTicket.telegram - 1) 
+                              }} /2 Task completed</span
                             >
                           </div>
                         </div>
@@ -353,8 +385,11 @@
                         :class="socialTicket.twitter === 3 ? 'active' : ''"
                         @click="
                           () => {
+                          if(this.socialTicket.twitter < 3){
+
                             this.taskModalShow = true
                             this.taskModalType = 1
+                          }
                           }
                         "
                       >
@@ -1038,6 +1073,25 @@ export default Vue.extend({
 
             this.currentStatus.subscribe = true
             this.social_tickets = (responseData.tickets ? responseData.tickets : 0);
+            this.socialTicket.telegram = 1;
+            if(responseData.tg_a){
+              this.socialTicket.telegram++;
+            }
+            if(responseData.tg_b){
+              this.socialTicket.telegram++;
+            }
+
+            this.socialTicket.twitter = 0;
+            if(responseData.twitter_a){
+              this.socialTicket.twitter++;
+            }
+            if(responseData.twitter_b){
+              this.socialTicket.twitter++;
+            }
+            if(responseData.retweet){
+              this.socialTicket.twitter++;
+            }
+
             this.referral_tickets = (responseData.referal_ticket ? responseData.referal_ticket : 0);
             this.total_tickets = this.social_tickets + this.referral_tickets;
             this.affiliatedLink = 'https://cropper.finance/fertilizer/'+ 'ABC' + '/' +this.wallet.address;
@@ -1104,7 +1158,7 @@ export default Vue.extend({
       let responseData = {} as any
 
         try {
-          responseData =  await fetch('https://api.croppppp.com/launchpad/?list=1').then((res) => res.json())
+          responseData =  await fetch('https://api.cropper.finance/fertilizer/').then((res) => res.json())
         } catch {
           // dummy data
         } finally {
@@ -1139,6 +1193,11 @@ export default Vue.extend({
           this.fertilizer.short_desc = item['short_desc'];
           this.fertilizer.long_desc = item['short_desc_2'];
           this.fertilizer.title = item['title'];
+          this.fertilizer.tg_a = item['tg_a'];
+          this.fertilizer.tg_b = item['tg_b'];
+          this.fertilizer.tw_a = item['twitter_a'];
+          this.fertilizer.tw_b = item['twitter_b'];
+          this.fertilizer.retweetlink = item['post_a'];
           this.SubscribeModalContent = item['disclaimer'];
           this.fertilizer.distribution_end_date = (moment(scValues.date_distribution).unix() + (86400 * 2)) * 1000;
           this.fertilizer.distribution_start_date = moment(scValues.date_distribution).unix() * 1000;
@@ -1172,22 +1231,21 @@ export default Vue.extend({
 
           let content = 'TODO' as any
 
-          /*  
+          
           try {
-            content = await fetch(item.long_desc).then((res) => res)
+            content = await fetch("https://api.cropper.finance/fertilizer/"+ this.fertilizer.mint +"/").then((res) => res.json())
           } catch {
             // dummy data
             this.fertilizer.longContent = 'TODO';
           } finally {
-            this.fertilizer.longContent = content;
+            this.fertilizer.longContent = content.content;
+
+            console.log(content);
           }
 
-          */
-          console.log('done', this.fertilizer);
           this.contextualizeUser();
         }
-          console.log('dune', this.fertilizer);
-        }
+      }
     },
 
     setTimer() {
