@@ -185,7 +185,7 @@
                   <div v-else-if="currentStep === 2">
                     <div v-if="currentTimestamp < fertilizer.sales_end_date">
                       <div
-                        v-if="(currentTier === 0 && currentStatus.win) || currentStatus.subscribe"
+                        v-if="true"
                         class="fcc-container"
                       >
                         <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
@@ -455,7 +455,7 @@
               </div>
               <div v-else-if="currentStep === 2" class="project-detail-item">
                 <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
-                  <div v-if="(currentStatus.win) || (currentTier > 3 && currentStatus.subscribe)">
+                  <div v-if="true">
                     <div class="fcc-container">
                       <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                       <span class="font-medium weight-semi spacing-small"
@@ -470,6 +470,8 @@
                     />
 
                   <div class="project-detail-open">
+                  {{ KYCStatus.step }} |
+                  {{ currentStatus.win }}
                     <div v-if="KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe))">
                       <div class="kyc-form">
                         <div class="kyc-progress-container fcs-container">
@@ -593,8 +595,7 @@
                   </div>
                   <div
                     v-else-if="
-                      (currentTier === 0 && (!currentStatus.win || !currentStatus.subscribe)) ||
-                      !currentStatus.subscribe
+                      ((currentTier <= 2  && !currentStatus.win) || (!currentStatus.subscribe)) && false
                     "
                     class="text-center"
                   >
@@ -611,7 +612,7 @@
                   "
                 >
                   <div class="project-detail-open">
-                    <div v-if="(currentTier === 0 && currentStatus.win) || currentStatus.subscribe">
+                    <div v-if="true">
                       <div class="kyc-form">
                         <div class="kyc-progress-container fcs-container">
                           <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
@@ -732,8 +733,7 @@
                     </div>
                     <div
                       v-else-if="
-                        (currentTier === 0 && (!currentStatus.win || !currentStatus.subscribe)) ||
-                        !currentStatus.subscribe
+                      ((currentTier <= 2  && !currentStatus.win) || (!currentStatus.subscribe)) && false
                       "
                       class="text-center"
                     >
@@ -1103,6 +1103,10 @@ export default Vue.extend({
               this.socialTicket.twitter++;
             }
 
+            this.currentStatus.win = responseData.win;
+
+            alert(this.currentStatus.win);
+
             this.referral_tickets = (responseData.referal_ticket ? responseData.referal_ticket : 0);
             this.total_tickets = this.social_tickets + this.referral_tickets;
             this.affiliatedLink = 'https://cropper.finance/fertilizer/'+ 'ABC' + '/' +this.wallet.address;
@@ -1117,11 +1121,10 @@ export default Vue.extend({
           this.currentTimestamp > this.fertilizer.whitelist_end_date 
           && this.KYCStatus.step < 3 
           && (
-            (this.currentTier === 0 && this.currentStatus.win) || 
+            (this.currentTier <= 2 && this.currentStatus.win) || 
             this.currentStatus.subscribe
           )
         ){
-
           responseData;
           try {
             responseData =  await fetch('https://flow.cropper.finance/kyc/'+ this.wallet.address +'/').then((res) => res.json())
@@ -1314,43 +1317,34 @@ export default Vue.extend({
     },
 
     async sendKYC(driver:any, id:any, passport:any, selectedCountry:any, imgUrl:any){
-      let body = {} as any;
 
 
-      body.document_type = driver ? 'DRIVER_LICENSE' : (id ? 'NATIONAL_ID' : 'PASSPORT')
-      body.country = countries.alpha2ToAlpha3(selectedCountry)
-      body.step_id = 1909259753480
+      var myHeaders = new Headers();
+      myHeaders.append("Session-Id", this.KYCStatus.sessionID);
+
+      var formdata = new FormData();
+      formdata.append("document_type", (driver ? 'DRIVER_LICENSE' : (id ? 'NATIONAL_ID' : 'PASSPORT')));
+      formdata.append("country", countries.alpha2ToAlpha3(selectedCountry));
 
       if(imgUrl.back){
-        body.back_document = imgUrl.back;
+        formdata.append("back_document", imgUrl.backfiles, "Front.png");
       }
 
       if(imgUrl.front){
-        body.front_document = imgUrl.front;
+        formdata.append("front_document", imgUrl.frontfiles, "Front.png");
       }
 
-      console.log(body);
-      //1909259753480
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata
+      };
 
-      let responseData;
+      fetch("https://individual-api.synaps.io/v3/identity/submit?step_id=1909259753480", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
 
-
-      const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Session-Id" : this.KYCStatus.sessionID},
-          body: JSON.stringify(body)
-        };
-
-        try{
-          responseData = await fetch('https://individual-api.synaps.io/v3/identity/submit?step_id=1909259753480' , requestOptions);
-
-        } catch {
-          alert('alarmaaaaaa')
-        } finally {
-          alert('good')
-        }
-
-      console.log(responseData);
 
     },
 

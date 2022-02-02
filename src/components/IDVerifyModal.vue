@@ -66,7 +66,7 @@
                     list-type="picture-card"
                     class="id-uploader"
                     :show-upload-list="false"
-                    :before-upload="beforeUpload"
+                    :before-upload="beforeUploadFront"
                     @change="
                       (info) => {
                         this.uploadFrontImage(info)
@@ -96,7 +96,7 @@
                     list-type="picture-card"
                     class="id-uploader"
                     :show-upload-list="false"
-                    :before-upload="beforeUpload"
+                    :before-upload="beforeUploadBack"
                     @change="
                       (info) => {
                         this.uploadBackImage(info)
@@ -152,7 +152,7 @@
                     list-type="picture-card"
                     class="id-uploader"
                     :show-upload-list="false"
-                    :before-upload="beforeUpload"
+                    :before-upload="beforeUploadFront"
                     @change="
                       (info) => {
                         this.uploadFrontImage(info)
@@ -182,7 +182,7 @@
                     list-type="picture-card"
                     class="id-uploader"
                     :show-upload-list="false"
-                    :before-upload="beforeUpload"
+                    :before-upload="beforeUploadBack"
                     @change="
                       (info) => {
                         this.uploadBackImage(info)
@@ -238,7 +238,7 @@
                     list-type="picture-card"
                     class="id-uploader"
                     :show-upload-list="false"
-                    :before-upload="beforeUpload"
+                    :before-upload="beforeUploadFront"
                     @change="
                       (info) => {
                         this.uploadFrontImage(info)
@@ -268,7 +268,7 @@
                     list-type="picture-card"
                     class="id-uploader"
                     :show-upload-list="false"
-                    :before-upload="beforeUpload"
+                    :before-upload="beforeUploadBack"
                     @change="
                       (info) => {
                         this.uploadBackImage(info)
@@ -366,7 +366,11 @@ export default Vue.extend({
         front: '' as string,
         back: '' as string,
         frontFull: false as any,
-        backFull: false as any
+        backFull: false as any,
+        frontFull2: false as any,
+        backFull2: false as any,
+        frontfiles: false as any,
+        backfiles: false as any
       },
       selectedCountry: 'France' as string,
       selectedCountryISO: 'FR' as string,
@@ -376,7 +380,7 @@ export default Vue.extend({
   },
 
   methods: {
-    beforeUpload(file: any) {
+    beforeUploadBack(file: any){
       const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
       if (!isJpgOrPng) {
         this.$message.error('You can only upload JPG file!')
@@ -385,6 +389,19 @@ export default Vue.extend({
       if (!isLt4M) {
         this.$message.error('Image must smaller than 4MB!')
       }
+      this.imgUrl.backfiles = file
+      return isJpgOrPng && isLt4M
+    },
+    beforeUploadFront(file: any) {
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+      if (!isJpgOrPng) {
+        this.$message.error('You can only upload JPG file!')
+      }
+      const isLt4M = file.size / 1024 / 1024 < 4
+      if (!isLt4M) {
+        this.$message.error('Image must smaller than 4MB!')
+      }
+      this.imgUrl.frontfiles = file
       return isJpgOrPng && isLt4M
     },
     uploadFrontImage(info: any) {
@@ -394,6 +411,7 @@ export default Vue.extend({
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         this.imgUrl.frontFull = info.file
+        this.imgUrl.frontFull2 = info
         getBase64(info.file.originFileObj, (imgUrl: any) => {
           this.imgUrl.front = imgUrl
         })
@@ -406,6 +424,7 @@ export default Vue.extend({
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         this.imgUrl.backFull = info.file
+        this.imgUrl.backFull2 = info
         getBase64(info.file.originFileObj, (imgUrl: any) => {
           this.imgUrl.back = imgUrl
         })
