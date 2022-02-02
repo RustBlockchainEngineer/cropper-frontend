@@ -62,9 +62,6 @@
           @onOk="
             (driver, id, passport, selectedCountry, imgUrl) => {
               sendKYC(driver, id, passport, selectedCountry, imgUrl);
-              KYCStatus.step = 2
-              KYCStatus.verification = 1
-              KYCModalShow = false
             }
           "
         />
@@ -1105,7 +1102,6 @@ export default Vue.extend({
 
             this.currentStatus.win = responseData.win;
 
-            alert(this.currentStatus.win);
 
             this.referral_tickets = (responseData.referal_ticket ? responseData.referal_ticket : 0);
             this.total_tickets = this.social_tickets + this.referral_tickets;
@@ -1125,6 +1121,8 @@ export default Vue.extend({
             this.currentStatus.subscribe
           )
         ){
+
+
           responseData;
           try {
             responseData =  await fetch('https://flow.cropper.finance/kyc/'+ this.wallet.address +'/').then((res) => res.json())
@@ -1132,8 +1130,19 @@ export default Vue.extend({
           } finally {
             if(responseData.session_id){
               this.KYCStatus.sessionID = responseData.session_id;
-              if(responseData.status){
+              console.log(responseData.status);
+              if(responseData.status == 'PENDING' || responseData.status == 'SUBMITTED'){
                 this.KYCStatus.step = 2;
+                this.KYCStatus.verification = 1
+              } else if(responseData.status == 'VALIDATED'){
+                this.KYCStatus.verification = 2
+                this.KYCStatus.step = 3
+                this.KYCStatus.userVerified = true
+              } else if(!responseData.status){
+                this.KYCStatus.step = 1;
+              } else {
+                this.KYCStatus.step = 2
+                this.KYCStatus.verification = 0
               }
             } else if(responseData.message){
               this.KYCStatus.step = 1;
@@ -1144,8 +1153,12 @@ export default Vue.extend({
                     body: JSON.stringify({ spl: this.wallet.address})
                   };
                 responseData = await fetch('https://flow.cropper.finance/kyc/', requestOptions);
+
+                responseData =  await fetch('https://flow.cropper.finance/kyc/'+ this.wallet.address +'/').then((res) => res.json())
+
                 //@ts-ignore
                 if(responseData.session_id){
+                
                   //@ts-ignore
                   this.KYCStatus.sessionID = responseData.session_id;
                 }
@@ -1155,10 +1168,20 @@ export default Vue.extend({
                 if(responseData.message){
                   this.KYCStatus.step = 1;
                 }
+
+                if(responseData.session_id){
+                  //@ts-ignore
+                  this.KYCStatus.sessionID = responseData.session_id;
+                }
+
               }
             }
 
-          console.log('KYCStatus', this.KYCStatus);
+            if(responseData.session_id){
+              //@ts-ignore
+              this.KYCStatus.sessionID = responseData.session_id;
+            }
+
           }
         }
     },
@@ -1340,10 +1363,29 @@ export default Vue.extend({
         body: formdata
       };
 
-      fetch("https://individual-api.synaps.io/v3/identity/submit?step_id=1909259753480", requestOptions)
+      let rest = await fetch("https://individual-api.synaps.io/v3/identity/submit?step_id=1909259753480", requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => {
+
+        if(JSON.parse(result).api_code == 'WORKFLOW_STEP_UPLOADED'){
+
+
+            var requestOptions2 = {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ session_id: this.KYCStatus.sessionID })
+              };
+              fetch('https://flow.cropper.finance/kyc/init/', requestOptions2);
+
+            this.contextualizeUser();
+
+            this.KYCModalShow = false;
+        } else {
+          alert(JSON.parse(result).message);
+        }
+      })
         .catch(error => console.log('error', error));
+
 
 
     },
