@@ -1269,6 +1269,35 @@
     "@json-rpc-tools/types" "^1.7.6"
     "@pedrouid/environment" "^1.0.1"
 
+"@jup-ag/core@^1.0.0-beta.11":
+  version "1.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@jup-ag/core/-/core-1.0.0-beta.11.tgz#f83495dc43bbbe96524cb6df47c41fea499c39cd"
+  integrity sha512-Oth+lgMt1ewvvhXqsCWpkaPm0ThgBd1OenXXgGb+j08coK1vlX7B2/JX/koOLWEYI5MEmNRLsBZUusAapXFkIg==
+  dependencies:
+    "@jup-ag/math" "1.0.0-beta.11"
+    "@project-serum/anchor" "~0.20.1"
+    "@project-serum/serum" "~0.13.61"
+    "@saberhq/stableswap-sdk" "~1.12.6"
+    "@saberhq/token-utils" "~1.12.6"
+    "@solana/spl-token" "~0.1.8"
+    "@solana/web3.js" "~1.31.0"
+    bn.js "~5.2.0"
+    cross-fetch "3.1.4"
+    decimal.js "~10.3.1"
+    jsbi "~4.1.0"
+    promise-retry "~2.0.1"
+
+"@jup-ag/math@1.0.0-beta.11":
+  version "1.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@jup-ag/math/-/math-1.0.0-beta.11.tgz#11ee330e34b8d0a357703c2eb7cb9bdd91573e51"
+  integrity sha512-ZJLh9gLrr6N9Iz8BDG3meTPnCkBVv2AmDk+dJMuZEZ0bz0wrawFbiUhwno23cnDSNtVpMTLpW6N25md5W+he1w==
+  dependencies:
+    "@solana/spl-token-registry" "~0.2.1105"
+    "@solana/web3.js" "~1.31.0"
+    builder-pattern "~1.3.0"
+    decimal.js "~10.3.1"
+    jsbi "~4.1.0"
+
 "@ledgerhq/devices@^5.51.1":
   version "5.51.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-5.51.1.tgz#d741a4a5d8f17c2f9d282fd27147e6fe1999edb7"
@@ -1959,6 +1988,26 @@
     snake-case "^3.0.4"
     toml "^3.0.0"
 
+"@project-serum/anchor@~0.20.1":
+  version "0.20.1"
+  resolved "https://registry.yarnpkg.com/@project-serum/anchor/-/anchor-0.20.1.tgz#0937807e807e8332aa708cfef4bcb6cbb88b4129"
+  integrity sha512-2TuBmGUn9qeYz6sJINJlElrBuPsaUAtYyUsJ3XplEBf1pczrANAgs5ceJUFzdiqGEWLn+84ObSdBeChT/AXYFA==
+  dependencies:
+    "@project-serum/borsh" "^0.2.2"
+    "@solana/web3.js" "^1.17.0"
+    base64-js "^1.5.1"
+    bn.js "^5.1.2"
+    bs58 "^4.0.1"
+    buffer-layout "^1.2.2"
+    camelcase "^5.3.1"
+    crypto-hash "^1.3.0"
+    eventemitter3 "^4.0.7"
+    find "^0.3.0"
+    js-sha256 "^0.9.0"
+    pako "^2.0.3"
+    snake-case "^3.0.4"
+    toml "^3.0.0"
+
 "@project-serum/borsh@^0.1.0":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@project-serum/borsh/-/borsh-0.1.1.tgz#a810aad74e4b458fbd1ab63188f175bee765a8af"
@@ -1984,7 +2033,7 @@
     bn.js "^5.1.2"
     superstruct "0.8.3"
 
-"@project-serum/serum@^0.13.21", "@project-serum/serum@^0.13.37", "@project-serum/serum@~0.13.60":
+"@project-serum/serum@^0.13.21", "@project-serum/serum@^0.13.37", "@project-serum/serum@~0.13.60", "@project-serum/serum@~0.13.61":
   version "0.13.61"
   resolved "https://registry.yarnpkg.com/@project-serum/serum/-/serum-0.13.61.tgz#1f0e6dfa7786a71e4317593911e9915d8b2a06e6"
   integrity sha512-aebaRGQ0/K7a5kJ9UXO59BAQFJILVu5jbGobU8GD2CTSy6SPceprB6/pgZmZLQIabhXWUHaZRF/wXIClgWataA==
@@ -2189,6 +2238,13 @@
   dependencies:
     buffer "~6.0.3"
 
+"@solana/spl-token-registry@~0.2.1105":
+  version "0.2.1957"
+  resolved "https://registry.yarnpkg.com/@solana/spl-token-registry/-/spl-token-registry-0.2.1957.tgz#4da56b10b72edcc5e58bb8c41f2bb775417506f0"
+  integrity sha512-eki/d9nGGCTYzIP85ccwGFUpcYYmtP0Cq38Q8WJbVOZF7dsXr4PQTghZso/fHWiGX2+yQoxsfuLQZLD8P4+bjg==
+  dependencies:
+    cross-fetch "3.0.6"
+
 "@solana/spl-token-swap@^0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@solana/spl-token-swap/-/spl-token-swap-0.1.2.tgz#804019513b72b15a384a78dcaee705c87d8d97cc"
@@ -2213,7 +2269,7 @@
     dotenv "8.2.0"
     mkdirp "1.0.4"
 
-"@solana/spl-token@^0.1.5", "@solana/spl-token@^0.1.6", "@solana/spl-token@^0.1.8":
+"@solana/spl-token@^0.1.5", "@solana/spl-token@^0.1.6", "@solana/spl-token@^0.1.8", "@solana/spl-token@~0.1.8":
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/@solana/spl-token/-/spl-token-0.1.8.tgz#f06e746341ef8d04165e21fc7f555492a2a0faa6"
   integrity sha512-LZmYCKcPQDtJgecvWOgT/cnoIQPWjdH+QVyzPcFvyDUiT0DiRjZaam4aqNUyvchLFhzgunv3d9xOoyE34ofdoQ==
@@ -2475,6 +2531,26 @@
   version "1.30.2"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.30.2.tgz#e85da75e0825dc64f53eb64a1ff0115b27bec135"
   integrity sha512-hznCj+rkfvM5taRP3Z+l5lumB7IQnDrB4l55Wpsg4kDU9Zds8pE5YOH5Z9bbF/pUzZJKQjyBjnY/6kScBm3Ugg==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@ethersproject/sha2" "^5.5.0"
+    "@solana/buffer-layout" "^3.0.0"
+    bn.js "^5.0.0"
+    borsh "^0.4.0"
+    bs58 "^4.0.1"
+    buffer "6.0.1"
+    cross-fetch "^3.1.4"
+    jayson "^3.4.4"
+    js-sha3 "^0.8.0"
+    rpc-websockets "^7.4.2"
+    secp256k1 "^4.0.2"
+    superstruct "^0.14.2"
+    tweetnacl "^1.0.0"
+
+"@solana/web3.js@~1.31.0":
+  version "1.31.0"
+  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.31.0.tgz#7a313d4c1a90b77f27ddbfe845a10d6883e06452"
+  integrity sha512-7nHHx1JNFnrt15e9y8m38I/EJCbaB+bFC3KZVM1+QhybCikFxGMtGA5r7PDC3GEL1R2RZA8yKoLkDKo3vzzqnw==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@ethersproject/sha2" "^5.5.0"
@@ -4377,7 +4453,7 @@ buffer-json@^2.0.0:
   resolved "https://registry.yarnpkg.com/buffer-json/-/buffer-json-2.0.0.tgz#f73e13b1e42f196fe2fd67d001c7d7107edd7c23"
   integrity sha512-+jjPFVqyfF1esi9fvfUs3NqM0pH1ziZ36VP4hmA/y/Ssfo/5w5xHKfTw9BwQjoJ1w/oVtpLomqwUHKdefGyuHw==
 
-buffer-layout@^1.2.0, buffer-layout@^1.2.1:
+buffer-layout@^1.2.0, buffer-layout@^1.2.1, buffer-layout@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/buffer-layout/-/buffer-layout-1.2.2.tgz#b9814e7c7235783085f9ca4966a0cfff112259d5"
   integrity sha512-kWSuLN694+KTk8SrYvCqwP2WcgQjoRCiF5b4QDvkkz8EmgD+aWAIceGFKMIAdmF/pH+vpgNV3d3kAKorcdAmWA==
@@ -4426,6 +4502,11 @@ bufferutil@^4.0.1:
   integrity sha512-jduaYOYtnio4aIAyc6UbvPCVcgq7nYpVnucyxr6eCYg/Woad9Hf/oxxBRDnGGjPfjUm6j5O/uBWhIu4iLebFaw==
   dependencies:
     node-gyp-build "^4.3.0"
+
+builder-pattern@~1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/builder-pattern/-/builder-pattern-1.3.0.tgz#a70dd297340a630cc88bc987e2fd80c85b8455c2"
+  integrity sha512-Et/hsZtdEQig6744zDzkkhFnnb/i2H/3d1iAb46cIIcFQnmLVw2Hes5JIMiPe/Jh4dovDJO+x88yC0Omd2OcRw==
 
 builtin-status-codes@^3.0.0:
   version "3.0.0"
@@ -5228,6 +5309,20 @@ create-require@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
+
+cross-fetch@3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.6.tgz#3a4040bc8941e653e0e9cf17f29ebcd177d3365c"
+  integrity sha512-KBPUbqgFjzWlVcURG+Svp9TlhA5uliYtiNx/0r8nv0pdypeQCRJ9IaSIc3q/x3q8t3F75cHuwxVql1HFGHCNJQ==
+  dependencies:
+    node-fetch "2.6.1"
+
+cross-fetch@3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
+  dependencies:
+    node-fetch "2.6.1"
 
 cross-fetch@^3.1.4:
   version "3.1.5"

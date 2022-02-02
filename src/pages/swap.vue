@@ -348,7 +348,7 @@ import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
 import { SERUM_PROGRAM_ID_V3, ENDPOINT_CRP, ENDPOINT_SRM, ENDPOINT_JUP } from '@/utils/ids'
 
-import { Jupiter } from '@pngfi/jupiter-core';
+import { Jupiter } from '@jup-ag/core';
 
 import {
   getOutAmount,
@@ -466,7 +466,7 @@ export default Vue.extend({
       showInformations: false as boolean,
       showSlippage: false as boolean,
       showPercentage: false as boolean,
-      jupiter: {} as any
+      jupiter: false as any
     }
   },
   head: {
