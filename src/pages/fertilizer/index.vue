@@ -1123,6 +1123,11 @@ export default Vue.extend({
   },
   async mounted() {
     this.getTvl()
+
+      this.$router.push({
+        path: '/swap/'
+      })
+
     this.$accessor.token.loadTokens()
     await this.updateLabelizedAmms()
 

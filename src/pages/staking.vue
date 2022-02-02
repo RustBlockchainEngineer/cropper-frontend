@@ -1068,27 +1068,23 @@ export default Vue.extend({
                 border-radius: 14px;
 
                 &.tier-1 {
-                  background: url('@/assets/tier/Tier1.jpg');
+                  background: url('@/assets/tier/tier1.png');
                 }
 
                 &.tier-2 {
-                  background: url('@/assets/tier/Tier2.jpg');
+                  background: url('@/assets/tier/tier2.png');
                 }
 
                 &.tier-3 {
-                  background: url('@/assets/tier/Tier3.jpg');
+                  background: url('@/assets/tier/tier3.png');
                 }
 
                 &.tier-4 {
-                  background: url('@/assets/tier/Tier4.jpg');
+                  background: url('@/assets/tier/tier4.png');
                 }
 
                 &.tier-5 {
-                  background: url('@/assets/tier/Tier5.jpg');
-                }
-
-                &.blur {
-                  filter: blur(17px);
+                  background: url('@/assets/tier/tier5.png');
                 }
               }
 

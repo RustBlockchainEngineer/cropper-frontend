@@ -267,7 +267,7 @@ export default Vue.extend({
   methods: {
 
     async getsCRP(){
-      this.scrpEstimate = calculateTiers(this.userStaked * 1 + this.toStake * 1, this.minutesLock * 60)
+      this.scrpEstimate = calculateTiers(this.userStaked * 1 + this.toStake.replace(',', '.') * 1, this.minutesLock * 60)
     },
 
     displayTiers(tier: any) {
