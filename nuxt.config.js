@@ -148,7 +148,7 @@ export default {
     'nuxt-clipboard',
     '@nuxtjs/dayjs',
     '@nuxtjs/google-gtag',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
     // '@nuxtjs/sentry'
   ],
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -177,11 +177,11 @@ export default {
   build: {
 
     extend(config, ctx) {
-        config.node = {
-            fs: "empty"
-        }
-      },
-    transpile: [/^ant-design-vue/],
+      config.node = {
+        fs: "empty"
+      }
+    },
+    transpile: [/^ant-design-vue/, '@pngfi/jupiter-core', '@saberhq/token-utils'],
 
     loaders: {
       less: {
@@ -203,14 +203,14 @@ export default {
         ]
       ]
     },
-  build: {
-    extend(config, ctx) {
+    build: {
+      extend(config, ctx) {
         config.node = {
-            fs: "empty"
+          fs: "empty"
         },
-
-      config.resolve.alias['@ant-design/icons/lib/dist$'] = path.resolve(__dirname, './src/utils/antd-icons.ts')
-    }
-},
+          config.resolve.alias['@ant-design/icons/lib/dist$'] = path.resolve(__dirname, './src/utils/antd-icons.ts')
+      },
+      standalone: true
+    },
   }
 }
