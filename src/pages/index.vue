@@ -843,7 +843,7 @@ h4 {
       top: 0;
       min-width: 100%;
       min-height: 100%;
-      width: auto;
+      width: 100%;
       height: auto;
       background-size: cover;
       overflow: hidden;

@@ -1068,23 +1068,23 @@ export default Vue.extend({
                 border-radius: 14px;
 
                 &.tier-1 {
-                  background: url('@/assets/tier/Tier1.png');
+                  background: url('@/assets/tier/Tier1.jpg');
                 }
 
                 &.tier-2 {
-                  background: url('@/assets/tier/Tier2.png');
+                  background: url('@/assets/tier/Tier2.jpg');
                 }
 
                 &.tier-3 {
-                  background: url('@/assets/tier/Tier3.png');
+                  background: url('@/assets/tier/Tier3.jpg');
                 }
 
                 &.tier-4 {
-                  background: url('@/assets/tier/Tier4.png');
+                  background: url('@/assets/tier/Tier4.jpg');
                 }
 
                 &.tier-5 {
-                  background: url('@/assets/tier/Tier5.png');
+                  background: url('@/assets/tier/Tier5.jpg');
                 }
               }
 
