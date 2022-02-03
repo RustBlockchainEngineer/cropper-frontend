@@ -530,7 +530,7 @@ export default class Landing extends Vue {
     telegram: 'https://linktr.ee/cropperfinance'
   }
   videoLinks = {
-    landing: 'https://cropper.finance/distant/landing/landing.mp4',
+    landing: 'https://cropper.finance/distant/landing/landing-video.mp4',
     swap: 'https://cropper.finance/distant/industry/SwapvideoforGIF.mp4',
     stake: 'https://cropper.finance/distant/industry/FarmingvideoforGIF.mp4',
     harvest: 'https://cropper.finance/distant/industry/HarvestvideoforGIF.mp4',
@@ -839,13 +839,13 @@ h4 {
 
     .landing-video {
       position: absolute;
-      right: 0;
+      left: 0;
       top: 0;
       min-width: 100%;
       min-height: 100%;
       width: 100%;
-      height: auto;
-      background-size: cover;
+      height: 100%;
+      object-fit: cover;
       overflow: hidden;
     }
 
