@@ -16,7 +16,7 @@
         />
         <TaskProcessModal
           :show="taskModalShow"
-          :step="taskModalType === 0 ? (socialTicket.telegram + 1) : (socialTicket.twitter + 1) "
+          :step="taskModalType === 0 ? socialTicket.telegram + 1 : socialTicket.twitter + 1"
           :project="fertilizer.title"
           :type="taskModalType"
           :mint="fertilizer.mint"
@@ -27,21 +27,19 @@
           :retweetlink="fertilizer.retweetlink"
           @onNext="
             () => {
-              if (this.taskModalType === 0){ 
-                this.socialTicket.telegram++; 
-                if(this.socialTicket.telegram == 3){
-                  taskModalShow = false;
-                  contextualizeUser();
-                } 
-              } else { 
-                this.socialTicket.twitter++; 
-                if(this.socialTicket.twitter == 3){
-                  taskModalShow = false;
-                  contextualizeUser();
-
+              if (this.taskModalType === 0) {
+                this.socialTicket.telegram++
+                if (this.socialTicket.telegram == 3) {
+                  taskModalShow = false
+                  contextualizeUser()
+                }
+              } else {
+                this.socialTicket.twitter++
+                if (this.socialTicket.twitter == 3) {
+                  taskModalShow = false
+                  contextualizeUser()
                 }
               }
-
             }
           "
           @onPrev="
@@ -50,18 +48,19 @@
               else this.socialTicket.twitter--
             }
           "
-          @onCancel="() => {
-            contextualizeUser();
-            (taskModalShow = false)
-
-          }"
+          @onCancel="
+            () => {
+              contextualizeUser()
+              taskModalShow = false
+            }
+          "
         />
         <IDVerifyModal
           :show="KYCModalShow"
           @onCancel="() => (KYCModalShow = false)"
           @onOk="
             (driver, id, passport, selectedCountry, imgUrl) => {
-              sendKYC(driver, id, passport, selectedCountry, imgUrl);
+              sendKYC(driver, id, passport, selectedCountry, imgUrl)
             }
           "
         />
@@ -168,7 +167,8 @@
                         class="btn-transparent font-medium weight-semi icon-cursor"
                         @click="
                           () => {
-                            this.subscribeShow = true
+                            if (this.wallet.connected) this.subscribeShow = true
+                            else this.$accessor.wallet.openModal()
                           }
                         "
                         >Subscribe Whitelist</Button
@@ -181,10 +181,7 @@
                   </div>
                   <div v-else-if="currentStep === 2">
                     <div v-if="currentTimestamp < fertilizer.sales_end_date">
-                      <div
-                        v-if="true"
-                        class="fcc-container"
-                      >
+                      <div v-if="true" class="fcc-container">
                         <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                         <span class="font-small weight-semi spacing-large">You are registered</span>
                       </div>
@@ -347,13 +344,10 @@
                         :class="socialTicket.telegram === 3 ? 'active' : ''"
                         @click="
                           () => {
-                            if((this.socialTicket.telegram == 0) ? 
-                                  0 : 
-                                  (this.socialTicket.telegram - 1) < 2){
-                                    this.taskModalShow = true
-                                    this.taskModalType = 0
-
-                                  }
+                            if (this.socialTicket.telegram == 0 ? 0 : this.socialTicket.telegram - 1 < 2) {
+                              this.taskModalShow = true
+                              this.taskModalType = 0
+                            }
                           }
                         "
                       >
@@ -363,11 +357,7 @@
                             <span class="font-medium weight-bold">Telegram task</span>
                             <br />
                             <span class="font-xsmall weight-semi"
-                              >{{ 
-                                (socialTicket.telegram == 0) ? 
-                                  0 : 
-                                  (socialTicket.telegram - 1) 
-                              }} /2 Task completed</span
+                              >{{ socialTicket.telegram == 0 ? 0 : socialTicket.telegram - 1 }} /2 Task completed</span
                             >
                           </div>
                         </div>
@@ -382,11 +372,10 @@
                         :class="socialTicket.twitter === 3 ? 'active' : ''"
                         @click="
                           () => {
-                          if(this.socialTicket.twitter < 3){
-
-                            this.taskModalShow = true
-                            this.taskModalType = 1
-                          }
+                            if (this.socialTicket.twitter < 3) {
+                              this.taskModalShow = true
+                              this.taskModalType = 1
+                            }
                           }
                         "
                       >
@@ -395,9 +384,7 @@
                           <div>
                             <span class="font-medium weight-bold">Twitter task</span>
                             <br />
-                            <span class="font-xsmall weight-semi"
-                              >{{ socialTicket.twitter }}/3 Task completed</span
-                            >
+                            <span class="font-xsmall weight-semi">{{ socialTicket.twitter }}/3 Task completed</span>
                           </div>
                         </div>
                         <img
@@ -418,15 +405,17 @@
                     <div class="ticket-btn-group fcsb-container">
                       <div class="share-btn btn-container">
                         <a :href="telegramShareLink" target="_blank">
-                        <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
-                          >Share on Telegram</Button
-                        ></a>
+                          <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
+                            >Share on Telegram</Button
+                          ></a
+                        >
                       </div>
                       <div class="share-btn btn-container">
                         <a :href="twitterShareLink" target="_blank">
-                        <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
-                          >Share on Twitter</Button
-                        ></a>
+                          <Button class="btn-primary font-small weight-semi spacing-large icon-cursor"
+                            >Share on Twitter</Button
+                          ></a
+                        >
                       </div>
                     </div>
                   </div>
@@ -439,11 +428,13 @@
                         <img class="referral-icon" src="@/assets/icons/referral.svg" />
                         <div>
                           <span class="font-medium weight-semi spacing-small">
-                            <label class="font-large">{{total_tickets}}</label>
+                            <label class="font-large">{{ total_tickets }}</label>
                             Earned Tickets
                           </span>
                           <br />
-                          <span class="font-xsmall">{{social_tickets}} Social / {{referral_tickets}} Referrals</span>
+                          <span class="font-xsmall"
+                            >{{ social_tickets }} Social / {{ referral_tickets }} Referrals</span
+                          >
                         </div>
                       </div>
                     </div>
@@ -466,134 +457,136 @@
                       format="DD:HH:mm:ss"
                     />
 
-                  <div class="project-detail-open">
-                  {{ KYCStatus.step }} |
-                  {{ currentStatus.win }}
-                    <div v-if="KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe))">
-                      <div class="kyc-form">
-                        <div class="kyc-progress-container fcs-container">
-                          <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
-                            <span class="kyc-no m-auto font-medium weight-bold">1</span>
-                            <span class="kyc-title font-small weight-bold">ID Verification</span>
+                    <div class="project-detail-open">
+                      {{ KYCStatus.step }} |
+                      {{ currentStatus.win }}
+                      <div
+                        v-if="KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe))"
+                      >
+                        <div class="kyc-form">
+                          <div class="kyc-progress-container fcs-container">
+                            <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
+                              <span class="kyc-no m-auto font-medium weight-bold">1</span>
+                              <span class="kyc-title font-small weight-bold">ID Verification</span>
+                            </div>
+                            <div class="kyc-step text-center" :class="KYCStatus.step >= 2 ? 'active' : ''">
+                              <span class="kyc-no m-auto font-medium weight-bold">2</span>
+                              <span class="kyc-title font-small weight-bold">Verification</span>
+                            </div>
+                            <div class="kyc-step text-center" :class="KYCStatus.step >= 3 ? 'active' : ''">
+                              <span class="kyc-no m-auto font-medium weight-bold">3</span>
+                              <span class="kyc-title font-small weight-bold">Start to buy</span>
+                            </div>
                           </div>
-                          <div class="kyc-step text-center" :class="KYCStatus.step >= 2 ? 'active' : ''">
-                            <span class="kyc-no m-auto font-medium weight-bold">2</span>
-                            <span class="kyc-title font-small weight-bold">Verification</span>
-                          </div>
-                          <div class="kyc-step text-center" :class="KYCStatus.step >= 3 ? 'active' : ''">
-                            <span class="kyc-no m-auto font-medium weight-bold">3</span>
-                            <span class="kyc-title font-small weight-bold">Start to buy</span>
+                          <div v-if="KYCStatus.step < 3">
+                            <div class="kyc-status-container fcsb-container">
+                              <div class="kyc-current-step fcs-container">
+                                <span class="font-large weight-bold">ID Verification</span>
+                                <img class="info-icon left" src="@/assets/icons/info.svg" />
+                              </div>
+                              <span
+                                class="kyc-status font-xsmall weight-bold"
+                                :class="
+                                  KYCStatus.step === 1
+                                    ? 'failed'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                    ? 'progress'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                    ? 'success'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                    ? 'failed'
+                                    : ''
+                                "
+                                >{{
+                                  KYCStatus.step === 1
+                                    ? 'Not verified'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                    ? 'In progress'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                    ? 'Verified'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                    ? 'Verification failed'
+                                    : ''
+                                }}</span
+                              >
+                            </div>
+                            <div class="kyc-description">
+                              <span class="font-small weight-semi spacing-large">
+                                Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours
+                                to be verified.
+                              </span>
+                              <img
+                                v-if="KYCStatus.step === 1"
+                                class="kyc-status-icon flex m-auto"
+                                src="@/assets/icons/kyc-verification.svg"
+                              />
+                              <img
+                                v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                                class="kyc-status-icon flex m-auto"
+                                src="@/assets/icons/kyc-progress.svg"
+                              />
+                              <img
+                                v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
+                                class="kyc-status-icon flex m-auto"
+                                src="@/assets/icons/kyc-success.svg"
+                              />
+                              <img
+                                v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
+                                class="kyc-status-icon flex m-auto"
+                                src="@/assets/icons/kyc-failed.svg"
+                              />
+                            </div>
+                            <div class="btn-container">
+                              <Button
+                                class="btn-transparent font-medium weight-semi icon-cursor"
+                                :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                                @click="KYCConfirm"
+                                >{{
+                                  KYCStatus.step === 1
+                                    ? 'Verify your ID now'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                    ? 'Next'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                    ? 'Next'
+                                    : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                    ? 'Verify your ID again'
+                                    : ''
+                                }}</Button
+                              >
+                            </div>
                           </div>
                         </div>
-                        <div v-if="KYCStatus.step < 3">
-                          <div class="kyc-status-container fcsb-container">
-                            <div class="kyc-current-step fcs-container">
-                              <span class="font-large weight-bold">ID Verification</span>
-                              <img class="info-icon left" src="@/assets/icons/info.svg" />
+                        <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
+                          <span class="font-medium weight-semi spacing-small"
+                            >You can buy token from this project and see what you will receive.</span
+                          >
+                          <div class="token-amount fcsb-container">
+                            <div class="token-amount-input fcs-container">
+                              <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                              <input class="font-medium weight-bold" type="number" placeholder="673" />
                             </div>
-                            <span
-                              class="kyc-status font-xsmall weight-bold"
-                              :class="
-                                KYCStatus.step === 1
-                                  ? 'failed'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                  ? 'progress'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                  ? 'success'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                  ? 'failed'
-                                  : ''
-                              "
-                              >{{
-                                KYCStatus.step === 1
-                                  ? 'Not verified'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                  ? 'In progress'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                  ? 'Verified'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                  ? 'Verification failed'
-                                  : ''
-                              }}</span
+                            <span class="font-xsmall weight-semi token-max-amount"
+                              >max 1500 {{ fertilizer.token_price }}</span
                             >
                           </div>
-                          <div class="kyc-description">
-                            <span class="font-small weight-semi spacing-large">
-                              Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours
-                              to be verified.
-                            </span>
-                            <img
-                              v-if="KYCStatus.step === 1"
-                              class="kyc-status-icon flex m-auto"
-                              src="@/assets/icons/kyc-verification.svg"
-                            />
-                            <img
-                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
-                              class="kyc-status-icon flex m-auto"
-                              src="@/assets/icons/kyc-progress.svg"
-                            />
-                            <img
-                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
-                              class="kyc-status-icon flex m-auto"
-                              src="@/assets/icons/kyc-success.svg"
-                            />
-                            <img
-                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
-                              class="kyc-status-icon flex m-auto"
-                              src="@/assets/icons/kyc-failed.svg"
-                            />
+                          <div class="receive-amount">
+                            <label class="font-xmall">You will receive:</label>
+                            <div class="receive-amount-output fcs-container">
+                              <img class="coin-icon" :src="fertilizer.logo" />
+                              <span class="receive-amount-value font-medium weight-semi spacing-small"
+                                >0.028 {{ fertilizer.title }}</span
+                              >
+                            </div>
                           </div>
                           <div class="btn-container">
-                            <Button
-                              class="btn-transparent font-medium weight-semi icon-cursor"
-                              :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
-                              @click="KYCConfirm"
-                              >{{
-                                KYCStatus.step === 1
-                                  ? 'Verify your ID now'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                  ? 'Next'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                  ? 'Next'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                  ? 'Verify your ID again'
-                                  : ''
-                              }}</Button
-                            >
+                            <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
                           </div>
                         </div>
                       </div>
-                      <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
-                        <span class="font-medium weight-semi spacing-small"
-                          >You can buy token from this project and see what you will receive.</span
-                        >
-                        <div class="token-amount fcsb-container">
-                          <div class="token-amount-input fcs-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <input class="font-medium weight-bold" type="number" placeholder="673" />
-                          </div>
-                          <span class="font-xsmall weight-semi token-max-amount">max 1500 {{ fertilizer.token_price }}</span>
-                        </div>
-                        <div class="receive-amount">
-                          <label class="font-xmall">You will receive:</label>
-                          <div class="receive-amount-output fcs-container">
-                            <img class="coin-icon" :src="fertilizer.logo" />
-                            <span class="receive-amount-value font-medium weight-semi spacing-small"
-                              >0.028 {{ fertilizer.title }}</span
-                            >
-                          </div>
-                        </div>
-                        <div class="btn-container">
-                          <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
-                        </div>
-                      </div>
-                    </div>
                     </div>
                   </div>
                   <div
-                    v-else-if="
-                      ((currentTier <= 2  && !currentStatus.win) || (!currentStatus.subscribe)) && false
-                    "
+                    v-else-if="((currentTier <= 2 && !currentStatus.win) || !currentStatus.subscribe) && false"
                     class="text-center"
                   >
                     <div class="fcc-container mb-8">
@@ -712,7 +705,9 @@
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                             <input class="font-medium weight-bold" type="number" placeholder="673" />
                           </div>
-                          <span class="font-xsmall weight-semi token-max-amount">max 1500 {{ fertilizer.token_price }}</span>
+                          <span class="font-xsmall weight-semi token-max-amount"
+                            >max 1500 {{ fertilizer.token_price }}</span
+                          >
                         </div>
                         <div class="receive-amount">
                           <label class="font-xmall">You will receive:</label>
@@ -729,9 +724,7 @@
                       </div>
                     </div>
                     <div
-                      v-else-if="
-                      ((currentTier <= 2  && !currentStatus.win) || (!currentStatus.subscribe)) && false
-                      "
+                      v-else-if="((currentTier <= 2 && !currentStatus.win) || !currentStatus.subscribe) && false"
                       class="text-center"
                     >
                       <div class="fcc-container mb-8">
@@ -761,7 +754,9 @@
                           <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                           <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
                         </div>
-                        <span class="font-xsmall weight-semi token-max-amount">max 1500 {{ fertilizer.token_price }}</span>
+                        <span class="font-xsmall weight-semi token-max-amount"
+                          >max 1500 {{ fertilizer.token_price }}</span
+                        >
                       </div>
                       <div class="receive-amount">
                         <label class="font-xmall">You will receive:</label>
@@ -795,7 +790,9 @@
                         <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
                         <input class="font-medium weight-bold" type="number" placeholder="673" disabled />
                       </div>
-                      <span class="font-xsmall weight-semi token-max-amount">max 1500 {{ fertilizer.token_price }}</span>
+                      <span class="font-xsmall weight-semi token-max-amount"
+                        >max 1500 {{ fertilizer.token_price }}</span
+                      >
                     </div>
                     <div class="receive-amount">
                       <label class="font-xmall">You will receive:</label>
@@ -852,7 +849,15 @@
               <div class="project-detail-stake">
                 <h4 class="weight-semi">Develop your Tier to have more allocation</h4>
                 <div class="btn-container">
-                  <Button class="btn-transparent font-medium weight-semi icon-cursor">Stake CRP</Button>
+                  <Button
+                    class="btn-transparent font-medium weight-semi icon-cursor"
+                    @click="
+                      () => {
+                        this.$router.push({ path: '/staking/' })
+                      }
+                    "
+                    >Stake CRP</Button
+                  >
                 </div>
               </div>
               <img class="farmer-img isDesktop" src="@/assets/background/farmer-desktop.png" />
@@ -860,12 +865,6 @@
             </div>
 
             <div class="pds" v-html="fertilizer.longContent"></div>
-
-
-
-
-
-
           </div>
         </div>
       </div>
@@ -877,7 +876,7 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { Row, Col, Statistic, Steps } from 'ant-design-vue'
-import {setAnchorProvider, getLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
+import { setAnchorProvider, getLaunchpad, getProjectFormatted } from '@/utils/crp-launchpad'
 import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
@@ -927,7 +926,7 @@ export default Vue.extend({
         },
         token_info: {
           symbol: 'UNQ',
-          category: 'NFT',
+          category: 'NFT'
         },
         whitelist_start_date: 0 as any,
         whitelist_end_date: 0 as any,
@@ -974,8 +973,8 @@ export default Vue.extend({
       copyNotification: false as boolean,
       timer: null as any,
 
-      social_tickets : 0,
-      referral_tickets : 0
+      social_tickets: 0,
+      referral_tickets: 0
     }
   },
 
@@ -984,39 +983,32 @@ export default Vue.extend({
   },
 
   computed: {
-     ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
+    ...mapState(['app', 'wallet', 'farm', 'url', 'price', 'liquidity'])
   },
 
   watch: {
-
     'wallet.address': {
       handler(newTokenAccounts: any) {
-        this.loadDatas();
+        this.loadDatas()
       },
       deep: true
-    },
-
+    }
   },
 
   mounted() {
     setAnchorProvider(this.$web3, this.$wallet)
-    console.log(getLaunchpad());
+    console.log(getLaunchpad())
     this.currentTimestamp = moment().valueOf()
     this.setTimer()
     const query = new URLSearchParams(window.location.search)
     if (query.get('f')) {
-
       this.fertilizer.mint = query.get('f') as string
-      this.loadDatas();
-
+      this.loadDatas()
     } else {
-
       this.$router.push({
         path: '/fertilizer/'
       })
     }
-
-
   },
 
   methods: {
@@ -1029,14 +1021,13 @@ export default Vue.extend({
       if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date)
         this.currentStep = 3
     },
-    goBack(){
+    goBack() {
       this.$router.push({
         path: '/fertilizer/'
       })
     },
 
-    async initSubscribe(){
-
+    async initSubscribe() {
       /*
         @Hongbo => 
         here, we wait for the registering function in smart contract, 
@@ -1065,268 +1056,250 @@ export default Vue.extend({
               break;
       */
 
-
-
-
       let requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            spl: this.wallet.address, 
-            mint: this.fertilizer.mint, 
-            tx_id_register: '3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc' 
-          })
-        };
-        await fetch('https://flow.cropper.finance/registers/', requestOptions);
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          spl: this.wallet.address,
+          mint: this.fertilizer.mint,
+          tx_id_register: '3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc'
+        })
+      }
+      await fetch('https://flow.cropper.finance/registers/', requestOptions)
 
       requestOptions = {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ spl: this.wallet.address, hash: '58eda2485e96378dca8f5d8044161e6a567614bb6a24626c92df13277fdc2d72' })
-        };
-        await fetch('https://flow.cropper.finance/registers/', requestOptions);
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          spl: this.wallet.address,
+          hash: '58eda2485e96378dca8f5d8044161e6a567614bb6a24626c92df13277fdc2d72'
+        })
+      }
+      await fetch('https://flow.cropper.finance/registers/', requestOptions)
 
-      await this.contextualizeUser();
+      await this.contextualizeUser()
     },
 
-    getFertilzerMint(){
+    getFertilzerMint() {
       const query = new URLSearchParams(window.location.search)
       if (query.get('f')) {
         return query.get('f') as string
       }
-      return '';
+      return ''
     },
 
-    async contextualizeUser(){
+    async contextualizeUser() {
+      if (!this.wallet.connected) {
+        return
+      }
 
-        if(!this.wallet.connected){
-          return;
-        }
-
-        let responseData;
-        try {
-          responseData =  await fetch('https://flow.cropper.finance/registers/'+ this.wallet.address +'/'+ this.fertilizer.mint +'/').then((res) => res.json())
-        } catch {
+      let responseData
+      try {
+        responseData = await fetch(
+          'https://flow.cropper.finance/registers/' + this.wallet.address + '/' + this.fertilizer.mint + '/'
+        ).then((res) => res.json())
+      } catch {
+        this.currentStatus.subscribe = false
+      } finally {
+        if (responseData.message) {
           this.currentStatus.subscribe = false
-        } finally {
-          if(responseData.message){
-
-            this.currentStatus.subscribe = false
-          } else {
-
-            this.currentStatus.subscribe = true
-            this.social_tickets = (responseData.tickets ? responseData.tickets : 0);
-            this.socialTicket.telegram = 1;
-            if(responseData.tg_a){
-              this.socialTicket.telegram++;
-            }
-            if(responseData.tg_b){
-              this.socialTicket.telegram++;
-            }
-
-            this.socialTicket.twitter = 0;
-            if(responseData.twitter_a){
-              this.socialTicket.twitter++;
-            }
-            if(responseData.twitter_b){
-              this.socialTicket.twitter++;
-            }
-            if(responseData.retweet){
-              this.socialTicket.twitter++;
-            }
-
-            this.currentStatus.win = responseData.win;
-
-
-            this.referral_tickets = (responseData.referal_ticket ? responseData.referal_ticket : 0);
-            this.total_tickets = this.social_tickets + this.referral_tickets;
-            this.affiliatedLink = 'https://cropper.finance/fertilizer/'+ 'ABC' + '/' +this.wallet.address;
-            this.twitterShareLink = `http://twitter.com/share?text=${this.affiliatedLink} I am participating to the ${this.fertilizer.title} IDO on @cropper&url= `
-            this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=I am participating to the ${this.fertilizer.title} IDO on @cropper`
+        } else {
+          this.currentStatus.subscribe = true
+          this.social_tickets = responseData.tickets ? responseData.tickets : 0
+          this.socialTicket.telegram = 1
+          if (responseData.tg_a) {
+            this.socialTicket.telegram++
+          }
+          if (responseData.tg_b) {
+            this.socialTicket.telegram++
           }
 
-        }
+          this.socialTicket.twitter = 0
+          if (responseData.twitter_a) {
+            this.socialTicket.twitter++
+          }
+          if (responseData.twitter_b) {
+            this.socialTicket.twitter++
+          }
+          if (responseData.retweet) {
+            this.socialTicket.twitter++
+          }
 
-        if(
-          this.currentTimestamp < this.fertilizer.sales_end_date && 
-          this.currentTimestamp > this.fertilizer.whitelist_end_date 
-          && this.KYCStatus.step < 3 
-          && (
-            (this.currentTier <= 2 && this.currentStatus.win) || 
-            this.currentStatus.subscribe
+          this.currentStatus.win = responseData.win
+
+          this.referral_tickets = responseData.referal_ticket ? responseData.referal_ticket : 0
+          this.total_tickets = this.social_tickets + this.referral_tickets
+          this.affiliatedLink = 'https://cropper.finance/fertilizer/' + 'ABC' + '/' + this.wallet.address
+          this.twitterShareLink = `http://twitter.com/share?text=${this.affiliatedLink} I am participating to the ${this.fertilizer.title} IDO on @cropper&url= `
+          this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=I am participating to the ${this.fertilizer.title} IDO on @cropper`
+        }
+      }
+
+      if (
+        this.currentTimestamp < this.fertilizer.sales_end_date &&
+        this.currentTimestamp > this.fertilizer.whitelist_end_date &&
+        this.KYCStatus.step < 3 &&
+        ((this.currentTier <= 2 && this.currentStatus.win) || this.currentStatus.subscribe)
+      ) {
+        responseData
+        try {
+          responseData = await fetch('https://flow.cropper.finance/kyc/' + this.wallet.address + '/').then((res) =>
+            res.json()
           )
-        ){
-
-
-          responseData;
-          try {
-            responseData =  await fetch('https://flow.cropper.finance/kyc/'+ this.wallet.address +'/').then((res) => res.json())
-          } catch {
-          } finally {
-            if(responseData.session_id){
-              this.KYCStatus.sessionID = responseData.session_id;
-              if(responseData.status == 'PENDING' || responseData.status == 'SUBMITTED'){
-                this.KYCStatus.step = 2;
-                this.KYCStatus.verification = 1
-              } else if(responseData.status == 'VALIDATED'){
-                this.KYCStatus.verification = 2
-                this.KYCStatus.step = 3
-                this.KYCStatus.userVerified = true
-              } else if(!responseData.status){
-                this.KYCStatus.step = 1;
-              } else {
-                this.KYCStatus.step = 2
-                this.KYCStatus.verification = 0
-              }
-            } else if(responseData.message){
-              this.KYCStatus.step = 1;
-              try {
-                const requestOptions = {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ spl: this.wallet.address})
-                  };
-                responseData = await fetch('https://flow.cropper.finance/kyc/', requestOptions);
-
-                responseData =  await fetch('https://flow.cropper.finance/kyc/'+ this.wallet.address +'/').then((res) => res.json())
-
-                //@ts-ignore
-                if(responseData.session_id){
-
-                  //@ts-ignore
-                  this.KYCStatus.sessionID = responseData.session_id;
-                }
-
-              } catch {
-              } finally {
-                if(responseData.message){
-                  this.KYCStatus.step = 1;
-                }
-
-                if(responseData.session_id){
-                  //@ts-ignore
-                  this.KYCStatus.sessionID = responseData.session_id;
-                }
-
-              }
+        } catch {
+        } finally {
+          if (responseData.session_id) {
+            this.KYCStatus.sessionID = responseData.session_id
+            if (responseData.status == 'PENDING' || responseData.status == 'SUBMITTED') {
+              this.KYCStatus.step = 2
+              this.KYCStatus.verification = 1
+            } else if (responseData.status == 'VALIDATED') {
+              this.KYCStatus.verification = 2
+              this.KYCStatus.step = 3
+              this.KYCStatus.userVerified = true
+            } else if (!responseData.status) {
+              this.KYCStatus.step = 1
+            } else {
+              this.KYCStatus.step = 2
+              this.KYCStatus.verification = 0
             }
+          } else if (responseData.message) {
+            this.KYCStatus.step = 1
+            try {
+              const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ spl: this.wallet.address })
+              }
+              responseData = await fetch('https://flow.cropper.finance/kyc/', requestOptions)
 
-            if(responseData.session_id){
+              responseData = await fetch('https://flow.cropper.finance/kyc/' + this.wallet.address + '/').then((res) =>
+                res.json()
+              )
+
               //@ts-ignore
-              this.KYCStatus.sessionID = responseData.session_id;
-            }
+              if (responseData.session_id) {
+                //@ts-ignore
+                this.KYCStatus.sessionID = responseData.session_id
+              }
+            } catch {
+            } finally {
+              if (responseData.message) {
+                this.KYCStatus.step = 1
+              }
 
+              if (responseData.session_id) {
+                //@ts-ignore
+                this.KYCStatus.sessionID = responseData.session_id
+              }
+            }
+          }
+
+          if (responseData.session_id) {
+            //@ts-ignore
+            this.KYCStatus.sessionID = responseData.session_id
           }
         }
+      }
     },
 
     async delay(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms))
     },
 
-    async loadDatas(){
-
+    async loadDatas() {
       let responseData = {} as any
 
-        try {
-          responseData =  await fetch('https://api.cropper.finance/fertilizer/').then((res) => res.json())
-        } catch {
-          // dummy data
-        } finally {
+      try {
+        responseData = await fetch('https://api.cropper.finance/fertilizer/').then((res) => res.json())
+      } catch {
+        // dummy data
+      } finally {
+        let key = 0
 
-
-        let key = 0;
-
-        if(!this.fertilizer.mint){
-          this.fertilizer.mint = this.getFertilzerMint().toString();
+        if (!this.fertilizer.mint) {
+          this.fertilizer.mint = this.getFertilzerMint().toString()
         }
 
         for (const item of responseData.message) {
-
-          if(item.mint != this.fertilizer.mint){
-            continue;
+          if (item.mint != this.fertilizer.mint) {
+            continue
           }
 
-          if(!item['title']){
-            continue;
+          if (!item['title']) {
+            continue
           }
 
           let scValues = await getProjectFormatted(this.fertilizer.mint)
 
-          if(!scValues){
-            continue;
+          if (!scValues) {
+            continue
           }
 
-
-          var curdate = new Date();
-          this.fertilizer.short_desc = item['short_desc'];
-          this.fertilizer.long_desc = item['short_desc_2'];
-          this.fertilizer.title = item['title'];
-          this.fertilizer.tg_a = item['tg_a'];
-          this.fertilizer.tg_b = item['tg_b'];
-          this.fertilizer.tw_a = item['twitter_a'];
-          this.fertilizer.tw_b = item['twitter_b'];
-          this.fertilizer.retweetlink = item['post_a'];
-          this.SubscribeModalContent = item['disclaimer'];
-          this.fertilizer.distribution_end_date = (moment(scValues.date_distribution).unix() + (86400 * 2)) * 1000;
-          this.fertilizer.distribution_start_date = moment(scValues.date_distribution).unix() * 1000;
-          this.fertilizer.date_preparation = moment(scValues.date_preparation).unix() * 1000;
-          this.fertilizer.sales_end_date = moment(scValues.date_sale_end).unix() * 1000;
-          this.fertilizer.sales_start_date = moment(scValues.date_sale_start).unix() * 1000;
-          this.fertilizer.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000;
-          this.fertilizer.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000;
-          this.fertilizer.ido_info.sale_rate = scValues.token_price;
-          this.fertilizer.ido_info.hard_cap = scValues.pool_size;
-          this.fertilizer.ido_info.sale_type = item.type;
-          if(scValues.token_price != undefined && scValues.token_price > 0){
-            this.fertilizer.pool_size = Math.round((scValues.pool_size / scValues.token_price) * 100) / 100;
+          var curdate = new Date()
+          this.fertilizer.short_desc = item['short_desc']
+          this.fertilizer.long_desc = item['short_desc_2']
+          this.fertilizer.title = item['title']
+          this.fertilizer.tg_a = item['tg_a']
+          this.fertilizer.tg_b = item['tg_b']
+          this.fertilizer.tw_a = item['twitter_a']
+          this.fertilizer.tw_b = item['twitter_b']
+          this.fertilizer.retweetlink = item['post_a']
+          this.SubscribeModalContent = item['disclaimer']
+          this.fertilizer.distribution_end_date = (moment(scValues.date_distribution).unix() + 86400 * 2) * 1000
+          this.fertilizer.distribution_start_date = moment(scValues.date_distribution).unix() * 1000
+          this.fertilizer.date_preparation = moment(scValues.date_preparation).unix() * 1000
+          this.fertilizer.sales_end_date = moment(scValues.date_sale_end).unix() * 1000
+          this.fertilizer.sales_start_date = moment(scValues.date_sale_start).unix() * 1000
+          this.fertilizer.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000
+          this.fertilizer.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000
+          this.fertilizer.ido_info.sale_rate = scValues.token_price
+          this.fertilizer.ido_info.hard_cap = scValues.pool_size
+          this.fertilizer.ido_info.sale_type = item.type
+          if (scValues.token_price != undefined && scValues.token_price > 0) {
+            this.fertilizer.pool_size = Math.round((scValues.pool_size / scValues.token_price) * 100) / 100
           }
           this.fertilizer.website_url = item.website_display
           this.fertilizer.website = item.website_url
           this.fertilizer.logo = item.token_logo
 
-          let token = getTokenByMintAddress(scValues.price_token_mint);
+          let token = getTokenByMintAddress(scValues.price_token_mint)
 
-          if(token){
+          if (token) {
             this.fertilizer.price_token = token.symbol
             this.fertilizer.price_token_mint = scValues.price_token_mint
           }
 
-          token = getTokenByMintAddress(this.fertilizer.mint);
-          if(token){
+          token = getTokenByMintAddress(this.fertilizer.mint)
+          if (token) {
             this.fertilizer.token_info.symbol = token.symbol
           }
 
           let content = '' as any
 
-          
           try {
-            content = await fetch("https://api.cropper.finance/fertilizer/"+ this.fertilizer.mint +"/").then((res) => res.json())
+            content = await fetch('https://api.cropper.finance/fertilizer/' + this.fertilizer.mint + '/').then((res) =>
+              res.json()
+            )
           } catch {
-            this.fertilizer.longContent = '';
+            this.fertilizer.longContent = ''
           } finally {
-            this.fertilizer.longContent = content.content;
+            this.fertilizer.longContent = content.content
           }
 
-
-          let registerdList;
+          let registerdList
           try {
-            registerdList =  await fetch('https://flow.cropper.finance/registers/').then((res) => res.json())
+            registerdList = await fetch('https://flow.cropper.finance/registers/').then((res) => res.json())
           } catch {
             this.fertilizer.subscribers = ''
           } finally {
-              
-            let sub = registerdList.find(
-              (items: any) => items.mint === this.fertilizer.mint
-            )
-            if(sub){
-
+            let sub = registerdList.find((items: any) => items.mint === this.fertilizer.mint)
+            if (sub) {
               this.fertilizer.subscribers = sub.ct
             }
           }
 
-
-          this.contextualizeUser();
+          this.contextualizeUser()
         }
       }
     },
@@ -1350,73 +1323,64 @@ export default Vue.extend({
       }, 3000)
     },
 
-    dataURLtoFile(dataurl :any, filename :any) {
- 
-        var arr = dataurl.split(','),
-            mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), 
-            n = bstr.length, 
-            u8arr = new Uint8Array(n);
-            
-        while(n--){
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        
+    dataURLtoFile(dataurl: any, filename: any) {
+      var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n)
 
-
-
-        return new File([u8arr], filename + '.jpg', {type:mime});
-    },
-
-    async sendKYC(driver:any, id:any, passport:any, selectedCountry:any, imgUrl:any){
-
-
-      var myHeaders = new Headers();
-      myHeaders.append("Session-Id", this.KYCStatus.sessionID);
-
-      var formdata = new FormData();
-      formdata.append("document_type", (driver ? 'DRIVER_LICENSE' : (id ? 'NATIONAL_ID' : 'PASSPORT')));
-      formdata.append("country", countries.alpha2ToAlpha3(selectedCountry));
-
-      if(imgUrl.back){
-        formdata.append("back_document", imgUrl.backfiles, "Front.png");
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n)
       }
 
-      if(imgUrl.front){
-        formdata.append("front_document", imgUrl.frontfiles, "Front.png");
+      return new File([u8arr], filename + '.jpg', { type: mime })
+    },
+
+    async sendKYC(driver: any, id: any, passport: any, selectedCountry: any, imgUrl: any) {
+      var myHeaders = new Headers()
+      myHeaders.append('Session-Id', this.KYCStatus.sessionID)
+
+      var formdata = new FormData()
+      formdata.append('document_type', driver ? 'DRIVER_LICENSE' : id ? 'NATIONAL_ID' : 'PASSPORT')
+      formdata.append('country', countries.alpha2ToAlpha3(selectedCountry))
+
+      if (imgUrl.back) {
+        formdata.append('back_document', imgUrl.backfiles, 'Front.png')
+      }
+
+      if (imgUrl.front) {
+        formdata.append('front_document', imgUrl.frontfiles, 'Front.png')
       }
 
       var requestOptions = {
         method: 'POST',
         headers: myHeaders,
         body: formdata
-      };
+      }
 
-      let rest = await fetch("https://individual-api.synaps.io/v3/identity/submit?step_id=1909259753480", requestOptions)
-        .then(response => response.text())
-        .then(result => {
-
-        if(JSON.parse(result).api_code == 'WORKFLOW_STEP_UPLOADED'){
-
-
+      let rest = await fetch(
+        'https://individual-api.synaps.io/v3/identity/submit?step_id=1909259753480',
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => {
+          if (JSON.parse(result).api_code == 'WORKFLOW_STEP_UPLOADED') {
             var requestOptions2 = {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ session_id: this.KYCStatus.sessionID })
-              };
-              fetch('https://flow.cropper.finance/kyc/init/', requestOptions2);
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ session_id: this.KYCStatus.sessionID })
+            }
+            fetch('https://flow.cropper.finance/kyc/init/', requestOptions2)
 
-            this.contextualizeUser();
+            this.contextualizeUser()
 
-            this.KYCModalShow = false;
-        } else {
-          alert(JSON.parse(result).message);
-        }
-      })
-        .catch(error => console.log('error', error));
-
-
-
+            this.KYCModalShow = false
+          } else {
+            alert(JSON.parse(result).message)
+          }
+        })
+        .catch((error) => console.log('error', error))
     },
 
     KYCConfirm() {
@@ -1733,7 +1697,7 @@ export default Vue.extend({
                   .project-logo {
                     margin-right: 8px;
                     border-radius: 50%;
-                    width: 40px
+                    width: 40px;
                   }
                 }
 
