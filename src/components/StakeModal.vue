@@ -280,7 +280,7 @@ export default Vue.extend({
 
       var currentDate = moment()
       var futureMonth = moment(currentDate).add('days', currentTier[0].days)
-
+      this.getsCRP();
       this.unstakeDate = futureMonth.format('MM/DD/YYYY')
     },
     setMax(multiple: number) {
