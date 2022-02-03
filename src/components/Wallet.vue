@@ -828,10 +828,6 @@ export default class Wallet extends Vue {
         width: 100%;
         height: 100%;
         border-radius: 50%;
-
-        &.blur {
-          filter: blur(2px);
-        }
       }
     }
 

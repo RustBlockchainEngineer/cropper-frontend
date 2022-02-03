@@ -216,7 +216,7 @@
               </div>
 
               <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-1 blur fcc-container"></div>
+                <div class="staking-tier-preview tier-1 fcc-container"></div>
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 1</span>
                   <br />
@@ -236,7 +236,7 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-2 blur"></div>
+                <div class="staking-tier-preview tier-2 fcc-container"></div>
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 2</span>
                   <br />
@@ -256,7 +256,7 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-3 blur fcc-container"></div>
+                <div class="staking-tier-preview tier-3 fcc-container"></div>
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 3</span>
                   <br />
@@ -276,7 +276,7 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-4 blur fcc-container"></div>
+                <div class="staking-tier-preview tier-4 fcc-container"></div>
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 4</span>
                   <br />
@@ -296,7 +296,7 @@
                 </div>
               </div>
               <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-5 blur fcc-container"></div>
+                <div class="staking-tier-preview tier-5 fcc-container"></div>
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 5</span>
                   <br />
