@@ -875,6 +875,7 @@ export default Vue.extend({
 
         if (this.fromCoin.mintAddress && this.toCoin.mintAddress) {
           do {
+            /* to test jupiter integration
             // mono-step swap
             const crpLPList = getCropperPoolListByTokenMintAddresses(
               this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
@@ -908,17 +909,17 @@ export default Vue.extend({
                 break;
               }
             }
-
+*/
             const routes = await this.jupiter.computeRoutes(
-              new PublicKey(fromMint == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: fromMint), 
-              new PublicKey(toMint == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: toMint), 
+              new PublicKey(this.fromCoin.mintAddress == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: this.fromCoin.mintAddress), 
+              new PublicKey(this.toCoin.mintAddress == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: this.toCoin.mintAddress), 
               1_000_000_000, 1);
 
             if(routes.routesInfos.length){
               this.available_dex.push(ENDPOINT_JUP)
             }
-
-/*
+            console.log("Dex", this.available_dex)
+/* to test jupiter integration
             // mono-step swap using serum market
             let marketAddress = ''
             for (const address of Object.keys(this.swap.markets)) {
@@ -998,7 +999,7 @@ export default Vue.extend({
         this.loading = false
       }
     },
-    updateAmounts() {
+    async updateAmounts() {
       let max_coinAmount = 0
 
       try {
@@ -1011,8 +1012,11 @@ export default Vue.extend({
             this.toCoinAmount = this.fromCoinAmount
             return
           }
-          this.available_dex.forEach((dex_type) => {
-            /*if (dex_type == ENDPOINT_SRM) {
+          console.log("Dex-updating", this.available_dex)
+
+          for(let i = 0; i < this.available_dex.length; i ++) {
+            const dex_type = this.available_dex[i];
+            if (dex_type == ENDPOINT_SRM) {
               if (this.marketAddress && this.market && this.asks && this.bids && !this.asksAndBidsLoading) {
                 // serum
                 const { amountOut, amountOutWithSlippage, priceImpact } = getOutAmount(
@@ -1052,8 +1056,7 @@ export default Vue.extend({
                   }
                 }
               }
-            } else */
-            if (dex_type == ENDPOINT_CRP) {
+            } else if (dex_type == ENDPOINT_CRP) {
               // @ts-ignore
               const poolInfo = findBestCropperLP(
                 this.$accessor.liquidity.infos,
@@ -1063,7 +1066,7 @@ export default Vue.extend({
                 this.setting.slippage
               )
 
-              if (!poolInfo) return
+              if (!poolInfo) break;
 
               const { amountOut, amountOutWithSlippage, priceImpact } = getSwapOutAmount(
                 poolInfo,
@@ -1168,8 +1171,15 @@ export default Vue.extend({
                   }
                 }
               }
+            } else if(dex_type == ENDPOINT_JUP) {
+              const routes = await this.jupiter.computeRoutes(
+                new PublicKey(this.fromCoin?.mintAddress == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: this.fromCoin?.mintAddress), 
+                new PublicKey(this.toCoin?.mintAddress == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: this.toCoin?.mintAddress), 
+                new TokenAmount(this.fromCoinAmount, this.fromCoin?.decimals), 1);
+              console.log(routes);
             }
-          })
+
+          }
         }
       } catch {}
 
@@ -1698,7 +1708,7 @@ export default Vue.extend({
       }, 1000)
       this.getOrderBooks()
       this.flush()
-      this.$accessor.wallet.getTokenAccounts()
+      this.$accessor.wallet?.getTokenAccounts()
     }
   }
 })
