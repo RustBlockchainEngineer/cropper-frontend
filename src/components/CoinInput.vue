@@ -116,7 +116,7 @@ export default Vue.extend({
       this.showHalf = !this.showHalf
 
       // error balance
-      if (!this.balance || this.balance.wei.isNaN()) return
+      if (!this.balance || !this.balance.wei || !this.balance.wei.isNaN || this.balance.wei.isNaN()) return
 
       const availableBalance = Number(this.balance.toEther()) + (this.balanceOffset ?? 0)
 

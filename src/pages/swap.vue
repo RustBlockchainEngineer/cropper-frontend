@@ -498,13 +498,7 @@ export default Vue.extend({
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
         this.wsolBalance = this.wallet.tokenAccounts[TOKENS.WSOL.mintAddress]
 
-        this.jupiter =  await Jupiter.load({
-          connection: this.$web3,
-          cluster: 'mainnet-beta',
-          user: this.wallet.publicKey, // or public key
-          // platformFeeAndAccounts:  NO_PLATFORM_FEE,
-          // routeCacheDuration: CACHE_DURATION_MS 
-        });
+        // this.jupiter.setUserPublicKey(this.$wallet?.publicKey);
 
         this.flush()
       },
@@ -601,6 +595,10 @@ export default Vue.extend({
     const { from, to, ammId } = this.$route.query
     // @ts-ignore
     this.setCoinFromMint(ammId, from, to)
+    this.jupiter =  await Jupiter.load({
+      connection: this.$web3,
+      cluster: 'mainnet-beta',
+    });
 
     this.toCoin = Object.values(TOKENS).find((item) => item.symbol === 'CRP')
     this.fromCoin = Object.values(TOKENS).find((item) => item.symbol === 'USDC')
@@ -862,6 +860,7 @@ export default Vue.extend({
       this.initialized = true
       this.mainAmmId = undefined
       this.officialPool = true
+
       if (this.fromCoin && this.toCoin && this.liquidity.initialized) {
         const InputAmmIdOrMarket = this.userNeedAmmIdOrMarket
         // let userSelectFlag = false
@@ -910,23 +909,16 @@ export default Vue.extend({
               }
             }
 
-            if(this.available_dex.length){
-              break;
-            }
-
             const routes = await this.jupiter.computeRoutes(
-              new PublicKey(this.fromCoin.mintAddress), // Mint address of the input token
-              new PublicKey(this.toCoin.mintAddress), // Mint address of the output token
-              '0.0001', // raw input amount of tokens
-              '100', // The slippage in % terms
-              true // cached=true => will use cache if not older than routeCacheDuration
-            )
+              new PublicKey(fromMint == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: fromMint), 
+              new PublicKey(toMint == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: toMint), 
+              1_000_000_000, 1);
 
-            if(routes.length){
+            if(routes.routesInfos.length){
               this.available_dex.push(ENDPOINT_JUP)
             }
 
-
+/*
             // mono-step swap using serum market
             let marketAddress = ''
             for (const address of Object.keys(this.swap.markets)) {
@@ -960,7 +952,7 @@ export default Vue.extend({
                   this.available_dex.push(ENDPOINT_SRM)
                 }
               )
-            }
+            }*/
           } while (false)
         }
         this.updateUrl()
@@ -1014,14 +1006,13 @@ export default Vue.extend({
           this.best_dex_type = 'Unknown'
         }
         if (this.fromCoin && this.toCoin && this.fromCoinAmount) {
-          console.log(this.available_dex)
           if (this.isWrap) {
             // wrap & unwrap
             this.toCoinAmount = this.fromCoinAmount
             return
           }
           this.available_dex.forEach((dex_type) => {
-            if (dex_type == ENDPOINT_SRM) {
+            /*if (dex_type == ENDPOINT_SRM) {
               if (this.marketAddress && this.market && this.asks && this.bids && !this.asksAndBidsLoading) {
                 // serum
                 const { amountOut, amountOutWithSlippage, priceImpact } = getOutAmount(
@@ -1061,7 +1052,8 @@ export default Vue.extend({
                   }
                 }
               }
-            } else if (dex_type == ENDPOINT_CRP) {
+            } else */
+            if (dex_type == ENDPOINT_CRP) {
               // @ts-ignore
               const poolInfo = findBestCropperLP(
                 this.$accessor.liquidity.infos,
