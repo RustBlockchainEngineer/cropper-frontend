@@ -1037,10 +1037,45 @@ export default Vue.extend({
 
     async initSubscribe(){
 
+      /*
+        @Hongbo => 
+        here, we wait for the registering function in smart contract, 
+        when the contract return the transaction ID, we'll use it in the request to also check transaction + register user in database
+        SO this return should give us 2 datas if possible : 
+          - txID
+          - also, if it's possible for you to make a simple function (smart contract side) to return the current tier of the user sha encrypted on this base (spl == user wallet ID) :
+
+              case crypto.createHash('sha256').update(result.spl + 'teisr0').digest('hex'):
+                tier = 0;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'teicozksr1').digest('hex'):
+                tier = 1;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'txxzeisr2').digest('hex'):
+                tier = 2;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'teisrer3').digest('hex'):
+                tier = 3;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'teiscer4').digest('hex'):
+                tier = 4;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'teccisr5').digest('hex'):
+                tier = 5;
+              break;
+      */
+
+
+
+
       let requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ spl: this.wallet.address, mint: this.fertilizer.mint, tx_id_register: '3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc' })
+          body: JSON.stringify({ 
+            spl: this.wallet.address, 
+            mint: this.fertilizer.mint, 
+            tx_id_register: '3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc' 
+          })
         };
         await fetch('https://flow.cropper.finance/registers/', requestOptions);
 
@@ -1130,7 +1165,6 @@ export default Vue.extend({
           } finally {
             if(responseData.session_id){
               this.KYCStatus.sessionID = responseData.session_id;
-              console.log(responseData.status);
               if(responseData.status == 'PENDING' || responseData.status == 'SUBMITTED'){
                 this.KYCStatus.step = 2;
                 this.KYCStatus.verification = 1
@@ -1158,7 +1192,7 @@ export default Vue.extend({
 
                 //@ts-ignore
                 if(responseData.session_id){
-                
+
                   //@ts-ignore
                   this.KYCStatus.sessionID = responseData.session_id;
                 }
@@ -1206,8 +1240,6 @@ export default Vue.extend({
         if(!this.fertilizer.mint){
           this.fertilizer.mint = this.getFertilzerMint().toString();
         }
-
-        console.log('ResponseData', responseData, this.fertilizer.mint);
 
         for (const item of responseData.message) {
 
@@ -1265,18 +1297,15 @@ export default Vue.extend({
             this.fertilizer.token_info.symbol = token.symbol
           }
 
-          let content = 'TODO' as any
+          let content = '' as any
 
           
           try {
             content = await fetch("https://api.cropper.finance/fertilizer/"+ this.fertilizer.mint +"/").then((res) => res.json())
           } catch {
-            // dummy data
-            this.fertilizer.longContent = 'TODO';
+            this.fertilizer.longContent = '';
           } finally {
             this.fertilizer.longContent = content.content;
-
-            console.log(content);
           }
 
 
