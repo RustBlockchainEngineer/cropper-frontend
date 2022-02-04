@@ -97,7 +97,7 @@
           </div>
 
           <div class="calc-yield-info">
-            <label class="label font-small weight-bold">Total sCRP earn </label>
+            <label class="label font-small weight-bold">Total sCRP </label>
             <label class="value font-small weight-semi spacing-large"
               >{{
                 scrpEstimate.xCRP
