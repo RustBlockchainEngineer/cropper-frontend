@@ -222,17 +222,9 @@
                   <br />
                   <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
-                <div class="staking-tier-desc fcsb-container">
-                  <label class="font-large weight-bold">Tier 1</label>
-                  <label class="font-large weight-bold">200 sCRP</label>
-                  <!-- <div class="btn-container">
-                    <a
-                      class="btn-primary font-medium weight-semi fcc-container"
-                      href="#staking-tiers-details"
-                      @click="setTierTabs"
-                      >About Tiers</a
-                    >
-                  </div> -->
+                <div class="staking-tier-desc text-center">
+                  <h4 class="crp-balance spacing-large">200 sCRP</h4>
+                  <label class="font-small">20 lottery tickets</label>
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -242,17 +234,9 @@
                   <br />
                   <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
-                <div class="staking-tier-desc fcsb-container">
-                  <label class="font-large weight-bold">Tier 2</label>
-                  <label class="font-large weight-bold">2000 sCRP</label>
-                  <!-- <div class="btn-container">
-                    <a
-                      class="btn-primary font-medium weight-semi fcc-container"
-                      href="#staking-tiers-details"
-                      @click="setTierTabs"
-                      >About Tiers</a
-                    >
-                  </div> -->
+                <div class="staking-tier-desc text-center">
+                  <h4 class="crp-balance spacing-large">2,000 sCRP</h4>
+                  <label class="font-small">300 lottery tickets</label>
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -262,17 +246,9 @@
                   <br />
                   <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
-                <div class="staking-tier-desc fcsb-container">
-                  <label class="font-large weight-bold">Tier 3</label>
-                  <label class="font-large weight-bold">10,000 sCRP</label>
-                  <!-- <div class="btn-container">
-                    <a
-                      class="btn-primary font-medium weight-semi fcc-container"
-                      href="#staking-tiers-details"
-                      @click="setTierTabs"
-                      >About Tiers</a
-                    >
-                  </div> -->
+                <div class="staking-tier-desc text-center">
+                  <h4 class="crp-balance spacing-large">10,000 sCRP</h4>
+                  <label class="font-small">Garanteed allocation</label>
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -282,17 +258,9 @@
                   <br />
                   <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
-                <div class="staking-tier-desc fcsb-container">
-                  <label class="font-large weight-bold">Tier 4</label>
-                  <label class="font-large weight-bold">20,000 sCRP</label>
-                  <!-- <div class="btn-container">
-                    <a
-                      class="btn-primary font-medium weight-semi fcc-container"
-                      href="#staking-tiers-details"
-                      @click="setTierTabs"
-                      >About Tiers</a
-                    >
-                  </div> -->
+                <div class="staking-tier-desc text-center">
+                  <h4 class="crp-balance spacing-large">20,000 sCRP</h4>
+                  <label class="font-small">Garanteed allocation</label>
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -302,17 +270,9 @@
                   <br />
                   <span class="font-large weight-bold text-upper">Soon</span>
                 </div>
-                <div class="staking-tier-desc fcsb-container">
-                  <label class="font-large weight-bold">Tier 5</label>
-                  <label class="font-large weight-bold">100,000 sCRP</label>
-                  <!-- <div class="btn-container">
-                    <a
-                      class="btn-primary font-medium weight-semi fcc-container"
-                      href="#staking-tiers-details"
-                      @click="setTierTabs"
-                      >About Tiers</a
-                    >
-                  </div> -->
+                <div class="staking-tier-desc text-center">
+                  <h4 class="crp-balance spacing-large">100,000 sCRP</h4>
+                  <label class="font-small">Garanteed allocation</label>
                 </div>
               </div>
             </Carousel>
@@ -1043,10 +1003,10 @@ export default Vue.extend({
             max-width: 369px;
             margin: auto;
             width: 100%;
-            background: @color-blue800;
+            background: #080C0D;
             border: 4px solid @color-petrol500;
             border-radius: 18px;
-            padding-bottom: 24px;
+            padding-bottom: 12px;
             overflow: hidden;
 
             @media @max-md-tablet {
@@ -1097,6 +1057,10 @@ export default Vue.extend({
 
               .staking-tier-desc {
                 padding: 0 18px;
+
+                .crp-balance {
+                  color: @color-petrol500;
+                }
               }
 
               .btn-container {
@@ -1304,7 +1268,7 @@ export default Vue.extend({
   // ant carousel
   .ant-carousel {
     .custom-slick-arrow {
-      top: 40%;
+      top: 45%;
       width: 25px;
       height: 25px;
       font-size: 25px;
@@ -1332,16 +1296,19 @@ export default Vue.extend({
 
     .slick-dots {
       position: relative;
-      margin-top: 28px;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+      padding: 10px;
       bottom: 0;
       height: auto;
 
       li {
         margin-left: 0;
-        margin-right: 18px;
-        width: 24px;
-        height: 24px;
-        padding: 3px;
+        margin-right: 16px;
+        width: 9px;
+        height: 9px;
         background: transparent;
         border-radius: 50%;
 
@@ -1350,20 +1317,16 @@ export default Vue.extend({
         }
 
         button {
-          width: 18px !important;
-          height: 18px !important;
-          padding: 4px;
-          border: 4px solid @color-blue800;
+          width: 100% !important;
+          height: 100% !important;
           border-radius: 50%;
-          background: @color-petrol400;
+          background: @color-petrol300;
           opacity: 0.4;
         }
 
         &.slick-active {
-          background: #a1dfe5;
-
           button {
-            background: @color-petrol500;
+            background: @color-petrol50;
             opacity: 1;
           }
         }
