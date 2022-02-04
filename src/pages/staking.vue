@@ -248,7 +248,7 @@
                 </div>
                 <div class="staking-tier-desc text-center">
                   <h4 class="crp-balance spacing-large">10,000 sCRP</h4>
-                  <label class="font-small">Garanteed allocation</label>
+                  <label class="font-small">Guaranteed allocation</label>
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -260,7 +260,7 @@
                 </div>
                 <div class="staking-tier-desc text-center">
                   <h4 class="crp-balance spacing-large">20,000 sCRP</h4>
-                  <label class="font-small">Garanteed allocation</label>
+                  <label class="font-small">Guaranteed allocation</label>
                 </div>
               </div>
               <div class="staking-tier-item">
@@ -272,7 +272,7 @@
                 </div>
                 <div class="staking-tier-desc text-center">
                   <h4 class="crp-balance spacing-large">100,000 sCRP</h4>
-                  <label class="font-small">Garanteed allocation</label>
+                  <label class="font-small">Guaranteed allocation</label>
                 </div>
               </div>
             </Carousel>
