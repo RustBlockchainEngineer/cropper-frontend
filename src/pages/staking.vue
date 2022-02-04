@@ -1003,7 +1003,7 @@ export default Vue.extend({
             max-width: 369px;
             margin: auto;
             width: 100%;
-            background: #080C0D;
+            background: #080c0d;
             border: 4px solid @color-petrol500;
             border-radius: 18px;
             padding-bottom: 12px;
@@ -1019,12 +1019,12 @@ export default Vue.extend({
 
             .staking-tier-item {
               position: relative;
-              
+
               .staking-tier-preview {
                 background-size: cover !important;
                 background-position: center !important;
-                height: 317px;
-                margin-bottom: 28px;
+                height: 337px;
+                margin-bottom: 8px;
                 border-radius: 14px;
 
                 &.tier-1 {
@@ -1340,32 +1340,32 @@ export default Vue.extend({
   }
 
   // ant tabs
-  .ant-tabs-bar {
-    border-bottom: 0;
-    margin: 0 0 28px 0;
+  // .ant-tabs-bar {
+  //   border-bottom: 0;
+  //   margin: 0 0 28px 0;
 
-    .ant-tabs-nav {
-      .ant-tabs-tab {
-        margin: 0 18px 0 0;
-        font-weight: 600;
-        font-size: 20px;
-        line-height: 30px;
-        color: #eae8f1;
-      }
+  //   .ant-tabs-nav {
+  //     .ant-tabs-tab {
+  //       margin: 0 18px 0 0;
+  //       font-weight: 600;
+  //       font-size: 20px;
+  //       line-height: 30px;
+  //       color: #eae8f1;
+  //     }
 
-      .ant-tabs-tab-active {
-        color: @color-petrol500;
-      }
+  //     .ant-tabs-tab-active {
+  //       color: @color-petrol500;
+  //     }
 
-      .ant-tabs-ink-bar {
-        position: relative;
-        margin-top: 8px;
-        width: 50px !important;
-        height: 4px;
-        background: @color-petrol400;
-        border-radius: 10px;
-      }
-    }
-  }
+  //     .ant-tabs-ink-bar {
+  //       position: relative;
+  //       margin-top: 8px;
+  //       width: 50px !important;
+  //       height: 4px;
+  //       background: @color-petrol400;
+  //       border-radius: 10px;
+  //     }
+  //   }
+  // }
 }
 </style>
