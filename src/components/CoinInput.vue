@@ -46,7 +46,7 @@
           @focus="$emit('onFocus')"
         />
       </div>
-      <div v-if="balance && !balance.wei.isNaN()" class="label fcb-container font-xsmall weight-semi">
+      <div v-if="balance && balance.wei && balance.wei.isNaN && !balance.wei.isNaN()" class="label fcb-container font-xsmall weight-semi">
         <span> Balance: {{ balance.fixed() }} </span>
         <span> ~${{ balance.fixed() }} </span>
       </div>

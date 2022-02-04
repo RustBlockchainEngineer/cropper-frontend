@@ -278,7 +278,7 @@
               !fromCoin ||
               !fromCoinAmount ||
               !toCoin ||
-              !this.mainAmmId ||
+              !mainAmmId ||
               (!marketAddress && !lpMintAddress && !isWrap && !best_dex_type) ||
               !initialized ||
               loading ||
@@ -342,7 +342,7 @@ import { mapState } from 'vuex'
 import { Tooltip, Button } from 'ant-design-vue'
 import { cloneDeep, get } from 'lodash-es'
 import { Market, Orderbook } from '@project-serum/serum/lib/market.js'
-import { getTokenBySymbol, TokenInfo, NATIVE_SOL, TOKENS } from '@/utils/tokens'
+import { getTokenBySymbol, TokenInfo, NATIVE_SOL, WRAPPED_SOL, TOKENS } from '@/utils/tokens'
 import { inputRegex, escapeRegExp } from '@/utils/regex'
 import { getMultipleAccounts, commitment } from '@/utils/web3'
 import { PublicKey } from '@solana/web3.js'
@@ -466,7 +466,9 @@ export default Vue.extend({
       showInformations: false as boolean,
       showSlippage: false as boolean,
       showPercentage: false as boolean,
-      jupiter: false as any
+
+      jupiter: null as any,
+      jupiter_route: null as any
     }
   },
   head: {
@@ -496,7 +498,7 @@ export default Vue.extend({
           this.fetchUnsettledByMarket()
         }
         this.solBalance = this.wallet.tokenAccounts[NATIVE_SOL.mintAddress]
-        this.wsolBalance = this.wallet.tokenAccounts[TOKENS.WSOL.mintAddress]
+        this.wsolBalance = this.wallet.tokenAccounts[WRAPPED_SOL.mintAddress]
 
         // this.jupiter.setUserPublicKey(this.$wallet?.publicKey);
 
@@ -746,10 +748,10 @@ export default Vue.extend({
           description: ''
         })
       }
-      setTimeout(() => {
+      /*setTimeout(() => {
         this.setCoinFromMintLoading = false
         this.findMarket()
-      }, 1)
+      }, 1)*/
     },
     needUserCheckUnofficialShow(ammId: string) {
       if (!this.wallet.connected) {
@@ -838,7 +840,7 @@ export default Vue.extend({
       return (
         parseFloat(this.fromCoinAmount) >
         parseFloat(
-          this.fromCoin && this.fromCoin.balance
+          this.fromCoin && this.fromCoin.balance && this.fromCoin.balance.fixed
             ? this.fromCoin.symbol === 'SOL'
               ? this.fromCoin.balance
                   .toEther()
@@ -861,6 +863,7 @@ export default Vue.extend({
       this.mainAmmId = undefined
       this.officialPool = true
 
+      const tmp_dex_array = []
       if (this.fromCoin && this.toCoin && this.liquidity.initialized) {
         const InputAmmIdOrMarket = this.userNeedAmmIdOrMarket
         // let userSelectFlag = false
@@ -875,7 +878,7 @@ export default Vue.extend({
 
         if (this.fromCoin.mintAddress && this.toCoin.mintAddress) {
           do {
-            /* to test jupiter integration
+
             // mono-step swap
             const crpLPList = getCropperPoolListByTokenMintAddresses(
               this.fromCoin.mintAddress === TOKENS.WSOL.mintAddress
@@ -885,7 +888,7 @@ export default Vue.extend({
               typeof InputAmmIdOrMarket === 'string' ? InputAmmIdOrMarket : undefined
             )
             if (crpLPList.length > 0) {
-              this.available_dex.push(ENDPOINT_CRP)
+              tmp_dex_array.push(ENDPOINT_CRP)
             }
 
             //two-step swap with cropper pools
@@ -905,21 +908,11 @@ export default Vue.extend({
                 undefined
               )
               if (lpList_1.length > 0 && lpList_2.length > 0) {
-                this.available_dex.push(ENDPOINT_MULTI)
+                tmp_dex_array.push(ENDPOINT_MULTI)
                 break;
               }
             }
-*/
-            const routes = await this.jupiter.computeRoutes(
-              new PublicKey(this.fromCoin.mintAddress == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: this.fromCoin.mintAddress), 
-              new PublicKey(this.toCoin.mintAddress == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: this.toCoin.mintAddress), 
-              1_000_000_000, 1);
 
-            if(routes.routesInfos.length){
-              this.available_dex.push(ENDPOINT_JUP)
-            }
-            console.log("Dex", this.available_dex)
-/* to test jupiter integration
             // mono-step swap using serum market
             let marketAddress = ''
             for (const address of Object.keys(this.swap.markets)) {
@@ -950,12 +943,20 @@ export default Vue.extend({
                 (market) => {
                   this.market = market
                   this.getOrderBooks()
-                  this.available_dex.push(ENDPOINT_SRM)
+                  tmp_dex_array.push(ENDPOINT_SRM)
                 }
               )
-            }*/
+            }
           } while (false)
         }
+
+        if(tmp_dex_array.length == 0)
+        {
+          tmp_dex_array.push(ENDPOINT_JUP)
+        }
+        this.available_dex = [...tmp_dex_array];
+        // this.available_dex = [ENDPOINT_JUP];
+
         this.updateUrl()
         this.updateAmounts()
       } else {
@@ -1001,7 +1002,12 @@ export default Vue.extend({
     },
     async updateAmounts() {
       let max_coinAmount = 0
-
+      if(!this.jupiter){
+        this.jupiter =  await Jupiter.load({
+          connection: this.$web3,
+          cluster: 'mainnet-beta',
+        });
+      }
       try {
         if (this.fromCoinAmount == '') {
           this.best_dex_type = 'Unknown'
@@ -1012,7 +1018,6 @@ export default Vue.extend({
             this.toCoinAmount = this.fromCoinAmount
             return
           }
-          console.log("Dex-updating", this.available_dex)
 
           for(let i = 0; i < this.available_dex.length; i ++) {
             const dex_type = this.available_dex[i];
@@ -1172,16 +1177,49 @@ export default Vue.extend({
                 }
               }
             } else if(dex_type == ENDPOINT_JUP) {
+              const inputAmount = new TokenAmount(this.fromCoinAmount, this.fromCoin?.decimals, false).toWei().toNumber()
+
               const routes = await this.jupiter.computeRoutes(
                 new PublicKey(this.fromCoin?.mintAddress == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: this.fromCoin?.mintAddress), 
                 new PublicKey(this.toCoin?.mintAddress == NATIVE_SOL.mintAddress ? TOKENS.WSOL.mintAddress: this.toCoin?.mintAddress), 
-                new TokenAmount(this.fromCoinAmount, this.fromCoin?.decimals), 1);
-              console.log(routes);
-            }
+                inputAmount, this.setting.slippage);
+              
+              // console.log("Available Routes", routes.routesInfos[0])
+              // console.log('Quoted out amount', routes.routesInfos[0].outAmount);
+             
+              let out = new TokenAmount(routes.routesInfos[0].outAmount, this.toCoin?.decimals);
 
+              if (max_coinAmount < parseFloat(out.fixed())) {
+                  const route = routes.routesInfos[0];
+                  
+                  max_coinAmount = parseFloat(out.fixed())
+
+                  this.toCoinAmount = out.fixed()
+                  this.toCoinWithSlippage = new TokenAmount(route.outAmountWithSlippage, this.toCoin?.decimals).fixed()
+                  this.outToPirceValue = +new TokenAmount(
+                    parseFloat(this.toCoinAmount) / parseFloat(this.fromCoinAmount),
+                    // @ts-ignore
+                    this.toCoin.decimals,
+                    false
+                  ).fixed()
+
+                  this.priceImpact = route.priceImpactPct;
+                  this.jupiter_route = cloneDeep(routes.routesInfos[0]);
+                  this.endpoint = ENDPOINT_JUP
+                  this.best_dex_type = 'jup'
+
+                  this.sub_endpoint_1 = route.marketInfos[0].marketMeta.amm.label;
+                  this.mainAmmId = route.marketInfos[0].marketMeta.amm.id;
+                  if(route.marketInfos.length > 1){
+                    this.sub_endpoint_2 = route.marketInfos[1].marketMeta.amm.label;
+                    this.extAmmId = route.marketInfos[1].marketMeta.amm.id;
+                  }
+              }
+            }
           }
         }
-      } catch {}
+      } catch (e){console.log(e)}
+
 
       if (max_coinAmount === 0) {
         this.toCoinAmount = ''
@@ -1282,7 +1320,7 @@ export default Vue.extend({
         })
     },
 
-    placeOrder() {
+    async placeOrder() {
       this.swaping = true
       const key = getUnixTs().toString()
       this.$notify.info({
@@ -1521,7 +1559,7 @@ export default Vue.extend({
               this.flush()
             })
         }
-      } else {
+      } else if (this.endpoint === ENDPOINT_SRM) {
         place(
           this.$web3,
           // @ts-ignore
@@ -1574,6 +1612,50 @@ export default Vue.extend({
             this.swaping = false
             this.flush()
           })
+      } else if(this.endpoint === ENDPOINT_JUP) {
+        console.log("Jupiter Ag Swap")
+        this.jupiter.setUserPublicKey(this.$wallet?.publicKey);
+        
+        const { execute } = await this.jupiter.exchange({
+          route: this.jupiter_route
+        });
+        const res = await execute({
+            wallet: this.$wallet // from @solana/wallet-adapter-base, mainly need signTransaction and signAllTransactions
+          })
+        console.log(res)
+        if (res.error) {
+          this.$notify.error({
+            key,
+            message: 'Swap failed',
+            description: res.error.message
+          })
+        } else {
+          this.$notify.info({
+            key,
+            message: 'Transaction has been sent',
+            description: (h: any) =>
+              h('div', [
+                'Confirmation is in progress.  Check your transaction on ',
+                h(
+                  'a',
+                  {
+                    attrs: {
+                      href: `${this.url.explorer}/tx/${res.txid}`,
+                      target: '_blank'
+                    }
+                  },
+                  'here'
+                )
+              ])
+          })
+          const description = `Swap ${this.fromCoinAmount} ${this.fromCoin?.symbol} to ${this.toCoinAmount} ${this.toCoin?.symbol}`
+          this.$accessor.transaction.sub({ txid: res.txid , description })
+          this.flush()
+        }
+
+        this.swaping = false
+        this.flush()
+
       }
     },
     async updateUrl() {
