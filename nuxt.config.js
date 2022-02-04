@@ -27,6 +27,10 @@ export default {
         name: 'viewport',
         content: 'width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'
       },
+      {
+        property: 'og:image',
+        content: 'https://cropper.finance/webapp.png',
+      },
       { hid: 'description', name: 'description', content: 'The first permissionless yield farming protocol on Solana.' }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
@@ -177,10 +181,10 @@ export default {
   build: {
 
     extend(config, ctx) {
-        config.node = {
-            fs: "empty"
-        }
-      },
+      config.node = {
+        fs: "empty"
+      }
+    },
     transpile: [/^ant-design-vue/],
 
     loaders: {
@@ -203,14 +207,14 @@ export default {
         ]
       ]
     },
-  build: {
-    extend(config, ctx) {
+    build: {
+      extend(config, ctx) {
         config.node = {
-            fs: "empty"
+          fs: "empty"
         },
 
-      config.resolve.alias['@ant-design/icons/lib/dist$'] = path.resolve(__dirname, './src/utils/antd-icons.ts')
-    }
-},
+          config.resolve.alias['@ant-design/icons/lib/dist$'] = path.resolve(__dirname, './src/utils/antd-icons.ts')
+      }
+    },
   }
 }
