@@ -363,7 +363,7 @@
                   </div>
 
                   <div v-if="idx === 0" class="project-info whitelist-countdown fcc-container text-center">
-                    <Countdown
+                    <Countdown v-if="fertilizer.distribution_start_date > currentTimestamp"
                       :title="
                         fertilizer.status === filterOptions.whitelist
                           ? 'End of the whitelist in'
@@ -413,7 +413,7 @@
                       >
                         <span class="font-xsmall weight-bold">Open Now</span>
                       </div>
-                      <div v-else class="project-balance">
+                      <div v-else-if="fertilizer.distribution_start_date > currentTimestamp" class="project-balance">
                         <span class="label font-small weight-semi spacing-large">
                           {{
                             fertilizer.status === filterOptions.preparation
@@ -427,7 +427,7 @@
                               : ''
                           }}
                         </span>
-                        <span class="value fcs-container">
+                        <span class="value fcs-container" v-if="fertilizer.distribution_start_date > currentTimestamp">
                           <Countdown
                             :value="
                               fertilizer.status === filterOptions.preparation

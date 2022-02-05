@@ -187,7 +187,7 @@
                       </div>
                       <div
                         v-else-if="
-                          (currentTier === 0 && (!currentStatus.win || !currentStatus.subscribe)) ||
+                          (currentTier <= 2 && (!currentStatus.win || !currentStatus.subscribe)) ||
                           !currentStatus.subscribe
                         "
                         class="fcc-container"
@@ -328,8 +328,138 @@
             </div>
 
             <div class="project-detail-condition">
+
+              <div class="project-detail-item" v-if="
+                ( currentStep === 1 && KYCStatus.step < 3 && currentTier > 3 && currentStatus.subscribe ) ||
+                ( currentStep === 2 && KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) )">
+
+                  <div class="project-detail-open">
+                    <div>
+                      <div class="kyc-form">
+                        <div class="kyc-progress-container fcs-container">
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">1</span>
+                            <span class="kyc-title font-small weight-bold">ID Verification</span>
+                          </div>
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 2 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">2</span>
+                            <span class="kyc-title font-small weight-bold">Verification</span>
+                          </div>
+                          <div class="kyc-step text-center" :class="KYCStatus.step >= 3 ? 'active' : ''">
+                            <span class="kyc-no m-auto font-medium weight-bold">3</span>
+                            <span class="kyc-title font-small weight-bold">Start to buy</span>
+                          </div>
+                        </div>
+                        <div v-if="KYCStatus.step < 3">
+                          <div class="kyc-status-container fcsb-container">
+                            <div class="kyc-current-step fcs-container">
+                              <span class="font-large weight-bold">ID Verification</span>
+                              <img class="info-icon left" src="@/assets/icons/info.svg" />
+                            </div>
+                            <span
+                              class="kyc-status font-xsmall weight-bold"
+                              :class="
+                                KYCStatus.step === 1
+                                  ? 'failed'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'progress'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'success'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'failed'
+                                  : ''
+                              "
+                              >{{
+                                KYCStatus.step === 1
+                                  ? 'Not verified'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'In progress'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'Verified'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'Verification failed'
+                                  : ''
+                              }}</span
+                            >
+                          </div>
+                          <div class="kyc-description">
+                            <span class="font-small weight-semi spacing-large">
+                              Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours
+                              to be verified.
+                            </span>
+                            <img
+                              v-if="KYCStatus.step === 1"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-verification.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-progress.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-success.svg"
+                            />
+                            <img
+                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
+                              class="kyc-status-icon flex m-auto"
+                              src="@/assets/icons/kyc-failed.svg"
+                            />
+                          </div>
+                          <div class="btn-container">
+                            <Button
+                              class="btn-transparent font-medium weight-semi icon-cursor"
+                              :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                              @click="KYCConfirm"
+                              >{{
+                                KYCStatus.step === 1
+                                  ? 'Verify your ID now'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                  ? 'Next'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                  ? 'Next'
+                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                  ? 'Verify your ID again'
+                                  : ''
+                              }}</Button
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
+                        <span class="font-medium weight-semi spacing-small"
+                          >You can buy token from this project and see what you will receive.</span
+                        >
+                        <div class="token-amount fcsb-container">
+                          <div class="token-amount-input fcs-container">
+                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                            <input class="font-medium weight-bold" type="number" placeholder="673" />
+                          </div>
+                          <span class="font-xsmall weight-semi token-max-amount"
+                            >max 1500 {{ fertilizer.token_price }}</span
+                          >
+                        </div>
+                        <div class="receive-amount">
+                          <label class="font-xmall">You will receive:</label>
+                          <div class="receive-amount-output fcs-container">
+                            <img class="coin-icon" :src="fertilizer.logo" />
+                            <span class="receive-amount-value font-medium weight-semi spacing-small"
+                              >0.028 {{ fertilizer.title }}</span
+                            >
+                          </div>
+                        </div>
+                        <div class="btn-container">
+                          <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
               <div v-if="currentStep === 0"></div>
-              <div v-else-if="currentStep === 1 && currentStatus.subscribe" class="project-detail-item">
+              <div v-else-if="currentStep === 1 && currentStatus.subscribe && currentTier <= 2" class="project-detail-item">
                 <h4 class="weight-semi">Earn Social Pool tickets!</h4>
                 <span class="font-medium">
                   A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
@@ -428,12 +558,12 @@
                         <img class="referral-icon" src="@/assets/icons/referral.svg" />
                         <div>
                           <span class="font-medium weight-semi spacing-small">
-                            <label class="font-large">{{ total_tickets }}</label>
+                            <label class="font-large">{{ total_tickets + (currentTier == 2 ? 300 : (currentTier == 1 ? 20 : 0 )) }}</label>
                             Earned Tickets
                           </span>
                           <br />
                           <span class="font-xsmall"
-                            >{{ social_tickets }} Social / {{ referral_tickets }} Referrals</span
+                            >{{ social_tickets }} Social / {{ referral_tickets }} Referrals / {{ (currentTier == 2 ? 300 : (currentTier == 1 ? 20 : 0 )) }} Tier {{ currentTier }}</span
                           >
                         </div>
                       </div>
@@ -441,6 +571,7 @@
                   </div>
                 </div>
               </div>
+
               <div v-else-if="currentStep === 2" class="project-detail-item">
                 <div v-if="currentTimestamp < fertilizer.sales_start_date" class="project-detail-sales">
                   <div v-if="true">
@@ -457,133 +588,6 @@
                       format="DD:HH:mm:ss"
                     />
 
-                    <div class="project-detail-open">
-                      {{ KYCStatus.step }} |
-                      {{ currentStatus.win }}
-                      <div
-                        v-if="KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe))"
-                      >
-                        <div class="kyc-form">
-                          <div class="kyc-progress-container fcs-container">
-                            <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
-                              <span class="kyc-no m-auto font-medium weight-bold">1</span>
-                              <span class="kyc-title font-small weight-bold">ID Verification</span>
-                            </div>
-                            <div class="kyc-step text-center" :class="KYCStatus.step >= 2 ? 'active' : ''">
-                              <span class="kyc-no m-auto font-medium weight-bold">2</span>
-                              <span class="kyc-title font-small weight-bold">Verification</span>
-                            </div>
-                            <div class="kyc-step text-center" :class="KYCStatus.step >= 3 ? 'active' : ''">
-                              <span class="kyc-no m-auto font-medium weight-bold">3</span>
-                              <span class="kyc-title font-small weight-bold">Start to buy</span>
-                            </div>
-                          </div>
-                          <div v-if="KYCStatus.step < 3">
-                            <div class="kyc-status-container fcsb-container">
-                              <div class="kyc-current-step fcs-container">
-                                <span class="font-large weight-bold">ID Verification</span>
-                                <img class="info-icon left" src="@/assets/icons/info.svg" />
-                              </div>
-                              <span
-                                class="kyc-status font-xsmall weight-bold"
-                                :class="
-                                  KYCStatus.step === 1
-                                    ? 'failed'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                    ? 'progress'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                    ? 'success'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                    ? 'failed'
-                                    : ''
-                                "
-                                >{{
-                                  KYCStatus.step === 1
-                                    ? 'Not verified'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                    ? 'In progress'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                    ? 'Verified'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                    ? 'Verification failed'
-                                    : ''
-                                }}</span
-                              >
-                            </div>
-                            <div class="kyc-description">
-                              <span class="font-small weight-semi spacing-large">
-                                Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours
-                                to be verified.
-                              </span>
-                              <img
-                                v-if="KYCStatus.step === 1"
-                                class="kyc-status-icon flex m-auto"
-                                src="@/assets/icons/kyc-verification.svg"
-                              />
-                              <img
-                                v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
-                                class="kyc-status-icon flex m-auto"
-                                src="@/assets/icons/kyc-progress.svg"
-                              />
-                              <img
-                                v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
-                                class="kyc-status-icon flex m-auto"
-                                src="@/assets/icons/kyc-success.svg"
-                              />
-                              <img
-                                v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
-                                class="kyc-status-icon flex m-auto"
-                                src="@/assets/icons/kyc-failed.svg"
-                              />
-                            </div>
-                            <div class="btn-container">
-                              <Button
-                                class="btn-transparent font-medium weight-semi icon-cursor"
-                                :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
-                                @click="KYCConfirm"
-                                >{{
-                                  KYCStatus.step === 1
-                                    ? 'Verify your ID now'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                    ? 'Next'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                    ? 'Next'
-                                    : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                    ? 'Verify your ID again'
-                                    : ''
-                                }}</Button
-                              >
-                            </div>
-                          </div>
-                        </div>
-                        <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
-                          <span class="font-medium weight-semi spacing-small"
-                            >You can buy token from this project and see what you will receive.</span
-                          >
-                          <div class="token-amount fcsb-container">
-                            <div class="token-amount-input fcs-container">
-                              <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                              <input class="font-medium weight-bold" type="number" placeholder="673" />
-                            </div>
-                            <span class="font-xsmall weight-semi token-max-amount"
-                              >max 1500 {{ fertilizer.token_price }}</span
-                            >
-                          </div>
-                          <div class="receive-amount">
-                            <label class="font-xmall">You will receive:</label>
-                            <div class="receive-amount-output fcs-container">
-                              <img class="coin-icon" :src="fertilizer.logo" />
-                              <span class="receive-amount-value font-medium weight-semi spacing-small"
-                                >0.028 {{ fertilizer.title }}</span
-                              >
-                            </div>
-                          </div>
-                          <div class="btn-container">
-                            <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                   <div
                     v-else-if="((currentTier <= 2 && !currentStatus.win) || !currentStatus.subscribe) && false"
@@ -845,7 +849,7 @@
               </div>
             </div>
 
-            <div class="project-detail-static banner fcsb-container">
+            <div class="project-detail-static banner fcsb-container" v-if="currentTier < 5">
               <div class="project-detail-stake">
                 <h4 class="weight-semi">Develop your Tier to have more allocation</h4>
                 <div class="btn-container">
@@ -1093,6 +1097,8 @@ export default Vue.extend({
         return
       }
 
+
+
       let responseData
       try {
         responseData = await fetch(
@@ -1126,6 +1132,7 @@ export default Vue.extend({
           }
 
           this.currentStatus.win = responseData.win
+          this.currentTier = responseData.tier_reference;
 
           this.referral_tickets = responseData.referal_ticket ? responseData.referal_ticket : 0
           this.total_tickets = this.social_tickets + this.referral_tickets
@@ -1137,7 +1144,7 @@ export default Vue.extend({
 
       if (
         this.currentTimestamp < this.fertilizer.sales_end_date &&
-        this.currentTimestamp > this.fertilizer.whitelist_end_date &&
+        this.currentTimestamp > this.fertilizer.whitelist_start_date &&
         this.KYCStatus.step < 3 &&
         ((this.currentTier <= 2 && this.currentStatus.win) || this.currentStatus.subscribe)
       ) {
