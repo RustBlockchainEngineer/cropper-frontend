@@ -95,6 +95,13 @@
 
               <div class="staking-info fcsb-container">
                 <div class="label font-medium weight-semi spacing-small">
+                  Total Stakers
+                </div>
+                <div class="value font-medium weight-bold">{{ totalUsers }}</div>
+              </div>
+
+              <div class="staking-info fcsb-container">
+                <div class="label font-medium weight-semi spacing-small">
                   Total Staked
                   <Tooltip placement="bottomLeft">
                     <template slot="title">
