@@ -69,16 +69,18 @@
           :show-max="true"
           :show-arrow="true"
           :disabled="true"
-          @onInput="(amount) => (toCoinAmount = amount)"
+          @onInput="(amount) => { (toCoinAmount = amount); flush(); }"
           @onFocus="
             () => {
               fixedFromCoin = false
+              flush();
             }
           "
           @onMax="
             () => {
               fixedFromCoin = false
               toCoinAmount = toCoin.balance.fixed()
+              flush();
             }
           "
           @onSelect="openToCoinSelect"
