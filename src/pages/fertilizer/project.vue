@@ -34,12 +34,12 @@
 
 
             <label class="half">
-              Picture URL: 
+              Picture URL: <small>(877x190)</small>
               <input type="text" class="std" id="picture" name="picture" v-model="apiValues.picture" />
             </label>
 
             <label class="half">
-              Picture URL (mobile): 
+              Picture URL (mobile):  <small>(426.5x190)</small>
               <input type="text" class="std" id="picture_mobile" name="picture_mobile" v-model="apiValues.picture_mobile" />
             </label>
 
