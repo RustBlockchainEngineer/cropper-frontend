@@ -705,6 +705,8 @@ export default Vue.extend({
         }
       }
       this.coinSelectShow = false
+
+      this.flush();
     },
     setCoinFromMint(ammIdOrMarket: string | undefined, from: string | undefined, to: string | undefined) {
       this.setCoinFromMintLoading = true
