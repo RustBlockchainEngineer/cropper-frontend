@@ -274,7 +274,7 @@
             
             <h4>Allocation infos - (<b>{{ (
               (
-                (apiValues.ticketsCount * scValues.alloc_ticket) +
+                (apiValues.ticketsCount * scValues.tier0) +
                 (scValues.tier1Count * scValues.tier1) + 
                 (scValues.tier2Count * scValues.tier2) + 
                 (scValues.tier3Count * scValues.tier3) + 
@@ -283,27 +283,37 @@
               )  / scValues.pool_size) * 100 }} % </b> filled) </h4>
 
             <div class="bloc">
+
             <label>
-              <div>Lottery ticket :</div>
-              <div class="conta">Tickets count <br />
+              <div>Whitelist</div>
+              <textarea class="std" id="whitelist" name="whitelist" v-model="whitelist"></textarea>
+            </label>
+
+            <hr />
+
+
+            <label>
+              <div>Lottery ticket : {{ scValues.tier0Count }} subscribers</div>
+              <div class="conta">Set winner count <br />
               <input style="color:#000;font-weight:bold" type="text" class="tier" id="ticketsCount" name="ticketsCount" v-model="apiValues.ticketsCount" />
               </div>
               <div class="conta">Tickets value (USDC)<br />
-              <input style="color:#000;font-weight:bold" type="text" class="tier" id="alloc_ticket" name="alloc_ticket" v-model="scValues.alloc_ticket" />
+              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier0" name="tier0" v-model="scValues.tier0" />
               </div>
               <div class="conta">% Allocation<br />
-              {{ (apiValues.ticketsCount * scValues.alloc_ticket / scValues.pool_size) * 100 }} %
+              {{ (apiValues.ticketsCount * scValues.tier0 / scValues.pool_size) * 100 }} %
               </div>
 
               <div class="conta">
-<button>Process Lottery</button>
+                  <button>Process Lottery</button>
               </div>
+              <div  v-if="scValues.date_whitelist_end <= moment().toISOString() && this.scValues.date_sale_start >= moment().toISOString()" ></div>
             </label>
 
             <hr />
             <label>
               <div>Tier1 : </div>
-              <div class="conta">Tickets count<br /> <b>{{ scValues.tier1Count * 1 }}</b>
+              <div class="conta">Tickets count<br /> <b>{{ scValues.tier1Count  }}</b>
               </div>
               <div class="conta">Tickets value (USDC)<br />
               <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier1" name="tier1" v-model="scValues.tier1" />
@@ -317,7 +327,7 @@
 
             <label>
               <div>Tier2 :</div>
-              <div class="conta">Tickets count<br />  <b>{{ scValues.tier2Count * 1 }}</b>
+              <div class="conta">Tickets count<br />  <b>{{ scValues.tier2Count  }}</b>
               </div>
               <div class="conta">Tickets value (USDC)<br />
               <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier2" name="tier2" v-model="scValues.tier2" />
@@ -330,7 +340,7 @@
 
             <label>
               <div>Tier3 : </div>
-              <div class="conta">Tickets count<br /> <b>{{ scValues.tier3Count * 1 }}</b>
+              <div class="conta">Tickets count<br /> <b>{{ scValues.tier3Count  }}</b>
               </div>
               <div class="conta">Tickets value (USDC)<br />
               <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier3" name="tier3" v-model="scValues.tier3" />
@@ -343,7 +353,7 @@
 
             <label>
               <div>Tier4 : </div>
-              <div class="conta">Tickets count<br /> <b>{{ scValues.tier4Count * 1 }}</b>
+              <div class="conta">Tickets count<br /> <b>{{ scValues.tier4Count  }}</b>
               </div>
               <div class="conta">Tickets value (USDC)<br />
               <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier4" name="tier4" v-model="scValues.tier4" />
@@ -356,7 +366,7 @@
 
             <label>
               <div>Tier5 : </div>
-              <div class="conta">Tickets count<br /> <b>{{ scValues.tier5Count * 1 }}</b>
+              <div class="conta">Tickets count<br /> <b>{{ scValues.tier5Count  }}</b>
               </div>
               <div class="conta">Tickets value (USDC)<br />
               <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier5" name="tier5" v-model="scValues.tier5" />
@@ -535,7 +545,6 @@ export default Vue.extend({
       }
 
       this.scValues = await getProjectFormatted(this.mint)
-      console.log("SC Values", this.scValues)
 
       if(this.scValues.pool_size * 1 == 0){
       this.scValues.pool_size = 1;
@@ -551,8 +560,38 @@ export default Vue.extend({
         this.apiValues = responseData.message
       }
 
+      try {
+        responseData =  await fetch('https://flow.cropper.finance/registers/adminroeireroijgorigoerigjerogierjg').then((res) => res.json())
+      } catch {
+        // dummy data
+      } finally {
+        for (let dat in responseData) {
+          let value=  responseData[dat]
+
+          if(value.mint == this.mint){
+            this.scValues['tier' + value.tier_reference + 'Count'] = value.ct;
+          }
+        };
+
+      }
+
     }
 
+    if(!this.apiValues.ticketsCount){
+      this.apiValues.ticketsCount = 0;
+    }
+
+
+    for( let dat in [0,1,2,3,4,5]){
+      if(!this.scValues['tier' + dat + 'Count']){
+        this.scValues['tier' + dat + 'Count'] = 0;
+      }
+      if(!this.scValues['tier' + dat]){
+        this.scValues['tier' + dat] = 0;
+      }
+    }
+
+    console.log("SC Values", this.scValues)
 
     this.currentTimestamp = moment().valueOf()
     this.updateFertilizer()
