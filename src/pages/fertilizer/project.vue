@@ -111,12 +111,12 @@
             </label>
 
             <label class="half">
-              Token Price : <span v-if="scValues.token_price * 1 == 0" class="error">Price unknown</span>
+              Token Price ({{ this.scValues.price_token_mint ? getTokenByMintAddress(this.scValues.price_token_mint)['symbol'] : 'SELECT A TOKEN' }}) : <span v-if="scValues.token_price * 1 == 0" class="error">Price unknown</span>
               <input type="text" class="std" id="token_price" name="token_price" v-model="scValues.token_price" />
             </label>
 
             <label class="half">
-              Pool size (in token price value) :  <span v-if="scValues.pool_size * 1 == 0" class="error">Pool size unknown</span>
+              Pool size ({{ this.scValues.price_token_mint ? getTokenByMintAddress(this.scValues.price_token_mint)['symbol'] : 'SELECT A TOKEN' }}) :  <span v-if="scValues.pool_size * 1 == 0" class="error">Pool size unknown</span>
               <input type="text" class="std" id="pool_size" name="pool_size" v-model="scValues.pool_size" />
             </label>
 
@@ -272,6 +272,20 @@
 
 
             
+            <h4>Whitelist</h4>
+
+            <div class="bloc">
+
+              <label>
+                <div>1 SPL per line</div>
+                <textarea class="std" id="apiValues.whitelist" name="apiValues.whitelist" v-model="apiValues.whitelist"></textarea>
+              </label>
+
+
+            </div>
+
+
+            
             <h4>Allocation infos - (<b>{{ (
               (
                 (apiValues.ticketsCount * scValues.tier0) +
@@ -285,38 +299,36 @@
             <div class="bloc">
 
             <label>
-              <div>Whitelist</div>
-              <textarea class="std" id="whitelist" name="whitelist" v-model="whitelist"></textarea>
-            </label>
-
-            <hr />
-
-
-            <label>
-              <div>Lottery ticket : {{ scValues.tier0Count }} subscribers</div>
-              <div class="conta">Set winner count <br />
-              <input style="color:#000;font-weight:bold" type="text" class="tier" id="ticketsCount" name="ticketsCount" v-model="apiValues.ticketsCount" />
+              <div>Lottery ticket : {{ scValues.tier0Count + scValues.tier1Count + scValues.tier2Count }} subscribers</div>
+              <div class="conta" v-if="apiValues.lottery_done == 0">Set winner count <br />
+              <input style="color:#000;font-weight:bold"  @input="refr" type="text" class="tier" id="ticketsCount" name="ticketsCount" v-model="apiValues.ticketsCount" />
               </div>
-              <div class="conta">Tickets value (USDC)<br />
-              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier0" name="tier0" v-model="scValues.tier0" />
+              <div class="conta" v-else>Winner count <br />
+              <b>{{ apiValues.lottery_done }}</b>
+              </div>
+              <div class="conta">Tickets value ({{ scValues.price_token_mint ? getTokenByMintAddress(scValues.price_token_mint)['symbol'] : 'SELECT A TOKEN' }})<br />
+              <input style="color:#000;font-weight:bold"  @input="refr" type="text" class="tier" id="tier0" name="tier0" v-model="scValues.tier0" />
               </div>
               <div class="conta">% Allocation<br />
               {{ (apiValues.ticketsCount * scValues.tier0 / scValues.pool_size) * 100 }} %
               </div>
 
               <div class="conta">
-                  <button>Process Lottery</button>
+                  <button @click="processLottery" v-if="apiValues.lottery_done == 0">Process Lottery</button>
+                  <button v-if="apiValues.lottery_done > 0">Get airdrop list</button>
               </div>
-              <div  v-if="scValues.date_whitelist_end <= moment().toISOString() && this.scValues.date_sale_start >= moment().toISOString()" ></div>
+
+              <div  v-if="scValues.date_whitelist_end <= moment().toISOString() && scValues.date_sale_start >= moment().toISOString()" ></div>
             </label>
 
+            <!-- 
             <hr />
             <label>
               <div>Tier1 : </div>
               <div class="conta">Tickets count<br /> <b>{{ scValues.tier1Count  }}</b>
               </div>
-              <div class="conta">Tickets value (USDC)<br />
-              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier1" name="tier1" v-model="scValues.tier1" />
+              <div class="conta">Tickets value ({{ scValues.price_token_mint ? getTokenByMintAddress(scValues.price_token_mint)['symbol'] : 'SELECT A TOKEN' }})<br />
+              <input style="color:#000;font-weight:bold"  @input="refr" type="text" class="tier" id="tier1" name="tier1" v-model="scValues.tier1" />
               </div>
               <div class="conta">% Allocation<br />
               {{ (scValues.tier1Count * scValues.tier1 / scValues.pool_size) * 100 }} %
@@ -329,21 +341,23 @@
               <div>Tier2 :</div>
               <div class="conta">Tickets count<br />  <b>{{ scValues.tier2Count  }}</b>
               </div>
-              <div class="conta">Tickets value (USDC)<br />
-              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier2" name="tier2" v-model="scValues.tier2" />
+              <div class="conta">Tickets value ({{ scValues.price_token_mint ? getTokenByMintAddress(scValues.price_token_mint)['symbol'] : 'SELECT A TOKEN' }})<br />
+              <input style="color:#000;font-weight:bold"  @input="refr" type="text" class="tier" id="tier2" name="tier2" v-model="scValues.tier2" />
               </div>
               <div class="conta">% Allocation<br />
               {{ (scValues.tier2Count * scValues.tier2 / scValues.pool_size) * 100 }} %
               </div>
             </label>
+
+            -->
             <hr />
 
             <label>
               <div>Tier3 : </div>
               <div class="conta">Tickets count<br /> <b>{{ scValues.tier3Count  }}</b>
               </div>
-              <div class="conta">Tickets value (USDC)<br />
-              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier3" name="tier3" v-model="scValues.tier3" />
+              <div class="conta">Tickets value ({{ scValues.price_token_mint ? getTokenByMintAddress(scValues.price_token_mint)['symbol'] : 'SELECT A TOKEN' }})<br />
+              <input style="color:#000;font-weight:bold"  @input="refr" type="text" class="tier" id="tier3" name="tier3" v-model="scValues.tier3" />
               </div>
               <div class="conta">% Allocation<br />
               {{ (scValues.tier3Count * scValues.tier3 / scValues.pool_size) * 100 }} %
@@ -355,8 +369,8 @@
               <div>Tier4 : </div>
               <div class="conta">Tickets count<br /> <b>{{ scValues.tier4Count  }}</b>
               </div>
-              <div class="conta">Tickets value (USDC)<br />
-              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier4" name="tier4" v-model="scValues.tier4" />
+              <div class="conta">Tickets value ({{ scValues.price_token_mint ? getTokenByMintAddress(scValues.price_token_mint)['symbol'] : 'SELECT A TOKEN' }})<br />
+              <input style="color:#000;font-weight:bold"  @input="refr" type="text" class="tier" id="tier4" name="tier4" v-model="scValues.tier4" />
               </div>
               <div class="conta">% Allocation<br />
               {{ (scValues.tier4Count * scValues.tier4 / scValues.pool_size) * 100 }} %
@@ -368,8 +382,8 @@
               <div>Tier5 : </div>
               <div class="conta">Tickets count<br /> <b>{{ scValues.tier5Count  }}</b>
               </div>
-              <div class="conta">Tickets value (USDC)<br />
-              <input style="color:#000;font-weight:bold" type="text" class="tier" id="tier5" name="tier5" v-model="scValues.tier5" />
+              <div class="conta">Tickets value ({{ scValues.price_token_mint ? getTokenByMintAddress(scValues.price_token_mint)['symbol'] : 'SELECT A TOKEN' }})<br />
+              <input style="color:#000;font-weight:bold"  @input="refr" type="text" class="tier" id="tier5" name="tier5" v-model="scValues.tier5" />
               </div>
               <div class="conta">% Allocation<br />
               {{ (scValues.tier5Count * scValues.tier5 / scValues.pool_size) * 100 }} %
@@ -419,7 +433,7 @@ import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import axios from '@nuxtjs/axios'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
-import { TOKENS, NATIVE_SOL } from '@/utils/tokens'
+import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
 import {setAnchorProvider, saveProject, createLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
 import {Keypair} from '@solana/web3.js'
 const Vco = require('v-click-outside')
@@ -462,6 +476,7 @@ export default Vue.extend({
       poolLoaded: false,
       autoRefreshTime: 60 as number,
       countdown: 0,
+      whitelist: '' as string,
       showCollapse: [] as any[],
       timer: null as any,
       loading: false as boolean,
@@ -547,17 +562,20 @@ export default Vue.extend({
       this.scValues = await getProjectFormatted(this.mint)
 
       if(this.scValues.pool_size * 1 == 0){
-      this.scValues.pool_size = 1;
+        this.scValues.pool_size = 1;
       }
 
       let responseData = {} as any
 
       try {
-        responseData =  await fetch('https://api.croppppp.com/launchpad/?mint=' + this.mint).then((res) => res.json())
+        responseData =  await fetch('https://api.croppppp.com/launchpad/?mint=' + this.mint +'&full=1').then((res) => res.json())
       } catch {
         // dummy data
       } finally {
         this.apiValues = responseData.message
+        console.log(this.apiValues);
+
+        this.apiValues.ticketsCount = this.apiValues.lottery_done
       }
 
       try {
@@ -591,6 +609,11 @@ export default Vue.extend({
       }
     }
 
+    if(this.scValues.pool_size * 1 != 0){
+      this.scValues.pool_size = this.scValues.pool_size * 1;
+    }
+
+
     console.log("SC Values", this.scValues)
 
     this.currentTimestamp = moment().valueOf()
@@ -599,6 +622,7 @@ export default Vue.extend({
   watch: {
   },
   methods: {
+    getTokenByMintAddress,
     importIcon,
     TokenAmount,
     async flush() {},
@@ -629,6 +653,9 @@ export default Vue.extend({
           this.coinPicUrl = ''
         }
       }
+    },
+    refr(){
+      this.apiValues.whitelist = this.apiValues.whitelist + '';
     },
     goToProject(fertilizer: any) {
       this.$router.push({
@@ -702,6 +729,44 @@ export default Vue.extend({
       this.is_new = 0;
 
     }, 
+    processLottery() {
+      var request = require('request');
+      var options = {
+        'method': 'POST',
+        'url': 'https://flow.cropper.finance/registers/admoofrekcijgorigoerigjerogierjg/'+this.mint,
+        'headers': {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        form: {
+          'whitelist': this.apiValues.whitelist,
+          'count' : this.apiValues.ticketsCount
+        }
+      };
+      request(options, function (error, response) {
+        if (error) throw new Error(error);
+        console.log(response.body);
+
+      });
+
+
+        var options2 = {
+          'method': 'POST',
+          'url': 'https://api.croppppp.com/launchpad/post/',
+          'headers': {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          form: {
+            'mint': this.mint,
+            'lottery_done' : this.apiValues.ticketsCount
+          }
+        };
+        request(options2, function (error, response) {
+          if (error) throw new Error(error);
+          console.log(response.body);
+        });
+
+
+    },
 
     save() {
 
