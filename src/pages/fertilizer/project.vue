@@ -747,7 +747,7 @@ export default Vue.extend({
           'count' : this.apiValues.ticketsCount
         }
       };
-      request(options, function (error, response) {
+      request(options, function (error:any, response:any) {
         if (error) throw new Error(error);
         console.log(response.body);
 
@@ -765,7 +765,7 @@ export default Vue.extend({
             'lottery_done' : this.apiValues.ticketsCount
           }
         };
-        request(options2, function (error, response) {
+        request(options2, function (error:any, response:any) {
           if (error) throw new Error(error);
           console.log(response.body);
         });
