@@ -782,9 +782,9 @@
                   </div>
                 </div>
               </div>
-              <div v-else-if="currentStep === 3" class="project-detail-item">
+              <div v-else-if="currentStep === 3 && (currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded && ( KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) ) || currentStatus.funded)" class="project-detail-item">
                 <div
-                  v-if="currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded"
+                  v-if="currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded && ( KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) )"
                   class="project-detail-open"
                 >
                   <span class="font-medium weight-semi spacing-small">Distribution in progress, keep in touch!</span>
@@ -811,13 +811,16 @@
                       <img class="info-icon right" src="@/assets/icons/info.svg" />
                       <span class="font-xsmall weight-bold"
                         >You will receive your tokens on
-                        <label class="font-small">Wallet ID: QlkjfjdsiuJDlkjf</label>
+                        <label class="font-small">Wallet ID: 
+                          {{ wallet.address.substr(0, 4) }}
+                          ...
+                          {{ wallet.address.substr(wallet.address.length - 4, 4) }}</label>
                       </span>
                     </div>
                   </div>
                 </div>
-                <div v-else class="text-center">
-                  <h4 class="weight-bold spacing-medium">Sonar Watch public sale has finished!</h4>
+                <div v-else-if="currentStatus.funded" class="text-center">
+                  <h4 class="weight-bold spacing-medium">{{ fertilizer.title }} public sale has finished!</h4>
                   <div class="distribution-details">
                     <span class="font-medium">
                       Sonar Watch raised:
@@ -890,6 +893,25 @@ const countries = require('i18n-iso-countries')
 // 1643500800000
 
 export default Vue.extend({
+
+  async asyncData({ params, redirect }) {
+    const projects = await fetch(
+      'https://api.cropper.finance/fertilizer/'
+    ).then((res) => res.json())
+
+    const filteredProject = projects.message.find(
+      (el: any) =>
+        el.slug === params.project
+    )
+    if (filteredProject) {
+      return {
+        project: filteredProject
+      }
+    } else {
+      redirect('/fertilizer/')
+    }
+  },
+
   components: {
     Row,
     Col,
@@ -899,10 +921,11 @@ export default Vue.extend({
   },
 
   data() {
+
     return {
       total_tickets: 0,
       fertilizer: {
-        picture: '/fertilizer/banner/unq.png',
+        picture: '',
         logo: '',
         longContent: '',
         title: '',
@@ -922,15 +945,12 @@ export default Vue.extend({
         tg_b: '',
         retweetlink: '',
         ido_info: {
-          hard_cap: 140000,
-          sale_rate: 0.028 as any,
-          sale_type: '',
-          open_time: 1643500800000,
-          close_time: 1643500800000
+          hard_cap: 0,
+          sale_rate: 0 as any,
+          sale_type: ''
         },
         token_info: {
-          symbol: 'UNQ',
-          category: 'NFT'
+          symbol: ''
         },
         whitelist_start_date: 0 as any,
         whitelist_end_date: 0 as any,
@@ -983,7 +1003,7 @@ export default Vue.extend({
   },
 
   head: {
-    title: 'Fertilizer Project Details'
+    title: 'Cropper - '
   },
 
   computed: {
@@ -996,23 +1016,25 @@ export default Vue.extend({
         this.loadDatas()
       },
       deep: true
+    },
+
+    'wallet': {
+      handler(newTokenAccounts: any) {
+        this.loadDatas()
+      },
+      deep: true
     }
   },
 
   mounted() {
     setAnchorProvider(this.$web3, this.$wallet)
-    console.log(getLaunchpad())
+    getLaunchpad()
+
+    //@ts-ignore
+    this.fertilizer.mint = this.project.mint;
     this.currentTimestamp = moment().valueOf()
-    this.setTimer()
-    const query = new URLSearchParams(window.location.search)
-    if (query.get('f')) {
-      this.fertilizer.mint = query.get('f') as string
-      this.loadDatas()
-    } else {
-      this.$router.push({
-        path: '/fertilizer/'
-      })
-    }
+    this.loadDatas()
+
   },
 
   methods: {
@@ -1022,8 +1044,10 @@ export default Vue.extend({
     checkCurrentStep() {
       if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
       if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
-      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date)
-        this.currentStep = 3
+      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
+
+      //@ts-ignore
+      if(this.project.closed) currentStatus.funded = 1
     },
     goBack() {
       this.$router.push({
@@ -1084,14 +1108,6 @@ export default Vue.extend({
       await this.contextualizeUser()
     },
 
-    getFertilzerMint() {
-      const query = new URLSearchParams(window.location.search)
-      if (query.get('f')) {
-        return query.get('f') as string
-      }
-      return ''
-    },
-
     async contextualizeUser() {
       if (!this.wallet.connected) {
         return
@@ -1136,13 +1152,20 @@ export default Vue.extend({
 
           this.referral_tickets = responseData.referal_ticket ? responseData.referal_ticket : 0
           this.total_tickets = this.social_tickets + this.referral_tickets
-          this.affiliatedLink = 'https://cropper.finance/fertilizer/' + 'ABC' + '/' + this.wallet.address
-          this.twitterShareLink = `http://twitter.com/share?text=Sign up for ${this.fertilizer.title} on Cropper. Participate in the IDO of an emerging project.  Become an investor. Let's subscribe!   Link : ${this.affiliatedLink}&url= `
-          this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=Sign up for ${this.fertilizer.title} on Cropper. Participate in the IDO of an emerging project.  Become an investor. Let's subscribe!`
+
+          //@ts-ignore
+          this.affiliatedLink = 'https://cropper.finance/fertilizer/' + this.project.slug + '/?r=' + this.wallet.address
+          this.twitterShareLink = `http://twitter.com/share?text=Sign up for ${this.fertilizer.title} on Cropper. Participate in the IDO of an emerging project.  Become an investor. Let's subscribe!&url=${this.affiliatedLink}`
+          this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=Sign up for ${this.fertilizer.title} on Cropper. Participate in the IDO of an emerging project. Become an investor. Let's subscribe!`
+
         }
       }
 
-      if (
+      if(window.localStorage['CYK'+ this.wallet.address +'set']){
+        this.KYCStatus.verification = 2
+        this.KYCStatus.step = 3
+        this.KYCStatus.userVerified = true
+      } else if (
         this.currentTimestamp < this.fertilizer.sales_end_date &&
         this.currentTimestamp > this.fertilizer.whitelist_start_date &&
         this.KYCStatus.step < 3 &&
@@ -1164,6 +1187,7 @@ export default Vue.extend({
               this.KYCStatus.verification = 2
               this.KYCStatus.step = 3
               this.KYCStatus.userVerified = true
+              window.localStorage['CYK'+ this.wallet.address +'set'] = 1
             } else if (!responseData.status) {
               this.KYCStatus.step = 1
             } else {
@@ -1217,106 +1241,101 @@ export default Vue.extend({
     async loadDatas() {
       let responseData = {} as any
 
+      //@ts-ignore
+      let item = this.project
+
+      this.currentTimestamp = moment().valueOf()
+
+      var curdate = new Date()
+      this.fertilizer.short_desc = item['short_desc']
+      this.fertilizer.long_desc = item['short_desc_2']
+      this.fertilizer.title = item['title']
+      this.fertilizer.tg_a = item['tg_a']
+      this.fertilizer.tg_b = item['tg_b']
+      this.fertilizer.tw_a = item['twitter_a']
+      this.fertilizer.tw_b = item['twitter_b']
+
+      const titleEl = document.querySelector('head title');
+      //@ts-ignore
+      titleEl?.textContent = 'Cropper - ' + item['seo_title_meta'];
+      const descEl = document.querySelector('head meta[name="description"]');
+      descEl?.setAttribute('content', item['seo_desc_meta']);
+      const descEl2 = document.querySelector('head meta[name="og:description"]');
+      descEl2?.setAttribute('content', item['seo_desc_meta']);
+
+      this.fertilizer.retweetlink = item['post_a']
+      this.SubscribeModalContent = item['disclaimer']
+      this.fertilizer.website_url = item.website_display
+      this.fertilizer.website = item.website_url
+      this.fertilizer.logo = item.token_logo
+
+
+      let scValues = await getProjectFormatted(this.fertilizer.mint)
+
+      if (!scValues || !item.active) {
+        this.$router.push({
+          path: '/fertilizer/'
+        })
+      }
+
+      this.fertilizer.distribution_end_date = (moment(scValues.date_distribution).unix() + 86400 * 2) * 1000
+      this.fertilizer.distribution_start_date = moment(scValues.date_distribution).unix() * 1000
+      this.fertilizer.date_preparation = moment(scValues.date_preparation).unix() * 1000
+      this.fertilizer.sales_end_date = moment(scValues.date_sale_end).unix() * 1000
+      this.fertilizer.sales_start_date = moment(scValues.date_sale_start).unix() * 1000
+      this.fertilizer.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000
+      this.fertilizer.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000
+      this.fertilizer.ido_info.sale_rate = scValues.token_price
+      this.fertilizer.ido_info.hard_cap = scValues.pool_size
+      this.fertilizer.ido_info.sale_type = item.type
+
+      this.checkCurrentStep()
+
+      if (scValues.token_price != undefined && scValues.token_price > 0) {
+        this.fertilizer.pool_size = Math.round((scValues.pool_size / scValues.token_price) * 100) / 100
+      }
+
+      let token = getTokenByMintAddress(scValues.price_token_mint)
+
+      if (token) {
+        this.fertilizer.price_token = token.symbol
+        this.fertilizer.price_token_mint = scValues.price_token_mint
+      }
+
+      token = getTokenByMintAddress(this.fertilizer.mint)
+      if (token) {
+        this.fertilizer.token_info.symbol = token.symbol
+      }
+
+      let content = '' as any
+
       try {
-        responseData = await fetch('https://api.cropper.finance/fertilizer/').then((res) => res.json())
+        content = await fetch('https://api.cropper.finance/fertilizer/' + this.fertilizer.mint + '/').then((res) =>
+          res.json()
+        )
       } catch {
-        // dummy data
+        this.fertilizer.longContent = ''
       } finally {
-        let key = 0
+        this.fertilizer.longContent = content.content
+      }
 
-        if (!this.fertilizer.mint) {
-          this.fertilizer.mint = this.getFertilzerMint().toString()
-        }
-
-        for (const item of responseData.message) {
-          if (item.mint != this.fertilizer.mint) {
-            continue
-          }
-
-          if (!item['title']) {
-            continue
-          }
-
-          let scValues = await getProjectFormatted(this.fertilizer.mint)
-
-          if (!scValues) {
-            continue
-          }
-
-          var curdate = new Date()
-          this.fertilizer.short_desc = item['short_desc']
-          this.fertilizer.long_desc = item['short_desc_2']
-          this.fertilizer.title = item['title']
-          this.fertilizer.tg_a = item['tg_a']
-          this.fertilizer.tg_b = item['tg_b']
-          this.fertilizer.tw_a = item['twitter_a']
-          this.fertilizer.tw_b = item['twitter_b']
-          this.fertilizer.retweetlink = item['post_a']
-          this.SubscribeModalContent = item['disclaimer']
-          this.fertilizer.distribution_end_date = (moment(scValues.date_distribution).unix() + 86400 * 2) * 1000
-          this.fertilizer.distribution_start_date = moment(scValues.date_distribution).unix() * 1000
-          this.fertilizer.date_preparation = moment(scValues.date_preparation).unix() * 1000
-          this.fertilizer.sales_end_date = moment(scValues.date_sale_end).unix() * 1000
-          this.fertilizer.sales_start_date = moment(scValues.date_sale_start).unix() * 1000
-          this.fertilizer.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000
-          this.fertilizer.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000
-          this.fertilizer.ido_info.sale_rate = scValues.token_price
-          this.fertilizer.ido_info.hard_cap = scValues.pool_size
-          this.fertilizer.ido_info.sale_type = item.type
-          if (scValues.token_price != undefined && scValues.token_price > 0) {
-            this.fertilizer.pool_size = Math.round((scValues.pool_size / scValues.token_price) * 100) / 100
-          }
-          this.fertilizer.website_url = item.website_display
-          this.fertilizer.website = item.website_url
-          this.fertilizer.logo = item.token_logo
-
-          let token = getTokenByMintAddress(scValues.price_token_mint)
-
-          if (token) {
-            this.fertilizer.price_token = token.symbol
-            this.fertilizer.price_token_mint = scValues.price_token_mint
-          }
-
-          token = getTokenByMintAddress(this.fertilizer.mint)
-          if (token) {
-            this.fertilizer.token_info.symbol = token.symbol
-          }
-
-          let content = '' as any
-
-          try {
-            content = await fetch('https://api.cropper.finance/fertilizer/' + this.fertilizer.mint + '/').then((res) =>
-              res.json()
-            )
-          } catch {
-            this.fertilizer.longContent = ''
-          } finally {
-            this.fertilizer.longContent = content.content
-          }
-
-          let registerdList
-          try {
-            registerdList = await fetch('https://flow.cropper.finance/registers/').then((res) => res.json())
-          } catch {
-            this.fertilizer.subscribers = ''
-          } finally {
-            let sub = registerdList.find((items: any) => items.mint === this.fertilizer.mint)
-            if (sub) {
-              this.fertilizer.subscribers = sub.ct
-            }
-          }
-
-          this.contextualizeUser()
+      let registerdList
+      try {
+        registerdList = await fetch('https://flow.cropper.finance/registers/').then((res) => res.json())
+      } catch {
+        this.fertilizer.subscribers = ''
+      } finally {
+        let sub = registerdList.find((items: any) => items.mint === this.fertilizer.mint)
+        if (sub) {
+          this.fertilizer.subscribers = sub.ct
         }
       }
+
+      this.contextualizeUser()
+        
+      
     },
 
-    setTimer() {
-      this.timer = setInterval(async () => {
-        this.currentTimestamp = moment().valueOf()
-        this.checkCurrentStep()
-      }, 1000)
-    },
     copyToClipboard() {
       var textField = document.createElement('textarea')
       textField.innerText = this.affiliatedLink

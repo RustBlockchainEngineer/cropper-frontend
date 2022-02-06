@@ -449,13 +449,13 @@
 
                   <div class="btn-container">
                     <Button
-                      @click="goToProject(fertilizer.mint)"
+                      @click="goToProject(fertilizer)"
                       v-if="fertilizer.status === filterOptions.whitelist"
                       class="btn-transparent font-medium weight-semi fcc-container spacing-small"
                       >Subscription</Button
                     >
                     <Button
-                      @click="goToProject(fertilizer.mint)" v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small"
+                      @click="goToProject(fertilizer)" v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small"
                       >More Details</Button
                     >
                   </div>
@@ -957,10 +957,9 @@ export default Vue.extend({
   async mounted() {
     // this.$router.push({ path: `/swap/` })
     setAnchorProvider(this.$web3, this.$wallet)
-    console.log(await getLaunchpad());
+    await getLaunchpad();
     this.getTvl()
     this.$accessor.token.loadTokens()
-    await this.updateLabelizedAmms()
 
     let timer = setInterval(async () => {
       if (this.nbFarmsLoaded == Object.keys(this.labelizedAmms).length) {
@@ -1036,13 +1035,13 @@ export default Vue.extend({
 
 
         for (const item of responseData.message) {
-
           let project = {
             status: 'Whitelist Open',
             key: 'k' + key,
             picture: item['picture'],
             title: item['title'],
             short_desc: item['short_desc'],
+            slug: item['slug'],
             hard_cap: '3000K',
             subscribers: 0,
             mint: item.mint,
@@ -1084,7 +1083,7 @@ export default Vue.extend({
 
           project.token_price = scValues.token_price;
 
-          if(curdate > project.distribution_end_date){
+          if(curdate > project.distribution_end_date && item.closed){
             project.status = 'Funded'
           } else if(curdate >  project.distribution_start_date){
             project.status = 'Distribution'
@@ -1118,7 +1117,6 @@ export default Vue.extend({
           }
 
           key++;
-          console.log(project)
           this.fertilizerData.push(project);
         }
 
@@ -1166,45 +1164,10 @@ export default Vue.extend({
       window.localStorage.TVL = this.TVL
     },
     async flush() {
-      await this.updateLabelizedAmms()
       clearInterval(this.timer)
       this.poolLoaded = true
       this.countdown = 0
       this.setTimer()
-    },
-    async updateLabelizedAmms() {
-      this.labelizedAmms = {}
-      let responseData2 = {}
-      let responseData
-      try {
-        responseData = await fetch('https://api.cropper.finance/farms/').then((res) => res.json())
-      } catch {
-        // dummy data
-        responseData = [
-          { ammID: 'ADjGcPYAu5VZWdKwhqU3cLCgX733tEaGTYaXS2TsB2hF', labelized: true },
-          { ammID: '8j7uY3UiVkJprJnczC7x5c1S6kPYQnpxVUiPD7NBnKAo', labelized: true }
-        ]
-      } finally {
-        responseData.forEach(async (element: any) => {
-          if (element.pfo == true) {
-            element.calculateNextStep = 'Bla bla bla'
-
-            this.labelizedAmms[element.slug] = element
-            try {
-              responseData2 = await fetch(
-                'https://api.cropper.finance/pfo/?farmId=' +
-                  this.labelizedAmms[element.slug].pfarmID +
-                  '&t=' +
-                  Math.round(moment().unix() / 60000)
-              ).then((res) => res.json())
-            } catch {
-            } finally {
-              this.labelizedAmms[element.slug]['followers'] = Object.keys(responseData2).length
-              this.nbFarmsLoaded++
-            }
-          }
-        })
-      }
     },
     async delay(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms))
@@ -1300,7 +1263,6 @@ export default Vue.extend({
 
       // search with name
       if (searchName != '') {
-        console.log(searchName)
         this.fertilizerItems = this.fertilizerItems.filter((fertilizer: any) =>
           fertilizer.title.toLowerCase().includes(searchName.toLowerCase())
         )
@@ -1332,7 +1294,7 @@ export default Vue.extend({
     },
     goToProject(fertilizer: any) {
       this.$router.push({
-        path: '/fertilizer/project/?f=' + fertilizer
+        path: '/fertilizer/' + fertilizer.slug
       })
     },
     sortByStatus(option: string) {
@@ -1364,7 +1326,6 @@ export default Vue.extend({
         }
         return item
       })
-      console.log(this.showMoreMenu)
     },
     hideMore() {
       if (this.currentShowMore != -1) {
