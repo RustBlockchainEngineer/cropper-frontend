@@ -1739,7 +1739,7 @@ export default Vue.extend({
       this.initBasedSearch == 0
 
       try {
-        this.poolsDatas = await fetch('http://vps747084.ovh.net/test.php').then((res) => res.json())
+        this.poolsDatas = await fetch('https://api.cropper.finance/pools/').then((res) => res.json())
       } catch {
         this.poolsDatas = []
       } finally {
