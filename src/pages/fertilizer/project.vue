@@ -32,6 +32,11 @@
               <input style="font-size:20px;font-weight:bold" type="text" class="std" id="title" name="title" v-model="apiValues.title" />
             </label>
 
+            <label>
+              Project slug : (URL will be <b>https://cropper.finance/fertilizer/{{apiValues.slug}}</b>) 
+              <input style="font-size:20px;font-weight:bold" type="text" class="std" id="slug" name="slug" v-model="apiValues.slug" />
+            </label>
+
 
             <label class="half">
               Picture URL: <small>(877x190)</small>
