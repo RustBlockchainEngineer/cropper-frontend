@@ -215,20 +215,21 @@
                 <Icon type="right" />
               </div>
 
-              <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-1 fcc-container"></div>
-                <div class="staking-tier-soon">
+              <div class="staking-tier-item tier-1">
+                <div class="staking-tier-title text-center">
+                  <span class="font-medium"><b>Tier 1</b> GrassCropper</span>
+                </div>
+                <!-- <div class="staking-tier-soon">
                   <span class="font-large">Tier 1</span>
                   <br />
                   <span class="font-large weight-bold text-upper">Soon</span>
-                </div>
+                </div> -->
                 <div class="staking-tier-desc text-center">
                   <h4 class="crp-balance spacing-large">200 sCRP</h4>
                   <label class="font-small">20 lottery tickets</label>
                 </div>
               </div>
-              <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-2 fcc-container"></div>
+              <div class="staking-tier-item tier-2">
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 2</span>
                   <br />
@@ -239,8 +240,7 @@
                   <label class="font-small">300 lottery tickets</label>
                 </div>
               </div>
-              <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-3 fcc-container"></div>
+              <div class="staking-tier-item tier-3">
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 3</span>
                   <br />
@@ -251,8 +251,7 @@
                   <label class="font-small">Guaranteed allocation</label>
                 </div>
               </div>
-              <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-4 fcc-container"></div>
+              <div class="staking-tier-item tier-4">
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 4</span>
                   <br />
@@ -263,8 +262,7 @@
                   <label class="font-small">Guaranteed allocation</label>
                 </div>
               </div>
-              <div class="staking-tier-item">
-                <div class="staking-tier-preview tier-5 fcc-container"></div>
+              <div class="staking-tier-item tier-5">
                 <div class="staking-tier-soon">
                   <span class="font-large">Tier 5</span>
                   <br />
@@ -273,7 +271,7 @@
                 <div class="staking-tier-desc text-center">
                   <h4 class="crp-balance spacing-large">100,000 sCRP</h4>
                   <label class="font-small">Guaranteed allocation</label>
-                </div>
+                </div> 
               </div>
             </Carousel>
           </div>
@@ -1003,7 +1001,7 @@ export default Vue.extend({
             max-width: 369px;
             margin: auto;
             width: 100%;
-            background: #080c0d;
+            height: 458px;
             border: 4px solid @color-petrol500;
             border-radius: 18px;
             padding-bottom: 12px;
@@ -1019,33 +1017,14 @@ export default Vue.extend({
 
             .staking-tier-item {
               position: relative;
+              height: 450px;
+              background-size: cover !important;
+              background-position: center !important;
 
-              .staking-tier-preview {
-                background-size: cover !important;
-                background-position: center !important;
-                height: 337px;
-                margin-bottom: 8px;
-                border-radius: 14px;
-
-                &.tier-1 {
-                  background: url('@/assets/tier/Tier1.jpg');
-                }
-
-                &.tier-2 {
-                  background: url('@/assets/tier/Tier2.jpg');
-                }
-
-                &.tier-3 {
-                  background: url('@/assets/tier/Tier3.jpg');
-                }
-
-                &.tier-4 {
-                  background: url('@/assets/tier/Tier4.jpg');
-                }
-
-                &.tier-5 {
-                  background: url('@/assets/tier/Tier5.jpg');
-                }
+              .staking-tier-title {
+                position: absolute;
+                top: 12px;
+                width: 100%;
               }
 
               .staking-tier-soon {
@@ -1056,19 +1035,33 @@ export default Vue.extend({
               }
 
               .staking-tier-desc {
-                padding: 0 18px;
+                position: absolute;
+                bottom: 42px;
+                width: 100%;
 
                 .crp-balance {
                   color: @color-petrol500;
                 }
               }
 
-              .btn-container {
-                width: 120px;
+              &.tier-1 {
+                background: url('@/assets/tier/Tier1.jpg');
+              }
 
-                .btn-primary {
-                  background: @color-blue800;
-                }
+              &.tier-2 {
+                background: url('@/assets/tier/Tier2.jpg');
+              }
+
+              &.tier-3 {
+                background: url('@/assets/tier/Tier3.jpg');
+              }
+
+              &.tier-4 {
+                background: url('@/assets/tier/Tier4.jpg');
+              }
+
+              &.tier-5 {
+                background: url('@/assets/tier/Tier5.jpg');
               }
             }
           }
@@ -1295,14 +1288,13 @@ export default Vue.extend({
     }
 
     .slick-dots {
-      position: relative;
+      position: absolute;
       display: flex !important;
       align-items: center;
       justify-content: center;
-      margin-top: 8px;
-      padding: 10px;
-      bottom: 0;
-      height: auto;
+      background: transparent;
+      height: 30px;
+      bottom: 12px;
 
       li {
         margin-left: 0;
