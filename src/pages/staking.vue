@@ -219,11 +219,6 @@
                 <div class="staking-tier-title text-center">
                   <span class="font-medium"><b>Tier 1</b> GrassCropper</span>
                 </div>
-                <!-- <div class="staking-tier-soon">
-                  <span class="font-large">Tier 1</span>
-                  <br />
-                  <span class="font-large weight-bold text-upper">Soon</span>
-                </div> -->
                 <div class="staking-tier-desc text-center">
                   <h4 class="crp-balance spacing-large">200 sCRP</h4>
                   <label class="font-small">20 lottery tickets</label>
