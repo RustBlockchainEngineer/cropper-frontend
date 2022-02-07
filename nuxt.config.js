@@ -29,7 +29,7 @@ export default {
       },
       {
         property: 'og:image',
-        content: 'https://cropper.finance/webapp.png',
+        content: '/webapp.png',
       },
       { hid: 'description', name: 'description', content: 'The first permissionless yield farming protocol on Solana.' }
     ],
