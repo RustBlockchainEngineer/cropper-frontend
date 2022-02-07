@@ -715,7 +715,7 @@ export class Market extends MarketSerum {
   public asks: PublicKey | null = null
   public baseLotSize: number = 0
   public quoteLotSize: number = 0
-  public decoded: any
+  // public decoded: any
   public quoteMint: PublicKey | null = null
   public baseMint: PublicKey | null = null
 
@@ -734,7 +734,7 @@ export class Market extends MarketSerum {
     ])
 
     const market = new Market(decoded, baseMintDecimals, quoteMintDecimals, options, programId)
-    market.decoded = decoded
+    // market.decoded = decoded
     market.baseLotSize = decoded.baseLotSize
     market.quoteLotSize = decoded.quoteLotSize
     market.baseVault = decoded.baseVault
