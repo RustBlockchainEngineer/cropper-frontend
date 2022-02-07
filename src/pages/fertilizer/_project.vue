@@ -1485,7 +1485,7 @@ export default Vue.extend({
         this.KYCStatus.userVerified = true
       }
 
-      // FIXME: comment two lines
+      // FIXME: remove two lines
       this.KYCStatus.userVerified = true;
       this.KYCStatus.step = 3;
     }
