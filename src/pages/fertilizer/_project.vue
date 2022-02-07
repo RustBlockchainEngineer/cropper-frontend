@@ -451,7 +451,9 @@
                           </div>
                         </div>
                         <div class="btn-container">
-                          <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                          <Button class="btn-transparent font-medium weight-semi icon-cursor"
+                            
+                          >Buy Now</Button>
                         </div>
                       </div>
                     </div>
@@ -707,10 +709,12 @@
                         <div class="token-amount fcsb-container">
                           <div class="token-amount-input fcs-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <input class="font-medium weight-bold" type="number" placeholder="673" />
-                          </div>
+                            <input class="font-medium weight-bold" type="number" placeholder="673" 
+                              v-model="buyAmount"
+                              @onInput="(amount) => (buyAmount = amount)"/>
+                          </div> 
                           <span class="font-xsmall weight-semi token-max-amount"
-                            >max 1500 {{ fertilizer.token_price }}</span
+                            >max {{maxAmount}} {{ fertilizer.token_price }}</span
                           >
                         </div>
                         <div class="receive-amount">
@@ -723,7 +727,13 @@
                           </div>
                         </div>
                         <div class="btn-container">
-                          <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                          <Button class="btn-transparent font-medium weight-semi icon-cursor"
+                            @click="
+                              () => {
+                                onClickBuyNow();
+                              }
+                            "
+                          >Buy Now</Button>
                         </div>
                       </div>
                     </div>
@@ -782,11 +792,11 @@
                   </div>
                 </div>
               </div>
-              <div v-else-if="currentStep === 3 && (currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded && ( KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) ) || currentStatus.funded)" class="project-detail-item">
+              <!-- FIXME: remove true -->
+              <div v-else-if="true || (currentStep === 3 && (currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded && ( KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) ) || currentStatus.funded))" class="project-detail-item">
                 <div
-                  v-if="currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded && ( KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) )"
-                  class="project-detail-open"
-                >
+                  v-if="true || (currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded && ( KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) ))"
+                  class="project-detail-open">
                   <span class="font-medium weight-semi spacing-small">Distribution in progress, keep in touch!</span>
                   <div class="buy-form">
                     <div class="token-amount fcsb-container">
@@ -807,16 +817,22 @@
                         >
                       </div>
                     </div>
-                    <div class="receive-notification fb-container">
-                      <img class="info-icon right" src="@/assets/icons/info.svg" />
-                      <span class="font-xsmall weight-bold"
+                      <!--span class="font-xsmall weight-bold"
                         >You will receive your tokens on
                         <label class="font-small">Wallet ID: 
                           {{ wallet.address.substr(0, 4) }}
                           ...
                           {{ wallet.address.substr(wallet.address.length - 4, 4) }}</label>
-                      </span>
-                    </div>
+                      </span-->
+                      <div class="btn-container">                 
+                        <Button class="btn-transparent font-medium weight-semi icon-cursor"
+                          @click="
+                            () => {
+                              onClaimTokens();
+                            }
+                          "
+                        >Claim Now</Button>
+                      </div>
                   </div>
                 </div>
                 <div v-else-if="currentStatus.funded" class="text-center">
@@ -883,7 +899,13 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { Row, Col, Statistic, Steps } from 'ant-design-vue'
-import { setAnchorProvider, getLaunchpad, getProjectFormatted } from '@/utils/crp-launchpad'
+import { 
+  setAnchorProvider, 
+  getLaunchpad, 
+  getProjectFormatted,
+  subscribeToWhitelist,
+  buyTokens,
+  claimTokens } from '@/utils/crp-launchpad'
 import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
 import moment from 'moment'
 const Countdown = Statistic.Countdown
@@ -998,7 +1020,9 @@ export default Vue.extend({
       timer: null as any,
 
       social_tickets: 0,
-      referral_tickets: 0
+      referral_tickets: 0,
+      buyAmount: 0,
+      maxAmount: 1500,
     }
   },
 
@@ -1055,6 +1079,37 @@ export default Vue.extend({
       })
     },
 
+    async onClaimTokens() {
+      let res = await claimTokens(this.$web3, this.$wallet);
+      if (res.success) {
+          this.$notify.success({
+          message: `Claim Succeed. ${res.amount} received`,
+          description: 'Transaction Succeed'
+        })
+      } else {
+        this.$notify.error({
+          message: 'Claim Failed',
+          description: 'Transaction Failed'
+        })
+      }
+    },
+
+    async onClickBuyNow() {
+      let res = await buyTokens(this.$web3, this.$wallet, this.buyAmount > this.maxAmount ? this.maxAmount : this.buyAmount);
+      if (res.success) {
+          this.$notify.success({
+          message: 'Buy Succeed',
+          description: 'Transaction Succeed'
+        })
+      } else {
+        this.$notify.error({
+          message: 'Buy Failed',
+          description: 'Transaction Failed'
+        })
+      }
+      console.log("buyAmount =", this.buyAmount);
+    },
+
     async initSubscribe() {
       /*
         @Hongbo => 
@@ -1084,30 +1139,43 @@ export default Vue.extend({
               break;
       */
 
-      let requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          spl: this.wallet.address,
-          mint: this.fertilizer.mint,
-          tx_id_register: '3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc'
+      let res = await subscribeToWhitelist(this.$web3, this.$wallet);
+      if (res.success) {
+        let requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            spl: this.wallet.address,
+            mint: this.fertilizer.mint,
+            tx_id_register: res.txId
+          })
+        }
+        await fetch('https://flow.cropper.finance/registers/', requestOptions)
+
+        requestOptions = {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            spl: this.wallet.address,
+            hash: res.hash
+          })
+        }
+        await fetch('https://flow.cropper.finance/registers/', requestOptions)
+
+        await this.contextualizeUser()
+        
+        this.$notify.success({
+          message: 'Subscribe Succeed',
+          description: 'Transaction Succeed'
+        })
+      } else {
+        this.$notify.error({
+          message: 'Subscribe Failed',
+          description: 'Transaction Failed'
         })
       }
-      await fetch('https://flow.cropper.finance/registers/', requestOptions)
-
-      requestOptions = {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          spl: this.wallet.address,
-          hash: '58eda2485e96378dca8f5d8044161e6a567614bb6a24626c92df13277fdc2d72'
-        })
-      }
-      await fetch('https://flow.cropper.finance/registers/', requestOptions)
-
-      await this.contextualizeUser()
     },
-
+  
     async contextualizeUser() {
       if (!this.wallet.connected) {
         return
@@ -1416,6 +1484,10 @@ export default Vue.extend({
         this.KYCStatus.step = 3
         this.KYCStatus.userVerified = true
       }
+
+      // FIXME: comment two lines
+      this.KYCStatus.userVerified = true;
+      this.KYCStatus.step = 3;
     }
   }
 })

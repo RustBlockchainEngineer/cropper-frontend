@@ -295,3 +295,70 @@ export async function saveProject(
 
   return await sendTransaction(connection, wallet, transaction, signers)
 }
+export async function subscribeToWhitelist(  
+  connection: Connection,
+  wallet: any,
+) {
+  /*
+        @Hongbo => 
+        here, we wait for the registering function in smart contract, 
+        when the contract return the transaction ID, we'll use it in the request to also check transaction + register user in database
+        SO this return should give us 2 datas if possible : 
+          - txID
+          - also, if it's possible for you to make a simple function (smart contract side) to return the current tier of the user sha encrypted on this base (spl == user wallet ID) :
+
+              case crypto.createHash('sha256').update(result.spl + 'teisr0').digest('hex'):
+                tier = 0;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'teicozksr1').digest('hex'):
+                tier = 1;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'txxzeisr2').digest('hex'):
+                tier = 2;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'teisrer3').digest('hex'):
+                tier = 3;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'teiscer4').digest('hex'):
+                tier = 4;
+              break;
+              case crypto.createHash('sha256').update(result.spl + 'teccisr5').digest('hex'):
+                tier = 5;
+              break;
+      */
+
+  // todo: LaunchpadProgram.rpc.registerUser
+  for(let i = 0; i < 100000000; i++);
+  console.log("subscribe");
+  let txId = "3woKNB9ubF3VdamWN6b1m4AnTrfVY9BEDe27PLm3nWcvAT4qnLsZ53LhoTitPxdJj9MkhNdYuNDyaddPDBUnQ2mc";
+  let hash = "58eda2485e96378dca8f5d8044161e6a567614bb6a24626c92df13277fdc2d72";
+  let no_error = 1;
+  if (no_error) return {success: true, txId, hash};
+  return {success: false};
+}
+
+export async function buyTokens(  
+  connection: Connection,
+  wallet: any,
+  amount: number
+) {
+  for(let i = 0; i < 100000000; i++);
+  console.log("pay");
+  // todo: pay
+  let no_error = 1;
+  if (no_error) return { success: true };
+  return { success: false };
+}
+
+export async function claimTokens(  
+  connection: Connection,
+  wallet: any
+) {
+  for(let i = 0; i < 100000000; i++);
+  console.log("pay");
+  // todo: pay
+  let amount = 1000;
+  let no_error = 1;
+  if (no_error) return { success: true, amount };
+  return { success: false };
+}
