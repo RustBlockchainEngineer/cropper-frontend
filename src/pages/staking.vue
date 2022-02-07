@@ -468,6 +468,7 @@ export default Vue.extend({
       running: 0 as any,
 
       totalStaked: '0' as string,
+      totalUsers: 0 as number,
       userStaked: 0 as number,
       userStakedUnformated: 0 as number,
       pendingReward: '0' as string,
@@ -588,10 +589,12 @@ export default Vue.extend({
       if (!this.$accessor.token.initialized) return
 
       const pools = await getAllPools()
-      const current_pool = pools[0]
+      const current_pool = pools[0].account
 
       const farm_state = await getFarmState()
-      const stakedAmount = new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals)
+      const stakedAmount = new TokenAmount(current_pool.amount, TOKENS['CRP'].decimals)
+
+      this.totalUsers = current_pool.totalUser;
 
       if (this.price.prices['CRP']) {
         this.totalStakedPrice =
@@ -607,18 +610,14 @@ export default Vue.extend({
         'CRP ' +
         (Math.round(parseFloat(stakedAmount.fixed()) * 1000) / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
-      // const apr = Number(farm_state.tokenPerSecond.muln(YEAR2SECOND).div(current_pool.account.amount).toString());
+      // const apr = Number(farm_state.tokenPerSecond.muln(YEAR2SECOND).div(current_pool.amount).toString());
       // this.estimatedAPY = Number((((1 + (apr / 100)/ 365)) ** 365 - 1) * 100);
 
       const apr =
         (Number(new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals).fixed()) * 365 * 24 * 3600) /
-        Number(new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals).fixed())
+        Number(new TokenAmount(current_pool.amount, TOKENS['CRP'].decimals).fixed())
 
-      this.estimatedAPY =
-        (Number(new TokenAmount(farm_state.tokenPerSecond, TOKENS['CRP'].decimals).fixed()) * 365 * 24 * 3600) /
-        Number(new TokenAmount(current_pool.account.amount, TOKENS['CRP'].decimals).fixed())
-
-      this.estimatedAPY = Number(((1 + this.estimatedAPY / 365) ** 365 - 1) * 100)
+      this.estimatedAPY = Number(((1 + apr / 365) ** 365 - 1) * 100)
     },
 
     async getUserState() {

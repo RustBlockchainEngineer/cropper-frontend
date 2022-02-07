@@ -46,7 +46,7 @@
           @focus="$emit('onFocus')"
         />
       </div>
-      <div v-if="balance && !balance.wei.isNaN()" class="label fcsb-container font-xsmall weight-semi">
+      <div v-if="balance && balance.wei && balance.wei.isNaN && !balance.wei.isNaN()" class="label fcb-container font-xsmall weight-semi">
         <span> Balance: {{ balance.fixed() }} </span>
         <span> ~${{ balance.fixed() }} </span>
       </div>
@@ -116,7 +116,7 @@ export default Vue.extend({
       this.showHalf = !this.showHalf
 
       // error balance
-      if (!this.balance || this.balance.wei.isNaN()) return
+      if (!this.balance || !this.balance.wei || !this.balance.wei.isNaN || this.balance.wei.isNaN()) return
 
       const availableBalance = Number(this.balance.toEther()) + (this.balanceOffset ?? 0)
 

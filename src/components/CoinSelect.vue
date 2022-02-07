@@ -221,7 +221,6 @@ export default Vue.extend({
     },
     selectCommonToken(common: any) {
       let selectedToken = this.tokenList.find((token) => token.symbol === common.symbol)
-      console.log(selectedToken)
       this.$emit('onSelect', selectedToken)
     },
     filteredTokenList() {
