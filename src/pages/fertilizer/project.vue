@@ -18,7 +18,7 @@
 
 
           <div class="create">
-              <Button @click="create" ghost>Create launchpad</Button>
+              <Button @click="create" ghost>Create project</Button>
           </div>
         </div>
         <div v-else-if="mint">
@@ -206,13 +206,6 @@
               Distribution Date (D5) : <span v-if="scValues.date_distribution <= scValues.date_sale_end" class="error">Date doesn't look good</span> <span v-if="!scValues.date_distribution || scValues.date_distribution.length != 19" class="error">Please enter a date like YYYY-MM-JJ HH:II:SS</span>
               <input placeholder="YYYY-MM-JJ HH:II:SS" type="text" class="std" id="date_distribution" name="date_distribution" v-model="scValues.date_distribution" />
             </label>
-
-            
-
-
-
-
-
 
             <label>
               Sort order: 
@@ -709,7 +702,8 @@ export default Vue.extend({
 
 
     async create() {
-
+      alert("here")
+      return;
 
       await this.delay(1000);
 

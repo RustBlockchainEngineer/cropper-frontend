@@ -9,6 +9,18 @@ const { BN, web3, Program, Provider } = anchor
 const { PublicKey, SystemProgram, Keypair, Transaction } = web3
 const utf8 = anchor.utils.bytes.utf8;
 
+const LAUNCHPAD_TAG = "launchpad";
+const USER_TAG = "user";
+const PROJECT_TAG = "project";
+const PROJECT_VAULT_TAG = "project-vault";
+const TREASURY_VAULT_TAG = "treasury-vault";
+const USER_PROJECT_TOKEN_TAG = "user-project-token";
+
+const stakingProgramId = STAKE_TIERS_PROGRAM_ID
+
+const stakingPoolId = STAKE_TIERS_POOL_ID
+
+
 function getNumber (num: number) {
   return new BN(num * 10 ** 9)
 }
@@ -21,8 +33,8 @@ const defaultAccounts = {
 }
 
 import launchpad_idl from '@/utils/crp-launchpad-idl.json'
-import { Account, Connection} from '@solana/web3.js';
-import { LAUNCHPAD_PROGRAM_ID } from './ids';
+import { Account, Connection, SYSVAR_RENT_PUBKEY} from '@solana/web3.js';
+import { LAUNCHPAD_PROGRAM_ID, STAKE_TIERS_POOL_ID, STAKE_TIERS_PROGRAM_ID } from './ids';
 import moment from 'moment';
 import { sendTransaction } from './web3';
 let LaunchpadProgram:any = null
@@ -63,30 +75,38 @@ export async function createLaunchpad(
   connection:Connection,
   wallet: any,
 ) {
-  const transaction = new Transaction()
-  const signers: Account[] = []
-
-  const [launchpad, launchpadBump] = await anchor.web3.PublicKey.findProgramAddress(
-    [utf8.encode('launchpad')],
-    LaunchpadProgram.programId
-  );
-
-  const treasury = new Keypair()
-
-  transaction.add(
-    LaunchpadProgram.instruction.createLaunchpad(launchpadBump, 
+  const maxXcrpTier0 = new anchor.BN(199);
+  const maxXcrpTier1 = new anchor.BN(1999);
+  const maxXcrpTier2 = new anchor.BN(9999);
+  const maxXcrpTier3 = new anchor.BN(19999);
+  const maxXcrpTier4 = new anchor.BN(99999);
+  const [globalStateKey] = 
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(LAUNCHPAD_TAG)],
+        LaunchpadProgram.programId,
+      );
+  console.log("LaunchpadProgram.programId", LaunchpadProgram.programId.toBase58())
+  let txHash = await LaunchpadProgram.rpc.setLaunchpad(
+    maxXcrpTier0,
+    maxXcrpTier1,
+    maxXcrpTier2,
+    maxXcrpTier3,
+    maxXcrpTier4,
     {
       accounts: {
-        launchpad,
         authority: wallet.publicKey,
-        treasury: treasury.publicKey,
-        ...defaultAccounts
-      }
-    })
-  )
-
-  // const stateInfo = await StakingProgram.account.stateAccount.fetch(stateSigner)
-  return await sendTransaction(connection, wallet, transaction, signers)
+        launchpad: globalStateKey,
+        treasury: wallet.publicKey,
+        stakingProgramId: stakingProgramId,
+        stakingPoolId: stakingPoolId,
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
 }
 
 export async function getLaunchpad(){
@@ -101,30 +121,6 @@ export async function getLaunchpad(){
   return null
 }
 
-export async function updateLaunchpad(
-  connection:Connection,
-  wallet: any,
-) {
-  const transaction = new Transaction()
-  const signers: Account[] = []
-
-  const launchpadAddress = await getLaunchpadAddress();
-  const treasury = new Keypair()
-
-  transaction.add(
-    LaunchpadProgram.instruction.createLaunchpad( 
-    {
-      accounts: {
-        launchpad: launchpadAddress,
-        authority: wallet.publicKey,
-        treasury: treasury.publicKey,
-        ...defaultAccounts
-      }
-    })
-  )
-  return await sendTransaction(connection, wallet, transaction, signers)
-
-}
 
 export async function getProject(mint: string){
   const projectAddress = await getProjectAddress(new PublicKey(mint));
@@ -164,11 +160,8 @@ export async function getProjectFormatted(mint: string){
     }
   }
   catch{
-
   }
-
   return {}
-
 }
 
 const datetime_format = 'YYYY-MM-DD HH:mm:ss'
@@ -232,18 +225,10 @@ export async function saveProject(
   firstLiberation: any,
 )
 {
-  const transaction = new Transaction()
-  const signers: Account[] = []
-
-  const launchpadAddress = await getLaunchpadAddress();
-  
-  const [projectAddress, bump] = await anchor.web3.PublicKey.findProgramAddress(
-    [utf8.encode('project'), new PublicKey(projectMint).toBuffer() ],
+  const [projectAddress] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(PROJECT_TAG), new PublicKey(projectMint).toBuffer() ],
     LaunchpadProgram.programId
   );
-
-
-  const project = await getProject(projectMint);
   const paramFormatted = await formatProjectParams(  
     prepareDate,
     whiltelistStartDate,
@@ -258,40 +243,19 @@ export async function saveProject(
     poolSize,
     firstLiberation,
   );
-
-  if(!project){
-    transaction.add(
-      LaunchpadProgram.instruction.createProject(
-        bump,
-        ...paramFormatted,
-      {
-        accounts: {
-          launchpad: launchpadAddress,
-          project: projectAddress,
-          authority: wallet.publicKey,
-          projectMint,
-          priceTokenMint: new PublicKey(priceTokenMint),
-          ...defaultAccounts
-        }
-      })
-    )
-  }
-  else
-  {
-    transaction.add(
-      LaunchpadProgram.instruction.updateProject(
-        ...paramFormatted,
-      {
-        accounts: {
-          launchpad: launchpadAddress,
-          project: projectAddress,
-          authority: wallet.publicKey,
-          priceTokenMint: new PublicKey(priceTokenMint),
-          ...defaultAccounts
-        }
-      })
-    )
-  }
-
-  return await sendTransaction(connection, wallet, transaction, signers)
+  let txHash = await LaunchpadProgram.rpc.setProject(
+    ...paramFormatted,
+    {
+      accounts: {
+        authority: wallet.publicKey,
+        project: projectAddress,
+        projectMint: projectMint,
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
 }

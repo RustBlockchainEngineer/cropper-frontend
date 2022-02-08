@@ -3,11 +3,26 @@
   "name": "launchpad",
   "instructions": [
     {
-      "name": "createLaunchpad",
+      "name": "setLaunchpad",
       "accounts": [
         {
           "name": "launchpad",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasury",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "stakingProgramId",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "stakingPoolId",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -16,61 +31,46 @@
           "isSigner": true
         },
         {
-          "name": "treasury",
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "systemProgram",
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "bump",
-          "type": "u8"
+          "name": "maxXcrpTier0",
+          "type": "u64"
+        },
+        {
+          "name": "maxXcrpTier1",
+          "type": "u64"
+        },
+        {
+          "name": "maxXcrpTier2",
+          "type": "u64"
+        },
+        {
+          "name": "maxXcrpTier3",
+          "type": "u64"
+        },
+        {
+          "name": "maxXcrpTier4",
+          "type": "u64"
         }
       ]
     },
     {
-      "name": "updateLaunchpad",
+      "name": "setProject",
       "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "treasury",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "createProject",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": true,
-          "isSigner": false
-        },
         {
           "name": "project",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
         },
         {
           "name": "projectMint",
@@ -78,50 +78,69 @@
           "isSigner": false
         },
         {
-          "name": "priceTokenMint",
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "systemProgram",
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "bump",
-          "type": "u8"
-        },
-        {
           "name": "prepareDate",
-          "type": "i64"
+          "type": "u64"
         },
         {
           "name": "wlStartDate",
-          "type": "i64"
+          "type": "u64"
         },
         {
           "name": "wlEndDate",
-          "type": "i64"
+          "type": "u64"
         },
         {
           "name": "saleStartDate",
-          "type": "i64"
+          "type": "u64"
         },
         {
           "name": "saleEndDate",
-          "type": "i64"
+          "type": "u64"
         },
         {
           "name": "distributionDate",
-          "type": "i64"
+          "type": "u64"
         },
         {
-          "name": "maxAlloc",
-          "type": {
-            "vec": "u64"
-          }
+          "name": "maxAllocTier0",
+          "type": "u64"
+        },
+        {
+          "name": "maxAllocTier1",
+          "type": "u64"
+        },
+        {
+          "name": "maxAllocTier2",
+          "type": "u64"
+        },
+        {
+          "name": "maxAllocTier3",
+          "type": "u64"
+        },
+        {
+          "name": "maxAllocTier4",
+          "type": "u64"
+        },
+        {
+          "name": "maxAllocTier5",
+          "type": "u64"
         },
         {
           "name": "tokenPrice",
@@ -133,12 +152,53 @@
         },
         {
           "name": "firstLiberation",
-          "type": "u8"
+          "type": "u64"
         }
       ]
     },
     {
-      "name": "updateProject",
+      "name": "registerUser",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "projectMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userProjectToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "setSaleToken",
       "accounts": [
         {
           "name": "launchpad",
@@ -151,71 +211,63 @@
           "isSigner": false
         },
         {
+          "name": "saleMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "treasuryVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "authority",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "priceTokenMint",
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "systemProgram",
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "prepareDate",
-          "type": "i64"
-        },
-        {
-          "name": "wlStartDate",
-          "type": "i64"
-        },
-        {
-          "name": "wlEndDate",
-          "type": "i64"
-        },
-        {
-          "name": "saleStartDate",
-          "type": "i64"
-        },
-        {
-          "name": "saleEndDate",
-          "type": "i64"
-        },
-        {
-          "name": "distributionDate",
-          "type": "i64"
-        },
-        {
-          "name": "maxAlloc",
-          "type": {
-            "vec": "u64"
-          }
-        },
-        {
-          "name": "tokenPrice",
-          "type": "u64"
-        },
-        {
-          "name": "poolSize",
-          "type": "u64"
-        },
-        {
-          "name": "firstLiberation",
-          "type": "u8"
-        }
-      ]
+      "args": []
     },
     {
-      "name": "createUser",
+      "name": "depositProjectToken",
       "accounts": [
         {
-          "name": "user",
+          "name": "project",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "projectMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "projectVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userVault",
           "isMut": true,
           "isSigner": false
         },
@@ -228,17 +280,73 @@
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "bump",
-          "type": "u8"
+          "name": "amount",
+          "type": "u64"
         }
       ]
     },
     {
-      "name": "setMaxAllocation",
+      "name": "withdrawProjectToken",
+      "accounts": [
+        {
+          "name": "project",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "projectVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claimProjectToken",
       "accounts": [
         {
           "name": "launchpad",
@@ -246,7 +354,68 @@
           "isSigner": false
         },
         {
+          "name": "project",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "projectVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingUser",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "pay",
+      "accounts": [
+        {
+          "name": "project",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasuryVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userVault",
           "isMut": true,
           "isSigner": false
         },
@@ -256,14 +425,14 @@
           "isSigner": true
         },
         {
-          "name": "systemProgram",
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "maxAlloc",
+          "name": "amount",
           "type": "u64"
         }
       ]
@@ -271,7 +440,7 @@
   ],
   "accounts": [
     {
-      "name": "LaunchpadAccount",
+      "name": "FarmPoolUserAccount",
       "type": {
         "kind": "struct",
         "fields": [
@@ -280,12 +449,92 @@
             "type": "u8"
           },
           {
+            "name": "pool",
+            "type": "publicKey"
+          },
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "rewardAmount",
+            "type": "u128"
+          },
+          {
+            "name": "extraReward",
+            "type": "u128"
+          },
+          {
+            "name": "rewardDebt",
+            "type": "u128"
+          },
+          {
+            "name": "lastStakeTime",
+            "type": "i64"
+          },
+          {
+            "name": "lockDuration",
+            "type": "i64"
+          },
+          {
+            "name": "reserved1",
+            "type": "u128"
+          },
+          {
+            "name": "reserved2",
+            "type": "u128"
+          },
+          {
+            "name": "reserved3",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LaunchpadAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
             "name": "authority",
             "type": "publicKey"
           },
           {
             "name": "treasury",
             "type": "publicKey"
+          },
+          {
+            "name": "stakingProgramId",
+            "type": "publicKey"
+          },
+          {
+            "name": "stakingPoolId",
+            "type": "publicKey"
+          },
+          {
+            "name": "maxXcrpTier0",
+            "type": "u64"
+          },
+          {
+            "name": "maxXcrpTier1",
+            "type": "u64"
+          },
+          {
+            "name": "maxXcrpTier2",
+            "type": "u64"
+          },
+          {
+            "name": "maxXcrpTier3",
+            "type": "u64"
+          },
+          {
+            "name": "maxXcrpTier4",
+            "type": "u64"
           }
         ]
       }
@@ -295,10 +544,6 @@
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "bump",
-            "type": "u8"
-          },
           {
             "name": "authority",
             "type": "publicKey"
@@ -317,27 +562,27 @@
           },
           {
             "name": "prepareDate",
-            "type": "i64"
+            "type": "u64"
           },
           {
             "name": "wlStartDate",
-            "type": "i64"
+            "type": "u64"
           },
           {
             "name": "wlEndDate",
-            "type": "i64"
+            "type": "u64"
           },
           {
             "name": "saleStartDate",
-            "type": "i64"
+            "type": "u64"
           },
           {
             "name": "saleEndDate",
-            "type": "i64"
+            "type": "u64"
           },
           {
             "name": "distributionDate",
-            "type": "i64"
+            "type": "u64"
           },
           {
             "name": "maxAllocTier0",
@@ -372,12 +617,8 @@
             "type": "u64"
           },
           {
-            "name": "priceTokenMint",
-            "type": "publicKey"
-          },
-          {
             "name": "firstLiberation",
-            "type": "u8"
+            "type": "u64"
           }
         ]
       }
@@ -388,15 +629,27 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
             "name": "authority",
             "type": "publicKey"
           },
           {
             "name": "maxAllocation",
+            "type": "u64"
+          },
+          {
+            "name": "projectMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "userProjectToken",
+            "type": "publicKey"
+          },
+          {
+            "name": "paidAmount",
+            "type": "u64"
+          },
+          {
+            "name": "claimedAmount",
             "type": "u64"
           }
         ]
@@ -428,6 +681,19 @@
       "code": 6002,
       "name": "InvalidTierCount",
       "msg": "Invalid Tier Count"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidAddress",
+      "msg": "Invalid address"
+    },
+    {
+      "code": 6004,
+      "name": "NotAllowed",
+      "msg": "not allowed"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "5WXuqs97CUeYriYhHsQMqLpuA1PAgBPVZP92c9kkMnxb"
+  }
 }
