@@ -995,6 +995,7 @@ export default Vue.extend({
         win: false as boolean,
         subscribe: false as boolean
       },
+      referal : '' as string,
       socialTicket: {
         telegram: 0 as number,
         twitter: 0 as number
@@ -1040,19 +1041,17 @@ export default Vue.extend({
         this.loadDatas()
       },
       deep: true
-    },
-
-    'wallet': {
-      handler(newTokenAccounts: any) {
-        this.loadDatas()
-      },
-      deep: true
     }
   },
 
   mounted() {
     setAnchorProvider(this.$web3, this.$wallet)
     getLaunchpad()
+
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('r')) {
+      this.referal = query.get('r') as string
+    }
 
     //@ts-ignore
     this.fertilizer.mint = this.project.mint;
@@ -1141,14 +1140,22 @@ export default Vue.extend({
 
       let res = await subscribeToWhitelist(this.$web3, this.$wallet);
       if (res.success) {
-        let requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+
+        let body = {
             spl: this.wallet.address,
             mint: this.fertilizer.mint,
             tx_id_register: res.txId
-          })
+          };
+
+        if(this.referal){
+          //@ts-ignore
+          body.referer = this.referal
+        }
+
+        let requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
         }
         await fetch('https://flow.cropper.finance/registers/', requestOptions)
 
