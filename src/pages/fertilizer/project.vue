@@ -282,7 +282,7 @@
 
             </div>
 
-
+            <button @click="save" @disabled="!$wallet || $wallet.publicKey">Save</button>
             
             <h4>Allocation infos - (<b>{{ (
               (
@@ -398,7 +398,7 @@
 
 
 
-        <button @click="save" @disabled="!$wallet || $wallet.publicKey">Save</button>
+        <button @click="setAllocation" @disabled="!$wallet || $wallet.publicKey">Set Allocation</button>
 
 
 
@@ -432,7 +432,7 @@ import moment from 'moment'
 import axios from '@nuxtjs/axios'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
-import {setAnchorProvider, saveProject, createLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
+import {setAnchorProvider, saveProject, createLaunchpad, getProjectFormatted, setMaxAllocation} from '@/utils/crp-launchpad'
 import {Keypair} from '@solana/web3.js'
 const Vco = require('v-click-outside')
 Vue.use(Vco)
@@ -811,12 +811,29 @@ export default Vue.extend({
         this.scValues.date_sale_end,
         this.scValues.date_distribution,
 
-        [0,1,2,3,4,5],
+        // [0,1,2,3,4,5],
 
         this.scValues.token_price,
         this.scValues.pool_size,
         this.scValues.first_liberation,
 
+      );
+    },
+    setAllocation() {
+
+
+      
+      setMaxAllocation(
+        this.$web3,
+        this.$wallet,
+        
+        this.mint,
+        this.scValues.tier0,
+        this.scValues.tier1,
+        this.scValues.tier2,
+        this.scValues.tier3,
+        this.scValues.tier4,
+        this.scValues.tier5,
       );
     }
   }
