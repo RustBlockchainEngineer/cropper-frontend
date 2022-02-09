@@ -908,6 +908,8 @@ import {
   claimTokens } from '@/utils/crp-launchpad'
 import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
 import moment from 'moment'
+import { PublicKey } from '@solana/web3.js'
+import { get } from 'lodash-es'
 const Countdown = Statistic.Countdown
 const Step = Steps.Step
 const TEST_TIME = 1643356116915
@@ -1079,7 +1081,7 @@ export default Vue.extend({
     },
 
     async onClaimTokens() {
-      let res = await claimTokens(this.$web3, this.$wallet);
+      let res = await claimTokens(this.$web3, this.$wallet, new PublicKey(this.fertilizer.mint));
       if (res.success) {
           this.$notify.success({
           message: `Claim Succeed. ${res.amount} received`,
@@ -1094,7 +1096,17 @@ export default Vue.extend({
     },
 
     async onClickBuyNow() {
-      let res = await buyTokens(this.$web3, this.$wallet, this.buyAmount > this.maxAmount ? this.maxAmount : this.buyAmount);
+      const priceTokenAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.fertilizer.price_token_mint}.tokenAccountAddress`
+      )
+      let res = await buyTokens(
+        this.$web3, 
+        this.$wallet, 
+        new PublicKey(this.fertilizer.price_token_mint), 
+        new PublicKey(priceTokenAccount), 
+        this.buyAmount > this.maxAmount ? this.maxAmount : this.buyAmount
+      );
       if (res.success) {
           this.$notify.success({
           message: 'Buy Succeed',
@@ -1138,7 +1150,9 @@ export default Vue.extend({
               break;
       */
 
-      let res = await subscribeToWhitelist(this.$web3, this.$wallet);
+     // for current tier, we can calculate in here
+
+      let res = await subscribeToWhitelist(this.$web3, this.$wallet, new PublicKey(this.fertilizer.mint));
       if (res.success) {
 
         let body = {

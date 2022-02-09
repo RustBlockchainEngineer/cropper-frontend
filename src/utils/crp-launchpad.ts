@@ -147,7 +147,7 @@ export async function getProjectFormatted(mint: string){
       token_price: data.tokenPrice.toString() / PRICE_PRECISION,
       pool_size: data.poolSize.toString(),
       first_liberation: data.firstLiberation.toString(),
-      price_token_mint: data.priceTokenMint.toString(),
+      price_token_mint: data.saleMint.toString(),
       
       max_allocation:  [ 
         new Number(data.maxAllocTier0.toString()), 
