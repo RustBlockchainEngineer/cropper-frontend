@@ -147,7 +147,9 @@ export async function getProjectFormatted(mint: string){
       token_price: data.tokenPrice.toString() / PRICE_PRECISION,
       pool_size: data.poolSize.toString(),
       first_liberation: data.firstLiberation.toString(),
-      price_token_mint: data.priceTokenMint.toString(),
+      project_token_mint: data.projectMint.toString(),
+      project_token_vault: data.projectVault.toString(),
+      price_token_mint: data.saleMint.toString(),
       
       max_allocation:  [ 
         new Number(data.maxAllocTier0.toString()), 
@@ -209,7 +211,7 @@ export async function saveProject(
   wallet: any,
 
   projectMint: string,
-  priceTokenMint: string,
+  saleTokenMint: string,
 
   prepareDate: any,
   whiltelistStartDate: any,
