@@ -68,6 +68,11 @@
       "name": "setProject",
       "accounts": [
         {
+          "name": "launchpad",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "project",
           "isMut": true,
           "isSigner": false
@@ -78,12 +83,32 @@
           "isSigner": false
         },
         {
+          "name": "saleMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasuryVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "authority",
           "isMut": true,
           "isSigner": true
         },
         {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -119,6 +144,35 @@
           "type": "u64"
         },
         {
+          "name": "tokenPrice",
+          "type": "u64"
+        },
+        {
+          "name": "poolSize",
+          "type": "u64"
+        },
+        {
+          "name": "firstLiberation",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "setMaxAllocation",
+      "accounts": [
+        {
+          "name": "project",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
           "name": "maxAllocTier0",
           "type": "u64"
         },
@@ -141,18 +195,6 @@
         {
           "name": "maxAllocTier5",
           "type": "u64"
-        },
-        {
-          "name": "tokenPrice",
-          "type": "u64"
-        },
-        {
-          "name": "poolSize",
-          "type": "u64"
-        },
-        {
-          "name": "firstLiberation",
-          "type": "u64"
         }
       ]
     },
@@ -171,57 +213,6 @@
         },
         {
           "name": "userProjectToken",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "setSaleToken",
-      "accounts": [
-        {
-          "name": "launchpad",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "project",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "saleMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "treasuryVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "treasury",
           "isMut": true,
           "isSigner": false
         },
@@ -692,8 +683,5 @@
       "name": "NotAllowed",
       "msg": "not allowed"
     }
-  ],
-  "metadata": {
-    "address": "5WXuqs97CUeYriYhHsQMqLpuA1PAgBPVZP92c9kkMnxb"
-  }
+  ]
 }

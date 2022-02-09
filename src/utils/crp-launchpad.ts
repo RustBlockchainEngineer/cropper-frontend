@@ -182,7 +182,7 @@ function formatProjectParams(
   saleEndDate: any,
   distributionDate: any,
   
-  max_allocs: any[],
+  // max_allocs: any[],
 
   tokenPrice: any,
   poolSize: any,
@@ -196,7 +196,7 @@ function formatProjectParams(
     str2time(saleEndDate),
     str2time(distributionDate),
     
-    max_allocs.map(function(ele){ return new BN(ele)}),
+    // max_allocs.map(function(ele){ return new BN(ele)}),
     
     new BN(Math.ceil(tokenPrice * PRICE_PRECISION)),
     new BN(poolSize),
@@ -218,17 +218,28 @@ export async function saveProject(
   saleEndDate: any,
   distributionDate: any,
   
-  max_allocs: any[],
-
   tokenPrice: any,
   poolSize: any,
   firstLiberation: any,
 )
 {
+  const [launchpadKey] = 
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(LAUNCHPAD_TAG)],
+        LaunchpadProgram.programId,
+      );
   const [projectAddress] = await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from(PROJECT_TAG), new PublicKey(projectMint).toBuffer() ],
     LaunchpadProgram.programId
   );
+  const launchpadData = await LaunchpadProgram.account.launchpadAccount.fetch(launchpadKey);
+  const treasury = launchpadData.treasury;
+
+  const [treasuryVault] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(TREASURY_VAULT_TAG), projectAddress.toBuffer()],
+      LaunchpadProgram.programId,
+    );
   const paramFormatted = await formatProjectParams(  
     prepareDate,
     whiltelistStartDate,
@@ -237,8 +248,6 @@ export async function saveProject(
     saleEndDate,
     distributionDate,
     
-    max_allocs,
-  
     tokenPrice,
     poolSize,
     firstLiberation,
@@ -248,9 +257,14 @@ export async function saveProject(
     {
       accounts: {
         authority: wallet.publicKey,
+        launchpad: launchpadKey,
         project: projectAddress,
-        projectMint: projectMint,
+        projectMint: new PublicKey(projectMint),
+        saleMint: new PublicKey(priceTokenMint),
+        treasury,
+        treasuryVault,
         systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
         rent: SYSVAR_RENT_PUBKEY,
       },
     }
@@ -260,56 +274,42 @@ export async function saveProject(
   console.log("txHash =", txHash);
 }
 
-export async function setSaleToken(
+
+export async function setMaxAllocation(
   connection:Connection,
   wallet: any,
-  projectMint: PublicKey,
-  saleMint: PublicKey,
-) {
-  const [launchpadKey] = 
-      await anchor.web3.PublicKey.findProgramAddress(
-        [Buffer.from(LAUNCHPAD_TAG)],
-        LaunchpadProgram.programId,
-      );
-    const [projectKey] = 
-      await anchor.web3.PublicKey.findProgramAddress(
-        [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
-        LaunchpadProgram.programId,
-      );
-    const launchpadData = await LaunchpadProgram.account.launchpadAccount.fetch(launchpadKey);
-    const treasury = launchpadData.treasury;
 
-    const [treasuryVault] = 
-      await anchor.web3.PublicKey.findProgramAddress(
-        [Buffer.from(TREASURY_VAULT_TAG), projectKey.toBuffer()],
-        LaunchpadProgram.programId,
-      );
-  let txHash = await LaunchpadProgram.rpc.setSaleToken(
+  projectMint: string,
+
+  maxAllocTier0: any,
+  maxAllocTier1: any,
+  maxAllocTier2: any,
+  maxAllocTier3: any,
+  maxAllocTier4: any,
+  maxAllocTier5: any,
+)
+{
+  const [projectAddress] = await anchor.web3.PublicKey.findProgramAddress(
+    [Buffer.from(PROJECT_TAG), new PublicKey(projectMint).toBuffer() ],
+    LaunchpadProgram.programId
+  );
+  let txHash = await LaunchpadProgram.rpc.setMaxAllocation(
+    maxAllocTier0,
+    maxAllocTier1,
+    maxAllocTier2,
+    maxAllocTier3,
+    maxAllocTier4,
+    maxAllocTier5,
     {
       accounts: {
-        launchpad: launchpadKey,
-        treasuryVault,
-        treasury,
         authority: wallet.publicKey,
-        project: projectKey,
-        saleMint: saleMint,
-
-        systemProgram: SystemProgram.programId,
-        rent: SYSVAR_RENT_PUBKEY,
-        tokenProgram: TOKEN_PROGRAM_ID
+        project: projectAddress,
       },
     }
   ).catch((e:any) => {
     console.log("e =", e);
   });
   console.log("txHash =", txHash);
-
-  return {
-    amount:0,
-    success: true,
-    txId:txHash,
-    hash:""
-  }
 }
 
 export async function depositProjectToken(
