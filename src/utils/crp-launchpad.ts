@@ -6,7 +6,7 @@ import * as serumCmn from "@project-serum/common";
 
 import { TOKEN_PROGRAM_ID, Token, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 const { BN, web3, Program, Provider } = anchor
-const { PublicKey, SystemProgram, Keypair, Transaction } = web3
+const { SystemProgram, Keypair, Transaction } = web3
 const utf8 = anchor.utils.bytes.utf8;
 
 const LAUNCHPAD_TAG = "launchpad";
@@ -16,9 +16,9 @@ const PROJECT_VAULT_TAG = "project-vault";
 const TREASURY_VAULT_TAG = "treasury-vault";
 const USER_PROJECT_TOKEN_TAG = "user-project-token";
 
-const stakingProgramId = STAKE_TIERS_PROGRAM_ID
+const stakingProgramId = new PublicKey(STAKE_TIERS_PROGRAM_ID)
 
-const stakingPoolId = STAKE_TIERS_POOL_ID
+const stakingPoolId = new PublicKey(STAKE_TIERS_POOL_ID)
 
 
 function getNumber (num: number) {
@@ -33,7 +33,7 @@ const defaultAccounts = {
 }
 
 import launchpad_idl from '@/utils/crp-launchpad-idl.json'
-import { Account, Connection, SYSVAR_RENT_PUBKEY} from '@solana/web3.js';
+import { Connection, PublicKey, SYSVAR_CLOCK_PUBKEY, SYSVAR_RENT_PUBKEY} from '@solana/web3.js';
 import { LAUNCHPAD_PROGRAM_ID, STAKE_TIERS_POOL_ID, STAKE_TIERS_PROGRAM_ID } from './ids';
 import moment from 'moment';
 import { sendTransaction } from './web3';
@@ -258,4 +258,297 @@ export async function saveProject(
     console.log("e =", e);
   });
   console.log("txHash =", txHash);
+}
+
+export async function setSaleToken(
+  connection:Connection,
+  wallet: any,
+  projectMint: PublicKey,
+  saleMint: PublicKey,
+) {
+  const [launchpadKey] = 
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(LAUNCHPAD_TAG)],
+        LaunchpadProgram.programId,
+      );
+    const [projectKey] = 
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
+        LaunchpadProgram.programId,
+      );
+    const launchpadData = await LaunchpadProgram.account.launchpadAccount.fetch(launchpadKey);
+    const treasury = launchpadData.treasury;
+
+    const [treasuryVault] = 
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(TREASURY_VAULT_TAG), projectKey.toBuffer()],
+        LaunchpadProgram.programId,
+      );
+  let txHash = await LaunchpadProgram.rpc.setSaleToken(
+    {
+      accounts: {
+        launchpad: launchpadKey,
+        treasuryVault,
+        treasury,
+        authority: wallet.publicKey,
+        project: projectKey,
+        saleMint: saleMint,
+
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+        tokenProgram: TOKEN_PROGRAM_ID
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
+
+  return {
+    amount:0,
+    success: true,
+    txId:txHash,
+    hash:""
+  }
+}
+
+export async function depositProjectToken(
+  connection:Connection,
+  wallet: any,
+  projectMint: PublicKey,
+  userVault: PublicKey,
+  amount:any
+) {
+  const [projectKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [projectVaultKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_VAULT_TAG), projectKey.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const depositAmount = new anchor.BN(amount)
+
+  let txHash = await LaunchpadProgram.rpc.depositProjectToken(
+    depositAmount,
+    {
+      accounts: {
+        project: projectKey,
+        projectMint: projectMint,
+        projectVault: projectVaultKey,
+        userVault: userVault,
+        authority: wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
+  return {
+    amount:amount,
+    success: true,
+    txId:txHash,
+    hash:""
+  }
+}
+
+export async function withdrawProjectToken(
+  connection:Connection,
+  wallet: any,
+  projectMint: PublicKey,
+  userVault: PublicKey,
+  amount:any
+) {
+  const [projectKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [projectVaultKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_VAULT_TAG), projectKey.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const withdrawAmount = new anchor.BN(amount)
+  
+  let txHash = await LaunchpadProgram.rpc.withdrawProjectToken(
+    withdrawAmount,
+    {
+      accounts: {
+        project: projectKey,
+        projectVault: projectVaultKey,
+        userVault: userVault,
+        authority: wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
+  return {
+    amount:amount,
+    success: true,
+    txId:txHash,
+    hash:""
+  }
+}
+export async function subscribeToWhitelist(
+  connection:Connection,
+  wallet: any,
+  projectMint: PublicKey,
+) {
+  const [userKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(USER_TAG), wallet.publicKey.toBuffer(), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [userProjectToken] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(USER_PROJECT_TOKEN_TAG), wallet.publicKey.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  let txHash = await LaunchpadProgram.rpc.registerUser(
+    {
+      accounts: {
+        authority: wallet.publicKey,
+        user: userKey,
+        projectMint: projectMint,
+        userProjectToken,
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
+  return {
+    amount:0,
+    success: true,
+    txId:txHash,
+    hash:""
+  }
+}
+
+export async function buyTokens(
+  connection:Connection,
+  wallet: any,
+  projectMint: PublicKey,
+  userSaleTokenAccount: PublicKey,
+  amount:any
+) {
+  const payableAmount = new anchor.BN(amount)
+  const [launchpadKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(LAUNCHPAD_TAG)],
+      LaunchpadProgram.programId,
+    );
+  const [projectKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [userKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(USER_TAG), wallet.publicKey.toBuffer(), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [treasuryVault] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(TREASURY_VAULT_TAG), projectKey.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  
+  let txHash = await LaunchpadProgram.rpc.pay(
+    payableAmount,
+    {
+      accounts: {
+        project: projectKey,
+        user: userKey,
+        treasuryVault,
+        userVault: userSaleTokenAccount,
+        authority: wallet.publicKey,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
+  return {
+    amount:0,
+    success: true,
+    txId:txHash,
+    hash:""
+  }
+}
+
+export async function claimTokens(
+  connection:Connection,
+  wallet: any,
+  projectMint: PublicKey
+) {
+  const [launchpadKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(LAUNCHPAD_TAG)],
+      LaunchpadProgram.programId,
+    );
+  const [projectKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [projectVaultKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_VAULT_TAG), projectKey.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [userKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(USER_TAG), wallet.publicKey.toBuffer(), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [userProjectToken] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(USER_PROJECT_TOKEN_TAG), wallet.publicKey.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [stakingUserKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [stakingPoolId.toBuffer(), wallet.publicKey.toBuffer()],
+      stakingProgramId,
+    );
+  let txHash = await LaunchpadProgram.rpc.claimProjectToken(
+    {
+      accounts: {
+        launchpad: launchpadKey,
+        project: projectKey,
+        user: userKey,
+        projectVault: projectVaultKey,
+        userVault: userProjectToken,
+        stakingUser: stakingUserKey,
+        authority: wallet.publicKey,
+        clock: SYSVAR_CLOCK_PUBKEY,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
+  return {
+    amount:0,
+    success: true,
+    txId:txHash,
+    hash:""
+  }
 }
