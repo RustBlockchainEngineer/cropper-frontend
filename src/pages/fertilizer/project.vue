@@ -572,8 +572,9 @@ export default Vue.extend({
       } finally {
         this.apiValues = responseData.message
         console.log(this.apiValues);
-
-        this.apiValues.ticketsCount = this.apiValues.lottery_done
+        if(this.apiValues){
+          this.apiValues.ticketsCount = this.apiValues.lottery_done
+        }
       }
 
       try {
@@ -593,7 +594,7 @@ export default Vue.extend({
 
     }
 
-    if(!this.apiValues.ticketsCount){
+    if(this.apiValues && !this.apiValues.ticketsCount){
       this.apiValues.ticketsCount = 0;
     }
 
@@ -702,8 +703,6 @@ export default Vue.extend({
 
 
     async create() {
-      alert("here")
-      return;
 
       await this.delay(1000);
 
@@ -721,6 +720,8 @@ export default Vue.extend({
         if (error) throw new Error(error);
       });
       
+      alert(this.mint);
+
       this.$router.push({
         path: '/fertilizer/project/?mint=' + this.mint
       })
