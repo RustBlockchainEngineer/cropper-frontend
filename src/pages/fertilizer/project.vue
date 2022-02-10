@@ -400,8 +400,12 @@
 
         <button @click="setAllocation" @disabled="!$wallet || $wallet.publicKey">Set Allocation</button>
 
-
-
+        <label>
+          <div>Deposit & Wihdraw : </div>
+          <input style="color:#000;font-weight:bold"  @input="refr" type="text" class="tier" id="projectTokenAmount" name="projectTokenAmount" v-model="projectTokenAmount" />
+        </label>
+        <button @click="depositProjectToken" @disabled="!$wallet || $wallet.publicKey">Deposit</button>
+        <button @click="withdrawProjectToken" @disabled="!$wallet || $wallet.publicKey">Withdraw</button>
 
         </div>
 
@@ -432,8 +436,8 @@ import moment from 'moment'
 import axios from '@nuxtjs/axios'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
-import {setAnchorProvider, saveProject, createLaunchpad, getProjectFormatted, setMaxAllocation} from '@/utils/crp-launchpad'
-import {Keypair} from '@solana/web3.js'
+import {setAnchorProvider, saveProject, createLaunchpad, getProjectFormatted, setMaxAllocation, depositProjectToken, withdrawProjectToken} from '@/utils/crp-launchpad'
+import {Keypair, PublicKey} from '@solana/web3.js'
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
@@ -462,6 +466,7 @@ export default Vue.extend({
       currentPage: 1,
       coinName: '',
       mintAddress: '',
+      projectTokenAmount: 0, 
       scValues: {
       } as any,
       apiValues: {
@@ -835,6 +840,38 @@ export default Vue.extend({
         this.scValues.tier4,
         this.scValues.tier5,
       );
+    },
+    depositProjectToken() {
+      const projectTokenAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.mint}.tokenAccountAddress`
+      );
+      if (!projectTokenAccount) {
+        alert("you don't have project token")
+      }
+      depositProjectToken(
+        this.$web3,
+        this.$wallet,
+        new PublicKey(this.mint),
+        new PublicKey(projectTokenAccount),
+        this.projectTokenAmount
+      )
+    },
+    withdrawProjectToken() {
+      const projectTokenAccount = get(
+        this.wallet.tokenAccounts,
+        `${this.mint}.tokenAccountAddress`
+      );
+      if (!projectTokenAccount) {
+        alert("you don't have project token account")
+      }
+      withdrawProjectToken(
+        this.$web3,
+        this.$wallet,
+        new PublicKey(this.mint),
+        new PublicKey(projectTokenAccount),
+        this.projectTokenAmount
+      )
     }
   }
 })

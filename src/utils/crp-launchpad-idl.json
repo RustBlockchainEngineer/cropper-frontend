@@ -202,6 +202,11 @@
       "name": "registerUser",
       "accounts": [
         {
+          "name": "project",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "user",
           "isMut": true,
           "isSigner": false
@@ -227,12 +232,17 @@
           "isSigner": false
         },
         {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "rent",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "tokenProgram",
+          "name": "clock",
           "isMut": false,
           "isSigner": false
         }
