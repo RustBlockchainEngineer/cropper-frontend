@@ -405,6 +405,11 @@ export async function subscribeToWhitelist(
   wallet: any,
   projectMint: PublicKey,
 ) {
+  const [projectKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
   const [userKey] = 
     await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(USER_TAG), wallet.publicKey.toBuffer(), projectMint.toBuffer()],
@@ -419,12 +424,14 @@ export async function subscribeToWhitelist(
     {
       accounts: {
         authority: wallet.publicKey,
+        project: projectKey,
         user: userKey,
         projectMint: projectMint,
         userProjectToken,
         systemProgram: SystemProgram.programId,
         rent: SYSVAR_RENT_PUBKEY,
         tokenProgram: TOKEN_PROGRAM_ID,
+        clock: SYSVAR_CLOCK_PUBKEY
       },
     }
   ).catch((e:any) => {
