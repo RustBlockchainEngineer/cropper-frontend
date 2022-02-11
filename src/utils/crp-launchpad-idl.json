@@ -259,7 +259,7 @@
         },
         {
           "name": "projectMint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -693,5 +693,8 @@
       "name": "NotAllowed",
       "msg": "not allowed"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "43Vf5Wt6ei8CV4nNe86XgFsFUPMR2k3hEzjRj7XHvjF7"
+  }
 }
