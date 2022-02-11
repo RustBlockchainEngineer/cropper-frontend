@@ -434,10 +434,11 @@ import { TokenAmount } from '@/utils/safe-math'
 import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import axios from '@nuxtjs/axios'
-import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
+import { Token, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
 import {setAnchorProvider, saveProject, createLaunchpad, getProjectFormatted, setMaxAllocation, depositProjectToken, withdrawProjectToken} from '@/utils/crp-launchpad'
 import {Keypair, PublicKey} from '@solana/web3.js'
+import { LAUNCHPAD_PROGRAM_ID } from '@/utils/ids'
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
@@ -841,7 +842,10 @@ export default Vue.extend({
         this.scValues.tier5,
       );
     },
-    depositProjectToken() {
+    async depositProjectToken() {
+      const projectToken = new Token(this.$web3,new PublicKey(this.mint),new PublicKey(LAUNCHPAD_PROGRAM_ID), this.$wallet as any)
+      const decimals = (await projectToken.getMintInfo()).decimals;
+
       const projectTokenAccount = get(
         this.wallet.tokenAccounts,
         `${this.mint}.tokenAccountAddress`
@@ -849,15 +853,18 @@ export default Vue.extend({
       if (!projectTokenAccount) {
         alert("you don't have project token")
       }
+      const amount = Math.round(this.projectTokenAmount * Math.pow(10, decimals))
       depositProjectToken(
         this.$web3,
         this.$wallet,
         new PublicKey(this.mint),
         new PublicKey(projectTokenAccount),
-        this.projectTokenAmount
+        amount
       )
     },
-    withdrawProjectToken() {
+    async withdrawProjectToken() {
+      const projectToken = new Token(this.$web3,new PublicKey(this.mint),new PublicKey(LAUNCHPAD_PROGRAM_ID), this.$wallet as any)
+      const decimals = (await projectToken.getMintInfo()).decimals;
       const projectTokenAccount = get(
         this.wallet.tokenAccounts,
         `${this.mint}.tokenAccountAddress`
@@ -865,12 +872,13 @@ export default Vue.extend({
       if (!projectTokenAccount) {
         alert("you don't have project token account")
       }
+      const amount = Math.round(this.projectTokenAmount * Math.pow(10, decimals))
       withdrawProjectToken(
         this.$web3,
         this.$wallet,
         new PublicKey(this.mint),
         new PublicKey(projectTokenAccount),
-        this.projectTokenAmount
+        amount
       )
     }
   }
