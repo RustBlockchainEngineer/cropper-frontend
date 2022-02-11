@@ -294,12 +294,12 @@ export async function setMaxAllocation(
     LaunchpadProgram.programId
   );
   let txHash = await LaunchpadProgram.rpc.setMaxAllocation(
-    maxAllocTier0,
-    maxAllocTier1,
-    maxAllocTier2,
-    maxAllocTier3,
-    maxAllocTier4,
-    maxAllocTier5,
+    new anchor.BN(maxAllocTier0),
+    new anchor.BN(maxAllocTier1),
+    new anchor.BN(maxAllocTier2),
+    new anchor.BN(maxAllocTier3),
+    new anchor.BN(maxAllocTier4),
+    new anchor.BN(maxAllocTier5),
     {
       accounts: {
         authority: wallet.publicKey,
