@@ -86,6 +86,7 @@ export async function createLaunchpad(
         LaunchpadProgram.programId,
       );
   console.log("LaunchpadProgram.programId", LaunchpadProgram.programId.toBase58())
+  console.log("globalStateKey", globalStateKey.toString())
   let txHash = await LaunchpadProgram.rpc.setLaunchpad(
     maxXcrpTier0,
     maxXcrpTier1,
@@ -104,6 +105,7 @@ export async function createLaunchpad(
       },
     }
   ).catch((e:any) => {
+    console.log("txHash =", txHash);
     console.log("e =", e);
   });
   console.log("txHash =", txHash);
@@ -223,23 +225,31 @@ export async function saveProject(
   firstLiberation: any,
 )
 {
+  console.log('lp A', LaunchpadProgram.programId.toString());
   const [launchpadKey] = 
       await anchor.web3.PublicKey.findProgramAddress(
         [Buffer.from(LAUNCHPAD_TAG)],
         LaunchpadProgram.programId,
       );
+
+  console.log('lp B', LaunchpadProgram.programId);
   const [projectAddress] = await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from(PROJECT_TAG), new PublicKey(projectMint).toBuffer() ],
     LaunchpadProgram.programId
   );
+  console.log('lp B1', LaunchpadProgram.account.launchpadAccount);
   const launchpadData = await LaunchpadProgram.account.launchpadAccount.fetch(launchpadKey);
+  console.log('lp B2', launchpadData);
   const treasury = launchpadData.treasury;
 
+  console.log('lp C', treasury);
   const [treasuryVault] = 
     await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(TREASURY_VAULT_TAG), projectAddress.toBuffer()],
       LaunchpadProgram.programId,
     );
+
+  console.log('lp D', treasury);
   const paramFormatted = await formatProjectParams(  
     prepareDate,
     whiltelistStartDate,
@@ -252,6 +262,8 @@ export async function saveProject(
     poolSize,
     firstLiberation,
   );
+
+  console.log('lp E', paramFormatted);
   let txHash = await LaunchpadProgram.rpc.setProject(
     ...paramFormatted,
     {
