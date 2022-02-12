@@ -110,7 +110,7 @@
             <label class="half">
               Token Price token : <span v-if="scValues.price_token_mint == '' || scValues.price_token_mint == undefined" class="error">Required</span>
               <select class="std" id="price_token_mint" name="price_token_mint" v-model="scValues.price_token_mint">
-                <option value="6MBRfPbzejwVpADXq3LCotZetje3N16m5Yn7LCs2ffU4">USDC</option>
+                <option value="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v">USDC</option>
                 <option value="11111111111111111111111111111111">SOL</option>
               </select>
             </label>
@@ -843,8 +843,7 @@ export default Vue.extend({
       );
     },
     async depositProjectToken() {
-      const projectToken = new Token(this.$web3,new PublicKey(this.mint),new PublicKey(LAUNCHPAD_PROGRAM_ID), this.$wallet as any)
-      const decimals = (await projectToken.getMintInfo()).decimals;
+      const decimals = 9;
 
       const projectTokenAccount = get(
         this.wallet.tokenAccounts,
@@ -863,8 +862,7 @@ export default Vue.extend({
       )
     },
     async withdrawProjectToken() {
-      const projectToken = new Token(this.$web3,new PublicKey(this.mint),new PublicKey(LAUNCHPAD_PROGRAM_ID), this.$wallet as any)
-      const decimals = (await projectToken.getMintInfo()).decimals;
+      const decimals = 9;
       const projectTokenAccount = get(
         this.wallet.tokenAccounts,
         `${this.mint}.tokenAccountAddress`
