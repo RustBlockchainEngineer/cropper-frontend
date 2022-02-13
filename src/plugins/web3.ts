@@ -8,7 +8,8 @@ import logger from '@/utils/logger'
 import { NuxtApiInstance, Rpc } from '@/types/api'
 
 const createWeb3Instance = (endpoint: string) => {
-  const web3 = new Connection(endpoint, commitment)
+
+  const web3 = new Connection(endpoint, {commitment, confirmTransactionInitialTimeout: 60})
   return web3
 }
 
