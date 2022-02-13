@@ -1153,6 +1153,7 @@ export default Vue.extend({
      // for current tier, we can calculate in here
 
       let res = await subscribeToWhitelist(this.$web3, this.$wallet, new PublicKey(this.fertilizer.mint));
+      console.log(res);
       if (res.success) {
 
         let body = {
