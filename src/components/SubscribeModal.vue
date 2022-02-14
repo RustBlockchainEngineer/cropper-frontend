@@ -1,6 +1,6 @@
 <template>
   <Modal
-    title="Subscribe Whitelist"
+    title="Join Whitelist"
     :visible="show"
     :footer="null"
     :mask-closable="true"
@@ -24,7 +24,7 @@
       <hcaptcha class="text-center" />
       <div class="btn-container">
         <Button class="btn-transparent font-medium weight-semi letter-small icon-cursor" @click="onSubmit"
-          >Subscribe Whitelist</Button
+          >Join Whitelist</Button
         >
       </div>
     </div>
