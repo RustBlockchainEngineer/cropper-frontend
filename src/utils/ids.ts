@@ -11,7 +11,7 @@ export const ENDPOINT_CRP = 'CropperFinance Pool'
 export const ENDPOINT_RAY = 'Raydium Pool'
 export const ENDPOINT_JUP = 'Jupiter Aggregator'
 
-export const DEVNET_MODE = true;
+export const DEVNET_MODE = false;
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
