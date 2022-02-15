@@ -843,7 +843,7 @@ export default Vue.extend({
       );
     },
     async depositProjectToken() {
-      const decimals = 9;
+      const decimals = TOKENS[this.mint].decimals;
 
       const projectTokenAccount = get(
         this.wallet.tokenAccounts,
@@ -862,7 +862,7 @@ export default Vue.extend({
       )
     },
     async withdrawProjectToken() {
-      const decimals = 9;
+      const decimals = TOKENS[this.mint].decimals;
       const projectTokenAccount = get(
         this.wallet.tokenAccounts,
         `${this.mint}.tokenAccountAddress`
