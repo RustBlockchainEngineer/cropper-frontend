@@ -202,6 +202,11 @@
       "name": "registerUser",
       "accounts": [
         {
+          "name": "launchpad",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "project",
           "isMut": false,
           "isSigner": false
@@ -209,6 +214,11 @@
         {
           "name": "user",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingUser",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -243,6 +253,47 @@
         },
         {
           "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateUserTier",
+      "accounts": [
+        {
+          "name": "launchpad",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingUser",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "projectMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         }
@@ -652,6 +703,19 @@
           {
             "name": "claimedAmount",
             "type": "u64"
+          },
+          {
+            "name": "tierHash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "tier",
+            "type": "u8"
           }
         ]
       }
@@ -695,6 +759,6 @@
     }
   ],
   "metadata": {
-    "address": "ErJiGkw8B2UXpTKHhvYG28PWXmEpRpLNtYux2wztaV43"
+    "address": "CMZNzPN3wn4HdYDA3z7DpnH8DEWWHbnd6rNuPRS7KDov"
   }
 }

@@ -1,6 +1,6 @@
 // @ts-ignore
 import * as anchor from '@project-serum/anchor';
-
+import bs58 from 'bs58';
 // @ts-ignore
 import * as serumCmn from "@project-serum/common";
 
@@ -405,6 +405,11 @@ export async function subscribeToWhitelist(
   wallet: any,
   projectMint: PublicKey,
 ) {
+  const [launchpadKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(LAUNCHPAD_TAG)],
+      LaunchpadProgram.programId,
+    );
   const [projectKey] = 
     await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
@@ -420,12 +425,19 @@ export async function subscribeToWhitelist(
       [Buffer.from(USER_PROJECT_TOKEN_TAG), wallet.publicKey.toBuffer()],
       LaunchpadProgram.programId,
     );
+  const [stakingUserKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [stakingPoolId.toBuffer(), wallet.publicKey.toBuffer()],
+      stakingProgramId,
+    );
   let txHash = await LaunchpadProgram.rpc.registerUser(
     {
       accounts: {
+        launchpad: launchpadKey,
         authority: wallet.publicKey,
         project: projectKey,
         user: userKey,
+        stakingUser: stakingUserKey,
         projectMint: projectMint,
         userProjectToken,
         systemProgram: SystemProgram.programId,
@@ -438,11 +450,61 @@ export async function subscribeToWhitelist(
     console.log("e =", e);
   });
   console.log("txHash =", txHash);
+  await connection.confirmTransaction(txHash, "processed");
+  const userData = await LaunchpadProgram.account.userAccount.fetch(userKey);
+  let tierHash = bs58.encode(Uint8Array.from(userData.tierHash));
+  return {
+    amount: 0,
+    success: true,
+    txId: txHash,
+    hash: tierHash
+  }
+}
+
+export async function updateUserTier(
+  connection:Connection,
+  wallet: any,
+  projectMint: PublicKey,
+) {
+  const [launchpadKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(LAUNCHPAD_TAG)],
+      LaunchpadProgram.programId,
+    );
+  const [userKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(USER_TAG), wallet.publicKey.toBuffer(), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const [stakingUserKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [stakingPoolId.toBuffer(), wallet.publicKey.toBuffer()],
+      stakingProgramId,
+    );
+  let txHash = await LaunchpadProgram.rpc.updateUserTier(
+    {
+      accounts: {
+        launchpad: launchpadKey,
+        authority: wallet.publicKey,
+        user: userKey,
+        stakingUser: stakingUserKey,
+        projectMint: projectMint,
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+      },
+    }
+  ).catch((e:any) => {
+    console.log("e =", e);
+  });
+  console.log("txHash =", txHash);
+  await connection.confirmTransaction(txHash, "processed");
+  const userData = await LaunchpadProgram.account.userAccount.fetch(userKey);
+  let tierHash = bs58.encode(Uint8Array.from(userData.tierHash));
   return {
     amount:0,
     success: true,
-    txId:txHash,
-    hash:""
+    txId: txHash,
+    hash: tierHash
   }
 }
 

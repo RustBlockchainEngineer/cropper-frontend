@@ -11,7 +11,7 @@ export const ENDPOINT_CRP = 'CropperFinance Pool'
 export const ENDPOINT_RAY = 'Raydium Pool'
 export const ENDPOINT_JUP = 'Jupiter Aggregator'
 
-export const DEVNET_MODE = false;
+export const DEVNET_MODE = true;
 
 export const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111')
 export const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
@@ -34,7 +34,9 @@ export const CRP_LP_PROGRAM_ID_V1 = DEVNET_MODE? '7ZZJNL4xD8db6yrT46SeMFZXcVr9ML
 export const STAKE_TIERS_PROGRAM_ID = DEVNET_MODE ? "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw" : "HYzrD877vEcBgd6ySKPpa3pcMbqYEmwEF1GFQmvuswcC"
 export const STAKE_TIERS_POOL_ID = DEVNET_MODE ? "Anm6hayiLSEAEr7co6hRKcFKcvLk7Z2kEUenykEr7xwk" : "5mEH7a7abQwUEXqfusVepc3z9cHVQg8uhqTXdq47J91o"
 
-export const LAUNCHPAD_PROGRAM_ID = DEVNET_MODE ? "8VU8xv5rLX7hsUqeersNBywyyqusAA7D2HgTEsBe5u1K" : "ErJiGkw8B2UXpTKHhvYG28PWXmEpRpLNtYux2wztaV43"
+//export const LAUNCHPAD_PROGRAM_ID = DEVNET_MODE ? "8VU8xv5rLX7hsUqeersNBywyyqusAA7D2HgTEsBe5u1K" : "ErJiGkw8B2UXpTKHhvYG28PWXmEpRpLNtYux2wztaV43"
+export const LAUNCHPAD_PROGRAM_ID = DEVNET_MODE ? "CMZNzPN3wn4HdYDA3z7DpnH8DEWWHbnd6rNuPRS7KDov" : "ErJiGkw8B2UXpTKHhvYG28PWXmEpRpLNtYux2wztaV43"
+
 //"FBHjXGXUa65hSCzyfMhkcLzu2U3HByNqcWMuDUUHURLa"
 
 export let FARM_VERSION = 2;//@Hongbo
