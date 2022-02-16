@@ -422,7 +422,7 @@ export async function subscribeToWhitelist(
     );
   const [userProjectToken] = 
     await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(USER_PROJECT_TOKEN_TAG), wallet.publicKey.toBuffer()],
+      [Buffer.from(USER_PROJECT_TOKEN_TAG), projectMint.toBuffer(), wallet.publicKey.toBuffer()],
       LaunchpadProgram.programId,
     );
   const [stakingUserKey] = 
@@ -470,6 +470,11 @@ export async function updateUserTier(
     await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(LAUNCHPAD_TAG)],
       LaunchpadProgram.programId,
+    );  
+  const [projectKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
     );
   const [userKey] = 
     await anchor.web3.PublicKey.findProgramAddress(
@@ -485,6 +490,7 @@ export async function updateUserTier(
     {
       accounts: {
         launchpad: launchpadKey,
+        project: projectKey,
         authority: wallet.publicKey,
         user: userKey,
         stakingUser: stakingUserKey,
@@ -588,7 +594,7 @@ export async function claimTokens(
     );
   const [userProjectToken] = 
     await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(USER_PROJECT_TOKEN_TAG), wallet.publicKey.toBuffer()],
+      [Buffer.from(USER_PROJECT_TOKEN_TAG), projectMint.toBuffer(), wallet.publicKey.toBuffer()],
       LaunchpadProgram.programId,
     );
   const [stakingUserKey] = 
@@ -603,7 +609,7 @@ export async function claimTokens(
         project: projectKey,
         user: userKey,
         projectVault: projectVaultKey,
-        userVault: userProjectToken,
+        userProjectToken,
         stakingUser: stakingUserKey,
         authority: wallet.publicKey,
         clock: SYSVAR_CLOCK_PUBKEY,
