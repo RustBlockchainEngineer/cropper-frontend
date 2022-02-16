@@ -28,7 +28,7 @@
                     this.filterProject = filterOptions.upcoming
                   }
                 "
-                >Upcoming projects</Button
+                >Upcoming Projects</Button
               >
               <div v-if="filterProject === filterOptions.upcoming" class="active-underline"></div>
             </div>
@@ -363,10 +363,11 @@
                   </div>
 
                   <div v-if="idx === 0" class="project-info whitelist-countdown fcc-container text-center">
-                    <Countdown v-if="fertilizer.distribution_start_date > currentTimestamp"
+                    <Countdown
+                      v-if="fertilizer.distribution_start_date > currentTimestamp"
                       :title="
                         fertilizer.status === filterOptions.whitelist
-                          ? 'End of the whitelist in'
+                          ? 'The Whitelist ends in'
                           : fertilizer.status === filterOptions.sales && currentTimestamp < fertilizer.sales_start_date
                           ? 'Sales starts in'
                           : fertilizer.status === filterOptions.sales && currentTimestamp > fertilizer.sales_start_date
@@ -455,8 +456,10 @@
                       >Subscription</Button
                     >
                     <Button
-                      @click="goToProject(fertilizer)" v-else class="btn-transparent font-medium weight-semi fcc-container spacing-small"
-                      >More Details</Button
+                      @click="goToProject(fertilizer)"
+                      v-else
+                      class="btn-transparent font-medium weight-semi fcc-container spacing-small"
+                      >Research Now</Button
                     >
                   </div>
                 </div>
@@ -879,7 +882,7 @@ import { getUnixTs } from '@/utils'
 import moment from 'moment'
 import { TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
-import {setAnchorProvider, getLaunchpad, getProjectFormatted} from '@/utils/crp-launchpad'
+import { setAnchorProvider, getLaunchpad, getProjectFormatted } from '@/utils/crp-launchpad'
 const Vco = require('v-click-outside')
 Vue.use(Vco)
 const CollapsePanel = Collapse.Panel
@@ -933,7 +936,7 @@ export default Vue.extend({
         preparation: 'Preparation',
         funded: 'Funded'
       },
-      registerdList : {},
+      registerdList: {},
       sortOptions: {
         investors: 'Investors',
         total_raised: 'Total raise',
@@ -957,7 +960,7 @@ export default Vue.extend({
   async mounted() {
     // this.$router.push({ path: `/swap/` })
     setAnchorProvider(this.$web3, this.$wallet)
-    await getLaunchpad();
+    await getLaunchpad()
     this.getTvl()
     this.$accessor.token.loadTokens()
 
@@ -972,12 +975,11 @@ export default Vue.extend({
       this.setTimer()
     }, 1000)
 
-    await this.constructFertilizerData();
-   
+    await this.constructFertilizerData()
+
     this.currentTimestamp = moment().valueOf()
     this.updateFertilizer()
   },
-
 
   watch: {
     showCollapse: {
@@ -1010,119 +1012,108 @@ export default Vue.extend({
     importIcon,
     TokenAmount,
 
-    async constructFertilizerData(){
+    async constructFertilizerData() {
+      let registerdList
+      try {
+        registerdList = await fetch('https://flow.cropper.finance/registers/').then((res) => res.json())
+      } catch {
+      } finally {
+      }
 
-        let registerdList;
-        try {
-          registerdList =  await fetch('https://flow.cropper.finance/registers/').then((res) => res.json())
-        } catch {
-        } finally {
-          
+      let responseData
+
+      try {
+        responseData = await fetch('https://api.cropper.finance/fertilizer/').then((res) => res.json())
+      } catch {
+        // dummy data
+      } finally {
+      }
+
+      this.fertilizerData = []
+      let key = 0
+
+      for (const item of responseData.message) {
+        let project = {
+          status: 'Whitelist Open',
+          key: 'k' + key,
+          picture: item['picture'],
+          title: item['title'],
+          short_desc: item['short_desc'],
+          slug: item['slug'],
+          hard_cap: '3000K',
+          subscribers: 0,
+          mint: item.mint,
+          whitelist_end_date: 1643500800000,
+          whitelist_start_date: 0,
+          distribution_end_date: 0,
+          distribution_start_date: 0,
+          date_preparation: 0,
+          sales_end_date: 0,
+          sales_start_date: 0,
+          token_price: 0,
+          price_token: '',
+          price_token_mint: ''
         }
 
-        let responseData
-
-        try {
-          responseData =  await fetch('https://api.cropper.finance/fertilizer/').then((res) => res.json())
-        } catch {
-          // dummy data
-        } finally {
-
+        if (!item['title']) {
+          continue
         }
 
-        this.fertilizerData = [];
-        let key = 0;
+        let scValues = await getProjectFormatted(item.mint)
 
-
-        for (const item of responseData.message) {
-          let project = {
-            status: 'Whitelist Open',
-            key: 'k' + key,
-            picture: item['picture'],
-            title: item['title'],
-            short_desc: item['short_desc'],
-            slug: item['slug'],
-            hard_cap: '3000K',
-            subscribers: 0,
-            mint: item.mint,
-            whitelist_end_date: 1643500800000,
-            whitelist_start_date: 0,
-            distribution_end_date: 0,
-            distribution_start_date: 0,
-            date_preparation: 0,
-            sales_end_date: 0,
-            sales_start_date: 0,
-            token_price: 0,
-            price_token: '',
-            price_token_mint: ''
-          };
-
-          if(!item['title']){
-            continue;
-          }
-
-          let scValues = await getProjectFormatted(item.mint)
-
-          if(!scValues){
-            continue;
-          }
-
-          var curdate = (new Date() as any) * 1;
-
-          project.distribution_end_date = (moment(scValues.date_distribution).unix() + (86400 * 2)) * 1000;
-          project.distribution_start_date = moment(scValues.date_distribution).unix() * 1000;
-          project.date_preparation = moment(scValues.date_preparation).unix() * 1000;
-          project.sales_end_date = moment(scValues.date_sale_end).unix() * 1000;
-          project.sales_start_date = moment(scValues.date_sale_start).unix() * 1000;
-          project.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000;
-          project.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000;
-
-          if(scValues.token_price == undefined){
-            continue;
-          }
-
-          project.token_price = scValues.token_price;
-
-          if(curdate > project.distribution_end_date && item.closed){
-            project.status = 'Funded'
-          } else if(curdate >  project.distribution_start_date){
-            project.status = 'Distribution'
-          } else if(curdate >  project.sales_end_date){
-            project.status = 'Distribution'
-          } else if(curdate >  project.sales_start_date){
-            project.status = 'Sales'
-          } else if(curdate >  project.whitelist_end_date){
-            project.status = 'Lottery'
-          } else if(curdate >  project.whitelist_start_date){
-            project.status = 'Whitelist Open'
-          } else {
-            project.status = 'Upcoming'
-          }
-
-          project.hard_cap = scValues.pool_size;
-
-          let sub = registerdList.find(
-            (items: any) => items.mint === item.mint
-          )
-          if(sub){
-
-            project.subscribers = sub.ct
-          }
-
-          let token = getTokenByMintAddress(scValues.price_token_mint);
-
-          if(token){
-            project.price_token = token.symbol
-            project.price_token_mint = scValues.price_token_mint
-          }
-
-          key++;
-          this.fertilizerData.push(project);
+        if (!scValues) {
+          continue
         }
 
+        var curdate = (new Date() as any) * 1
 
+        project.distribution_end_date = (moment(scValues.date_distribution).unix() + 86400 * 2) * 1000
+        project.distribution_start_date = moment(scValues.date_distribution).unix() * 1000
+        project.date_preparation = moment(scValues.date_preparation).unix() * 1000
+        project.sales_end_date = moment(scValues.date_sale_end).unix() * 1000
+        project.sales_start_date = moment(scValues.date_sale_start).unix() * 1000
+        project.whitelist_end_date = moment(scValues.date_whitelist_end).unix() * 1000
+        project.whitelist_start_date = moment(scValues.date_whitelist_start).unix() * 1000
 
+        if (scValues.token_price == undefined) {
+          continue
+        }
 
+        project.token_price = scValues.token_price
+
+        if (curdate > project.distribution_end_date && item.closed) {
+          project.status = 'Funded'
+        } else if (curdate > project.distribution_start_date) {
+          project.status = 'Distribution'
+        } else if (curdate > project.sales_end_date) {
+          project.status = 'Distribution'
+        } else if (curdate > project.sales_start_date) {
+          project.status = 'Sales'
+        } else if (curdate > project.whitelist_end_date) {
+          project.status = 'Lottery'
+        } else if (curdate > project.whitelist_start_date) {
+          project.status = 'Whitelist Open'
+        } else {
+          project.status = 'Upcoming'
+        }
+
+        project.hard_cap = scValues.pool_size
+
+        let sub = registerdList.find((items: any) => items.mint === item.mint)
+        if (sub) {
+          project.subscribers = sub.ct
+        }
+
+        let token = getTokenByMintAddress(scValues.price_token_mint)
+
+        if (token) {
+          project.price_token = token.symbol
+          project.price_token_mint = scValues.price_token_mint
+        }
+
+        key++
+        this.fertilizerData.push(project)
+      }
     },
 
     async getTvl() {
@@ -1202,7 +1193,7 @@ export default Vue.extend({
           (fertilizer: any) => fertilizer.status != this.filterOptions.funded
         )
 
-        // sort by status on Upcoming projects
+        // sort by status on Upcoming Projects
         if (this.sortUpcoming === this.filterOptions.all) {
           this.fertilizerItems = this.fertilizerItems.filter(
             (fertilizer: any) => fertilizer.status != this.filterOptions.funded
@@ -1341,183 +1332,185 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 // global stylesheet
-.btn-container {
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 48px;
-  padding: 3px;
-  height: auto;
-}
-
-.btn-transparent {
-  background: transparent;
-  border-radius: 48px;
-  border: none;
-  height: auto;
-  width: 100%;
-  padding: 7.5px 0;
-}
-
-.btn-primary {
-  background: @color-blue700;
-  border-radius: 48px;
-  border: none;
-  height: auto;
-  width: auto;
-  padding: 4.5px 23.5px;
-}
-
-.option-sort-collapse {
-  position: absolute;
-  top: 50px;
-  background: @gradient-color-primary;
-  background-origin: border-box;
-  border: 2px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
-  min-width: 188px;
-  z-index: 999;
-
-  &.collapse-left {
-    left: 0;
+.fertilizer {
+  .btn-container {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 48px;
+    padding: 3px;
+    height: auto;
   }
 
-  &.collapse-right {
-    right: 0;
+  .btn-transparent {
+    background: transparent;
+    border-radius: 48px;
+    border: none;
+    height: auto;
+    width: 100%;
+    padding: 7.5px 0;
   }
 
-  .collapse-item {
-    padding: 18px 0;
-    border-bottom: 1px solid #c4c4c420;
+  .btn-primary {
+    background: @color-blue700;
+    border-radius: 48px;
+    border: none;
+    height: auto;
+    width: auto;
+    padding: 4.5px 23.5px;
+  }
 
-    &:last-child {
-      border-bottom: 0;
+  .option-sort-collapse {
+    position: absolute;
+    top: 50px;
+    background: @gradient-color-primary;
+    background-origin: border-box;
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 18px 11px 14px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    min-width: 188px;
+    z-index: 999;
+
+    &.collapse-left {
+      left: 0;
     }
 
-    &.active-item {
-      color: @color-petrol500;
+    &.collapse-right {
+      right: 0;
     }
 
-    a {
-      color: #fff;
+    .collapse-item {
+      padding: 18px 0;
+      border-bottom: 1px solid #c4c4c420;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &.active-item {
+        color: @color-petrol500;
+      }
+
+      a {
+        color: #fff;
+      }
     }
   }
-}
 
-.project-status {
-  padding: 4px 8px;
-  border-radius: 6px;
-
-  &.upcoming {
-    background: #a262ac;
-  }
-
-  &.whitelist {
-    background: @color-red600;
-  }
-
-  &.sales {
-    background: @color-purple500;
-  }
-
-  &.distribution {
-    background: @color-yellow600;
-    color: @color-neutral900;
-  }
-
-  &.preparation {
-    background: @color-pink600;
-  }
-
-  &.open {
-    background: @color-green500;
-  }
-}
-
-.project-name {
-  .logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 18px;
-  }
-
-  .title {
-    text-align: left;
-
-    .short-desc {
-      display: block;
-      color: rgba(255, 255, 255, 0.7);
-    }
-  }
-}
-
-.project-ath {
-  .value {
-    background: @color-petrol400;
-    color: @color-blue800;
+  .project-status {
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 6px;
+
+    &.upcoming {
+      background: #a262ac;
+    }
+
+    &.whitelist {
+      background: @color-red600;
+    }
+
+    &.sales {
+      background: @color-purple500;
+    }
+
+    &.distribution {
+      background: @color-yellow600;
+      color: @color-neutral900;
+    }
+
+    &.preparation {
+      background: @color-pink600;
+    }
+
+    &.open {
+      background: @color-green500;
+    }
   }
-}
 
-.info-icon {
-  img {
-    width: 12px;
-    height: 12px;
-    margin-right: 8px;
+  .project-name {
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 18px;
+    }
+
+    .title {
+      text-align: left;
+
+      .short-desc {
+        display: block;
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
   }
-}
 
-.arrow-icon {
-  transition: all 0.3s;
-
-  &.arrow-up {
-    transform: rotate(180deg);
+  .project-ath {
+    .value {
+      background: @color-petrol400;
+      color: @color-blue800;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
   }
-}
 
-.social-link {
-  color: #fff;
-
-  .social-icon {
-    width: 18px;
-    height: 18px;
-    margin-left: 8px;
+  .info-icon {
+    img {
+      width: 12px;
+      height: 12px;
+      margin-right: 8px;
+    }
   }
-}
 
-.detail-btn {
-  position: absolute;
-  right: 0;
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-}
+  .arrow-icon {
+    transition: all 0.3s;
 
-.isDesktop {
-  @media @max-lg-tablet {
+    &.arrow-up {
+      transform: rotate(180deg);
+    }
+  }
+
+  .social-link {
+    color: #fff;
+
+    .social-icon {
+      width: 18px;
+      height: 18px;
+      margin-left: 8px;
+    }
+  }
+
+  .detail-btn {
+    position: absolute;
+    right: 0;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .isDesktop {
+    @media @max-lg-tablet {
+      display: none;
+    }
+  }
+
+  .isTablet {
     display: none;
+
+    @media @max-lg-tablet {
+      display: unset;
+    }
+
+    @media @max-sl-mobile {
+      display: none;
+    }
   }
-}
 
-.isTablet {
-  display: none;
-
-  @media @max-lg-tablet {
-    display: unset;
-  }
-
-  @media @max-sl-mobile {
+  .isMobile {
     display: none;
-  }
-}
 
-.isMobile {
-  display: none;
-
-  @media @max-sl-mobile {
-    display: unset;
+    @media @max-sl-mobile {
+      display: unset;
+    }
   }
 }
 
@@ -2051,9 +2044,5 @@ export default Vue.extend({
     line-height: 24px;
     letter-spacing: 0.15px;
   }
-}
-
-.ant-tooltip .ant-tooltip-inner {
-  width: 180px !important;
 }
 </style>

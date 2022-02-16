@@ -131,7 +131,7 @@
                       currentStep === 0 && currentTimestamp < fertilizer.whitelist_start_date
                         ? 'The whitelist starts in'
                         : currentStep === 1
-                        ? 'End of the whitelist in'
+                        ? 'The Whitelist ends in'
                         : currentStep === 2 && currentTimestamp < fertilizer.sales_start_date
                         ? 'Sales start in'
                         : currentStep === 2 &&
@@ -171,12 +171,12 @@
                             else this.$accessor.wallet.openModal()
                           }
                         "
-                        >Subscribe Whitelist</Button
+                        >Join Whitelist</Button
                       >
                     </div>
                     <div v-else class="fcc-container">
                       <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
-                      <span class="font-small weight-semi spacing-large">Earn ticket in progress</span>
+                      <span class="font-small weight-semi spacing-large">Ticket earning is in progress</span>
                     </div>
                   </div>
                   <div v-else-if="currentStep === 2">
@@ -225,8 +225,8 @@
                             >Registered</span
                           >
                         </div>
-                        <span v-if="currentStep === 1" class="status-label description font-small"
-                          >You can now whitelist yourself for the lottery.</span
+                        <span v-if="currentStep === 1" class="status-label description font-small">
+                          You can now register for the whitelist</span
                         >
                       </template>
                     </Step>
@@ -250,7 +250,7 @@
                           >
                         </div>
                         <span v-if="currentStep === 3" class="status-label description font-small"
-                          >The tokens get distributed to Sale subscribers.</span
+                          >The Sale tokens have been distributed</span
                         >
                       </template>
                     </Step>
@@ -328,144 +328,149 @@
             </div>
 
             <div class="project-detail-condition">
-
-              <div class="project-detail-item" v-if="
-                ( currentStep === 1 && KYCStatus.step < 3 && currentTier > 3 && currentStatus.subscribe ) ||
-                ( currentStep === 2 && KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) )">
-
-                  <div class="project-detail-open">
-                    <div>
-                      <div class="kyc-form">
-                        <div class="kyc-progress-container fcs-container">
-                          <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
-                            <span class="kyc-no m-auto font-medium weight-bold">1</span>
-                            <span class="kyc-title font-small weight-bold">ID Verification</span>
-                          </div>
-                          <div class="kyc-step text-center" :class="KYCStatus.step >= 2 ? 'active' : ''">
-                            <span class="kyc-no m-auto font-medium weight-bold">2</span>
-                            <span class="kyc-title font-small weight-bold">Verification</span>
-                          </div>
-                          <div class="kyc-step text-center" :class="KYCStatus.step >= 3 ? 'active' : ''">
-                            <span class="kyc-no m-auto font-medium weight-bold">3</span>
-                            <span class="kyc-title font-small weight-bold">Start to buy</span>
-                          </div>
+              <div
+                class="project-detail-item"
+                v-if="
+                  (currentStep === 1 && KYCStatus.step < 3 && currentTier > 3 && currentStatus.subscribe) ||
+                  (currentStep === 2 &&
+                    KYCStatus.step < 3 &&
+                    (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)))
+                "
+              >
+                <div class="project-detail-open">
+                  <div>
+                    <div class="kyc-form">
+                      <div class="kyc-progress-container fcs-container">
+                        <div class="kyc-step text-center" :class="KYCStatus.step >= 1 ? 'active' : ''">
+                          <span class="kyc-no m-auto font-medium weight-bold">1</span>
+                          <span class="kyc-title font-small weight-bold">ID Verification</span>
                         </div>
-                        <div v-if="KYCStatus.step < 3">
-                          <div class="kyc-status-container fcsb-container">
-                            <div class="kyc-current-step fcs-container">
-                              <span class="font-large weight-bold">ID Verification</span>
-                              <img class="info-icon left" src="@/assets/icons/info.svg" />
-                            </div>
-                            <span
-                              class="kyc-status font-xsmall weight-bold"
-                              :class="
-                                KYCStatus.step === 1
-                                  ? 'failed'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                  ? 'progress'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                  ? 'success'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                  ? 'failed'
-                                  : ''
-                              "
-                              >{{
-                                KYCStatus.step === 1
-                                  ? 'Not verified'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                  ? 'In progress'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                  ? 'Verified'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                  ? 'Verification failed'
-                                  : ''
-                              }}</span
-                            >
-                          </div>
-                          <div class="kyc-description">
-                            <span class="font-small weight-semi spacing-large">
-                              Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours
-                              to be verified.
-                            </span>
-                            <img
-                              v-if="KYCStatus.step === 1"
-                              class="kyc-status-icon flex m-auto"
-                              src="@/assets/icons/kyc-verification.svg"
-                            />
-                            <img
-                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
-                              class="kyc-status-icon flex m-auto"
-                              src="@/assets/icons/kyc-progress.svg"
-                            />
-                            <img
-                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
-                              class="kyc-status-icon flex m-auto"
-                              src="@/assets/icons/kyc-success.svg"
-                            />
-                            <img
-                              v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
-                              class="kyc-status-icon flex m-auto"
-                              src="@/assets/icons/kyc-failed.svg"
-                            />
-                          </div>
-                          <div class="btn-container">
-                            <Button
-                              class="btn-transparent font-medium weight-semi icon-cursor"
-                              :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
-                              @click="KYCConfirm"
-                              >{{
-                                KYCStatus.step === 1
-                                  ? 'Verify your ID now'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 1
-                                  ? 'Next'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 2
-                                  ? 'Next'
-                                  : KYCStatus.step === 2 && KYCStatus.verification === 0
-                                  ? 'Verify your ID again'
-                                  : ''
-                              }}</Button
-                            >
-                          </div>
+                        <div class="kyc-step text-center" :class="KYCStatus.step >= 2 ? 'active' : ''">
+                          <span class="kyc-no m-auto font-medium weight-bold">2</span>
+                          <span class="kyc-title font-small weight-bold">Verification</span>
+                        </div>
+                        <div class="kyc-step text-center" :class="KYCStatus.step >= 3 ? 'active' : ''">
+                          <span class="kyc-no m-auto font-medium weight-bold">3</span>
+                          <span class="kyc-title font-small weight-bold">Start to buy</span>
                         </div>
                       </div>
-                      <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
-                        <span class="font-medium weight-semi spacing-small"
-                          >You can buy token from this project and see what you will receive.</span
-                        >
-                        <div class="token-amount fcsb-container">
-                          <div class="token-amount-input fcs-container">
-                            <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <input class="font-medium weight-bold" type="number" placeholder="673" />
+                      <div v-if="KYCStatus.step < 3">
+                        <div class="kyc-status-container fcsb-container">
+                          <div class="kyc-current-step fcs-container">
+                            <span class="font-large weight-bold">ID Verification</span>
+                            <img class="info-icon left" src="@/assets/icons/info.svg" />
                           </div>
-                          <span class="font-xsmall weight-semi token-max-amount"
-                            >max 1500 {{ fertilizer.token_price }}</span
+                          <span
+                            class="kyc-status font-xsmall weight-bold"
+                            :class="
+                              KYCStatus.step === 1
+                                ? 'failed'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                ? 'progress'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                ? 'success'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                ? 'failed'
+                                : ''
+                            "
+                            >{{
+                              KYCStatus.step === 1
+                                ? 'Not verified'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                ? 'In progress'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                ? 'Verified'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                ? 'Verification failed'
+                                : ''
+                            }}</span
                           >
                         </div>
-                        <div class="receive-amount">
-                          <label class="font-xmall">You will receive:</label>
-                          <div class="receive-amount-output fcs-container">
-                            <img class="coin-icon" :src="fertilizer.logo" />
-                            <span class="receive-amount-value font-medium weight-semi spacing-small"
-                              >0.028 {{ fertilizer.title }}</span
-                            >
-                          </div>
+                        <div class="kyc-description">
+                          <span class="font-small weight-semi spacing-large">
+                            Before you can purchase your allocation, we need to verify your identity. It usually takes
+                            between 24 and 48 hours to be verified.
+                          </span>
+                          <img
+                            v-if="KYCStatus.step === 1"
+                            class="kyc-status-icon flex m-auto"
+                            src="@/assets/icons/kyc-verification.svg"
+                          />
+                          <img
+                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                            class="kyc-status-icon flex m-auto"
+                            src="@/assets/icons/kyc-progress.svg"
+                          />
+                          <img
+                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 2"
+                            class="kyc-status-icon flex m-auto"
+                            src="@/assets/icons/kyc-success.svg"
+                          />
+                          <img
+                            v-else-if="KYCStatus.step === 2 && KYCStatus.verification === 0"
+                            class="kyc-status-icon flex m-auto"
+                            src="@/assets/icons/kyc-failed.svg"
+                          />
                         </div>
                         <div class="btn-container">
-                          <Button class="btn-transparent font-medium weight-semi icon-cursor"
-                            
-                          >Buy Now</Button>
+                          <Button
+                            class="btn-transparent font-medium weight-semi icon-cursor"
+                            :disabled="KYCStatus.step === 2 && KYCStatus.verification === 1"
+                            @click="KYCConfirm"
+                            >{{
+                              KYCStatus.step === 1
+                                ? 'Verify your ID now'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 1
+                                ? 'Next'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 2
+                                ? 'Next'
+                                : KYCStatus.step === 2 && KYCStatus.verification === 0
+                                ? 'Verify your ID again'
+                                : ''
+                            }}</Button
+                          >
                         </div>
                       </div>
                     </div>
+                    <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
+                      <span class="font-medium weight-semi spacing-small"
+                        >You can buy sale tokens and preview what you will receive below.</span
+                      >
+                      <div class="token-amount fcsb-container">
+                        <div class="token-amount-input fcs-container">
+                          <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
+                          <input class="font-medium weight-bold" type="number" placeholder="673" />
+                        </div>
+                        <span class="font-xsmall weight-semi token-max-amount"
+                          >max 1500 {{ fertilizer.token_price }}</span
+                        >
+                      </div>
+                      <div class="receive-amount">
+                        <label class="font-xmall">You will receive:</label>
+                        <div class="receive-amount-output fcs-container">
+                          <img class="coin-icon" :src="fertilizer.logo" />
+                          <span class="receive-amount-value font-medium weight-semi spacing-small"
+                            >0.028 {{ fertilizer.title }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="btn-container">
+                        <Button class="btn-transparent font-medium weight-semi icon-cursor">Buy Now</Button>
+                      </div>
+                    </div>
                   </div>
+                </div>
               </div>
 
               <div v-if="currentStep === 0"></div>
-              <div v-else-if="currentStep === 1 && currentStatus.subscribe && currentTier <= 2" class="project-detail-item">
-                <h4 class="weight-semi">Earn Social Pool tickets!</h4>
+              <div
+                v-else-if="currentStep === 1 && currentStatus.subscribe && currentTier <= 2"
+                class="project-detail-item"
+              >
+                <h4 class="weight-semi">Earn Social Pool Lottery Tickets</h4>
                 <span class="font-medium">
-                  A small percentage of the to-be-sold tokens will be allocated to the Social Pool. You can earn extra
-                  allocation by performing various social tasks.
+                  A portion of the token sale will be allocated to the Social Pool. You can earn extra chances for
+                  allocation by completing different social tasks.
                 </span>
                 <div class="ticket-tasks-group fssb-container">
                   <div class="ticket-tasks">
@@ -486,10 +491,10 @@
                         <div class="ticket-task-status fs-container">
                           <img class="ticket-social-icon" src="@/assets/icons/telegram-white.svg" />
                           <div>
-                            <span class="font-medium weight-bold">Telegram task</span>
+                            <span class="font-medium weight-bold">Telegram tasks</span>
                             <br />
                             <span class="font-xsmall weight-semi"
-                              >{{ socialTicket.telegram == 0 ? 0 : socialTicket.telegram - 1 }} /2 Task completed</span
+                              >{{ socialTicket.telegram == 0 ? 0 : socialTicket.telegram - 1 }} /2 Tasks completed</span
                             >
                           </div>
                         </div>
@@ -514,9 +519,9 @@
                         <div class="ticket-task-status fs-container">
                           <img class="ticket-social-icon" src="@/assets/icons/twitter-white.svg" />
                           <div>
-                            <span class="font-medium weight-bold">Twitter task</span>
+                            <span class="font-medium weight-bold">Twitter tasks</span>
                             <br />
-                            <span class="font-xsmall weight-semi">{{ socialTicket.twitter }}/3 Task completed</span>
+                            <span class="font-xsmall weight-semi">{{ socialTicket.twitter }}/3 Tasks completed</span>
                           </div>
                         </div>
                         <img
@@ -526,7 +531,7 @@
                         />
                       </div>
                     </div>
-                    <span class="font-medium weight-bold">Share your affilliated link to earn tickets:</span>
+                    <span class="font-medium weight-bold">Share your referral below to earn additional tickets:</span>
                     <div class="ticket-share-group fcsb-container">
                       <input type="text" class="ticket-share-link font-medium" :value="affiliatedLink" disabled />
                       <img class="copy-icon icon-cursor" src="@/assets/icons/copy.svg" @click="copyToClipboard()" />
@@ -554,18 +559,21 @@
                   <div class="ticket-preview">
                     <div class="ticket-earned">
                       <span class="font-medium weight-bold"
-                        >You are now registered for the {{ fertilizer.title }} whitelist as:</span
+                        >You are now registered for the {{ fertilizer.title }} whitelist and have:</span
                       >
                       <div class="ticket-earned-status fcs-container">
                         <img class="referral-icon" src="@/assets/icons/referral.svg" />
                         <div>
                           <span class="font-medium weight-semi spacing-small">
-                            <label class="font-large">{{ total_tickets + (currentTier == 2 ? 300 : (currentTier == 1 ? 20 : 0 )) }}</label>
+                            <label class="font-large">{{
+                              total_tickets + (currentTier == 2 ? 300 : currentTier == 1 ? 20 : 0)
+                            }}</label>
                             Earned Tickets
                           </span>
                           <br />
                           <span class="font-xsmall"
-                            >{{ social_tickets }} Social / {{ referral_tickets }} Referrals / {{ (currentTier == 2 ? 300 : (currentTier == 1 ? 20 : 0 )) }} Tier {{ currentTier }}</span
+                            >{{ social_tickets }} Social / {{ referral_tickets }} Referrals /
+                            {{ currentTier == 2 ? 300 : currentTier == 1 ? 20 : 0 }} Tier {{ currentTier }}</span
                           >
                         </div>
                       </div>
@@ -580,16 +588,16 @@
                     <div class="fcc-container">
                       <img class="status-icon" src="@/assets/icons/check-circle-white.svg" />
                       <span class="font-medium weight-semi spacing-small"
-                        >Congratulations you will be able to buy when this sales start.</span
+                        >Congratulations! You're officially registered and will be able to buy once the sale
+                        starts.</span
                       >
                     </div>
                     <Countdown
                       class="sales-start-countdown"
-                      title="Sales start in:"
+                      title="Sale start in:"
                       :value="fertilizer.sales_start_date"
                       format="DD:HH:mm:ss"
                     />
-
                   </div>
                   <div
                     v-else-if="((currentTier <= 2 && !currentStatus.win) || !currentStatus.subscribe) && false"
@@ -597,9 +605,14 @@
                   >
                     <div class="fcc-container mb-8">
                       <img class="alert-icon" src="@/assets/icons/alert-white.svg" />
-                      <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
+                      <h4 class="weight-bold spacing-medium">
+                        Sorry, the whitelist has ended and it looks like you didn't win allocation this time.
+                      </h4>
                     </div>
-                    <span class="font-medium">You do not have a winning staking ticket or winning social ticket.</span>
+                    <span class="font-medium"
+                      >Tired of not winning? You can secure guaranteed allocation for every Fertilizer whitelist by
+                      staking CRP below..</span
+                    >
                   </div>
                 </div>
                 <div
@@ -658,8 +671,8 @@
                           </div>
                           <div class="kyc-description">
                             <span class="font-small weight-semi spacing-large">
-                              Before buy the token we need to verify your ID. Usually it takes between 24 and 48 hours
-                              to be verified.
+                              Before you can purchase your allocation, we need to verify your identity. It usually takes
+                              between 24 and 48 hours to be verified.
                             </span>
                             <img
                               v-if="KYCStatus.step === 1"
@@ -704,17 +717,21 @@
                       </div>
                       <div v-if="KYCStatus.userVerified && KYCStatus.step === 3" class="buy-form">
                         <span class="font-medium weight-semi spacing-small"
-                          >You can buy token from this project and see what you will receive.</span
+                          >You can buy sale tokens and preview what you will receive below.</span
                         >
                         <div class="token-amount fcsb-container">
                           <div class="token-amount-input fcs-container">
                             <CoinIcon class="coin-icon" :mint-address="fertilizer.mint" />
-                            <input class="font-medium weight-bold" type="number" placeholder="673" 
+                            <input
+                              class="font-medium weight-bold"
+                              type="number"
+                              placeholder="673"
                               v-model="buyAmount"
-                              @onInput="(amount) => (buyAmount = amount)"/>
-                          </div> 
+                              @onInput="(amount) => (buyAmount = amount)"
+                            />
+                          </div>
                           <span class="font-xsmall weight-semi token-max-amount"
-                            >max {{maxAmount}} {{ fertilizer.token_price }}</span
+                            >max {{ maxAmount }} {{ fertilizer.token_price }}</span
                           >
                         </div>
                         <div class="receive-amount">
@@ -727,13 +744,15 @@
                           </div>
                         </div>
                         <div class="btn-container">
-                          <Button class="btn-transparent font-medium weight-semi icon-cursor"
+                          <Button
+                            class="btn-transparent font-medium weight-semi icon-cursor"
                             @click="
                               () => {
-                                onClickBuyNow();
+                                onClickBuyNow()
                               }
                             "
-                          >Buy Now</Button>
+                            >Buy Now</Button
+                          >
                         </div>
                       </div>
                     </div>
@@ -743,10 +762,13 @@
                     >
                       <div class="fcc-container mb-8">
                         <img class="alert-icon" src="@/assets/icons/alert-white.svg" />
-                        <h4 class="weight-bold spacing-medium">Sorry whitelist is ended, find another project</h4>
+                        <h4 class="weight-bold spacing-medium">
+                          Sorry, the whitelist has ended and it looks like you didn't win allocation this time.
+                        </h4>
                       </div>
                       <span class="font-medium"
-                        >You do not have a winning staking ticket or winning social ticket.</span
+                        >Tired of not winning? You can secure guaranteed allocation for every Fertilizer whitelist by
+                        staking CRP below..</span
                       >
                     </div>
                   </div>
@@ -760,7 +782,7 @@
                       format="DD:HH:mm:ss"
                     />
                     <span class="font-medium weight-semi spacing-small"
-                      >You have to wait Distribution date to receive Tokens. Be patient!</span
+                      >You will receive your tokens once distribution begins. Be patient!</span
                     >
                     <div class="buy-form">
                       <div class="token-amount fcsb-container">
@@ -793,10 +815,28 @@
                 </div>
               </div>
               <!-- FIXME: remove true -->
-              <div v-else-if="true || (currentStep === 3 && (currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded && ( KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) ) || currentStatus.funded))" class="project-detail-item">
+              <div
+                v-else-if="
+                  true ||
+                  (currentStep === 3 &&
+                    ((currentTimestamp > fertilizer.distribution_start_date &&
+                      !currentStatus.funded &&
+                      KYCStatus.step < 3 &&
+                      (currentStatus.win || (currentTier > 3 && currentStatus.subscribe))) ||
+                      currentStatus.funded))
+                "
+                class="project-detail-item"
+              >
                 <div
-                  v-if="true || (currentTimestamp > fertilizer.distribution_start_date && !currentStatus.funded && ( KYCStatus.step < 3 && (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)) ))"
-                  class="project-detail-open">
+                  v-if="
+                    true ||
+                    (currentTimestamp > fertilizer.distribution_start_date &&
+                      !currentStatus.funded &&
+                      KYCStatus.step < 3 &&
+                      (currentStatus.win || (currentTier > 3 && currentStatus.subscribe)))
+                  "
+                  class="project-detail-open"
+                >
                   <span class="font-medium weight-semi spacing-small">Distribution in progress, keep in touch!</span>
                   <div class="buy-form">
                     <div class="token-amount fcsb-container">
@@ -817,26 +857,28 @@
                         >
                       </div>
                     </div>
-                      <!--span class="font-xsmall weight-bold"
+                    <!--span class="font-xsmall weight-bold"
                         >You will receive your tokens on
                         <label class="font-small">Wallet ID: 
                           {{ wallet.address.substr(0, 4) }}
                           ...
                           {{ wallet.address.substr(wallet.address.length - 4, 4) }}</label>
                       </span-->
-                      <div class="btn-container">                 
-                        <Button class="btn-transparent font-medium weight-semi icon-cursor"
-                          @click="
-                            () => {
-                              onClaimTokens();
-                            }
-                          "
-                        >Claim Now</Button>
-                      </div>
+                    <div class="btn-container">
+                      <Button
+                        class="btn-transparent font-medium weight-semi icon-cursor"
+                        @click="
+                          () => {
+                            onClaimTokens()
+                          }
+                        "
+                        >Claim Now</Button
+                      >
+                    </div>
                   </div>
                 </div>
                 <div v-else-if="currentStatus.funded" class="text-center">
-                  <h4 class="weight-bold spacing-medium">{{ fertilizer.title }} public sale has finished!</h4>
+                  <h4 class="weight-bold spacing-medium">The {{ fertilizer.title }} public sale has finished!</h4>
                   <div class="distribution-details">
                     <span class="font-medium">
                       Sonar Watch raised:
@@ -870,7 +912,10 @@
 
             <div class="project-detail-static banner fcsb-container" v-if="currentTier < 5">
               <div class="project-detail-stake">
-                <h4 class="weight-semi">Develop your Tier to have more allocation</h4>
+                <h4 class="weight-semi">
+                  Increase your Tier ranking to receive more lottery tickets or guarantee allocations. Tier 1 starts at
+                  200 CRP.
+                </h4>
                 <div class="btn-container">
                   <Button
                     class="btn-transparent font-medium weight-semi icon-cursor"
@@ -879,7 +924,7 @@
                         this.$router.push({ path: '/staking/' })
                       }
                     "
-                    >Stake CRP</Button
+                    >Stake CRP Now</Button
                   >
                 </div>
               </div>
@@ -899,13 +944,14 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { Row, Col, Statistic, Steps } from 'ant-design-vue'
-import { 
-  setAnchorProvider, 
-  getLaunchpad, 
+import {
+  setAnchorProvider,
+  getLaunchpad,
   getProjectFormatted,
   subscribeToWhitelist,
   buyTokens,
-  claimTokens } from '@/utils/crp-launchpad'
+  claimTokens
+} from '@/utils/crp-launchpad'
 import { TOKENS, NATIVE_SOL, getTokenByMintAddress } from '@/utils/tokens'
 import moment from 'moment'
 import { PublicKey } from '@solana/web3.js'
@@ -917,16 +963,10 @@ const countries = require('i18n-iso-countries')
 // 1643500800000
 
 export default Vue.extend({
-
   async asyncData({ params, redirect }) {
-    const projects = await fetch(
-      'https://api.cropper.finance/fertilizer/'
-    ).then((res) => res.json())
+    const projects = await fetch('https://api.cropper.finance/fertilizer/').then((res) => res.json())
 
-    const filteredProject = projects.message.find(
-      (el: any) =>
-        el.slug === params.project
-    )
+    const filteredProject = projects.message.find((el: any) => el.slug === params.project)
     if (filteredProject) {
       return {
         project: filteredProject
@@ -945,7 +985,6 @@ export default Vue.extend({
   },
 
   data() {
-
     return {
       total_tickets: 0,
       fertilizer: {
@@ -997,7 +1036,7 @@ export default Vue.extend({
         win: false as boolean,
         subscribe: false as boolean
       },
-      referal : '' as string,
+      referal: '' as string,
       socialTicket: {
         telegram: 0 as number,
         twitter: 0 as number
@@ -1025,7 +1064,7 @@ export default Vue.extend({
       social_tickets: 0,
       referral_tickets: 0,
       buyAmount: 0,
-      maxAmount: 1500,
+      maxAmount: 1500
     }
   },
 
@@ -1056,10 +1095,9 @@ export default Vue.extend({
     }
 
     //@ts-ignore
-    this.fertilizer.mint = this.project.mint;
+    this.fertilizer.mint = this.project.mint
     this.currentTimestamp = moment().valueOf()
     this.loadDatas()
-
   },
 
   methods: {
@@ -1069,10 +1107,11 @@ export default Vue.extend({
     checkCurrentStep() {
       if (this.currentStep === 0 && this.currentTimestamp > this.fertilizer.whitelist_start_date) this.currentStep = 1
       if (this.currentStep === 1 && this.currentTimestamp > this.fertilizer.whitelist_end_date) this.currentStep = 2
-      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date) this.currentStep = 3
+      if (this.currentStep === 2 && this.currentTimestamp > this.fertilizer.distribution_start_date)
+        this.currentStep = 3
 
       //@ts-ignore
-      if(this.project.closed) currentStatus.funded = 1
+      if (this.project.closed) currentStatus.funded = 1
     },
     goBack() {
       this.$router.push({
@@ -1081,9 +1120,9 @@ export default Vue.extend({
     },
 
     async onClaimTokens() {
-      let res = await claimTokens(this.$web3, this.$wallet, new PublicKey(this.fertilizer.mint));
+      let res = await claimTokens(this.$web3, this.$wallet, new PublicKey(this.fertilizer.mint))
       if (res.success) {
-          this.$notify.success({
+        this.$notify.success({
           message: `Claim Succeed. ${res.amount} received`,
           description: 'Transaction Succeed'
         })
@@ -1101,14 +1140,14 @@ export default Vue.extend({
         `${this.fertilizer.price_token_mint}.tokenAccountAddress`
       )
       let res = await buyTokens(
-        this.$web3, 
-        this.$wallet, 
-        new PublicKey(this.fertilizer.price_token_mint), 
-        new PublicKey(priceTokenAccount), 
+        this.$web3,
+        this.$wallet,
+        new PublicKey(this.fertilizer.price_token_mint),
+        new PublicKey(priceTokenAccount),
         this.buyAmount > this.maxAmount ? this.maxAmount : this.buyAmount
-      );
+      )
       if (res.success) {
-          this.$notify.success({
+        this.$notify.success({
           message: 'Buy Succeed',
           description: 'Transaction Succeed'
         })
@@ -1118,7 +1157,7 @@ export default Vue.extend({
           description: 'Transaction Failed'
         })
       }
-      console.log("buyAmount =", this.buyAmount);
+      console.log('buyAmount =', this.buyAmount)
     },
 
     async initSubscribe() {
@@ -1150,19 +1189,18 @@ export default Vue.extend({
               break;
       */
 
-     // for current tier, we can calculate in here
+      // for current tier, we can calculate in here
 
-      let res = await subscribeToWhitelist(this.$web3, this.$wallet, new PublicKey(this.fertilizer.mint));
-      console.log(res);
+      let res = await subscribeToWhitelist(this.$web3, this.$wallet, new PublicKey(this.fertilizer.mint))
+      console.log(res)
       if (res.success) {
-
         let body = {
-            spl: this.wallet.address,
-            mint: this.fertilizer.mint,
-            tx_id_register: res.txId
-          };
+          spl: this.wallet.address,
+          mint: this.fertilizer.mint,
+          tx_id_register: res.txId
+        }
 
-        if(this.referal){
+        if (this.referal) {
           //@ts-ignore
           body.referer = this.referal
         }
@@ -1185,7 +1223,7 @@ export default Vue.extend({
         await fetch('https://flow.cropper.finance/registers/', requestOptions)
 
         await this.contextualizeUser()
-        
+
         this.$notify.success({
           message: 'Subscribe Succeed',
           description: 'Transaction Succeed'
@@ -1197,13 +1235,11 @@ export default Vue.extend({
         })
       }
     },
-  
+
     async contextualizeUser() {
       if (!this.wallet.connected) {
         return
       }
-
-
 
       let responseData
       try {
@@ -1238,7 +1274,7 @@ export default Vue.extend({
           }
 
           this.currentStatus.win = responseData.win
-          this.currentTier = responseData.tier_reference;
+          this.currentTier = responseData.tier_reference
 
           this.referral_tickets = responseData.referal_ticket ? responseData.referal_ticket : 0
           this.total_tickets = this.social_tickets + this.referral_tickets
@@ -1247,11 +1283,10 @@ export default Vue.extend({
           this.affiliatedLink = 'https://cropper.finance/fertilizer/' + this.project.slug + '/?r=' + this.wallet.address
           this.twitterShareLink = `http://twitter.com/share?text=Sign up for ${this.fertilizer.title} on Cropper. Participate in the IDO of an emerging project.  Become an investor. Let's subscribe!&url=${this.affiliatedLink}`
           this.telegramShareLink = `https://telegram.me/share/url?url=${this.affiliatedLink}&text=Sign up for ${this.fertilizer.title} on Cropper. Participate in the IDO of an emerging project. Become an investor. Let's subscribe!`
-
         }
       }
 
-      if(window.localStorage['CYK'+ this.wallet.address +'set']){
+      if (window.localStorage['CYK' + this.wallet.address + 'set']) {
         this.KYCStatus.verification = 2
         this.KYCStatus.step = 3
         this.KYCStatus.userVerified = true
@@ -1277,7 +1312,7 @@ export default Vue.extend({
               this.KYCStatus.verification = 2
               this.KYCStatus.step = 3
               this.KYCStatus.userVerified = true
-              window.localStorage['CYK'+ this.wallet.address +'set'] = 1
+              window.localStorage['CYK' + this.wallet.address + 'set'] = 1
             } else if (!responseData.status) {
               this.KYCStatus.step = 1
             } else {
@@ -1345,20 +1380,19 @@ export default Vue.extend({
       this.fertilizer.tw_a = item['twitter_a']
       this.fertilizer.tw_b = item['twitter_b']
 
-      const titleEl = document.querySelector('head title');
+      const titleEl = document.querySelector('head title')
       //@ts-ignore
-      titleEl?.textContent = 'Cropper - ' + item['seo_title_meta'];
-      const descEl = document.querySelector('head meta[name="description"]');
-      descEl?.setAttribute('content', item['seo_desc_meta']);
-      const descEl2 = document.querySelector('head meta[name="og:description"]');
-      descEl2?.setAttribute('content', item['seo_desc_meta']);
+      titleEl?.textContent = 'Cropper - ' + item['seo_title_meta']
+      const descEl = document.querySelector('head meta[name="description"]')
+      descEl?.setAttribute('content', item['seo_desc_meta'])
+      const descEl2 = document.querySelector('head meta[name="og:description"]')
+      descEl2?.setAttribute('content', item['seo_desc_meta'])
 
       this.fertilizer.retweetlink = item['post_a']
       this.SubscribeModalContent = item['disclaimer']
       this.fertilizer.website_url = item.website_display
       this.fertilizer.website = item.website_url
       this.fertilizer.logo = item.token_logo
-
 
       let scValues = await getProjectFormatted(this.fertilizer.mint)
 
@@ -1422,8 +1456,6 @@ export default Vue.extend({
       }
 
       this.contextualizeUser()
-        
-      
     },
 
     copyToClipboard() {
@@ -1508,8 +1540,8 @@ export default Vue.extend({
       }
 
       // FIXME: remove two lines
-      this.KYCStatus.userVerified = true;
-      this.KYCStatus.step = 3;
+      this.KYCStatus.userVerified = true
+      this.KYCStatus.step = 3
     }
   }
 })
@@ -1517,137 +1549,139 @@ export default Vue.extend({
 
 <style lang="less" scoped>
 // global stylesheet
-.btn-container {
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 48px;
-  padding: 3px;
-  height: auto;
-}
-
-.btn-transparent {
-  background: transparent;
-  border-radius: 48px;
-  border: none;
-  height: auto;
-  width: 100%;
-  padding: 7.5px 0;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-.btn-primary {
-  background: @color-blue700;
-  border-radius: 48px;
-  border: none;
-  height: auto;
-  width: auto;
-  padding: 4.5px 23.5px;
-}
-
-.project-status {
-  padding: 4px 8px;
-  border-radius: 6px;
-
-  &.whitelist {
-    background: @color-red600;
+.fertilizer-project {
+  .btn-container {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 48px;
+    padding: 3px;
+    height: auto;
   }
 
-  &.sales {
-    background: @color-purple600;
+  .btn-transparent {
+    background: transparent;
+    border-radius: 48px;
+    border: none;
+    height: auto;
+    width: 100%;
+    padding: 7.5px 0;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
 
-  &.open {
-    background: @color-purple500;
+  .btn-primary {
+    background: @color-blue700;
+    border-radius: 48px;
+    border: none;
+    height: auto;
+    width: auto;
+    padding: 4.5px 23.5px;
   }
 
-  &.distribution {
-    background: @color-yellow600;
-    color: @color-neutral900;
+  .project-status {
+    padding: 4px 8px;
+    border-radius: 6px;
+
+    &.whitelist {
+      background: @color-red600;
+    }
+
+    &.sales {
+      background: @color-purple600;
+    }
+
+    &.open {
+      background: @color-purple500;
+    }
+
+    &.distribution {
+      background: @color-yellow600;
+      color: @color-neutral900;
+    }
+
+    &.preparation {
+      background: @color-pink600;
+    }
   }
 
-  &.preparation {
-    background: @color-pink600;
-  }
-}
+  .status-label {
+    &.description {
+      color: #fff;
+    }
 
-.status-label {
-  &.description {
-    color: #fff;
-  }
+    &.success {
+      color: @color-green500;
+    }
 
-  &.success {
-    color: @color-green500;
-  }
-
-  &.closed {
-    color: @color-red500;
-  }
-}
-
-.status-icon {
-  height: 16px;
-  width: 16px;
-  margin-right: 8px;
-}
-
-.alert-icon {
-  height: 24px;
-  width: 24px;
-  margin-right: 8px;
-}
-
-.coin-icon {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  margin-right: 6px;
-}
-
-.info-icon {
-  width: 12px;
-  height: 12px;
-
-  &.left {
-    margin-left: 8px;
+    &.closed {
+      color: @color-red500;
+    }
   }
 
-  &.right {
+  .status-icon {
+    height: 16px;
+    width: 16px;
     margin-right: 8px;
   }
-}
 
-.lock-icon {
-  width: 16px;
-  height: 16px;
-  margin-right: 6px;
-}
+  .alert-icon {
+    height: 24px;
+    width: 24px;
+    margin-right: 8px;
+  }
 
-.isDesktop {
-  @media @max-lg-tablet {
+  .coin-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+
+  .info-icon {
+    width: 12px;
+    height: 12px;
+
+    &.left {
+      margin-left: 8px;
+    }
+
+    &.right {
+      margin-right: 8px;
+    }
+  }
+
+  .lock-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+  }
+
+  .isDesktop {
+    @media @max-lg-tablet {
+      display: none;
+    }
+  }
+
+  .isTablet {
     display: none;
+
+    @media @max-lg-tablet {
+      display: unset;
+    }
+
+    @media @max-sl-mobile {
+      display: none;
+    }
   }
-}
 
-.isTablet {
-  display: none;
-
-  @media @max-lg-tablet {
-    display: unset;
-  }
-
-  @media @max-sl-mobile {
+  .isMobile {
     display: none;
-  }
-}
 
-.isMobile {
-  display: none;
-
-  @media @max-sl-mobile {
-    display: unset;
+    @media @max-sl-mobile {
+      display: unset;
+    }
   }
 }
 
