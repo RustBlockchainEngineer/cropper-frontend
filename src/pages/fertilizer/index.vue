@@ -1061,6 +1061,8 @@ export default Vue.extend({
 
         let scValues = await getProjectFormatted(item.mint)
 
+        console.log(scValues);
+
         if (!scValues) {
           continue
         }
@@ -1114,6 +1116,8 @@ export default Vue.extend({
         key++
         this.fertilizerData.push(project)
       }
+
+      console.log(this.fertilizerData);
     },
 
     async getTvl() {
