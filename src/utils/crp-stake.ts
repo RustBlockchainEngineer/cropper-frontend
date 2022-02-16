@@ -22,6 +22,7 @@ const defaultAccounts = {
 import waggle_farm_idl from '@/utils/cropper_staking.json'
 import { Account, Connection } from '@solana/web3.js';
 import { createSplAccount } from './crp-swap';
+import { getUpdateUserTierIx, getUserTier } from './crp-launchpad';
 import { createAssociatedTokenAccountIfNotExist2, sendTransaction } from './web3';
 import { STAKE_TIERS_PROGRAM_ID } from './ids';
 import moment from 'moment';
@@ -521,7 +522,16 @@ export async function stake (
     }
   }));
 
-  return await sendTransaction(connection, wallet, transaction, signers)
+  // FIXME: It needs projectMint
+  let projectMint = new PublicKey(rewardMint);
+  /*? projectMint ? */
+  let tierIx = await getUpdateUserTierIx(wallet, projectMint);
+  transaction.add(tierIx);
+  let txHash = await sendTransaction(connection, wallet, transaction, signers);
+  
+  let {tier, tierHash} = await getUserTier(wallet, projectMint);
+
+  return txHash;
 }
 
 export async function unstake (
@@ -577,7 +587,17 @@ export async function unstake (
     }
   }))
   
-  return await sendTransaction(connection, wallet, transaction, signers)
+  
+  // FIXME: It needs projectMint
+  let projectMint = new PublicKey(rewardMint);
+  /*? projectMint ? */
+  let tierIx = await getUpdateUserTierIx(wallet, projectMint);
+  transaction.add(tierIx);
+  let txHash = await sendTransaction(connection, wallet, transaction, signers);
+  
+  let {tier, tierHash} = await getUserTier(wallet, projectMint);
+
+  return txHash;
 
 }
 
