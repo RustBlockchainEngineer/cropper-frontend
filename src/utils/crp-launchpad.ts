@@ -124,35 +124,19 @@ export async function getLaunchpad(){
 
 export async function getProject(mint: string){
   const projectAddress = await getProjectAddress(new PublicKey(mint));
-  const data = await LaunchpadProgram.account.projectAccount.fetch(projectAddress)
-  return data
+  try{
+    const data = await LaunchpadProgram.account.projectAccount.fetch(projectAddress)
+    return data
+  }
+  catch{
 
+  }
+  return null
 }
 
 export async function getProjectFormatted(mint: string){
+  try{
     const data = await getProject(mint)
-    
-    let tda = '';
-    if(data.deposit_amount) {
-      tda = data.deposit_amount.toString();
-    }
-
-    let tpa = '';
-    if(data.total_paid_amount) {
-      tpa = data.total_paid_amount.toString();
-    }
-
-    let tca = '';
-    if(data.claimed_amount) {
-      tca = data.claimed_amount.toString();
-    }
-
-    let tru = '';
-    if(data.total_registered_user) {
-      tru = data.total_registered_user.toString();
-    }
-
-
     return {
       date_preparation: time2str(data.prepareDate),
       date_whitelist_start: time2str(data.wlStartDate),
@@ -165,10 +149,10 @@ export async function getProjectFormatted(mint: string){
       first_liberation: data.firstLiberation.toString(),
       price_token_mint: data.saleMint.toString(),
       
-      total_deposit_amount: tda,
-      total_paid_amount: tpa,
-      total_claimed_amount: tca,
-      total_registered_user: tru,
+      total_deposit_amount: data.depositAmount.toString(),
+      total_paid_amount: data.paidAmount.toString(),
+      total_claimed_amount: data.claimedAmount.toString(),
+      total_registered_user: data.subscribed.toString(),
 
       max_allocation:  [ 
         new Number(data.maxAllocTier0.toString()), 
@@ -179,6 +163,9 @@ export async function getProjectFormatted(mint: string){
         new Number(data.maxAllocTier5.toString())
       ]
     }
+  }
+  catch{
+  }
   return {}
 }
 
