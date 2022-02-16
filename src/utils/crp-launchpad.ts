@@ -149,6 +149,11 @@ export async function getProjectFormatted(mint: string){
       first_liberation: data.firstLiberation.toString(),
       price_token_mint: data.saleMint.toString(),
       
+      total_deposit_amount: data.deposit_amount.toString(),
+      total_paid_amount: data.paid_amount.toString(),
+      total_claimed_amount: data.claimed_amount.toString(),
+      total_registered_user: data.subscribed.toString(),
+
       max_allocation:  [ 
         new Number(data.maxAllocTier0.toString()), 
         new Number(data.maxAllocTier1.toString()),
@@ -163,6 +168,7 @@ export async function getProjectFormatted(mint: string){
   }
   return {}
 }
+
 
 const datetime_format = 'YYYY-MM-DD HH:mm:ss'
 function str2time(date:string){
@@ -422,7 +428,7 @@ export async function subscribeToWhitelist(
     );
   const [userProjectToken] = 
     await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(USER_PROJECT_TOKEN_TAG), wallet.publicKey.toBuffer()],
+      [Buffer.from(USER_PROJECT_TOKEN_TAG), projectMint.toBuffer(), wallet.publicKey.toBuffer()],
       LaunchpadProgram.programId,
     );
   const [stakingUserKey] = 
@@ -461,14 +467,18 @@ export async function subscribeToWhitelist(
   }
 }
 
-export async function updateUserTier(
-  connection:Connection,
+export async function getUpdateUserTierIx(
   wallet: any,
   projectMint: PublicKey,
 ) {
   const [launchpadKey] = 
     await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(LAUNCHPAD_TAG)],
+      LaunchpadProgram.programId,
+    );  
+  const [projectKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(PROJECT_TAG), projectMint.toBuffer()],
       LaunchpadProgram.programId,
     );
   const [userKey] = 
@@ -481,10 +491,12 @@ export async function updateUserTier(
       [stakingPoolId.toBuffer(), wallet.publicKey.toBuffer()],
       stakingProgramId,
     );
-  let txHash = await LaunchpadProgram.rpc.updateUserTier(
+
+  return LaunchpadProgram.instruction.updateUserTier(
     {
       accounts: {
         launchpad: launchpadKey,
+        project: projectKey,
         authority: wallet.publicKey,
         user: userKey,
         stakingUser: stakingUserKey,
@@ -493,10 +505,8 @@ export async function updateUserTier(
         rent: SYSVAR_RENT_PUBKEY,
       },
     }
-  ).catch((e:any) => {
-    console.log("e =", e);
-  });
-  console.log("txHash =", txHash);
+  );
+  /*console.log("txHash =", txHash);
   await connection.confirmTransaction(txHash, "processed");
   const userData = await LaunchpadProgram.account.userAccount.fetch(userKey);
   let tierHash = bs58.encode(Uint8Array.from(userData.tierHash));
@@ -505,8 +515,40 @@ export async function updateUserTier(
     success: true,
     txId: txHash,
     hash: tierHash
-  }
+  }*/
 }
+
+export const getUserTier = async (
+  wallet: any,
+  projectMint: PublicKey,
+) => {
+  const [userKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(USER_TAG), wallet.publicKey.toBuffer(), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  const userData = await LaunchpadProgram.account.userAccount.fetch(userKey);
+  let tierHash = bs58.encode(Uint8Array.from(userData.tierHash));
+  return { tierHash, tier: userData.tier }
+}
+
+export const isSubscribed = async (
+  wallet: any,
+  projectMint: PublicKey,
+) => {
+  const [userKey] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(USER_TAG), wallet.publicKey.toBuffer(), projectMint.toBuffer()],
+      LaunchpadProgram.programId,
+    );
+  let userData = null;
+  try {
+    userData = await LaunchpadProgram.account.userAccount.fetch(userKey);
+  } catch {}
+  
+  return userData !== null;
+}
+
 
 export async function buyTokens(
   connection:Connection,
@@ -588,7 +630,7 @@ export async function claimTokens(
     );
   const [userProjectToken] = 
     await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(USER_PROJECT_TOKEN_TAG), wallet.publicKey.toBuffer()],
+      [Buffer.from(USER_PROJECT_TOKEN_TAG), projectMint.toBuffer(), wallet.publicKey.toBuffer()],
       LaunchpadProgram.programId,
     );
   const [stakingUserKey] = 
@@ -603,7 +645,7 @@ export async function claimTokens(
         project: projectKey,
         user: userKey,
         projectVault: projectVaultKey,
-        userVault: userProjectToken,
+        userProjectToken,
         stakingUser: stakingUserKey,
         authority: wallet.publicKey,
         clock: SYSVAR_CLOCK_PUBKEY,
