@@ -406,6 +406,7 @@ export async function withdrawProjectToken(
     hash:""
   }
 }
+
 export async function subscribeToWhitelist(
   connection:Connection,
   wallet: any,
@@ -436,10 +437,10 @@ export async function subscribeToWhitelist(
       [stakingPoolId.toBuffer(), wallet.publicKey.toBuffer()],
       stakingProgramId,
     );
+  let updateUserTierTx = await getUpdateUserTierIx(wallet, projectMint)
   let txHash = await LaunchpadProgram.rpc.registerUser(
     {
       accounts: {
-        launchpad: launchpadKey,
         authority: wallet.publicKey,
         project: projectKey,
         user: userKey,
@@ -451,6 +452,7 @@ export async function subscribeToWhitelist(
         tokenProgram: TOKEN_PROGRAM_ID,
         clock: SYSVAR_CLOCK_PUBKEY
       },
+      postInstructions: [updateUserTierTx]
     }
   ).catch((e:any) => {
     console.log("e =", e);
