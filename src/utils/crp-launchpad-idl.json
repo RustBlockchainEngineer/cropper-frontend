@@ -202,6 +202,11 @@
       "name": "registerUser",
       "accounts": [
         {
+          "name": "launchpad",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "project",
           "isMut": false,
           "isSigner": false
@@ -212,13 +217,18 @@
           "isSigner": false
         },
         {
-          "name": "projectMint",
+          "name": "userProjectToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingUser",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "userProjectToken",
-          "isMut": true,
+          "name": "projectMint",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -243,6 +253,52 @@
         },
         {
           "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateUserTier",
+      "accounts": [
+        {
+          "name": "launchpad",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "project",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakingUser",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "projectMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         }
@@ -350,11 +406,6 @@
       "name": "claimProjectToken",
       "accounts": [
         {
-          "name": "launchpad",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "project",
           "isMut": true,
           "isSigner": false
@@ -370,12 +421,7 @@
           "isSigner": false
         },
         {
-          "name": "userVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "stakingUser",
+          "name": "userProjectToken",
           "isMut": false,
           "isSigner": false
         },
@@ -620,6 +666,22 @@
           {
             "name": "firstLiberation",
             "type": "u64"
+          },
+          {
+            "name": "depositAmount",
+            "type": "u64"
+          },
+          {
+            "name": "paidAmount",
+            "type": "u64"
+          },
+          {
+            "name": "claimedAmount",
+            "type": "u64"
+          },
+          {
+            "name": "subscribed",
+            "type": "u64"
           }
         ]
       }
@@ -652,6 +714,19 @@
           {
             "name": "claimedAmount",
             "type": "u64"
+          },
+          {
+            "name": "tierHash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "tier",
+            "type": "u8"
           }
         ]
       }
@@ -692,6 +767,19 @@
       "code": 6004,
       "name": "NotAllowed",
       "msg": "not allowed"
+    },
+    {
+      "code": 6005,
+      "name": "PayOverflow",
+      "msg": "Overflow max allocation"
+    },
+    {
+      "code": 6006,
+      "name": "InsufficientAmount",
+      "msg": "Insufficient amount to withdraw"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "ErJiGkw8B2UXpTKHhvYG28PWXmEpRpLNtYux2wztaV43"
+  }
 }
